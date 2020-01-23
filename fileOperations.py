@@ -26,6 +26,11 @@ import errors
 # Read user input data file
 import readInputData as rid
 #
+#                                                                           Global variables
+# ==========================================================================================
+# Set '.screen' file path as a global variable
+screen_file_path = ''
+#
 #                                                                      Prompt user functions
 # ==========================================================================================
 # Prompt the user to answer a 'yes' or 'no' question
@@ -40,6 +45,9 @@ def query_yn(question, default_answer = 'yes'):
     n_invalid_ans = 0
     while True:
         option = input(question + prompt).lower()
+        screen_file = open(screen_file_path,'a')
+        print(question+prompt+option,file = screen_file)
+        screen_file.close()
         if default_answer is not None and option == '':
             return answer[default_answer]
         elif option in answer:
@@ -47,15 +55,18 @@ def query_yn(question, default_answer = 'yes'):
         else:
             n_invalid_ans = n_invalid_ans + 1
             if n_invalid_ans > 3 or str(option).lower() == 'exit':
-                print('\nProgram aborted.\n')
+                info.print2('\nProgram aborted.\n')
                 sys.exit(1)
-            print('Please answer with \'yes\' or \'no\' (or \'exit\' to quit).')
+            info.print2('Please answer with \'yes\' or \'no\' (or \'exit\' to quit).')
 # ------------------------------------------------------------------------------------------
 # Prompt the user to perform some action before proceeding the program execution
 def userAction(message):
     option = input(message)
+    screen_file = open(screen_file_path,'a')
+    print(message+option,file = screen_file)
+    screen_file.close()
     if str(option).lower() == 'exit':
-        print('\nProgram aborted.\n')
+        info.print2('\nProgram aborted.\n')
         sys.exit(1)
 #
 #                                                                       Directory operations
@@ -113,6 +124,13 @@ def setProblemDirs(input_file_name,input_file_dir):
     # Set offline stage and post processing subdirectories
     offline_stage_dir = problem_dir + 'Offline_Stage' + '/'
     postprocess_dir = problem_dir + 'Post_Process' + '/'
+    # Set '.screen' path and delete the file it it already exists
+    global screen_file_path
+    screen_file_path = problem_dir + str(input_file_name) + '.screen'
+    if os.path.isfile(screen_file_path):
+        os.remove(screen_file_path)
+    # Set '.hres' path
+    hres_file_path = problem_dir + str(input_file_name) + '.hres'
     # Check if the problem directory already exists or not
     if not os.path.exists(problem_dir):
         status = 0
@@ -120,9 +138,10 @@ def setProblemDirs(input_file_name,input_file_dir):
         makeDirectory(problem_dir)
         for dir in [offline_stage_dir,postprocess_dir]:
             makeDirectory(dir)
+        #
     else:
-        print('\nWarning: The problem directory for the specified input data file ' + \
-                                                                          'already exists.')
+        info.print2('\nWarning: The problem directory for the specified input data ' + \
+                                                                     'file already exists.')
         # Ask user if the purpose is to consider the previously computed offline stage data
         # files
         is_same_offstage = query_yn('\nDo you wish to consider the already existent ' + \

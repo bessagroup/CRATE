@@ -71,12 +71,12 @@ def displayError(code,*args):
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display error
-    print(template_header.format(*header,width=output_width))
-    print(template.format(*error,width=output_width))
-    print(template_footer.format(*footer,width=output_width))
+    info.print2(template_header.format(*header,width=output_width))
+    info.print2(template.format(*error,width=output_width))
+    info.print2(template_footer.format(*footer,width=output_width))
     # Abort program
     sys.exit(1)
-
+#
 #                                                       Display built-in exceptions function
 # ==========================================================================================
 # Display runtime built-in exceptions
@@ -99,8 +99,8 @@ def displayException(*args):
     template = 'Details:' + '\n\n' + \
                 indent + '{}'
     # Display built-in exception
-    print(template_header.format(*header,width=output_width))
-    print(template.format(*exception,width=output_width))
-    print(template_footer.format(*footer,width=output_width))
+    info.print2(template_header.format(*header,width=output_width))
+    info.print2(template.format(*exception,width=output_width))
+    info.print2(template_footer.format(*footer,width=output_width))
     # Abort program
     sys.exit(1)

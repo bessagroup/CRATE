@@ -17,6 +17,8 @@ import numpy as np
 import math
 # Date and time
 import time
+# Manage files and directories
+import fileOperations
 #
 #                                                Display features and manipulation functions
 # ==========================================================================================
@@ -34,6 +36,16 @@ def setDisplayFeatures():
 def convertIterableToList(iterable):
     list = [ element for element in iterable ]
     return list
+#
+#                                                                         Set print function
+# ==========================================================================================
+def print2(*objects):
+    # Print to default sys.stdout
+    print(*objects)
+    # Print to '.screen file'
+    screen_file = open(fileOperations.screen_file_path,'a')
+    print(*objects,file = screen_file)
+    screen_file.close()
 #
 #                                                                           Display function
 # ==========================================================================================
@@ -64,7 +76,8 @@ def displayInfo(code,*args,**kwargs):
             template = 4*'\n' + 'Problem directory: {}' + '\n\n' + \
                                 'Status: New problem (overwriting existing directory)'
         elif status == 3:
-            print('Please rerun the program and provide a different problem name.' + '\n')
+            info.print2('Please rerun the program and provide a different problem name.' + \
+                        '\n')
             sys.exit(1)
     elif code == '0':
         arguments = ['Brand New Shiny Unnamed Program','v1.0.0'] + \
@@ -118,4 +131,4 @@ def displayInfo(code,*args,**kwargs):
         template = '\n' + n_indents*indent + '> {}'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display information
-    print(template.format(*info,width=output_width))
+    print2(template.format(*info,width=output_width))
