@@ -126,11 +126,11 @@ def setProblemDirs(input_file_name,input_file_dir):
     postprocess_dir = problem_dir + 'Post_Process' + '/'
     # Set '.screen' path and delete the file it it already exists
     global screen_file_path
-    screen_file_path = problem_dir + str(input_file_name) + '.screen'
+    screen_file_path = problem_dir + input_file_name + '.screen'
     if os.path.isfile(screen_file_path):
         os.remove(screen_file_path)
     # Set '.hres' path
-    hres_file_path = problem_dir + str(input_file_name) + '.hres'
+    hres_file_path = problem_dir + input_file_name + '.hres'
     # Check if the problem directory already exists or not
     if not os.path.exists(problem_dir):
         status = 0
@@ -154,8 +154,8 @@ def setProblemDirs(input_file_name,input_file_dir):
                 errors.displayError('E00009',location.filename,location.lineno+1,
                                                              problem_name,offline_stage_dir)
             # Remove all the existent directories and files except the existent offline
-            # stage subdirectory
-            required_dirnames = ['Offline_Stage']
+            # stage subdirectory and '.screen' file
+            required_dirnames = [input_file_name + '.screen','Offline_Stage']
             rmUnrequiredDirs(problem_dir,required_dirnames)
             # Create post processing subdirectory
             makeDirectory(postprocess_dir,'overwrite')
@@ -174,7 +174,7 @@ def setProblemDirs(input_file_name,input_file_dir):
             if is_overwrite:
                 status = 2
                 # Remove all the existent directories and files
-                required_dirnames = ['',]
+                required_dirnames = [input_file_name + '.screen']
                 rmUnrequiredDirs(problem_dir,required_dirnames)
                 # Create problem directory and main subdirectories
                 for dir in [offline_stage_dir,postprocess_dir]:
@@ -184,4 +184,5 @@ def setProblemDirs(input_file_name,input_file_dir):
         # Display information about the problem directory and status
         info.displayInfo('-1',problem_dir,status)
     # Return
-    return [problem_name,problem_dir,offline_stage_dir,postprocess_dir,is_same_offstage]
+    return [problem_name,problem_dir,offline_stage_dir,postprocess_dir,is_same_offstage,
+            hres_file_path]

@@ -47,6 +47,8 @@ import inspect
 import info
 # Display errors, warnings and built-in exceptions
 import errors
+# Read user input data file
+import readInputData as rid
 # Manage files and directories
 import fileOperations
 #
@@ -63,7 +65,7 @@ elif not os.path.isfile(str(sys.argv[1])):
 input_file_name,input_file_path,input_file_dir = \
                                        fileOperations.setInputDataFilePath(str(sys.argv[1]))
 # Set problem name, directory and main subdirectories
-problem_name,problem_dir,offline_stage_dir,postprocess_dir,is_same_offstage \
+problem_name,problem_dir,offline_stage_dir,postprocess_dir,is_same_offstage,hres_file_path \
                              = fileOperations.setProblemDirs(input_file_name,input_file_dir)
 # Open user input data file
 try:
@@ -98,14 +100,24 @@ except FileNotFoundError as message:
     errors.displayException(location.filename,location.lineno+1,message)
 # Read input data according to analysis type
 info.displayInfo('5','Reading the input data file...')
-
-
-
+strain_formulation,problem_type,problem_dimension,n_material_phases,material_properties, \
+macroscale_loading_type,macroscale_loading,macroscale_load_indexes,self_consistent_scheme, \
+scs_max_n_iterations,scs_conv_tol,clustering_method,clustering_strategy, \
+clustering_solution_method,phase_clustering,n_load_increments,max_n_iterations,conv_tol, \
+max_subincrem_level,max_n_iterations,su_conv_tol = \
+                                               rid.readInputData(input_file,input_file_path)
+# Close user input data file
+input_file.close()
 # Set phase ending time and display finishing phase information
 phase_end_time = time.time()
 phase_names.append('Read input data')
 phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
 info.displayInfo('3','Read input data file',phase_times[1,1]-phase_times[1,0])
+#
+#
+#                                      Offline stage: Compute clustering-defining quantities
+# ==========================================================================================
+# ...
 #
 #                                                                                End program
 # ==========================================================================================

@@ -54,6 +54,108 @@ def displayError(code,*args):
         error = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been found in the input data file.'
+    elif code == 'E00004':
+        arguments = 3*[args[2],]
+        error = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
+                   'input ' + '\n' + \
+                   indent + 'data file. The keyword specification is either missing, ' + \
+                   'provided in a wrong format or ' + '\n' + \
+                   indent + 'is not a non-negative floating-point number.' + '\n\n' + \
+                   'Suggestion:' + '\n\n' + \
+                   indent + 'The keyword - {} - should be specified as ' + '\n\n' + \
+                   indent + '{}' + '\n' + \
+                   indent + '< value >'
+    elif code == 'E00005':
+        arguments = info.convertIterableToList(args[2:4]) + \
+                    info.convertIterableToList(2*(args[2],))
+        error = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
+                   'input \n' + \
+                   indent + 'data file. In particular, the header of the material ' + \
+                   'phase {} is missing, misplaced or \n' + \
+                   indent + 'the number of associated properties ' + \
+                   'hasn\'t been specified as a positive integer.' + '\n\n' + \
+                   'Suggestion:' + '\n\n' + \
+                   indent + 'The keyword - {} - should be specified p.e. as' + '\n\n' + \
+                   indent + '{}' + '\n' + \
+                   indent + '1 2' + '\n' + \
+                   indent + '< property1_name > < value >' + '\n' + \
+                   indent + '< property2_name > < value >' + \
+                   '\n' + \
+                   indent + '2 3' + '\n' + \
+                   indent + '< property1_name > < value >' + \
+                   '\n' + \
+                   indent + '< property2_name > < value >' + \
+                   '\n' + \
+                   indent + '< property3_name > < value >' + '\n'
+    elif code == 'E00006':
+        arguments = info.convertIterableToList(args[2:5]) + \
+                    info.convertIterableToList(2*(args[2],))
+        error = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
+                   'input \n' + \
+                   indent + 'data file. In particular, the {}th property of material ' + \
+                   'phase {} is not properly ' + '\n' + \
+                   indent + 'specified potentially due to one of the following reasons:' + \
+                   '\n\n' + \
+                   indent + '1. Missing property specification;' + '\n' + \
+                   indent + '2. Property name can only contain letters, numbers or ' + \
+                   'underscores;' + '\n' + \
+                   indent + '3. Invalid property value (e.g must be integer or ' + \
+                   'floating-point number);' + '\n\n' + \
+                   'Suggestion:' + '\n\n' + \
+                   indent + 'The keyword - {} - should be specified p.e. as' + '\n\n' + \
+                   indent + '{}' + '\n' + \
+                   indent + '1 2' + '\n' + \
+                   indent + '< property1_name > < value >' + '\n' + \
+                   indent + '< property2_name > < value >' + \
+                   '\n' + \
+                   indent + '2 3' + '\n' + \
+                   indent + '< property1_name > < value >' + \
+                   '\n' + \
+                   indent + '< property2_name > < value >' + \
+                   '\n' + \
+                   indent + '< property3_name > < value >' + '\n'
+    elif code == 'E00007':
+        arguments = info.convertIterableToList(3*(args[2],))
+        error = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
+                   'input \n' + \
+                   indent + 'data file. In particular, the option or value ' + \
+                   'specification is missing, the option ' + '\n' + \
+                   indent + 'does not exist or the value is not a positive integer.' + \
+                   '\n\n' + \
+                   'Suggestion:' + '\n\n' + \
+                   indent + 'The keyword - {} - should be specified as' + '\n\n' + \
+                   indent + '{} < option or value >'
+    elif code == 'E00008':
+        arguments = info.convertIterableToList(args[2:4]) + \
+                    info.convertIterableToList(2*(args[2],))
+        error = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
+                   'input \n' + \
+                   indent + 'data file. In particular, the {}th component is not ' + \
+                   'properly specified potentially' + '\n' + \
+                   indent + 'due to one of the following reasons: \n\n' + \
+                   indent + '1. Missing descriptor specification;' + '\n' + \
+                   indent + '2. Component name can only contain letters, numbers or ' + \
+                   'underscores;' + '\n' + \
+                   indent + '3. Invalid component value (e.g must be integers or ' + \
+                   'floating-point number);' + '\n\n' + \
+                   'Suggestion:' + '\n\n' + \
+                   indent + 'The keyword - {} - should be specified p.e. in a 2D ' + \
+                   'problem as' + '\n\n' + \
+                   indent + '{}' + '\n' + \
+                   indent + '< descriptor_name_11 > < value >' + '\n' + \
+                   indent + '< descriptor_name_21 > < value >' + '\n' + \
+                   indent + '< descriptor_name_12 > < value >' + '\n' + \
+                   indent + '< descriptor_name_22 > < value > < value >'
     elif code == 'E00009':
         arguments = info.convertIterableToList(args[2:4])
         error = tuple(arguments)
@@ -68,6 +170,50 @@ def displayError(code,*args):
         error = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The input data file must have \'.dat\' extension.'
+    elif code == 'E00011':
+        arguments = 3*[args[2],]
+        error = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
+                   'input \n' + \
+                   indent + 'data file, potentially due to one of the following reasons:' +\
+                   '\n\n' + \
+                   indent + '1. Missing specification;' + '\n' + \
+                   indent + '2. Number of prescribed components is either insufficient ' + \
+                   'or excessive;' + '\n' + \
+                   indent + '3. Prescription must be either 0 (strain component) or 1 ' + \
+                   '(stress component);' + '\n\n' + \
+                   'Suggestion:' + '\n\n' + \
+                   indent + 'The keyword - {} - should be specified p.e. in a 2D ' + \
+                   'problem as' + '\n\n' + \
+                   indent + '{}' + '\n' + \
+                   indent + '0 0 1 0'
+    elif code == 'E00012':
+        component = ['12','13','23']
+        arguments = [component[args[2]],component[args[2]][::-1]]
+        error = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+        indent + 'A different kind of macroscale prescription (strain or stress) has ' + \
+        'been specified for ' + '\n' + \
+        indent + 'the two dependent components {} and {} under a small strain ' + \
+        'formulation.' + '\n' + \
+        indent + 'Please prescribe both components as either macroscale strain or ' + \
+        'macroscale stress.'
+    elif code == 'E00013':
+        arguments = info.convertIterableToList(args[2:4] + 2*(args[2],))
+        error = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
+                   'input data file. ' + '\n' + \
+                   indent + 'In particular, the clustering discretization of the ' + \
+                   'material phase {} is missing, ' + '\n' + \
+                   indent + 'misplaced or has an invalid format ' + \
+                   '(< phase_id > < number_of_clusters >).' + '\n\n' + \
+                   'Suggestion:' + '\n\n' + \
+                   indent + 'The keyword - {} - should be specified p.e. as ' + '\n\n' + \
+                   indent + '{}' + '\n' + \
+                   indent + '1 10' + '\n' + \
+                   indent + '2 15'
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display error
@@ -76,6 +222,46 @@ def displayError(code,*args):
     info.print2(template_footer.format(*footer,width=output_width))
     # Abort program
     sys.exit(1)
+#
+#                                                                  Display warnings function
+# ==========================================================================================
+# Set and display runtime warnings
+def displayWarning(code,*args):
+    # Get display features
+    displayFeatures = info.setDisplayFeatures()
+    output_width, dashed_line, indent, asterisk_line = displayFeatures[0:4]
+    # Set error display header and footer
+    header = tuple(info.convertIterableToList(['!! Warning !!',code]) + \
+                  info.convertIterableToList(args[0:2]))
+    template_header = '\n' + asterisk_line + '\n' + \
+                      '{:^{width}}' + '\n\n' + 'Code: {}' + '\n\n' + \
+                      'Traceback: {} (at line {})' + '\n\n'
+    footer = tuple([' '])
+    template_footer = '\n' + asterisk_line + '\n'
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set warnings to display
+    if code == 'W00001':
+        if args[2] == 1:
+            arguments = ['strain',]
+        elif args[2] == 2:
+            arguments = ['stress',]
+        elif args[2] == 3:
+            if args[3] == 0:
+                arguments = ['strain',]
+            elif args[3] == 1:
+                arguments = ['stress',]
+        warning = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'A non-symmetric macroscale {} tensor was prescribed under ' + \
+                   'a small strain formulation.' + '\n' + \
+                   indent + 'The symmetric value with the lowest first index is ' + \
+                   'enforced (p.e. if descriptor_12 is ' + '\n' + \
+                   indent + 'different from descriptor_21, then descriptor_12 is enforced).'
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Display warning
+    info.print2(template_header.format(*header,width=output_width))
+    info.print2(template.format(*warning,width=output_width))
+    info.print2(template_footer.format(*footer,width=output_width))
 #
 #                                                       Display built-in exceptions function
 # ==========================================================================================
