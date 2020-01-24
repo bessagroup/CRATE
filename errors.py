@@ -214,7 +214,27 @@ def displayError(code,*args):
                    indent + '{}' + '\n' + \
                    indent + '1 10' + '\n' + \
                    indent + '2 15'
-
+    elif code == 'E00014':
+        arguments = args[2:4]
+        error = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
+                   'input data file. ' + '\n' + \
+                   indent + 'In particular, the specified path to the spatial ' + \
+                   'discretization file is not an absolute ' + '\n' + \
+                   indent + 'path (mandatory) or does not exist.' + '\n\n' + \
+                   indent + '{}'
+    elif code == 'E00015':
+        n_valid_exts = len(args[3])
+        arguments = [args[2],] + info.convertIterableToList(args[3])
+        error = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
+                   'input data file. ' + '\n' + \
+                   indent + 'In particular, the specified path to the spatial ' + \
+                   'discretization file has an invalid' + '\n' + \
+                   indent + 'extension.' + '\n\n' + \
+                   indent + 'Valid extensions:' + n_valid_exts*' \'{}\''
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display error
     info.print2(template_header.format(*header,width=output_width))

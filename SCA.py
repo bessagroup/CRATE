@@ -51,6 +51,8 @@ import errors
 import readInputData as rid
 # Manage files and directories
 import fileOperations
+# Clustering quantities computation
+import clusteringQuantities as clsq
 #
 #                             Check user input data file and create problem main directories
 # ==========================================================================================
@@ -104,8 +106,8 @@ strain_formulation,problem_type,problem_dimension,n_material_phases,material_pro
 macroscale_loading_type,macroscale_loading,macroscale_load_indexes,self_consistent_scheme, \
 scs_max_n_iterations,scs_conv_tol,clustering_method,clustering_strategy, \
 clustering_solution_method,phase_clustering,n_load_increments,max_n_iterations,conv_tol, \
-max_subincrem_level,max_n_iterations,su_conv_tol = \
-                                               rid.readInputData(input_file,input_file_path)
+max_subincrem_level,max_n_iterations,su_conv_tol,discret_file_path = \
+                      rid.readInputData(input_file,input_file_path,problem_name,problem_dir)
 # Close user input data file
 input_file.close()
 # Set phase ending time and display finishing phase information
@@ -117,7 +119,19 @@ info.displayInfo('3','Read input data file',phase_times[1,1]-phase_times[1,0])
 #
 #                                      Offline stage: Compute clustering-defining quantities
 # ==========================================================================================
-# ...
+# Display starting phase information and set phase initial time
+info.displayInfo('2','Compute cluster-defining quantities')
+phase_init_time = time.time()
+# Compute the quantities required to perform the clustering according to the strategy
+# adopted
+clsq.computeClusteringQuantities(clustering_strategy,clustering_solution_method,discret_file_path)
+
+# Set phase ending time and display finishing phase information
+phase_end_time = time.time()
+phase_names.append('Compute cluster-defining quantities')
+phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
+info.displayInfo('3','Compute cluster-defining quantities', \
+                                                          phase_times[1,1]-phase_times[1,0])
 #
 #                                                                                End program
 # ==========================================================================================

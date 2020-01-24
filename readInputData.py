@@ -13,6 +13,8 @@
 import os
 # Parse command-line options and arguments
 import sys
+# Operations on files and directories
+import shutil
 # Working with arrays
 import numpy as np
 # Mathematics
@@ -23,6 +25,8 @@ import re
 import linecache
 # Inspect file name and line
 import inspect
+# Extract information from path
+import ntpath
 # Display errors, warnings and built-in exceptions
 import errors
 #
@@ -100,7 +104,7 @@ def findMaxNumberProperties(file,file_path,keyword,keyword_line_number,n_materia
 #                                                                  Read input data functions
 # ==========================================================================================
 # Read the input data file
-def readInputData(input_file,input_file_path):
+def readInputData(input_file,input_file_path,problem_name,problem_dir):
     # Read strain formulation
     keyword = 'Strain_Formulation'
     max = 2
@@ -246,13 +250,28 @@ def readInputData(input_file,input_file_path):
         su_conv_tol = readTypeBKeyword(input_file,input_file_path,keyword)
     else:
         su_conv_tol = 1e-6
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Read the spatial discretization file absolute path
+    # [WIP - Implement the case of several spatial discretization files]
+    keyword = 'Discretization_File'
+    valid_exts = ['.rgmsh']
+    discret_file_path, discret_file_ext = \
+                   readDiscretizationFilePath(input_file,input_file_path,keyword,valid_exts)
+    # Copy the spatial discretization file to the problem directory and update the absolute
+    # path to the copied file
+    try:
+        shutil.copy2(discret_file_path,problem_dir+problem_name+discret_file_ext)
+        discret_file_path = problem_dir+problem_name+discret_file_ext
+    except IOError as message:
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayException(location.filename,location.lineno+1,message)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return [strain_formulation,problem_type,problem_dimension,n_material_phases,
             material_properties,macroscale_loading_type,macroscale_loading,
             macroscale_load_indexes,self_consistent_scheme,scs_max_n_iterations,
             scs_conv_tol,clustering_method,clustering_strategy,clustering_solution_method,
             phase_clustering,n_load_increments,max_n_iterations,conv_tol,
-            max_subincrem_level,max_n_iterations,su_conv_tol]
+            max_subincrem_level,max_n_iterations,su_conv_tol,discret_file_path]
 #
 # ------------------------------------------------------------------------------------------
 # Read a keyword of type A specification, characterized as follows:
@@ -501,3 +520,25 @@ def readPhaseClustering(file,file_path,keyword,n_material_phases):
             errors.displayError('E00013',location.filename,location.lineno+1,keyword,iphase)
         phase_clustering[iphase-1,:] = [int(i) for i in line[0:2]]
     return phase_clustering
+# ------------------------------------------------------------------------------------------
+# Read the spatial discretization file absolute path
+#
+# Discretization_File
+# < absolute_path >
+#
+def readDiscretizationFilePath(file,file_path,keyword,valid_exts):
+    line_number = searchKeywordLine(file,keyword) + 1
+    discret_file_path = linecache.getline(file_path,line_number).strip()
+    if not os.path.isabs(discret_file_path):
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00014',location.filename,location.lineno+1,keyword,\
+                                                                          discret_file_path)
+    elif not os.path.isfile(discret_file_path):
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00014',location.filename,location.lineno+1,keyword,\
+                                                                          discret_file_path)
+    elif not ntpath.splitext(ntpath.basename(discret_file_path))[-1] in valid_exts:
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00015',location.filename,location.lineno+1,keyword,valid_exts)
+    discret_file_ext = ntpath.splitext(ntpath.basename(discret_file_path))[-1]
+    return [discret_file_path,discret_file_ext]
