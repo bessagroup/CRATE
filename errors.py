@@ -278,6 +278,17 @@ def displayError(code,*args):
                    indent + 'Matrix to tensor conversions are only available for ' + \
                    'vector or square matrix with size 3, ' + '\n' + \
                    indent + '4, 6 or 9 in each dimension.'
+    elif code == 'E00022':
+        arguments = args[2:4]
+        error = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The elastic property - {} - of material phase {} hasn\'t ' + \
+                   'been specified or has been ' + '\n' + \
+                   indent + 'specified more than once in the input data file.'
+    #print(template_header.format(*header,width=output_width))
+    #print(template.format(*error,width=output_width))
+    #print(template_footer.format(*footer,width=output_width))
+    #sys.exit(1)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display error
     info.print2(template_header.format(*header,width=output_width))

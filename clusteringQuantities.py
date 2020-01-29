@@ -48,7 +48,33 @@ def computeClusteringQuantities(clustering_strategy,clustering_solution_method,d
         # Read the regular grid mesh
         regular_grid = np.loadtxt(discret_file_path)
         print(regular_grid)
+        # Set number of pixels/voxels in each dimension and total number of pixels/voxels
+        n_voxels_dims = [regular_grid.shape[i] for i in range(len(regular_grid.shape))]
+        n_voxels = sum(n_voxels_dir)
+        print(n_voxels_dim)
+        print(n_voxels)
     # Compute the required cluster-defining quantities according to the adopted clustering
     # strategy
     if clustering_strategy == 1:
+        # Clustering based solely on the strain concentration tensor. The total number of
+        # (scalar) cluster-defining quantities is thus equal to the number of independent
+        # strain components (according to the problem type and strain formulation)
+        n_clustering_var = n_strain
+        # Initialize clustering quantities array
+        clustering_quantities = np.zeros((n_voxels,n_clustering_var))
+        # Loop over independent strain components
+        for i in range(n_strain):
+            # Set macroscopic strain loading
+            mac_strain = np.zeros((n_strain))
+            mac_strain[i] = 1.0
+            # Call FFT method
+            # ...
+            # Assemble strain concentration tensor components in the clustering quantities
+            # array
+            for j in range(n_strain):
+                pass
+
+
         pass
+    # Return the clustering quantities array
+    return clustering_array
