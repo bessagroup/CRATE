@@ -109,6 +109,10 @@ def readInputData(input_file,input_file_path,problem_name,problem_dir):
     keyword = 'Strain_Formulation'
     max = 2
     strain_formulation = readTypeAKeyword(input_file,input_file_path,keyword,max)
+    # Large strain formulation has not been implemented yet
+    if strain_formulation == 2:
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00016',location.filename,location.lineno+1)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read problem type and set problem dimensions
     keyword = 'Problem_Type'
@@ -117,14 +121,12 @@ def readInputData(input_file,input_file_path,problem_name,problem_dir):
     if problem_type == 1:
         n_dim = 2
         n_strain = 3
-        print('Not implemented')
     elif problem_type == 2:
-        n_dim = 2
-        n_strain = 3
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00017',location.filename,location.lineno+1,problem_type)
     elif problem_type == 3:
-        n_dim = 2
-        n_strain = 4
-        print('Not implemented')
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00017',location.filename,location.lineno+1,problem_type)
     elif problem_type == 4:
         n_dim = 3
         n_strain = 6

@@ -235,6 +235,21 @@ def displayError(code,*args):
                    'discretization file has an invalid' + '\n' + \
                    indent + 'extension.' + '\n\n' + \
                    indent + 'Valid extensions:' + n_valid_exts*' \'{}\''
+    elif code == 'E00016':
+        arguments = ['',]
+        error = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The large strain formulation option has not been ' + \
+                   'implemented yet!'
+    elif code == 'E00017':
+        if args[2] == 2:
+            type = 'plane stress'
+        elif args[2] == 3:
+            type = 'axisymmetric'
+        arguments = [type,]
+        error = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The program cannot deal with {} problems yet!'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display error
     info.print2(template_header.format(*header,width=output_width))
