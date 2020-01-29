@@ -250,6 +250,34 @@ def displayError(code,*args):
         error = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The program cannot deal with {} problems yet!'
+    elif code == 'E00018':
+        arguments = ['',]
+        error = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'Tensor to matrix conversions are only available for ' + \
+                   'second-order and fourth-order ' + '\n' + \
+                   indent + 'tensors.'
+    elif code == 'E00019':
+        arguments = ['',]
+        error = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'Tensor to matrix conversions are only available for ' + \
+                   'second-order and fourth-order tensors ' + '\n' + \
+                   indent + 'with the same size in each dimension, which must be 2 or 3.'
+    elif code == 'E00020':
+        arguments = ['',]
+        error = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'Matrix to tensor conversions are only available for ' + \
+                   'vector or square matrix matricial ' + '\n' + \
+                   indent + 'forms.'
+    elif code == 'E00021':
+        arguments = ['',]
+        error = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'Matrix to tensor conversions are only available for ' + \
+                   'vector or square matrix with size 3, ' + '\n' + \
+                   indent + '4, 6 or 9 in each dimension.'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display error
     info.print2(template_header.format(*header,width=output_width))

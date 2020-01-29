@@ -13,6 +13,10 @@
 import numpy as np
 # Mathematics
 import math
+# Inspect file name and line
+import inspect
+# Display errors, warnings and built-in exceptions
+import errors
 #
 #                                                                       Tensorial operations
 # ==========================================================================================
@@ -110,25 +114,27 @@ def setIdentityTensors(n_dim):
 #
 #     A[i,j,k,l] = Aijkl, i,j,k,l in [1,2,3]  stored as
 #                  _                                                            _
-#                 | A1111  A1121  A1131  A1112  A1122  A1132 A1113  A1123  A1133 |
-#                 | A2111  A2121  A2131  A2112  A2122  A2132 A2113  A2123  A2133 |
-#                 | A3111  A3121  A3131  A3112  A3122  A3132 A3113  A3123  A3133 |
-#                 | A1211  A1221  A1231  A1212  A1222  A1232 A1213  A1223  A1233 |
-#             A = | A2211  A2221  A2231  A2212  A2222  A2232 A2213  A2223  A2233 |
-#                 | A3211  A3221  A3231  A3212  A3222  A3232 A3213  A3223  A3233 |
-#                 | A1311  A1321  A1331  A1312  A1322  A1332 A1313  A1323  A1333 |
-#                 | A2311  A2321  A2331  A2312  A2322  A2332 A2313  A2323  A2333 |
-#                 |_A3311  A3321  A3331  A3312  A3322  A3332 A3313  A3323  A3333_|
+#                 | A1111  A1121  A1131  A1112  A1122  A1132  A1113  A1123  A1133 |
+#                 | A2111  A2121  A2131  A2112  A2122  A2132  A2113  A2123  A2133 |
+#                 | A3111  A3121  A3131  A3112  A3122  A3132  A3113  A3123  A3133 |
+#                 | A1211  A1221  A1231  A1212  A1222  A1232  A1213  A1223  A1233 |
+#             A = | A2211  A2221  A2231  A2212  A2222  A2232  A2213  A2223  A2233 |
+#                 | A3211  A3221  A3231  A3212  A3222  A3232  A3213  A3223  A3233 |
+#                 | A1311  A1321  A1331  A1312  A1322  A1332  A1313  A1323  A1333 |
+#                 | A2311  A2321  A2331  A2312  A2322  A2332  A2313  A2323  A2333 |
+#                 |_A3311  A3321  A3331  A3312  A3322  A3332  A3313  A3323  A3333_|
 #
 # Note: The sr() stands for square-root of ().
 #
 def setTensorToMatrix(tensor,isSym):
     # Check if valid second-order or fourth-order tensor
     if np.ndim(tensor) not in [2,4]:
-        print('must be 2nd order or 4rd order tensor')
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00018',location.filename,location.lineno+1)
     elif not all(x == tensor.shape[0] for x in tensor.shape) or \
                                                                tensor.shape[0] not in [2,3]:
-        print('all tensor dimensions must have the same size and be 2 or 3')
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00019',location.filename,location.lineno+1)
     # Set dimension
     n_dim = tensor.shape[0]
     # Set matrix storage index order (and weights associated to the Kelvin notation)
@@ -144,9 +150,6 @@ def setTensorToMatrix(tensor,isSym):
             weights = np.array([1,1,1,math.sqrt(2),math.sqrt(2),math.sqrt(2)])
         else:
             indexes = np.array([[1,1],[2,1],[3,1],[1,2],[2,2],[3,2],[1,3],[2,3],[3,3]])
-    else:
-        print('Invalid n_dim, aborting')
-        sys.exit(1)
     # Store tensor in matricial form
     n_index = indexes.shape[0]
     if np.ndim(tensor) == 2:
@@ -178,11 +181,14 @@ def setTensorToMatrix(tensor,isSym):
 def getTensorFromMatrix(matrix):
     # Check if valid matrix
     if np.ndim(matrix) not in [1,2]:
-        print('error,must be vector of matrix')
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00020',location.filename,location.lineno+1)
     elif np.ndim(matrix) == 2 and matrix.shape[0] != matrix.shape[1]:
-        print('error, must be square matrix')
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00020',location.filename,location.lineno+1)
     elif matrix.shape[0] not in [3,4,6,9]:
-        print('error, cannot associate a tensor to the provided matrix')
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00021',location.filename,location.lineno+1)
     # Set dimension
     if matrix.shape[0] in [3,4]:
         n_dim = 2
