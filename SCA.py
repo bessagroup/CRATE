@@ -102,7 +102,7 @@ except FileNotFoundError as message:
     errors.displayException(location.filename,location.lineno+1,message)
 # Read input data according to analysis type
 info.displayInfo('5','Reading the input data file...')
-strain_formulation,problem_type,problem_dimension,n_material_phases,material_properties, \
+strain_formulation,problem_type,n_dim,n_strain,n_material_phases,material_properties, \
 macroscale_loading_type,macroscale_loading,macroscale_load_indexes,self_consistent_scheme, \
 scs_max_n_iterations,scs_conv_tol,clustering_method,clustering_strategy, \
 clustering_solution_method,phase_clustering,n_load_increments,max_n_iterations,conv_tol, \

@@ -110,14 +110,24 @@ def readInputData(input_file,input_file_path,problem_name,problem_dir):
     max = 2
     strain_formulation = readTypeAKeyword(input_file,input_file_path,keyword,max)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Read problem type and set problem dimension
+    # Read problem type and set problem dimensions
     keyword = 'Problem_Type'
     max = 4
     problem_type = readTypeAKeyword(input_file,input_file_path,keyword,max)
-    if problem_type in [1,2,3]:
-        problem_dimension = 4
+    if problem_type == 1:
+        n_dim = 2
+        n_strain = 3
+        print('Not implemented')
+    elif problem_type == 2:
+        n_dim = 2
+        n_strain = 3
+    elif problem_type == 3:
+        n_dim = 2
+        n_strain = 4
+        print('Not implemented')
     elif problem_type == 4:
-        problem_dimension = 9
+        n_dim = 3
+        n_strain = 6
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read number of material phases
     keyword = 'Number_of_Material_Phases'
@@ -135,7 +145,7 @@ def readInputData(input_file,input_file_path,problem_name,problem_dir):
     macroscale_loading_type = readTypeAKeyword(input_file,input_file_path,keyword,max)
     macroscale_loading, macroscale_load_indexes = \
                    readMacroscaleLoading(input_file,input_file_path,macroscale_loading_type,
-                                                       problem_dimension,strain_formulation)
+                                                                   n_dim,strain_formulation)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read self consistent scheme (optional). If the associated keyword is not found, then
     # a default specification is assumed
@@ -266,7 +276,7 @@ def readInputData(input_file,input_file_path,problem_name,problem_dir):
         location = inspect.getframeinfo(inspect.currentframe())
         errors.displayException(location.filename,location.lineno+1,message)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    return [strain_formulation,problem_type,problem_dimension,n_material_phases,
+    return [strain_formulation,problem_type,n_dim,n_strain,n_material_phases,
             material_properties,macroscale_loading_type,macroscale_loading,
             macroscale_load_indexes,self_consistent_scheme,scs_max_n_iterations,
             scs_conv_tol,clustering_method,clustering_strategy,clustering_solution_method,
@@ -369,21 +379,20 @@ def readMaterialProperties(file,file_path,keyword,n_material_phases):
 # Mixed_Prescription_Index (only if prescribed macroscale strains and stresses)
 # < 0 or 1 > < 0 or 1 > ...
 #
-# and store it in a array(problem_dimension,2,2) as
+# and store it in a array(n_dim**2,2,2) as
 #                                    _                          _
 #                                   |'component_name_11' , value |
 #                    array[:,:,0] = |'component_name_21' , value |
 #                                   |_       ...        ,   ... _|
 #
-# and a array(problem_dimension) as
+# and a array(n_dim**2) as
 #
 #                    array = [ 0 , 1 , 1 , 0 , ... ]
 #
 # Note: The symmetry of the macroscale strain and stress tensors is verified under a small
 #       strain formulation
 #
-def readMacroscaleLoading(file,file_path,macroscale_loading_type,
-                                                      problem_dimension,strain_formulation):
+def readMacroscaleLoading(file,file_path,macroscale_loading_type,n_dim,strain_formulation):
     if macroscale_loading_type == 1:
         loading_keywords = ['Macroscale_Strain']
     elif macroscale_loading_type == 2:
@@ -391,10 +400,10 @@ def readMacroscaleLoading(file,file_path,macroscale_loading_type,
     elif macroscale_loading_type == 3:
         loading_keywords = ['Macroscale_Strain','Macroscale_Stress']
         presc_keyword = 'Mixed_Prescription_Index'
-    macroscale_loading = np.full((problem_dimension,2,2),'ND',dtype=object)
+    macroscale_loading = np.full((n_dim**2,2,2),'ND',dtype=object)
     for load_keyword in loading_keywords:
         load_keyword_line_number = searchKeywordLine(file,load_keyword)
-        for icomponent in range(1,problem_dimension+1):
+        for icomponent in range(1,n_dim**2+1):
             component_line = linecache.getline(file_path,
                                      load_keyword_line_number+icomponent).strip().split(' ')
             if component_line[0] == '':
@@ -419,18 +428,18 @@ def readMacroscaleLoading(file,file_path,macroscale_loading_type,
             macroscale_loading[icomponent-1,1,store_index[macroscale_loading_type-1]] = \
                                                                     float(component_line[1])
     if macroscale_loading_type == 1:
-        macroscale_load_indexes = np.zeros((problem_dimension),dtype=int)
+        macroscale_load_indexes = np.zeros((n_dim**2),dtype=int)
     elif macroscale_loading_type == 2:
-        macroscale_load_indexes = np.ones((problem_dimension),dtype=int)
+        macroscale_load_indexes = np.ones((n_dim**2),dtype=int)
     elif macroscale_loading_type == 3:
-        macroscale_load_indexes = np.zeros((problem_dimension),dtype=int)
+        macroscale_load_indexes = np.zeros((n_dim**2),dtype=int)
         presc_keyword_line_number = searchKeywordLine(file,presc_keyword)
         presc_line = \
                  linecache.getline(file_path,presc_keyword_line_number+1).strip().split(' ')
         if presc_line[0] == '':
             location = inspect.getframeinfo(inspect.currentframe())
             errors.displayError('E00011',location.filename,location.lineno+1,presc_keyword)
-        elif len(presc_line) != problem_dimension:
+        elif len(presc_line) != n_dim**2:
             location = inspect.getframeinfo(inspect.currentframe())
             errors.displayError('E00011',location.filename,location.lineno+1,presc_keyword)
         elif not all(presc_line[i] == '0' or presc_line[i] == '1' \
@@ -442,9 +451,9 @@ def readMacroscaleLoading(file,file_path,macroscale_loading_type,
                               np.array([int(presc_line[i]) for i in range(len(presc_line))])
     # Check small strain formulation symmetry
     if strain_formulation == 1:
-        if problem_dimension == 4:
+        if n_dim**2 == 4:
             symmetric_indexes = np.array([[3],[1]])
-        elif problem_dimension == 9:
+        elif n_dim**2 == 9:
             symmetric_indexes = np.array([[3,6,7],[1,2,5]])
         for i in range(symmetric_indexes.shape[1]):
             if macroscale_loading_type == 1:
