@@ -22,7 +22,9 @@ import errors
 # ==========================================================================================
 # Tensorial products
 dyad22 = lambda A2,B2 : np.einsum('ij,kl -> ijkl',A2,B2)
-# Tensorial contractions
+# Tensorial single contractions
+dot21_1 = lambda A2,B1 : np.einsum('ij,j -> i',A2,B1)
+# Tensorial double contractions
 ddot44_1 = lambda A4,B4 : np.einsum('ijmn,mnkl -> ijkl',A4,B4)
 #
 #                                                                       Set identity tensors
