@@ -50,7 +50,7 @@ def computeClusteringQuantities(clustering_strategy,clustering_solution_method,d
         print(regular_grid)
         # Set number of pixels/voxels in each dimension and total number of pixels/voxels
         n_voxels_dims = [regular_grid.shape[i] for i in range(len(regular_grid.shape))]
-        n_voxels = sum(n_voxels_dir)
+        n_voxels = np.prod(n_voxels_dir)
         print(n_voxels_dim)
         print(n_voxels)
     # Compute the required cluster-defining quantities according to the adopted clustering
