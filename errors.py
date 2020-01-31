@@ -34,7 +34,7 @@ def displayError(code,*args):
     # Set errors to display
     if code == 'E00001':
         arguments = ['',]
-        error = tuple(arguments)
+        values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The input data file hasn\'t been specified or found.' + \
                    '\n\n' + \
@@ -45,18 +45,18 @@ def displayError(code,*args):
                    indent + 'pythonX.X SCA.py < input_data_file_path >'
     elif code == 'E00002':
         arguments = ['',]
-        error = tuple(arguments)
+        values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The input data file name must only contain letters, ' + \
                    'numbers or underscores.'
     elif code == 'E00003':
         arguments = info.convertIterableToList([args[2],])
-        error = tuple(arguments)
+        values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been found in the input data file.'
     elif code == 'E00004':
         arguments = 3*[args[2],]
-        error = tuple(arguments)
+        values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
                    'input ' + '\n' + \
@@ -70,7 +70,7 @@ def displayError(code,*args):
     elif code == 'E00005':
         arguments = info.convertIterableToList(args[2:4]) + \
                     info.convertIterableToList(2*(args[2],))
-        error = tuple(arguments)
+        values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
                    'input \n' + \
@@ -94,7 +94,7 @@ def displayError(code,*args):
     elif code == 'E00006':
         arguments = info.convertIterableToList(args[2:5]) + \
                     info.convertIterableToList(2*(args[2],))
-        error = tuple(arguments)
+        values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
                    'input \n' + \
@@ -122,7 +122,7 @@ def displayError(code,*args):
                    indent + '< property3_name > < value >' + '\n'
     elif code == 'E00007':
         arguments = info.convertIterableToList(3*(args[2],))
-        error = tuple(arguments)
+        values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
                    'input \n' + \
@@ -136,7 +136,7 @@ def displayError(code,*args):
     elif code == 'E00008':
         arguments = info.convertIterableToList(args[2:4]) + \
                     info.convertIterableToList(2*(args[2],))
-        error = tuple(arguments)
+        values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
                    'input \n' + \
@@ -158,7 +158,7 @@ def displayError(code,*args):
                    indent + '< descriptor_name_22 > < value > < value >'
     elif code == 'E00009':
         arguments = info.convertIterableToList(args[2:4])
-        error = tuple(arguments)
+        values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'It was requested the consideration of the previously ' + \
                    'computed offline stage data files ' + '\n' + \
@@ -167,12 +167,12 @@ def displayError(code,*args):
                    indent + '{}'
     elif code == 'E00010':
         arguments = ['',]
-        error = tuple(arguments)
+        values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The input data file must have \'.dat\' extension.'
     elif code == 'E00011':
         arguments = 3*[args[2],]
-        error = tuple(arguments)
+        values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
                    'input \n' + \
@@ -191,7 +191,7 @@ def displayError(code,*args):
     elif code == 'E00012':
         component = ['12','13','23']
         arguments = [component[args[2]],component[args[2]][::-1]]
-        error = tuple(arguments)
+        values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
         indent + 'A different kind of macroscale prescription (strain or stress) has ' + \
         'been specified for ' + '\n' + \
@@ -201,7 +201,7 @@ def displayError(code,*args):
         'macroscale stress.'
     elif code == 'E00013':
         arguments = info.convertIterableToList(args[2:4] + 2*(args[2],))
-        error = tuple(arguments)
+        values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
                    'input data file. ' + '\n' + \
@@ -216,7 +216,7 @@ def displayError(code,*args):
                    indent + '2 15'
     elif code == 'E00014':
         arguments = args[2:4]
-        error = tuple(arguments)
+        values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
                    'input data file. ' + '\n' + \
@@ -227,7 +227,7 @@ def displayError(code,*args):
     elif code == 'E00015':
         n_valid_exts = len(args[3])
         arguments = [args[2],] + info.convertIterableToList(args[3])
-        error = tuple(arguments)
+        values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
                    'input data file. ' + '\n' + \
@@ -237,7 +237,7 @@ def displayError(code,*args):
                    indent + 'Valid extensions:' + n_valid_exts*' \'{}\''
     elif code == 'E00016':
         arguments = ['',]
-        error = tuple(arguments)
+        values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The large strain formulation option has not been ' + \
                    'implemented yet!'
@@ -247,46 +247,46 @@ def displayError(code,*args):
         elif args[2] == 3:
             type = 'axisymmetric'
         arguments = [type,]
-        error = tuple(arguments)
+        values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The program cannot deal with {} problems yet!'
     elif code == 'E00018':
         arguments = ['',]
-        error = tuple(arguments)
+        values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'Tensor to matrix conversions are only available for ' + \
                    'second-order and fourth-order ' + '\n' + \
                    indent + 'tensors.'
     elif code == 'E00019':
         arguments = ['',]
-        error = tuple(arguments)
+        values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'Tensor to matrix conversions are only available for ' + \
                    'second-order and fourth-order tensors ' + '\n' + \
                    indent + 'with the same size in each dimension, which must be 2 or 3.'
     elif code == 'E00020':
         arguments = ['',]
-        error = tuple(arguments)
+        values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'Matrix to tensor conversions are only available for ' + \
                    'vector or square matrix matricial ' + '\n' + \
                    indent + 'forms.'
     elif code == 'E00021':
         arguments = ['',]
-        error = tuple(arguments)
+        values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'Matrix to tensor conversions are only available for ' + \
                    'vector or square matrix with size 3, ' + '\n' + \
                    indent + '4, 6 or 9 in each dimension.'
     elif code == 'E00022':
         arguments = args[2:4]
-        error = tuple(arguments)
+        values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The elastic property - {} - of material phase {} hasn\'t ' + \
                    'been specified or has been ' + '\n' + \
                    indent + 'specified more than once in the input data file.'
     #print(template_header.format(*header,width=output_width))
-    #print(template.format(*error,width=output_width))
+    #print(template.format(*values,width=output_width))
     #print(template_footer.format(*footer,width=output_width))
     #sys.exit(1)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -324,7 +324,7 @@ def displayWarning(code,*args):
                 arguments = ['strain',]
             elif args[3] == 1:
                 arguments = ['stress',]
-        warning = tuple(arguments)
+        values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'A non-symmetric macroscale {} tensor was prescribed under ' + \
                    'a small strain formulation.' + '\n' + \
@@ -334,7 +334,7 @@ def displayWarning(code,*args):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display warning
     info.print2(template_header.format(*header,width=output_width))
-    info.print2(template.format(*warning,width=output_width))
+    info.print2(template.format(*values,width=output_width))
     info.print2(template_footer.format(*footer,width=output_width))
 #
 #                                                       Display built-in exceptions function
@@ -355,12 +355,12 @@ def displayException(*args):
                       '{:^{width}}' + '\n'
     # Set built-in exception to display
     arguments = info.convertIterableToList([args[2],])
-    exception = tuple(arguments)
+    values = tuple(arguments)
     template = 'Details:' + '\n\n' + \
                 indent + '{}'
     # Display built-in exception
     info.print2(template_header.format(*header,width=output_width))
-    info.print2(template.format(*exception,width=output_width))
+    info.print2(template.format(*values,width=output_width))
     info.print2(template_footer.format(*footer,width=output_width))
     # Abort program
     sys.exit(1)
