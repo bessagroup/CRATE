@@ -17,8 +17,6 @@ import math
 import inspect
 # Generate efficient iterators
 import itertools as it
-# Display errors, warnings and built-in exceptions
-import errors
 # Tensorial operations
 import tensorOperations
 #
@@ -43,26 +41,39 @@ import tensorOperations
 #
 # A. 2D problem (plane strain):
 #
-#   strain[key] = array(d1,d2), where | di is the number of pixels in dimension i
-#                                     | key is the strain component defined as '11', '22' or
-#                                     |     '12'
+#   strain_vox[comp] = array(d1,d2), where | di is the number of pixels in dimension i
+#                                          | comp is the strain component that would be
+#                                          | stored in matricial form ('11', '22', '12')
 #
 # B. 3D problem:
 #
-#   strain[key] = array(d1,d2,d3), where | di is the number of pixels in dimension i
-#                                        | key is the strain component defined as '11', '22'
-#                                        |     '33', '12', '23' or '13'
+#   strain_vox[comp] = array(d1,d2,d3), where | di is the number of pixels in dimension i
+#                                             | comp is the strain component that would be
+#                                             |     stored in matricial form ('11', '22',
+#                                             |     '33', '12', '23', '13')
+#
+# Note 1: All the strain or stress related tensors stored componentwise in dictionaries (for
+#         every pixels/voxels) do not follow the Kelvin notation, i.e. the stored component
+#         values are the real ones
+#
+# Note 2: The suffix '_mf' is employed to denote tensorial quantities stored in matricial
+#         form. The matricial form follows the Kelvin notation when symmetry conditions
+#         exist and is performed columnwise otherwise.
 #
 def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
                                                      n_material_phases,material_properties):
     #
     #                                                                             Parameters
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set macroscale strain
+    mac_strain_mf = [ 1.0 , 0 , 0 , 0 , 0 , 0]
+    # Set RVE dimensions (this must be argument)
+    rve_dims = [1.0,1.0,1.0]
     # Set strain components according to problem type
     if problem_type == 1:
-        strain_list = ['11','22','12']
+        comp_list = ['11','22','12']
     elif problem_type == 4:
-        strain_list = ['11','22','33','12','23','13']
+        comp_list = ['11','22','33','12','23','13']
     # Set maximum number of iterations
     max_n_iterations = 100
     # Set convergence tolerance
@@ -71,239 +82,258 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
     #                                                     Material phases elasticity tensors
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Compute the elasticity tensors (matricial form) associated to each material phase
-    De_matrices = list()
+    De_matrices_mf = list()
     for iphase in range(n_material_phases):
         # Set required elastic properties according to material phase constitutive model
-        required_props = ['E','v']
-        required_values = {prop: None for prop in required_props}
-        for iprop in range(len(required_props)):
-            match = np.where(material_properties[:,0,iphase]==required_props[iprop])
+        req_props = ['E','v']
+        req_props_vals = {prop: None for prop in req_props}
+        for iprop in range(len(req_props)):
+            match = np.where(material_properties[:,0,iphase]==req_props[iprop])
             if len(match[0]) != 1:
-                location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayError('E00022',location.filename,location.lineno+1,
-                                                         required_props[iprop],iphase+1)
+                values = tuple(req_props[iprop],iphase+1)
+                template = 'The elastic property - {} - of material phase {} hasn\'t ' + \
+                           'been specified or has been ' + '\n' + \
+                           'specified more than once in the input data file.'
+                print(template.format(*values))
             else:
-                required_values[required_props[iprop]] = \
-                                               material_properties[match[0][0],1,iphase]
-        # Compute elasticity tensor (matricial form)
-        De_matrix = getElasticityTensor(strain_formulation,problem_type,n_dim,
-                                                                            required_values)
-        De_matrices.append(De_matrix)
+                req_props_vals[req_props[iprop]] = material_properties[match[0][0],1,iphase]
+        # Compute elasticity tensor (matricial form) for current material phase
+        De_tensor_mf = getElasticityTensor(strain_formulation,problem_type,n_dim,
+                                                                             req_props_vals)
+        # Store material phase elasticity tensor (matricial form)
+        De_tensors_mf.append(De_tensor_mf)
     #
     #                                                  Reference material elastic properties
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Compute reference material compliance tensor (matricial form) according to reference
-    # material constitutive assumptions
-    if strain_formulation == 1:
-        # Set required elastic properties
-        required_props = ['E','v']
-        required_values = {prop: None for prop in required_props}
-        # Set homogeneous reference material elastic properties
-        E_ref = 1.0
-        v_ref = 0.3
-        required_values['E'] = E_ref
-        required_values['v'] = v_ref
-        # Compute compliance tensor (matricial form)
-        Se_matrix_ref = np.linalg.inv(getElasticityTensor(strain_formulation,problem_type,
+    # Set required elastic properties
+    req_props_ref = ['E','v']
+    req_props_vals_ref = {prop: None for prop in req_props}
+    # Set reference material elastic properties
+    req_props_vals_ref['E'] = 1.0
+    req_props_vals_ref['v'] = 0.3
+    # Compute compliance tensor (matricial form)
+    Se_tensor_mf_ref = np.linalg.inv(getElasticityTensor(strain_formulation,problem_type,
                                                                      n_dim,required_values))
     #
     #                                                               Frequency discretization
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    rve_sizes = [1.0,1.0,1.0]
     # Set discrete frequencies (Hz) for each dimension
     freqs_dims = list()
     for i in range(n_dim):
         # Set sampling spatial period
         sampling_period = rve_size[i]/n_voxels_dims[i]
+        # Set discrete frequencies
+        freqs_dim.append(2*math.pi*np.fft.fftfreq(n_voxels_dim[i],sampling_period))
         # >>>> António
         # Set sampling angular frequency
-        sampling_freq = 2*math.pi/sampling_period
+        # sampling_freq = 2*math.pi/sampling_period
         # Set discrete frequencies
-        freqs_dims.append(sampling_freq*np.linspace(0,1,num=n_voxels_dims[i],endpoint = False))
-
-        # >>>> fft package
-        # Set discrete frequencies
-        # freqs_dim.append(2*math.pi*np.fft.fftfreq(n_voxels_dim[i],sampling_period)) Better?
-        # >>>>
+        # freqs_dims.append(sampling_freq*np.linspace(0,1,num=n_voxels_dims[i],endpoint = False))
     #
     #                                                      Reference material Green operator
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Storage description:
-    # ...
-    # Compute Green operator according to strain formulation
-    if strain_formulation == 1:
-        # Compute reference material Lamé parameters
-        lam_ref = (E_ref*v_ref)/((1.0+v_ref)*(1.0-2.0*v_ref))
-        miu_ref = E_ref/(2.0*(1.0+v_ref))
-        # Compute Green operator reference material related constants
-        c1 = 1.0/(4.0*miu_ref)
-        c2 = (miu_ref + lam_ref)/(miu_ref*(lam_ref + 2.0*miu_ref))
-        # Set mapping between Green operator fourth-order tensor and storing matrix
-        aux = list(it.product(strain_list,strain_list))
-        fo_indexes = list()
-        mat_indexes = list()
-        for i in range(len(strain_list)**2):
-            fo_indexes.append([int(x)-1 for x in list(aux[i][0]+aux[i][1])])
-            mat_indexes.append([x for x in \
-                               [strain_list.index(aux[i][0]),strain_list.index(aux[i][1])]])
-        # Initialize Green operator (matricial form)
-        Green_operator = {str(comp[0]+1)+str(comp[1]+1): np.zeros(tuple(n_voxels_dims)) for comp in mat_indexes}
-        # Compute Green operator (matricial form) components
-        for i in range(len(mat_indexes)):
-            # Get matrix index
-            mat_idx = mat_indexes[i]
-            # Get fourth-order tensor indexes
-            fo_idx = fo_indexes[i]
-            # Get Green operator component key
-            key = str(mat_idx[0]+1)+str(mat_idx[1]+1)
-            # Loop over discrete frequencies
-            for freq_coord in it.product(*freqs_dims):
-                # Compute frequency vector norm
-                freq_norm = np.linalg.norm(freq_coord)
-                # Compute first term of Green operator
-                first_term = (1.0/freq_norm**2)*(
+    # The fourth-order Green operator for the reference material is computed for every
+    # pixel/voxel and stored as follows:
+    #
+    # A. 2D problem (plane strain):
+    #
+    #   Green_operator_vox[comp] = array(d1,d2),
+    #
+    #                        where | di is the number of pixels in dimension i
+    #                              | comp is the component that would be stored in matricial
+    #                              |      form ('1111', '2211', '1211', '1122', ...)
+    #
+    # B. 3D problem:
+    #
+    #   Green_operator_vox[comp] = array(d1,d2,d3),
+    #
+    #                        where | di is the number of pixels in dimension i
+    #                              | comp is the component that would be stored in matricial
+    #                              |     form ('1111', '2211', '3311', '1211', ...)
+    #
+    # Get reference material Young modulus and Poisson coeficient
+    E_ref = req_props_vals_ref['E']
+    v_ref = req_props_vals_ref['v']
+    # Compute reference material Lamé parameters
+    lam_ref = (E_ref*v_ref)/((1.0 + v_ref)*(1.0 - 2.0*v_ref))
+    miu_ref = E_ref/(2.0*(1.0 + v_ref))
+    # Compute Green operator reference material related constants
+    c1 = 1.0/(4.0*miu_ref)
+    c2 = (miu_ref + lam_ref)/(miu_ref*(lam_ref + 2.0*miu_ref))
+    # Set Green operator matricial form components
+    comps = list(it.product(comp_list,comp_list))
+    # Set mapping between Green operator fourth-order tensor and matricial form components
+    fo_indexes = list()
+    mf_indexes = list()
+    for i in range(len(comp_list)**2):
+        fo_indexes.append([int(x)-1 for x in list(comps[i][0]+comps[i][1])])
+        mf_indexes.append([x for x in \
+                               [comp_list.index(comps[i][0]),comp_list.index(comps[i][1])]])
+    # Initialize Green operator
+    Green_operator_vox = {str(idx[0]+1)+str(idx[1]+1): \
+                                       np.zeros(tuple(n_voxels_dims)) for idx in mf_indexes}
+    # Compute Green operator matricial form components
+    for i in range(len(mf_indexes)):
+        # Get matrix index
+        mf_idx = mf_indexes[i]
+        # Get fourth-order tensor indexes
+        fo_idx = fo_indexes[i]
+        # Get Green operator matricial form component
+        comp = str(mf_idx[0]+1)+str(mf_idx[1]+1)
+        # Loop over discrete frequencies
+        for freq_coord in it.product(*freqs_dims):
+            # Get voxel index
+            voxel_idx = [list(freqs_dims[x]).index(freq_coord[x]) for x in range(n_dim)]
+            # Compute frequency vector norm
+            freq_norm = np.linalg.norm(freq_coord)
+            # Compute first material independent term of Green operator
+            first_term = (1.0/freq_norm**2)*(
                        Dd(fo_idx[0],fo_idx[2])*freq_coord[fo_idx[1]]*freq_coord[fo_idx[1]] +
                        Dd(fo_idx[0],fo_idx[3])*freq_coord[fo_idx[1]]*freq_coord[fo_idx[2]] +
                        Dd(fo_idx[1],fo_idx[3])*freq_coord[fo_idx[0]]*freq_coord[fo_idx[2]] +
                        Dd(fo_idx[1],fo_idx[2])*freq_coord[fo_idx[0]]*freq_coord[fo_idx[3]])
-                # Compute second term of Green operator
-                second_term = -(1.0/freq_norm**4)*(
-                                                freq_coord[fo_idx[0]]*freq_coord[fo_idx[1]]*
-                                                freq_coord[fo_idx[2]]*freq_coord[fo_idx[3]])
-                # Compute Green operator (matricial form) component
-                Green_operator[key][freq_coord] = kelvinFactor(mat_idx,mat_indexes)*(
-                                                             c1*first_term + c2*second_term)
+            # Compute second material independent term of Green operator
+            second_term = -(1.0/freq_norm**4)*(freq_coord[fo_idx[0]]*freq_coord[fo_idx[1]]*
+                                               freq_coord[fo_idx[2]]*freq_coord[fo_idx[3]])
+            # Compute Green operator matricial form component for current voxel
+            Green_operator_vox[voxel_idx] = c1*first_term + c2*second_term)
     #
     #                                                                       Iterative scheme
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    if strain_formulation == 1:
-        # Initialize strain and stress tensors (matricial form)
-        strain = {comp: np.zeros(tuple(n_voxels_dims)) for comp in strain_list}
-        stress = {comp: np.zeros(tuple(n_voxels_dims)) for comp in strain_list}
+    # Initialize strain and stress tensors
+    strain_vox = {comp: np.zeros(tuple(n_voxels_dims)) for comp in comp_list}
+    stress_vox = {comp: np.zeros(tuple(n_voxels_dims)) for comp in comp_list}
+    #
+    #                                                                Initial iterative guess
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Loop over discrete frequencies
+    for freq_coord in it.product(*freqs_dims):
+        # Get voxel material phase
+        voxel_idx = [list(freqs_dims[x]).index(freq_coord[x]) for x in range(n_dim)]
+        phase_idx = regular_grid[voxel_idx] - 1
+        # Get material phase elasticity tensor (matricial form)
+        De_tensor_mf = De_tensors_mf[phase_idx]
+        # Set strain initial iterative guess
+        strain_mf = mac_strain_mf
+        for i in range(len(comp_list)):
+            comp = comp_list[i]
+            strain_vox[comp][voxel_idx] = (1.0/kelvinFactor(i,comp_list))*strain_mf[i]
+        # Set stress initial iterative guess
+        stress_mf = De_tensor_mf*strain_mf
+        for i in range(len(comp_list)):
+            comp = comp_list[i]
+            stress_vox[comp][voxel_idx] = (1.0/kelvinFactor(i,comp_list))*stress_mf[i]
+    #
+    #                                                Strain Discrete Fourier Transform (DFT)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Compute strain Discrete Fourier Transform (DFT)
+    strain_DFT_vox = {comp: np.zeros(tuple(n_voxels_dims)) for comp in comp_list}
+    for comp in comp_list:
+        # Discrete Fourier Transform (DFT) by means of Fast Fourier Transform (FFT)
+        strain_DFT_vox[comp] = np.fft.fftn(strain_vox[comp])
+    #
+    #                                                                       Iterative scheme
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Initialize iteration counter:
+    iter = 0
+    # Start iterative loop
+    while True:
         #
-        #                                                            Initial iterative guess
+        #                                            Stress Discrete Fourier Transform (DFT)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Compute stress Discrete Fourier Transform (DFT)
+        stress_DFT_vox = {comp: np.zeros(tuple(n_voxels_dims)) for comp in comp_list}
+        for comp in comp_list:
+            # Discrete Fourier Transform (DFT) by means of Fast Fourier Transform (FFT)
+            stress_DFT_vox[comp] = np.fft.fftn(stress_vox[comp])
+        #
+        #                                                             Convergence evaluation
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Compute sum of stress divergence norm for all discrete frequencies and store
+        # zero-frequency stress
+        sum = 0
+        for freq_coord in it.product(*freqs_dims):
+            # Get voxel index
+            voxel_idx = [list(freqs_dims[x]).index(freq_coord[x]) for x in range(n_dim)]
+            # Initialize stress auxiliary vectors
+            stress_DFT_mf = np.array(len(comp_list))
+            stress_DFT_0_mf = np.array(len(comp_list))
+            for i in range(len(comp_list)):
+                comp = comp_list[i]
+                # Get stress vector for current discrete frequency
+                stress_DFT_mf[i] = kelvinFactor(i,comp_list)*stress_DFT_vox[comp][voxel_idx]
+                # Store stress vector for zero-frequency
+                if all([voxel_idx[x] == 0 for x in range(n_dim)]):
+                    stress_DFT_0_mf[i] = kelvinFactor(i,comp_list)*\
+                                                             stress_DFT_vox[comp][voxel_idx]
+            # Build stress tensor (frequency domain)
+            stress_DFT = tensorOperations.getTensorFromMatrix(stress_DFT_mf,True)
+            # Add discrete frequency contribution to discrete error required sum
+            sum = sum + \
+                     np.norm(tensorOperations.dot21_1(stress_DFT,np.asarray(freq_coord)))**2
+        # Compute discrete error serving to check convergence
+        n_voxels = np.prod(n_voxels_dir)
+        discrete_error = math.sqrt(sum/n_voxels)/np.norm(stress_DFT_0_mf)
+        # Check if the solution converged (return) and if the maximum number of iterations
+        # was reached (stop execution)
+        if discrete_error < conv_tol:
+            # Return strain
+            return strain_vox
+        elif iter == max_n_iterations:
+            # Stop execution
+            print('\nAbort: The maximum number of iterations was reached before ' + \
+                  'solution convergence.\n')
+            sys.exit(1)
+        #
+        #                                                                      Update strain
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~----~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        for i in range(len(comp_list)):
+            comp = comp_list[i]
+            # Update strain
+            strain_DFT_vox[comp] = strain_DFT_vox[comp] - \
+                    sum([np.multiply(Green_operator_vox[comp+dummy],stress_DFT_vox[dummy]) \
+                                                                    for dummy in comp_list])
+            # Enforce macroscopic strain at the zero-frequency strain component
+            freq_0_idx = n_dim*(0,)
+            strain_DFT_vox[comp][freq_0_idx] = (1.0/kelvinFactor(i,comp_list))*mac_strain[i]
+        #
+        #                                   Strain Inverse Discrete Fourier Transform (IDFT)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Compute strain Inverse Discrete Fourier Transform (IDFT)
+        for comp in comp_list:
+            # Inverse Discrete Fourier Transform (IDFT) by means of Fast Fourier
+            # Transform (FFT)
+            strain_vox[comp] = np.fft.ifftn(strain_DFT_vox[comp])
+        #
+        #                                                                      Update stress
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over discrete frequencies
         for freq_coord in it.product(*freqs_dims):
             # Get voxel material phase
-            voxel_id = [list(freqs_dims[x]).index(freq_coord[x]) for x in range(n_dim)]
-            phase = regular_grid[voxel_id]
+            voxel_idx = [list(freqs_dims[x]).index(freq_coord[x]) for x in range(n_dim)]
+            phase_idx = regular_grid[voxel_idx] - 1
             # Get material phase elasticity tensor (matricial form)
-            De_matrix = De_matrices[phase-1]
-            # Set strain initial iterative guess
-            strain_vector = mac_strain
-            for i in range(len(strain_list)):
-                key = strain_list[i]
-                strain[key][freq_coord] = strain_vector[i]
-            # Set stress initial iterative guess
-            stress_vector = De_matrix*strain_vector
-            for i in range(len(strain_list)):
-                key = strain_list[i]
-                stress[key][freq_coord] = stress_vector[i]
-        #
-        #                                            Strain Discrete Fourier Transform (DFT)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Compute strain Discrete Fourier Transform (DFT) (matricial form)
-        strain_DFT = {comp: np.zeros(tuple(n_voxels_dims)) for comp in strain_list}
-        for i in range(len(strain_list)):
-            key = strain_list[i]
-            # Discrete Fourier Transform (DFT) by means of Fast Fourier Transform (FFT)
-            strain_DFT[key] = np.fft.fftn(strain[key])
-        #
-        #                                                                   Iterative scheme
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Set maximum number of iterations
-        max_n_iterations = 100
-        # Start iterative loop
-        for iter in range(max_n_iterations):
-            #
-            #                                        Stress Discrete Fourier Transform (DFT)
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Compute stress Discrete Fourier Transform (DFT)
-            stress_DFT = {comp: np.zeros(tuple(n_voxels_dims)) for comp in strain_list}
-            for i in range(len(strain_list)):
-                key = strain_list[i]
-                # Discrete Fourier Transform (DFT) by means of Fast Fourier Transform (FFT)
-                stress_DFT[key] = np.fft.fftn(stress[key])
-            #
-            #                                                         Convergence evaluation
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Compute sum of stress divergence norm for all discrete frequencies and store
-            # store zero-frequency stress
-            sum = 0
-            for freq_coord in it.product(*freqs_dims):
-                # Initialize stress auxiliary vectors
-                stress_DFT_vector = np.array(len(strain_list))
-                stress_DFT_vector_0 = np.array(len(strain_list))
-                for i in range(len(strain_list)):
-                    key = strain_list[i]
-                    # Get stress vector for current discrete frequency
-                    stress_DFT_vector[i] = stress_DFT[key][freq_coord]
-                    # Store stress vector for zero-frequency
-                    if all([list(freqs_dims[x]).index(freq_coord[x]) == 0 for x in range(n_dim)]):
-                        stress_DFT_vector_0[i] = stress_DFT[key][freq_coord]
-                # Build stress tensor (frequency domain)
-                stress_DFT_tensor = tensorOperations.setTensorToMatrix(stress_DFT_vector,True)
-                # Add discrete frequency contribution to discrete error required sum
-                sum = sum + np.norm(tensorOperations.dot21_1(stress_DFT_tensor,np.asarray(freq_coord)))**2
-            # Compute discrete error serving to check convergence
-            n_voxels = np.prod(n_voxels_dir)
-            discrete_error = math.sqrt(sum/n_voxels)/np.norm(stress_DFT_vector_0)
-            # Check if the solution converged
-            if discrete_error < conv_tol:
-                # Return strain
-                return strain
-            #
-            #                                                                  Update strain
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            for i in range(len(strain_list)):
-                key = strain_list[i]
-                # Update strain
-                strain_DFT[key] = strain_DFT[key] - sum([np.multiply(Green_operator[key+key2],stress_DFT[key2] for key2 in strain_list))
-                # Enforce macroscopic strain at the zero-frequency strain component
-                freq_0_idx = n_dim*(0,)
-                strain_DFT[key][freq_0_idx] = mac_strain[i]
-            #
-            #                               Strain Inverse Discrete Fourier Transform (IDFT)
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Compute strain Inverse Discrete Fourier Transform (IDFT)
-            for i in range(len(strain_list)):
-                key = strain_list[i]
-                # Inverse Discrete Fourier Transform (IDFT) by means of Fast Fourier
-                # Transform (FFT)
-                strain[key] = np.fft.ifftn(strain_DFT[key])
-            #
-            #                                                                  Update stress
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Loop over discrete frequencies
-            for freq_coord in it.product(*freqs_dims):
-                # Get voxel material phase
-                voxel_id = [list(freqs_dims[x]).index(freq_coord[x]) for x in range(n_dim)]
-                phase = regular_grid[voxel_id]
-                # Get material phase elasticity tensor (matricial form)
-                De_matrix = De_matrices[phase-1]
-                # Get strain vector for current discrete frequency
-                for i in range(len(strain_list)):
-                    key = strain_list[i]
-                    strain_vector[i] = strain[key][freq_coord]
-                # Update stress for current discrete frequency
-                stress_vector = De_matrix*strain_vector
-                for i in range(len(strain_list)):
-                    key = strain_list[i]
-                    stress[key][freq_coord] = stress_vector[i]
-
-
-
-
-
-
-
-
-
-# ------------------------------------------------------------------------------------------
+            De_tensor_mf = De_tensors_mf[phase_idx]
+            # Get strain vector for current discrete frequency
+            for i in range(len(comp_list)):
+                comp = comp_list[i]
+                strain_mf[i] = (1.0/kelvinFactor(i,comp_list))*strain[comp][voxel_idx]
+            # Update stress for current discrete frequency
+            stress_vector = De_tensor_mf*strain_mf
+            for i in range(len(comp_list)):
+                comp = comp_list[i]
+                stress[comp][voxel_idx] = (1.0/kelvinFactor(i,comp_list))*stress_vector[i]
+#
+#                                                                    Complementary functions
+# ==========================================================================================
 # Set the coefficient associated to the Kelvin notation when storing a symmetric
-# second-order tensor or a minor simmetric fourth-order tensor in matrix form. The storage
-# is performed as follows:
+# second-order tensor or a minor simmetric fourth-order tensor in matrix form.
+# For a given component index in a given component list, this function returns the
+# component's associated Kelvin notation factor.
+#
+# For instance, assuming that the component list is ['11','22','12'] (2D problem) or
+# ['11','22','33','12','23','13'] (3D problem), the Kelvin notation matricial form is
+# described as follows:
 #
 # A. Symmetric second-order tensor Aij (Aij=Aji):
 #          _       _
@@ -322,7 +352,6 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
 #
 #
 #     A[i,j,k,l] = Aijkl, i,j,k,l in [1,2,3]  stored as
-#
 #            _                                                                            _
 #           |    A1111        A1122        A1133     sr(2)*A1112  sr(2)*A1123  sr(2)*A1113 |
 #           |    A2211        A2222        A2233     sr(2)*A2212  sr(2)*A2223  sr(2)*A2213 |
@@ -332,29 +361,33 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
 #           |_sr(2)*A1311  sr(2)*A1322  sr(2)*A1333    2*A1312      2*A1323      2*A1313  _|
 #
 # Note: The sr() stands for square-root of ().
-def kelvinFactor(mat_idx,mat_indexes):
-    ref_index = math.ceil(math.sqrt(len(mat_indexes))/2)
-    if isinstance(mat_idx,int):
-        factor = math.sqrt(2) if mat_idx >= ref_index else 1.0
-    else:
-        if mat_idx[0] < ref_index and mat_idx[1] < ref_index:
+#
+def kelvinFactor(idx,comp_list):
+    if isinstance(idx,int):
+        if int(list(comp_list[idx])[0]) == int(list(comp_list[idx])[1]):
             factor = 1.0
-        elif mat_idx[0] >= ref_index and mat_idx[1] >= ref_index:
-            factor = 2.0
         else:
             factor = math.sqrt(2)
+    else:
+        factor = 1.0
+        for i in idx:
+            if int(list(comp_list[i])[0]) != int(list(comp_list[i])[1]):
+                factor = factor*math.sqrt(2)
     return factor
 # ------------------------------------------------------------------------------------------
-# Discrete Dirac's delta function (dij = 1 if i=j, dij = 0 if i!=j)
+# Discrete Dirac's delta function (dij = 1 if i=j, dij = 0 if i!=j).
 def Dd(i,j):
     if not isinstance(i,int) or not isinstance(j,int):
-        print('error:not integer')
+          print('\nAbort: The discrete Dirac\'s delta function only accepts two ' + \
+                'integer indexes as arguments.\n')
+          sys.exit(1)
     value = 1 if i == j else 0
     return value
 # ------------------------------------------------------------------------------------------
-# Compute the elasticity tensor according to the strain formulation, problem type and
-# material constitutive model, storing it in matricial form afterwards. The elasticity
-# tensor is described as follows:
+# Compute the small strain elasticity tensor according to the problem type and material
+# constitutive model. Then store it in matricial form following Kelvin notation.
+#
+# The elasticity tensor is described as follows:
 #
 # A. Small strain:
 #
@@ -366,37 +399,35 @@ def Dd(i,j):
 #                                 | I denotes the second-order identity tensor
 #                                 | IIsym denotes the fourth-order symmetric project. tensor
 #
-#      A.1.1 2D problem (plane strain):
-#                            _                   _
-#                           | 1-v   v      0      | (11)
-#          De =  E/(2*(1+v))|  v   1-v     0      | (22)
-#                           |_ 0    0   0.5(1-2v)_| (12)
+#      A.1.1 2D problem (plane strain) - Kelvin notation:
+#                            _                _
+#                           | 1-v   v      0   | (11)
+#          De =  E/(2*(1+v))|  v   1-v     0   | (22)
+#                           |_ 0    0   (1-2v)_| (12)
 #
-#      A.1.2 2D problem (plane stress):
-#                           _                _
-#                          |  1   v     0     | (11)
-#          De =  E/(1-v**2)|  v   1     0     | (22)
-#                          |_ 0   0  0.5(1-v)_| (12)
+#      A.1.2 2D problem (plane stress) - Kelvin notation:
+#                           _              _
+#                          |  1   v     0   | (11)
+#          De =  E/(1-v**2)|  v   1     0   | (22)
+#                          |_ 0   0   (1-v)_| (12)
 #
-#     A.1.3 2D problem (axisymmetric):
+#     A.1.3 2D problem (axisymmetric) - Kelvin notation:
+#                            _                     _
+#                           | 1-v   v      0     v  | (11)
+#          De =  E/(2*(1+v))|  v   1-v     0     v  | (22)
+#                           |  0    0   (1-2v)   0  | (12)
+#                           |_ v    v      0    1-v_| (33)
 #
-#                            _                        _
-#                           | 1-v   v      0        v  | (11)
-#          De =  E/(2*(1+v))|  v   1-v     0        v  | (22)
-#                           |  0    0   0.5(1-2v)   0  | (12)
-#                           |_ v    v      0       1-v_| (33)
+#     A.1.4 3D problem - Kelvin notation:
+#                            _                                    _
+#                           | 1-v   v    v     0       0       0   | (11)
+#                           |  v   1-v   v     0       0       0   | (22)
+#          De =  E/(2*(1+v))|  v    v  1-v     0       0       0   | (33)
+#                           |  0    0    0  (1-2v)     0       0   | (12)
+#                           |  0    0    0     0    (1-2v)     0   | (23)
+#                           |_ 0    0    0     0       0    (1-2v)_| (13)
 #
-#
-#     A.1.4 3D problem:
-#                            _                                               _
-#                           | 1-v   v    v       0          0          0      | (11)
-#                           |  v   1-v   v       0          0          0      | (22)
-#          De =  E/(2*(1+v))|  v    v  1-v       0          0          0      | (33)
-#                           |  0    0    0   0.5(1-2v)      0          0      | (12)
-#                           |  0    0    0       0      0.5(1-2v)      0      | (23)
-#                           |_ 0    0    0       0          0      0.5(1-2v) _| (13)
-#
-#    Note: E and v denote the Young's Modulus and the Poisson ratio respectively.
+#    Note: E and v denote the Young modulus and the Poisson ratio respectively.
 #
 def getElasticityTensor(strain_formulation,problem_type,n_dim,properties):
     # Compute elasticity tensor according to the strain formulation, problem type and
@@ -413,13 +444,13 @@ def getElasticityTensor(strain_formulation,problem_type,n_dim,properties):
         # 2D problem (plane strain)
         if problem_type == 1:
             De_tensor = lam*FODiagTrace + 2.0*miu*FOSym
-            De_matrix = tensorOperations.setTensorToMatrix(De_tensor,True)
+            De_tensor_mf = tensorOperations.setTensorToMatrix(De_tensor,True)
         # 3D problem
         elif problem_type == 4:
             De_tensor = lam*FODiagTrace + 2.0*miu*FOSym
-            De_matrix = tensorOperations.setTensorToMatrix(De_tensor,True)
+            De_tensor_mf = tensorOperations.setTensorToMatrix(De_tensor,True)
     # Return
-    return De_matrix
+    return De_tensor_mf
 
 #                                                                                    Testing
 # ==========================================================================================
@@ -436,26 +467,3 @@ n_dim = 2
 n_voxels = 0
 n_voxels_dir = 0
 regular_grid = 0
-
-#function(strain_formulation,problem_type,n_dim,n_voxels,n_voxels_dir,regular_grid,n_material_phases,material_properties)
-
-
-# Set strain components according to problem type (move to readInputData?)
-if problem_type == 1:
-    strain_list = ['11','22','12']
-elif problem_type == 4:
-    strain_list = ['11','22','33','12','23','13']
-# Set mapping between Green operator fourth-order tensor and storing matrix
-aux = list(it.product(strain_list,strain_list))
-fo_indexes = list()
-mat_indexes = list()
-for i in range(len(strain_list)**2):
-    fo_indexes.append([int(x)-1 for x in list(aux[i][0]+aux[i][1])])
-    mat_indexes.append([x for x in \
-                       [strain_list.index(aux[i][0]),strain_list.index(aux[i][1])]])
-# Initialize Green operator
-GreenOperator = {str(comp[0]+1)+str(comp[1]+1): None for comp in mat_indexes}
-
-for i in range(len(strain_list)**2):
-    print(mat_indexes[i],'>',fo_indexes[i], ' factor:', kelvinFactor(mat_indexes[i],mat_indexes))
-print(GreenOperator)
