@@ -285,6 +285,46 @@ def displayError(code,*args):
                    indent + 'The elastic property - {} - of material phase {} hasn\'t ' + \
                    'been specified or has been ' + '\n' + \
                    indent + 'specified more than once in the input data file.'
+    elif code == 'E00023':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'Invalid tensor order.'
+    elif code == 'E00024':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'Invalid component in component list.'
+    elif code == 'E00025':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'Invalid tensor dimensions.'
+    elif code == 'E00026':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'Duplicated component in component list.'
+    elif code == 'E00027':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'Invalid number of components in component list.'
+    elif code == 'E00028':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'Invalid number of components in tensor matricial form.'
+    elif code == 'E00029':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'Fourth-order tensor matricial form must be a square matrix.'
+    elif code == 'E00030':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'Tensor matricial form must be a vector or a matrix.'
     #print(template_header.format(*header,width=output_width))
     #print(template.format(*values,width=output_width))
     #print(template_footer.format(*footer,width=output_width))
@@ -292,7 +332,7 @@ def displayError(code,*args):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display error
     info.print2(template_header.format(*header,width=output_width))
-    info.print2(template.format(*error,width=output_width))
+    info.print2(template.format(*values,width=output_width))
     info.print2(template_footer.format(*footer,width=output_width))
     # Abort program
     sys.exit(1)

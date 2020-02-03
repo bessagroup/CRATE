@@ -64,7 +64,7 @@ def setIdentityTensors(n_dim):
     # Return
     return [SOId,FOId,FOTransp,FOSym,FODiagTrace,FODevProj,FODevProjSym]
 #
-#                                                   			Tensorial < > Matricial Form
+#                                                               Tensorial < > Matricial Form
 # ==========================================================================================
 # Store a given second-order or fourth-order tensor in matricial form for a given number of
 # dimensions and given ordered component list. If the second-order tensor is symmetric or
@@ -143,149 +143,162 @@ def setIdentityTensors(n_dim):
 # Note: The sr() stands for square-root of ().
 #
 def setTensorMatricialForm(tensor,n_dim,comp_list):
-	# Set tensor order
-	tensor_order = len(tensor.shape)
-	# Check input arguments validity
-	if tensor_order not in [2,4]:
-		print('Invalid tensor order.')
-	elif any([ int(x) not in range(1,n_dim+1) for x in list(''.join(comp_list))]):
-		print('Invalid component in component list.')
-	elif any([tensor.shape[i] != n_dim for i in range(len(tensor.shape))]):
-		print('Invalid tensor dimensions.')
-	elif any([len(comp) != 2 for comp in comp_list]):
-		print('Invalid component in component list.')
-	elif len(list(dict.fromkeys(comp_list))) != len(comp_list):
-		print('Duplicated component in component list.')
-	# Set Kelvin notation flag
-	if len(comp_list) == n_dim**2:
-		isKelvinNotation = False
-	elif len(comp_list) == sum(range(n_dim+1)):
-		isKelvinNotation = True
-	else:
-		print('Invalid number of components in component list.')
-	# Store tensor according to tensor order
-	if tensor_order == 2:
-		# Set second-order and matricial form indexes
-		so_indexes = list()
-		mf_indexes = list()
-		for i in range(len(comp_list)):
-			so_indexes.append([int(x)-1 for x in list(comp_list[i])])
-			mf_indexes.append( comp_list.index(comp_list[i]))
-		# Initialize tensor matricial form
-		tensor_mf = np.zeros(len(comp_list))
-		# Store tensor in matricial form
-		for i in range(len(mf_indexes)):
-			mf_idx = mf_indexes[i]
-			so_idx = tuple(so_indexes[i])
-			factor = 1.0
-			if isKelvinNotation and not so_idx[0] == so_idx[1]:
-				factor = math.sqrt(2)
-			tensor_mf[mf_idx] = factor*tensor[so_idx]
-	elif tensor_order == 4:
-		# Set cartesian product of component list
-		comps = list(it.product(comp_list,comp_list))
-		# Set fourth-order and matricial form indexes
-		fo_indexes = list()
-		mf_indexes = list()
-		for i in range(len(comp_list)**2):
-			fo_indexes.append([int(x)-1 for x in list(comps[i][0]+comps[i][1])])
-			mf_indexes.append([x for x in \
-				               [comp_list.index(comps[i][0]),comp_list.index(comps[i][1])]])
-		# Initialize tensor matricial form
-		tensor_mf = np.zeros((len(comp_list),len(comp_list)))
-		# Store tensor in matricial form
-		for i in range(len(mf_indexes)):
-			mf_idx = tuple(mf_indexes[i])
-			fo_idx = tuple(fo_indexes[i])
-			factor = 1.0
-			if isKelvinNotation and not (fo_idx[0] == fo_idx[1] and fo_idx[2] == fo_idx[3]):
-				factor = factor*math.sqrt(2) if fo_idx[0] != fo_idx[1] else factor
-				factor = factor*math.sqrt(2) if fo_idx[2] != fo_idx[3] else factor
-			tensor_mf[mf_idx] = factor*tensor[fo_idx]
-	# Return
-	return tensor_mf
+    # Set tensor order
+    tensor_order = len(tensor.shape)
+    # Check input arguments validity
+    if tensor_order not in [2,4]:
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00023',location.filename,location.lineno+1)
+    elif any([ int(x) not in range(1,n_dim+1) for x in list(''.join(comp_list))]):
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00024',location.filename,location.lineno+1)
+    elif any([tensor.shape[i] != n_dim for i in range(len(tensor.shape))]):
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00025',location.filename,location.lineno+1)
+    elif any([len(comp) != 2 for comp in comp_list]):
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00024',location.filename,location.lineno+1)
+    elif len(list(dict.fromkeys(comp_list))) != len(comp_list):
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00026',location.filename,location.lineno+1)
+    # Set Kelvin notation flag
+    if len(comp_list) == n_dim**2:
+        isKelvinNotation = False
+    elif len(comp_list) == sum(range(n_dim+1)):
+        isKelvinNotation = True
+    else:
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00027',location.filename,location.lineno+1)
+    # Store tensor according to tensor order
+    if tensor_order == 2:
+        # Set second-order and matricial form indexes
+        so_indexes = list()
+        mf_indexes = list()
+        for i in range(len(comp_list)):
+            so_indexes.append([int(x)-1 for x in list(comp_list[i])])
+            mf_indexes.append( comp_list.index(comp_list[i]))
+        # Initialize tensor matricial form
+        tensor_mf = np.zeros(len(comp_list))
+        # Store tensor in matricial form
+        for i in range(len(mf_indexes)):
+            mf_idx = mf_indexes[i]
+            so_idx = tuple(so_indexes[i])
+            factor = 1.0
+            if isKelvinNotation and not so_idx[0] == so_idx[1]:
+                factor = math.sqrt(2)
+            tensor_mf[mf_idx] = factor*tensor[so_idx]
+    elif tensor_order == 4:
+        # Set cartesian product of component list
+        comps = list(it.product(comp_list,comp_list))
+        # Set fourth-order and matricial form indexes
+        fo_indexes = list()
+        mf_indexes = list()
+        for i in range(len(comp_list)**2):
+            fo_indexes.append([int(x)-1 for x in list(comps[i][0]+comps[i][1])])
+            mf_indexes.append([x for x in \
+                               [comp_list.index(comps[i][0]),comp_list.index(comps[i][1])]])
+        # Initialize tensor matricial form
+        tensor_mf = np.zeros((len(comp_list),len(comp_list)))
+        # Store tensor in matricial form
+        for i in range(len(mf_indexes)):
+            mf_idx = tuple(mf_indexes[i])
+            fo_idx = tuple(fo_indexes[i])
+            factor = 1.0
+            if isKelvinNotation and not (fo_idx[0] == fo_idx[1] and fo_idx[2] == fo_idx[3]):
+                factor = factor*math.sqrt(2) if fo_idx[0] != fo_idx[1] else factor
+                factor = factor*math.sqrt(2) if fo_idx[2] != fo_idx[3] else factor
+            tensor_mf[mf_idx] = factor*tensor[fo_idx]
+    # Return
+    return tensor_mf
 # ------------------------------------------------------------------------------------------
 def getTensorFromMatricialForm(tensor_mf,n_dim,comp_list):
-	# Set tensor order
-	if len(tensor_mf.shape) == 1:
-		tensor_order = 2
-		if tensor_mf.shape[0] != n_dim**2 and tensor_mf.shape[0] != sum(range(n_dim+1)):
-			print('Invalid number of components in tensor matricial form.')
-	elif len(tensor_mf.shape) == 2:
-		tensor_order = 4
-		if tensor_mf.shape[0] != tensor_mf.shape[1]:
-			print('Fourth-order tensor matricial form must be a square matrix.')
-		elif tensor_mf.shape[0] != n_dim**2 and tensor_mf.shape[0] != sum(range(n_dim+1)):
-			print('Invalid number of components in tensor matricial form.')
-	else:
-		print('Tensor matricial form must be a vector or a matrix.')
-	# Check input arguments validity
-	if any([ int(x) not in range(1,n_dim+1) for x in list(''.join(comp_list))]):
-		print('Invalid component in component list.')
-	elif any([len(comp) != 2 for comp in comp_list]):
-		print('Invalid component in component list.')
-	elif len(list(dict.fromkeys(comp_list))) != len(comp_list):
-		print('Duplicated component in component list.')
-	# Set Kelvin notation flag
-	if len(comp_list) == n_dim**2:
-		isKelvinNotation = False
-	elif len(comp_list) == sum(range(n_dim+1)):
-		isKelvinNotation = True
-	else:
-		print('Invalid number of components in component list.')
-	# Get tensor according to tensor order
-	if tensor_order == 2:
-		# Set second-order and matricial form indexes
-		so_indexes = list()
-		mf_indexes = list()
-		for i in range(len(comp_list)):
-			so_indexes.append([int(x)-1 for x in list(comp_list[i])])
-			mf_indexes.append( comp_list.index(comp_list[i]))
-		# Initialize tensor
-		tensor = np.zeros(tensor_order*(n_dim ,))
-		# Get tensor from matricial form
-		for i in range(len(mf_indexes)):
-			mf_idx = mf_indexes[i]
-			so_idx = tuple(so_indexes[i])
-			factor = 1.0
-			if isKelvinNotation and not so_idx[0] == so_idx[1]:
-				factor = math.sqrt(2)
-				tensor[so_idx[::-1]] = (1.0/factor)*tensor_mf[mf_idx]
-			tensor[so_idx] = (1.0/factor)*tensor_mf[mf_idx]
-	elif tensor_order == 4:
-		# Set cartesian product of component list
-		comps = list(it.product(comp_list,comp_list))
-		# Set fourth-order and matricial form indexes
-		mf_indexes = list()
-		fo_indexes = list()
-		for i in range(len(comp_list)**2):
-			fo_indexes.append([int(x)-1 for x in list(comps[i][0]+comps[i][1])])
-			mf_indexes.append([x for x in \
-				               [comp_list.index(comps[i][0]),comp_list.index(comps[i][1])]])
-		# Initialize tensor
-		tensor = np.zeros(tensor_order*(n_dim ,))
-		# Get tensor from matricial form
-		for i in range(len(mf_indexes)):
-			mf_idx = tuple(mf_indexes[i])
-			fo_idx = tuple(fo_indexes[i])
-			factor = 1.0
-			if isKelvinNotation and not (fo_idx[0] == fo_idx[1] and fo_idx[2] == fo_idx[3]):
-				factor = factor*math.sqrt(2) if fo_idx[0] != fo_idx[1] else factor
-				factor = factor*math.sqrt(2) if fo_idx[2] != fo_idx[3] else factor
-				if fo_idx[0] != fo_idx[1] and fo_idx[2] != fo_idx[3]:
-					tensor[tuple(fo_idx[1::-1]+fo_idx[2:])] = (1.0/factor)*tensor_mf[mf_idx]
-					tensor[tuple(fo_idx[:2]+fo_idx[3:1:-1])] = \
+    # Set tensor order
+    if len(tensor_mf.shape) == 1:
+        tensor_order = 2
+        if tensor_mf.shape[0] != n_dim**2 and tensor_mf.shape[0] != sum(range(n_dim+1)):
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayError('E00028',location.filename,location.lineno+1)
+    elif len(tensor_mf.shape) == 2:
+        tensor_order = 4
+        if tensor_mf.shape[0] != tensor_mf.shape[1]:
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayError('E00029',location.filename,location.lineno+1)
+        elif tensor_mf.shape[0] != n_dim**2 and tensor_mf.shape[0] != sum(range(n_dim+1)):
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayError('E00028',location.filename,location.lineno+1)
+    else:
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00030',location.filename,location.lineno+1)
+    # Check input arguments validity
+    if any([ int(x) not in range(1,n_dim+1) for x in list(''.join(comp_list))]):
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00024',location.filename,location.lineno+1)
+    elif any([len(comp) != 2 for comp in comp_list]):
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00024',location.filename,location.lineno+1)
+    elif len(list(dict.fromkeys(comp_list))) != len(comp_list):
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00026',location.filename,location.lineno+1)
+    # Set Kelvin notation flag
+    if len(comp_list) == n_dim**2:
+        isKelvinNotation = False
+    elif len(comp_list) == sum(range(n_dim+1)):
+        isKelvinNotation = True
+    else:
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00027',location.filename,location.lineno+1)
+    # Get tensor according to tensor order
+    if tensor_order == 2:
+        # Set second-order and matricial form indexes
+        so_indexes = list()
+        mf_indexes = list()
+        for i in range(len(comp_list)):
+            so_indexes.append([int(x)-1 for x in list(comp_list[i])])
+            mf_indexes.append( comp_list.index(comp_list[i]))
+        # Initialize tensor
+        tensor = np.zeros(tensor_order*(n_dim ,))
+        # Get tensor from matricial form
+        for i in range(len(mf_indexes)):
+            mf_idx = mf_indexes[i]
+            so_idx = tuple(so_indexes[i])
+            factor = 1.0
+            if isKelvinNotation and not so_idx[0] == so_idx[1]:
+                factor = math.sqrt(2)
+                tensor[so_idx[::-1]] = (1.0/factor)*tensor_mf[mf_idx]
+            tensor[so_idx] = (1.0/factor)*tensor_mf[mf_idx]
+    elif tensor_order == 4:
+        # Set cartesian product of component list
+        comps = list(it.product(comp_list,comp_list))
+        # Set fourth-order and matricial form indexes
+        mf_indexes = list()
+        fo_indexes = list()
+        for i in range(len(comp_list)**2):
+            fo_indexes.append([int(x)-1 for x in list(comps[i][0]+comps[i][1])])
+            mf_indexes.append([x for x in \
+                               [comp_list.index(comps[i][0]),comp_list.index(comps[i][1])]])
+        # Initialize tensor
+        tensor = np.zeros(tensor_order*(n_dim ,))
+        # Get tensor from matricial form
+        for i in range(len(mf_indexes)):
+            mf_idx = tuple(mf_indexes[i])
+            fo_idx = tuple(fo_indexes[i])
+            factor = 1.0
+            if isKelvinNotation and not (fo_idx[0] == fo_idx[1] and fo_idx[2] == fo_idx[3]):
+                factor = factor*math.sqrt(2) if fo_idx[0] != fo_idx[1] else factor
+                factor = factor*math.sqrt(2) if fo_idx[2] != fo_idx[3] else factor
+                if fo_idx[0] != fo_idx[1] and fo_idx[2] != fo_idx[3]:
+                    tensor[tuple(fo_idx[1::-1]+fo_idx[2:])] = (1.0/factor)*tensor_mf[mf_idx]
+                    tensor[tuple(fo_idx[:2]+fo_idx[3:1:-1])] = \
                                                               (1.0/factor)*tensor_mf[mf_idx]
-					tensor[tuple(fo_idx[1::-1]+fo_idx[3:1:-1])] = \
+                    tensor[tuple(fo_idx[1::-1]+fo_idx[3:1:-1])] = \
                                                               (1.0/factor)*tensor_mf[mf_idx]
-				elif fo_idx[0] != fo_idx[1]:
-					tensor[tuple(fo_idx[1::-1]+fo_idx[2:])] = (1.0/factor)*tensor_mf[mf_idx]
-				elif fo_idx[2] != fo_idx[3]:
-					tensor[tuple(fo_idx[:2]+fo_idx[3:1:-1])] = \
-                                                              (1.0/factor)*tensor_mf[mf_idx]
-			tensor[fo_idx] = (1.0/factor)*tensor_mf[mf_idx]
-	# Return
-	return tensor
+                elif fo_idx[0] != fo_idx[1]:
+                    tensor[tuple(fo_idx[1::-1]+fo_idx[2:])] = (1.0/factor)*tensor_mf[mf_idx]
+                elif fo_idx[2] != fo_idx[3]:
+                    tensor[tuple(fo_idx[:2]+fo_idx[3:1:-1])] = (1.0/factor)*tensor_mf[mf_idx]
+            tensor[fo_idx] = (1.0/factor)*tensor_mf[mf_idx]
+    # Return
+    return tensor
 #
 #                                       Check identity tensors and tensor-matrix conversions
 #                                                                                (temporary)
@@ -313,7 +326,7 @@ if False:
     print('\nRecovered original tensor?',np.all(original_tensor==tensor))
     print('\n' + 72*'-' + '\n')
 
-if False:
+if True:
     # Set functions being validated
     val_functions = ['setIdentityTensors()',]
     # Set function arguments
