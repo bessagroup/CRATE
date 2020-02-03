@@ -15,6 +15,8 @@ import numpy as np
 import math
 # Inspect file name and line
 import inspect
+# Generate efficient iterators
+import itertools as it
 # Display errors, warnings and built-in exceptions
 import errors
 #
@@ -62,11 +64,23 @@ def setIdentityTensors(n_dim):
     # Return
     return [SOId,FOId,FOTransp,FOSym,FODiagTrace,FODevProj,FODevProjSym]
 #
-#                                                                Tensor - Matrix conversions
+#                                                   			Tensorial < > Matricial Form
 # ==========================================================================================
-# Store a given second-order or fourth-order tensor in matricial form. If the second-order
-# tensor is symmetric or the fourth-order tensor has minor symmetry, then the Kelvin
-# notation is employed to perform the storage. The storage is described as follows:
+# Store a given second-order or fourth-order tensor in matricial form for a given number of
+# dimensions and given ordered component list. If the second-order tensor is symmetric or
+# the fourth-order tensor has minor symmetry (component list only contains independent
+# components), then the Kelvin notation is employed to perform the storage. The tensor
+# recovery from the associated matricial form follows an precisely inverse procedure.
+#
+# For instance, assume the following four examples:
+#
+# 	(a) n_dim = 2, comp_list = ['11','22','12'] (symmetry)
+# 	(b) n_dim = 3, comp_list = ['11','22','33','12','23','13'] (symmetry)
+# 	(c) n_dim = 2, comp_list = ['11','21','12','22']
+# 	(d) n_dim = 3, comp_list = ['11','21','31','21','22','32','13','23','33']
+#
+# For a given second-order or fourth-order tensor, the storage is performed as described
+# below:
 #
 # A. Second-order tensor Aij:
 #
@@ -128,157 +142,221 @@ def setIdentityTensors(n_dim):
 #
 # Note: The sr() stands for square-root of ().
 #
-def setTensorToMatrix(tensor,isSym):
-    # Check if valid second-order or fourth-order tensor
-    if np.ndim(tensor) not in [2,4]:
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00018',location.filename,location.lineno+1)
-    elif not all(x == tensor.shape[0] for x in tensor.shape) or \
-                                                               tensor.shape[0] not in [2,3]:
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00019',location.filename,location.lineno+1)
-    # Set dimension
-    n_dim = tensor.shape[0]
-    # Set matrix storage index order (and weights associated to the Kelvin notation)
-    if n_dim == 2:
-        if isSym:
-            indexes = np.array([[1,1],[2,2],[1,2]])
-            weights = np.array([1,1,math.sqrt(2)])
-        else:
-            indexes = np.array([[1,1],[2,1],[1,2],[2,2]])
-    elif n_dim == 3:
-        if isSym:
-            indexes = np.array([[1,1],[2,2],[3,3],[1,2],[2,3],[1,3]])
-            weights = np.array([1,1,1,math.sqrt(2),math.sqrt(2),math.sqrt(2)])
-        else:
-            indexes = np.array([[1,1],[2,1],[3,1],[1,2],[2,2],[3,2],[1,3],[2,3],[3,3]])
-    # Store tensor in matricial form
-    n_index = indexes.shape[0]
-    if np.ndim(tensor) == 2:
-        matrix = np.zeros(n_index)
-        for iStore in range(n_index):
-            i = indexes[iStore,0] - 1
-            j = indexes[iStore,1] - 1
-            matrix[iStore] = tensor[i,j]
-            if isSym:
-                matrix[iStore] = weights[iStore]*matrix[iStore]
-    elif np.ndim(tensor) ==4:
-        matrix = np.zeros((n_index,n_index))
-        for iStore in range(n_index):
-            for jStore in range(n_index):
-                i = indexes[iStore,0] - 1
-                j = indexes[iStore,1] - 1
-                k = indexes[jStore,0] - 1
-                l = indexes[jStore,1] - 1
-                matrix[iStore,jStore] = tensor[i,j,k,l]
-                if isSym:
-                    matrix[iStore,jStore] = \
-                                       weights[iStore]*weights[jStore]*matrix[iStore,jStore]
-    # Return
-    return matrix
+def setTensorMatricialForm(tensor,n_dim,comp_list):
+	# Set tensor order
+	tensor_order = len(tensor.shape)
+	# Check input arguments validity
+	if tensor_order not in [2,4]:
+		print('Invalid tensor order.')
+	elif any([ int(x) not in range(1,n_dim+1) for x in list(''.join(comp_list))]):
+		print('Invalid component in component list.')
+	elif any([tensor.shape[i] != n_dim for i in range(len(tensor.shape))]):
+		print('Invalid tensor dimensions.')
+	elif any([len(comp) != 2 for comp in comp_list]):
+		print('Invalid component in component list.')
+	elif len(list(dict.fromkeys(comp_list))) != len(comp_list):
+		print('Duplicated component in component list.')
+	# Set Kelvin notation flag
+	if len(comp_list) == n_dim**2:
+		isKelvinNotation = False
+	elif len(comp_list) == sum(range(n_dim+1)):
+		isKelvinNotation = True
+	else:
+		print('Invalid number of components in component list.')
+	# Store tensor according to tensor order
+	if tensor_order == 2:
+		# Set second-order and matricial form indexes
+		so_indexes = list()
+		mf_indexes = list()
+		for i in range(len(comp_list)):
+			so_indexes.append([int(x)-1 for x in list(comp_list[i])])
+			mf_indexes.append( comp_list.index(comp_list[i]))
+		# Initialize tensor matricial form
+		tensor_mf = np.zeros(len(comp_list))
+		# Store tensor in matricial form
+		for i in range(len(mf_indexes)):
+			mf_idx = mf_indexes[i]
+			so_idx = tuple(so_indexes[i])
+			factor = 1.0
+			if isKelvinNotation and not so_idx[0] == so_idx[1]:
+				factor = math.sqrt(2)
+			tensor_mf[mf_idx] = factor*tensor[so_idx]
+	elif tensor_order == 4:
+		# Set cartesian product of component list
+		comps = list(it.product(comp_list,comp_list))
+		# Set fourth-order and matricial form indexes
+		fo_indexes = list()
+		mf_indexes = list()
+		for i in range(len(comp_list)**2):
+			fo_indexes.append([int(x)-1 for x in list(comps[i][0]+comps[i][1])])
+			mf_indexes.append([x for x in \
+				               [comp_list.index(comps[i][0]),comp_list.index(comps[i][1])]])
+		# Initialize tensor matricial form
+		tensor_mf = np.zeros((len(comp_list),len(comp_list)))
+		# Store tensor in matricial form
+		for i in range(len(mf_indexes)):
+			mf_idx = tuple(mf_indexes[i])
+			fo_idx = tuple(fo_indexes[i])
+			factor = 1.0
+			if isKelvinNotation and not (fo_idx[0] == fo_idx[1] and fo_idx[2] == fo_idx[3]):
+				factor = factor*math.sqrt(2) if fo_idx[0] != fo_idx[1] else factor
+				factor = factor*math.sqrt(2) if fo_idx[2] != fo_idx[3] else factor
+			tensor_mf[mf_idx] = factor*tensor[fo_idx]
+	# Return
+	return tensor_mf
 # ------------------------------------------------------------------------------------------
-# Recover a given second-order or fourth-order tensor from its matricial form. If the
-# second-order tensor is symmetric or the fourth-order tensor has minor symmetry, then the
-# associated matricial form follows the Kelvin notation.
-def getTensorFromMatrix(matrix):
-    # Check if valid matrix
-    if np.ndim(matrix) not in [1,2]:
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00020',location.filename,location.lineno+1)
-    elif np.ndim(matrix) == 2 and matrix.shape[0] != matrix.shape[1]:
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00020',location.filename,location.lineno+1)
-    elif matrix.shape[0] not in [3,4,6,9]:
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00021',location.filename,location.lineno+1)
-    # Set dimension
-    if matrix.shape[0] in [3,4]:
-        n_dim = 2
-    else:
-        n_dim = 3
-    # Set matrix storage index order (and weights associated to the Kelvin notation)
-    if n_dim == 2:
-        if matrix.shape[0] == 3:
-            indexes = np.array([[1,1],[2,2],[1,2]])
-            weights = np.array([1,1,math.sqrt(2)])
-            isSym = True
-        else:
-            indexes = np.array([[1,1],[2,1],[1,2],[2,2]])
-            isSym = False
-    elif n_dim == 3:
-        if matrix.shape[0] == 6:
-            indexes = np.array([[1,1],[2,2],[3,3],[1,2],[2,3],[1,3]])
-            weights = np.array([1,1,1,math.sqrt(2),math.sqrt(2),math.sqrt(2)])
-            isSym = True
-        else:
-            indexes = np.array([[1,1],[2,1],[3,1],[1,2],[2,2],[3,2],[1,3],[2,3],[3,3]])
-            isSym = False
-    # Initialize tensor
-    if np.ndim(matrix) == 1:
-        if matrix.shape[0] in [3,4]:
-            tensor = np.zeros((2,2))
-        else:
-            tensor = np.zeros((3,3))
-    else:
-        if matrix.shape[0] in [3,4]:
-            tensor = np.zeros((2,2,2,2))
-        else:
-            tensor = np.zeros((3,3,3,3))
-    # Recover tensor from matrix
-    n_index = indexes.shape[0]
-    if np.ndim(tensor) == 2:
-        for iStore in range(n_index):
-            i = indexes[iStore,0] - 1
-            j = indexes[iStore,1] - 1
-            tensor[i,j] = matrix[iStore]
-            if isSym and iStore > n_dim - 1:
-                tensor[i,j] = (1.0/weights[iStore])*tensor[i,j]
-                tensor[j,i] = tensor[i,j]
-    else:
-        for iStore in range(n_index):
-            for jStore in range(n_index):
-                i = indexes[iStore,0] - 1
-                j = indexes[iStore,1] - 1
-                k = indexes[jStore,0] - 1
-                l = indexes[jStore,1] - 1
-                tensor[i,j,k,l] = matrix[iStore,jStore]
-                if isSym and (iStore > n_dim - 1 or jStore > n_dim - 1):
-                    tensor[i,j,k,l] = \
-                                 (1.0/weights[iStore])*(1.0/weights[jStore])*tensor[i,j,k,l]
-                    tensor[j,i,k,l] = tensor[i,j,k,l]
-                    tensor[i,j,l,k] = tensor[i,j,k,l]
-                    tensor[j,i,l,k] = tensor[i,j,k,l]
-    # Return
-    return tensor
+def getTensorFromMatricialForm(tensor_mf,n_dim,comp_list):
+	# Set tensor order
+	if len(tensor_mf.shape) == 1:
+		tensor_order = 2
+		if tensor_mf.shape[0] != n_dim**2 and tensor_mf.shape[0] != sum(range(n_dim+1)):
+			print('Invalid number of components in tensor matricial form.')
+	elif len(tensor_mf.shape) == 2:
+		tensor_order = 4
+		if tensor_mf.shape[0] != tensor_mf.shape[1]:
+			print('Fourth-order tensor matricial form must be a square matrix.')
+		elif tensor_mf.shape[0] != n_dim**2 and tensor_mf.shape[0] != sum(range(n_dim+1)):
+			print('Invalid number of components in tensor matricial form.')
+	else:
+		print('Tensor matricial form must be a vector or a matrix.')
+	# Check input arguments validity
+	if any([ int(x) not in range(1,n_dim+1) for x in list(''.join(comp_list))]):
+		print('Invalid component in component list.')
+	elif any([len(comp) != 2 for comp in comp_list]):
+		print('Invalid component in component list.')
+	elif len(list(dict.fromkeys(comp_list))) != len(comp_list):
+		print('Duplicated component in component list.')
+	# Set Kelvin notation flag
+	if len(comp_list) == n_dim**2:
+		isKelvinNotation = False
+	elif len(comp_list) == sum(range(n_dim+1)):
+		isKelvinNotation = True
+	else:
+		print('Invalid number of components in component list.')
+	# Get tensor according to tensor order
+	if tensor_order == 2:
+		# Set second-order and matricial form indexes
+		so_indexes = list()
+		mf_indexes = list()
+		for i in range(len(comp_list)):
+			so_indexes.append([int(x)-1 for x in list(comp_list[i])])
+			mf_indexes.append( comp_list.index(comp_list[i]))
+		# Initialize tensor
+		tensor = np.zeros(tensor_order*(n_dim ,))
+		# Get tensor from matricial form
+		for i in range(len(mf_indexes)):
+			mf_idx = mf_indexes[i]
+			so_idx = tuple(so_indexes[i])
+			factor = 1.0
+			if isKelvinNotation and not so_idx[0] == so_idx[1]:
+				factor = math.sqrt(2)
+				tensor[so_idx[::-1]] = (1.0/factor)*tensor_mf[mf_idx]
+			tensor[so_idx] = (1.0/factor)*tensor_mf[mf_idx]
+	elif tensor_order == 4:
+		# Set cartesian product of component list
+		comps = list(it.product(comp_list,comp_list))
+		# Set fourth-order and matricial form indexes
+		mf_indexes = list()
+		fo_indexes = list()
+		for i in range(len(comp_list)**2):
+			fo_indexes.append([int(x)-1 for x in list(comps[i][0]+comps[i][1])])
+			mf_indexes.append([x for x in \
+				               [comp_list.index(comps[i][0]),comp_list.index(comps[i][1])]])
+		# Initialize tensor
+		tensor = np.zeros(tensor_order*(n_dim ,))
+		# Get tensor from matricial form
+		for i in range(len(mf_indexes)):
+			mf_idx = tuple(mf_indexes[i])
+			fo_idx = tuple(fo_indexes[i])
+			factor = 1.0
+			if isKelvinNotation and not (fo_idx[0] == fo_idx[1] and fo_idx[2] == fo_idx[3]):
+				factor = factor*math.sqrt(2) if fo_idx[0] != fo_idx[1] else factor
+				factor = factor*math.sqrt(2) if fo_idx[2] != fo_idx[3] else factor
+				if fo_idx[0] != fo_idx[1] and fo_idx[2] != fo_idx[3]:
+					tensor[tuple(fo_idx[1::-1]+fo_idx[2:])] = (1.0/factor)*tensor_mf[mf_idx]
+					tensor[tuple(fo_idx[:2]+fo_idx[3:1:-1])] = \
+                                                              (1.0/factor)*tensor_mf[mf_idx]
+					tensor[tuple(fo_idx[1::-1]+fo_idx[3:1:-1])] = \
+                                                              (1.0/factor)*tensor_mf[mf_idx]
+				elif fo_idx[0] != fo_idx[1]:
+					tensor[tuple(fo_idx[1::-1]+fo_idx[2:])] = (1.0/factor)*tensor_mf[mf_idx]
+				elif fo_idx[2] != fo_idx[3]:
+					tensor[tuple(fo_idx[:2]+fo_idx[3:1:-1])] = \
+                                                              (1.0/factor)*tensor_mf[mf_idx]
+			tensor[fo_idx] = (1.0/factor)*tensor_mf[mf_idx]
+	# Return
+	return tensor
 #
 #                                       Check identity tensors and tensor-matrix conversions
 #                                                                                (temporary)
 # ==========================================================================================
 if False:
+    # Set functions being validated
+    val_functions = ['setMatricialForm()','getTensorFromMatricialForm()']
+    # Set functions arguments
+    tensor = np.ones((3,3,3,3))
+    n_dim = 3
+    comp_list = ['11','22','33','12','23','13']
+    # Save original tensor
+    original_tensor = tensor
+    # Set tensor matricial form
+    tensor_mf = setTensorMatricialForm(tensor,n_dim,comp_list)
+    # Get tensor back from matricial form
+    tensor = getTensorFromMatricialForm(tensor_mf,n_dim,comp_list)
+    # Display validation
+    print('\nValidation: ',len(val_functions)*'{}, '.format(*val_functions), 3*'\b', ' ')
+    print(72*'-')
+    print('\nNumber of dimensions: ',n_dim)
+    print('Component list      : ',comp_list)
+    print('\nTensor:'+'\n\n',original_tensor)
+    print('\nMatricial form:'+'\n\n',tensor_mf)
+    print('\nRecovered original tensor?',np.all(original_tensor==tensor))
+    print('\n' + 72*'-' + '\n')
+
+if False:
+    # Set functions being validated
+    val_functions = ['setIdentityTensors()',]
+    # Set function arguments
+    n_dim = 3
     # Set identity tensors
-    SOId,FOId,FOTransp,FOSym,FODiagTrace,FODevProj,FODevProjSym = setIdentityTensors(3)
-    # Print identity tensors in matricial form
+    SOId,FOId,FOTransp,FOSym,FODiagTrace,FODevProj,FODevProjSym = setIdentityTensors(n_dim)
+    # Display validation
+    print('\nValidation: ',len(val_functions)*'{}, '.format(*val_functions), 3*'\b', ' ')
+    print(72*'-')
     print('\nCheck identity tensors:')
     print('\nSOId (matricial form):')
-    print(setTensorToMatrix(SOId,False))
+    comp_list = ['11','22','33','12','23','13']
+    print(setTensorMatricialForm(SOId,n_dim,comp_list))
     print('\nFOId (matricial form):')
-    print(setTensorToMatrix(FOId,False))
+    comp_list = ['11','21','31','12','22','32','13','23','33']
+    print(setTensorMatricialForm(FOId,n_dim,comp_list))
     print('\nFOTransp (matricial form):')
-    print(setTensorToMatrix(FOTransp,False))
+    comp_list = ['11','21','31','12','22','32','13','23','33']
+    print(setTensorMatricialForm(FOTransp,n_dim,comp_list))
     print('\nFOSym (matricial form):')
-    print(setTensorToMatrix(FOSym,True))
+    comp_list = ['11','22','33','12','23','13']
+    print(setTensorMatricialForm(FOSym,n_dim,comp_list))
     print('\nFODiagTrace (matricial form):')
-    print(setTensorToMatrix(FODiagTrace,True))
+    comp_list = ['11','22','33','12','23','13']
+    print(setTensorMatricialForm(FODiagTrace,n_dim,comp_list))
     print('\nFODevProj (matricial form):')
-    print(setTensorToMatrix(FODevProj,False))
+    comp_list = ['11','21','31','12','22','32','13','23','33']
+    print(setTensorMatricialForm(FODevProj,n_dim,comp_list))
     # Check tensor-matrix conversions
     print('\nCheck tensor-matrix conversions:\n')
-    print('SOId:       ', np.all(getTensorFromMatrix(setTensorToMatrix(SOId,True))==SOId))
-    print('FOId:       ', np.all(getTensorFromMatrix(setTensorToMatrix(FOId,False))==FOId))
+    print('SOId:       ', np.all(getTensorFromMatricialForm(setTensorMatricialForm(SOId,\
+                                                   n_dim,comp_list),n_dim,comp_list)==SOId))
+    print('FOId:       ', np.all(getTensorFromMatricialForm(setTensorMatricialForm(FOId,\
+                                                   n_dim,comp_list),n_dim,comp_list)==FOId))
     print('FOTransp:   ', \
-                   np.all(getTensorFromMatrix(setTensorToMatrix(FOTransp,False))==FOTransp))
-    print('FOSym:      ', np.all(getTensorFromMatrix(setTensorToMatrix(FOSym,True))==FOSym))
+                   np.all(getTensorFromMatricialForm(setTensorMatricialForm(FOTransp,\
+                                               n_dim,comp_list),n_dim,comp_list)==FOTransp))
+    print('FOSym:      ', np.all(getTensorFromMatricialForm(setTensorMatricialForm(FOSym,\
+                                                  n_dim,comp_list),n_dim,comp_list)==FOSym))
     print('FODiagTrace:', \
-              np.all(getTensorFromMatrix(setTensorToMatrix(FODiagTrace,True))==FODiagTrace))
+              np.all(getTensorFromMatricialForm(setTensorMatricialForm(FODiagTrace,n_dim,\
+                                                  comp_list),n_dim,comp_list)==FODiagTrace))
     print('FODevProj:  ', \
-                 np.all(getTensorFromMatrix(setTensorToMatrix(FODevProj,False))==FODevProj))
+                 np.all(getTensorFromMatricialForm(setTensorMatricialForm(FODevProj,n_dim,\
+                                                    comp_list),n_dim,comp_list)==FODevProj))
+    print('\n' + 72*'-' + '\n')
