@@ -300,8 +300,7 @@ def getTensorFromMatricialForm(tensor_mf,n_dim,comp_list):
     # Return
     return tensor
 #
-#                                       Check identity tensors and tensor-matrix conversions
-#                                                                                (temporary)
+#                                                                     Validation (temporary)
 # ==========================================================================================
 if False:
     # Set functions being validated
@@ -326,7 +325,7 @@ if False:
     print('\nRecovered original tensor?',np.all(original_tensor==tensor))
     print('\n' + 72*'-' + '\n')
 
-if True:
+if False:
     # Set functions being validated
     val_functions = ['setIdentityTensors()',]
     # Set function arguments

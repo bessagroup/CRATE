@@ -69,7 +69,7 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
     mac_strain_mf = [ 1.0 , 0 , 0 , 0 , 0 , 0]
     # Set RVE dimensions (this must be argument)
     rve_dims = [1.0,1.0,1.0]
-    # Set strain components according to problem type
+    # Set strain components according to problem type (this must be argument)
     if problem_type == 1:
         comp_list = ['11','22','12']
     elif problem_type == 4:
@@ -98,8 +98,7 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
             else:
                 req_props_vals[req_props[iprop]] = material_properties[match[0][0],1,iphase]
         # Compute elasticity tensor (matricial form) for current material phase
-        De_tensor_mf = getElasticityTensor(strain_formulation,problem_type,n_dim,
-                                                                             req_props_vals)
+        De_tensor_mf = getElasticityTensor(problem_type,n_dim,comp_list,req_props_vals)
         # Store material phase elasticity tensor (matricial form)
         De_tensors_mf.append(De_tensor_mf)
     #
@@ -112,8 +111,8 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
     req_props_vals_ref['E'] = 1.0
     req_props_vals_ref['v'] = 0.3
     # Compute compliance tensor (matricial form)
-    Se_tensor_mf_ref = np.linalg.inv(getElasticityTensor(strain_formulation,problem_type,
-                                                                     n_dim,required_values))
+    Se_tensor_mf_ref = \
+                      np.linalg.inv(getElasticityTensor(problem_type,n_dim,required_values))
     #
     #                                                               Frequency discretization
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -123,7 +122,7 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
         # Set sampling spatial period
         sampling_period = rve_size[i]/n_voxels_dims[i]
         # Set discrete frequencies
-        freqs_dim.append(2*math.pi*np.fft.fftfreq(n_voxels_dim[i],sampling_period))
+        freqs_dims.append(2*math.pi*np.fft.fftfreq(n_voxels_dim[i],sampling_period))
         # >>>> António
         # Set sampling angular frequency
         # sampling_freq = 2*math.pi/sampling_period
@@ -196,7 +195,7 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
             second_term = -(1.0/freq_norm**4)*(freq_coord[fo_idx[0]]*freq_coord[fo_idx[1]]*
                                                freq_coord[fo_idx[2]]*freq_coord[fo_idx[3]])
             # Compute Green operator matricial form component for current voxel
-            Green_operator_vox[comp][voxel_idx] = c1*first_term + c2*second_term)
+            Green_operator_vox[comp][voxel_idx] = c1*first_term + c2*second_term
     #
     #                                                                       Iterative scheme
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -267,7 +266,8 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
                     stress_DFT_0_mf[i] = kelvinFactor(i,comp_list)*\
                                                              stress_DFT_vox[comp][voxel_idx]
             # Build stress tensor (frequency domain)
-            stress_DFT = tensorOperations.getTensorFromMatrix(stress_DFT_mf,True)
+            stress_DFT = \
+                  tensorOperations.getTensorFromMatricialForm(stress_DFT_mf,n_dim,comp_list)
             # Add discrete frequency contribution to discrete error required sum
             sum = sum + \
                      np.norm(tensorOperations.dot21_1(stress_DFT,np.asarray(freq_coord)))**2
@@ -429,41 +429,45 @@ def Dd(i,j):
 #
 #    Note: E and v denote the Young modulus and the Poisson ratio respectively.
 #
-def getElasticityTensor(strain_formulation,problem_type,n_dim,properties):
-    # Compute elasticity tensor according to the strain formulation, problem type and
-    # material constitutive model
-    if strain_formulation == 1:
-        # Get Young's Modulus and Poisson ratio
-        E = properties['E']
-        v = properties['v']
-        # Compute Lamé parameters
-        lam = (E*v)/((1.0+v)*(1.0-2.0*v))
-        miu = E/(2.0*(1.0+v))
-        # Set required fourth-order tensors
-        _,_,_,FOSym,FODiagTrace,_,_ = tensorOperations.setIdentityTensors(n_dim)
-        # 2D problem (plane strain)
-        if problem_type == 1:
-            De_tensor = lam*FODiagTrace + 2.0*miu*FOSym
-            De_tensor_mf = tensorOperations.setTensorToMatrix(De_tensor,True)
-        # 3D problem
-        elif problem_type == 4:
-            De_tensor = lam*FODiagTrace + 2.0*miu*FOSym
-            De_tensor_mf = tensorOperations.setTensorToMatrix(De_tensor,True)
+def getElasticityTensor(strain_formulation,problem_type,n_dim,comp_list,properties):
+    # Get Young's Modulus and Poisson ratio
+    E = properties['E']
+    v = properties['v']
+    # Compute Lamé parameters
+    lam = (E*v)/((1.0+v)*(1.0-2.0*v))
+    miu = E/(2.0*(1.0+v))
+    # Set required fourth-order tensors
+    _,_,_,FOSym,FODiagTrace,_,_ = tensorOperations.setIdentityTensors(n_dim)
+    # 2D problem (plane strain)
+    if problem_type == 1:
+        De_tensor = lam*FODiagTrace + 2.0*miu*FOSym
+        De_tensor_mf = tensorOperations.setTensorMatricialForm(De_tensor,n_dim,comp_list)
+    # 3D problem
+    elif problem_type == 4:
+        De_tensor = lam*FODiagTrace + 2.0*miu*FOSym
+        De_tensor_mf = tensorOperations.setTensorMatricialForm(De_tensor,n_dim,comp_list)
     # Return
     return De_tensor_mf
-
-#                                                                                    Testing
+#
+#                                                                     Validation (temporary)
 # ==========================================================================================
-n_material_phases = 2
-material_properties = np.zeros((2,2,2),dtype=object)
-material_properties[0,0,0] = 'E' ; material_properties[0,1,0] = 210e9
-material_properties[1,0,0] = 'v' ; material_properties[1,1,0] = 0.3
-material_properties[0,0,1] = 'E' ; material_properties[0,1,1] = 70e9
-material_properties[1,0,1] = 'v' ; material_properties[1,1,1] = 0.33
-strain_formulation = 1
-problem_type = 1
-n_dim = 2
-
-n_voxels = 0
-n_voxels_dir = 0
-regular_grid = 0
+if True:
+    # Set functions being validated
+    val_functions = ['FFTHomogenizationBasicScheme()','getElasticityTensor()']
+    # Set functions arguments
+    problem_type = 4
+    n_dim = 3
+    n = [5,5,5]
+    n_voxels_dims = tuple([n[i] for i in range(n_dim)])
+    discrete_file_path = '/home/bernardoferreira/Documents/SCA/' + \
+                         'debug/FFT_Homogenization_Method/RVE_2D_2Phases.rgmsh.npy'
+    regular_grid = np.load(discret_file_path)
+    n_material_phases = 2
+    material_properties = np.zeros((2,2,2),dtype=object)
+    material_properties[0,0,0] = 'E' ; material_properties[0,1,0] = 210e9
+    material_properties[1,0,0] = 'v' ; material_properties[1,1,0] = 0.3
+    material_properties[0,0,1] = 'E' ; material_properties[0,1,1] = 70e9
+    material_properties[1,0,1] = 'v' ; material_properties[1,1,1] = 0.33
+    # Call function
+    FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
+                                                      n_material_phases,material_properties)
