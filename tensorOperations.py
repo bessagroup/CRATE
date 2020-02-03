@@ -178,7 +178,10 @@ def setTensorMatricialForm(tensor,n_dim,comp_list):
             so_indexes.append([int(x)-1 for x in list(comp_list[i])])
             mf_indexes.append( comp_list.index(comp_list[i]))
         # Initialize tensor matricial form
-        tensor_mf = np.zeros(len(comp_list))
+        if np.any(np.iscomplex(tensor)):
+            tensor_mf = np.zeros(len(comp_list),dtype=complex)
+        else:
+            tensor_mf = np.zeros(len(comp_list))
         # Store tensor in matricial form
         for i in range(len(mf_indexes)):
             mf_idx = mf_indexes[i]
@@ -198,7 +201,10 @@ def setTensorMatricialForm(tensor,n_dim,comp_list):
             mf_indexes.append([x for x in \
                                [comp_list.index(comps[i][0]),comp_list.index(comps[i][1])]])
         # Initialize tensor matricial form
-        tensor_mf = np.zeros((len(comp_list),len(comp_list)))
+        if np.any(np.iscomplex(tensor)):
+            tensor_mf = np.zeros((len(comp_list),len(comp_list)),dtype=complex)
+        else:
+            tensor_mf = np.zeros((len(comp_list),len(comp_list)))
         # Store tensor in matricial form
         for i in range(len(mf_indexes)):
             mf_idx = tuple(mf_indexes[i])
@@ -256,7 +262,10 @@ def getTensorFromMatricialForm(tensor_mf,n_dim,comp_list):
             so_indexes.append([int(x)-1 for x in list(comp_list[i])])
             mf_indexes.append( comp_list.index(comp_list[i]))
         # Initialize tensor
-        tensor = np.zeros(tensor_order*(n_dim ,))
+        if np.any(np.iscomplex(tensor_mf)):
+            tensor = np.zeros(tensor_order*(n_dim ,),dtype=complex)
+        else:
+            tensor = np.zeros(tensor_order*(n_dim ,))
         # Get tensor from matricial form
         for i in range(len(mf_indexes)):
             mf_idx = mf_indexes[i]
@@ -277,7 +286,10 @@ def getTensorFromMatricialForm(tensor_mf,n_dim,comp_list):
             mf_indexes.append([x for x in \
                                [comp_list.index(comps[i][0]),comp_list.index(comps[i][1])]])
         # Initialize tensor
-        tensor = np.zeros(tensor_order*(n_dim ,))
+        if np.any(np.iscomplex(tensor_mf)):
+            tensor = np.zeros(tensor_order*(n_dim ,),dtype=complex)
+        else:
+            tensor = np.zeros(tensor_order*(n_dim ,))
         # Get tensor from matricial form
         for i in range(len(mf_indexes)):
             mf_idx = tuple(mf_indexes[i])
@@ -316,7 +328,7 @@ if False:
     # Get tensor back from matricial form
     tensor = getTensorFromMatricialForm(tensor_mf,n_dim,comp_list)
     # Display validation
-    print('\nValidation: ',len(val_functions)*'{}, '.format(*val_functions), 3*'\b', ' ')
+    print('\nValidation: ', (len(val_functions)*'{}, ').format(*val_functions), 3*'\b', ' ')
     print(72*'-')
     print('\nNumber of dimensions: ',n_dim)
     print('Component list      : ',comp_list)
