@@ -241,7 +241,7 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
     for freq_coord in it.product(*freqs_dims):
         # Get voxel material phase
         voxel_idx = tuple([list(freqs_dims[x]).index(freq_coord[x]) for x in range(n_dim)])
-        phase_idx = regular_grid[voxel_idx] ## Atenção ficheiro regular-grid 0 ...
+        phase_idx = regular_grid[voxel_idx] - 1
         # Get material phase elasticity tensor (matricial form)
         De_tensor_mf = De_tensors_mf[phase_idx]
         # Set strain initial iterative guess
@@ -423,7 +423,7 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
             # Get voxel material phase
             voxel_idx = \
                      tuple([list(freqs_dims[x]).index(freq_coord[x]) for x in range(n_dim)])
-            phase_idx = regular_grid[voxel_idx] ## Atenção ficheiro regular-grid 0 ...
+            phase_idx = regular_grid[voxel_idx] - 1
             # Get material phase elasticity tensor (matricial form)
             De_tensor_mf = De_tensors_mf[phase_idx]
             # Get strain vector for current discrete frequency
