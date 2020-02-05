@@ -588,11 +588,10 @@ if __name__ == '__main__':
     # Set functions arguments
     problem_type = 4
     n_dim = 3
-    n = [5,5,5]
-    n_voxels_dims = tuple([n[i] for i in range(n_dim)])
     discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
-                        'debug/FFT_Homogenization_Method/RVE_3D_2Phases.rgmsh.npy'
+                        'debug/FFT_Homogenization_Method/RVE_3D_2Phases_5x7x9.rgmsh.npy'
     regular_grid = np.load(discret_file_path)
+    n_voxels_dims = [regular_grid.shape[i] for i in range(len(regular_grid.shape))]
     n_material_phases = 2
     material_properties = np.zeros((2,2,2),dtype=object)
     material_properties[0,0,0] = 'E' ; material_properties[0,1,0] = 210e6
