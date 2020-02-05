@@ -66,7 +66,7 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
     #                                                                             Parameters
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set macroscale strain
-    mac_strain_mf = [ 1.0 , 0 , 0 , 0 , 0 , 0]
+    mac_strain_mf = [ 2 , 1 , 3 , 0.5*math.sqrt(2) , math.sqrt(2) , 0.5*math.sqrt(2)]
     # Set RVE dimensions (this must be argument)
     rve_dims = [1.0,1.0,1.0]
     # Set strain components according to problem type (this must be argument)
@@ -75,7 +75,7 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
     elif problem_type == 4:
         comp_list = ['11','22','33','12','23','13']
     # Set maximum number of iterations
-    max_n_iterations = 10
+    max_n_iterations = 20
     # Set convergence tolerance
     conv_tol = 1e-2
     #
@@ -263,7 +263,7 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
         if comp[0] == comp[1]:
             avg_stress_norm = avg_stress_norm + np.square(stress_vox[comp])
         else:
-            avg_stress_norm = avg_stress_norm + 2.0*np.square(stress_vox[comp])
+            avg_stress_norm = avg_stress_norm + 1.0*np.square(stress_vox[comp])
     avg_stress_norm = np.sum(np.sqrt(avg_stress_norm))/n_voxels
     avg_stress_norm_Old = avg_stress_norm
     # --------------------------------------------------------------------------------------
@@ -286,8 +286,8 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
     for comp in comp_list:
         # Discrete Fourier Transform (DFT) by means of Fast Fourier Transform (FFT)
         strain_DFT_vox[comp] = np.fft.fftn(strain_vox[comp])
-    # Store macroscale strain DFT values (testing)
-    aux_mac_array = [ strain_DFT_vox[comp][(0,0,0)] for comp in comp_list]
+    # Store macroscale strain DFT at the zero-frequency
+    mac_strain_DFT_0 = [strain_DFT_vox[comp][(0,0,0)] for comp in comp_list]
     # --------------------------------------------------------------------------------------
     # Validation:
     print('\nStrain DFT (voxel_idx = ' + str(val_voxel_idx) + '):\n')
@@ -391,8 +391,7 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
                                                          (1.0/kelvinFactor(i,comp_list))*aux
             # Enforce macroscopic strain at the zero-frequency strain component
             freq_0_idx = n_dim*(0,)
-            strain_DFT_vox[compi][freq_0_idx] = \
-                            (1.0/kelvinFactor(i,comp_list))*aux_mac_array[i]
+            strain_DFT_vox[compi][freq_0_idx] = mac_strain_DFT_0[i]
         # ----------------------------------------------------------------------------------
         # Validation:
         print('\nStrain DFT - Update (voxel_idx = ' + str(val_voxel_idx) + '):\n')
@@ -443,7 +442,7 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
             if comp[0] == comp[1]:
                 avg_stress_norm = avg_stress_norm + np.square(stress_vox[comp])
             else:
-                avg_stress_norm = avg_stress_norm + 2.0*np.square(stress_vox[comp])
+                avg_stress_norm = avg_stress_norm + 1.0*np.square(stress_vox[comp])
         avg_stress_norm = np.sum(np.sqrt(avg_stress_norm))/n_voxels
         # ----------------------------------------------------------------------------------
         # Validation:
