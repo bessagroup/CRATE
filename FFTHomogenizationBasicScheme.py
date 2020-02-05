@@ -255,6 +255,17 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
         for i in range(len(comp_list)):
             comp = comp_list[i]
             stress_vox[comp][voxel_idx] = (1.0/kelvinFactor(i,comp_list))*stress_mf[i]
+    # Compute average stress norm (convergence criterion)
+    n_voxels = np.prod(n_voxels_dims)
+    avg_stress_norm = 0
+    for i in range(len(comp_list)):
+        comp = comp_list[i]
+        if comp[0] == comp[1]:
+            avg_stress_norm = avg_stress_norm + np.square(stress_vox[comp])
+        else:
+            avg_stress_norm = avg_stress_norm + 2.0*np.square(stress_vox[comp])
+    avg_stress_norm = np.sum(np.sqrt(avg_stress_norm))/n_voxels
+    avg_stress_norm_Old = avg_stress_norm
     # --------------------------------------------------------------------------------------
     # Validation:
     print('\nStrain initial iterative guess (voxel_idx = ' + str(val_voxel_idx) + '):\n')
@@ -310,35 +321,44 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
         #
         #                                                             Convergence evaluation
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Discrete error as proposed in (Moulinec, H. and Suquet, P., 1998):
         # Compute sum of stress divergence norm for all discrete frequencies and store
         # zero-frequency stress
-        error_sum = 0
-        for freq_coord in it.product(*freqs_dims):
-            # Get voxel index
-            voxel_idx = \
-                     tuple([list(freqs_dims[x]).index(freq_coord[x]) for x in range(n_dim)])
-            # Initialize stress auxiliary vectors
-            stress_DFT_mf = np.zeros(len(comp_list),dtype=complex)
-            stress_DFT_0_mf = np.zeros(len(comp_list),dtype=complex)
-            for i in range(len(comp_list)):
-                comp = comp_list[i]
-                # Get stress vector for current discrete frequency
-                stress_DFT_mf[i] = kelvinFactor(i,comp_list)*stress_DFT_vox[comp][voxel_idx]
-                # Store stress vector for zero-frequency
-                if all([voxel_idx[x] == 0 for x in range(n_dim)]):
-                    stress_DFT_0_mf[i] = kelvinFactor(i,comp_list)*\
-                                                             stress_DFT_vox[comp][voxel_idx]
-            # Build stress tensor (frequency domain)
-            stress_DFT = top.getTensorFromMatricialForm(stress_DFT_mf,n_dim,comp_list)
-            # Add discrete frequency contribution to discrete error required sum
-            error_sum = error_sum + \
-                           np.linalg.norm(top.dot21_1(stress_DFT,np.asarray(freq_coord)))**2
-        # Compute discrete error serving to check convergence
-        n_voxels = np.prod(n_voxels_dims)
-        discrete_error = math.sqrt(error_sum/n_voxels)/np.linalg.norm(stress_DFT_0_mf)
+        # error_sum = 0
+        # for freq_coord in it.product(*freqs_dims):
+        #     # Get voxel index
+        #     voxel_idx = \
+        #              tuple([list(freqs_dims[x]).index(freq_coord[x]) for x in range(n_dim)])
+        #     # Initialize stress auxiliary vectors
+        #     stress_DFT_mf = np.zeros(len(comp_list),dtype=complex)
+        #     stress_DFT_0_mf = np.zeros(len(comp_list),dtype=complex)
+        #     for i in range(len(comp_list)):
+        #         comp = comp_list[i]
+        #         # Get stress vector for current discrete frequency
+        #         stress_DFT_mf[i] = kelvinFactor(i,comp_list)*stress_DFT_vox[comp][voxel_idx]
+        #         # Store stress vector for zero-frequency
+        #         if all([voxel_idx[x] == 0 for x in range(n_dim)]):
+        #             stress_DFT_0_mf[i] = kelvinFactor(i,comp_list)*\
+        #                                                      stress_DFT_vox[comp][voxel_idx]
+        #     # Build stress tensor (frequency domain)
+        #     stress_DFT = top.getTensorFromMatricialForm(stress_DFT_mf,n_dim,comp_list)
+        #     # Add discrete frequency contribution to discrete error required sum
+        #     error_sum = error_sum + \
+        #                    np.linalg.norm(top.dot21_1(stress_DFT,np.asarray(freq_coord)))**2
+        # # Compute discrete error serving to check convergence
+        # n_voxels = np.prod(n_voxels_dims)
+        # discrete_error = math.sqrt(error_sum/n_voxels)/np.linalg.norm(stress_DFT_0_mf)
+        #
+        # Discrete error as implemented by Zeliang Liu in SCA Matlab Code
+        if iter == 0:
+            discrete_error = 1
+        else:
+            discrete_error = abs(avg_stress_norm-avg_stress_norm_Old)/avg_stress_norm
         # ----------------------------------------------------------------------------------
         # Validation:
         print('\nIteration', iter, '\nDiscrete error = ', discrete_error, '\n')
+        print('avg_stress_norm:',avg_stress_norm)
+        print('avg_stress_norm_Old:',avg_stress_norm_Old)
         if iter == 2:
             sys.exit(1)
         # ----------------------------------------------------------------------------------
@@ -415,6 +435,16 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
             for i in range(len(comp_list)):
                 comp = comp_list[i]
                 stress_vox[comp][voxel_idx] = (1.0/kelvinFactor(i,comp_list))*stress_mf[i]
+        # Compute average stress norm (convergence criterion)
+        avg_stress_norm_Old = avg_stress_norm
+        avg_stress_norm = 0
+        for i in range(len(comp_list)):
+            comp = comp_list[i]
+            if comp[0] == comp[1]:
+                avg_stress_norm = avg_stress_norm + np.square(stress_vox[comp])
+            else:
+                avg_stress_norm = avg_stress_norm + 2.0*np.square(stress_vox[comp])
+        avg_stress_norm = np.sum(np.sqrt(avg_stress_norm))/n_voxels
         # ----------------------------------------------------------------------------------
         # Validation:
         print('\nStress (voxel_idx = ' + str(val_voxel_idx) + '):\n')
