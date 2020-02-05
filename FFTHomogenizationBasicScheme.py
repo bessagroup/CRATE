@@ -77,7 +77,7 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
     # Set maximum number of iterations
     max_n_iterations = 10
     # Set convergence tolerance
-    conv_tol = 1e-6
+    conv_tol = 1e-2
     #
     #                                                     Material phases elasticity tensors
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -359,8 +359,8 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
         print('\nIteration', iter, '\nDiscrete error = ', discrete_error, '\n')
         print('avg_stress_norm:',avg_stress_norm)
         print('avg_stress_norm_Old:',avg_stress_norm_Old)
-        if iter == 2:
-            sys.exit(1)
+        #if iter == 2:
+            #sys.exit(1)
         # ----------------------------------------------------------------------------------
         # Check if the solution converged (return) and if the maximum number of iterations
         # was reached (stop execution)
