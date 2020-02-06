@@ -60,19 +60,12 @@ import tensorOperations as top
 #         form. The matricial form follows the Kelvin notation when symmetry conditions
 #         exist and is performed columnwise otherwise.
 #
-def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
-                                                     n_material_phases,material_properties):
+def FFTHomogenizationBasicScheme(problem_type,n_dim,rve_dims,n_voxels_dims,regular_grid,
+                                          n_material_phases,material_properties,mac_strain):
     #
     #                                                                             Parameters
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Set macroscale strain (this must be argument)
-    if n_dim == 2:
-        mac_strain_mf = np.array([2,1,0.5*math.sqrt(2)])
-    else:
-        mac_strain_mf = np.array([2,1,3,0.5*math.sqrt(2),math.sqrt(2),0.5*math.sqrt(2)])
-    # Set RVE dimensions (this must be argument)
-    rve_dims = [1.0,1.0,1.0]
-    # Set strain components according to problem type (this must be argument)
+    # Set strain/stress components order
     if problem_type == 1:
         comp_list = ['11','22','12']
     elif problem_type == 4:
@@ -81,6 +74,11 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
     max_n_iterations = 30
     # Set convergence tolerance
     conv_tol = 1e-2
+    #
+    #                                                                      Macroscale strain
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set macroscale strain matricial form
+    mac_strain_mf = top.setTensorMatricialForm(mac_strain,n_dim,comp_list)
     #
     #                                                     Material phases elasticity tensors
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -374,7 +372,15 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
             stress_DFT = top.getTensorFromMatricialForm(stress_DFT_mf,n_dim,comp_list)
             # Add discrete frequency contribution to discrete error required sum
             error_sum = error_sum + \
-                           np.linalg.norm(top.dot12_1(np.asarray(freq_coord),stress_DFT))**2
+                        np.linalg.norm(top.dot12_1(1j*np.asarray(freq_coord),stress_DFT))**2
+
+            print('\nVerify original convergence criterion:')
+            print('\nvoxel_idx / freq_idx = ', freq_idx)
+            print('\nfreq_coord           = ', freq_coord)
+            print('\nnorm(divergence_DFT[freq_idx]) = ', '{:>11.4e}'.format(np.linalg.norm(top.dot12_1(1j*np.asarray(freq_coord),stress_DFT))))
+            print('divergence_DFT[freq_idx]  = ', top.dot12_1(1j*np.asarray(freq_coord),stress_DFT))
+            print('divergence[voxel_idx]     = ', np.fft.ifftn(top.dot12_1(np.asarray(freq_coord),stress_DFT)))
+
         # Compute discrete error serving to check convergence
         n_voxels = np.prod(n_voxels_dims)
         discrete_error_2 = math.sqrt(error_sum/n_voxels)/np.linalg.norm(stress_DFT_0_mf)
@@ -624,8 +630,9 @@ if __name__ == '__main__':
     # Set functions arguments
     problem_type = 4
     n_dim = 3
+    rve_dims = [1.0,1.0,1.0]
     discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
-                        'debug/FFT_Homogenization_Method/RVE_3D_2Phases_5x5x5.rgmsh.npy'
+    'debug/FFT_Homogenization_Method/RVE_3D_2Phases_5x5x5.rgmsh.npy'
     regular_grid = np.load(discret_file_path)
     n_voxels_dims = [regular_grid.shape[i] for i in range(len(regular_grid.shape))]
     n_material_phases = 2
@@ -634,8 +641,12 @@ if __name__ == '__main__':
     material_properties[1,0,0] = 'v' ; material_properties[1,1,0] = 0.3
     material_properties[0,0,1] = 'E' ; material_properties[0,1,1] = 70e6
     material_properties[1,0,1] = 'v' ; material_properties[1,1,1] = 0.33
+    if n_dim == 2:
+        mac_strain = np.array([[2,0.5],[0.5,1]])
+    else:
+        mac_strain = np.array([[2,0.5,0.5],[0.5,1,1],[0.5,1,3]])
     # Call function
-    FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
-                                                      n_material_phases,material_properties)
+    FFTHomogenizationBasicScheme(problem_type,n_dim,rve_dims,n_voxels_dims,regular_grid,
+                                           n_material_phases,material_properties,mac_strain)
     # Display validation footer
     print('\n' + 92*'-' + '\n')
