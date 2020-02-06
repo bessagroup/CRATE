@@ -65,11 +65,11 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
     #
     #                                                                             Parameters
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Set macroscale strain
+    # Set macroscale strain (this must be argument)
     if n_dim == 2:
-        mac_strain_mf = [ 2 , 1 , 0.5*math.sqrt(2)]
+        mac_strain_mf = np.array([2,1,0.5*math.sqrt(2)])
     else:
-        mac_strain_mf = [ 2 , 1 , 3 , 0.5*math.sqrt(2) , math.sqrt(2) , 0.5*math.sqrt(2)]
+        mac_strain_mf = np.array([2,1,3,0.5*math.sqrt(2),math.sqrt(2),0.5*math.sqrt(2)])
     # Set RVE dimensions (this must be argument)
     rve_dims = [1.0,1.0,1.0]
     # Set strain components according to problem type (this must be argument)
@@ -101,15 +101,18 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
             else:
                 req_props_vals[req_props[iprop]] = material_properties[match[0][0],1,iphase]
         # Compute elasticity tensor (matricial form) for current material phase
+        De_tensor_mf = np.zeros((len(comp_list),len(comp_list)))
         De_tensor_mf = getElasticityTensor(problem_type,n_dim,comp_list,req_props_vals)
         # Store material phase elasticity tensor (matricial form)
         De_tensors_mf.append(De_tensor_mf)
     # --------------------------------------------------------------------------------------
     # Validation:
-    for iphase in range(n_material_phases):
-        print('\nElasticity tensor (material phase ', iphase + 1, ') - Kelvin notation:\n')
-        np.set_printoptions(precision=2)
-        print(De_tensors_mf[iphase])
+    if __name__ == '__main__':
+        for iphase in range(n_material_phases):
+            print('\nElasticity tensor (material phase ', iphase + 1, ') - ' + \
+                                                                       'Kelvin notation:\n')
+            np.set_printoptions(precision=2)
+            print(De_tensors_mf[iphase])
     # --------------------------------------------------------------------------------------
     #
     #                                                  Reference material elastic properties
@@ -121,12 +124,14 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
     req_props_vals_ref['E'] = 100e6
     req_props_vals_ref['v'] = 0.3
     # Compute compliance tensor (matricial form)
+    Se_tensor_mf_ref = np.zeros((len(comp_list),len(comp_list)))
     Se_tensor_mf_ref = \
          np.linalg.inv(getElasticityTensor(problem_type,n_dim,comp_list,req_props_vals_ref))
     # --------------------------------------------------------------------------------------
     # Validation:
-    print('\nCompliance tensor (reference material) - Kelvin notation:\n')
-    print(Se_tensor_mf_ref)
+    if __name__ == '__main__':
+        print('\nCompliance tensor (reference material) - Kelvin notation:\n')
+        print(Se_tensor_mf_ref)
     # --------------------------------------------------------------------------------------
     #
     #                                                               Frequency discretization
@@ -140,9 +145,10 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
         freqs_dims.append(2*math.pi*np.fft.fftfreq(n_voxels_dims[i],sampling_period))
     # --------------------------------------------------------------------------------------
     # Validation:
-    print('\nDiscrete frequencies in each dimension:\n')
-    for i in range(n_dim):
-        print('  Dimension ', i, ': ', freqs_dims[i],'\n')
+    if __name__ == '__main__':
+        print('\nDiscrete frequencies in each dimension:\n')
+        for i in range(n_dim):
+            print('  Dimension ', i, ': ', freqs_dims[i],'\n')
     # --------------------------------------------------------------------------------------
     #
     #                                                      Reference material Green operator
@@ -218,22 +224,23 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
             Green_operator_vox[comp][freq_idx] = c1*first_term + c2*second_term
     # --------------------------------------------------------------------------------------
     # Validation:
-    if n_dim == 2:
-        val_voxel_idx = (2,1)
-    else:
-        val_voxel_idx = (2,1,3)
-    val_voxel_freqs = [freqs_dims[i][val_voxel_idx[i]] for i in range(n_dim)]
-    val_voxel_freqs_norm = np.linalg.norm(val_voxel_freqs)
-    print('\nGreen operator components (freq_idx = ' + str(val_voxel_idx) + '):\n')
-    print('  Frequency point = ', val_voxel_freqs)
-    print('  Norm            = ', '{:>11.4e}'.format(val_voxel_freqs_norm))
-    print('\n  Material-dependent constants:')
-    print('  c1 = ', '{:>11.4e}'.format(c1))
-    print('  c2 = ', '{:>11.4e}\n'.format(c2))
-    for i in range(len(mf_indexes)):
-        mf_idx = mf_indexes[i]
-        comp = ''.join([str(x+1) for x in fo_indexes[i]])
-        print('  Component ' + comp + ': ', \
+    if __name__ == '__main__':
+        if n_dim == 2:
+            val_voxel_idx = (2,1)
+        else:
+            val_voxel_idx = (2,1,3)
+        val_voxel_freqs = [freqs_dims[i][val_voxel_idx[i]] for i in range(n_dim)]
+        val_voxel_freqs_norm = np.linalg.norm(val_voxel_freqs)
+        print('\nGreen operator components (freq_idx = ' + str(val_voxel_idx) + '):\n')
+        print('  Frequency point = ', val_voxel_freqs)
+        print('  Norm            = ', '{:>11.4e}'.format(val_voxel_freqs_norm))
+        print('\n  Material-dependent constants:')
+        print('  c1 = ', '{:>11.4e}'.format(c1))
+        print('  c2 = ', '{:>11.4e}\n'.format(c2))
+        for i in range(len(mf_indexes)):
+            mf_idx = mf_indexes[i]
+            comp = ''.join([str(x+1) for x in fo_indexes[i]])
+            print('  Component ' + comp + ': ', \
                                 '{:>11.4e}'.format(Green_operator_vox[comp][val_voxel_idx]))
     # --------------------------------------------------------------------------------------
     #
@@ -253,11 +260,13 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
         # Get material phase elasticity tensor (matricial form)
         De_tensor_mf = De_tensors_mf[phase_idx]
         # Set strain initial iterative guess
+        strain_mf = np.zeros(len(comp_list))
         strain_mf = mac_strain_mf
         for i in range(len(comp_list)):
             comp = comp_list[i]
             strain_vox[comp][voxel_idx] = (1.0/kelvinFactor(i,comp_list))*strain_mf[i]
         # Set stress initial iterative guess
+        stress_mf = np.zeros(len(comp_list))
         stress_mf = top.dot21_1(De_tensor_mf,strain_mf) #(confirmar dot21_1)
         #stress_mf = np.matmul(De_tensor_mf,strain_mf)
         for i in range(len(comp_list)):
@@ -273,17 +282,22 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
         else:
             avg_stress_norm = avg_stress_norm + 1.0*np.square(stress_vox[comp])
     avg_stress_norm = np.sum(np.sqrt(avg_stress_norm))/n_voxels
-    avg_stress_norm_Old = avg_stress_norm
+    avg_stress_norm_Old = 0
     # --------------------------------------------------------------------------------------
     # Validation:
-    print('\nStrain initial iterative guess (voxel_idx = ' + str(val_voxel_idx) + '):\n')
-    for i in range(len(comp_list)):
-        comp = comp_list[i]
-        print('Component ' + comp + ': ', '{:>11.4e}'.format(strain_vox[comp][val_voxel_idx]))
-    print('\nStress initial iterative guess (voxel_idx = ' + str(val_voxel_idx) + '):\n')
-    for i in range(len(comp_list)):
-        comp = comp_list[i]
-        print('Component ' + comp + ': ', '{:>11.4e}'.format(stress_vox[comp][val_voxel_idx]))
+    if __name__ == '__main__':
+        print('\nStrain initial iterative guess (voxel_idx = ' + str(val_voxel_idx) + \
+                                                                                     '):\n')
+        for i in range(len(comp_list)):
+            comp = comp_list[i]
+            print('Component ' + comp + ': ', \
+                                        '{:>11.4e}'.format(strain_vox[comp][val_voxel_idx]))
+        print('\nStress initial iterative guess (voxel_idx = ' + str(val_voxel_idx) + \
+                                                                                     '):\n')
+        for i in range(len(comp_list)):
+            comp = comp_list[i]
+            print('Component ' + comp + ': ', \
+                                        '{:>11.4e}'.format(stress_vox[comp][val_voxel_idx]))
     # --------------------------------------------------------------------------------------
     #
     #                                                Strain Discrete Fourier Transform (DFT)
@@ -296,13 +310,16 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
         strain_DFT_vox[comp] = np.fft.fftn(strain_vox[comp])
     # Store macroscale strain DFT at the zero-frequency
     freq_0_idx = n_dim*(0,)
-    mac_strain_DFT_0 = [strain_DFT_vox[comp][freq_0_idx] for comp in comp_list]
+    mac_strain_DFT_0 = np.zeros((n_dim,n_dim))
+    mac_strain_DFT_0 = np.array([strain_DFT_vox[comp][freq_0_idx] for comp in comp_list])
     # --------------------------------------------------------------------------------------
     # Validation:
-    print('\nStrain DFT (freq_idx = ' + str(val_voxel_idx) + '):\n')
-    for i in range(len(comp_list)):
-        comp = comp_list[i]
-        print('Component ' + comp + ': ', '{:>23.4e}'.format(strain_DFT_vox[comp][val_voxel_idx]))
+    if __name__ == '__main__':
+        print('\nStrain DFT (freq_idx = ' + str(val_voxel_idx) + '):\n')
+        for i in range(len(comp_list)):
+            comp = comp_list[i]
+            print('Component ' + comp + ': ', \
+                                    '{:>23.4e}'.format(strain_DFT_vox[comp][val_voxel_idx]))
     # --------------------------------------------------------------------------------------
     #
     #                                                                       Iterative scheme
@@ -322,53 +339,56 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
             stress_DFT_vox[comp] = np.fft.fftn(stress_vox[comp])
         # ----------------------------------------------------------------------------------
         # Validation:
-        print('\nStress DFT (freq_idx = ' + str(val_voxel_idx) + '):\n')
-        for i in range(len(comp_list)):
-            comp = comp_list[i]
-            print('Component ' + comp + ': ', '{:>23.4e}'.format(stress_DFT_vox[comp][val_voxel_idx]))
+        if __name__ == '__main__':
+            print('\nStress DFT (freq_idx = ' + str(val_voxel_idx) + '):\n')
+            for i in range(len(comp_list)):
+                comp = comp_list[i]
+                print('Component ' + comp + ': ', \
+                                    '{:>23.4e}'.format(stress_DFT_vox[comp][val_voxel_idx]))
         # ----------------------------------------------------------------------------------
         #
         #                                                             Convergence evaluation
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Convergence criterion 1:
         # Discrete error as proposed in (Moulinec, H. and Suquet, P., 1998):
         # Compute sum of stress divergence norm for all discrete frequencies and store
         # zero-frequency stress
-        # error_sum = 0
-        # for freq_coord in it.product(*freqs_dims):
-        #     # Get voxel index
-        #     voxel_idx = \
-        #              tuple([list(freqs_dims[x]).index(freq_coord[x]) for x in range(n_dim)])
-        #     # Initialize stress auxiliary vectors
-        #     stress_DFT_mf = np.zeros(len(comp_list),dtype=complex)
-        #     stress_DFT_0_mf = np.zeros(len(comp_list),dtype=complex)
-        #     for i in range(len(comp_list)):
-        #         comp = comp_list[i]
-        #         # Get stress vector for current discrete frequency
-        #         stress_DFT_mf[i] = kelvinFactor(i,comp_list)*stress_DFT_vox[comp][voxel_idx]
-        #         # Store stress vector for zero-frequency
-        #         if all([voxel_idx[x] == 0 for x in range(n_dim)]):
-        #             stress_DFT_0_mf[i] = kelvinFactor(i,comp_list)*\
-        #                                                      stress_DFT_vox[comp][voxel_idx]
-        #     # Build stress tensor (frequency domain)
-        #     stress_DFT = top.getTensorFromMatricialForm(stress_DFT_mf,n_dim,comp_list)
-        #     # Add discrete frequency contribution to discrete error required sum
-        #     error_sum = error_sum + \
-        #                    np.linalg.norm(top.dot21_1(stress_DFT,np.asarray(freq_coord)))**2
-        # # Compute discrete error serving to check convergence
-        # n_voxels = np.prod(n_voxels_dims)
-        # discrete_error = math.sqrt(error_sum/n_voxels)/np.linalg.norm(stress_DFT_0_mf)
-        #
-        # Discrete error as implemented by Zeliang Liu in SCA Matlab Code
-        if iter == 0:
-            discrete_error = 1
-        else:
-            discrete_error = abs(avg_stress_norm-avg_stress_norm_Old)/avg_stress_norm
+        error_sum = 0
+        stress_DFT_0_mf = np.zeros(len(comp_list),dtype=complex)
+        for freq_coord in it.product(*freqs_dims):
+            # Get voxel index
+            freq_idx = \
+                     tuple([list(freqs_dims[x]).index(freq_coord[x]) for x in range(n_dim)])
+            # Initialize stress auxiliary vector
+            stress_DFT = np.zeros((n_dim,n_dim),dtype=complex)
+            stress_DFT_mf = np.zeros(len(comp_list),dtype=complex)
+            for i in range(len(comp_list)):
+                comp = comp_list[i]
+                # Get stress vector for current discrete frequency
+                stress_DFT_mf[i] = kelvinFactor(i,comp_list)*stress_DFT_vox[comp][freq_idx]
+                # Store stress vector for zero-frequency
+                if freq_idx == n_dim*(0,):
+                    stress_DFT_0_mf[i] = kelvinFactor(i,comp_list)*\
+                                                              stress_DFT_vox[comp][freq_idx]
+            # Build stress tensor (frequency domain)
+            stress_DFT = top.getTensorFromMatricialForm(stress_DFT_mf,n_dim,comp_list)
+            # Add discrete frequency contribution to discrete error required sum
+            error_sum = error_sum + \
+                           np.linalg.norm(top.dot12_1(np.asarray(freq_coord),stress_DFT))**2
+        # Compute discrete error serving to check convergence
+        n_voxels = np.prod(n_voxels_dims)
+        discrete_error_2 = math.sqrt(error_sum/n_voxels)/np.linalg.norm(stress_DFT_0_mf)
+        # ----------------------------------------------------------------------------------
+        # Convergence criterion 2:
+        # Discrete error based on the average stress norm
+        discrete_error = abs(avg_stress_norm-avg_stress_norm_Old)/avg_stress_norm
         # ----------------------------------------------------------------------------------
         # Validation:
-        print('\nIteration', iter, '- Convergence evaluation:\n')
-        print('Average stress norm     = ', '{:>11.4e}'.format(avg_stress_norm))
-        print('Average stress norm old = ', '{:>11.4e}'.format(avg_stress_norm_Old))
-        print('Discrete error          = ', '{:>11.4e}'.format(discrete_error))
+        if __name__ == '__main__':
+            print('\nIteration', iter, '- Convergence evaluation:\n')
+            print('Average stress norm     = ', '{:>11.4e}'.format(avg_stress_norm))
+            print('Average stress norm old = ', '{:>11.4e}'.format(avg_stress_norm_Old))
+            print('Discrete error          = ', '{:>11.4e}'.format(discrete_error))
         # ----------------------------------------------------------------------------------
         # Check if the solution converged (return) and if the maximum number of iterations
         # was reached (stop execution)
@@ -402,10 +422,12 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
             strain_DFT_vox[compi][freq_0_idx] = mac_strain_DFT_0[i]
         # ----------------------------------------------------------------------------------
         # Validation:
-        print('\nStrain DFT - Update (freq_idx = ' + str(val_voxel_idx) + '):\n')
-        for i in range(len(comp_list)):
-            comp = comp_list[i]
-            print('Component ' + comp + ': ', '{:>23.4e}'.format(strain_DFT_vox[comp][val_voxel_idx]))
+        if __name__ == '__main__':
+            print('\nStrain DFT - Update (freq_idx = ' + str(val_voxel_idx) + '):\n')
+            for i in range(len(comp_list)):
+                comp = comp_list[i]
+                print('Component ' + comp + ': ', \
+                                    '{:>23.4e}'.format(strain_DFT_vox[comp][val_voxel_idx]))
         # ----------------------------------------------------------------------------------
         #
         #                                   Strain Inverse Discrete Fourier Transform (IDFT)
@@ -417,10 +439,12 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
             strain_vox[comp] = np.real(np.fft.ifftn(strain_DFT_vox[comp]))
         # ----------------------------------------------------------------------------------
         # Validation:
-        print('\nStrain (voxel_idx = ' + str(val_voxel_idx) + '):\n')
-        for i in range(len(comp_list)):
-            comp = comp_list[i]
-            print('Component ' + comp + ': ', '{:>11.4e}'.format(strain_vox[comp][val_voxel_idx]))
+        if __name__ == '__main__':
+            print('\nStrain (voxel_idx = ' + str(val_voxel_idx) + '):\n')
+            for i in range(len(comp_list)):
+                comp = comp_list[i]
+                print('Component ' + comp + ': ', \
+                                        '{:>11.4e}'.format(strain_vox[comp][val_voxel_idx]))
         # ----------------------------------------------------------------------------------
         #
         #                                                                      Update stress
@@ -434,10 +458,12 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
             # Get material phase elasticity tensor (matricial form)
             De_tensor_mf = De_tensors_mf[phase_idx]
             # Get strain vector for current discrete frequency
+            strain_mf = np.zeros(len(comp_list))
             for i in range(len(comp_list)):
                 comp = comp_list[i]
                 strain_mf[i] = kelvinFactor(i,comp_list)*strain_vox[comp][voxel_idx]
             # Update stress for current discrete frequency
+            stress_mf = np.zeros(len(comp_list))
             stress_mf = top.dot21_1(De_tensor_mf,strain_mf)
             for i in range(len(comp_list)):
                 comp = comp_list[i]
@@ -454,10 +480,12 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
         avg_stress_norm = np.sum(np.sqrt(avg_stress_norm))/n_voxels
         # ----------------------------------------------------------------------------------
         # Validation:
-        print('\nStress (voxel_idx = ' + str(val_voxel_idx) + '):\n')
-        for i in range(len(comp_list)):
-            comp = comp_list[i]
-            print('Component ' + comp + ': ', '{:>11.4e}'.format(stress_vox[comp][val_voxel_idx]))
+        if __name__ == '__main__':
+            print('\nStress (voxel_idx = ' + str(val_voxel_idx) + '):\n')
+            for i in range(len(comp_list)):
+                comp = comp_list[i]
+                print('Component ' + comp + ': ', \
+                                        '{:>11.4e}'.format(stress_vox[comp][val_voxel_idx]))
         # ----------------------------------------------------------------------------------
 #
 #                                                                    Complementary functions
