@@ -198,7 +198,7 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
         # Loop over discrete frequencies
         for freq_coord in it.product(*freqs_dims):
             # Get voxel index
-            voxel_idx = tuple([list(freqs_dims[x]).index(freq_coord[x]) for \
+            freq_idx = tuple([list(freqs_dims[x]).index(freq_coord[x]) for \
                                                                          x in range(n_dim)])
             # Compute frequency vector norm
             freq_norm = np.linalg.norm(freq_coord)
@@ -212,7 +212,7 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
             second_term = -(1.0/freq_norm**4)*(freq_coord[fo_idx[0]]*freq_coord[fo_idx[1]]*
                                                freq_coord[fo_idx[2]]*freq_coord[fo_idx[3]])
             # Compute Green operator matricial form component for current voxel
-            Green_operator_vox[comp][voxel_idx] = c1*first_term + c2*second_term
+            Green_operator_vox[comp][freq_idx] = c1*first_term + c2*second_term
     # --------------------------------------------------------------------------------------
     # Validation:
     if n_dim == 2:
