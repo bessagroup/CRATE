@@ -218,8 +218,9 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
     val_voxel_freqs = [freqs_dims[i][val_voxel_idx[i]] for i in range(n_dim)]
     val_voxel_freqs_norm = np.linalg.norm(val_voxel_freqs)
     print('\nGreen operator components (voxel_idx = ' + str(val_voxel_idx) + '):\n')
-    print('  frequency_vector = ', val_voxel_freqs)
-    print('  frequency_norm = ', '{:>11.4e}'.format(val_voxel_freqs_norm))
+    print('  Frequency point = ', val_voxel_freqs)
+    print('  Norm            = ', '{:>11.4e}'.format(val_voxel_freqs_norm))
+    print('\n  Material-dependent constants:')
     print('  c1 = ', '{:>11.4e}'.format(c1))
     print('  c2 = ', '{:>11.4e}\n'.format(c2))
     for i in range(len(mf_indexes)):
@@ -293,7 +294,7 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
     print('\nStrain DFT (voxel_idx = ' + str(val_voxel_idx) + '):\n')
     for i in range(len(comp_list)):
         comp = comp_list[i]
-        print('Component ' + comp + ': ', '{:>11.4e}'.format(strain_DFT_vox[comp][val_voxel_idx]))
+        print('Component ' + comp + ': ', '{:>23.4e}'.format(strain_DFT_vox[comp][val_voxel_idx]))
     # --------------------------------------------------------------------------------------
     #
     #                                                                       Iterative scheme
@@ -316,7 +317,7 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
         print('\nStress DFT (voxel_idx = ' + str(val_voxel_idx) + '):\n')
         for i in range(len(comp_list)):
             comp = comp_list[i]
-            print('Component ' + comp + ': ', '{:>11.4e}'.format(stress_DFT_vox[comp][val_voxel_idx]))
+            print('Component ' + comp + ': ', '{:>23.4e}'.format(stress_DFT_vox[comp][val_voxel_idx]))
         # ----------------------------------------------------------------------------------
         #
         #                                                             Convergence evaluation
@@ -356,11 +357,10 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
             discrete_error = abs(avg_stress_norm-avg_stress_norm_Old)/avg_stress_norm
         # ----------------------------------------------------------------------------------
         # Validation:
-        print('\nIteration', iter, '\nDiscrete error = ', discrete_error, '\n')
-        print('avg_stress_norm:',avg_stress_norm)
-        print('avg_stress_norm_Old:',avg_stress_norm_Old)
-        #if iter == 2:
-            #sys.exit(1)
+        print('\nIteration', iter, '- Convergence evaluation:\n')
+        print('Average stress norm     = ', '{:>11.4e}'.format(avg_stress_norm))
+        print('Average stress norm old = ', '{:>11.4e}'.format(avg_stress_norm_Old))
+        print('Discrete error          = ', '{:>11.4e}'.format(discrete_error))
         # ----------------------------------------------------------------------------------
         # Check if the solution converged (return) and if the maximum number of iterations
         # was reached (stop execution)
@@ -397,7 +397,7 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
         print('\nStrain DFT - Update (voxel_idx = ' + str(val_voxel_idx) + '):\n')
         for i in range(len(comp_list)):
             comp = comp_list[i]
-            print('Component ' + comp + ': ', '{:>11.4e}'.format(strain_DFT_vox[comp][val_voxel_idx]))
+            print('Component ' + comp + ': ', '{:>23.4e}'.format(strain_DFT_vox[comp][val_voxel_idx]))
         # ----------------------------------------------------------------------------------
         #
         #                                   Strain Inverse Discrete Fourier Transform (IDFT)
@@ -589,7 +589,7 @@ if __name__ == '__main__':
     problem_type = 4
     n_dim = 3
     discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
-                        'debug/FFT_Homogenization_Method/RVE_3D_2Phases_5x7x9.rgmsh.npy'
+                        'debug/FFT_Homogenization_Method/RVE_3D_2Phases_5x5x5.rgmsh.npy'
     regular_grid = np.load(discret_file_path)
     n_voxels_dims = [regular_grid.shape[i] for i in range(len(regular_grid.shape))]
     n_material_phases = 2
