@@ -200,6 +200,9 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
             # Get voxel index
             freq_idx = tuple([list(freqs_dims[x]).index(freq_coord[x]) for \
                                                                          x in range(n_dim)])
+            # Skip zero-frequency computation (prescribed macroscale strain)
+            if freq_idx == n_dim*(0,):
+                continue
             # Compute frequency vector norm
             freq_norm = np.linalg.norm(freq_coord)
             # Compute first material independent term of Green operator
@@ -221,7 +224,7 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
         val_voxel_idx = (2,1,3)
     val_voxel_freqs = [freqs_dims[i][val_voxel_idx[i]] for i in range(n_dim)]
     val_voxel_freqs_norm = np.linalg.norm(val_voxel_freqs)
-    print('\nGreen operator components (voxel_idx = ' + str(val_voxel_idx) + '):\n')
+    print('\nGreen operator components (freq_idx = ' + str(val_voxel_idx) + '):\n')
     print('  Frequency point = ', val_voxel_freqs)
     print('  Norm            = ', '{:>11.4e}'.format(val_voxel_freqs_norm))
     print('\n  Material-dependent constants:')
@@ -296,7 +299,7 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
     mac_strain_DFT_0 = [strain_DFT_vox[comp][freq_0_idx] for comp in comp_list]
     # --------------------------------------------------------------------------------------
     # Validation:
-    print('\nStrain DFT (voxel_idx = ' + str(val_voxel_idx) + '):\n')
+    print('\nStrain DFT (freq_idx = ' + str(val_voxel_idx) + '):\n')
     for i in range(len(comp_list)):
         comp = comp_list[i]
         print('Component ' + comp + ': ', '{:>23.4e}'.format(strain_DFT_vox[comp][val_voxel_idx]))
@@ -319,7 +322,7 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
             stress_DFT_vox[comp] = np.fft.fftn(stress_vox[comp])
         # ----------------------------------------------------------------------------------
         # Validation:
-        print('\nStress DFT (voxel_idx = ' + str(val_voxel_idx) + '):\n')
+        print('\nStress DFT (freq_idx = ' + str(val_voxel_idx) + '):\n')
         for i in range(len(comp_list)):
             comp = comp_list[i]
             print('Component ' + comp + ': ', '{:>23.4e}'.format(stress_DFT_vox[comp][val_voxel_idx]))
@@ -399,7 +402,7 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
             strain_DFT_vox[compi][freq_0_idx] = mac_strain_DFT_0[i]
         # ----------------------------------------------------------------------------------
         # Validation:
-        print('\nStrain DFT - Update (voxel_idx = ' + str(val_voxel_idx) + '):\n')
+        print('\nStrain DFT - Update (freq_idx = ' + str(val_voxel_idx) + '):\n')
         for i in range(len(comp_list)):
             comp = comp_list[i]
             print('Component ' + comp + ': ', '{:>23.4e}'.format(strain_DFT_vox[comp][val_voxel_idx]))
