@@ -66,7 +66,10 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
     #                                                                             Parameters
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set macroscale strain
-    mac_strain_mf = [ 2 , 1 , 3 , 0.5*math.sqrt(2) , math.sqrt(2) , 0.5*math.sqrt(2)]
+    if n_dim == 2:
+        mac_strain_mf = [ 2 , 1 , 0.5*math.sqrt(2)]
+    else:
+        mac_strain_mf = [ 2 , 1 , 3 , 0.5*math.sqrt(2) , math.sqrt(2) , 0.5*math.sqrt(2)]
     # Set RVE dimensions (this must be argument)
     rve_dims = [1.0,1.0,1.0]
     # Set strain components according to problem type (this must be argument)
@@ -75,7 +78,7 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
     elif problem_type == 4:
         comp_list = ['11','22','33','12','23','13']
     # Set maximum number of iterations
-    max_n_iterations = 20
+    max_n_iterations = 30
     # Set convergence tolerance
     conv_tol = 1e-2
     #
@@ -128,15 +131,13 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
     #
     #                                                               Frequency discretization
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Set discrete frequencies (Hz) for each dimension
+    # Set discrete frequencies (rad/m) for each dimension
     freqs_dims = list()
     for i in range(n_dim):
         # Set sampling spatial period
         sampling_period = rve_dims[i]/n_voxels_dims[i]
         # Set discrete frequencies
-        #freqs_dims.append(2*math.pi*np.fft.fftfreq(n_voxels_dims[i],sampling_period))
-        # Comparison with SCA Matlab Code (remove afterwards)
-        freqs_dims.append(np.fft.fftfreq(n_voxels_dims[i]))
+        freqs_dims.append(2*math.pi*np.fft.fftfreq(n_voxels_dims[i],sampling_period))
     # --------------------------------------------------------------------------------------
     # Validation:
     print('\nDiscrete frequencies in each dimension:\n')
@@ -214,7 +215,10 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
             Green_operator_vox[comp][voxel_idx] = c1*first_term + c2*second_term
     # --------------------------------------------------------------------------------------
     # Validation:
-    val_voxel_idx = (2,1,3)
+    if n_dim == 2:
+        val_voxel_idx = (2,1)
+    else:
+        val_voxel_idx = (2,1,3)
     val_voxel_freqs = [freqs_dims[i][val_voxel_idx[i]] for i in range(n_dim)]
     val_voxel_freqs_norm = np.linalg.norm(val_voxel_freqs)
     print('\nGreen operator components (voxel_idx = ' + str(val_voxel_idx) + '):\n')
@@ -288,7 +292,8 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,n_voxels_dims,regular_grid,
         # Discrete Fourier Transform (DFT) by means of Fast Fourier Transform (FFT)
         strain_DFT_vox[comp] = np.fft.fftn(strain_vox[comp])
     # Store macroscale strain DFT at the zero-frequency
-    mac_strain_DFT_0 = [strain_DFT_vox[comp][(0,0,0)] for comp in comp_list]
+    freq_0_idx = n_dim*(0,)
+    mac_strain_DFT_0 = [strain_DFT_vox[comp][freq_0_idx] for comp in comp_list]
     # --------------------------------------------------------------------------------------
     # Validation:
     print('\nStrain DFT (voxel_idx = ' + str(val_voxel_idx) + '):\n')
