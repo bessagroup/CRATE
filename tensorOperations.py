@@ -26,6 +26,7 @@ import errors
 dyad22 = lambda A2,B2 : np.einsum('ij,kl -> ijkl',A2,B2)
 # Tensorial single contractions
 dot21_1 = lambda A2,B1 : np.einsum('ij,j -> i',A2,B1)
+dot12_1 = lambda A1,B2 : np.einsum('i,ij -> j',A1,B2)
 # Tensorial double contractions
 ddot44_1 = lambda A4,B4 : np.einsum('ijmn,mnkl -> ijkl',A4,B4)
 #
@@ -178,7 +179,7 @@ def setTensorMatricialForm(tensor,n_dim,comp_list):
             so_indexes.append([int(x)-1 for x in list(comp_list[i])])
             mf_indexes.append( comp_list.index(comp_list[i]))
         # Initialize tensor matricial form
-        if np.any(np.iscomplex(tensor)):
+        if tensor.dtype == 'complex':
             tensor_mf = np.zeros(len(comp_list),dtype=complex)
         else:
             tensor_mf = np.zeros(len(comp_list))
@@ -201,7 +202,7 @@ def setTensorMatricialForm(tensor,n_dim,comp_list):
             mf_indexes.append([x for x in \
                                [comp_list.index(comps[i][0]),comp_list.index(comps[i][1])]])
         # Initialize tensor matricial form
-        if np.any(np.iscomplex(tensor)):
+        if tensor.dtype == 'complex':
             tensor_mf = np.zeros((len(comp_list),len(comp_list)),dtype=complex)
         else:
             tensor_mf = np.zeros((len(comp_list),len(comp_list)))
@@ -262,7 +263,7 @@ def getTensorFromMatricialForm(tensor_mf,n_dim,comp_list):
             so_indexes.append([int(x)-1 for x in list(comp_list[i])])
             mf_indexes.append( comp_list.index(comp_list[i]))
         # Initialize tensor
-        if np.any(np.iscomplex(tensor_mf)):
+        if tensor_mf.dtype == 'complex':
             tensor = np.zeros(tensor_order*(n_dim ,),dtype=complex)
         else:
             tensor = np.zeros(tensor_order*(n_dim ,))
@@ -286,7 +287,7 @@ def getTensorFromMatricialForm(tensor_mf,n_dim,comp_list):
             mf_indexes.append([x for x in \
                                [comp_list.index(comps[i][0]),comp_list.index(comps[i][1])]])
         # Initialize tensor
-        if np.any(np.iscomplex(tensor_mf)):
+        if tensor_mf.dtype == 'complex':
             tensor = np.zeros(tensor_order*(n_dim ,),dtype=complex)
         else:
             tensor = np.zeros(tensor_order*(n_dim ,))
