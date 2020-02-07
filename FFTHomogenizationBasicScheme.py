@@ -60,23 +60,25 @@ import tensorOperations as top
 #         form. The matricial form follows the Kelvin notation when symmetry conditions
 #         exist and is performed columnwise otherwise.
 #
-def FFTHomogenizationBasicScheme(problem_type,n_dim,rve_dims,n_voxels_dims,regular_grid,
-                                          n_material_phases,material_properties,mac_strain):
+def FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_properties,
+                                                                      comp_list,mac_strain):
     #
     #                                                                             Parameters
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Set strain/stress components order
-    if problem_type == 1:
-        comp_list = ['11','22','12']
-    elif problem_type == 4:
-        comp_list = ['11','22','33','12','23','13']
     # Set maximum number of iterations
     max_n_iterations = 30
     # Set convergence tolerance
     conv_tol = 1e-2
     #
-    #                                                                      Macroscale strain
+    #                                                                        Input arguments
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set problem dimensions
+    n_dim = len(regular_grid.shape)
+    # Set number of pixels/voxels in each dimension and total number of pixels/voxels
+    n_voxels_dims = [regular_grid.shape[i] for i in range(len(regular_grid.shape))]
+    n_voxels = np.prod(n_voxels_dims)
+    # Set number of material phases
+    n_material_phases = material_properties.shape[2]
     # Set macroscale strain matricial form
     mac_strain_mf = top.setTensorMatricialForm(mac_strain,n_dim,comp_list)
     #
@@ -201,7 +203,7 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,rve_dims,n_voxels_dims,regul
         comp = ''.join([str(x+1) for x in fo_idx])
         # Loop over discrete frequencies
         for freq_coord in it.product(*freqs_dims):
-            # Get voxel index
+            # Get discrete frequency index
             freq_idx = tuple([list(freqs_dims[x]).index(freq_coord[x]) for \
                                                                          x in range(n_dim)])
             # Skip zero-frequency computation (prescribed macroscale strain)
@@ -211,10 +213,10 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,rve_dims,n_voxels_dims,regul
             freq_norm = np.linalg.norm(freq_coord)
             # Compute first material independent term of Green operator
             first_term = (1.0/freq_norm**2)*(
-                       Dd(fo_idx[0],fo_idx[2])*freq_coord[fo_idx[1]]*freq_coord[fo_idx[3]] +
-                       Dd(fo_idx[0],fo_idx[3])*freq_coord[fo_idx[1]]*freq_coord[fo_idx[2]] +
-                       Dd(fo_idx[1],fo_idx[3])*freq_coord[fo_idx[0]]*freq_coord[fo_idx[2]] +
-                       Dd(fo_idx[1],fo_idx[2])*freq_coord[fo_idx[0]]*freq_coord[fo_idx[3]])
+                   top.Dd(fo_idx[0],fo_idx[2])*freq_coord[fo_idx[1]]*freq_coord[fo_idx[3]] +
+                   top.Dd(fo_idx[0],fo_idx[3])*freq_coord[fo_idx[1]]*freq_coord[fo_idx[2]] +
+                   top.Dd(fo_idx[1],fo_idx[3])*freq_coord[fo_idx[0]]*freq_coord[fo_idx[2]] +
+                   top.Dd(fo_idx[1],fo_idx[2])*freq_coord[fo_idx[0]]*freq_coord[fo_idx[3]])
             # Compute second material independent term of Green operator
             second_term = -(1.0/freq_norm**4)*(freq_coord[fo_idx[0]]*freq_coord[fo_idx[1]]*
                                                freq_coord[fo_idx[2]]*freq_coord[fo_idx[3]])
@@ -262,16 +264,15 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,rve_dims,n_voxels_dims,regul
         strain_mf = mac_strain_mf
         for i in range(len(comp_list)):
             comp = comp_list[i]
-            strain_vox[comp][voxel_idx] = (1.0/kelvinFactor(i,comp_list))*strain_mf[i]
+            strain_vox[comp][voxel_idx] = (1.0/top.kelvinFactor(i,comp_list))*strain_mf[i]
         # Set stress initial iterative guess
         stress_mf = np.zeros(len(comp_list))
         stress_mf = top.dot21_1(De_tensor_mf,strain_mf) #(confirmar dot21_1)
         #stress_mf = np.matmul(De_tensor_mf,strain_mf)
         for i in range(len(comp_list)):
             comp = comp_list[i]
-            stress_vox[comp][voxel_idx] = (1.0/kelvinFactor(i,comp_list))*stress_mf[i]
+            stress_vox[comp][voxel_idx] = (1.0/top.kelvinFactor(i,comp_list))*stress_mf[i]
     # Compute average stress norm (convergence criterion)
-    n_voxels = np.prod(n_voxels_dims)
     avg_stress_norm = 0
     for i in range(len(comp_list)):
         comp = comp_list[i]
@@ -419,10 +420,11 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,rve_dims,n_voxels_dims,regul
                 compj = comp_list[j]
                 idx1 = [comp_list.index(compi),comp_list.index(compj)]
                 idx2 = comp_list.index(compj)
-                aux = aux + kelvinFactor(idx1,comp_list)*Green_operator_vox[compi+compj]*\
-                            kelvinFactor(idx2,comp_list)*stress_DFT_vox[compj]
+                aux = aux + \
+                          top.kelvinFactor(idx1,comp_list)*Green_operator_vox[compi+compj]*\
+                                      top.kelvinFactor(idx2,comp_list)*stress_DFT_vox[compj]
             strain_DFT_vox[compi] = strain_DFT_vox[compi] - \
-                                                         (1.0/kelvinFactor(i,comp_list))*aux
+                                                     (1.0/top.kelvinFactor(i,comp_list))*aux
             # Enforce macroscopic strain at the zero-frequency strain component
             freq_0_idx = n_dim*(0,)
             strain_DFT_vox[compi][freq_0_idx] = mac_strain_DFT_0[i]
@@ -467,13 +469,14 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,rve_dims,n_voxels_dims,regul
             strain_mf = np.zeros(len(comp_list))
             for i in range(len(comp_list)):
                 comp = comp_list[i]
-                strain_mf[i] = kelvinFactor(i,comp_list)*strain_vox[comp][voxel_idx]
+                strain_mf[i] = top.kelvinFactor(i,comp_list)*strain_vox[comp][voxel_idx]
             # Update stress for current discrete frequency
             stress_mf = np.zeros(len(comp_list))
             stress_mf = top.dot21_1(De_tensor_mf,strain_mf)
             for i in range(len(comp_list)):
                 comp = comp_list[i]
-                stress_vox[comp][voxel_idx] = (1.0/kelvinFactor(i,comp_list))*stress_mf[i]
+                stress_vox[comp][voxel_idx] = \
+                                            (1.0/top.kelvinFactor(i,comp_list))*stress_mf[i]
         # Compute average stress norm (convergence criterion)
         avg_stress_norm_Old = avg_stress_norm
         avg_stress_norm = 0
@@ -494,66 +497,6 @@ def FFTHomogenizationBasicScheme(problem_type,n_dim,rve_dims,n_voxels_dims,regul
                                         '{:>11.4e}'.format(stress_vox[comp][val_voxel_idx]))
         # ----------------------------------------------------------------------------------
 #
-#                                                                    Complementary functions
-# ==========================================================================================
-# Set the coefficient associated to the Kelvin notation when storing a symmetric
-# second-order tensor or a minor simmetric fourth-order tensor in matrix form.
-# For a given component index in a given component list, this function returns the
-# component's associated Kelvin notation factor.
-#
-# For instance, assuming that the component list is ['11','22','12'] (2D problem) or
-# ['11','22','33','12','23','13'] (3D problem), the Kelvin notation matricial form is
-# described as follows:
-#
-# A. Symmetric second-order tensor Aij (Aij=Aji):
-#          _       _
-#     A = | A11 A12 |      stored as  A = [ A11 A22 sr(2)*A12 ]
-#         |_A21 A22_|
-#          _           _
-#         | A11 A12 A13 |
-#     A = | A21 A22 A23 |  stored as  A = [ A11 A22 A33 sr(2)*A12 sr(2)*A23 sr(2)*A13 ]
-#         |_A31 A32 A33_|
-#
-# B. Minor simmetric fourth-order tensor Aijkl (Aijkl=Ajikl=Aijlk=Ajilk):
-#                                          _                                     _
-#                                         |    A1111        A1122     sr(2)*A1112 |
-#     A[i,j,k,l] = Aijkl,  stored as  A = |    A2211        A2222     sr(2)*A2212 |
-#      i,j,k,l in [1,2]                   |_sr(2)*A1211  sr(2)*A1222    2*A1212  _|
-#
-#
-#     A[i,j,k,l] = Aijkl, i,j,k,l in [1,2,3]  stored as
-#            _                                                                            _
-#           |    A1111        A1122        A1133     sr(2)*A1112  sr(2)*A1123  sr(2)*A1113 |
-#           |    A2211        A2222        A2233     sr(2)*A2212  sr(2)*A2223  sr(2)*A2213 |
-#       A = |    A3311        A3322        A3333     sr(2)*A3312  sr(2)*A3323  sr(2)*A3313 |
-#           | sr(2)*A1211  sr(2)*A1222  sr(2)*A1233    2*A1212      2*A1223      2*A1213   |
-#           | sr(2)*A2311  sr(2)*A2322  sr(2)*A2333    2*A2312      2*A2323      2*A2313   |
-#           |_sr(2)*A1311  sr(2)*A1322  sr(2)*A1333    2*A1312      2*A1323      2*A1313  _|
-#
-# Note: The sr() stands for square-root of ().
-#
-def kelvinFactor(idx,comp_list):
-    if isinstance(idx,int):
-        if int(list(comp_list[idx])[0]) == int(list(comp_list[idx])[1]):
-            factor = 1.0
-        else:
-            factor = math.sqrt(2)
-    else:
-        factor = 1.0
-        for i in idx:
-            if int(list(comp_list[i])[0]) != int(list(comp_list[i])[1]):
-                factor = factor*math.sqrt(2)
-    return factor
-# ------------------------------------------------------------------------------------------
-# Discrete Dirac's delta function (dij = 1 if i=j, dij = 0 if i!=j).
-def Dd(i,j):
-    if not isinstance(i,int) or not isinstance(j,int):
-          print('\nAbort: The discrete Dirac\'s delta function only accepts two ' + \
-                'integer indexes as arguments.\n')
-          sys.exit(1)
-    value = 1 if i == j else 0
-    return value
-# ------------------------------------------------------------------------------------------
 # Compute the small strain elasticity tensor according to the problem type and material
 # constitutive model. Then store it in matricial form following Kelvin notation.
 #
@@ -628,25 +571,27 @@ if __name__ == '__main__':
     print('\nValidation: ',(len(val_functions)*'{}, ').format(*val_functions), 3*'\b', ' ')
     print(92*'-')
     # Set functions arguments
-    problem_type = 4
-    n_dim = 3
+    problem_type = 1
     rve_dims = [1.0,1.0,1.0]
     discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
-    'debug/FFT_Homogenization_Method/RVE_3D_2Phases_5x5x5.rgmsh.npy'
+    'debug/FFT_Homogenization_Method/RVE_2D_2Phases_100x100.rgmsh.npy'
     regular_grid = np.load(discret_file_path)
-    n_voxels_dims = [regular_grid.shape[i] for i in range(len(regular_grid.shape))]
-    n_material_phases = 2
+    n_dim = len(regular_grid.shape)
     material_properties = np.zeros((2,2,2),dtype=object)
     material_properties[0,0,0] = 'E' ; material_properties[0,1,0] = 210e6
     material_properties[1,0,0] = 'v' ; material_properties[1,1,0] = 0.3
     material_properties[0,0,1] = 'E' ; material_properties[0,1,1] = 70e6
     material_properties[1,0,1] = 'v' ; material_properties[1,1,1] = 0.33
+    if problem_type == 1:
+        comp_list = ['11','22','12']
+    elif problem_type == 4:
+        comp_list = ['11','22','33','12','23','13']
     if n_dim == 2:
         mac_strain = np.array([[2,0.5],[0.5,1]])
     else:
         mac_strain = np.array([[2,0.5,0.5],[0.5,1,1],[0.5,1,3]])
     # Call function
-    FFTHomogenizationBasicScheme(problem_type,n_dim,rve_dims,n_voxels_dims,regular_grid,
-                                           n_material_phases,material_properties,mac_strain)
+    FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_properties,
+                                                                       comp_list,mac_strain)
     # Display validation footer
     print('\n' + 92*'-' + '\n')
