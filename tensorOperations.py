@@ -30,6 +30,16 @@ dot12_1 = lambda A1,B2 : np.einsum('i,ij -> j',A1,B2)
 # Tensorial double contractions
 ddot44_1 = lambda A4,B4 : np.einsum('ijmn,mnkl -> ijkl',A4,B4)
 #
+#                                                                                  Operators
+# ==========================================================================================
+# Discrete Dirac's delta function (dij = 1 if i=j, dij = 0 if i!=j).
+def Dd(i,j):
+    if not isinstance(i,int) or not isinstance(j,int):
+          print('\nAbort: The discrete Dirac\'s delta function only accepts two ' + \
+                'integer indexes as arguments.\n')
+          sys.exit(1)
+    value = 1 if i == j else 0
+    return value
 #                                                                       Set identity tensors
 # ==========================================================================================
 # Set the following common identity tensors:
@@ -312,10 +322,27 @@ def getTensorFromMatricialForm(tensor_mf,n_dim,comp_list):
             tensor[fo_idx] = (1.0/factor)*tensor_mf[mf_idx]
     # Return
     return tensor
+# ------------------------------------------------------------------------------------------
+# Set the coefficient associated to the Kelvin notation when storing a symmetric
+# second-order tensor or a minor simmetric fourth-order tensor in matricial form. For a
+# given component index in a given component list, this function returns the component's
+# associated Kelvin notation factor.
+def kelvinFactor(idx,comp_list):
+    if isinstance(idx,int):
+        if int(list(comp_list[idx])[0]) == int(list(comp_list[idx])[1]):
+            factor = 1.0
+        else:
+            factor = math.sqrt(2)
+    else:
+        factor = 1.0
+        for i in idx:
+            if int(list(comp_list[i])[0]) != int(list(comp_list[i])[1]):
+                factor = factor*math.sqrt(2)
+    return factor
 #
 #                                                                     Validation (temporary)
 # ==========================================================================================
-if False:
+if if __name__ == '__main__':
     # Set functions being validated
     val_functions = ['setMatricialForm()','getTensorFromMatricialForm()']
     # Set functions arguments
@@ -338,7 +365,7 @@ if False:
     print('\nRecovered original tensor?',np.all(original_tensor==tensor))
     print('\n' + 72*'-' + '\n')
 
-if False:
+if if __name__ == '__main__':
     # Set functions being validated
     val_functions = ['setIdentityTensors()',]
     # Set function arguments
