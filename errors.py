@@ -233,7 +233,9 @@ def displayError(code,*args):
                    'input data file. ' + '\n' + \
                    indent + 'In particular, the specified path to the spatial ' + \
                    'discretization file has an invalid' + '\n' + \
-                   indent + 'extension.' + '\n\n' + \
+                   indent + 'extension (python format extensions are ignored ' + \
+                   'when checking the spatial discretization ' + '\n' + \
+                   indent + 'file extension).' + '\n\n' + \
                    indent + 'Valid extensions:' + n_valid_exts*' \'{}\''
     elif code == 'E00016':
         arguments = ['',]
@@ -294,7 +296,7 @@ def displayError(code,*args):
         arguments = ['',]
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
-                   indent + 'Invalid component in component list.'
+                   indent + 'Invalid component in component order list.'
     elif code == 'E00025':
         arguments = ['',]
         values = tuple(arguments)
@@ -304,12 +306,12 @@ def displayError(code,*args):
         arguments = ['',]
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
-                   indent + 'Duplicated component in component list.'
+                   indent + 'Duplicated component in component order list.'
     elif code == 'E00027':
         arguments = ['',]
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
-                   indent + 'Invalid number of components in component list.'
+                   indent + 'Invalid number of components in component order list.'
     elif code == 'E00028':
         arguments = ['',]
         values = tuple(arguments)
@@ -325,6 +327,25 @@ def displayError(code,*args):
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'Tensor matricial form must be a vector or a matrix.'
+    elif code == 'E00031':
+        arguments = 5*[args[2],]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The keyword - {} - hasn\'t been properly defined in ' + \
+                   'the input data file.' + '\n' + \
+                   indent + 'The keyword specification is either missing, provided ' + \
+                   'in a wrong format or has at least' + '\n' + \
+                   indent + 'one specified dimension as a non-positive floating-point ' + \
+                   'number.' + '\n\n' + \
+                   'Suggestion:' + '\n\n' + \
+                   indent + 'The keyword - {} - should be specified in a 2D problem as' + \
+                   '\n\n' + \
+                   indent + '{}' + '\n' + \
+                   indent + '< dim1_size > < dim2_size >' + '\n\n\n' + \
+                   indent + 'The keyword - {} - should be specified in a 3D problem as' + \
+                   '\n\n' + \
+                   indent + '{}' + '\n' + \
+                   indent + '< dim1_size > < dim2_size > < dim3_size >'
     #print(template_header.format(*header,width=output_width))
     #print(template.format(*values,width=output_width))
     #print(template_footer.format(*footer,width=output_width))

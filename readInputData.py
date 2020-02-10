@@ -118,18 +118,7 @@ def readInputData(input_file,input_file_path,problem_name,problem_dir):
     keyword = 'Problem_Type'
     max = 4
     problem_type = readTypeAKeyword(input_file,input_file_path,keyword,max)
-    if problem_type == 1:
-        n_dim = 2
-        n_strain = 3
-    elif problem_type == 2:
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00017',location.filename,location.lineno+1,problem_type)
-    elif problem_type == 3:
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00017',location.filename,location.lineno+1,problem_type)
-    elif problem_type == 4:
-        n_dim = 3
-        n_strain = 6
+    n_dim, comp_order = setProblemTypeParameters(problem_type)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read number of material phases
     keyword = 'Number_of_Material_Phases'
@@ -272,18 +261,22 @@ def readInputData(input_file,input_file_path,problem_name,problem_dir):
     # Copy the spatial discretization file to the problem directory and update the absolute
     # path to the copied file
     try:
-        shutil.copy2(discret_file_path,problem_dir+problem_name+discret_file_ext)
-        discret_file_path = problem_dir+problem_name+discret_file_ext
+        shutil.copy2(discret_file_path,problem_dir+ntpath.basename(discret_file_path))
+        discret_file_path = problem_dir+ntpath.basename(discret_file_path)
     except IOError as message:
         location = inspect.getframeinfo(inspect.currentframe())
         errors.displayException(location.filename,location.lineno+1,message)
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    return [strain_formulation,problem_type,n_dim,n_strain,n_material_phases,
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Read RVE dimensions
+    keyword = 'RVE_Dimensions'
+    rve_dims = readRVEDimensions(input_file,input_file_path,keyword,n_dim)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    return [strain_formulation,problem_type,n_dim,n_material_phases,
             material_properties,macroscale_loading_type,macroscale_loading,
             macroscale_load_indexes,self_consistent_scheme,scs_max_n_iterations,
             scs_conv_tol,clustering_method,clustering_strategy,clustering_solution_method,
             phase_clustering,n_load_increments,max_n_iterations,conv_tol,
-            max_subincrem_level,max_n_iterations,su_conv_tol,discret_file_path]
+            max_subincrem_level,max_n_iterations,su_conv_tol,discret_file_path,rve_dims]
 #
 # ------------------------------------------------------------------------------------------
 # Read a keyword of type A specification, characterized as follows:
@@ -319,7 +312,7 @@ def readTypeBKeyword(file,file_path,keyword):
     elif len(line) != 1:
         location = inspect.getframeinfo(inspect.currentframe())
         errors.displayError('E00004',location.filename,location.lineno+1,keyword)
-    elif not checkNumber(line[0]) and float(line[0]) <= 0:
+    elif not checkNumber(line[0]) or float(line[0]) <= 0:
         location = inspect.getframeinfo(inspect.currentframe())
         errors.displayError('E00004',location.filename,location.lineno+1,keyword)
     return float(line[0])
@@ -548,8 +541,69 @@ def readDiscretizationFilePath(file,file_path,keyword,valid_exts):
         location = inspect.getframeinfo(inspect.currentframe())
         errors.displayError('E00014',location.filename,location.lineno+1,keyword,\
                                                                           discret_file_path)
-    elif not ntpath.splitext(ntpath.basename(discret_file_path))[-1] in valid_exts:
+    format_exts = ['.npy']
+    if ntpath.splitext(ntpath.basename(discret_file_path))[-1] in format_exts:
+        if not ntpath.splitext(ntpath.splitext(ntpath.basename(discret_file_path))[0])[-1] \
+                                                                              in valid_exts:
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayError('E00015',location.filename,location.lineno+1,keyword,\
+                                                                                 valid_exts)
+        discret_file_ext = \
+                 ntpath.splitext(ntpath.splitext(ntpath.basename(discret_file_path))[0])[-1]
+        return [discret_file_path,discret_file_ext]
+    else:
+        if not ntpath.splitext(ntpath.basename(discret_file_path))[-1] in valid_exts:
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayError('E00015',location.filename,location.lineno+1,keyword,\
+                                                                                 valid_exts)
+        discret_file_ext = ntpath.splitext(ntpath.basename(discret_file_path))[-1]
+        return [discret_file_path,discret_file_ext]
+# ------------------------------------------------------------------------------------------
+# Read the RVE dimensions specified as follows:
+#
+# 2D Problems:
+#
+# RVE_Dimensions
+# < dim1_size > < dim2_size >
+#
+# 3D Problems:
+#
+# RVE_Dimensions
+# < dim1_size > < dim2_size > < dim3_size >
+#
+def readRVEDimensions(file,file_path,keyword,n_dim):
+    keyword_line_number = searchKeywordLine(file,keyword)
+    line = linecache.getline(file_path,keyword_line_number+1).strip().split(' ')
+    if line == '':
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00015',location.filename,location.lineno+1,keyword,valid_exts)
-    discret_file_ext = ntpath.splitext(ntpath.basename(discret_file_path))[-1]
-    return [discret_file_path,discret_file_ext]
+        errors.displayError('E00031',location.filename,location.lineno+1,keyword)
+    elif len(line) != n_dim:
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00031',location.filename,location.lineno+1,keyword)
+    for i in range(n_dim):
+        if not checkNumber(line[i]) or float(line[i]) <= 0:
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayError('E00031',location.filename,location.lineno+1,keyword)
+    rve_dims = list()
+    for i in range(n_dim):
+        rve_dims.append(float(line[i]))
+    return rve_dims
+#
+#                                                                      Consistency functions
+# ==========================================================================================
+# Set parameters dependent on the problem type
+def setProblemTypeParameters(problem_type):
+    # Set problem dimension and strain/stress components order
+    if problem_type == 1:
+        n_dim = 2
+        comp_order = ['11','22','12']
+    elif problem_type == 2:
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00017',location.filename,location.lineno+1,problem_type)
+    elif problem_type == 3:
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00017',location.filename,location.lineno+1,problem_type)
+    elif problem_type == 4:
+        n_dim = 3
+        comp_order = ['11','22','33','12','23','13']
+    return [n_dim,comp_order]

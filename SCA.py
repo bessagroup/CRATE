@@ -102,11 +102,11 @@ except FileNotFoundError as message:
     errors.displayException(location.filename,location.lineno+1,message)
 # Read input data according to analysis type
 info.displayInfo('5','Reading the input data file...')
-strain_formulation,problem_type,n_dim,n_strain,n_material_phases,material_properties, \
+strain_formulation,problem_type,n_dim,n_material_phases,material_properties, \
 macroscale_loading_type,macroscale_loading,macroscale_load_indexes,self_consistent_scheme, \
 scs_max_n_iterations,scs_conv_tol,clustering_method,clustering_strategy, \
 clustering_solution_method,phase_clustering,n_load_increments,max_n_iterations,conv_tol, \
-max_subincrem_level,max_n_iterations,su_conv_tol,discret_file_path = \
+max_subincrem_level,max_n_iterations,su_conv_tol,discret_file_path,rve_dims = \
                       rid.readInputData(input_file,input_file_path,problem_name,problem_dir)
 # Close user input data file
 input_file.close()
@@ -124,7 +124,9 @@ info.displayInfo('2','Compute cluster-defining quantities')
 phase_init_time = time.time()
 # Compute the quantities required to perform the clustering according to the strategy
 # adopted
-clsq.computeClusteringQuantities(clustering_strategy,clustering_solution_method,discret_file_path)
+clsq.computeClusteringQuantities(strain_formulation,problem_type,clustering_strategy,
+                                      clustering_solution_method,discret_file_path,rve_dims,
+                                      n_material_phases,material_properties)
 
 # Set phase ending time and display finishing phase information
 phase_end_time = time.time()
