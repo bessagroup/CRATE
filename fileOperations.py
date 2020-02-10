@@ -138,7 +138,8 @@ def setProblemDirs(input_file_name,input_file_dir):
         makeDirectory(problem_dir)
         for dir in [offline_stage_dir,postprocess_dir]:
             makeDirectory(dir)
-        #
+        # There is no previously computed offline stage data
+        is_same_offstage = False
     else:
         info.print2('\nWarning: The problem directory for the specified input data ' + \
                                                                      'file already exists.')
