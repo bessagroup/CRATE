@@ -61,7 +61,7 @@ import tensorOperations as top
 #         exist and is performed columnwise otherwise.
 #
 def FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_properties,
-                                                                      comp_list,mac_strain):
+                                                                     comp_order,mac_strain):
     #
     #                                                                             Parameters
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -80,7 +80,7 @@ def FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_pro
     # Set number of material phases
     n_material_phases = material_properties.shape[2]
     # Set macroscale strain matricial form
-    mac_strain_mf = top.setTensorMatricialForm(mac_strain,n_dim,comp_list)
+    mac_strain_mf = top.setTensorMatricialForm(mac_strain,n_dim,comp_order)
     #
     #                                                     Material phases elasticity tensors
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -101,8 +101,8 @@ def FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_pro
             else:
                 req_props_vals[req_props[iprop]] = material_properties[match[0][0],1,iphase]
         # Compute elasticity tensor (matricial form) for current material phase
-        De_tensor_mf = np.zeros((len(comp_list),len(comp_list)))
-        De_tensor_mf = getElasticityTensor(problem_type,n_dim,comp_list,req_props_vals)
+        De_tensor_mf = np.zeros((len(comp_order),len(comp_order)))
+        De_tensor_mf = getElasticityTensor(problem_type,n_dim,comp_order,req_props_vals)
         # Store material phase elasticity tensor (matricial form)
         De_tensors_mf.append(De_tensor_mf)
     # --------------------------------------------------------------------------------------
@@ -124,9 +124,9 @@ def FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_pro
     req_props_vals_ref['E'] = 100e6
     req_props_vals_ref['v'] = 0.3
     # Compute compliance tensor (matricial form)
-    Se_tensor_mf_ref = np.zeros((len(comp_list),len(comp_list)))
+    Se_tensor_mf_ref = np.zeros((len(comp_order),len(comp_order)))
     Se_tensor_mf_ref = \
-         np.linalg.inv(getElasticityTensor(problem_type,n_dim,comp_list,req_props_vals_ref))
+         np.linalg.inv(getElasticityTensor(problem_type,n_dim,comp_order,req_props_vals_ref))
     # --------------------------------------------------------------------------------------
     # Validation:
     if __name__ == '__main__':
@@ -182,14 +182,14 @@ def FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_pro
     c1 = 1.0/(4.0*miu_ref)
     c2 = (miu_ref + lam_ref)/(miu_ref*(lam_ref + 2.0*miu_ref))
     # Set Green operator matricial form components
-    comps = list(it.product(comp_list,comp_list))
+    comps = list(it.product(comp_order,comp_order))
     # Set mapping between Green operator fourth-order tensor and matricial form components
     fo_indexes = list()
     mf_indexes = list()
-    for i in range(len(comp_list)**2):
+    for i in range(len(comp_order)**2):
         fo_indexes.append([int(x)-1 for x in list(comps[i][0]+comps[i][1])])
         mf_indexes.append([x for x in \
-                               [comp_list.index(comps[i][0]),comp_list.index(comps[i][1])]])
+                               [comp_order.index(comps[i][0]),comp_order.index(comps[i][1])]])
     # Initialize Green operator
     Green_operator_vox = {''.join([str(x+1) for x in idx]): \
                                        np.zeros(tuple(n_voxels_dims)) for idx in fo_indexes}
@@ -247,8 +247,8 @@ def FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_pro
     #                                                                       Iterative scheme
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Initialize strain and stress tensors
-    strain_vox = {comp: np.zeros(tuple(n_voxels_dims)) for comp in comp_list}
-    stress_vox = {comp: np.zeros(tuple(n_voxels_dims)) for comp in comp_list}
+    strain_vox = {comp: np.zeros(tuple(n_voxels_dims)) for comp in comp_order}
+    stress_vox = {comp: np.zeros(tuple(n_voxels_dims)) for comp in comp_order}
     #
     #                                                                Initial iterative guess
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -260,22 +260,22 @@ def FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_pro
         # Get material phase elasticity tensor (matricial form)
         De_tensor_mf = De_tensors_mf[phase_idx]
         # Set strain initial iterative guess
-        strain_mf = np.zeros(len(comp_list))
+        strain_mf = np.zeros(len(comp_order))
         strain_mf = mac_strain_mf
-        for i in range(len(comp_list)):
-            comp = comp_list[i]
-            strain_vox[comp][voxel_idx] = (1.0/top.kelvinFactor(i,comp_list))*strain_mf[i]
+        for i in range(len(comp_order)):
+            comp = comp_order[i]
+            strain_vox[comp][voxel_idx] = (1.0/top.kelvinFactor(i,comp_order))*strain_mf[i]
         # Set stress initial iterative guess
-        stress_mf = np.zeros(len(comp_list))
+        stress_mf = np.zeros(len(comp_order))
         stress_mf = top.dot21_1(De_tensor_mf,strain_mf) #(confirmar dot21_1)
         #stress_mf = np.matmul(De_tensor_mf,strain_mf)
-        for i in range(len(comp_list)):
-            comp = comp_list[i]
-            stress_vox[comp][voxel_idx] = (1.0/top.kelvinFactor(i,comp_list))*stress_mf[i]
+        for i in range(len(comp_order)):
+            comp = comp_order[i]
+            stress_vox[comp][voxel_idx] = (1.0/top.kelvinFactor(i,comp_order))*stress_mf[i]
     # Compute average stress norm (convergence criterion)
     avg_stress_norm = 0
-    for i in range(len(comp_list)):
-        comp = comp_list[i]
+    for i in range(len(comp_order)):
+        comp = comp_order[i]
         if comp[0] == comp[1]:
             avg_stress_norm = avg_stress_norm + np.square(stress_vox[comp])
         else:
@@ -287,14 +287,14 @@ def FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_pro
     if __name__ == '__main__':
         print('\nStrain initial iterative guess (voxel_idx = ' + str(val_voxel_idx) + \
                                                                                      '):\n')
-        for i in range(len(comp_list)):
-            comp = comp_list[i]
+        for i in range(len(comp_order)):
+            comp = comp_order[i]
             print('Component ' + comp + ': ', \
                                         '{:>11.4e}'.format(strain_vox[comp][val_voxel_idx]))
         print('\nStress initial iterative guess (voxel_idx = ' + str(val_voxel_idx) + \
                                                                                      '):\n')
-        for i in range(len(comp_list)):
-            comp = comp_list[i]
+        for i in range(len(comp_order)):
+            comp = comp_order[i]
             print('Component ' + comp + ': ', \
                                         '{:>11.4e}'.format(stress_vox[comp][val_voxel_idx]))
     # --------------------------------------------------------------------------------------
@@ -303,20 +303,20 @@ def FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_pro
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Compute strain Discrete Fourier Transform (DFT)
     strain_DFT_vox = \
-                  {comp: np.zeros(tuple(n_voxels_dims),dtype=complex) for comp in comp_list}
-    for comp in comp_list:
+                  {comp: np.zeros(tuple(n_voxels_dims),dtype=complex) for comp in comp_order}
+    for comp in comp_order:
         # Discrete Fourier Transform (DFT) by means of Fast Fourier Transform (FFT)
         strain_DFT_vox[comp] = np.fft.fftn(strain_vox[comp])
     # Store macroscale strain DFT at the zero-frequency
     freq_0_idx = n_dim*(0,)
     mac_strain_DFT_0 = np.zeros((n_dim,n_dim))
-    mac_strain_DFT_0 = np.array([strain_DFT_vox[comp][freq_0_idx] for comp in comp_list])
+    mac_strain_DFT_0 = np.array([strain_DFT_vox[comp][freq_0_idx] for comp in comp_order])
     # --------------------------------------------------------------------------------------
     # Validation:
     if __name__ == '__main__':
         print('\nStrain DFT (freq_idx = ' + str(val_voxel_idx) + '):\n')
-        for i in range(len(comp_list)):
-            comp = comp_list[i]
+        for i in range(len(comp_order)):
+            comp = comp_order[i]
             print('Component ' + comp + ': ', \
                                     '{:>23.4e}'.format(strain_DFT_vox[comp][val_voxel_idx]))
     # --------------------------------------------------------------------------------------
@@ -332,16 +332,16 @@ def FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_pro
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute stress Discrete Fourier Transform (DFT)
         stress_DFT_vox = \
-                  {comp: np.zeros(tuple(n_voxels_dims),dtype=complex) for comp in comp_list}
-        for comp in comp_list:
+                 {comp: np.zeros(tuple(n_voxels_dims),dtype=complex) for comp in comp_order}
+        for comp in comp_order:
             # Discrete Fourier Transform (DFT) by means of Fast Fourier Transform (FFT)
             stress_DFT_vox[comp] = np.fft.fftn(stress_vox[comp])
         # ----------------------------------------------------------------------------------
         # Validation:
         if __name__ == '__main__':
             print('\nStress DFT (freq_idx = ' + str(val_voxel_idx) + '):\n')
-            for i in range(len(comp_list)):
-                comp = comp_list[i]
+            for i in range(len(comp_order)):
+                comp = comp_order[i]
                 print('Component ' + comp + ': ', \
                                     '{:>23.4e}'.format(stress_DFT_vox[comp][val_voxel_idx]))
         # ----------------------------------------------------------------------------------
@@ -351,7 +351,7 @@ def FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_pro
         # Convergence criterion 1:
         # Discrete error as proposed in (Moulinec, H. and Suquet, P., 1998)
         error_sum = 0
-        stress_DFT_0_mf = np.zeros(len(comp_list),dtype=complex)
+        stress_DFT_0_mf = np.zeros(len(comp_order),dtype=complex)
         div_stress_DFT = {str(comp+1): np.zeros(tuple(n_voxels_dims),dtype=complex) \
                                                                    for comp in range(n_dim)}
         # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -364,20 +364,20 @@ def FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_pro
             freq_idx = \
                      tuple([list(freqs_dims[x]).index(freq_coord[x]) for x in range(n_dim)])
             # Initialize stress tensor Discrete Fourier Transform (DFT) matricial form
-            stress_DFT_mf = np.zeros(len(comp_list),dtype=complex)
-            for i in range(len(comp_list)):
-                comp = comp_list[i]
+            stress_DFT_mf = np.zeros(len(comp_order),dtype=complex)
+            for i in range(len(comp_order)):
+                comp = comp_order[i]
                 # Build stress tensor Discrete Fourier Transform (DFT) matricial form
                 stress_DFT_mf[i] = \
-                                top.kelvinFactor(i,comp_list)*stress_DFT_vox[comp][freq_idx]
+                               top.kelvinFactor(i,comp_order)*stress_DFT_vox[comp][freq_idx]
                 # Store stress tensor Discrete Fourier Transform (DFT) matricial form for
                 # zero-frequency
                 if freq_idx == n_dim*(0,):
                     stress_DFT_0_mf[i] = \
-                                top.kelvinFactor(i,comp_list)*stress_DFT_vox[comp][freq_idx]
+                               top.kelvinFactor(i,comp_order)*stress_DFT_vox[comp][freq_idx]
             # Build stress tensor Discrete Fourier Transform (DFT)
             stress_DFT = np.zeros((n_dim,n_dim),dtype=complex)
-            stress_DFT = top.getTensorFromMatricialForm(stress_DFT_mf,n_dim,comp_list)
+            stress_DFT = top.getTensorFromMatricialForm(stress_DFT_mf,n_dim,comp_order)
             # Add discrete frequency contribution to discrete error required sum
             error_sum = error_sum + \
                         np.linalg.norm(top.dot12_1(1j*np.asarray(freq_coord),stress_DFT))**2
@@ -497,19 +497,19 @@ def FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_pro
         #
         #                                                                      Update strain
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~----~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        for i in range(len(comp_list)):
-            compi = comp_list[i]
+        for i in range(len(comp_order)):
+            compi = comp_order[i]
             # Update strain
             aux = 0
-            for j in range(len(comp_list)):
-                compj = comp_list[j]
-                idx1 = [comp_list.index(compi),comp_list.index(compj)]
-                idx2 = comp_list.index(compj)
+            for j in range(len(comp_order)):
+                compj = comp_order[j]
+                idx1 = [comp_order.index(compi),comp_order.index(compj)]
+                idx2 = comp_order.index(compj)
                 aux = aux + \
-                          top.kelvinFactor(idx1,comp_list)*Green_operator_vox[compi+compj]*\
-                                      top.kelvinFactor(idx2,comp_list)*stress_DFT_vox[compj]
+                         top.kelvinFactor(idx1,comp_order)*Green_operator_vox[compi+compj]*\
+                                     top.kelvinFactor(idx2,comp_order)*stress_DFT_vox[compj]
             strain_DFT_vox[compi] = strain_DFT_vox[compi] - \
-                                                     (1.0/top.kelvinFactor(i,comp_list))*aux
+                                                    (1.0/top.kelvinFactor(i,comp_order))*aux
             # Enforce macroscopic strain at the zero-frequency strain component
             freq_0_idx = n_dim*(0,)
             strain_DFT_vox[compi][freq_0_idx] = mac_strain_DFT_0[i]
@@ -517,8 +517,8 @@ def FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_pro
         # Validation:
         if __name__ == '__main__':
             print('\nStrain DFT - Update (freq_idx = ' + str(val_voxel_idx) + '):\n')
-            for i in range(len(comp_list)):
-                comp = comp_list[i]
+            for i in range(len(comp_order)):
+                comp = comp_order[i]
                 print('Component ' + comp + ': ', \
                                     '{:>23.4e}'.format(strain_DFT_vox[comp][val_voxel_idx]))
         # ----------------------------------------------------------------------------------
@@ -526,7 +526,7 @@ def FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_pro
         #                                   Strain Inverse Discrete Fourier Transform (IDFT)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute strain Inverse Discrete Fourier Transform (IDFT)
-        for comp in comp_list:
+        for comp in comp_order:
             # Inverse Discrete Fourier Transform (IDFT) by means of Fast Fourier
             # Transform (FFT)
             strain_vox[comp] = np.real(np.fft.ifftn(strain_DFT_vox[comp]))
@@ -534,8 +534,8 @@ def FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_pro
         # Validation:
         if __name__ == '__main__':
             print('\nStrain (voxel_idx = ' + str(val_voxel_idx) + '):\n')
-            for i in range(len(comp_list)):
-                comp = comp_list[i]
+            for i in range(len(comp_order)):
+                comp = comp_order[i]
                 print('Component ' + comp + ': ', \
                                         '{:>11.4e}'.format(strain_vox[comp][val_voxel_idx]))
         # ----------------------------------------------------------------------------------
@@ -551,22 +551,22 @@ def FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_pro
             # Get material phase elasticity tensor (matricial form)
             De_tensor_mf = De_tensors_mf[phase_idx]
             # Get strain vector for current discrete frequency
-            strain_mf = np.zeros(len(comp_list))
-            for i in range(len(comp_list)):
-                comp = comp_list[i]
-                strain_mf[i] = top.kelvinFactor(i,comp_list)*strain_vox[comp][voxel_idx]
+            strain_mf = np.zeros(len(comp_order))
+            for i in range(len(comp_order)):
+                comp = comp_order[i]
+                strain_mf[i] = top.kelvinFactor(i,comp_order)*strain_vox[comp][voxel_idx]
             # Update stress for current discrete frequency
-            stress_mf = np.zeros(len(comp_list))
+            stress_mf = np.zeros(len(comp_order))
             stress_mf = top.dot21_1(De_tensor_mf,strain_mf)
-            for i in range(len(comp_list)):
-                comp = comp_list[i]
+            for i in range(len(comp_order)):
+                comp = comp_order[i]
                 stress_vox[comp][voxel_idx] = \
-                                            (1.0/top.kelvinFactor(i,comp_list))*stress_mf[i]
+                                           (1.0/top.kelvinFactor(i,comp_order))*stress_mf[i]
         # Compute average stress norm (convergence criterion)
         avg_stress_norm_Old = avg_stress_norm
         avg_stress_norm = 0
-        for i in range(len(comp_list)):
-            comp = comp_list[i]
+        for i in range(len(comp_order)):
+            comp = comp_order[i]
             if comp[0] == comp[1]:
                 avg_stress_norm = avg_stress_norm + np.square(stress_vox[comp])
             else:
@@ -576,8 +576,8 @@ def FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_pro
         # Validation:
         if __name__ == '__main__':
             print('\nStress (voxel_idx = ' + str(val_voxel_idx) + '):\n')
-            for i in range(len(comp_list)):
-                comp = comp_list[i]
+            for i in range(len(comp_order)):
+                comp = comp_order[i]
                 print('Component ' + comp + ': ', \
                                         '{:>11.4e}'.format(stress_vox[comp][val_voxel_idx]))
         # ----------------------------------------------------------------------------------
@@ -629,7 +629,7 @@ def FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_pro
 #
 #    Note: E and v denote the Young modulus and the Poisson ratio respectively.
 #
-def getElasticityTensor(problem_type,n_dim,comp_list,properties):
+def getElasticityTensor(problem_type,n_dim,comp_order,properties):
     # Get Young's Modulus and Poisson ratio
     E = properties['E']
     v = properties['v']
@@ -641,11 +641,11 @@ def getElasticityTensor(problem_type,n_dim,comp_list,properties):
     # 2D problem (plane strain)
     if problem_type == 1:
         De_tensor = lam*FODiagTrace + 2.0*miu*FOSym
-        De_tensor_mf = top.setTensorMatricialForm(De_tensor,n_dim,comp_list)
+        De_tensor_mf = top.setTensorMatricialForm(De_tensor,n_dim,comp_order)
     # 3D problem
     elif problem_type == 4:
         De_tensor = lam*FODiagTrace + 2.0*miu*FOSym
-        De_tensor_mf = top.setTensorMatricialForm(De_tensor,n_dim,comp_list)
+        De_tensor_mf = top.setTensorMatricialForm(De_tensor,n_dim,comp_order)
     # Return
     return De_tensor_mf
 #
@@ -670,15 +670,15 @@ if __name__ == '__main__':
     material_properties[0,0,1] = 'E' ; material_properties[0,1,1] = 70e6
     material_properties[1,0,1] = 'v' ; material_properties[1,1,1] = 0.33
     if problem_type == 1:
-        comp_list = ['11','22','12']
+        comp_order = ['11','22','12']
     elif problem_type == 4:
-        comp_list = ['11','22','33','12','23','13']
+        comp_order = ['11','22','33','12','23','13']
     if n_dim == 2:
         mac_strain = np.array([[2,0.5],[0.5,1]])
     else:
         mac_strain = np.array([[2,0.5,0.5],[0.5,1,1],[0.5,1,3]])
     # Call function
     FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_properties,
-                                                                       comp_list,mac_strain)
+                                                                      comp_order,mac_strain)
     # Display validation footer
     print('\n' + 92*'-' + '\n')
