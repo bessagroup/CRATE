@@ -9,10 +9,16 @@
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
+# Operating system related functions
+import os
 # Working with arrays
 import numpy as np
+# Extract information from path
+import ntpath
 # Display messages
 import info
+# Read user input data file
+import readInputData as rid
 # FFT-Based Homogenization Method (Moulinec, H. and Suquet, P., 1998)
 import FFTHomogenizationBasicScheme
 #
@@ -38,10 +44,10 @@ import FFTHomogenizationBasicScheme
 #    with n_voxels = d1xd2 (2D) or n_voxels = d1xd2xd3 (3D), where di is the number of
 #    voxels in the dimension i, as
 #                         _                       _
-#                        | a b1 b2 c11 c21 c12 c22 | > voxel 1
-#                array = | a b1 b2 c11 c21 c12 c22 | > voxel 2
+#                        | a b1 b2 c11 c21 c12 c22 | > voxel 0
+#                array = | a b1 b2 c11 c21 c12 c22 | > voxel 1
 #                        | . .. .. ... ... ... ... | > ...
-#                        |_a b1 b2 c11 c21 c12 c22_| > voxel n_voxels
+#                        |_a b1 b2 c11 c21 c12 c22_| > voxel n_voxels - 1
 #
 #    The quantities associated to each clustering process (referring to columns of the
 #    previous array) are then specified in a list as
@@ -52,41 +58,55 @@ import FFTHomogenizationBasicScheme
 #         tensor with major or minor simmetries, only the independent components may be
 #         stored in the clustering array
 #
-def computeClusteringQuantities(strain_formulation,problem_type,n_dim,clustering_strategy,
-                                               clustering_solution_method,discret_file_path,
-                                                     n_material_phases,material_properties):
+#   Note: The voxel order in the clustering quantities array is described as follows for
+#         2D and 3D problems
+#
+#                                      2D Problem     3D Problem
+#                          voxel 0       (0,0)          (0,0,0)
+#                          voxel 1       (0,1)          (0,0,1)
+#                          voxel 2       (1,0)          (0,1,0)
+#                          voxel 3       (1,1)          (0,1,1)
+#                          voxel 4         -            (1,0,0)
+#                          voxel 5         -            (1,0,1)
+#                            ...          ...             ...
+#
+#        where voxel(i,j,k) is stored as voxel X, with X = i*d2 + j (2D Problem) and
+#        X = i*(d2*d3) + j*d3 + k (3D Problem)
+#
+def computeClusteringQuantities(strain_formulation,problem_type,clustering_strategy,
+                                clustering_solution_method,discret_file_path,rve_dims,
+                                n_material_phases,material_properties):
     # Extract the required data from the spatial discretization file(s) according to the
     # chosen solution method to compute the cluster-defining quantities
-    #info.displayInfo('5','Reading discretization file...')
+    info.displayInfo('5','Reading discretization file...')
     if clustering_solution_method == 1:
         # Read the spatial discretization file (regular grid of pixels/voxels)
-        regular_grid = np.load(discret_file_path)
-        print(regular_grid)
+        if ntpath.splitext(ntpath.basename(discret_file_path))[-1] == '.npy':
+            regular_grid = np.load(discret_file_path)
+        else:
+            regular_grid = np.loadtxt(discret_file_path)
         # Set number of pixels/voxels in each dimension and total number of pixels/voxels
         n_voxels_dims = [regular_grid.shape[i] for i in range(len(regular_grid.shape))]
         n_voxels = np.prod(n_voxels_dims)
     # Compute the required cluster-defining quantities according to the adopted clustering
     # strategy and set clustering processes quantities list
+    info.displayInfo('5','Computing clustering-defining quantities:')
     if clustering_strategy == 1:
-        # Set strain/stress components order (this must be argument)
-        if problem_type == 1:
-            comp_list = ['11','22','12']
-        elif problem_type == 4:
-            comp_list = ['11','22','33','12','23','13']
-        # Set RVE dimensions (this must be argument)
-        rve_dims = [1.0,1.0,1.0]
+        # Set problem dimension and strain/stress components order list
+        n_dim, comp_order = rid.setProblemTypeParameters(problem_type)
         # In this clustering strategy, only one clustering process is performed based
         # on the strain concentration fourth-order tensor. Initialize the clustering
         # quantities array according to number of independent strain components
-        n_clustering_var = len(comp_list)**2
+        n_clustering_var = len(comp_order)**2
         clustering_quantities = np.zeros((n_voxels,n_clustering_var))
         clustering_processes = [list(range(n_clustering_var)),]
         # Small strain formulation
         if strain_formulation == 1:
+            info.displayInfo('5','Computing strain concentration tensors...',2)
             # Loop over independent strain components
-            for i in range(len(comp_list)):
-                compi = comp_list[i]
-                so_idx = tuple([int(x)-1 for x in list(comp_list[i])])
+            for i in range(len(comp_order)):
+                compi = comp_order[i]
+                so_idx = tuple([int(x)-1 for x in list(comp_order[i])])
                 # Set macroscopic strain loading
                 mac_strain = np.zeros((n_dim,n_dim))
                 if compi[0] == compi[1]:
@@ -97,15 +117,40 @@ def computeClusteringQuantities(strain_formulation,problem_type,n_dim,clustering
                 # Solve RVE static equilibrium problem
                 strain_vox = FFTHomogenizationBasicScheme.FFTHomogenizationBasicScheme(
                                      problem_type,rve_dims,regular_grid,material_properties,
-                                     comp_list,mac_strain)
+                                     comp_order,mac_strain)
                 # Assemble strain concentration tensor components associated to the imposed
                 # macroscale strain loading component
-                for j in range(len(comp_list)):
-                    compj = comp_list[j]
-                    clustering_quantities[:,i*len(comp_list)+j] = \
+                for j in range(len(comp_order)):
+                    compj = comp_order[j]
+                    clustering_quantities[:,i*len(comp_order)+j] = \
                                                                  strain_vox[compj].flatten()
+                # --------------------------------------------------------------------------
+                # Validation:
+                if __name__ == '__main__':
+                    if n_dim == 2:
+                        val_voxel_idx = (2,1)
+                        val_voxel_row = val_voxel_idx[0]*n_voxels_dims[1] + val_voxel_idx[1]
+                    else:
+                        val_voxel_idx = (2,1,3)
+                        val_voxel_row = \
+                                    val_voxel_idx[0]*(n_voxels_dims[1]*n_voxels_dims[2]) + \
+                                        val_voxel_idx[1]*n_voxels_dims[2] + val_voxel_idx[2]
+                    print('\nPerturbed strain component: ' + compi)
+                    for j in range(len(comp_order)):
+                        compj = comp_order[j]
+                        print('  Strain (' + compj + '): ', \
+                                       '{:>11.4e}'.format(strain_vox[compj][val_voxel_idx]))
+                # --------------------------------------------------------------------------
+            # ------------------------------------------------------------------------------
+            # Validation:
+            if __name__ == '__main__':
+                print('\nClustering quantities array row - Voxel ', val_voxel_idx, ':')
+                print(clustering_quantities[val_voxel_row,:])
+                print('\nClustering processes list:')
+                print(clustering_processes)
+            # ------------------------------------------------------------------------------
     # Return the clustering quantities array
-    return clustering_quantities, clustering_processes
+    return [clustering_quantities, clustering_processes]
 #
 #                                                                     Validation (temporary)
 # ==========================================================================================
@@ -118,11 +163,16 @@ if __name__ == '__main__':
     # Set functions arguments
     strain_formulation = 1
     problem_type = 4
-    n_dim = 3
     clustering_strategy = 1
     clustering_solution_method = 1
-    discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
-                        'debug/FFT_Homogenization_Method/RVE_3D_2Phases_5x5x5.rgmsh.npy'
+    if problem_type == 1:
+        discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
+                            'debug/FFT_Homogenization_Method/RVE_2D_2Phases_5x5.rgmsh.npy'
+        rve_dims = [1.0,1.0]
+    else:
+        discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
+                            'debug/FFT_Homogenization_Method/RVE_3D_2Phases_5x5x5.rgmsh.npy'
+        rve_dims = [1.0,1.0,1.0]
     n_material_phases = 2
     material_properties = np.zeros((2,2,2),dtype=object)
     material_properties[0,0,0] = 'E' ; material_properties[0,1,0] = 210e6
@@ -130,7 +180,8 @@ if __name__ == '__main__':
     material_properties[0,0,1] = 'E' ; material_properties[0,1,1] = 70e6
     material_properties[1,0,1] = 'v' ; material_properties[1,1,1] = 0.33
     # Call function
-    computeClusteringQuantities(strain_formulation,problem_type,n_dim,clustering_strategy,
-         clustering_solution_method,discret_file_path,n_material_phases,material_properties)
+    clustering_quantities, clustering_processes = computeClusteringQuantities( \
+             strain_formulation,problem_type,clustering_strategy,clustering_solution_method,
+             discret_file_path,rve_dims,n_material_phases,material_properties)
     # Display validation footer
     print('\n' + 92*'-' + '\n')
