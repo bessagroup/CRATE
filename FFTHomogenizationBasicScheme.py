@@ -9,6 +9,8 @@
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
+# Parse command-line options and arguments
+import sys
 # Working with arrays
 import numpy as np
 # Mathematics
@@ -93,11 +95,12 @@ def FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_pro
         for iprop in range(len(req_props)):
             match = np.where(material_properties[:,0,iphase]==req_props[iprop])
             if len(match[0]) != 1:
-                values = tuple(req_props[iprop],iphase+1)
-                template = 'The elastic property - {} - of material phase {} hasn\'t ' + \
+                values = tuple([req_props[iprop],iphase+1])
+                template = '\nThe elastic property - {} - of material phase {} hasn\'t ' + \
                            'been specified or has been ' + '\n' + \
-                           'specified more than once in the input data file.'
+                           'specified more than once in the input data file.\n'
                 print(template.format(*values))
+                sys.exit(1)
             else:
                 req_props_vals[req_props[iprop]] = material_properties[match[0][0],1,iphase]
         # Compute elasticity tensor (matricial form) for current material phase
