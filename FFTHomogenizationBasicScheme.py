@@ -356,7 +356,7 @@ def FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_pro
                                                                    for comp in range(n_dim)}
         # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         # Test (discrete divergence)
-        partial_xx_DFT = {'11': np.zeros(tuple(n_voxels_dims),dtype=complex)}
+        # partial_xx_DFT = {'11': np.zeros(tuple(n_voxels_dims),dtype=complex)}
         # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         # Loop over discrete frequencies
         for freq_coord in it.product(*freqs_dims):
@@ -387,15 +387,15 @@ def FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_pro
                                         top.dot12_1(1j*np.asarray(freq_coord),stress_DFT)[i]
             # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
             # Test (discrete divergence)
-            a = 2.0*math.pi/sampling_period
-            if freq_idx[0] <= n_voxels_dims[0]/2:
-                b = freq_idx[0]*n_voxels_dims[0]
-            else:
-                b = -1*(n_voxels_dims[1]-freq_idx[0])*n_voxels_dims[0]
-            if b == 0:
-                partial_xx_DFT['11'][freq_idx] = 0
-            else:
-                partial_xx_DFT['11'][freq_idx] = 1j*(a/b)*stress_DFT[0,0]
+            # a = 2.0*math.pi/sampling_period
+            # if freq_idx[0] <= n_voxels_dims[0]/2:
+            #     b = freq_idx[0]*n_voxels_dims[0]
+            # else:
+            #     b = -1*(n_voxels_dims[1]-freq_idx[0])*n_voxels_dims[0]
+            # if b == 0:
+            #     partial_xx_DFT['11'][freq_idx] = 0
+            # else:
+            #     partial_xx_DFT['11'][freq_idx] = 1j*(a/b)*stress_DFT[0,0]
             # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         # Compute discrete error serving to check convergence
         discrete_error_2 = math.sqrt(error_sum/n_voxels)/np.linalg.norm(stress_DFT_0_mf)
@@ -418,14 +418,14 @@ def FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_pro
             print('Discrete error          = ', '{:>11.4e}'.format(discrete_error))
             # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
             # Test (discrete divergence)
-            partial_xx = {'11': np.zeros(tuple(n_voxels_dims))}
-            partial_xx['11'] = np.real(np.fft.ifftn(partial_xx_DFT['11']))
-            print('\npartial_xx (analytic)')
-            print(partial_xx['11'][val_voxel_idx])
-            print('\npartial_xx (numerical)')
-            adj_voxel_idx_1 = tuple(np.copy(val_voxel_idx) + np.array([1,0]))
-            print((stress_vox['11'][adj_voxel_idx_1]-stress_vox['11'][val_voxel_idx]) / \
-                                                            sampling_period)
+            #partial_xx = {'11': np.zeros(tuple(n_voxels_dims))}
+            #partial_xx['11'] = np.real(np.fft.ifftn(partial_xx_DFT['11']))
+            #print('\npartial_xx (analytic)')
+            #print(partial_xx['11'][val_voxel_idx])
+            #print('\npartial_xx (numerical)')
+            #adj_voxel_idx_1 = tuple(np.copy(val_voxel_idx) + np.array([1,0]))
+            #print((stress_vox['11'][adj_voxel_idx_1]-stress_vox['11'][val_voxel_idx]) / \
+            #                                                sampling_period)
             # Check stress divergence after convergence is achieved
             if discrete_error < conv_tol:
                 # Analytical
@@ -658,10 +658,10 @@ if __name__ == '__main__':
     print('\nValidation: ',(len(val_functions)*'{}, ').format(*val_functions), 3*'\b', ' ')
     print(92*'-')
     # Set functions arguments
-    problem_type = 1
+    problem_type = 4
     rve_dims = [1.0,1.0,1.0]
     discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
-    'debug/FFT_Homogenization_Method/RVE_2D_2Phases_100x100.rgmsh.npy'
+    'debug/FFT_Homogenization_Method/RVE_3D_2Phases_5x5x5.rgmsh.npy'
     regular_grid = np.load(discret_file_path)
     n_dim = len(regular_grid.shape)
     material_properties = np.zeros((2,2,2),dtype=object)
