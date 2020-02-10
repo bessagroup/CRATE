@@ -662,9 +662,14 @@ if __name__ == '__main__':
     print(92*'-')
     # Set functions arguments
     problem_type = 4
-    rve_dims = [1.0,1.0,1.0]
-    discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
-    'debug/FFT_Homogenization_Method/RVE_3D_2Phases_5x5x5.rgmsh.npy'
+    if problem_type == 1:
+        rve_dims = [1.0,1.0]
+        discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
+                            'debug/FFT_Homogenization_Method/RVE_2D_2Phases_5x5.rgmsh.npy'
+    else:
+        rve_dims = [1.0,1.0,1.0]
+        discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
+                            'debug/FFT_Homogenization_Method/RVE_3D_2Phases_5x5x5.rgmsh.npy'
     regular_grid = np.load(discret_file_path)
     n_dim = len(regular_grid.shape)
     material_properties = np.zeros((2,2,2),dtype=object)
