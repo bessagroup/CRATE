@@ -342,7 +342,7 @@ def kelvinFactor(idx,comp_list):
 #
 #                                                                     Validation (temporary)
 # ==========================================================================================
-if if __name__ == '__main__':
+if __name__ == '__main__':
     # Set functions being validated
     val_functions = ['setMatricialForm()','getTensorFromMatricialForm()']
     # Set functions arguments
@@ -365,7 +365,7 @@ if if __name__ == '__main__':
     print('\nRecovered original tensor?',np.all(original_tensor==tensor))
     print('\n' + 72*'-' + '\n')
 
-if if __name__ == '__main__':
+if __name__ == '__main__':
     # Set functions being validated
     val_functions = ['setIdentityTensors()',]
     # Set function arguments
