@@ -500,10 +500,10 @@ def readMacroscaleLoading(file,file_path,macroscale_loading_type,n_dim,strain_fo
 # < phase_id > < number_of_clusters >
 #
 # and store it in a array(n_material_phases,2) as
-#                                    _                                     _
-#                                   | < phase_id > , < number_of_clusters > |
-#                      array[:,2] = | < phase_id > , < number_of_clusters > |
-#                                   |_     ...     ,          ...          _|
+#                           _                                     _
+#                          | < phase_id > , < number_of_clusters > |
+#                  array = | < phase_id > , < number_of_clusters > |
+#                          |_     ...     ,          ...          _|
 #
 def readPhaseClustering(file,file_path,keyword,n_material_phases):
     phase_clustering = np.zeros((n_material_phases,2),dtype=int)
