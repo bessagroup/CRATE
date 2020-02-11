@@ -129,6 +129,22 @@ def displayInfo(code,*args,**kwargs):
         arguments = convertIterableToList((args[0],))
         info = tuple(arguments)
         template = '\n' + n_indents*indent + '> {}'
+    elif code == '6':
+        mode = args[0]
+        if mode == 'progress':
+            arguments = args[1:3]
+            if args[1] == 1:
+                print(' '.format(width=output_width))
+            info = tuple(arguments)
+            template = 2*indent + '> Performing clustering process {} of {}...'
+            print(template.format(*info,width=output_width),end='\r')
+            if args[1] == args[2]:
+                print(' '.format(width=output_width))
+            return
+        elif mode == 'completed':
+            arguments = ['',]
+            info = tuple(arguments)
+            template = '\n' + 2*indent + '> Completed all clustering processes!'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display information
     print2(template.format(*info,width=output_width))

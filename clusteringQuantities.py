@@ -85,8 +85,8 @@ def computeClusteringQuantities(strain_formulation,problem_type,n_material_phase
         # on the strain concentration fourth-order tensor. Initialize the clustering
         # quantities array according to number of independent strain components
         n_clustering_var = len(comp_order)**2
-        clustering_quantities = np.zeros((n_voxels,n_clustering_var))
-        clustering_processes = [list(range(n_clustering_var)),]
+        clst_quantities = np.zeros((n_voxels,n_clustering_var))
+        clst_dataidxs = [list(range(n_clustering_var)),]
         # Small strain formulation
         if strain_formulation == 1:
             info.displayInfo('5','Computing strain concentration tensors...',2)
@@ -109,7 +109,7 @@ def computeClusteringQuantities(strain_formulation,problem_type,n_material_phase
                 # macroscale strain loading component
                 for j in range(len(comp_order)):
                     compj = comp_order[j]
-                    clustering_quantities[:,i*len(comp_order)+j] = \
+                    clst_quantities[:,i*len(comp_order)+j] = \
                                                                  strain_vox[compj].flatten()
                 # --------------------------------------------------------------------------
                 # Validation:
@@ -129,15 +129,15 @@ def computeClusteringQuantities(strain_formulation,problem_type,n_material_phase
                         '{:>11.4e}'.format(strain_vox[compj][val_voxel_idx]))
                 # --------------------------------------------------------------------------
             # Add clustering data to clustering dictionary
-            clst_dict['clustering_quantities'] = clustering_quantities
-            clst_dict['clustering_processes'] = clustering_processes
+            clst_dict['clst_quantities'] = clst_quantities
+            clst_dict['clst_dataidxs'] = clst_dataidxs
             # ------------------------------------------------------------------------------
             # Validation:
             if __name__ == '__main__':
                 print('\nClustering quantities array row - Voxel ', val_voxel_idx, ':')
-                print(clustering_quantities[val_voxel_row,:])
+                print(clst_quantities[val_voxel_row,:])
                 print('\nClustering processes list:')
-                print(clustering_processes)
+                print(clst_dataidxs)
             # ------------------------------------------------------------------------------
     # Return
     return None

@@ -45,11 +45,11 @@ def packageRegularGrid(discret_file_path,rve_dims,n_material_phases,n_dim):
     shape = tuple([n_voxels_dims[i] for i in range(n_dim)])
     voxels_idx_flat = [np.unravel_index(i,shape) for i in range(n_voxels)]
     # Set voxel flattened indexes associated to each material phase
-    phase_voxel_flatidx = list()
+    phase_voxel_flatidx = dict()
     for phase_idx in range(n_material_phases):
         is_phase_list = (regular_grid.flatten() - 1) == phase_idx
-        phase_voxel_flatidx.append(\
-                                 list(it.compress(range(len(is_phase_list)),is_phase_list)))
+        phase_voxel_flatidx[str(phase_idx+1)] = \
+                                  list(it.compress(range(len(is_phase_list)),is_phase_list))
     # Build regular grid dictionary
     rg_dict['rve_dims'] = rve_dims
     rg_dict['regular_grid'] = regular_grid
