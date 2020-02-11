@@ -346,6 +346,33 @@ def displayError(code,*args):
                    '\n\n' + \
                    indent + '{}' + '\n' + \
                    indent + '< dim1_size > < dim2_size > < dim3_size >'
+    elif code == 'E00032':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'All the indexes specified to perform a matrix ' + \
+                   'condensation must be non-negative integers.'
+    elif code == 'E00033':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'There cannot be duplicated row or column indexes when ' + \
+                   'performing a matrix condensation.'
+    elif code == 'E00034':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'At least one specified row index is out of the matrix ' + \
+                   'bounds when performing the ' + '\n' + \
+                   indent + 'corresponding condensation.'
+    elif code == 'E00035':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'At least one specified column index is out of the matrix ' + \
+                   'bounds when performing the ' + '\n' + \
+                   indent + 'corresponding condensation.'
+
     #print(template_header.format(*header,width=output_width))
     #print(template.format(*values,width=output_width))
     #print(template_footer.format(*footer,width=output_width))

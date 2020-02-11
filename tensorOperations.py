@@ -341,11 +341,59 @@ def kelvinFactor(idx,comp_order):
                 factor = factor*math.sqrt(2)
     return factor
 #
+#                                                                  Condensate matricial form
+# ==========================================================================================
+# Perform the condensation of a given matrix A (n x m), returning a matrix B (p,q) with the
+# matrix A elements specified by a given list of p rows indexes and q columns indexes. The
+# following example suffices to understand the procedure:
+#
+#         rows = [0,2,3] , cols = [0,2]
+#                      _       _                                    _   _
+#                     | 1 2 3 4 |                                  | 1 3 |
+#            matrix = | 5 6 7 8 |              >      matrix_cnd = | 9 7 |
+#                     | 9 8 7 6 |                                  |_5 3_|
+#                     |_5 4 3 2_|
+#
+# Note: Lists of rows and columns cannot contain duplicated indexes
+#
+def getCondensedMatrix(matrix,rows,cols):
+    # Check validity of rows and columns indexes to perform the condensation
+    if not np.all([isinstance(rows[i],int) for i in range(len(rows))]):
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00032',location.filename,location.lineno+1)
+    elif not np.all([isinstance(cols[i],int) for i in range(len(cols))]):
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00032',location.filename,location.lineno+1)
+    elif len(list(dict.fromkeys(rows))) != len(rows) or \
+                                                len(list(dict.fromkeys(cols))) != len(cols):
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00033',location.filename,location.lineno+1)
+    elif np.any([rows[i] not in range(matrix.shape[0]) for i in range(len(rows))]):
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00034',location.filename,location.lineno+1)
+    elif np.any([cols[i] not in range(matrix.shape[1]) for i in range(len(cols))]):
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00035',location.filename,location.lineno+1)
+    # Build auxiliary matrices with rows and columns condensation indexes
+    rows_matrix = np.zeros((len(rows),len(cols)),dtype=int)
+    cols_matrix = np.zeros((len(rows),len(cols)),dtype=int)
+    for j in range(len(cols)):
+        rows_matrix[:,j] = rows
+    for i in range(len(rows)):
+        cols_matrix[i,:] = cols
+    # Build condensed matrix
+    matrix_cnd = matrix[rows_matrix,cols_matrix]
+    # Return condensed matrix
+    return matrix_cnd
+#
 #                                                                     Validation (temporary)
 # ==========================================================================================
 if __name__ == '__main__':
     # Set functions being validated
     val_functions = ['setMatricialForm()','getTensorFromMatricialForm()']
+    # Display validation header
+    print('\nValidation: ',(len(val_functions)*'{}, ').format(*val_functions), 3*'\b', ' ')
+    print(92*'-')
     # Set functions arguments
     tensor = np.ones((3,3,3,3))
     n_dim = 3
@@ -357,25 +405,24 @@ if __name__ == '__main__':
     # Get tensor back from matricial form
     tensor = getTensorFromMatricialForm(tensor_mf,n_dim,comp_order)
     # Display validation
-    print('\nValidation: ', (len(val_functions)*'{}, ').format(*val_functions), 3*'\b', ' ')
-    print(72*'-')
     print('\nNumber of dimensions: ',n_dim)
     print('Component list      : ',comp_order)
     print('\nTensor:'+'\n\n',original_tensor)
     print('\nMatricial form:'+'\n\n',tensor_mf)
-    print('\nRecovered original tensor?',np.all(original_tensor==tensor))
-    print('\n' + 72*'-' + '\n')
+    # Display validation footer
+    print('\n' + 92*'-' + '\n')
 
 if __name__ == '__main__':
     # Set functions being validated
     val_functions = ['setIdentityTensors()',]
+    # Display validation header
+    print('\nValidation: ',(len(val_functions)*'{}, ').format(*val_functions), 3*'\b', ' ')
+    print(92*'-')
     # Set function arguments
     n_dim = 3
     # Set identity tensors
     SOId,FOId,FOTransp,FOSym,FODiagTrace,FODevProj,FODevProjSym = setIdentityTensors(n_dim)
     # Display validation
-    print('\nValidation: ',len(val_functions)*'{}, '.format(*val_functions), 3*'\b', ' ')
-    print(72*'-')
     print('\nCheck identity tensors:')
     print('\nSOId (matricial form):')
     comp_order = ['11','22','33','12','23','13']
@@ -412,4 +459,27 @@ if __name__ == '__main__':
     print('FODevProj:  ', \
                  np.all(getTensorFromMatricialForm(setTensorMatricialForm(FODevProj,n_dim,\
                                                   comp_order),n_dim,comp_order)==FODevProj))
-    print('\n' + 72*'-' + '\n')
+    # Display validation footer
+    print('\n' + 92*'-' + '\n')
+
+if __name__ == '__main__':
+    # Set functions being validated
+    val_functions = ['getCondensedMatrix()',]
+    # Display validation header
+    print('\nValidation: ',(len(val_functions)*'{}, ').format(*val_functions), 3*'\b', ' ')
+    print(92*'-')
+    # Set function arguments
+    matrix = np.array([[0,1,2,3],[3,4,5,1],[6,7,8,2],[9,10,11,0]])
+    rows = [1,3]
+    cols = [0,2,3]
+    # Call function
+    matrix_cnd = getCondensedMatrix(matrix,rows,cols)
+    # Display validation
+    print('\nrows:', rows)
+    print('\ncols:', cols)
+    print('\nmatrix:')
+    print(matrix)
+    print('\ncondensed matrix:')
+    print(matrix_cnd)
+    # Display validation footer
+    print('\n' + 92*'-' + '\n')
