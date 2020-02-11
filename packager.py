@@ -18,8 +18,21 @@ import itertools as it
 #
 #                                                                          Package functions
 # ==========================================================================================
+# Package data associated to the material phases
+def packageMaterialPhases(n_material_phases,material_properties):
+    # Initialize material phases dictionary
+    mat_dict = dict()
+    # Build material phases dictionary
+    mat_dict['n_material_phases'] = n_material_phases
+    mat_dict['material_properties'] = material_properties
+    # Return
+    return mat_dict
+# ------------------------------------------------------------------------------------------
 # Package data associated to a regular grid of pixels/voxels
-def packageRegularGrid(discret_file_path,rve_dims,n_material_phases,n_dim):
+def packageRegularGrid(discret_file_path,rve_dims,mat_dict,n_dim):
+    # Get material data
+    n_material_phases = mat_dict['n_material_phases']
+    material_properties = mat_dict['material_properties']
     # Initialize regular grid dictionary
     rg_dict = dict()
     # Read the spatial discretization file (regular grid of pixels/voxels)
@@ -46,9 +59,9 @@ def packageRegularGrid(discret_file_path,rve_dims,n_material_phases,n_dim):
     voxels_idx_flat = [np.unravel_index(i,shape) for i in range(n_voxels)]
     # Set voxel flattened indexes associated to each material phase
     phase_voxel_flatidx = dict()
-    for phase_idx in range(n_material_phases):
-        is_phase_list = (regular_grid.flatten() - 1) == phase_idx
-        phase_voxel_flatidx[str(phase_idx+1)] = \
+    for mat_phase in material_properties.keys():
+        is_phase_list = regular_grid.flatten() == int(mat_phase)
+        phase_voxel_flatidx[mat_phase] = \
                                   list(it.compress(range(len(is_phase_list)),is_phase_list))
     # Build regular grid dictionary
     rg_dict['rve_dims'] = rve_dims
@@ -62,7 +75,9 @@ def packageRegularGrid(discret_file_path,rve_dims,n_material_phases,n_dim):
 # ------------------------------------------------------------------------------------------
 # Package data associated to the clustering on a regular grid of pixels/voxels
 def packageRGClustering(clustering_method,clustering_strategy,clustering_solution_method,\
-                                                             phase_nclusters,n_voxels_dims):
+                                                                   phase_nclusters,rg_dict):
+    # Get regular grid data
+    n_voxels_dims = rg_dict['n_voxels_dims']
     # Initialize clustering dictionary
     clst_dict = dict()
     # Initialize flattened list with voxels cluster labels

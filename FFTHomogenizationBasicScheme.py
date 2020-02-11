@@ -62,8 +62,7 @@ import tensorOperations as top
 #         form. The matricial form follows the Kelvin notation when symmetry conditions
 #         exist and is performed columnwise otherwise.
 #
-def FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_properties,
-                                                                     comp_order,mac_strain):
+def FFTHomogenizationBasicScheme(problem_type,rg_dict,mat_dict,comp_order,mac_strain):
     #
     #                                                                             Parameters
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -74,62 +73,62 @@ def FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_pro
     #
     #                                                                        Input arguments
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Get the spatial discretization file (regular grid of pixels/voxels)
+    regular_grid = rg_dict['regular_grid']
+    # Get number of pixels/voxels in each dimension and total number of pixels/voxels
+    n_voxels_dims = rg_dict['n_voxels_dims']
+    n_voxels = np.prod(n_voxels_dims)
+    # Get RVE dimensions
+    rve_dims = rg_dict['rve_dims']
     # Set problem dimensions
     n_dim = len(regular_grid.shape)
-    # Set number of pixels/voxels in each dimension and total number of pixels/voxels
-    n_voxels_dims = [regular_grid.shape[i] for i in range(len(regular_grid.shape))]
-    n_voxels = np.prod(n_voxels_dims)
-    # Set number of material phases
-    n_material_phases = material_properties.shape[2]
+    # Get material properties
+    material_properties = mat_dict['material_properties']
     # Set macroscale strain matricial form
     mac_strain_mf = top.setTensorMatricialForm(mac_strain,n_dim,comp_order)
     #
     #                                                     Material phases elasticity tensors
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Compute the elasticity tensors (matricial form) associated to each material phase
-    De_tensors_mf = list()
-    for iphase in range(n_material_phases):
+    De_tensors_mf = dict()
+    for mat_phase in material_properties.keys():
         # Set required elastic properties according to material phase constitutive model
         req_props = ['E','v']
-        req_props_vals = {prop: None for prop in req_props}
         for iprop in range(len(req_props)):
-            match = np.where(material_properties[:,0,iphase]==req_props[iprop])
-            if len(match[0]) != 1:
-                values = tuple([req_props[iprop],iphase+1])
+            if req_props[iprop] not in material_properties[mat_phase]:
+                values = tuple([req_props[iprop],mat_phase])
                 template = '\nThe elastic property - {} - of material phase {} hasn\'t ' + \
-                           'been specified or has been ' + '\n' + \
-                           'specified more than once in the input data file.\n'
+                           'been specified in the ' + '\n' + \
+                           'input data file.\n'
                 print(template.format(*values))
                 sys.exit(1)
-            else:
-                req_props_vals[req_props[iprop]] = material_properties[match[0][0],1,iphase]
         # Compute elasticity tensor (matricial form) for current material phase
         De_tensor_mf = np.zeros((len(comp_order),len(comp_order)))
-        De_tensor_mf = getElasticityTensor(problem_type,n_dim,comp_order,req_props_vals)
+        De_tensor_mf = getElasticityTensor(problem_type,n_dim,comp_order,\
+                                                             material_properties[mat_phase])
         # Store material phase elasticity tensor (matricial form)
-        De_tensors_mf.append(De_tensor_mf)
+        De_tensors_mf[mat_phase] = De_tensor_mf
     # --------------------------------------------------------------------------------------
     # Validation:
     if __name__ == '__main__':
-        for iphase in range(n_material_phases):
-            print('\nElasticity tensor (material phase ', iphase + 1, ') - ' + \
+        for mat_phase in material_properties.keys():
+            print('\nElasticity tensor (material phase ', mat_phase, ') - ' + \
                                                                        'Kelvin notation:\n')
             np.set_printoptions(precision=2)
-            print(De_tensors_mf[iphase])
+            print(De_tensors_mf[mat_phase])
     # --------------------------------------------------------------------------------------
     #
     #                                                  Reference material elastic properties
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Set required elastic properties
-    req_props_ref = ['E','v']
-    req_props_vals_ref = {prop: None for prop in req_props}
     # Set reference material elastic properties
-    req_props_vals_ref['E'] = 100e6
-    req_props_vals_ref['v'] = 0.3
+    material_properties_ref = dict()
+    material_properties_ref['E'] = 100e6
+    material_properties_ref['v'] = 0.3
     # Compute compliance tensor (matricial form)
     Se_tensor_mf_ref = np.zeros((len(comp_order),len(comp_order)))
     Se_tensor_mf_ref = \
-         np.linalg.inv(getElasticityTensor(problem_type,n_dim,comp_order,req_props_vals_ref))
+         np.linalg.inv(getElasticityTensor(problem_type,n_dim,comp_order,\
+                                                                   material_properties_ref))
     # --------------------------------------------------------------------------------------
     # Validation:
     if __name__ == '__main__':
@@ -176,8 +175,8 @@ def FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_pro
     #                              |     form ('1111', '2211', '3311', '1211', ...)
     #
     # Get reference material Young modulus and Poisson coeficient
-    E_ref = req_props_vals_ref['E']
-    v_ref = req_props_vals_ref['v']
+    E_ref = material_properties_ref['E']
+    v_ref = material_properties_ref['v']
     # Compute reference material Lamé parameters
     lam_ref = (E_ref*v_ref)/((1.0 + v_ref)*(1.0 - 2.0*v_ref))
     miu_ref = E_ref/(2.0*(1.0 + v_ref))
@@ -259,9 +258,9 @@ def FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_pro
     for freq_coord in it.product(*freqs_dims):
         # Get voxel material phase
         voxel_idx = tuple([list(freqs_dims[x]).index(freq_coord[x]) for x in range(n_dim)])
-        phase_idx = regular_grid[voxel_idx] - 1
+        mat_phase = str(regular_grid[voxel_idx])
         # Get material phase elasticity tensor (matricial form)
-        De_tensor_mf = De_tensors_mf[phase_idx]
+        De_tensor_mf = De_tensors_mf[mat_phase]
         # Set strain initial iterative guess
         strain_mf = np.zeros(len(comp_order))
         strain_mf = mac_strain_mf
@@ -550,9 +549,9 @@ def FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_pro
             # Get voxel material phase
             voxel_idx = \
                      tuple([list(freqs_dims[x]).index(freq_coord[x]) for x in range(n_dim)])
-            phase_idx = regular_grid[voxel_idx] - 1
+            mat_phase = str(regular_grid[voxel_idx])
             # Get material phase elasticity tensor (matricial form)
-            De_tensor_mf = De_tensors_mf[phase_idx]
+            De_tensor_mf = De_tensors_mf[mat_phase]
             # Get strain vector for current discrete frequency
             strain_mf = np.zeros(len(comp_order))
             for i in range(len(comp_order)):
@@ -661,7 +660,7 @@ if __name__ == '__main__':
     print('\nValidation: ',(len(val_functions)*'{}, ').format(*val_functions), 3*'\b', ' ')
     print(92*'-')
     # Set functions arguments
-    problem_type = 4
+    problem_type = 1
     if problem_type == 1:
         rve_dims = [1.0,1.0]
         discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
@@ -671,12 +670,23 @@ if __name__ == '__main__':
         discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
                             'debug/FFT_Homogenization_Method/RVE_3D_2Phases_5x5x5.rgmsh.npy'
     regular_grid = np.load(discret_file_path)
+    n_voxels_dims = [regular_grid.shape[i] for i in range(len(regular_grid.shape))]
+    rg_dict = dict()
+    rg_dict['rve_dims'] = rve_dims
+    rg_dict['regular_grid'] = regular_grid
+    rg_dict['n_voxels_dims'] = n_voxels_dims
+    mat_dict = dict()
+    n_material_phases = 2
+    material_properties = dict()
+    material_properties['1'] = dict()
+    material_properties['1']['E'] = 210e6
+    material_properties['1']['v'] = 0.3
+    material_properties['2'] = dict()
+    material_properties['2']['E'] = 70e6
+    material_properties['2']['v'] = 0.33
+    mat_dict['n_material_phases'] = n_material_phases
+    mat_dict['material_properties'] = material_properties
     n_dim = len(regular_grid.shape)
-    material_properties = np.zeros((2,2,2),dtype=object)
-    material_properties[0,0,0] = 'E' ; material_properties[0,1,0] = 210e6
-    material_properties[1,0,0] = 'v' ; material_properties[1,1,0] = 0.3
-    material_properties[0,0,1] = 'E' ; material_properties[0,1,1] = 70e6
-    material_properties[1,0,1] = 'v' ; material_properties[1,1,1] = 0.33
     if problem_type == 1:
         comp_order = ['11','22','12']
     elif problem_type == 4:
@@ -686,7 +696,6 @@ if __name__ == '__main__':
     else:
         mac_strain = np.array([[2,0.5,0.5],[0.5,1,1],[0.5,1,3]])
     # Call function
-    FFTHomogenizationBasicScheme(problem_type,rve_dims,regular_grid,material_properties,
-                                                                      comp_order,mac_strain)
+    FFTHomogenizationBasicScheme(problem_type,rg_dict,mat_dict,comp_order,mac_strain)
     # Display validation footer
     print('\n' + 92*'-' + '\n')

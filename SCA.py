@@ -114,13 +114,16 @@ max_subincrem_level,max_n_iterations,su_conv_tol,discret_file_path,rve_dims = \
                       rid.readInputData(input_file,input_file_path,problem_name,problem_dir)
 # Close user input data file
 input_file.close()
+# Package data associated to the material phases
+info.displayInfo('5','Packaging material data...')
+mat_dict = packager.packageMaterialPhases(n_material_phases,material_properties)
 # Package data associated to the spatial discretization file(s)
 info.displayInfo('5','Packaging regular grid data...')
-rg_dict = packager.packageRegularGrid(discret_file_path,rve_dims,n_material_phases,n_dim)
+rg_dict = packager.packageRegularGrid(discret_file_path,rve_dims,mat_dict,n_dim)
 # Package data associated to the clustering
 info.displayInfo('5','Packaging clustering data...')
 clst_dict = packager.packageRGClustering(clustering_method,clustering_strategy,\
-                        clustering_solution_method,phase_nclusters,rg_dict['n_voxels_dims'])
+                                         clustering_solution_method,phase_nclusters,rg_dict)
 # Set phase ending time and display finishing phase information
 phase_end_time = time.time()
 phase_names.append('Read input data')
@@ -134,8 +137,8 @@ info.displayInfo('2','Compute cluster-defining quantities')
 phase_init_time = time.time()
 # Compute the quantities required to perform the clustering according to the strategy
 # adopted
-clusteringQuantities.computeClusteringQuantities(strain_formulation,problem_type,
-                                    n_material_phases,material_properties,rg_dict,clst_dict)
+clusteringQuantities.computeClusteringQuantities(strain_formulation,problem_type,mat_dict,
+                                                                          rg_dict,clst_dict)
 # Set phase ending time and display finishing phase information
 phase_end_time = time.time()
 phase_names.append('Compute cluster-defining quantities')
@@ -149,7 +152,7 @@ info.displayInfo('3','Compute cluster-defining quantities', \
 info.displayInfo('2','Perform clustering')
 phase_init_time = time.time()
 # Perform the clustering according to the selected method and adopted strategy
-clusteringMethods.performClustering(n_material_phases,rg_dict,clst_dict)
+clusteringMethods.performClustering(mat_dict,rg_dict,clst_dict)
 # Set phase ending time and display finishing phase information
 phase_end_time = time.time()
 phase_names.append('Perform clustering')

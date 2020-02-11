@@ -23,7 +23,10 @@ import tensorOperations as top
 #                                                                         Perform clustering
 # ==========================================================================================
 # ...
-def performClustering(n_material_phases,rg_dict,clst_dict):
+def performClustering(mat_dict,rg_dict,clst_dict):
+    # Get material data
+    n_material_phases = mat_dict['n_material_phases']
+    material_properties = mat_dict['material_properties']
     # Get regular grid data
     n_voxels_dims = rg_dict['n_voxels_dims']
     n_voxels = np.prod(n_voxels_dims)
@@ -48,17 +51,17 @@ def performClustering(n_material_phases,rg_dict,clst_dict):
             # Get current clustering process data indexes
             data_indexes = clst_dataidxs[iclst]
             # Loop over material phases
-            for iphase in range(n_material_phases):
+            for mat_phase in material_properties.keys():
                 # Set number of clusters
-                n_clusters = phase_nclusters[str(iphase+1)]
+                n_clusters = phase_nclusters[mat_phase]
                 # Set clustering training dataset
                 dataset = top.getCondensedMatrix(clst_quantities,\
-                                            phase_voxel_flatidx[str(iphase+1)],data_indexes)
+                                                phase_voxel_flatidx[mat_phase],data_indexes)
                 # Perform kmeans clustering (Lloyd's algorithm)
                 kmeans = sklearn.cluster.KMeans(n_clusters,init = 'k-means++',n_init = 10,
                                   max_iter = 300,tol = 1e-4,algorithm = 'auto').fit(dataset)
                 # Store current material phase cluster labels
-                clst_process_lbls_flat[phase_voxel_flatidx[str(iphase+1)]] = \
+                clst_process_lbls_flat[phase_voxel_flatidx[mat_phase]] = \
                                                            kmeans.labels_ + label_correction
                 # Update label correction so that different material phases do not share the
                 # same label

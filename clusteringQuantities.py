@@ -60,8 +60,7 @@ import FFTHomogenizationBasicScheme
 #          tensor with major or minor simmetries, only the independent components may be
 #          stored in the clustering array
 #
-def computeClusteringQuantities(strain_formulation,problem_type,n_material_phases,
-                                                     material_properties,rg_dict,clst_dict):
+def computeClusteringQuantities(strain_formulation,problem_type,mat_dict,rg_dict,clst_dict):
     # Extract the required data from the spatial discretization file(s) according to the
     # chosen solution method to compute the cluster-defining quantities
     info.displayInfo('5','Reading discretization file...')
@@ -103,8 +102,8 @@ def computeClusteringQuantities(strain_formulation,problem_type,n_material_phase
                     mac_strain[so_idx[::-1]] = 1.0
                 # Solve RVE static equilibrium problem
                 strain_vox = FFTHomogenizationBasicScheme.FFTHomogenizationBasicScheme(
-                                     problem_type,rve_dims,regular_grid,material_properties,
-                                     comp_order,mac_strain)
+                                                              problem_type,rg_dict,mat_dict,
+                                                              comp_order,mac_strain)
                 # Assemble strain concentration tensor components associated to the imposed
                 # macroscale strain loading component
                 for j in range(len(comp_order)):
@@ -153,12 +152,17 @@ if __name__ == '__main__':
     # Set functions arguments
     strain_formulation = 1
     problem_type = 4
+    mat_dict = dict()
     n_material_phases = 2
-    material_properties = np.zeros((2,2,2),dtype=object)
-    material_properties[0,0,0] = 'E' ; material_properties[0,1,0] = 210e6
-    material_properties[1,0,0] = 'v' ; material_properties[1,1,0] = 0.3
-    material_properties[0,0,1] = 'E' ; material_properties[0,1,1] = 70e6
-    material_properties[1,0,1] = 'v' ; material_properties[1,1,1] = 0.33
+    material_properties = dict()
+    material_properties['1'] = dict()
+    material_properties['1']['E'] = 210e6
+    material_properties['1']['v'] = 0.3
+    material_properties['2'] = dict()
+    material_properties['2']['E'] = 70e6
+    material_properties['2']['v'] = 0.33
+    mat_dict['n_material_phases'] = n_material_phases
+    mat_dict['material_properties'] = material_properties
     if problem_type == 1:
         discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
         'debug/FFT_Homogenization_Method/RVE_2D_2Phases_5x5.rgmsh.npy'
@@ -182,7 +186,6 @@ if __name__ == '__main__':
     clst_dict['clustering_strategy'] = clustering_strategy
     clst_dict['clustering_solution_method'] = clustering_solution_method
     # Call function
-    computeClusteringQuantities(strain_formulation,problem_type,n_material_phases,
-                                                      material_properties,rg_dict,clst_dict)
+    computeClusteringQuantities(strain_formulation,problem_type,mat_dict,rg_dict,clst_dict)
     # Display validation footer
     print('\n' + 92*'-' + '\n')

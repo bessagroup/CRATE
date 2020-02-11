@@ -84,7 +84,7 @@ def searchOptionalKeywordLine(file,keyword):
             return [isFound,line_number]
     return [isFound,line_number]
 # ------------------------------------------------------------------------------------------
-# Find the maximum number of specified material phase properties
+# Find the maximum number of specified material phase properties (not being used)
 def findMaxNumberProperties(file,file_path,keyword,keyword_line_number,n_material_phases):
     max_n_properties = 0
     line_number = keyword_line_number + 1
@@ -333,36 +333,65 @@ def readTypeBKeyword(file,file_path,keyword):
 #               array[:,:,phase_id] = |'property2_name' , value |
 #                                     |_     ...        ,  ... _|
 #
+#
+# and store it in a dictionary as
+#
+#                                      _                       _
+#                                     |'property1_name' , value |
+#            dictionary['phase_id'] = |'property2_name' , value |
+#                                     |_     ...        ,  ... _|
+#
 def readMaterialProperties(file,file_path,keyword,n_material_phases):
     keyword_line_number = searchKeywordLine(file,keyword)
-    max_n_properties = findMaxNumberProperties(file,file_path,keyword,
-                                                      keyword_line_number,n_material_phases)
-    material_properties = np.full((max_n_properties,2,n_material_phases),'ND',dtype=object)
+    material_properties = dict()
     line_number = keyword_line_number + 1
-    for iphase in range(1,n_material_phases+1):
+    for i in range(n_material_phases):
         phase_header = linecache.getline(file_path,line_number).strip().split(' ')
-        for iproperty in range(1,int(phase_header[1])+1):
+        if phase_header[0] == '':
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayError('E00005',location.filename,location.lineno+1,keyword,i+1)
+        elif len(phase_header) != 2:
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayError('E00005',location.filename,location.lineno+1,keyword,i+1)
+        elif not checkPositiveInteger(phase_header[0]):
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayError('E00005',location.filename,location.lineno+1,keyword,i+1)
+        elif phase_header[0] in material_properties.keys():
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayError('E00005',location.filename,location.lineno+1,keyword,i+1)
+        elif not checkPositiveInteger(phase_header[1]):
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayError('E00005',location.filename,location.lineno+1,keyword,i+1)
+        mat_phase = str(phase_header[0])
+        n_properties = int(phase_header[1])
+        material_properties[mat_phase] = dict()
+        for iproperty in range(n_properties):
             property_line = linecache.getline(file_path,
-                                                 line_number+iproperty).strip().split(' ')
+                                                 line_number+iproperty+1).strip().split(' ')
             if property_line[0] == '':
                 location = inspect.getframeinfo(inspect.currentframe())
                 errors.displayError('E00006',location.filename,location.lineno+1,
-                                                                 keyword,iproperty,iphase)
+                                                              keyword,iproperty+1,mat_phase)
             elif len(property_line) != 2:
                 location = inspect.getframeinfo(inspect.currentframe())
                 errors.displayError('E00006',location.filename,location.lineno+1,
-                                                                 keyword,iproperty,iphase)
+                                                              keyword,iproperty+1,mat_phase)
             elif not checkValidName(property_line[0]):
                 location = inspect.getframeinfo(inspect.currentframe())
                 errors.displayError('E00006',location.filename,location.lineno+1,
-                                                                 keyword,iproperty,iphase)
+                                                              keyword,iproperty+1,mat_phase)
             elif not checkNumber(property_line[1]):
                 location = inspect.getframeinfo(inspect.currentframe())
                 errors.displayError('E00006',location.filename,location.lineno+1,
-                                                                 keyword,iproperty,iphase)
-            material_properties[iproperty-1,0,iphase-1] = property_line[0]
-            material_properties[iproperty-1,1,iphase-1] = float(property_line[1])
-        line_number = line_number + int(phase_header[1]) + 1
+                                                              keyword,iproperty+1,mat_phase)
+            elif property_line[0] in material_properties[mat_phase].keys():
+                location = inspect.getframeinfo(inspect.currentframe())
+                errors.displayError('E00006',location.filename,location.lineno+1,
+                                                              keyword,iproperty+1,mat_phase)
+            prop_name = str(property_line[0])
+            prop_value = float(property_line[1])
+            material_properties[mat_phase][prop_name] = prop_value
+        line_number = line_number + n_properties + 1
     return material_properties
 # ------------------------------------------------------------------------------------------
 # Read the macroscale loading conditions, specified as

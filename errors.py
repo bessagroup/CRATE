@@ -73,53 +73,59 @@ def displayError(code,*args):
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
-                   'input \n' + \
-                   indent + 'data file. In particular, the header of the material ' + \
-                   'phase {} is missing, misplaced or \n' + \
-                   indent + 'the number of associated properties ' + \
-                   'hasn\'t been specified as a positive integer.' + '\n\n' + \
+                   'input data\n' + \
+                   indent + 'file. In particular, the header of the {}th material ' + \
+                   'phase is not properly specified ' + '\n' + \
+                   indent + 'potentially due to one of the following reasons: \n\n' + \
+                   indent + '1. Missing material phase header specification;' + '\n' + \
+                   indent + '2. Material phase header specification wrong format;' + '\n' + \
+                   indent + '3. Material phase label must be a positive integer;' + '\n' + \
+                   indent + '4. Duplicated material phase label;' + '\n' + \
+                   indent + '5. Material phase number of properties must be a positive integer;' + '\n\n' + \
                    'Suggestion:' + '\n\n' + \
                    indent + 'The keyword - {} - should be specified p.e. as' + '\n\n' + \
                    indent + '{}' + '\n' + \
                    indent + '1 2' + '\n' + \
-                   indent + '< property1_name > < value >' + '\n' + \
-                   indent + '< property2_name > < value >' + \
+                   indent + 'property1_name < value >' + '\n' + \
+                   indent + 'property2_name < value >' + \
                    '\n' + \
                    indent + '2 3' + '\n' + \
-                   indent + '< property1_name > < value >' + \
+                   indent + 'property1_name < value >' + \
                    '\n' + \
-                   indent + '< property2_name > < value >' + \
+                   indent + 'property2_name < value >' + \
                    '\n' + \
-                   indent + '< property3_name > < value >' + '\n'
+                   indent + 'property3_name < value >' + '\n'
     elif code == 'E00006':
         arguments = info.convertIterableToList(args[2:5]) + \
                     info.convertIterableToList(2*(args[2],))
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
-                   'input \n' + \
-                   indent + 'data file. In particular, the {}th property of material ' + \
+                   'input data\n' + \
+                   indent + 'file. In particular, the {}th property of material ' + \
                    'phase {} is not properly ' + '\n' + \
                    indent + 'specified potentially due to one of the following reasons:' + \
                    '\n\n' + \
                    indent + '1. Missing property specification;' + '\n' + \
-                   indent + '2. Property name can only contain letters, numbers or ' + \
+                   indent + '2. Property specification wrong format;' + '\n' + \
+                   indent + '3. Property name can only contain letters, numbers or ' + \
                    'underscores;' + '\n' + \
-                   indent + '3. Invalid property value (e.g must be integer or ' + \
+                   indent + '4. Duplicated material property name;' + '\n' + \
+                   indent + '5. Invalid property value (e.g must be integer or ' + \
                    'floating-point number);' + '\n\n' + \
                    'Suggestion:' + '\n\n' + \
                    indent + 'The keyword - {} - should be specified p.e. as' + '\n\n' + \
                    indent + '{}' + '\n' + \
                    indent + '1 2' + '\n' + \
-                   indent + '< property1_name > < value >' + '\n' + \
-                   indent + '< property2_name > < value >' + \
+                   indent + 'property1_name < value >' + '\n' + \
+                   indent + 'property2_name < value >' + \
                    '\n' + \
                    indent + '2 3' + '\n' + \
-                   indent + '< property1_name > < value >' + \
+                   indent + 'property1_name < value >' + \
                    '\n' + \
-                   indent + '< property2_name > < value >' + \
+                   indent + 'property2_name < value >' + \
                    '\n' + \
-                   indent + '< property3_name > < value >' + '\n'
+                   indent + 'property3_name < value >' + '\n'
     elif code == 'E00007':
         arguments = info.convertIterableToList(3*(args[2],))
         values = tuple(arguments)
@@ -152,10 +158,10 @@ def displayError(code,*args):
                    indent + 'The keyword - {} - should be specified p.e. in a 2D ' + \
                    'problem as' + '\n\n' + \
                    indent + '{}' + '\n' + \
-                   indent + '< descriptor_name_11 > < value >' + '\n' + \
-                   indent + '< descriptor_name_21 > < value >' + '\n' + \
-                   indent + '< descriptor_name_12 > < value >' + '\n' + \
-                   indent + '< descriptor_name_22 > < value > < value >'
+                   indent + 'descriptor_name_11 < value >' + '\n' + \
+                   indent + 'descriptor_name_21 < value >' + '\n' + \
+                   indent + 'descriptor_name_12 < value >' + '\n' + \
+                   indent + 'descriptor_name_22 < value >'
     elif code == 'E00009':
         arguments = info.convertIterableToList(args[2:4])
         values = tuple(arguments)
@@ -372,7 +378,6 @@ def displayError(code,*args):
                    indent + 'At least one specified column index is out of the matrix ' + \
                    'bounds when performing the ' + '\n' + \
                    indent + 'corresponding condensation.'
-
     #print(template_header.format(*header,width=output_width))
     #print(template.format(*values,width=output_width))
     #print(template_footer.format(*footer,width=output_width))
