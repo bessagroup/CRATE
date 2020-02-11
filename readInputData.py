@@ -196,7 +196,7 @@ def readInputData(input_file,input_file_path,problem_name,problem_dir):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read number of cluster associated to each material phase
     keyword = 'Number_of_Clusters'
-    phase_clustering = readPhaseClustering(input_file,input_file_path,keyword,
+    phase_nclusters = readPhaseClustering(input_file,input_file_path,keyword,
                                                                           n_material_phases)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read number of load increments
@@ -275,7 +275,7 @@ def readInputData(input_file,input_file_path,problem_name,problem_dir):
             material_properties,macroscale_loading_type,macroscale_loading,
             macroscale_load_indexes,self_consistent_scheme,scs_max_n_iterations,
             scs_conv_tol,clustering_method,clustering_strategy,clustering_solution_method,
-            phase_clustering,n_load_increments,max_n_iterations,conv_tol,
+            phase_nclusters,n_load_increments,max_n_iterations,conv_tol,
             max_subincrem_level,max_n_iterations,su_conv_tol,discret_file_path,rve_dims]
 #
 # ------------------------------------------------------------------------------------------
@@ -499,31 +499,33 @@ def readMacroscaleLoading(file,file_path,macroscale_loading_type,n_dim,strain_fo
 # < phase_id > < number_of_clusters >
 # < phase_id > < number_of_clusters >
 #
-# and store it in a array(n_material_phases,2) as
-#                           _                                     _
-#                          | < phase_id > , < number_of_clusters > |
-#                  array = | < phase_id > , < number_of_clusters > |
-#                          |_     ...     ,          ...          _|
+# and store it in a dictionary as
+#
+#                    dictionary['phase_id'] = number_of_clusters
 #
 def readPhaseClustering(file,file_path,keyword,n_material_phases):
-    phase_clustering = np.zeros((n_material_phases,2),dtype=int)
+    phase_nclusters = dict()
     line_number = searchKeywordLine(file,keyword) + 1
-    for iphase in range(1,n_material_phases+1):
-        line = linecache.getline(file_path,line_number+iphase-1).strip().split(' ')
+    for iphase in range(n_material_phases):
+        line = linecache.getline(file_path,line_number+iphase).strip().split(' ')
         if line[0] == '':
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00013',location.filename,location.lineno+1,keyword,iphase)
+            errors.displayError('E00013',location.filename,location.lineno+1,keyword,\
+                                                                                   iphase+1)
         elif len(line) != 2:
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00013',location.filename,location.lineno+1,keyword,iphase)
+            errors.displayError('E00013',location.filename,location.lineno+1,keyword,\
+                                                                                   iphase+1)
         elif not checkPositiveInteger(line[0]) or not checkPositiveInteger(line[1]):
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00013',location.filename,location.lineno+1,keyword,iphase)
-        elif int(line[0]) != iphase:
+            errors.displayError('E00013',location.filename,location.lineno+1,keyword,\
+                                                                                   iphase+1)
+        elif int(line[0]) != iphase + 1:
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00013',location.filename,location.lineno+1,keyword,iphase)
-        phase_clustering[iphase-1,:] = [int(i) for i in line[0:2]]
-    return phase_clustering
+            errors.displayError('E00013',location.filename,location.lineno+1,keyword,\
+                                                                                   iphase+1)
+        phase_nclusters[str(iphase+1)] = int(line[1])
+    return phase_nclusters
 # ------------------------------------------------------------------------------------------
 # Read the spatial discretization file absolute path
 #
@@ -570,6 +572,10 @@ def readDiscretizationFilePath(file,file_path,keyword,valid_exts):
 #
 # RVE_Dimensions
 # < dim1_size > < dim2_size > < dim3_size >
+#
+# and store them in a list as
+#
+#               list = [ < dim1_size > , < dim2_size > [, < dim3_size >] ]
 #
 def readRVEDimensions(file,file_path,keyword,n_dim):
     keyword_line_number = searchKeywordLine(file,keyword)
