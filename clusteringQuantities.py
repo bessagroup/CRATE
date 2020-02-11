@@ -15,6 +15,8 @@ import os
 import numpy as np
 # Extract information from path
 import ntpath
+# Generate efficient iterators
+import itertools as it
 # Display messages
 import info
 # Read user input data file
@@ -54,43 +56,28 @@ import FFTHomogenizationBasicScheme
 #
 #                        list = [ 0 , [1,2] , [3,4,5,6]]
 #
-#   Note: When the clustering quantity is a symmetric second-order tensor or a higher-order
-#         tensor with major or minor simmetries, only the independent components may be
-#         stored in the clustering array
+#    Note: When the clustering quantity is a symmetric second-order tensor or a higher-order
+#          tensor with major or minor simmetries, only the independent components may be
+#          stored in the clustering array
 #
-#   Note: The voxel order in the clustering quantities array is described as follows for
-#         2D and 3D problems
-#
-#                                      2D Problem     3D Problem
-#                          voxel 0       (0,0)          (0,0,0)
-#                          voxel 1       (0,1)          (0,0,1)
-#                          voxel 2       (1,0)          (0,1,0)
-#                          voxel 3       (1,1)          (0,1,1)
-#                          voxel 4         -            (1,0,0)
-#                          voxel 5         -            (1,0,1)
-#                            ...          ...             ...
-#
-#        where voxel(i,j,k) is stored as voxel X, with X = i*d2 + j (2D Problem) and
-#        X = i*(d2*d3) + j*d3 + k (3D Problem)
-#
-def computeClusteringQuantities(strain_formulation,problem_type,clustering_strategy,
-                                clustering_solution_method,discret_file_path,rve_dims,
-                                n_material_phases,material_properties):
+def computeClusteringQuantities(strain_formulation,problem_type,n_material_phases,
+                                                     material_properties,rg_dict,clst_dict):
     # Extract the required data from the spatial discretization file(s) according to the
     # chosen solution method to compute the cluster-defining quantities
     info.displayInfo('5','Reading discretization file...')
+    clustering_solution_method = clst_dict['clustering_solution_method']
     if clustering_solution_method == 1:
-        # Read the spatial discretization file (regular grid of pixels/voxels)
-        if ntpath.splitext(ntpath.basename(discret_file_path))[-1] == '.npy':
-            regular_grid = np.load(discret_file_path)
-        else:
-            regular_grid = np.loadtxt(discret_file_path)
-        # Set number of pixels/voxels in each dimension and total number of pixels/voxels
-        n_voxels_dims = [regular_grid.shape[i] for i in range(len(regular_grid.shape))]
+        # Get the spatial discretization file (regular grid of pixels/voxels)
+        regular_grid = rg_dict['regular_grid']
+        # Get number of pixels/voxels in each dimension and total number of pixels/voxels
+        n_voxels_dims = rg_dict['n_voxels_dims']
         n_voxels = np.prod(n_voxels_dims)
+        # Get RVE dimensions
+        rve_dims = rg_dict['rve_dims']
     # Compute the required cluster-defining quantities according to the adopted clustering
     # strategy and set clustering processes quantities list
     info.displayInfo('5','Computing clustering-defining quantities:')
+    clustering_strategy = clst_dict['clustering_strategy']
     if clustering_strategy == 1:
         # Set problem dimension and strain/stress components order list
         n_dim, comp_order = rid.setProblemTypeParameters(problem_type)
@@ -139,8 +126,11 @@ def computeClusteringQuantities(strain_formulation,problem_type,clustering_strat
                     for j in range(len(comp_order)):
                         compj = comp_order[j]
                         print('  Strain (' + compj + '): ', \
-                                       '{:>11.4e}'.format(strain_vox[compj][val_voxel_idx]))
+                        '{:>11.4e}'.format(strain_vox[compj][val_voxel_idx]))
                 # --------------------------------------------------------------------------
+            # Add clustering data to clustering dictionary
+            clst_dict['clustering_quantities'] = clustering_quantities
+            clst_dict['clustering_processes'] = clustering_processes
             # ------------------------------------------------------------------------------
             # Validation:
             if __name__ == '__main__':
@@ -149,8 +139,8 @@ def computeClusteringQuantities(strain_formulation,problem_type,clustering_strat
                 print('\nClustering processes list:')
                 print(clustering_processes)
             # ------------------------------------------------------------------------------
-    # Return the clustering quantities array
-    return [clustering_quantities, clustering_processes]
+    # Return
+    return None
 #
 #                                                                     Validation (temporary)
 # ==========================================================================================
@@ -163,25 +153,36 @@ if __name__ == '__main__':
     # Set functions arguments
     strain_formulation = 1
     problem_type = 4
-    clustering_strategy = 1
-    clustering_solution_method = 1
-    if problem_type == 1:
-        discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
-                            'debug/FFT_Homogenization_Method/RVE_2D_2Phases_5x5.rgmsh.npy'
-        rve_dims = [1.0,1.0]
-    else:
-        discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
-                            'debug/FFT_Homogenization_Method/RVE_3D_2Phases_5x5x5.rgmsh.npy'
-        rve_dims = [1.0,1.0,1.0]
     n_material_phases = 2
     material_properties = np.zeros((2,2,2),dtype=object)
     material_properties[0,0,0] = 'E' ; material_properties[0,1,0] = 210e6
     material_properties[1,0,0] = 'v' ; material_properties[1,1,0] = 0.3
     material_properties[0,0,1] = 'E' ; material_properties[0,1,1] = 70e6
     material_properties[1,0,1] = 'v' ; material_properties[1,1,1] = 0.33
+    if problem_type == 1:
+        discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
+        'debug/FFT_Homogenization_Method/RVE_2D_2Phases_5x5.rgmsh.npy'
+        rve_dims = [1.0,1.0]
+    else:
+        discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
+        'debug/FFT_Homogenization_Method/RVE_3D_2Phases_5x5x5.rgmsh.npy'
+        rve_dims = [1.0,1.0,1.0]
+    if ntpath.splitext(ntpath.basename(discret_file_path))[-1] == '.npy':
+        regular_grid = np.load(discret_file_path)
+    else:
+        regular_grid = np.loadtxt(discret_file_path)
+    n_voxels_dims = [regular_grid.shape[i] for i in range(len(regular_grid.shape))]
+    rg_dict = dict()
+    rg_dict['rve_dims'] = rve_dims
+    rg_dict['regular_grid'] = regular_grid
+    rg_dict['n_voxels_dims'] = n_voxels_dims
+    clustering_strategy = 1
+    clustering_solution_method = 1
+    clst_dict = dict()
+    clst_dict['clustering_strategy'] = clustering_strategy
+    clst_dict['clustering_solution_method'] = clustering_solution_method
     # Call function
-    clustering_quantities, clustering_processes = computeClusteringQuantities( \
-             strain_formulation,problem_type,clustering_strategy,clustering_solution_method,
-             discret_file_path,rve_dims,n_material_phases,material_properties)
+    computeClusteringQuantities(strain_formulation,problem_type,n_material_phases,
+                                                      material_properties,rg_dict,clst_dict)
     # Display validation footer
     print('\n' + 92*'-' + '\n')
