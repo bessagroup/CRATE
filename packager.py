@@ -18,6 +18,23 @@ import itertools as it
 #
 #                                                                          Package functions
 # ==========================================================================================
+# Package directories and paths
+def packageDirsPaths(input_file_name,input_file_path,input_file_dir,problem_name,
+                              problem_dir,offline_stage_dir,postprocess_dir,hres_file_path):
+    # Initialize directories and paths dictionary
+    dirs_dict = dict()
+    # Build directories and paths dictionary
+    dirs_dict['input_file_name'] = input_file_name
+    dirs_dict['input_file_path'] = input_file_path
+    dirs_dict['input_file_dir'] = input_file_dir
+    dirs_dict['problem_name'] = problem_name
+    dirs_dict['problem_dir'] = problem_dir
+    dirs_dict['offline_stage_dir'] = offline_stage_dir
+    dirs_dict['postprocess_dir'] = postprocess_dir
+    dirs_dict['hres_file_path'] = hres_file_path
+    # Return
+    return dirs_dict
+# ------------------------------------------------------------------------------------------
 # Package problem general data
 def packageProblem(strain_formulation,problem_type,n_dim,comp_order_sym,comp_order_nsym):
     # Initialize problem dictionary

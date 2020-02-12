@@ -75,6 +75,9 @@ input_file_name,input_file_path,input_file_dir = \
 # Set problem name, directory and main subdirectories
 problem_name,problem_dir,offline_stage_dir,postprocess_dir,is_same_offstage,hres_file_path \
                              = fileOperations.setProblemDirs(input_file_name,input_file_dir)
+# Package data associated to directories and paths
+dirs_dict = packager.packageDirsPaths(input_file_name,input_file_path,input_file_dir,
+                  problem_name,problem_dir,offline_stage_dir,postprocess_dir,hres_file_path)
 # Open user input data file
 try:
     input_file = open(input_file_path,'r')
@@ -113,7 +116,7 @@ material_properties, mac_load_type,mac_load,mac_load_typeidxs,self_consistent_sc
 scs_max_n_iterations,scs_conv_tol,clustering_method,clustering_strategy, \
 clustering_solution_method,phase_nclusters,n_load_increments,max_n_iterations,conv_tol, \
 max_subincrem_level,max_n_iterations,su_conv_tol,discret_file_path,rve_dims = \
-                      rid.readInputData(input_file,input_file_path,problem_name,problem_dir)
+                                                     rid.readInputData(input_file,dirs_dict)
 # Close user input data file
 input_file.close()
 # Package data associated to problem general parameters

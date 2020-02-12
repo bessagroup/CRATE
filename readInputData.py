@@ -106,7 +106,11 @@ def findMaxNumberProperties(file,file_path,keyword,keyword_line_number,n_materia
 #                                                                  Read input data functions
 # ==========================================================================================
 # Read the input data file
-def readInputData(input_file,input_file_path,problem_name,problem_dir):
+def readInputData(input_file,dirs_dict):
+    # Get input file and problem directory and path data
+    input_file_path = dirs_dict['input_file_path']
+    problem_name = dirs_dict['problem_name']
+    problem_dir = dirs_dict['problem_dir']
     # Read strain formulation
     keyword = 'Strain_Formulation'
     max = 2
