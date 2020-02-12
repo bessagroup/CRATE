@@ -28,6 +28,17 @@ def packageMaterialPhases(n_material_phases,material_properties):
     # Return
     return mat_dict
 # ------------------------------------------------------------------------------------------
+# Package data associated to the macroscale loading
+def packageMacroscaleLoading(mac_load_type,mac_load,mac_load_typeidxs):
+    # Initialize macroscale loading dictionary
+    macload_dict = dict()
+    # Build macroscale loading dictionary
+    macload_dict['mac_load_type'] = mac_load_type
+    macload_dict['mac_load'] = mac_load
+    macload_dict['mac_load_typeidxs'] = mac_load_typeidxs
+    # Return
+    return macload_dict
+# ------------------------------------------------------------------------------------------
 # Package data associated to a regular grid of pixels/voxels
 def packageRegularGrid(discret_file_path,rve_dims,mat_dict,n_dim):
     # Get material data

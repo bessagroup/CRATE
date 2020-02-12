@@ -133,9 +133,9 @@ def readInputData(input_file,input_file_path,problem_name,problem_dir):
     # Read macroscale loading
     keyword = 'Macroscale_Loading'
     max = 3
-    macroscale_loading_type = readTypeAKeyword(input_file,input_file_path,keyword,max)
-    macroscale_loading, macroscale_load_indexes = \
-                   readMacroscaleLoading(input_file,input_file_path,macroscale_loading_type,
+    mac_load_type = readTypeAKeyword(input_file,input_file_path,keyword,max)
+    mac_load, mac_load_typeidxs = \
+                   readMacroscaleLoading(input_file,input_file_path,mac_load_type,
                                                                    n_dim,strain_formulation)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read self consistent scheme (optional). If the associated keyword is not found, then
@@ -272,8 +272,8 @@ def readInputData(input_file,input_file_path,problem_name,problem_dir):
     rve_dims = readRVEDimensions(input_file,input_file_path,keyword,n_dim)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return [strain_formulation,problem_type,n_dim,n_material_phases,
-            material_properties,macroscale_loading_type,macroscale_loading,
-            macroscale_load_indexes,self_consistent_scheme,scs_max_n_iterations,
+            material_properties,mac_load_type,mac_load,
+            mac_load_typeidxs,self_consistent_scheme,scs_max_n_iterations,
             scs_conv_tol,clustering_method,clustering_strategy,clustering_solution_method,
             phase_nclusters,n_load_increments,max_n_iterations,conv_tol,
             max_subincrem_level,max_n_iterations,su_conv_tol,discret_file_path,rve_dims]
@@ -413,50 +413,60 @@ def readMaterialProperties(file,file_path,keyword,n_material_phases):
 #
 #                    array = [ 0 , 1 , 1 , 0 , ... ]
 #
+#
+# and store it in a dictionary as
+#                                    _                          _
+#                                   |'component_name_11' , value |
+#            dictionary['strain'] = |'component_name_21' , value |
+#                                   |_       ...        ,   ... _|
+#
 # Note: The symmetry of the macroscale strain and stress tensors is verified under a small
 #       strain formulation
 #
-def readMacroscaleLoading(file,file_path,macroscale_loading_type,n_dim,strain_formulation):
-    if macroscale_loading_type == 1:
+def readMacroscaleLoading(file,file_path,mac_load_type,n_dim,strain_formulation):
+    mac_load = dict()
+    if mac_load_type == 1:
         loading_keywords = ['Macroscale_Strain']
-    elif macroscale_loading_type == 2:
+        mac_load['strain'] = np.full((n_dim**2,2),'ND',dtype=object)
+        mac_load_typeidxs = np.zeros((n_dim**2),dtype=int)
+    elif mac_load_type == 2:
         loading_keywords = ['Macroscale_Stress']
-    elif macroscale_loading_type == 3:
+        mac_load['stress'] = np.full((n_dim**2,2),'ND',dtype=object)
+        mac_load_typeidxs = np.ones((n_dim**2),dtype=int)
+    elif mac_load_type == 3:
         loading_keywords = ['Macroscale_Strain','Macroscale_Stress']
+        mac_load['strain'] = np.full((n_dim**2,2),'ND',dtype=object)
+        mac_load['stress'] = np.full((n_dim**2,2),'ND',dtype=object)
         presc_keyword = 'Mixed_Prescription_Index'
-    macroscale_loading = np.full((n_dim**2,2,2),'ND',dtype=object)
     for load_keyword in loading_keywords:
         load_keyword_line_number = searchKeywordLine(file,load_keyword)
-        for icomponent in range(1,n_dim**2+1):
+        for icomponent in range(n_dim**2):
             component_line = linecache.getline(file_path,
-                                     load_keyword_line_number+icomponent).strip().split(' ')
+                                   load_keyword_line_number+icomponent+1).strip().split(' ')
             if component_line[0] == '':
                 location = inspect.getframeinfo(inspect.currentframe())
                 errors.displayError('E00008',location.filename,location.lineno+1,
-                                                                    load_keyword,icomponent)
+                                                                  load_keyword,icomponent+1)
             elif len(component_line) != 2:
                 location = inspect.getframeinfo(inspect.currentframe())
                 errors.displayError('E00008',location.filename,location.lineno+1,
-                                                                    load_keyword,icomponent)
+                                                                  load_keyword,icomponent+1)
             elif not checkValidName(component_line[0]):
                 location = inspect.getframeinfo(inspect.currentframe())
                 errors.displayError('E00008',location.filename,location.lineno+1,
-                                                                    load_keyword,icomponent)
+                                                                  load_keyword,icomponent+1)
             elif not checkNumber(component_line[1]):
                 location = inspect.getframeinfo(inspect.currentframe())
                 errors.displayError('E00008',location.filename,location.lineno+1,
-                                                                    load_keyword,icomponent)
-            store_index = (0,1,loading_keywords.index(load_keyword))
-            macroscale_loading[icomponent-1,0,store_index[macroscale_loading_type-1]] = \
-                                                                           component_line[0]
-            macroscale_loading[icomponent-1,1,store_index[macroscale_loading_type-1]] = \
-                                                                    float(component_line[1])
-    if macroscale_loading_type == 1:
-        macroscale_load_indexes = np.zeros((n_dim**2),dtype=int)
-    elif macroscale_loading_type == 2:
-        macroscale_load_indexes = np.ones((n_dim**2),dtype=int)
-    elif macroscale_loading_type == 3:
-        macroscale_load_indexes = np.zeros((n_dim**2),dtype=int)
+                                                                  load_keyword,icomponent+1)
+            if load_keyword == 'Macroscale_Strain':
+                mac_load['strain'][icomponent,0] = component_line[0]
+                mac_load['strain'][icomponent,1] = float(component_line[1])
+            elif load_keyword == 'Macroscale_Stress':
+                mac_load['stress'][icomponent,0] = component_line[0]
+                mac_load['stress'][icomponent,1] = float(component_line[1])
+    if mac_load_type == 3:
+        mac_load_typeidxs = np.zeros((n_dim**2),dtype=int)
         presc_keyword_line_number = searchKeywordLine(file,presc_keyword)
         presc_line = \
                  linecache.getline(file_path,presc_keyword_line_number+1).strip().split(' ')
@@ -471,8 +481,7 @@ def readMacroscaleLoading(file,file_path,macroscale_loading_type,n_dim,strain_fo
             location = inspect.getframeinfo(inspect.currentframe())
             errors.displayError('E00011',location.filename,location.lineno+1,presc_keyword)
         else:
-            macroscale_load_indexes = \
-                              np.array([int(presc_line[i]) for i in range(len(presc_line))])
+            mac_load_typeidxs = np.array([int(presc_line[i]) for i in range(len(presc_line))])
     # Check small strain formulation symmetry
     if strain_formulation == 1:
         if n_dim**2 == 4:
@@ -480,47 +489,43 @@ def readMacroscaleLoading(file,file_path,macroscale_loading_type,n_dim,strain_fo
         elif n_dim**2 == 9:
             symmetric_indexes = np.array([[3,6,7],[1,2,5]])
         for i in range(symmetric_indexes.shape[1]):
-            if macroscale_loading_type == 1:
+            if mac_load_type == 1:
                 isEqual = np.allclose(
-                                  macroscale_loading[symmetric_indexes[0,i],1,0],
-                                  macroscale_loading[symmetric_indexes[1,i],1,0],atol=1e-10)
+                          mac_load['strain'][symmetric_indexes[0,i],1],
+                          mac_load['strain'][symmetric_indexes[1,i],1],atol=1e-10)
                 if not isEqual:
                     location = inspect.getframeinfo(inspect.currentframe())
                     errors.displayWarning('W00001',location.filename,location.lineno+1,
-                                                                    macroscale_loading_type)
-                    macroscale_loading[symmetric_indexes[1,i],1,0] = \
-                                              macroscale_loading[symmetric_indexes[0,i],1,0]
-            if macroscale_loading_type == 2:
+                                                                              mac_load_type)
+                    mac_load['strain'][symmetric_indexes[1,i],1] = \
+                                      mac_load['strain'][symmetric_indexes[0,i],1]
+            if mac_load_type == 2:
                 isEqual = np.allclose(
-                                  macroscale_loading[symmetric_indexes[0,i],1,1],
-                                  macroscale_loading[symmetric_indexes[1,i],1,1],atol=1e-10)
+                          mac_load['stress'][symmetric_indexes[0,i],1],
+                          mac_load['stress'][symmetric_indexes[1,i],1],atol=1e-10)
                 if not isEqual:
                     location = inspect.getframeinfo(inspect.currentframe())
                     errors.displayWarning('W00001',location.filename,location.lineno+1,
-                                                                    macroscale_loading_type)
-                    macroscale_loading[symmetric_indexes[1,i],1,1] = \
-                                              macroscale_loading[symmetric_indexes[0,i],1,1]
-            elif macroscale_loading_type == 3:
-                if macroscale_load_indexes[symmetric_indexes[0,i]] != \
-                                            macroscale_load_indexes[symmetric_indexes[1,i]]:
+                                                                              mac_load_type)
+                    mac_load['stress'][symmetric_indexes[1,i],1] = \
+                                      mac_load['stress'][symmetric_indexes[0,i],1]
+            elif mac_load_type == 3:
+                if mac_load_typeidxs[symmetric_indexes[0,i]] != \
+                                            mac_load_typeidxs[symmetric_indexes[1,i]]:
                     location = inspect.getframeinfo(inspect.currentframe())
                     errors.displayError('E00012',location.filename,location.lineno+1,i)
-                aux = macroscale_load_indexes[symmetric_indexes[0,i]]
+                aux = mac_load_typeidxs[symmetric_indexes[0,i]]
+                key = 'strain' if aux == 0 else 'stress'
                 isEqual = np.allclose(
-                                macroscale_loading[symmetric_indexes[0,i],1,aux],
-                                macroscale_loading[symmetric_indexes[1,i],1,aux],atol=1e-10)
+                               mac_load[key][symmetric_indexes[0,i],1],
+                               mac_load[key][symmetric_indexes[1,i],1],atol=1e-10)
                 if not isEqual:
-                    if aux == 0:
-                        location = inspect.getframeinfo(inspect.currentframe())
-                        errors.displayWarning('W00001',location.filename,location.lineno+1,
-                                                                macroscale_loading_type,aux)
-                    elif aux == 1:
-                        location = inspect.getframeinfo(inspect.currentframe())
-                        errors.displayWarning('W00001',location.filename,location.lineno+1,
-                                                                macroscale_loading_type,aux)
-                    macroscale_loading[symmetric_indexes[1,i],1,aux] = \
-                                            macroscale_loading[symmetric_indexes[0,i],1,aux]
-    return macroscale_loading, macroscale_load_indexes
+                    location = inspect.getframeinfo(inspect.currentframe())
+                    errors.displayWarning('W00001',location.filename,location.lineno+1,
+                                                                          mac_load_type,key)
+                    mac_load[key][symmetric_indexes[1,i],1] = \
+                                                     mac_load[key][symmetric_indexes[0,i],1]
+    return mac_load, mac_load_typeidxs
 # ------------------------------------------------------------------------------------------
 # Read the number of clusters associated to each material phase, specified as
 #

@@ -109,7 +109,7 @@ except FileNotFoundError as message:
 # Read input data according to analysis type
 info.displayInfo('5','Reading the input data file...')
 strain_formulation,problem_type,n_dim,n_material_phases,material_properties, \
-macroscale_loading_type,macroscale_loading,macroscale_load_indexes,self_consistent_scheme, \
+mac_load_type,mac_load,mac_load_typeidxs,self_consistent_scheme, \
 scs_max_n_iterations,scs_conv_tol,clustering_method,clustering_strategy, \
 clustering_solution_method,phase_nclusters,n_load_increments,max_n_iterations,conv_tol, \
 max_subincrem_level,max_n_iterations,su_conv_tol,discret_file_path,rve_dims = \
@@ -119,6 +119,9 @@ input_file.close()
 # Package data associated to the material phases
 info.displayInfo('5','Packaging material data...')
 mat_dict = packager.packageMaterialPhases(n_material_phases,material_properties)
+# Package data associated to the macroscale loading
+info.displayInfo('5','Packaging macroscale loading data...')
+macload_dict = packager.packageMacroscaleLoading(mac_load_type,mac_load,mac_load_typeidxs)
 # Package data associated to the spatial discretization file(s)
 info.displayInfo('5','Packaging regular grid data...')
 rg_dict = packager.packageRegularGrid(discret_file_path,rve_dims,copy.deepcopy(mat_dict),
