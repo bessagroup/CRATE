@@ -15,8 +15,14 @@ import os
 import numpy as np
 # Unsupervised clustering algorithms
 import sklearn.cluster
+# Python object serialization
+import pickle
+# Inspect file name and line
+import inspect
 # Display messages
 import info
+# Display errors, warnings and built-in exceptions
+import errors
 # Tensorial operations
 import tensorOperations as top
 #
@@ -24,7 +30,9 @@ import tensorOperations as top
 # ==========================================================================================
 # Perform clustering processes according to the selected clustering strategy by employing
 # the selected clustering method
-def performClustering(mat_dict,rg_dict,clst_dict):
+def performClustering(dirs_dict,mat_dict,rg_dict,clst_dict):
+    # Get directories and paths data
+    cluster_file_path = dirs_dict['cluster_file_path']
     # Get material data
     n_material_phases = mat_dict['n_material_phases']
     material_properties = mat_dict['material_properties']
@@ -94,6 +102,10 @@ def performClustering(mat_dict,rg_dict,clst_dict):
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Update label correction
                 label_correction = label_correction + n_clusters
+            # Check if all the training dataset points have been labeled
+            if np.any(clst_process_lbls_flat == -1):
+                location = inspect.getframeinfo(inspect.currentframe())
+                errors.displayError('E00036',location.filename,location.lineno+1,iclst+1)
             # Store current clustering process labels list
             clst_processes.append(list(clst_process_lbls_flat))
         info.displayInfo('6','completed')
@@ -102,6 +114,18 @@ def performClustering(mat_dict,rg_dict,clst_dict):
     if clustering_strategy == 1:
         # Get the cluster labels from the unique clustering process
         clst_dict['voxels_clstlbl_flat'] = clst_processes[0]
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Open file which contains all the required information associated to the clustering
+    # discretization
+    try:
+        cluster_file = open(cluster_file_path,'wb')
+    except Exception as message:
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayException(location.filename,location.lineno+1,message)
+    # Store clustering data
+    pickle.dump(clst_dict,cluster_file)
+    # Close file
+    cluster_file.close()
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Return
     return None

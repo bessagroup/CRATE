@@ -68,14 +68,15 @@ def displayError(code,*args):
                    indent + '{}' + '\n' + \
                    indent + '< value >'
     elif code == 'E00005':
+        ord = getOrdinalNumber(args[3])
         arguments = info.convertIterableToList(args[2:4]) + \
                     info.convertIterableToList(2*(args[2],))
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
                    'input data\n' + \
-                   indent + 'file. In particular, the header of the {}th material ' + \
-                   'phase is not properly specified ' + '\n' + \
+                   indent + 'file. In particular, the header of the {}' + ord + \
+                   ' material phase is not properly specified ' + '\n' + \
                    indent + 'potentially due to one of the following reasons: \n\n' + \
                    indent + '1. Missing material phase header specification;' + '\n' + \
                    indent + '2. Material phase header specification wrong format;' + '\n' + \
@@ -96,14 +97,15 @@ def displayError(code,*args):
                    '\n' + \
                    indent + 'property3_name < value >' + '\n'
     elif code == 'E00006':
+        ord = getOrdinalNumber(args[3])
         arguments = info.convertIterableToList(args[2:5]) + \
                     info.convertIterableToList(2*(args[2],))
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
                    'input data\n' + \
-                   indent + 'file. In particular, the {}th property of material ' + \
-                   'phase {} is not properly ' + '\n' + \
+                   indent + 'file. In particular, the {}' + ord + ' property of ' + \
+                   'material phase {} is not properly ' + '\n' + \
                    indent + 'specified potentially due to one of the following reasons:' + \
                    '\n\n' + \
                    indent + '1. Missing property specification;' + '\n' + \
@@ -140,14 +142,15 @@ def displayError(code,*args):
                    indent + 'The keyword - {} - should be specified as' + '\n\n' + \
                    indent + '{} < option or value >'
     elif code == 'E00008':
+        ord = getOrdinalNumber(args[3])
         arguments = info.convertIterableToList(args[2:4]) + \
                     info.convertIterableToList(2*(args[2],))
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
                    'input \n' + \
-                   indent + 'data file. In particular, the {}th component is not ' + \
-                   'properly specified potentially' + '\n' + \
+                   indent + 'data file. In particular, the {}' + ord + ' component is ' + \
+                   'not properly specified potentially' + '\n' + \
                    indent + 'due to one of the following reasons: \n\n' + \
                    indent + '1. Missing descriptor specification;' + '\n' + \
                    indent + '2. Component name can only contain letters, numbers or ' + \
@@ -378,6 +381,18 @@ def displayError(code,*args):
                    indent + 'At least one specified column index is out of the matrix ' + \
                    'bounds when performing the ' + '\n' + \
                    indent + 'corresponding condensation.'
+    elif code == 'E00036':
+        ord = getOrdinalNumber(args[2])
+        arguments = [args[2],]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'At least one dataset point has not been labeled during ' + \
+                   'the {}' + ord + ' clustering process.'
+    elif code == 'E00037':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'Invalid cardinal number.'
     #print(template_header.format(*header,width=output_width))
     #print(template.format(*values,width=output_width))
     #print(template_footer.format(*footer,width=output_width))
@@ -457,3 +472,18 @@ def displayException(*args):
     info.print2(template_footer.format(*footer,width=output_width))
     # Abort program
     sys.exit(1)
+#
+#                                                                    Complementary functions
+# ==========================================================================================
+# Set ordinal number suffix
+def getOrdinalNumber(x):
+    suffix_list = ['st','nd','rd','th']
+    if not isinstance(x,int) or x < 0:
+        location = inspect.getframeinfo(inspect.currentframe())
+        displayError('E00037',location.filename,location.lineno+1)
+    else:
+        if int(str(x)[-1]) in range(1,4):
+            suffix = suffix_list[int(str(x)[-1])-1]
+        else:
+            suffix = suffix_list[3]
+    return suffix

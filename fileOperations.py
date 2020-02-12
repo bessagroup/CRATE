@@ -116,9 +116,44 @@ def setInputDataFilePath(path):
     # Return
     return [input_file_name,input_file_path,input_file_dir]
 # ------------------------------------------------------------------------------------------
-# Set problem name and directory
+# Set the problem folder (directories and files) as described below:
+#
+# example.dat
+# shinyregulargrid.rgmsh
+# example/ ------- example.screen
+#            |---- shinyregulargrid.rgmsh
+#            |---- Offline_Stage/ ------- example.info
+#            |                      |---- example.cluster
+#            |                      |---- example.cit
+#            |---- example.hres
+#            |---- Post_Process/  ------- example.pvd
+#                                   |---- VTK/
+#
+# Folders and files meaning:
+# example.dat            - User input data file
+# shinyregulargrid.rgmsh - Example of spatial discretization file (doesn't need to be in the
+#                          same directory as the user input data file)
+# example/               - Problem folder
+# example.screen         - File where all the data printed to the default standard output
+#                          device is stored
+# shinyregulargrid.rgmsh - Copy of the spatial discretization file contained in the problem
+#                          folder
+# Offline_Stage/         - Offline stage folder
+# example.info           - File which contains some parameters associated to the offline
+#                          stage (serving to check if previously computed offline stage can
+#                          be considered)
+# example.cluster        - File which contains all the required information associated to
+#                          the clustering discretization (binary format)
+# example.cit            - File which contains the cluster interaction tensors
+# example.hres           - File where standard homogenized results are stored
+# Post_Process/          - Post processing folder
+# example.pvd            - VTK XML file which contains the references to all the snapshots
+#                          of the problem solution
+# VTK/                   - Folder which constains all the snapshots of the problem solution
+#                          (VTK XML format)
+#
 def setProblemDirs(input_file_name,input_file_dir):
-    # Set problem name and directory
+    # Set problem name, directory
     problem_name = input_file_name
     problem_dir = input_file_dir + '/' + problem_name + '/'
     # Set offline stage and post processing subdirectories
@@ -129,6 +164,8 @@ def setProblemDirs(input_file_name,input_file_dir):
     screen_file_path = problem_dir + input_file_name + '.screen'
     if os.path.isfile(screen_file_path):
         os.remove(screen_file_path)
+    # Set '.cluster' path
+    cluster_file_path = offline_stage_dir + input_file_name + '.cluster'
     # Set '.hres' path
     hres_file_path = problem_dir + input_file_name + '.hres'
     # Check if the problem directory already exists or not
@@ -186,4 +223,4 @@ def setProblemDirs(input_file_name,input_file_dir):
         info.displayInfo('-1',problem_dir,status)
     # Return
     return [problem_name,problem_dir,offline_stage_dir,postprocess_dir,is_same_offstage,
-            hres_file_path]
+            cluster_file_path,hres_file_path]

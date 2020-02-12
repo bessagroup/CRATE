@@ -73,11 +73,13 @@ elif not os.path.isfile(str(sys.argv[1])):
 input_file_name,input_file_path,input_file_dir = \
                                        fileOperations.setInputDataFilePath(str(sys.argv[1]))
 # Set problem name, directory and main subdirectories
-problem_name,problem_dir,offline_stage_dir,postprocess_dir,is_same_offstage,hres_file_path \
+problem_name,problem_dir,offline_stage_dir,postprocess_dir,is_same_offstage,\
+cluster_file_path,hres_file_path \
                              = fileOperations.setProblemDirs(input_file_name,input_file_dir)
 # Package data associated to directories and paths
 dirs_dict = packager.packageDirsPaths(input_file_name,input_file_path,input_file_dir,
-                  problem_name,problem_dir,offline_stage_dir,postprocess_dir,hres_file_path)
+                                 problem_name,problem_dir,offline_stage_dir,postprocess_dir,
+                                 cluster_file_path,hres_file_path)
 # Open user input data file
 try:
     input_file = open(input_file_path,'r')
@@ -165,8 +167,8 @@ info.displayInfo('3','Compute cluster-defining quantities', \
 info.displayInfo('2','Perform clustering')
 phase_init_time = time.time()
 # Perform the clustering according to the selected method and adopted strategy
-clusteringMethods.performClustering(copy.deepcopy(mat_dict),copy.deepcopy(rg_dict),\
-                                                                                  clst_dict)
+clusteringMethods.performClustering(copy.deepcopy(dirs_dict),copy.deepcopy(mat_dict),
+                                                           copy.deepcopy(rg_dict),clst_dict)
 # Set phase ending time and display finishing phase information
 phase_end_time = time.time()
 phase_names.append('Perform clustering')
