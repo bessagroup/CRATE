@@ -118,7 +118,7 @@ def readInputData(input_file,input_file_path,problem_name,problem_dir):
     keyword = 'Problem_Type'
     max = 4
     problem_type = readTypeAKeyword(input_file,input_file_path,keyword,max)
-    n_dim, comp_order = setProblemTypeParameters(problem_type)
+    n_dim, comp_order_sym, comp_order_nsym = setProblemTypeParameters(problem_type)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read number of material phases
     keyword = 'Number_of_Material_Phases'
@@ -271,8 +271,8 @@ def readInputData(input_file,input_file_path,problem_name,problem_dir):
     keyword = 'RVE_Dimensions'
     rve_dims = readRVEDimensions(input_file,input_file_path,keyword,n_dim)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    return [strain_formulation,problem_type,n_dim,n_material_phases,
-            material_properties,mac_load_type,mac_load,
+    return [strain_formulation,problem_type,n_dim,comp_order_sym,comp_order_nsym,
+            n_material_phases,material_properties,mac_load_type,mac_load,
             mac_load_typeidxs,self_consistent_scheme,scs_max_n_iterations,
             scs_conv_tol,clustering_method,clustering_strategy,clustering_solution_method,
             phase_nclusters,n_load_increments,max_n_iterations,conv_tol,
@@ -636,7 +636,8 @@ def setProblemTypeParameters(problem_type):
     # Set problem dimension and strain/stress components order
     if problem_type == 1:
         n_dim = 2
-        comp_order = ['11','22','12']
+        comp_order_sym = ['11','22','12']
+        comp_order_nsym = ['11','21','12','22']
     elif problem_type == 2:
         location = inspect.getframeinfo(inspect.currentframe())
         errors.displayError('E00017',location.filename,location.lineno+1,problem_type)
@@ -645,5 +646,6 @@ def setProblemTypeParameters(problem_type):
         errors.displayError('E00017',location.filename,location.lineno+1,problem_type)
     elif problem_type == 4:
         n_dim = 3
-        comp_order = ['11','22','33','12','23','13']
-    return [n_dim,comp_order]
+        comp_order_sym = ['11','22','33','12','23','13']
+        comp_order_nsym = ['11','21','31','12','22','32','13','23','33']
+    return [n_dim,comp_order_sym,comp_order_nsym]

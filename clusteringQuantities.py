@@ -13,6 +13,8 @@
 import os
 # Working with arrays
 import numpy as np
+# Shallow and deep copy operations
+import copy
 # Extract information from path
 import ntpath
 # Generate efficient iterators
@@ -60,7 +62,12 @@ import FFTHomogenizationBasicScheme
 #          tensor with major or minor simmetries, only the independent components may be
 #          stored in the clustering array
 #
-def computeClusteringQuantities(strain_formulation,problem_type,mat_dict,rg_dict,clst_dict):
+def computeClusteringQuantities(problem_dict,mat_dict,rg_dict,clst_dict):
+    # Get problem data
+    strain_formulation = problem_dict['strain_formulation']
+    problem_type = problem_dict['problem_type']
+    n_dim = problem_dict['n_dim']
+    comp_order_sym = problem_dict['comp_order_sym']
     # Extract the required data from the spatial discretization file(s) according to the
     # chosen solution method to compute the cluster-defining quantities
     info.displayInfo('5','Reading discretization file...')
@@ -78,21 +85,20 @@ def computeClusteringQuantities(strain_formulation,problem_type,mat_dict,rg_dict
     info.displayInfo('5','Computing clustering-defining quantities:')
     clustering_strategy = clst_dict['clustering_strategy']
     if clustering_strategy == 1:
-        # Set problem dimension and strain/stress components order list
-        n_dim, comp_order = rid.setProblemTypeParameters(problem_type)
-        # In this clustering strategy, only one clustering process is performed based
-        # on the strain concentration fourth-order tensor. Initialize the clustering
-        # quantities array according to number of independent strain components
-        n_clustering_var = len(comp_order)**2
+        # In this clustering strategy, only one clustering process is performed based on the
+        # strain concentration fourth-order tensor. Initialize the clustering quantities
+        # array according to the number of independent strain components
+        if strain_formulation == 1:
+            n_clustering_var = len(comp_order_sym)**2
         clst_quantities = np.zeros((n_voxels,n_clustering_var))
         clst_dataidxs = [list(range(n_clustering_var)),]
         # Small strain formulation
         if strain_formulation == 1:
             info.displayInfo('5','Computing strain concentration tensors...',2)
             # Loop over independent strain components
-            for i in range(len(comp_order)):
-                compi = comp_order[i]
-                so_idx = tuple([int(x)-1 for x in list(comp_order[i])])
+            for i in range(len(comp_order_sym)):
+                compi = comp_order_sym[i]
+                so_idx = tuple([int(x)-1 for x in list(comp_order_sym[i])])
                 # Set macroscopic strain loading
                 mac_strain = np.zeros((n_dim,n_dim))
                 if compi[0] == compi[1]:
@@ -102,14 +108,13 @@ def computeClusteringQuantities(strain_formulation,problem_type,mat_dict,rg_dict
                     mac_strain[so_idx[::-1]] = 1.0
                 # Solve RVE static equilibrium problem
                 strain_vox = FFTHomogenizationBasicScheme.FFTHomogenizationBasicScheme(
-                                                              problem_type,rg_dict,mat_dict,
-                                                              comp_order,mac_strain)
+                                         copy.deepcopy(problem_dict),copy.deepcopy(rg_dict),
+                                         copy.deepcopy(mat_dict),mac_strain)
                 # Assemble strain concentration tensor components associated to the imposed
                 # macroscale strain loading component
-                for j in range(len(comp_order)):
-                    compj = comp_order[j]
-                    clst_quantities[:,i*len(comp_order)+j] = \
-                                                                 strain_vox[compj].flatten()
+                for j in range(len(comp_order_sym)):
+                    compj = comp_order_sym[j]
+                    clst_quantities[:,i*len(comp_order_sym)+j] = strain_vox[compj].flatten()
                 # --------------------------------------------------------------------------
                 # Validation:
                 if __name__ == '__main__':
@@ -122,8 +127,8 @@ def computeClusteringQuantities(strain_formulation,problem_type,mat_dict,rg_dict
                                     val_voxel_idx[0]*(n_voxels_dims[1]*n_voxels_dims[2]) + \
                                         val_voxel_idx[1]*n_voxels_dims[2] + val_voxel_idx[2]
                     print('\nPerturbed strain component: ' + compi)
-                    for j in range(len(comp_order)):
-                        compj = comp_order[j]
+                    for j in range(len(comp_order_sym)):
+                        compj = comp_order_sym[j]
                         print('  Strain (' + compj + '): ', \
                         '{:>11.4e}'.format(strain_vox[compj][val_voxel_idx]))
                 # --------------------------------------------------------------------------
@@ -152,7 +157,13 @@ if __name__ == '__main__':
     # Set functions arguments
     strain_formulation = 1
     problem_type = 4
-    mat_dict = dict()
+    n_dim, comp_order_sym, comp_order_nsym = rid.setProblemTypeParameters(problem_type)
+    problem_dict()
+    problem_dict['strain_formulation'] = strain_formulation
+    problem_dict['problem_type'] = problem_type
+    problem_dict['n_dim'] = n_dim
+    problem_dict['comp_order_sym'] = comp_order_sym
+    problem_dict['comp_order_nsym'] = comp_order_nsym
     n_material_phases = 2
     material_properties = dict()
     material_properties['1'] = dict()
@@ -161,6 +172,7 @@ if __name__ == '__main__':
     material_properties['2'] = dict()
     material_properties['2']['E'] = 70e6
     material_properties['2']['v'] = 0.33
+    mat_dict = dict()
     mat_dict['n_material_phases'] = n_material_phases
     mat_dict['material_properties'] = material_properties
     if problem_type == 1:
@@ -186,6 +198,6 @@ if __name__ == '__main__':
     clst_dict['clustering_strategy'] = clustering_strategy
     clst_dict['clustering_solution_method'] = clustering_solution_method
     # Call function
-    computeClusteringQuantities(strain_formulation,problem_type,mat_dict,rg_dict,clst_dict)
+    computeClusteringQuantities(problem_dict,mat_dict,rg_dict,clst_dict)
     # Display validation footer
     print('\n' + 92*'-' + '\n')

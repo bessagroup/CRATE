@@ -18,6 +18,19 @@ import itertools as it
 #
 #                                                                          Package functions
 # ==========================================================================================
+# Package problem general data
+def packageProblem(strain_formulation,problem_type,n_dim,comp_order_sym,comp_order_nsym):
+    # Initialize problem dictionary
+    problem_dict = dict()
+    # Build problem dictionary
+    problem_dict['strain_formulation'] = strain_formulation
+    problem_dict['problem_type'] = problem_type
+    problem_dict['n_dim'] = n_dim
+    problem_dict['comp_order_sym'] = comp_order_sym
+    problem_dict['comp_order_nsym'] = comp_order_nsym
+    # Return
+    return problem_dict
+# ------------------------------------------------------------------------------------------
 # Package data associated to the material phases
 def packageMaterialPhases(n_material_phases,material_properties):
     # Initialize material phases dictionary
@@ -40,7 +53,9 @@ def packageMacroscaleLoading(mac_load_type,mac_load,mac_load_typeidxs):
     return macload_dict
 # ------------------------------------------------------------------------------------------
 # Package data associated to a regular grid of pixels/voxels
-def packageRegularGrid(discret_file_path,rve_dims,mat_dict,n_dim):
+def packageRegularGrid(discret_file_path,rve_dims,mat_dict,problem_dict):
+    # Get problem data
+    n_dim = problem_dict['n_dim']
     # Get material data
     n_material_phases = mat_dict['n_material_phases']
     material_properties = mat_dict['material_properties']
@@ -123,9 +138,11 @@ if __name__ == '__main__':
         rve_dims = [1.0,1.0,1.0]
     n_material_phases = 2
     import readInputData as rid
-    n_dim, _ = rid.setProblemTypeParameters(problem_type)
+    n_dim,_,_ = rid.setProblemTypeParameters(problem_type)
+    problem_dict = dict()
+    problem_dict['n_dim'] = n_dim
     # Call function
-    rg_dict = packageRegularGrid(discret_file_path,rve_dims,n_material_phases,n_dim)
+    rg_dict = packageRegularGrid(discret_file_path,rve_dims,n_material_phases,problem_dict)
     # Display validation
     print('\nrve_dims:')
     print(rg_dict['rve_dims'])

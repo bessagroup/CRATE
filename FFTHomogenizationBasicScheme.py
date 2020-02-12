@@ -62,7 +62,7 @@ import tensorOperations as top
 #         form. The matricial form follows the Kelvin notation when symmetry conditions
 #         exist and is performed columnwise otherwise.
 #
-def FFTHomogenizationBasicScheme(problem_type,rg_dict,mat_dict,comp_order,mac_strain):
+def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
     #
     #                                                                             Parameters
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -73,6 +73,10 @@ def FFTHomogenizationBasicScheme(problem_type,rg_dict,mat_dict,comp_order,mac_st
     #
     #                                                                        Input arguments
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Get problem type and dimensions
+    problem_type = problem_dict['problem_type']
+    n_dim = problem_dict['n_dim']
+    comp_order = problem_dict['comp_order_sym']
     # Get the spatial discretization file (regular grid of pixels/voxels)
     regular_grid = rg_dict['regular_grid']
     # Get number of pixels/voxels in each dimension and total number of pixels/voxels
@@ -80,8 +84,6 @@ def FFTHomogenizationBasicScheme(problem_type,rg_dict,mat_dict,comp_order,mac_st
     n_voxels = np.prod(n_voxels_dims)
     # Get RVE dimensions
     rve_dims = rg_dict['rve_dims']
-    # Set problem dimensions
-    n_dim = len(regular_grid.shape)
     # Get material properties
     material_properties = mat_dict['material_properties']
     # Set macroscale strain matricial form
@@ -660,7 +662,14 @@ if __name__ == '__main__':
     print('\nValidation: ',(len(val_functions)*'{}, ').format(*val_functions), 3*'\b', ' ')
     print(92*'-')
     # Set functions arguments
-    problem_type = 1
+    problem_type = 4
+    import readInputData as rid
+    n_dim, comp_order_sym, comp_order_nsym = rid.setProblemTypeParameters(problem_type)
+    problem_dict = dict()
+    problem_dict['problem_type'] = problem_type
+    problem_dict['n_dim'] = n_dim
+    problem_dict['comp_order_sym'] = comp_order_sym
+    problem_dict['comp_order_nsym'] = comp_order_nsym
     if problem_type == 1:
         rve_dims = [1.0,1.0]
         discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
@@ -675,7 +684,6 @@ if __name__ == '__main__':
     rg_dict['rve_dims'] = rve_dims
     rg_dict['regular_grid'] = regular_grid
     rg_dict['n_voxels_dims'] = n_voxels_dims
-    mat_dict = dict()
     n_material_phases = 2
     material_properties = dict()
     material_properties['1'] = dict()
@@ -684,6 +692,7 @@ if __name__ == '__main__':
     material_properties['2'] = dict()
     material_properties['2']['E'] = 70e6
     material_properties['2']['v'] = 0.33
+    mat_dict = dict()
     mat_dict['n_material_phases'] = n_material_phases
     mat_dict['material_properties'] = material_properties
     n_dim = len(regular_grid.shape)
@@ -696,6 +705,6 @@ if __name__ == '__main__':
     else:
         mac_strain = np.array([[2,0.5,0.5],[0.5,1,1],[0.5,1,3]])
     # Call function
-    FFTHomogenizationBasicScheme(problem_type,rg_dict,mat_dict,comp_order,mac_strain)
+    FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain)
     # Display validation footer
     print('\n' + 92*'-' + '\n')

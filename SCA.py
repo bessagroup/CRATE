@@ -108,14 +108,18 @@ except FileNotFoundError as message:
     errors.displayException(location.filename,location.lineno+1,message)
 # Read input data according to analysis type
 info.displayInfo('5','Reading the input data file...')
-strain_formulation,problem_type,n_dim,n_material_phases,material_properties, \
-mac_load_type,mac_load,mac_load_typeidxs,self_consistent_scheme, \
+strain_formulation,problem_type,n_dim,comp_order_sym, comp_order_nsym,n_material_phases,\
+material_properties, mac_load_type,mac_load,mac_load_typeidxs,self_consistent_scheme, \
 scs_max_n_iterations,scs_conv_tol,clustering_method,clustering_strategy, \
 clustering_solution_method,phase_nclusters,n_load_increments,max_n_iterations,conv_tol, \
 max_subincrem_level,max_n_iterations,su_conv_tol,discret_file_path,rve_dims = \
                       rid.readInputData(input_file,input_file_path,problem_name,problem_dir)
 # Close user input data file
 input_file.close()
+# Package data associated to problem general parameters
+info.displayInfo('5','Packaging problem general data...')
+problem_dict = packager.packageProblem(strain_formulation,problem_type,n_dim,comp_order_sym,
+                                                                            comp_order_nsym)
 # Package data associated to the material phases
 info.displayInfo('5','Packaging material data...')
 mat_dict = packager.packageMaterialPhases(n_material_phases,material_properties)
@@ -125,7 +129,7 @@ macload_dict = packager.packageMacroscaleLoading(mac_load_type,mac_load,mac_load
 # Package data associated to the spatial discretization file(s)
 info.displayInfo('5','Packaging regular grid data...')
 rg_dict = packager.packageRegularGrid(discret_file_path,rve_dims,copy.deepcopy(mat_dict),
-                                                                                      n_dim)
+                                                                copy.deepcopy(problem_dict))
 # Package data associated to the clustering
 info.displayInfo('5','Packaging clustering data...')
 clst_dict = packager.packageRGClustering(clustering_method,clustering_strategy,\
@@ -143,7 +147,7 @@ info.displayInfo('2','Compute cluster-defining quantities')
 phase_init_time = time.time()
 # Compute the quantities required to perform the clustering according to the strategy
 # adopted
-clusteringQuantities.computeClusteringQuantities(strain_formulation,problem_type,
+clusteringQuantities.computeClusteringQuantities(copy.deepcopy(problem_dict),
                                    copy.deepcopy(mat_dict),copy.deepcopy(rg_dict),clst_dict)
 # Set phase ending time and display finishing phase information
 phase_end_time = time.time()
