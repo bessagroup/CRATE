@@ -17,6 +17,8 @@ import sys
 import shutil
 # Working with arrays
 import numpy as np
+# Shallow and deep copy operations
+import copy
 # Mathematics
 import math
 # Regular expressions
@@ -136,7 +138,7 @@ def readInputData(input_file,input_file_path,problem_name,problem_dir):
     mac_load_type = readTypeAKeyword(input_file,input_file_path,keyword,max)
     mac_load, mac_load_typeidxs = \
                    readMacroscaleLoading(input_file,input_file_path,mac_load_type,
-                                                                   n_dim,strain_formulation)
+                                                   strain_formulation,n_dim,comp_order_nsym)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read self consistent scheme (optional). If the associated keyword is not found, then
     # a default specification is assumed
@@ -396,34 +398,44 @@ def readMaterialProperties(file,file_path,keyword,n_material_phases):
 # ------------------------------------------------------------------------------------------
 # Read the macroscale loading conditions, specified as
 #
-# Macroscale_Strain or Macroscale_Stress
-# < component_name_11 > < value >
-# < component_name_21 > < value >
-#
-# Mixed_Prescription_Index (only if prescribed macroscale strains and stresses)
-# < 0 or 1 > < 0 or 1 > ...
-#
-# and store it in a array(n_dim**2,2,2) as
-#                                    _                          _
-#                                   |'component_name_11' , value |
-#                    array[:,:,0] = |'component_name_21' , value |
-#                                   |_       ...        ,   ... _|
-#
-# and a array(n_dim**2) as
-#
-#                    array = [ 0 , 1 , 1 , 0 , ... ]
+#                 2D Problem                                     3D Problem
+#   --------------------------------------         --------------------------------------
+#   Macroscale_Strain or Macroscale_Stress         Macroscale_Strain or Macroscale_Stress
+#   < component_name_11 > < value >                < component_name_11 > < value >
+#   < component_name_21 > < value >                < component_name_21 > < value >
+#   < component_name_12 > < value >                < component_name_31 > < value >
+#   < component_name_22 > < value >                < component_name_12 > < value >
+#                                                  < component_name_22 > < value >
+#                                                  < component_name_32 > < value >
+#                                                  < component_name_13> < value >
+#                                                  < component_name_23 > < value >
+#                                                  < component_name_33 > < value >
 #
 #
-# and store it in a dictionary as
-#                                    _                          _
-#                                   |'component_name_11' , value |
-#            dictionary['strain'] = |'component_name_21' , value |
-#                                   |_       ...        ,   ... _|
+#   Mixed_Prescription_Index (only if prescribed macroscale strains and stresses)
+#   < 0 or 1 > < 0 or 1 > < 0 or 1 > < 0 or 1 > ...
+#
+# and store them in a dictionary as
+#                       _                          _
+#                      |'component_name_11' , value |
+#    dictionary[key] = |'component_name_21' , value | , where key in ['strain','stress']
+#                      |_       ...        ,   ... _|
+#
+# and in an array(n_dim**2) as
+#
+#          array = [ < 0 or 1 > , < 0 or 1 > , < 0 or 1 > , < 0 or 1 > , ... ]
+#
+# Note: The macroscale strain or stress tensor is always assumed to be nonsymmetric and
+#       all components must be specified in columnwise order
 #
 # Note: The symmetry of the macroscale strain and stress tensors is verified under a small
 #       strain formulation
 #
-def readMacroscaleLoading(file,file_path,mac_load_type,n_dim,strain_formulation):
+# Note: Both strain/stress tensor dictionaries and prescription array are then reordered
+#       according to the program assumed nonsymmetric component order
+#
+def readMacroscaleLoading(file,file_path,mac_load_type,strain_formulation,n_dim,
+                                                                           comp_order_nsym):
     mac_load = dict()
     if mac_load_type == 1:
         loading_keywords = ['Macroscale_Strain']
@@ -481,7 +493,9 @@ def readMacroscaleLoading(file,file_path,mac_load_type,n_dim,strain_formulation)
             location = inspect.getframeinfo(inspect.currentframe())
             errors.displayError('E00011',location.filename,location.lineno+1,presc_keyword)
         else:
-            mac_load_typeidxs = np.array([int(presc_line[i]) for i in range(len(presc_line))])
+            mac_load_typeidxs = np.array([int(presc_line[i]) \
+                                                           for i in range(len(presc_line))])
+    # --------------------------------------------------------------------------------------
     # Check small strain formulation symmetry
     if strain_formulation == 1:
         if n_dim**2 == 4:
@@ -525,6 +539,25 @@ def readMacroscaleLoading(file,file_path,mac_load_type,n_dim,strain_formulation)
                                                                           mac_load_type,key)
                     mac_load[key][symmetric_indexes[1,i],1] = \
                                                      mac_load[key][symmetric_indexes[0,i],1]
+    # --------------------------------------------------------------------------------------
+    # Order macroscale strain and stress tensors according to the defined problem
+    # nonsymmetric component order
+    if n_dim == 2:
+        aux = {'11':0, '21':1, '12':2, '22':3}
+    else:
+        aux = {'11':0, '21':1, '31':2, '12':3, '22':4, '32':5, '13':6, '23':7, '33':8}
+    mac_load_copy = copy.deepcopy(mac_load)
+    mac_load_typeidxs_copy = copy.deepcopy(mac_load_typeidxs)
+    for i in range(n_dim**2):
+        if mac_load_type == 1:
+            mac_load['strain'][i,:] = mac_load_copy['strain'][aux[comp_order_nsym[i]],:]
+        elif mac_load_type == 2:
+            mac_load['stress'][i,:] = mac_load_copy['stress'][aux[comp_order_nsym[i]],:]
+        elif mac_load_type == 3:
+            mac_load['strain'][i,:] = mac_load_copy['strain'][aux[comp_order_nsym[i]],:]
+            mac_load['stress'][i,:] = mac_load_copy['stress'][aux[comp_order_nsym[i]],:]
+            mac_load_typeidxs[i] = mac_load_typeidxs_copy[aux[comp_order_nsym[i]]]
+    # --------------------------------------------------------------------------------------
     return mac_load, mac_load_typeidxs
 # ------------------------------------------------------------------------------------------
 # Read the number of clusters associated to each material phase, specified as
@@ -633,7 +666,8 @@ def readRVEDimensions(file,file_path,keyword,n_dim):
 # ==========================================================================================
 # Set parameters dependent on the problem type
 def setProblemTypeParameters(problem_type):
-    # Set problem dimension and strain/stress components order
+    # Set problem dimension and strain/stress components order in symmetric and nonsymmetric
+    # cases
     if problem_type == 1:
         n_dim = 2
         comp_order_sym = ['11','22','12']
