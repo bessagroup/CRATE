@@ -341,7 +341,7 @@ def kelvinFactor(idx,comp_order):
                 factor = factor*math.sqrt(2)
     return factor
 #
-#                                                                  Condensate matricial form
+#                                                                    Condense matricial form
 # ==========================================================================================
 # Perform the condensation of a given matrix A (n x m), returning a matrix B (p,q) with the
 # matrix A elements specified by a given list of p rows indexes and q columns indexes. The
