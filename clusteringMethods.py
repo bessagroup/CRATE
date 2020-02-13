@@ -112,8 +112,8 @@ def performClustering(dirs_dict,mat_dict,rg_dict,clst_dict):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Perform RVE clustering discretization according to the selected clustering strategy
     if clustering_strategy == 1:
-        # Get the cluster labels from the unique clustering process
-        clst_dict['voxels_clstlbl_flat'] = clst_processes[0]
+        # Store the cluster labels from the unique clustering process (regular grid shape)
+        clst_dict['voxels_clstlbl'] = np.array(clst_processes[0]).reshape(n_voxels_dims)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Open file which contains all the required information associated to the clustering
     # discretization

@@ -77,8 +77,6 @@ def packageRegularGrid(discret_file_path,rve_dims,mat_dict,problem_dict):
     # Get material data
     n_material_phases = mat_dict['n_material_phases']
     material_properties = mat_dict['material_properties']
-    # Initialize regular grid dictionary
-    rg_dict = dict()
     # Read the spatial discretization file (regular grid of pixels/voxels)
     if ntpath.splitext(ntpath.basename(discret_file_path))[-1] == '.npy':
         regular_grid = np.load(discret_file_path)
@@ -107,6 +105,8 @@ def packageRegularGrid(discret_file_path,rve_dims,mat_dict,problem_dict):
         is_phase_list = regular_grid.flatten() == int(mat_phase)
         phase_voxel_flatidx[mat_phase] = \
                                   list(it.compress(range(len(is_phase_list)),is_phase_list))
+    # Initialize regular grid dictionary
+    rg_dict = dict()
     # Build regular grid dictionary
     rg_dict['rve_dims'] = rve_dims
     rg_dict['regular_grid'] = regular_grid
@@ -122,17 +122,16 @@ def packageRGClustering(clustering_method,clustering_strategy,clustering_solutio
                                                                    phase_nclusters,rg_dict):
     # Get regular grid data
     n_voxels_dims = rg_dict['n_voxels_dims']
+    # Initialize array with voxels cluster labels
+    voxels_clstlbl = np.full(n_voxels_dims,-1,dtype=int)
     # Initialize clustering dictionary
     clst_dict = dict()
-    # Initialize flattened list with voxels cluster labels
-    n_voxels = np.prod(n_voxels_dims)
-    voxels_clstlbl_flat = n_voxels*[-1]
     # Build clustering dictionary
     clst_dict['clustering_method'] = clustering_method
     clst_dict['clustering_strategy'] = clustering_strategy
     clst_dict['clustering_solution_method'] = clustering_solution_method
     clst_dict['phase_nclusters'] = phase_nclusters
-    clst_dict['voxels_clstlbl_flat'] = voxels_clstlbl_flat
+    clst_dict['voxels_clstlbl'] = voxels_clstlbl
     # Return clustering dictionary
     return clst_dict
 #
