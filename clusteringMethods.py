@@ -37,6 +37,7 @@ def performClustering(dirs_dict,mat_dict,rg_dict,clst_dict):
     n_material_phases = mat_dict['n_material_phases']
     material_properties = mat_dict['material_properties']
     # Get regular grid data
+    rve_dims = rg_dict['rve_dims']
     n_voxels_dims = rg_dict['n_voxels_dims']
     n_voxels = np.prod(n_voxels_dims)
     phase_voxel_flatidx = rg_dict['phase_voxel_flatidx']
@@ -113,7 +114,23 @@ def performClustering(dirs_dict,mat_dict,rg_dict,clst_dict):
     # Perform RVE clustering discretization according to the selected clustering strategy
     if clustering_strategy == 1:
         # Store the cluster labels from the unique clustering process (regular grid shape)
-        clst_dict['voxels_clstlbl'] = np.array(clst_processes[0]).reshape(n_voxels_dims)
+        voxels_clusters = np.array(clst_processes[0],dtype=int).reshape(n_voxels_dims)
+        clst_dict['voxels_clusters'] = voxels_clusters
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Store material clusters belonging to each material phase
+    for mat_phase in phase_voxel_flatidx.keys():
+        phase_clusters[mat_phase] = \
+                        np.unique(voxels_clusters.flatten()[phase_voxel_flatidx[mat_phase]])
+    clst_dict['phase_clusters'] = phase_clusters
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Compute voxel volume
+    voxel_vol = np.prod([float(rve_dims[i])/n_voxels_dims[i] for i in range(len(rve_dims))])
+    # Compute RVE volume
+    rve_vol = np.prod(rve_dims)
+    # Compute volume fraction associated to each material cluster
+    for cluster in np.unique(voxels_clusters):
+        clst_dict['clusters_f'][str(cluster)] = \
+                                      (np.sum(voxels_clusters == cluster)*voxel_vol)/rve_vol
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Open file which contains all the required information associated to the clustering
     # discretization

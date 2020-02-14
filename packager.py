@@ -123,7 +123,11 @@ def packageRGClustering(clustering_method,clustering_strategy,clustering_solutio
     # Get regular grid data
     n_voxels_dims = rg_dict['n_voxels_dims']
     # Initialize array with voxels cluster labels
-    voxels_clstlbl = np.full(n_voxels_dims,-1,dtype=int)
+    voxels_clusters = np.full(n_voxels_dims,-1,dtype=int)
+    # Initialize array with each material phase clusters
+    phase_clusters = dict()
+    # Initialize array with clusters volume fractions
+    clusters_f = dict()
     # Initialize clustering dictionary
     clst_dict = dict()
     # Build clustering dictionary
@@ -131,7 +135,9 @@ def packageRGClustering(clustering_method,clustering_strategy,clustering_solutio
     clst_dict['clustering_strategy'] = clustering_strategy
     clst_dict['clustering_solution_method'] = clustering_solution_method
     clst_dict['phase_nclusters'] = phase_nclusters
-    clst_dict['voxels_clstlbl'] = voxels_clstlbl
+    clst_dict['phase_clusters'] = phase_clusters
+    clst_dict['voxels_clusters'] = voxels_clusters
+    clst_dict['clusters_f'] = clusters_f
     # Return clustering dictionary
     return clst_dict
 #
@@ -187,7 +193,7 @@ if __name__ == '__main__':
     print('\nclustering_solution_method: ', clustering_solution_method)
     print('\nphase_nclusters:')
     print(clst_dict['phase_nclusters'])
-    print('\nvoxels_clstlbl_flat:')
-    print(clst_dict['voxels_clstlbl_flat'])
+    print('\nvoxels_clusters:')
+    print(clst_dict['voxels_clusters'])
     # Display validation footer
     print('\n' + 92*'-' + '\n')
