@@ -19,6 +19,8 @@ import math
 import inspect
 # Generate efficient iterators
 import itertools as it
+# Finite Differences Method
+import findiff
 # Tensorial operations
 import tensorOperations as top
 #
@@ -358,10 +360,6 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
         stress_DFT_0_mf = np.zeros(len(comp_order),dtype=complex)
         div_stress_DFT = {str(comp+1): np.zeros(tuple(n_voxels_dims),dtype=complex) \
                                                                    for comp in range(n_dim)}
-        # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-        # Test (discrete divergence)
-        # partial_xx_DFT = {'11': np.zeros(tuple(n_voxels_dims),dtype=complex)}
-        # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         # Loop over discrete frequencies
         for freq_coord in it.product(*freqs_dims):
             # Get discrete frequency index
@@ -389,18 +387,6 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
             for i in range(n_dim):
                 div_stress_DFT[str(i+1)][freq_idx] = \
                                         top.dot12_1(1j*np.asarray(freq_coord),stress_DFT)[i]
-            # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            # Test (discrete divergence)
-            # a = 2.0*math.pi/sampling_period
-            # if freq_idx[0] <= n_voxels_dims[0]/2:
-            #     b = freq_idx[0]*n_voxels_dims[0]
-            # else:
-            #     b = -1*(n_voxels_dims[1]-freq_idx[0])*n_voxels_dims[0]
-            # if b == 0:
-            #     partial_xx_DFT['11'][freq_idx] = 0
-            # else:
-            #     partial_xx_DFT['11'][freq_idx] = 1j*(a/b)*stress_DFT[0,0]
-            # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         # Compute discrete error serving to check convergence
         discrete_error_2 = math.sqrt(error_sum/n_voxels)/np.linalg.norm(stress_DFT_0_mf)
         # Compute stress divergence Inverse Discrete Fourier Transform (IDFT)
@@ -420,71 +406,39 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
             print('Average stress norm     = ', '{:>11.4e}'.format(avg_stress_norm))
             print('Average stress norm old = ', '{:>11.4e}'.format(avg_stress_norm_Old))
             print('Discrete error          = ', '{:>11.4e}'.format(discrete_error))
-            # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            # Test (discrete divergence)
-            #partial_xx = {'11': np.zeros(tuple(n_voxels_dims))}
-            #partial_xx['11'] = np.real(np.fft.ifftn(partial_xx_DFT['11']))
-            #print('\npartial_xx (analytic)')
-            #print(partial_xx['11'][val_voxel_idx])
-            #print('\npartial_xx (numerical)')
-            #adj_voxel_idx_1 = tuple(np.copy(val_voxel_idx) + np.array([1,0]))
-            #print((stress_vox['11'][adj_voxel_idx_1]-stress_vox['11'][val_voxel_idx]) / \
-            #                                                sampling_period)
             # Check stress divergence after convergence is achieved
             if discrete_error < conv_tol:
                 # Analytical
-                print('\nStress divergence (analytic) - (voxel_idx = ' + \
+                print('\nStress divergence (computed in frequency) - (voxel_idx = ' + \
                                                                 str(val_voxel_idx) + '):\n')
                 for i in range(n_dim):
                     print('Component', str(i+1), ':',\
                                     '{:>11.4e}'.format(div_stress[str(i+1)][val_voxel_idx]))
-                # Numerical (forward finite differences)
+                # Numerical (Finite Differences Method)
+                div_stress_num = \
+                      {str(comp+1): np.zeros(tuple(n_voxels_dims)) for comp in range(n_dim)}
+                sampling_periods = \
+                                 [float(rve_dims[i])/n_voxels_dims[i] for i in range(n_dim)]
+                if n_dim == 2:
+                    ddx = findiff.FinDiff(0,sampling_periods[0],1)
+                    ddy = findiff.FinDiff(1,sampling_periods[1],1)
+                    div_stress_num['1'] = ddx(stress_vox['11']) + ddy(stress_vox['12'])
+                    div_stress_num['2'] = ddx(stress_vox['12']) + ddy(stress_vox['22'])
+                else:
+                    ddx = findiff.FinDiff(0,sampling_periods[0],1)
+                    ddy = findiff.FinDiff(1,sampling_periods[1],1)
+                    ddz = findiff.FinDiff(2,sampling_periods[2],1)
+                    div_stress_num['1'] = \
+                       ddx(stress_vox['11']) + ddy(stress_vox['12']) + ddz(stress_vox['13'])
+                    div_stress_num['2'] = \
+                       ddx(stress_vox['12']) + ddy(stress_vox['22']) + ddz(stress_vox['23'])
+                    div_stress_num['3'] = \
+                       ddx(stress_vox['13']) + ddy(stress_vox['23']) + ddz(stress_vox['33'])
                 print('\nStress divergence (numerical) - (voxel_idx = ' + \
                                                                 str(val_voxel_idx) + '):\n')
-                if n_dim == 2:
-                    adj_voxel_idx_1 = tuple(np.copy(val_voxel_idx) + np.array([1,0]))
-                    adj_voxel_idx_2 = tuple(np.copy(val_voxel_idx) + np.array([0,1]))
-                    print('Component 1 :', '{:>11.4e}'.format( \
-                     (stress_vox['11'][adj_voxel_idx_1]-stress_vox['11'][val_voxel_idx]) / \
-                                                                         sampling_period + \
-                     (stress_vox['12'][adj_voxel_idx_2]-stress_vox['12'][val_voxel_idx]) / \
-                                                                         sampling_period
-                                                             ))
-                    print('Component 2 :', '{:>11.4e}'.format( \
-                     (stress_vox['12'][adj_voxel_idx_1]-stress_vox['12'][val_voxel_idx]) / \
-                                                                         sampling_period + \
-                     (stress_vox['22'][adj_voxel_idx_2]-stress_vox['22'][val_voxel_idx]) / \
-                                                                         sampling_period
-                                                             ))
-                else:
-                    adj_voxel_idx_1 = tuple(np.copy(val_voxel_idx) + np.array([1,0,0]))
-                    adj_voxel_idx_2 = tuple(np.copy(val_voxel_idx) + np.array([0,1,0]))
-                    adj_voxel_idx_3 = tuple(np.copy(val_voxel_idx) + np.array([0,0,1]))
-                    print('Component 1 :', '{:>11.4e}'.format( \
-                     (stress_vox['11'][adj_voxel_idx_1]-stress_vox['11'][val_voxel_idx]) / \
-                                                                         sampling_period + \
-                     (stress_vox['12'][adj_voxel_idx_2]-stress_vox['12'][val_voxel_idx]) / \
-                                                                         sampling_period + \
-                     (stress_vox['13'][adj_voxel_idx_3]-stress_vox['13'][val_voxel_idx]) / \
-                                                                         sampling_period   \
-                                                             ))
-                    print('Component 2 :', '{:>11.4e}'.format( \
-                     (stress_vox['12'][adj_voxel_idx_1]-stress_vox['12'][val_voxel_idx]) / \
-                                                                         sampling_period + \
-                     (stress_vox['22'][adj_voxel_idx_2]-stress_vox['22'][val_voxel_idx]) / \
-                                                                         sampling_period + \
-                     (stress_vox['23'][adj_voxel_idx_3]-stress_vox['23'][val_voxel_idx]) / \
-                                                                         sampling_period   \
-                                                             ))
-                    print('Component 3 :', '{:>11.4e}'.format( \
-                     (stress_vox['13'][adj_voxel_idx_1]-stress_vox['13'][val_voxel_idx]) / \
-                                                                         sampling_period + \
-                     (stress_vox['23'][adj_voxel_idx_2]-stress_vox['23'][val_voxel_idx]) / \
-                                                                         sampling_period + \
-                     (stress_vox['33'][adj_voxel_idx_3]-stress_vox['33'][val_voxel_idx]) / \
-                                                                         sampling_period   \
-                                                             ))
-            # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                for i in range(n_dim):
+                    print('Component', str(i+1), ':',\
+                                '{:>11.4e}'.format(div_stress_num[str(i+1)][val_voxel_idx]))
         # ----------------------------------------------------------------------------------
         # Check if the solution converged (return) and if the maximum number of iterations
         # was reached (stop execution)
@@ -662,7 +616,7 @@ if __name__ == '__main__':
     print('\nValidation: ',(len(val_functions)*'{}, ').format(*val_functions), 3*'\b', ' ')
     print(92*'-')
     # Set functions arguments
-    problem_type = 4
+    problem_type = 1
     import readInputData as rid
     n_dim, comp_order_sym, comp_order_nsym = rid.setProblemTypeParameters(problem_type)
     problem_dict = dict()
@@ -673,11 +627,13 @@ if __name__ == '__main__':
     if problem_type == 1:
         rve_dims = [1.0,1.0]
         discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
-                            'debug/FFT_Homogenization_Method/RVE_2D_2Phases_5x5.rgmsh.npy'
+                            'debug/FFT_Homogenization_Method/issues/stress_divergence/' + \
+                            'examples/RVE_2D_2Phases_50x50_Particle.rgmsh.npy'
     else:
         rve_dims = [1.0,1.0,1.0]
         discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
-                            'debug/FFT_Homogenization_Method/RVE_3D_2Phases_5x5x5.rgmsh.npy'
+                            'debug/FFT_Homogenization_Method/issues/stress_divergence/' + \
+                            'examples/RVE_3D_2Phases_50x50_Particle.rgmsh.npy'
     regular_grid = np.load(discret_file_path)
     n_voxels_dims = [regular_grid.shape[i] for i in range(len(regular_grid.shape))]
     rg_dict = dict()
