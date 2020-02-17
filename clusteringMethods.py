@@ -114,14 +114,14 @@ def performClustering(dirs_dict,mat_dict,rg_dict,clst_dict):
     # Perform RVE clustering discretization according to the selected clustering strategy
     if clustering_strategy == 1:
         # Store the cluster labels from the unique clustering process (regular grid shape)
-        voxels_clusters = np.array(clst_processes[0],dtype=int).reshape(n_voxels_dims)
-        clst_dict['voxels_clusters'] = voxels_clusters
+        clst_dict['voxels_clusters'] = \
+                                np.array(clst_processes[0],dtype=int).reshape(n_voxels_dims)
+        voxels_clusters = clst_dict['voxels_clusters']
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Store material clusters belonging to each material phase
     for mat_phase in phase_voxel_flatidx.keys():
-        phase_clusters[mat_phase] = \
+        clst_dict['phase_clusters'] = \
                         np.unique(voxels_clusters.flatten()[phase_voxel_flatidx[mat_phase]])
-    clst_dict['phase_clusters'] = phase_clusters
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Compute voxel volume
     voxel_vol = np.prod([float(rve_dims[i])/n_voxels_dims[i] for i in range(len(rve_dims))])
