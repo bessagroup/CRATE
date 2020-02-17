@@ -114,7 +114,7 @@ def packageRegularGrid(discret_file_path,rve_dims,mat_dict,problem_dict):
     rg_dict['regular_grid_flat'] = regular_grid_flat
     rg_dict['voxels_idx_flat'] = voxels_idx_flat
     rg_dict['phase_voxel_flatidx'] = phase_voxel_flatidx
-    # Return regular grid dictionary
+    # Return
     return rg_dict
 # ------------------------------------------------------------------------------------------
 # Package data associated to the clustering on a regular grid of pixels/voxels
@@ -138,8 +138,18 @@ def packageRGClustering(clustering_method,clustering_strategy,clustering_solutio
     clst_dict['phase_clusters'] = phase_clusters
     clst_dict['voxels_clusters'] = voxels_clusters
     clst_dict['clusters_f'] = clusters_f
-    # Return clustering dictionary
+    # Return
     return clst_dict
+# ------------------------------------------------------------------------------------------
+# Package data associated to the VTK output
+def packageVTK():
+    # Initialize VTK dictionary
+    vtk_dict = dict()
+    # Build VTK dictionary
+    vtk_dict['format'] = 'ascii'
+    vtk_dict['precision'] = 'SinglePrecision'
+    # Return
+    return vtk_dict
 #
 #                                                                     Validation (temporary)
 # ==========================================================================================

@@ -59,6 +59,8 @@ import packager
 import clusteringQuantities
 # Perform clustering
 import clusteringMethods
+# VTK output
+import VTKOutput
 #
 #                             Check user input data file and create problem main directories
 # ==========================================================================================
@@ -139,6 +141,9 @@ rg_dict = packager.packageRegularGrid(discret_file_path,rve_dims,copy.deepcopy(m
 info.displayInfo('5','Packaging clustering data...')
 clst_dict = packager.packageRGClustering(clustering_method,clustering_strategy,\
                           clustering_solution_method,phase_nclusters,copy.deepcopy(rg_dict))
+# Package data associated to the VTK output
+info.displayInfo('5','Packaging VTK output data...')
+vtk_dict = packager.packageVTK()
 # Set phase ending time and display finishing phase information
 phase_end_time = time.time()
 phase_names.append('Read input data')
@@ -169,6 +174,8 @@ phase_init_time = time.time()
 # Perform the clustering according to the selected method and adopted strategy
 clusteringMethods.performClustering(copy.deepcopy(dirs_dict),copy.deepcopy(mat_dict),
                                                            copy.deepcopy(rg_dict),clst_dict)
+# Write clustering VTK file
+VTKOutput.writeVTKClusterFile(vtk_dict,dirs_dict,rg_dict,clst_dict)
 # Set phase ending time and display finishing phase information
 phase_end_time = time.time()
 phase_names.append('Perform clustering')
