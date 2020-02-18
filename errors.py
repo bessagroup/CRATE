@@ -399,9 +399,14 @@ def displayError(code,*args):
     #sys.exit(1)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display error
-    info.print2(template_header.format(*header,width=output_width))
-    info.print2(template.format(*values,width=output_width))
-    info.print2(template_footer.format(*footer,width=output_width))
+    if code in ['E00001','E00002','E00010']:
+        print(template_header.format(*header,width=output_width))
+        print(template.format(*values,width=output_width))
+        print(template_footer.format(*footer,width=output_width))
+    else:
+        info.print2(template_header.format(*header,width=output_width))
+        info.print2(template.format(*values,width=output_width))
+        info.print2(template_footer.format(*footer,width=output_width))
     # Abort program
     sys.exit(1)
 #
