@@ -98,8 +98,8 @@ def packageRegularGrid(discret_file_path,rve_dims,mat_dict,problem_dict):
     if len(regular_grid.shape) not in [2,3]:
         location = inspect.getframeinfo(inspect.currentframe())
         errors.displayError('E00042',location.filename,location.lineno+1)
-    elif np.any(np.unique(regular_grid) not in np.sort([int(key) \
-                                                   for key in material_properties.keys()])):
+    elif np.any([str(phase) not in material_properties.keys() \
+                                                     for phase in np.unique(regular_grid)]):
         idf_phases = list(np.sort([int(key) for key in material_properties.keys()]))
         rg_phases = list(np.unique(regular_grid))
         location = inspect.getframeinfo(inspect.currentframe())
@@ -111,8 +111,7 @@ def packageRegularGrid(discret_file_path,rve_dims,mat_dict,problem_dict):
     mat_dict['n_material_phases'] = len(mat_dict['material_phases'])
     # Display warning if all the material phases that have been specified in the input data
     # file are not present in the microstructure
-    if any([int(phase) not in list(np.unique(regular_grid)) \
-                                                  for phase in material_properties.keys()]):
+    if any([phase not in material_phases for phase in material_properties.keys()]):
         idf_phases = list(np.sort([int(key) for key in material_properties.keys()]))
         rg_phases = list(np.unique(regular_grid))
         location = inspect.getframeinfo(inspect.currentframe())
