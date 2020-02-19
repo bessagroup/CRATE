@@ -59,11 +59,15 @@ def packageProblem(strain_formulation,problem_type,n_dim,comp_order_sym,comp_ord
 # ------------------------------------------------------------------------------------------
 # Package data associated to the material phases
 def packageMaterialPhases(n_material_phases,material_properties):
+    # Initialize dictionary with existent material phases in the microstructure
+    material_phases = list()
     # Initialize material phases dictionary
     mat_dict = dict()
     # Build material phases dictionary
     mat_dict['n_material_phases'] = n_material_phases
     mat_dict['material_properties'] = material_properties
+    mat_dict['material_phases'] = material_phases
+
     # Return
     return mat_dict
 # ------------------------------------------------------------------------------------------
@@ -94,12 +98,25 @@ def packageRegularGrid(discret_file_path,rve_dims,mat_dict,problem_dict):
     if len(regular_grid.shape) not in [2,3]:
         location = inspect.getframeinfo(inspect.currentframe())
         errors.displayError('E00042',location.filename,location.lineno+1)
-    elif np.any(np.unique(regular_grid) != np.sort([int(key) \
+    elif np.any(np.unique(regular_grid) not in np.sort([int(key) \
                                                    for key in material_properties.keys()])):
         idf_phases = list(np.sort([int(key) for key in material_properties.keys()]))
         rg_phases = list(np.unique(regular_grid))
         location = inspect.getframeinfo(inspect.currentframe())
         errors.displayError('E00043',location.filename,location.lineno+1,idf_phases,
+                                                                                  rg_phases)
+    # Set material phases that are actually present in the microstructure
+    material_phases = [str(x) for x in list(np.unique(regular_grid))]
+    mat_dict['material_phases'] = material_phases
+    mat_dict['n_material_phases'] = len(mat_dict['material_phases'])
+    # Display warning if all the material phases that have been specified in the input data
+    # file are not present in the microstructure
+    if any([int(phase) not in list(np.unique(regular_grid)) \
+                                                  for phase in material_properties.keys()]):
+        idf_phases = list(np.sort([int(key) for key in material_properties.keys()]))
+        rg_phases = list(np.unique(regular_grid))
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayWarning('W00002',location.filename,location.lineno+1,idf_phases,
                                                                                   rg_phases)
     # Set number of pixels/voxels in each dimension
     n_voxels_dims = [regular_grid.shape[i] for i in range(len(regular_grid.shape))]
@@ -120,7 +137,7 @@ def packageRegularGrid(discret_file_path,rve_dims,mat_dict,problem_dict):
     voxels_idx_flat = [np.unravel_index(i,shape) for i in range(n_voxels)]
     # Set voxel flattened indexes associated to each material phase
     phase_voxel_flatidx = dict()
-    for mat_phase in material_properties.keys():
+    for mat_phase in material_phases:
         is_phase_list = regular_grid.flatten() == int(mat_phase)
         phase_voxel_flatidx[mat_phase] = \
                                   list(it.compress(range(len(is_phase_list)),is_phase_list))
@@ -143,9 +160,9 @@ def packageRGClustering(clustering_method,clustering_strategy,clustering_solutio
     n_voxels_dims = rg_dict['n_voxels_dims']
     # Initialize array with voxels cluster labels
     voxels_clusters = np.full(n_voxels_dims,-1,dtype=int)
-    # Initialize array with each material phase clusters
+    # Initialize dictionary with each material phase clusters
     phase_clusters = dict()
-    # Initialize array with clusters volume fractions
+    # Initialize dictionary with clusters volume fractions
     clusters_f = dict()
     # Initialize clustering dictionary
     clst_dict = dict()

@@ -46,12 +46,14 @@ import tensorOperations as top
 #                      where 'ij':cit_mf is the matricial form of the cluster interaction
 #                      tensor between the clusters i and j
 #
-def computeClusterInteractionTensors(dirs_dict,problem_dict,rg_dict,clst_dict):
+def computeClusterInteractionTensors(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict):
     # Get directories and paths data
     cit_file_path = dirs_dict['cit_file_path']
     # Get problem data
     n_dim = problem_dict['n_dim']
     comp_order = problem_dict['comp_order_sym']
+    # Get material data
+    material_phases = mat_dict['material_phases']
     # Get regular grid data
     n_voxels_dims = rg_dict['n_voxels_dims']
     rve_dims = rg_dict['rve_dims']
@@ -64,8 +66,8 @@ def computeClusterInteractionTensors(dirs_dict,problem_dict,rg_dict,clst_dict):
     cit_1 = dict()
     cit_2 = dict()
     cit_0_freq = dict()
-    for mat_phase_B in phase_clusters.keys():
-        for mat_phase_A in phase_clusters.keys():
+    for mat_phase_B in material_phases:
+        for mat_phase_A in material_phases:
             cit_1[mat_phase_A+mat_phase_B] = dict()
             cit_2[mat_phase_A+mat_phase_B] = dict()
             cit_0_freq[mat_phase_A+mat_phase_B] = dict()
@@ -73,7 +75,7 @@ def computeClusterInteractionTensors(dirs_dict,problem_dict,rg_dict,clst_dict):
     Gop_1_DFT_vox, Gop_2_DFT_vox, Gop_0_freq_DFT_vox = \
                          GreenOperatorMatIndTerms(n_dim,rve_dims,comp_order,n_voxels_dims)
     # Loop over material phases
-    for mat_phase_B in phase_clusters.keys():
+    for mat_phase_B in material_phases:
         # ----------------------------------------------------------------------------------
         # Validation:
         if False:
@@ -129,7 +131,7 @@ def computeClusterInteractionTensors(dirs_dict,problem_dict,rg_dict,clst_dict):
                         '{:>11.4e}'.format(Gop_0_freq_filt_vox[compi+compj][val_voxel_idx]))
             # ------------------------------------------------------------------------------
             # Loop over material phases
-            for mat_phase_A in phase_clusters.keys():
+            for mat_phase_A in material_phases:
                 # --------------------------------------------------------------------------
                 # Validation:
                 if False:

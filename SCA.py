@@ -137,7 +137,7 @@ info.displayInfo('5','Packaging macroscale loading data...')
 macload_dict = packager.packageMacroscaleLoading(mac_load_type,mac_load,mac_load_typeidxs)
 # Package data associated to the spatial discretization file(s)
 info.displayInfo('5','Packaging regular grid data...')
-rg_dict = packager.packageRegularGrid(discret_file_path,rve_dims,copy.deepcopy(mat_dict),
+rg_dict = packager.packageRegularGrid(discret_file_path,rve_dims,mat_dict,
                                                                 copy.deepcopy(problem_dict))
 # Package data associated to the clustering
 info.displayInfo('5','Packaging clustering data...')
@@ -194,7 +194,8 @@ info.displayInfo('2','Compute cluster interaction tensors')
 phase_init_time = time.time()
 # Compute the cluster interaction tensors
 clusterInteractionTensors.computeClusterInteractionTensors(copy.deepcopy(dirs_dict),
-                               copy.deepcopy(problem_dict),copy.deepcopy(rg_dict),clst_dict)
+                                        copy.deepcopy(problem_dict),copy.deepcopy(mat_dict),
+                                                           copy.deepcopy(rg_dict),clst_dict)
 # Set phase ending time and display finishing phase information
 phase_end_time = time.time()
 phase_names.append('Compute cluster interaction tensors')

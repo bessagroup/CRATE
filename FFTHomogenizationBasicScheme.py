@@ -86,6 +86,8 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
     n_voxels = np.prod(n_voxels_dims)
     # Get RVE dimensions
     rve_dims = rg_dict['rve_dims']
+    # Get material phases
+    material_phases = mat_dict['material_phases']
     # Get material properties
     material_properties = mat_dict['material_properties']
     # Set macroscale strain matricial form
@@ -95,7 +97,7 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Compute the elasticity tensors (matricial form) associated to each material phase
     De_tensors_mf = dict()
-    for mat_phase in material_properties.keys():
+    for mat_phase in material_phases:
         # Set required elastic properties according to material phase constitutive model
         req_props = ['E','v']
         for iprop in range(len(req_props)):
@@ -115,7 +117,7 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
     # --------------------------------------------------------------------------------------
     # Validation:
     if __name__ == '__main__':
-        for mat_phase in material_properties.keys():
+        for mat_phase in material_phases:
             print('\nElasticity tensor (material phase ', mat_phase, ') - ' + \
                                                                        'Kelvin notation:\n')
             np.set_printoptions(precision=2)
@@ -628,12 +630,12 @@ if __name__ == '__main__':
         rve_dims = [1.0,1.0]
         discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
                             'debug/FFT_Homogenization_Method/issues/stress_divergence/' + \
-                            'examples/RVE_2D_2Phases_50x50_Particle.rgmsh.npy'
+                            'examples/RVE_2D_2Phases_50x50_Homogeneous.rgmsh.npy'
     else:
         rve_dims = [1.0,1.0,1.0]
         discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
                             'debug/FFT_Homogenization_Method/issues/stress_divergence/' + \
-                            'examples/RVE_3D_2Phases_50x50_Particle.rgmsh.npy'
+                            'examples/RVE_3D_2Phases_50x50_Homogeneous.rgmsh.npy'
     regular_grid = np.load(discret_file_path)
     n_voxels_dims = [regular_grid.shape[i] for i in range(len(regular_grid.shape))]
     rg_dict = dict()

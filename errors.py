@@ -39,7 +39,7 @@ def displayError(code,*args):
                    indent + 'The input data file hasn\'t been specified or found.' + \
                    '\n\n' + \
                    'Suggestion:' + '\n\n' + \
-                   indent + 'Specify the input data file (with mandatory \'.dat\'' + \
+                   indent + 'Specify the input data file (with mandatory \'.dat\' ' + \
                    'extension) by calling the program' + '\n' + \
                    indent + 'with the following command line' + '\n\n' + \
                    indent + 'pythonX.X SCA.py < input_data_file_path >'
@@ -426,10 +426,9 @@ def displayError(code,*args):
         arguments = args[2] + args[3]
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
-                   indent + 'The material phases specified in the input data file ' + \
-                   'don\'t match the material phases' + '\n' + \
-                   indent + 'existent in the RVE regular grid spatial discretization ' + \
-                   'file (\'.rgmsh\').' + '\n\n' + \
+                   indent + 'There is at least one material phase in the RVE regular ' + \
+                   'grid spatial discretization' + '\n' + \
+                   indent + 'file (\'.rgmsh\') that has not been specified in the input data file.' + '\n\n' + \
                    indent + 'Material phases (input data file): ' + \
                                                 len(args[2])*('{}, ') + '\b\b ' + '\n\n' + \
                    indent + 'Material phases (regular grid):    ' + \
@@ -485,6 +484,21 @@ def displayWarning(code,*args):
                    indent + 'The symmetric value with the lowest first index is ' + \
                    'enforced (p.e. if descriptor_12 is ' + '\n' + \
                    indent + 'different from descriptor_21, then descriptor_12 is enforced).'
+    elif code == 'W00002':
+        arguments = args[2] + args[3]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                    indent + 'Not all the material phases specified in the input data ' + \
+                    'file are present in the RVE ' + '\n' + \
+                    indent + 'regular grid spatial discretization file (\'.rgmsh\').' + \
+                    '\n\n' + \
+                    indent + 'Material phases (input data file): ' + \
+                                                len(args[2])*('{}, ') + '\b\b ' + '\n\n' + \
+                    indent + 'Material phases (regular grid):    ' + \
+                                                len(args[3])*('{}, ') + '\b\b ' + '\n\n' + \
+                    indent + 'The number of material phases is going to be updated and ' + \
+                    'the non-present material phases ' + '\n' + \
+                    indent + 'will be ignored.'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display warning
     info.print2(template_header.format(*header,width=output_width))

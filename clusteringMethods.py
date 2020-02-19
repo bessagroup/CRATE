@@ -40,7 +40,7 @@ def performClustering(dirs_dict,mat_dict,rg_dict,clst_dict):
     # Get directories and paths data
     cluster_file_path = dirs_dict['cluster_file_path']
     # Get material data
-    n_material_phases = mat_dict['n_material_phases']
+    material_phases = mat_dict['material_phases']
     material_properties = mat_dict['material_properties']
     # Get regular grid data
     rve_dims = rg_dict['rve_dims']
@@ -70,7 +70,7 @@ def performClustering(dirs_dict,mat_dict,rg_dict,clst_dict):
             # Get current clustering process data indexes
             data_indexes = clst_dataidxs[iclst]
             # Loop over material phases
-            for mat_phase in material_properties.keys():
+            for mat_phase in material_phases:
                 # Set number of clusters
                 n_clusters = phase_nclusters[mat_phase]
                 # Set clustering training dataset
@@ -128,7 +128,7 @@ def performClustering(dirs_dict,mat_dict,rg_dict,clst_dict):
     # Initialize material phase initial cluster label
     lbl_init = 0
     # Loop over material phases sorted in ascending order
-    sorted_mat_phases = list(np.sort(list(phase_nclusters.keys())))
+    sorted_mat_phases = list(np.sort(list(material_phases)))
     for mat_phase in sorted_mat_phases:
         # Get old cluster labels
         old_clusters = np.unique(voxels_clusters.flatten()[phase_voxel_flatidx[mat_phase]])
@@ -169,7 +169,7 @@ def performClustering(dirs_dict,mat_dict,rg_dict,clst_dict):
     # --------------------------------------------------------------------------------------
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Store material clusters belonging to each material phase
-    for mat_phase in phase_nclusters.keys():
+    for mat_phase in material_phases:
         clst_dict['phase_clusters'][mat_phase] = \
                         np.unique(voxels_clusters.flatten()[phase_voxel_flatidx[mat_phase]])
     # --------------------------------------------------------------------------------------
