@@ -503,7 +503,7 @@ def readMacroscaleLoading(file,file_path,mac_load_type,strain_formulation,n_dim,
     # Check small strain formulation symmetry
     if strain_formulation == 1:
         if n_dim**2 == 4:
-            symmetric_indexes = np.array([[3],[1]])
+            symmetric_indexes = np.array([[2],[1]])
         elif n_dim**2 == 9:
             symmetric_indexes = np.array([[3,6,7],[1,2,5]])
         for i in range(symmetric_indexes.shape[1]):
