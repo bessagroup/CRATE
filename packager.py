@@ -15,12 +15,15 @@ import numpy as np
 import ntpath
 # Generate efficient iterators
 import itertools as it
+# Display messages
+import info
 #
 #                                                                          Package functions
 # ==========================================================================================
 # Package directories and paths
 def packageDirsPaths(input_file_name,input_file_path,input_file_dir,problem_name,
-            problem_dir,offline_stage_dir,postprocess_dir,cluster_file_path,hres_file_path):
+              problem_dir,offline_stage_dir,postprocess_dir,cluster_file_path,cit_file_path,
+                                                                            hres_file_path):
     # Initialize directories and paths dictionary
     dirs_dict = dict()
     # Build directories and paths dictionary
@@ -31,6 +34,7 @@ def packageDirsPaths(input_file_name,input_file_path,input_file_dir,problem_name
     dirs_dict['problem_dir'] = problem_dir
     dirs_dict['offline_stage_dir'] = offline_stage_dir
     dirs_dict['cluster_file_path'] = cluster_file_path
+    dirs_dict['cit_file_path'] = cit_file_path
     dirs_dict['hres_file_path'] = hres_file_path
     dirs_dict['postprocess_dir'] = postprocess_dir
     # Return
@@ -78,6 +82,7 @@ def packageRegularGrid(discret_file_path,rve_dims,mat_dict,problem_dict):
     n_material_phases = mat_dict['n_material_phases']
     material_properties = mat_dict['material_properties']
     # Read the spatial discretization file (regular grid of pixels/voxels)
+    info.displayInfo('5','Reading discretization file...')
     if ntpath.splitext(ntpath.basename(discret_file_path))[-1] == '.npy':
         regular_grid = np.load(discret_file_path)
     else:

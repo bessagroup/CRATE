@@ -68,10 +68,11 @@ def computeClusteringQuantities(problem_dict,mat_dict,rg_dict,clst_dict):
     problem_type = problem_dict['problem_type']
     n_dim = problem_dict['n_dim']
     comp_order_sym = problem_dict['comp_order_sym']
-    # Extract the required data from the spatial discretization file(s) according to the
-    # chosen solution method to compute the cluster-defining quantities
-    info.displayInfo('5','Reading discretization file...')
+    # Get clustering data
     clustering_solution_method = clst_dict['clustering_solution_method']
+    clustering_strategy = clst_dict['clustering_strategy']
+    # Get the required data from the spatial discretization file(s) according to the
+    # chosen solution method to compute the cluster-defining quantities
     if clustering_solution_method == 1:
         # Get the spatial discretization file (regular grid of pixels/voxels)
         regular_grid = rg_dict['regular_grid']
@@ -80,10 +81,9 @@ def computeClusteringQuantities(problem_dict,mat_dict,rg_dict,clst_dict):
         n_voxels = np.prod(n_voxels_dims)
         # Get RVE dimensions
         rve_dims = rg_dict['rve_dims']
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Compute the required cluster-defining quantities according to the adopted clustering
     # strategy and set clustering processes quantities list
-    info.displayInfo('5','Computing clustering-defining quantities:')
-    clustering_strategy = clst_dict['clustering_strategy']
     if clustering_strategy == 1:
         # In this clustering strategy, only one clustering process is performed based on the
         # strain concentration fourth-order tensor. Initialize the clustering quantities
@@ -94,7 +94,7 @@ def computeClusteringQuantities(problem_dict,mat_dict,rg_dict,clst_dict):
         clst_dataidxs = [list(range(n_clustering_var)),]
         # Small strain formulation
         if strain_formulation == 1:
-            info.displayInfo('5','Computing strain concentration tensors...',2)
+            info.displayInfo('5','Computing strain concentration tensors...')
             # Loop over independent strain components
             for i in range(len(comp_order_sym)):
                 compi = comp_order_sym[i]

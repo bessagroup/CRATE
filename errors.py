@@ -393,6 +393,27 @@ def displayError(code,*args):
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'Invalid cardinal number.'
+    elif code == 'E00038':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The cluster label already exists in the mapping ' + \
+                   'dictionary to sort cluster labels.'
+    elif code == 'E00039':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'Invalid mapping dictionary to sort cluster labels.'
+    elif code == 'E00040':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'Cluster label must be an integer.'
+    elif code == 'E00041':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'Unexistent cluster label.'
     #print(template_header.format(*header,width=output_width))
     #print(template.format(*values,width=output_width))
     #print(template_footer.format(*footer,width=output_width))

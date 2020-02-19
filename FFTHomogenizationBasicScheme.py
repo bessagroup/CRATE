@@ -69,7 +69,7 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
     #                                                                             Parameters
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set maximum number of iterations
-    max_n_iterations = 30
+    max_n_iterations = 50
     # Set convergence tolerance
     conv_tol = 1e-2
     #

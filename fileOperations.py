@@ -165,7 +165,9 @@ def setProblemDirs(input_file_name,input_file_dir):
     if os.path.isfile(screen_file_path):
         os.remove(screen_file_path)
     # Set '.cluster' path
-    cluster_file_path = offline_stage_dir + input_file_name + '.cluster'
+    cluster_file_path = offline_stage_dir + input_file_name + '.clusters'
+    # Set '.cit' path
+    cit_file_path = offline_stage_dir + input_file_name + '.cit'
     # Set '.hres' path
     hres_file_path = problem_dir + input_file_name + '.hres'
     # Check if the problem directory already exists or not
@@ -223,4 +225,4 @@ def setProblemDirs(input_file_name,input_file_dir):
         info.displayInfo('-1',problem_dir,status)
     # Return
     return [problem_name,problem_dir,offline_stage_dir,postprocess_dir,is_same_offstage,
-            cluster_file_path,hres_file_path]
+            cluster_file_path,cit_file_path,hres_file_path]

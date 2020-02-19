@@ -17,6 +17,8 @@ import sys
 import numpy as np
 # Shallow and deep copies
 import copy
+# Display messages
+import info
 #
 #                                                                           Global variables
 # ==========================================================================================
@@ -27,10 +29,13 @@ indent = '  '
 # ==========================================================================================
 # Write VTK file with the clustering discretization
 def writeVTKClusterFile(vtk_dict,dirs_dict,rg_dict,clst_dict):
+    info.displayInfo('5','Writing cluster VTK file...')
     # Get input data file name
     input_file_name = dirs_dict['input_file_name']
     # Get offline stage directory
     offline_stage_dir = dirs_dict['offline_stage_dir']
+    # Get the spatial discretization file (regular grid of pixels/voxels)
+    regular_grid = rg_dict['regular_grid']
     # Get number of pixels/voxels in each dimension and total number of pixels/voxels
     n_voxels_dims = rg_dict['n_voxels_dims']
     # Get RVE dimensions
@@ -62,14 +67,25 @@ def writeVTKClusterFile(vtk_dict,dirs_dict,rg_dict,clst_dict):
     # Open VTK dataset element piece
     writeVTKOpenPiece(vtk_file,piece_parameters)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Write VTK cell data array
+    # Open VTK dataset element piece cell data
+    writeVTKOpenCellData(vtk_file)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Write VTK cell data array - Material phases
+    data_list = list(regular_grid.flatten())
+    min_val = min(data_list)
+    max_val = max(data_list)
+    data_parameters = {'Name':'Material phase','format':'ascii','RangeMin':min_val,
+                                                                         'RangeMax':max_val}
+    writeVTKCellDataArray(vtk_file,vtk_dict,data_list,data_parameters)
+    # Write VTK cell data array - Clusters
     data_list = list(voxels_clusters.flatten())
     min_val = min(data_list)
     max_val = max(data_list)
     data_parameters = {'Name':'Cluster','format':'ascii','RangeMin':min_val,
                                                                          'RangeMax':max_val}
-    writeVTKOpenCellData(vtk_file)
     writeVTKCellDataArray(vtk_file,vtk_dict,data_list,data_parameters)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Close VTK dataset element piece cell data
     writeVTKCloseCellData(vtk_file)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Close VTK dataset element piece
@@ -275,7 +291,7 @@ def writeVTKCloseCellData(vtk_file):
 # Write VTK cell data array
 def writeVTKCellDataArray(vtk_file,vtk_dict,data_list,data_parameters):
     # Set cell data array data type and associated ascii format
-    if all('int' in str(type(x)).lower() for x in data_list):
+    if all(isinstance(x,int) or isinstance(x,np.integer) for x in data_list):
         data_type = 'Int32'
         frmt = 'd'
     elif all('bool' in str(type(x)).lower() for x in data_list):

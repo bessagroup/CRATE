@@ -59,6 +59,8 @@ import packager
 import clusteringQuantities
 # Perform clustering
 import clusteringMethods
+# Cluster interaction tensors computation
+import clusterInteractionTensors
 # VTK output
 import VTKOutput
 #
@@ -76,12 +78,12 @@ input_file_name,input_file_path,input_file_dir = \
                                        fileOperations.setInputDataFilePath(str(sys.argv[1]))
 # Set problem name, directory and main subdirectories
 problem_name,problem_dir,offline_stage_dir,postprocess_dir,is_same_offstage,\
-cluster_file_path,hres_file_path \
+cluster_file_path,cit_file_path,hres_file_path \
                              = fileOperations.setProblemDirs(input_file_name,input_file_dir)
 # Package data associated to directories and paths
 dirs_dict = packager.packageDirsPaths(input_file_name,input_file_path,input_file_dir,
                                  problem_name,problem_dir,offline_stage_dir,postprocess_dir,
-                                 cluster_file_path,hres_file_path)
+                                 cluster_file_path,cit_file_path,hres_file_path)
 # Open user input data file
 try:
     input_file = open(input_file_path,'r')
@@ -148,7 +150,8 @@ vtk_dict = packager.packageVTK()
 phase_end_time = time.time()
 phase_names.append('Read input data')
 phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
-info.displayInfo('3','Read input data file',phase_times[1,1]-phase_times[1,0])
+info.displayInfo('3','Read input data file',
+                phase_times[phase_times.shape[0]-1,1]-phase_times[phase_times.shape[0]-1,0])
 #
 #                                      Offline stage: Compute clustering-defining quantities
 # ==========================================================================================
@@ -163,8 +166,8 @@ clusteringQuantities.computeClusteringQuantities(copy.deepcopy(problem_dict),
 phase_end_time = time.time()
 phase_names.append('Compute cluster-defining quantities')
 phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
-info.displayInfo('3','Compute cluster-defining quantities', \
-                                                          phase_times[1,1]-phase_times[1,0])
+info.displayInfo('3','Compute cluster-defining quantities',
+                phase_times[phase_times.shape[0]-1,1]-phase_times[phase_times.shape[0]-1,0])
 #
 #                                                          Offline stage: Perform clustering
 # ==========================================================================================
@@ -175,12 +178,29 @@ phase_init_time = time.time()
 clusteringMethods.performClustering(copy.deepcopy(dirs_dict),copy.deepcopy(mat_dict),
                                                            copy.deepcopy(rg_dict),clst_dict)
 # Write clustering VTK file
-VTKOutput.writeVTKClusterFile(vtk_dict,dirs_dict,rg_dict,clst_dict)
+VTKOutput.writeVTKClusterFile(vtk_dict,copy.deepcopy(dirs_dict),copy.deepcopy(rg_dict),
+                                                                   copy.deepcopy(clst_dict))
 # Set phase ending time and display finishing phase information
 phase_end_time = time.time()
 phase_names.append('Perform clustering')
 phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
-info.displayInfo('3','Perform clustering',phase_times[1,1]-phase_times[1,0])
+info.displayInfo('3','Perform clustering',
+                phase_times[phase_times.shape[0]-1,1]-phase_times[phase_times.shape[0]-1,0])
+#
+#                                         Offline stage: Compute cluster interaction tensors
+# ==========================================================================================
+# Display starting phase information and set phase initial time
+info.displayInfo('2','Compute cluster interaction tensors')
+phase_init_time = time.time()
+# Compute the cluster interaction tensors
+clusterInteractionTensors.computeClusterInteractionTensors(copy.deepcopy(dirs_dict),
+                               copy.deepcopy(problem_dict),copy.deepcopy(rg_dict),clst_dict)
+# Set phase ending time and display finishing phase information
+phase_end_time = time.time()
+phase_names.append('Compute cluster interaction tensors')
+phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
+info.displayInfo('3','Compute cluster interaction tensors',
+                phase_times[phase_times.shape[0]-1,1]-phase_times[phase_times.shape[0]-1,0])
 #                                                                                End program
 # ==========================================================================================
 # Get current time and date

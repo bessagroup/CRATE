@@ -19,12 +19,18 @@ import sklearn.cluster
 import pickle
 # Inspect file name and line
 import inspect
+# Generate efficient iterators
+import itertools as it
+# Shallow and deep copy operations
+import copy
 # Display messages
 import info
 # Display errors, warnings and built-in exceptions
 import errors
 # Tensorial operations
 import tensorOperations as top
+# Imported for validation against Matlab only (remove)
+import scipy.io as sio
 #
 #                                                                         Perform clustering
 # ==========================================================================================
@@ -113,15 +119,64 @@ def performClustering(dirs_dict,mat_dict,rg_dict,clst_dict):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Perform RVE clustering discretization according to the selected clustering strategy
     if clustering_strategy == 1:
-        # Store the cluster labels from the unique clustering process (regular grid shape)
-        clst_dict['voxels_clusters'] = \
-                                np.array(clst_processes[0],dtype=int).reshape(n_voxels_dims)
-        voxels_clusters = clst_dict['voxels_clusters']
+        # Build cluster labels from the unique clustering process (regular grid shape)
+        voxels_clusters = np.array(clst_processes[0],dtype=int).reshape(n_voxels_dims)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Initialize mapping dictionary to sort the cluster labels in asceding order of material
+    # phase
+    sort_dict = dict()
+    # Initialize material phase initial cluster label
+    lbl_init = 0
+    # Loop over material phases sorted in ascending order
+    sorted_mat_phases = list(np.sort(list(phase_nclusters.keys())))
+    for mat_phase in sorted_mat_phases:
+        # Get old cluster labels
+        old_clusters = np.unique(voxels_clusters.flatten()[phase_voxel_flatidx[mat_phase]])
+        # Set new cluster labels
+        new_clusters = list(range(lbl_init,lbl_init+phase_nclusters[mat_phase]))
+        # Set next material phase initial cluster label
+        lbl_init = lbl_init + phase_nclusters[mat_phase]
+        # Build mapping dictionary to sort the cluster labels
+        for i in range(phase_nclusters[mat_phase]):
+            if old_clusters[i] in sort_dict.keys():
+                location = inspect.getframeinfo(inspect.currentframe())
+                errors.displayError('E00038',location.filename,location.lineno+1)
+            else:
+                sort_dict[old_clusters[i]] = new_clusters[i]
+    # Check mapping dictionary
+    if np.any(np.sort(list(sort_dict.keys())) != range(sum(phase_nclusters.values()))):
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00039',location.filename,location.lineno+1)
+    elif np.any(np.sort([sort_dict[key] for key in sort_dict.keys()]) != \
+                                                      range(sum(phase_nclusters.values()))):
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00039',location.filename,location.lineno+1)
+    # Sort cluster labels in ascending order of material phase
+    for voxel_idx in it.product(*[list(range(n_voxels_dims[i])) \
+                                                       for i in range(len(n_voxels_dims))]):
+        voxels_clusters[voxel_idx] = sort_dict[voxels_clusters[voxel_idx]]
+    # Store cluster labels
+    clst_dict['voxels_clusters'] = voxels_clusters
+    # --------------------------------------------------------------------------------------
+    # Validation:
+    if False:
+        # Dump voxels_clusters (Matlab consistent rowise flat format) in Matlab file
+        print('\nidx_from_python:')
+        print(voxels_clusters.flatten('F'))
+        matlab_dic = {'idx_from_python':voxels_clusters.flatten('F')}
+        sio.savemat(dirs_dict['input_file_dir'] + '/' + dirs_dict['input_file_name'] +
+                                                                          '_idx',matlab_dic)
+    # --------------------------------------------------------------------------------------
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Store material clusters belonging to each material phase
-    for mat_phase in phase_voxel_flatidx.keys():
-        clst_dict['phase_clusters'] = \
+    for mat_phase in phase_nclusters.keys():
+        clst_dict['phase_clusters'][mat_phase] = \
                         np.unique(voxels_clusters.flatten()[phase_voxel_flatidx[mat_phase]])
+    # --------------------------------------------------------------------------------------
+    # Validation:
+    if False:
+        print('\nCheck cluster labels sorting:\n', clst_dict['phase_clusters'])
+    # --------------------------------------------------------------------------------------
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Compute voxel volume
     voxel_vol = np.prod([float(rve_dims[i])/n_voxels_dims[i] for i in range(len(rve_dims))])
@@ -131,6 +186,13 @@ def performClustering(dirs_dict,mat_dict,rg_dict,clst_dict):
     for cluster in np.unique(voxels_clusters):
         clst_dict['clusters_f'][str(cluster)] = \
                                       (np.sum(voxels_clusters == cluster)*voxel_vol)/rve_vol
+        # ----------------------------------------------------------------------------------
+        # Validation:
+        if False:
+            print('\nCluster volume fractions:')
+            print('\ncluster:', cluster, ' volume fraction:', \
+                                                      clst_dict['clusters_f'][str(cluster)])
+        # ----------------------------------------------------------------------------------
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Open file which contains all the required information associated to the clustering
     # discretization
@@ -139,7 +201,8 @@ def performClustering(dirs_dict,mat_dict,rg_dict,clst_dict):
     except Exception as message:
         location = inspect.getframeinfo(inspect.currentframe())
         errors.displayException(location.filename,location.lineno+1,message)
-    # Store clustering data
+    # Dump clustering data
+    info.displayInfo('5','Storing clustering file (.clusters)...')
     pickle.dump(clst_dict,cluster_file)
     # Close file
     cluster_file.close()
