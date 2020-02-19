@@ -11,12 +11,16 @@
 # ==========================================================================================
 # Working with arrays
 import numpy as np
+# Inspect file name and line
+import inspect
 # Extract information from path
 import ntpath
 # Generate efficient iterators
 import itertools as it
 # Display messages
 import info
+# Display errors, warnings and built-in exceptions
+import errors
 #
 #                                                                          Package functions
 # ==========================================================================================
@@ -79,7 +83,6 @@ def packageRegularGrid(discret_file_path,rve_dims,mat_dict,problem_dict):
     # Get problem data
     n_dim = problem_dict['n_dim']
     # Get material data
-    n_material_phases = mat_dict['n_material_phases']
     material_properties = mat_dict['material_properties']
     # Read the spatial discretization file (regular grid of pixels/voxels)
     info.displayInfo('5','Reading discretization file...')
@@ -87,6 +90,17 @@ def packageRegularGrid(discret_file_path,rve_dims,mat_dict,problem_dict):
         regular_grid = np.load(discret_file_path)
     else:
         regular_grid = np.loadtxt(discret_file_path)
+    # Check validity of regular grid of pixels/voxels
+    if len(regular_grid.shape) not in [2,3]:
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00042',location.filename,location.lineno+1)
+    elif np.any(np.unique(regular_grid) != np.sort([int(key) \
+                                                   for key in material_properties.keys()])):
+        idf_phases = list(np.sort([int(key) for key in material_properties.keys()]))
+        rg_phases = list(np.unique(regular_grid))
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00043',location.filename,location.lineno+1,idf_phases,
+                                                                                  rg_phases)
     # Set number of pixels/voxels in each dimension
     n_voxels_dims = [regular_grid.shape[i] for i in range(len(regular_grid.shape))]
     n_voxels = np.prod(n_voxels_dims)

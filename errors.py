@@ -414,6 +414,26 @@ def displayError(code,*args):
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'Unexistent cluster label.'
+    elif code == 'E00042':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The number of dimensions of the regular grid of ' + \
+                   'pixels/voxels (read from the \'.rgmsh\'' + '\n' + \
+                   indent + 'spatial discretization file) must be either 2 ' + \
+                   '(2D problem) or 3 (3D problem).'
+    elif code == 'E00043':
+        arguments = args[2] + args[3]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The material phases specified in the input data file ' + \
+                   'don\'t match the material phases' + '\n' + \
+                   indent + 'existent in the RVE regular grid spatial discretization ' + \
+                   'file (\'.rgmsh\').' + '\n\n' + \
+                   indent + 'Material phases (input data file): ' + \
+                                                len(args[2])*('{}, ') + '\b\b ' + '\n\n' + \
+                   indent + 'Material phases (regular grid):    ' + \
+                                                             len(args[3])*('{}, ') + '\b\b '
     #print(template_header.format(*header,width=output_width))
     #print(template.format(*values,width=output_width))
     #print(template_footer.format(*footer,width=output_width))
