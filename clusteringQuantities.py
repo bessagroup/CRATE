@@ -164,7 +164,6 @@ if __name__ == '__main__':
     problem_dict['n_dim'] = n_dim
     problem_dict['comp_order_sym'] = comp_order_sym
     problem_dict['comp_order_nsym'] = comp_order_nsym
-    n_material_phases = 2
     material_properties = dict()
     material_properties['1'] = dict()
     material_properties['1']['E'] = 210e6
@@ -173,7 +172,6 @@ if __name__ == '__main__':
     material_properties['2']['E'] = 70e6
     material_properties['2']['v'] = 0.33
     mat_dict = dict()
-    mat_dict['n_material_phases'] = n_material_phases
     mat_dict['material_properties'] = material_properties
     if problem_type == 1:
         discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \

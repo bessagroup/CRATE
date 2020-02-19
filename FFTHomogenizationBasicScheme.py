@@ -642,7 +642,6 @@ if __name__ == '__main__':
     rg_dict['rve_dims'] = rve_dims
     rg_dict['regular_grid'] = regular_grid
     rg_dict['n_voxels_dims'] = n_voxels_dims
-    n_material_phases = 2
     material_properties = dict()
     material_properties['1'] = dict()
     material_properties['1']['E'] = 210e6
@@ -651,7 +650,6 @@ if __name__ == '__main__':
     material_properties['2']['E'] = 70e6
     material_properties['2']['v'] = 0.33
     mat_dict = dict()
-    mat_dict['n_material_phases'] = n_material_phases
     mat_dict['material_properties'] = material_properties
     n_dim = len(regular_grid.shape)
     if problem_type == 1:
