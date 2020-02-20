@@ -178,22 +178,24 @@ def computeClusterInteractionTensors(dirs_dict,problem_dict,mat_dict,rg_dict,cls
                     # Compute cluster interaction tensor between the material phase A
                     # cluster and the material phase B cluster
                     rve_vol = np.prod(rve_dims)
-                    #cit_1_pair_mf = \
-                    #             (1.0/(clusters_f[str(clusterI)]*rve_vol))*cit_1_integral_mf
-                    #cit_2_pair_mf = \
-                    #             (1.0/(clusters_f[str(clusterI)]*rve_vol))*cit_2_integral_mf
-                    #cit_0_freq_pair_mf = \
-                    #        (1.0/(clusters_f[str(clusterI)]*rve_vol))*cit_0_freq_integral_mf
                     cit_1_pair_mf = \
-                                 (1.0/np.sum(voxels_clusters == clusterI))*cit_1_integral_mf
+                                 (1.0/(clusters_f[str(clusterI)]*rve_vol))*cit_1_integral_mf
                     cit_2_pair_mf = \
-                                 (1.0/np.sum(voxels_clusters == clusterI))*cit_2_integral_mf
+                                 (1.0/(clusters_f[str(clusterI)]*rve_vol))*cit_2_integral_mf
                     cit_0_freq_pair_mf = \
-                            (1.0/np.sum(voxels_clusters == clusterI))*cit_0_freq_integral_mf
+                            (1.0/(clusters_f[str(clusterI)]*rve_vol))*cit_0_freq_integral_mf
                     # ----------------------------------------------------------------------
                     # Validation:
                     if False and mat_phase_B == '2' and clusterJ == 2 and \
                                                        mat_phase_A == '2' and clusterI == 2:
+                        # Divide by number of clusters instead of cluster volume fraction
+                        # (only on this particular cluster interaction tensor!)
+                        cit_1_pair_mf = \
+                                 (1.0/np.sum(voxels_clusters == clusterI))*cit_1_integral_mf
+                        cit_2_pair_mf = \
+                                 (1.0/np.sum(voxels_clusters == clusterI))*cit_2_integral_mf
+                        cit_0_freq_pair_mf = \
+                            (1.0/np.sum(voxels_clusters == clusterI))*cit_0_freq_integral_mf
                         print('mat_phase_B:',mat_phase_B,'clusterJ:',clusterJ)
                         print('mat_phase_A:',mat_phase_A,'clusterI:',clusterI)
                         print('\ncit_1_pair_mf\n')
