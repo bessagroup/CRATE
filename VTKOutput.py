@@ -29,7 +29,7 @@ indent = '  '
 # ==========================================================================================
 # Write VTK file with the clustering discretization
 def writeVTKClusterFile(vtk_dict,dirs_dict,rg_dict,clst_dict):
-    info.displayInfo('5','Writing cluster VTK file...')
+    #info.displayInfo('5','Writing cluster VTK file...') # Revert
     # Get input data file name
     input_file_name = dirs_dict['input_file_name']
     # Get offline stage directory

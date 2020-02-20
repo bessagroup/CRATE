@@ -120,7 +120,6 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
         for mat_phase in material_phases:
             print('\nElasticity tensor (material phase ', mat_phase, ') - ' + \
                                                                        'Kelvin notation:\n')
-            np.set_printoptions(precision=2)
             print(De_tensors_mf[mat_phase])
     # --------------------------------------------------------------------------------------
     #
@@ -233,10 +232,6 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
     # --------------------------------------------------------------------------------------
     # Validation:
     if __name__ == '__main__':
-        if n_dim == 2:
-            val_voxel_idx = (2,1)
-        else:
-            val_voxel_idx = (2,1,3)
         val_voxel_freqs = [freqs_dims[i][val_voxel_idx[i]] for i in range(n_dim)]
         val_voxel_freqs_norm = np.linalg.norm(val_voxel_freqs)
         print('\nGreen operator components (freq_idx = ' + str(val_voxel_idx) + '):\n')
@@ -311,7 +306,7 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Compute strain Discrete Fourier Transform (DFT)
     strain_DFT_vox = \
-                  {comp: np.zeros(tuple(n_voxels_dims),dtype=complex) for comp in comp_order}
+                 {comp: np.zeros(tuple(n_voxels_dims),dtype=complex) for comp in comp_order}
     for comp in comp_order:
         # Discrete Fourier Transform (DFT) by means of Fast Fourier Transform (FFT)
         strain_DFT_vox[comp] = np.fft.fftn(strain_vox[comp])
@@ -390,7 +385,7 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
                 div_stress_DFT[str(i+1)][freq_idx] = \
                                         top.dot12_1(1j*np.asarray(freq_coord),stress_DFT)[i]
         # Compute discrete error serving to check convergence
-        discrete_error_2 = math.sqrt(error_sum/n_voxels)/np.linalg.norm(stress_DFT_0_mf)
+        discrete_error_1 = math.sqrt(error_sum/n_voxels)/np.linalg.norm(stress_DFT_0_mf)
         # Compute stress divergence Inverse Discrete Fourier Transform (IDFT)
         div_stress = {str(comp+1): np.zeros(tuple(n_voxels_dims)) for comp in range(n_dim)}
         for i in range(n_dim):
@@ -400,16 +395,28 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
         # ----------------------------------------------------------------------------------
         # Convergence criterion 2:
         # Discrete error based on the average stress norm
-        discrete_error = abs(avg_stress_norm-avg_stress_norm_Old)/avg_stress_norm
+        discrete_error_2 = abs(avg_stress_norm-avg_stress_norm_Old)/avg_stress_norm
         # ----------------------------------------------------------------------------------
         # Validation:
         if __name__ == '__main__':
             print('\nIteration', iter, '- Convergence evaluation:\n')
             print('Average stress norm     = ', '{:>11.4e}'.format(avg_stress_norm))
             print('Average stress norm old = ', '{:>11.4e}'.format(avg_stress_norm_Old))
-            print('Discrete error          = ', '{:>11.4e}'.format(discrete_error))
+            print('Discrete error          = ', '{:>11.4e}'.format(discrete_error_2))
+            # Print iterative stress divergence for file
+            div_file_path = '/home/bernardoferreira/Documents/SCA/debug/' + \
+                            'FFT_Homogenization_Method/issues/stress_divergence/' + \
+                            'StressDivergenceEvolution.dat'
+            writeVoxelStressDivergence(div_file_path,'iteration',\
+                                                              val_voxel_idx,iter,div_stress)
+            # Print iterative stress convergence for file
+            conv_file_path = '/home/bernardoferreira/Documents/SCA/debug/' + \
+                            'FFT_Homogenization_Method/issues/stress_divergence/' + \
+                            'ConvergenceEvolution.dat'
+            writeIterationConvergence(conv_file_path,'iteration',\
+                                                     iter,discrete_error_1,discrete_error_2)
             # Check stress divergence after convergence is achieved
-            if discrete_error < conv_tol:
+            if discrete_error_2 < conv_tol:
                 # Analytical
                 print('\nStress divergence (computed in frequency) - (voxel_idx = ' + \
                                                                 str(val_voxel_idx) + '):\n')
@@ -441,10 +448,18 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
                 for i in range(n_dim):
                     print('Component', str(i+1), ':',\
                                 '{:>11.4e}'.format(div_stress_num[str(i+1)][val_voxel_idx]))
+                # Write stress divergence tensor components into files (only 2D problems)
+                if n_dim == 2:
+                    for comp in comp_order:
+                        stressdiv_file_path = \
+                                  '/home/bernardoferreira/Documents/SCA/debug/' + \
+                                  'FFT_Homogenization_Method/issues/stress_divergence/' + \
+                                  'StressDivVox_' + comp + '.dat'
+                        np.savetxt(stressdiv_file_path,stress_vox[comp])
         # ----------------------------------------------------------------------------------
         # Check if the solution converged (return) and if the maximum number of iterations
         # was reached (stop execution)
-        if discrete_error < conv_tol:
+        if discrete_error_2 < conv_tol:
             # Return strain
             return strain_vox
         elif iter == max_n_iterations:
@@ -611,37 +626,91 @@ def getElasticityTensor(problem_type,n_dim,comp_order,properties):
 #
 #                                                                     Validation (temporary)
 # ==========================================================================================
+def writeVoxelStressDivergence(file_path,mode,voxel_idx,*args):
+    if mode == 'header':
+        # Open file where the stress divergence tensor will be written
+        open(file_path,'w').close()
+        file = open(file_path,'a')
+        # Write file header
+        print('\nStress divergence tensor evaluation',file=file)
+        print('-----------------------------------',file=file)
+        # Write voxel indexes
+        print('\nVoxel indexes:',voxel_idx,file=file)
+        # Write stress divergence tensor header
+        print('\nIter'+ 9*' ' + 'x' + 12*' ' + 'y' + 12*' ' + 'z', file=file)
+        # Close file where the stress divergence tensor are written
+        file.close()
+    else:
+        # Open file where the stress divergence tensor are written
+        file = open(file_path,'a')
+        # Get iteration and stress divergence tensor
+        iter = args[0]
+        div_stress = args[1]
+        # Write iterative value of stress divergence tensor
+        print('{:>4d}  '.format(iter),\
+              (n_dim*'{:>11.4e}  ').format(*[div_stress[str(i+1)][voxel_idx] \
+                                                          for i in range(n_dim)]),file=file)
+# ------------------------------------------------------------------------------------------
+def writeIterationConvergence(file_path,mode,*args):
+    if mode == 'header':
+        # Open file where the iteration convergence metrics are written
+        open(file_path,'w').close()
+        file = open(file_path,'a')
+        # Write file header
+        print('\nFFT Homogenization Basic Scheme Convergence',file=file)
+        print('-------------------------------------------',file=file)
+        # Write stress divergence tensor header
+        print('\nIter' + 5*' ' + 'error 1' +  7*' ' + 'error 2',file=file)
+        # Close file where the stress divergence tensor will be written
+        file.close()
+    else:
+        # Open file where the stress divergence tensor are written
+        file = open(file_path,'a')
+        # Get iteration and stress divergence tensor
+        iter = args[0]
+        error1 = args[1]
+        error2 = args[2]
+        # Write iterative value of stress divergence tensor
+        print('{:>4d} '.format(iter), \
+              '{:>11.4e}'.format(error1), '  {:>11.4e}'.format(error2),file=file)
+# ------------------------------------------------------------------------------------------
 if __name__ == '__main__':
     # Set functions being validated
     val_functions = ['FFTHomogenizationBasicScheme()','getElasticityTensor()']
     # Display validation header
     print('\nValidation: ',(len(val_functions)*'{}, ').format(*val_functions), 3*'\b', ' ')
     print(92*'-')
-    # Set functions arguments
+    # Set functions arguments:
+    # Set problem type
     problem_type = 1
     import readInputData as rid
+    # Set problem parameters (number of dimensions and components order)
     n_dim, comp_order_sym, comp_order_nsym = rid.setProblemTypeParameters(problem_type)
+    # Set problem data
     problem_dict = dict()
     problem_dict['problem_type'] = problem_type
     problem_dict['n_dim'] = n_dim
     problem_dict['comp_order_sym'] = comp_order_sym
     problem_dict['comp_order_nsym'] = comp_order_nsym
+    # Set spatial discretization file absolute path
     if problem_type == 1:
         rve_dims = [1.0,1.0]
         discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
                             'debug/FFT_Homogenization_Method/issues/stress_divergence/' + \
-                            'examples/RVE_2D_2Phases_50x50_Homogeneous.rgmsh.npy'
+                            'examples/RVE_2D_2Phases_200x200_Particle.rgmsh.npy'
     else:
         rve_dims = [1.0,1.0,1.0]
         discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
                             'debug/FFT_Homogenization_Method/issues/stress_divergence/' + \
                             'examples/RVE_3D_2Phases_50x50_Homogeneous.rgmsh.npy'
+    # Read spatial discretization file and set regular grid data
     regular_grid = np.load(discret_file_path)
     n_voxels_dims = [regular_grid.shape[i] for i in range(len(regular_grid.shape))]
     rg_dict = dict()
     rg_dict['rve_dims'] = rve_dims
     rg_dict['regular_grid'] = regular_grid
     rg_dict['n_voxels_dims'] = n_voxels_dims
+    # Set material properties
     material_properties = dict()
     material_properties['1'] = dict()
     material_properties['1']['E'] = 210e6
@@ -651,16 +720,48 @@ if __name__ == '__main__':
     material_properties['2']['v'] = 0.33
     mat_dict = dict()
     mat_dict['material_properties'] = material_properties
-    n_dim = len(regular_grid.shape)
-    if problem_type == 1:
-        comp_order = ['11','22','12']
-    elif problem_type == 4:
-        comp_order = ['11','22','33','12','23','13']
+    material_phases = [str(x) for x in list(np.unique(regular_grid))]
+    mat_dict['material_phases'] = material_phases
+    # Set macroscale strain loading
     if n_dim == 2:
-        mac_strain = np.array([[2,0.5],[0.5,1]])
+        mac_strain = np.array([[2,0],[0,0]])
     else:
         mac_strain = np.array([[2,0.5,0.5],[0.5,1,1],[0.5,1,3]])
+    # Set numpy default print options
+    np.set_printoptions(precision=4,linewidth=np.inf)
+    # Set absolute path of the file where the stress divergence tensor for a given voxel
+    # is written at every iteration
+    div_file_path = '/home/bernardoferreira/Documents/SCA/debug/' + \
+                    'FFT_Homogenization_Method/issues/stress_divergence/' + \
+                    'StressDivergenceEvolution.dat'
+    if n_dim == 2:
+        val_voxel_idx = (2,1)
+    else:
+        val_voxel_idx = (2,1,3)
+    writeVoxelStressDivergence(div_file_path,'header',val_voxel_idx)
+    # Set absolute path of the file where the error for the diferent convergence criteria
+    # is written at every iteration
+    conv_file_path = '/home/bernardoferreira/Documents/SCA/debug/' + \
+                     'FFT_Homogenization_Method/issues/stress_divergence/' + \
+                     'ConvergenceEvolution.dat'
+    writeIterationConvergence(conv_file_path,'header')
     # Call function
     FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain)
+    # Write VTK file with material phases
+    import VTKOutput
+    import copy
+    import ntpath
+    # Build required dictionaries to write VTK file with the material phases
+    dirs_dict = dict()
+    dirs_dict['input_file_name'] = \
+                ntpath.splitext(ntpath.splitext(ntpath.basename(discret_file_path))[-2])[-2]
+    dirs_dict['offline_stage_dir'] = ntpath.dirname(discret_file_path) + '/'
+    clst_dict = dict()
+    clst_dict['voxels_clusters'] = np.full(n_voxels_dims,-1,dtype=int)
+    vtk_dict = dict()
+    vtk_dict['format'] = 'ascii'
+    vtk_dict['precision'] = 'SinglePrecision'
+    VTKOutput.writeVTKClusterFile(vtk_dict,copy.deepcopy(dirs_dict),copy.deepcopy(rg_dict),
+                                                                   copy.deepcopy(clst_dict))
     # Display validation footer
     print('\n' + 92*'-' + '\n')
