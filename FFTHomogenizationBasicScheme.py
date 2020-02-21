@@ -125,10 +125,17 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
     #
     #                                                  Reference material elastic properties
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Set reference material elastic properties
+    # Set reference material elastic properties as the mean between the minimum and maximum
+    # values existent in the microstructure material phases (this is reported in
+    # Moulinec, H. and Suquet, P., 1998 as the choice that leads to the best rate of
+    # convergence)
     material_properties_ref = dict()
-    material_properties_ref['E'] = 100e6
-    material_properties_ref['v'] = 0.3
+    material_properties_ref['E'] = \
+                0.5*(min([material_properties[phase]['E'] for phase in material_phases]) + \
+                     max([material_properties[phase]['E'] for phase in material_phases]))
+    material_properties_ref['v'] = \
+                0.5*(min([material_properties[phase]['v'] for phase in material_phases]) + \
+                     max([material_properties[phase]['v'] for phase in material_phases]))
     # Compute compliance tensor (matricial form)
     Se_tensor_mf_ref = np.zeros((len(comp_order),len(comp_order)))
     Se_tensor_mf_ref = \
