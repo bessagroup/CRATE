@@ -41,6 +41,15 @@ import tensorOperations as top
 #                       | Linear elastic constitutive behavior
 #                       | Material isotropy
 #
+# Note 1: At the end of article's 2.4 section, Moulinec and Suquet propose a modification of
+#         the Green operator at the higher frequencies in order to overcome limitations of
+#         the FFT packages (1998...) for low spatial resolutions. Such modification is not
+#         implemented here.
+#
+# Note 2: Besides the original convergence criterion proposed by Moulinec and Suquet, a
+#         second convergence criterion based on the average stress tensor norm has been
+#         implemented.
+#
 # The function returns the strain tensor in every pixel/voxel stored componentwise as:
 #
 # A. 2D problem (plane strain):
@@ -58,7 +67,7 @@ import tensorOperations as top
 #
 # Note 1: All the strain or stress related tensors stored componentwise in dictionaries (for
 #         every pixels/voxels) do not follow the Kelvin notation, i.e. the stored component
-#         values are the real ones
+#         values are the real ones.
 #
 # Note 2: The suffix '_mf' is employed to denote tensorial quantities stored in matricial
 #         form. The matricial form follows the Kelvin notation when symmetry conditions
@@ -69,9 +78,9 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
     #                                                                             Parameters
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set maximum number of iterations
-    max_n_iterations = 50
+    max_n_iterations = 100
     # Set convergence tolerance
-    conv_tol = 1e-2
+    conv_tol = 1e-4
     #
     #                                                                        Input arguments
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -103,9 +112,9 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
         for iprop in range(len(req_props)):
             if req_props[iprop] not in material_properties[mat_phase]:
                 values = tuple([req_props[iprop],mat_phase])
-                template = '\nThe elastic property - {} - of material phase {} hasn\'t ' + \
-                           'been specified in the ' + '\n' + \
-                           'input data file.\n'
+                template = '\nAbort: The elastic property - {} - of material phase {} ' + \
+                           'hasn\'t been specified in ' + '\n' + \
+                           'the input data file (FFTHomogenizationBasicScheme.py).\n'
                 print(template.format(*values))
                 sys.exit(1)
         # Compute elasticity tensor (matricial form) for current material phase
@@ -289,7 +298,7 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
         if comp[0] == comp[1]:
             avg_stress_norm = avg_stress_norm + np.square(stress_vox[comp])
         else:
-            avg_stress_norm = avg_stress_norm + 1.0*np.square(stress_vox[comp])
+            avg_stress_norm = avg_stress_norm + 2.0*np.square(stress_vox[comp])
     avg_stress_norm = np.sum(np.sqrt(avg_stress_norm))/n_voxels
     avg_stress_norm_Old = 0
     # --------------------------------------------------------------------------------------
@@ -411,15 +420,15 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
             print('Average stress norm old = ', '{:>11.4e}'.format(avg_stress_norm_Old))
             print('Discrete error          = ', '{:>11.4e}'.format(discrete_error_2))
             # Print iterative stress divergence for file
-            div_file_path = '/home/bernardoferreira/Documents/SCA/debug/' + \
-                            'FFT_Homogenization_Method/issues/stress_divergence/' + \
+            div_file_path = '/home/bernardoferreira/Documents/SCA/validation/' + \
+                            'FFT_Homogenization_Method/validation/' + \
                             'StressDivergenceEvolution.dat'
             writeVoxelStressDivergence(div_file_path,'iteration',\
                                                               val_voxel_idx,iter,div_stress)
             # Print iterative stress convergence for file
-            conv_file_path = '/home/bernardoferreira/Documents/SCA/debug/' + \
-                            'FFT_Homogenization_Method/issues/stress_divergence/' + \
-                            'ConvergenceEvolution.dat'
+            conv_file_path = '/home/bernardoferreira/Documents/SCA/validation/' + \
+                             'FFT_Homogenization_Method/validation/' + \
+                             'ConvergenceEvolution.dat'
             writeIterationConvergence(conv_file_path,'iteration',\
                                                      iter,discrete_error_1,discrete_error_2)
             # Check stress divergence after convergence is achieved
@@ -459,20 +468,20 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
                 if n_dim == 2:
                     for comp in comp_order:
                         stressdiv_file_path = \
-                                  '/home/bernardoferreira/Documents/SCA/debug/' + \
-                                  'FFT_Homogenization_Method/issues/stress_divergence/' + \
+                                  '/home/bernardoferreira/Documents/SCA/validation/' + \
+                                  'FFT_Homogenization_Method/validation/' + \
                                   'StressDivVox_' + comp + '.dat'
                         np.savetxt(stressdiv_file_path,stress_vox[comp])
         # ----------------------------------------------------------------------------------
         # Check if the solution converged (return) and if the maximum number of iterations
         # was reached (stop execution)
-        if discrete_error_2 < conv_tol:
+        if discrete_error_1 < conv_tol:
             # Return strain
             return strain_vox
         elif iter == max_n_iterations:
             # Stop execution
             print('\nAbort: The maximum number of iterations was reached before ' + \
-                  'solution convergence.\n')
+                  'solution convergence \n(FFTHomogenizationBasicScheme.py).')
             sys.exit(1)
         # Increment iteration counter
         iter = iter + 1
@@ -552,7 +561,7 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
             if comp[0] == comp[1]:
                 avg_stress_norm = avg_stress_norm + np.square(stress_vox[comp])
             else:
-                avg_stress_norm = avg_stress_norm + 1.0*np.square(stress_vox[comp])
+                avg_stress_norm = avg_stress_norm + 2.0*np.square(stress_vox[comp])
         avg_stress_norm = np.sum(np.sqrt(avg_stress_norm))/n_voxels
         # ----------------------------------------------------------------------------------
         # Validation:
@@ -703,8 +712,8 @@ if __name__ == '__main__':
     if problem_type == 1:
         rve_dims = [1.0,1.0]
         discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
-                            'debug/FFT_Homogenization_Method/issues/stress_divergence/' + \
-                            'examples/RVE_2D_2Phases_200x200_Particle.rgmsh.npy'
+                            'debug/FFT_Homogenization_Method/validation/' + \
+                            'RVE_2D_2Phases_1025x1025_Circular_Fiber.rgmsh.npy'
     else:
         rve_dims = [1.0,1.0,1.0]
         discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
@@ -719,27 +728,27 @@ if __name__ == '__main__':
     rg_dict['n_voxels_dims'] = n_voxels_dims
     # Set material properties
     material_properties = dict()
-    material_properties['1'] = dict()
-    material_properties['1']['E'] = 210e6
-    material_properties['1']['v'] = 0.3
     material_properties['2'] = dict()
-    material_properties['2']['E'] = 70e6
-    material_properties['2']['v'] = 0.33
+    material_properties['2']['E'] = 68.9e3
+    material_properties['2']['v'] = 0.35
+    material_properties['1'] = dict()
+    material_properties['1']['E'] = 400e3
+    material_properties['1']['v'] = 0.23
     mat_dict = dict()
     mat_dict['material_properties'] = material_properties
     material_phases = [str(x) for x in list(np.unique(regular_grid))]
     mat_dict['material_phases'] = material_phases
     # Set macroscale strain loading
     if n_dim == 2:
-        mac_strain = np.array([[2,0],[0,0]])
+        mac_strain = np.array([[0,0.005],[0.005,0]])
     else:
         mac_strain = np.array([[2,0.5,0.5],[0.5,1,1],[0.5,1,3]])
     # Set numpy default print options
     np.set_printoptions(precision=4,linewidth=np.inf)
     # Set absolute path of the file where the stress divergence tensor for a given voxel
     # is written at every iteration
-    div_file_path = '/home/bernardoferreira/Documents/SCA/debug/' + \
-                    'FFT_Homogenization_Method/issues/stress_divergence/' + \
+    div_file_path = '/home/bernardoferreira/Documents/SCA/validation/' + \
+                    'FFT_Homogenization_Method/validation/' + \
                     'StressDivergenceEvolution.dat'
     if n_dim == 2:
         val_voxel_idx = (2,1)
@@ -748,17 +757,16 @@ if __name__ == '__main__':
     writeVoxelStressDivergence(div_file_path,'header',val_voxel_idx)
     # Set absolute path of the file where the error for the diferent convergence criteria
     # is written at every iteration
-    conv_file_path = '/home/bernardoferreira/Documents/SCA/debug/' + \
-                     'FFT_Homogenization_Method/issues/stress_divergence/' + \
+    conv_file_path = '/home/bernardoferreira/Documents/SCA/validation/' + \
+                     'FFT_Homogenization_Method/validation/' + \
                      'ConvergenceEvolution.dat'
     writeIterationConvergence(conv_file_path,'header')
     # Call function
-    FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain)
+    strain_vox = FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain)
     # Write VTK file with material phases
     import VTKOutput
     import copy
     import ntpath
-    # Build required dictionaries to write VTK file with the material phases
     dirs_dict = dict()
     dirs_dict['input_file_name'] = \
                 ntpath.splitext(ntpath.splitext(ntpath.basename(discret_file_path))[-2])[-2]
@@ -770,5 +778,38 @@ if __name__ == '__main__':
     vtk_dict['precision'] = 'SinglePrecision'
     VTKOutput.writeVTKClusterFile(vtk_dict,copy.deepcopy(dirs_dict),copy.deepcopy(rg_dict),
                                                                    copy.deepcopy(clst_dict))
+    # 2D matplotlib plot
+    import matplotlib
+    import matplotlib.pyplot as plt
+    import matplotlib.ticker as ticker
+    matplotlib.rc('text',usetex=True)
+    matplotlib.rc('font',**{'family':'serif'})
+    figure1 = plt.figure()
+    axes1 = figure1.add_subplot(111)
+    axes1.set_title('Validation Example - Circular Fiber')
+    figure1.set_figheight(8, forward=True)
+    figure1.set_figwidth(8, forward=True)
+    axes1.set_frame_on(True)
+    axes1.set_xlabel('$x_{1}$', fontsize=12, labelpad=10)
+    axes1.set_ylabel('$\\varepsilon_{12}$', fontsize=12, labelpad=8)
+    axes1.ticklabel_format(axis='x', style='plain', scilimits=(3,4))
+    axes1.xaxis.set_minor_locator(ticker.AutoMinorLocator(2))
+    axes1.xaxis.set_minor_formatter(ticker.NullFormatter())
+    axes1.yaxis.set_major_locator(ticker.AutoLocator())
+    axes1.yaxis.set_minor_locator(ticker.AutoMinorLocator(2))
+    axes1.tick_params(which='major', width=1.0, length=10, labelcolor='0.0', labelsize=12)
+    axes1.tick_params(which='minor', width=1.0, length=5, labelsize=12)
+    axes1.grid(linestyle='-',linewidth=0.5, color='0.5',zorder=15)
+    axes1.set_xlim(xmin=0.4,xmax=0.6)
+    axes1.set_ylim(ymin=0,ymax=0.008)
+    aux1 = np.array(range(n_voxels_dims[0]))*(rve_dims[0]/n_voxels_dims[0])
+    x = aux1[int(np.nonzero(aux1>=0.4)[0][0]):int(np.nonzero(aux1>=0.6)[0][0])+1]
+    y = [strain_vox['12'][(i,int(n_voxels_dims[0]/2))] \
+        for i in range(int(np.nonzero(aux1>=0.4)[0][0]),int(np.nonzero(aux1>=0.6)[0][0])+1)]
+    axes1.plot(x,y,color='k',linewidth=2,linestyle='-',clip_on=False)
+    plt.show()
+    figure1.set_figheight(3.6, forward=False)
+    figure1.set_figwidth(3.6, forward=False)
+    figure1.savefig('Validation'+'.pdf', transparent=False, dpi=300, bbox_inches='tight')
     # Display validation footer
     print('\n' + 92*'-' + '\n')
