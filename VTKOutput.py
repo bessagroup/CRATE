@@ -71,14 +71,14 @@ def writeVTKClusterFile(vtk_dict,dirs_dict,rg_dict,clst_dict):
     writeVTKOpenCellData(vtk_file)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Write VTK cell data array - Material phases
-    data_list = list(regular_grid.flatten())
+    data_list = list(regular_grid.flatten('F'))
     min_val = min(data_list)
     max_val = max(data_list)
     data_parameters = {'Name':'Material phase','format':'ascii','RangeMin':min_val,
                                                                          'RangeMax':max_val}
     writeVTKCellDataArray(vtk_file,vtk_dict,data_list,data_parameters)
     # Write VTK cell data array - Clusters
-    data_list = list(voxels_clusters.flatten())
+    data_list = list(voxels_clusters.flatten('F'))
     min_val = min(data_list)
     max_val = max(data_list)
     data_parameters = {'Name':'Cluster','format':'ascii','RangeMin':min_val,
