@@ -331,15 +331,7 @@ def readTypeBKeyword(file,file_path,keyword):
 # < property1_name > < value >
 # ...
 #
-# and store it in a array(max_n_properties,2,n_material_phases) as
-#                                      _                       _
-#                                     |'property1_name' , value |
-#               array[:,:,phase_id] = |'property2_name' , value |
-#                                     |_     ...        ,  ... _|
-#
-#
 # and store it in a dictionary as
-#
 #                                      _                       _
 #                                     |'property1_name' , value |
 #            dictionary['phase_id'] = |'property2_name' , value |
