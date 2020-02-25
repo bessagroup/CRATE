@@ -179,7 +179,7 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
     #
     # A. 2D problem (plane strain):
     #
-    #   Green_operator_vox[comp] = array(d1,d2),
+    #   Green_operator_DFT_vox[comp] = array(d1,d2),
     #
     #                        where | di is the number of pixels in dimension i
     #                              | comp is the component that would be stored in matricial
@@ -187,7 +187,7 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
     #
     # B. 3D problem:
     #
-    #   Green_operator_vox[comp] = array(d1,d2,d3),
+    #   Green_operator_DFT_vox[comp] = array(d1,d2,d3),
     #
     #                        where | di is the number of pixels in dimension i
     #                              | comp is the component that would be stored in matricial
@@ -210,9 +210,9 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
     for i in range(len(comp_order)**2):
         fo_indexes.append([int(x)-1 for x in list(comps[i][0]+comps[i][1])])
         mf_indexes.append([x for x in \
-                               [comp_order.index(comps[i][0]),comp_order.index(comps[i][1])]])
+                             [comp_order.index(comps[i][0]),comp_order.index(comps[i][1])]])
     # Initialize Green operator
-    Green_operator_vox = {''.join([str(x+1) for x in idx]): \
+    Green_operator_DFT_vox = {''.join([str(x+1) for x in idx]): \
                                        np.zeros(tuple(n_voxels_dims)) for idx in fo_indexes}
     # Compute Green operator matricial form components
     for i in range(len(mf_indexes)):
@@ -242,7 +242,7 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
             second_term = -(1.0/freq_norm**4)*(freq_coord[fo_idx[0]]*freq_coord[fo_idx[1]]*
                                                freq_coord[fo_idx[2]]*freq_coord[fo_idx[3]])
             # Compute Green operator matricial form component for current voxel
-            Green_operator_vox[comp][freq_idx] = c1*first_term + c2*second_term
+            Green_operator_DFT_vox[comp][freq_idx] = c1*first_term + c2*second_term
     # --------------------------------------------------------------------------------------
     # Validation:
     if __name__ == '__main__':
@@ -258,7 +258,7 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
             mf_idx = mf_indexes[i]
             comp = ''.join([str(x+1) for x in fo_indexes[i]])
             print('  Component ' + comp + ': ', \
-                                '{:>11.4e}'.format(Green_operator_vox[comp][val_voxel_idx]))
+                            '{:>11.4e}'.format(Green_operator_DFT_vox[comp][val_voxel_idx]))
     # --------------------------------------------------------------------------------------
     #
     #                                                                       Iterative scheme
@@ -495,7 +495,7 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
                 idx1 = [comp_order.index(compi),comp_order.index(compj)]
                 idx2 = comp_order.index(compj)
                 aux = aux + \
-                         top.kelvinFactor(idx1,comp_order)*Green_operator_vox[compi+compj]*\
+                     top.kelvinFactor(idx1,comp_order)*Green_operator_DFT_vox[compi+compj]*\
                                      top.kelvinFactor(idx2,comp_order)*stress_DFT_vox[compj]
             strain_DFT_vox[compi] = strain_DFT_vox[compi] - \
                                                     (1.0/top.kelvinFactor(i,comp_order))*aux
