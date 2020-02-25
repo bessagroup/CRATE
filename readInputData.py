@@ -19,8 +19,6 @@ import shutil
 import numpy as np
 # Shallow and deep copy operations
 import copy
-# Mathematics
-import math
 # Regular expressions
 import re
 # Read specific lines from file

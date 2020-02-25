@@ -13,8 +13,6 @@
 import sys
 # Working with arrays
 import numpy as np
-# Mathematics
-import math
 # Inspect file name and line
 import inspect
 # Generate efficient iterators
@@ -165,7 +163,7 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
         # Set sampling spatial period
         sampling_period = rve_dims[i]/n_voxels_dims[i]
         # Set discrete frequencies
-        freqs_dims.append(2*math.pi*np.fft.fftfreq(n_voxels_dims[i],sampling_period))
+        freqs_dims.append(2*np.pi*np.fft.fftfreq(n_voxels_dims[i],sampling_period))
     # --------------------------------------------------------------------------------------
     # Validation:
     if __name__ == '__main__':
@@ -401,7 +399,7 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
                 div_stress_DFT[str(i+1)][freq_idx] = \
                                         top.dot12_1(1j*np.asarray(freq_coord),stress_DFT)[i]
         # Compute discrete error serving to check convergence
-        discrete_error_1 = math.sqrt(error_sum/n_voxels)/np.linalg.norm(stress_DFT_0_mf)
+        discrete_error_1 = np.sqrt(error_sum/n_voxels)/np.linalg.norm(stress_DFT_0_mf)
         # Compute stress divergence Inverse Discrete Fourier Transform (IDFT)
         div_stress = {str(comp+1): np.zeros(tuple(n_voxels_dims)) for comp in range(n_dim)}
         for i in range(n_dim):

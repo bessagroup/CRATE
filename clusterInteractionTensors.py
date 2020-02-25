@@ -11,8 +11,6 @@
 # ==========================================================================================
 # Working with arrays
 import numpy as np
-# Mathematics
-import math
 # Python object serialization
 import pickle
 # Inspect file name and line
@@ -242,7 +240,7 @@ def setDiscreteFrequencies(n_dim,rve_dims,n_voxels_dims):
         # Set sampling spatial period
         sampling_period = rve_dims[i]/n_voxels_dims[i]
         # Set discrete frequencies
-        freqs_dims.append(2*math.pi*np.fft.fftfreq(n_voxels_dims[i],sampling_period))
+        freqs_dims.append(2*np.pi*np.fft.fftfreq(n_voxels_dims[i],sampling_period))
     # Return
     return freqs_dims
 # ------------------------------------------------------------------------------------------

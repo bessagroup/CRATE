@@ -11,8 +11,6 @@
 # ==========================================================================================
 # Working with arrays
 import numpy as np
-# Mathematics
-import math
 # Inspect file name and line
 import inspect
 # Generate efficient iterators
@@ -199,7 +197,7 @@ def setTensorMatricialForm(tensor,n_dim,comp_order):
             so_idx = tuple(so_indexes[i])
             factor = 1.0
             if isKelvinNotation and not so_idx[0] == so_idx[1]:
-                factor = math.sqrt(2)
+                factor = np.sqrt(2)
             tensor_mf[mf_idx] = factor*tensor[so_idx]
     elif tensor_order == 4:
         # Set cartesian product of component list
@@ -222,8 +220,8 @@ def setTensorMatricialForm(tensor,n_dim,comp_order):
             fo_idx = tuple(fo_indexes[i])
             factor = 1.0
             if isKelvinNotation and not (fo_idx[0] == fo_idx[1] and fo_idx[2] == fo_idx[3]):
-                factor = factor*math.sqrt(2) if fo_idx[0] != fo_idx[1] else factor
-                factor = factor*math.sqrt(2) if fo_idx[2] != fo_idx[3] else factor
+                factor = factor*np.sqrt(2) if fo_idx[0] != fo_idx[1] else factor
+                factor = factor*np.sqrt(2) if fo_idx[2] != fo_idx[3] else factor
             tensor_mf[mf_idx] = factor*tensor[fo_idx]
     # Return
     return tensor_mf
@@ -283,7 +281,7 @@ def getTensorFromMatricialForm(tensor_mf,n_dim,comp_order):
             so_idx = tuple(so_indexes[i])
             factor = 1.0
             if isKelvinNotation and not so_idx[0] == so_idx[1]:
-                factor = math.sqrt(2)
+                factor = np.sqrt(2)
                 tensor[so_idx[::-1]] = (1.0/factor)*tensor_mf[mf_idx]
             tensor[so_idx] = (1.0/factor)*tensor_mf[mf_idx]
     elif tensor_order == 4:
@@ -307,8 +305,8 @@ def getTensorFromMatricialForm(tensor_mf,n_dim,comp_order):
             fo_idx = tuple(fo_indexes[i])
             factor = 1.0
             if isKelvinNotation and not (fo_idx[0] == fo_idx[1] and fo_idx[2] == fo_idx[3]):
-                factor = factor*math.sqrt(2) if fo_idx[0] != fo_idx[1] else factor
-                factor = factor*math.sqrt(2) if fo_idx[2] != fo_idx[3] else factor
+                factor = factor*np.sqrt(2) if fo_idx[0] != fo_idx[1] else factor
+                factor = factor*np.sqrt(2) if fo_idx[2] != fo_idx[3] else factor
                 if fo_idx[0] != fo_idx[1] and fo_idx[2] != fo_idx[3]:
                     tensor[tuple(fo_idx[1::-1]+fo_idx[2:])] = (1.0/factor)*tensor_mf[mf_idx]
                     tensor[tuple(fo_idx[:2]+fo_idx[3:1:-1])] = \
@@ -333,12 +331,12 @@ def kelvinFactor(idx,comp_order):
         if int(list(comp_order[idx])[0]) == int(list(comp_order[idx])[1]):
             factor = 1.0
         else:
-            factor = math.sqrt(2)
+            factor = np.sqrt(2)
     else:
         factor = 1.0
         for i in idx:
             if int(list(comp_order[i])[0]) != int(list(comp_order[i])[1]):
-                factor = factor*math.sqrt(2)
+                factor = factor*np.sqrt(2)
     return factor
 #
 #                                                                    Condense matricial form

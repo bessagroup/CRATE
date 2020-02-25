@@ -13,8 +13,6 @@
 import sys
 # Working with arrays
 import numpy as np
-# Mathematics
-import math
 # Date and time
 import time
 # Manage files and directories
@@ -99,7 +97,7 @@ def displayInfo(code,*args,**kwargs):
             phase_durations.insert(3*i,phase_names[i])
             phase_durations.insert(3*i+2,(phase_durations[3*i+1]/total_time)*100)
         arguments = convertIterableToList(args[0:3]) + \
-                    [total_time,math.floor(total_time/3600),(total_time%3600)/60] + \
+                    [total_time,np.floor(total_time/3600),(total_time%3600)/60] + \
                     ['Phase','Duration (s)','%'] + phase_durations[3:] + \
                     ['Program Completed']
         info = tuple(arguments)
