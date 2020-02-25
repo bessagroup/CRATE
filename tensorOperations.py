@@ -32,7 +32,8 @@ ddot44_1 = lambda A4,B4 : np.einsum('ijmn,mnkl -> ijkl',A4,B4)
 # ==========================================================================================
 # Discrete Dirac's delta function (dij = 1 if i=j, dij = 0 if i!=j).
 def Dd(i,j):
-    if not isinstance(i,int) or not isinstance(j,int):
+    if (not isinstance(i,int) and not isinstance(i,np.integer)) or \
+                                   (not isinstance(j,int) and not isinstance(j,np.integer)):
           print('\nAbort: The discrete Dirac\'s delta function only accepts two ' + \
                 'integer indexes as arguments.\n')
           sys.exit(1)
@@ -327,7 +328,7 @@ def getTensorFromMatricialForm(tensor_mf,n_dim,comp_order):
 # given component index in a given component list, this function returns the component's
 # associated Kelvin notation factor.
 def kelvinFactor(idx,comp_order):
-    if isinstance(idx,int):
+    if isinstance(idx,int) or isinstance(idx,np.integer):
         if int(list(comp_order[idx])[0]) == int(list(comp_order[idx])[1]):
             factor = 1.0
         else:

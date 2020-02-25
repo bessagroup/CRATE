@@ -222,7 +222,9 @@ def displayError(code,*args):
                    indent + 'misplaced or has an invalid format ' + \
                    '(< phase_id > < number_of_clusters >).' + '\n\n' + \
                    'Suggestion:' + '\n\n' + \
-                   indent + 'The keyword - {} - should be specified p.e. in a material with two phases (3 and 5) as ' + '\n\n' + \
+                   indent + 'The keyword - {} - should be specified p.e. in a ' + \
+                   'material with two' + '\n' + \
+                   indent + 'phases (3 and 5) as ' + '\n\n' + \
                    indent + '{}' + '\n' + \
                    indent + '3 10' + '\n' + \
                    indent + '5 15'
@@ -620,7 +622,7 @@ def displayException(*args):
 # Set ordinal number suffix
 def getOrdinalNumber(x):
     suffix_list = ['st','nd','rd','th']
-    if not isinstance(x,int) or x < 0:
+    if (not isinstance(x,int) and not isinstance(x,np.integer)) or x < 0:
         location = inspect.getframeinfo(inspect.currentframe())
         displayError('E00037',location.filename,location.lineno+1)
     else:

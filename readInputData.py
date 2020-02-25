@@ -45,7 +45,7 @@ def checkNumber(x):
 # Check if a given input is a positive integer
 def checkPositiveInteger(x):
     isPositiveInteger = True
-    if isinstance(x,int):
+    if isinstance(x,int) or isinstance(x,np.integer):
         if x <= 0:
             isPositiveInteger = False
     elif not re.match('^[1-9][0-9]*$',str(x)):
