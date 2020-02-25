@@ -154,7 +154,7 @@ def packageRegularGrid(discret_file_path,rve_dims,mat_dict,problem_dict):
 # ------------------------------------------------------------------------------------------
 # Package data associated to the clustering on a regular grid of pixels/voxels
 def packageRGClustering(clustering_method,clustering_strategy,clustering_solution_method,\
-                                                                   phase_nclusters,rg_dict):
+                                                                  phase_n_clusters,rg_dict):
     # Get regular grid data
     n_voxels_dims = rg_dict['n_voxels_dims']
     # Initialize array with voxels cluster labels
@@ -169,7 +169,7 @@ def packageRGClustering(clustering_method,clustering_strategy,clustering_solutio
     clst_dict['clustering_method'] = clustering_method
     clst_dict['clustering_strategy'] = clustering_strategy
     clst_dict['clustering_solution_method'] = clustering_solution_method
-    clst_dict['phase_nclusters'] = phase_nclusters
+    clst_dict['phase_n_clusters'] = phase_n_clusters
     clst_dict['phase_clusters'] = phase_clusters
     clst_dict['voxels_clusters'] = voxels_clusters
     clst_dict['clusters_f'] = clusters_f
@@ -228,16 +228,16 @@ if __name__ == '__main__':
     clustering_method = 1
     clustering_strategy = 1
     clustering_solution_method = 1
-    phase_nclusters = {'1':10,'2':20}
+    phase_n_clusters = {'1':10,'2':20}
     # Call function
     clst_dict = packageRGClustering(clustering_method,clustering_strategy,\
-                        clustering_solution_method,phase_nclusters,rg_dict['n_voxels_dims'])
+                       clustering_solution_method,phase_n_clusters,rg_dict['n_voxels_dims'])
     # Display validation
     print('\nclustering_method: ', clustering_method)
     print('\nclustering_strategy: ', clustering_strategy)
     print('\nclustering_solution_method: ', clustering_solution_method)
     print('\nphase_nclusters:')
-    print(clst_dict['phase_nclusters'])
+    print(clst_dict['phase_n_clusters'])
     print('\nvoxels_clusters:')
     print(clst_dict['voxels_clusters'])
     # Display validation footer

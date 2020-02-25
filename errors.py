@@ -70,14 +70,14 @@ def displayError(code,*args):
                    indent + '{}' + '\n' + \
                    indent + '< value >'
     elif code == 'E00005':
-        ord = getOrdinalNumber(args[3])
+        suffix = getOrdinalNumber(args[3])
         arguments = info.convertIterableToList(args[2:4]) + \
                     info.convertIterableToList(2*(args[2],))
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
                    'input data\n' + \
-                   indent + 'file. In particular, the header of the {}' + ord + \
+                   indent + 'file. In particular, the header of the {}' + suffix + \
                    ' material phase is not properly specified ' + '\n' + \
                    indent + 'potentially due to one of the following reasons: \n\n' + \
                    indent + '1. Missing material phase header specification;' + '\n' + \
@@ -99,14 +99,14 @@ def displayError(code,*args):
                    '\n' + \
                    indent + 'property3_name < value >' + '\n'
     elif code == 'E00006':
-        ord = getOrdinalNumber(args[3])
+        suffix = getOrdinalNumber(args[3])
         arguments = info.convertIterableToList(args[2:5]) + \
                     info.convertIterableToList(2*(args[2],))
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
                    'input data\n' + \
-                   indent + 'file. In particular, the {}' + ord + ' property of ' + \
+                   indent + 'file. In particular, the {}' + suffix + ' property of ' + \
                    'material phase {} is not properly ' + '\n' + \
                    indent + 'specified potentially due to one of the following reasons:' + \
                    '\n\n' + \
@@ -144,15 +144,15 @@ def displayError(code,*args):
                    indent + 'The keyword - {} - should be specified as' + '\n\n' + \
                    indent + '{} < option or value >'
     elif code == 'E00008':
-        ord = getOrdinalNumber(args[3])
+        suffix = getOrdinalNumber(args[3])
         arguments = info.convertIterableToList(args[2:4]) + \
                     info.convertIterableToList(2*(args[2],))
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
                    'input \n' + \
-                   indent + 'data file. In particular, the {}' + ord + ' component is ' + \
-                   'not properly specified potentially' + '\n' + \
+                   indent + 'data file. In particular, the {}' + suffix + ' component ' + \
+                   'is not properly specified potentially' + '\n' + \
                    indent + 'due to one of the following reasons: \n\n' + \
                    indent + '1. Missing descriptor specification;' + '\n' + \
                    indent + '2. Component name can only contain letters, numbers or ' + \
@@ -211,20 +211,21 @@ def displayError(code,*args):
         indent + 'Please prescribe both components as either macroscale strain or ' + \
         'macroscale stress.'
     elif code == 'E00013':
+        suffix = getOrdinalNumber(args[3])
         arguments = info.convertIterableToList(args[2:4] + 2*(args[2],))
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
                    'input data file. ' + '\n' + \
-                   indent + 'In particular, the clustering discretization of the ' + \
-                   'material phase {} is missing, ' + '\n' + \
+                   indent + 'In particular, the clustering discretization of the {}' + \
+                   suffix + ' material phase is missing, ' + '\n' + \
                    indent + 'misplaced or has an invalid format ' + \
                    '(< phase_id > < number_of_clusters >).' + '\n\n' + \
                    'Suggestion:' + '\n\n' + \
-                   indent + 'The keyword - {} - should be specified p.e. as ' + '\n\n' + \
+                   indent + 'The keyword - {} - should be specified p.e. in a material with two phases (3 and 5) as ' + '\n\n' + \
                    indent + '{}' + '\n' + \
-                   indent + '1 10' + '\n' + \
-                   indent + '2 15'
+                   indent + '3 10' + '\n' + \
+                   indent + '5 15'
     elif code == 'E00014':
         arguments = args[2:4]
         values = tuple(arguments)
@@ -384,12 +385,12 @@ def displayError(code,*args):
                    'bounds when performing the ' + '\n' + \
                    indent + 'corresponding condensation.'
     elif code == 'E00036':
-        ord = getOrdinalNumber(args[2])
+        suffix = getOrdinalNumber(args[2])
         arguments = [args[2],]
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'At least one dataset point has not been labeled during ' + \
-                   'the {}' + ord + ' clustering process.'
+                   'the {}' + suffix + ' clustering process.'
     elif code == 'E00037':
         arguments = ['',]
         values = tuple(arguments)
@@ -430,7 +431,8 @@ def displayError(code,*args):
         template = 'Details:' + '\n\n' + \
                    indent + 'There is at least one material phase in the RVE regular ' + \
                    'grid spatial discretization' + '\n' + \
-                   indent + 'file (\'.rgmsh\') that has not been specified in the input data file.' + '\n\n' + \
+                   indent + 'file (\'.rgmsh\') that has not been specified in the ' + \
+                   'input data file.' + '\n\n' + \
                    indent + 'Material phases (input data file):      ' + \
                                                 len(args[2])*('{}, ') + '\b\b ' + '\n\n' + \
                    indent + 'Material phases (regular grid file):    ' + \
@@ -493,6 +495,26 @@ def displayError(code,*args):
                     '\n\n' + \
                     indent + 'Material phases (input data file): ' + \
                                                              len(args[3])*('{}, ') + '\b\b '
+    elif code == 'E00049':
+        arguments = [args[2],args[3]] + list(np.sort(list(args[4])))
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
+                   'input data file. ' + '\n' + \
+                   indent + 'In particular, the clustering discretization of an ' + \
+                   'unknown material phase - {} - has' + '\n' + \
+                   indent + 'been specified.' + '\n\n' + \
+                   indent + 'Material phases (input data file): ' + \
+                                                             len(args[4])*('{}, ') + '\b\b '
+    elif code == 'E00050':
+        arguments = [args[2],args[3]]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
+                   'input data file. ' + '\n' + \
+                   indent + 'In particular, the clustering discretization of the ' + \
+                   'material phase {} has been specified' + '\n' + \
+                   indent + 'more than once.'
     #print(template_header.format(*header,width=output_width))
     #print(template.format(*values,width=output_width))
     #print(template_footer.format(*footer,width=output_width))

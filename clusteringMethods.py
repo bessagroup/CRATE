@@ -50,7 +50,7 @@ def performClustering(dirs_dict,mat_dict,rg_dict,clst_dict):
     # Get clustering data
     clustering_method = clst_dict['clustering_method']
     clustering_strategy = clst_dict['clustering_strategy']
-    phase_nclusters = clst_dict['phase_nclusters']
+    phase_n_clusters = clst_dict['phase_n_clusters']
     clst_dataidxs = clst_dict['clst_dataidxs']
     clst_quantities = clst_dict['clst_quantities']
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -72,7 +72,7 @@ def performClustering(dirs_dict,mat_dict,rg_dict,clst_dict):
             # Loop over material phases
             for mat_phase in material_phases:
                 # Set number of clusters
-                n_clusters = phase_nclusters[mat_phase]
+                n_clusters = phase_n_clusters[mat_phase]
                 # Set clustering training dataset
                 dataset = top.getCondensedMatrix(clst_quantities,\
                                                 phase_voxel_flatidx[mat_phase],data_indexes)
@@ -133,22 +133,22 @@ def performClustering(dirs_dict,mat_dict,rg_dict,clst_dict):
         # Get old cluster labels
         old_clusters = np.unique(voxels_clusters.flatten()[phase_voxel_flatidx[mat_phase]])
         # Set new cluster labels
-        new_clusters = list(range(lbl_init,lbl_init+phase_nclusters[mat_phase]))
+        new_clusters = list(range(lbl_init,lbl_init+phase_n_clusters[mat_phase]))
         # Set next material phase initial cluster label
-        lbl_init = lbl_init + phase_nclusters[mat_phase]
+        lbl_init = lbl_init + phase_n_clusters[mat_phase]
         # Build mapping dictionary to sort the cluster labels
-        for i in range(phase_nclusters[mat_phase]):
+        for i in range(phase_n_clusters[mat_phase]):
             if old_clusters[i] in sort_dict.keys():
                 location = inspect.getframeinfo(inspect.currentframe())
                 errors.displayError('E00038',location.filename,location.lineno+1)
             else:
                 sort_dict[old_clusters[i]] = new_clusters[i]
     # Check mapping dictionary
-    if np.any(np.sort(list(sort_dict.keys())) != range(sum(phase_nclusters.values()))):
+    if np.any(np.sort(list(sort_dict.keys())) != range(sum(phase_n_clusters.values()))):
         location = inspect.getframeinfo(inspect.currentframe())
         errors.displayError('E00039',location.filename,location.lineno+1)
     elif np.any(np.sort([sort_dict[key] for key in sort_dict.keys()]) != \
-                                                      range(sum(phase_nclusters.values()))):
+                                                     range(sum(phase_n_clusters.values()))):
         location = inspect.getframeinfo(inspect.currentframe())
         errors.displayError('E00039',location.filename,location.lineno+1)
     # Sort cluster labels in ascending order of material phase
@@ -224,10 +224,10 @@ def checkClstCompatibility(problem_dict,rg_dict,clst_dict_read,clst_dict):
             errors.displayError('E00044',location.filename,location.lineno+1,key,
                                                          clst_dict_read[key],clst_dict[key])
     # Check number of clusters associated to each material phase
-    if clst_dict['phase_nclusters'] != clst_dict_read['phase_nclusters']:
+    if clst_dict['phase_n_clusters'] != clst_dict_read['phase_n_clusters']:
         location = inspect.getframeinfo(inspect.currentframe())
         errors.displayError('E00045',location.filename,location.lineno+1,
-                             clst_dict_read['phase_nclusters'],clst_dict['phase_nclusters'])
+                           clst_dict_read['phase_n_clusters'],clst_dict['phase_n_clusters'])
     # Check spatial discretization
     elif list(clst_dict['voxels_clusters'].shape) != rg_dict['n_voxels_dims']:
         location = inspect.getframeinfo(inspect.currentframe())

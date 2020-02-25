@@ -202,8 +202,8 @@ def readInputData(input_file,dirs_dict):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read number of cluster associated to each material phase
     keyword = 'Number_of_Clusters'
-    phase_nclusters = readPhaseClustering(input_file,input_file_path,keyword,
-                                                                          n_material_phases)
+    phase_n_clusters = readPhaseClustering(input_file,input_file_path,keyword,
+                                                      n_material_phases,material_properties)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read number of load increments
     keyword = 'Number_of_Load_Increments'
@@ -281,7 +281,7 @@ def readInputData(input_file,dirs_dict):
             n_material_phases,material_properties,mac_load_type,mac_load,
             mac_load_typeidxs,self_consistent_scheme,scs_max_n_iterations,
             scs_conv_tol,clustering_method,clustering_strategy,clustering_solution_method,
-            phase_nclusters,n_load_increments,max_n_iterations,conv_tol,
+            phase_n_clusters,n_load_increments,max_n_iterations,conv_tol,
             max_subincrem_level,max_n_iterations,su_conv_tol,discret_file_path,rve_dims]
 #
 # ------------------------------------------------------------------------------------------
@@ -574,8 +574,8 @@ def readMacroscaleLoading(file,file_path,mac_load_type,strain_formulation,n_dim,
 #
 #                    dictionary['phase_id'] = number_of_clusters
 #
-def readPhaseClustering(file,file_path,keyword,n_material_phases):
-    phase_nclusters = dict()
+def readPhaseClustering(file,file_path,keyword,n_material_phases,material_properties):
+    phase_n_clusters = dict()
     line_number = searchKeywordLine(file,keyword) + 1
     for iphase in range(n_material_phases):
         line = linecache.getline(file_path,line_number+iphase).strip().split(' ')
@@ -591,12 +591,16 @@ def readPhaseClustering(file,file_path,keyword,n_material_phases):
             location = inspect.getframeinfo(inspect.currentframe())
             errors.displayError('E00013',location.filename,location.lineno+1,keyword,\
                                                                                    iphase+1)
-        elif int(line[0]) != iphase + 1:
+        elif str(int(line[0])) not in material_properties.keys():
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00013',location.filename,location.lineno+1,keyword,\
-                                                                                   iphase+1)
-        phase_nclusters[str(iphase+1)] = int(line[1])
-    return phase_nclusters
+            errors.displayError('E00049',location.filename,location.lineno+1,keyword,\
+                                                    int(line[0]),material_properties.keys())
+        elif str(int(line[0])) in phase_n_clusters.keys():
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayError('E00050',location.filename,location.lineno+1,keyword,\
+                                                                               int(line[0]))
+        phase_n_clusters[str(int(line[0]))] = int(line[1])
+    return phase_n_clusters
 # ------------------------------------------------------------------------------------------
 # Read the spatial discretization file absolute path
 #

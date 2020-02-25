@@ -122,7 +122,7 @@ info.displayInfo('5','Reading the input data file...')
 strain_formulation,problem_type,n_dim,comp_order_sym, comp_order_nsym,n_material_phases,\
 material_properties, mac_load_type,mac_load,mac_load_typeidxs,self_consistent_scheme, \
 scs_max_n_iterations,scs_conv_tol,clustering_method,clustering_strategy, \
-clustering_solution_method,phase_nclusters,n_load_increments,max_n_iterations,conv_tol, \
+clustering_solution_method,phase_n_clusters,n_load_increments,max_n_iterations,conv_tol, \
 max_subincrem_level,max_n_iterations,su_conv_tol,discret_file_path,rve_dims = \
                                                      rid.readInputData(input_file,dirs_dict)
 # Close user input data file
@@ -144,7 +144,7 @@ rg_dict = packager.packageRegularGrid(discret_file_path,rve_dims,mat_dict,
 # Package data associated to the clustering
 info.displayInfo('5','Packaging clustering data...')
 clst_dict = packager.packageRGClustering(clustering_method,clustering_strategy,\
-                          clustering_solution_method,phase_nclusters,copy.deepcopy(rg_dict))
+                         clustering_solution_method,phase_n_clusters,copy.deepcopy(rg_dict))
 if is_same_offstage:
     # Save copy of clustering dictionary for compatibility check procedure (loading
     # previously computed offline stage)
