@@ -11,6 +11,8 @@
 # ==========================================================================================
 # Parse command-line options and arguments
 import sys
+# Working with arrays
+import numpy as np
 # Display messages
 import info
 #
@@ -429,9 +431,67 @@ def displayError(code,*args):
                    indent + 'There is at least one material phase in the RVE regular ' + \
                    'grid spatial discretization' + '\n' + \
                    indent + 'file (\'.rgmsh\') that has not been specified in the input data file.' + '\n\n' + \
-                   indent + 'Material phases (input data file): ' + \
+                   indent + 'Material phases (input data file):      ' + \
                                                 len(args[2])*('{}, ') + '\b\b ' + '\n\n' + \
-                   indent + 'Material phases (regular grid):    ' + \
+                   indent + 'Material phases (regular grid file):    ' + \
+                                                             len(args[3])*('{}, ') + '\b\b '
+    elif code == 'E00044':
+        arguments = [' '.join(args[2].split('_')),' '.join(args[2].split('_')),
+                                               args[3],' '.join(args[2].split('_')),args[4]]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The {} read in the input data file does not match the one ' + \
+                   'loaded' + '\n' + \
+                   indent + 'from the clusters data file (.clusters).' + '\n\n' + \
+                   indent + '{} (input data file):    {}' + '\n\n' + \
+                   indent + '{} (clusters data file): {}'
+    elif code == 'E00045':
+        list1 = [ '\'' + key + '\': ' + '{:2s}'.format(str(args[2][key]))
+                                                   for key in np.sort(list(args[2].keys()))]
+        list2 = [ '\'' + key + '\': ' + '{:2s}'.format(str(args[3][key]))
+                                                   for key in np.sort(list(args[3].keys()))]
+        arguments = list1 + list2
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The number of clusters of each material phase read in the ' + \
+                   'input data file does not match' + '\n' + \
+                   indent + 'the one loaded from the clusters data file (\'.clusters\').' +\
+                   '\n\n' + \
+                   indent + 'phase: n_clusters (input data file):    ' + \
+                                                               len(list1)*'{} ' + '\n\n' + \
+                   indent + 'phase: n_clusters (clusters data file): ' + len(list2)*'{} '
+    elif code == 'E00046':
+        arguments = [args[2],args[3]]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The regular grid read from the spatial discretization ' + \
+                   'file does not match the clustering' + '\n' + \
+                   indent + 'grid loaded from the clusters data file (\'.clusters\').' + \
+                   '\n\n' + \
+                   indent + 'regular grid dimensions (input data file):       {}' + \
+                   '\n\n' + \
+                   indent + 'clustering grid dimensions (clusters data file): {}'
+    elif code == 'E00047':
+        arguments = [args[2],args[3],args[3]**2]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                    indent + 'The number of cluster interaction tensors read from the ' + \
+                    'cluster interaction tensors data' + '\n' + \
+                    indent + 'file (\'.cit\') - {} - is not consistent with the number ' + \
+                    'of material phases read in the' + '\n' + \
+                    indent + 'input data file - {} (leading to {} cluster interaction ' + \
+                    'tensors).'
+    elif code == 'E00048':
+        arguments = [args[2], ] + args[3]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                    indent + 'The cluster interaction tensors read from the ' + \
+                    'cluster interaction tensors data file' + '\n' + \
+                    indent + '(\'.cit\') are not consistent with the material phases ' + \
+                    'read in the input data file. The' + '\n' + \
+                    indent + 'cluster interaction tensor \'{}\' has not been found.' + \
+                    '\n\n' + \
+                    indent + 'Material phases (input data file): ' + \
                                                              len(args[3])*('{}, ') + '\b\b '
     #print(template_header.format(*header,width=output_width))
     #print(template.format(*values,width=output_width))

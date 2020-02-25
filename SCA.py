@@ -39,6 +39,8 @@ import os
 import sys
 # Working with arrays
 import numpy as np
+# Python object serialization
+import pickle
 # Date and time
 import time
 # Inspect file name and line
@@ -143,6 +145,10 @@ rg_dict = packager.packageRegularGrid(discret_file_path,rve_dims,mat_dict,
 info.displayInfo('5','Packaging clustering data...')
 clst_dict = packager.packageRGClustering(clustering_method,clustering_strategy,\
                           clustering_solution_method,phase_nclusters,copy.deepcopy(rg_dict))
+if is_same_offstage:
+    # Save copy of clustering dictionary for compatibility check procedure (loading
+    # previously computed offline stage)
+    clst_dict_read = copy.deepcopy(clst_dict)
 # Package data associated to the VTK output
 info.displayInfo('5','Packaging VTK output data...')
 vtk_dict = packager.packageVTK()
@@ -155,53 +161,112 @@ info.displayInfo('3','Read input data file',
 #
 #                                      Offline stage: Compute clustering-defining quantities
 # ==========================================================================================
-# Display starting phase information and set phase initial time
-info.displayInfo('2','Compute cluster-defining quantities')
-phase_init_time = time.time()
-# Compute the quantities required to perform the clustering according to the strategy
-# adopted
-clusteringQuantities.computeClusteringQuantities(copy.deepcopy(problem_dict),
+if not is_same_offstage:
+    # Display starting phase information and set phase initial time
+    info.displayInfo('2','Compute cluster-defining quantities')
+    phase_init_time = time.time()
+    # Compute the quantities required to perform the clustering according to the strategy
+    # adopted
+    clusteringQuantities.computeClusteringQuantities(copy.deepcopy(problem_dict),
                                    copy.deepcopy(mat_dict),copy.deepcopy(rg_dict),clst_dict)
-# Set phase ending time and display finishing phase information
-phase_end_time = time.time()
-phase_names.append('Compute cluster-defining quantities')
-phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
-info.displayInfo('3','Compute cluster-defining quantities',
+    # Set phase ending time and display finishing phase information
+    phase_end_time = time.time()
+    phase_names.append('Compute cluster-defining quantities')
+    phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
+    info.displayInfo('3','Compute cluster-defining quantities',
                 phase_times[phase_times.shape[0]-1,1]-phase_times[phase_times.shape[0]-1,0])
 #
 #                                                          Offline stage: Perform clustering
 # ==========================================================================================
-# Display starting phase information and set phase initial time
-info.displayInfo('2','Perform clustering')
-phase_init_time = time.time()
-# Perform the clustering according to the selected method and adopted strategy
-clusteringMethods.performClustering(copy.deepcopy(dirs_dict),copy.deepcopy(mat_dict),
+if not is_same_offstage:
+    # Display starting phase information and set phase initial time
+    info.displayInfo('2','Perform clustering')
+    phase_init_time = time.time()
+    # Perform the clustering according to the selected method and adopted strategy
+    clusteringMethods.performClustering(copy.deepcopy(dirs_dict),copy.deepcopy(mat_dict),
                                                            copy.deepcopy(rg_dict),clst_dict)
-# Write clustering VTK file
-VTKOutput.writeVTKClusterFile(vtk_dict,copy.deepcopy(dirs_dict),copy.deepcopy(rg_dict),
+    # Write clustering VTK file
+    VTKOutput.writeVTKClusterFile(vtk_dict,copy.deepcopy(dirs_dict),copy.deepcopy(rg_dict),
                                                                    copy.deepcopy(clst_dict))
-# Set phase ending time and display finishing phase information
-phase_end_time = time.time()
-phase_names.append('Perform clustering')
-phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
-info.displayInfo('3','Perform clustering',
+    # Set phase ending time and display finishing phase information
+    phase_end_time = time.time()
+    phase_names.append('Perform clustering')
+    phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
+    info.displayInfo('3','Perform clustering',
+                phase_times[phase_times.shape[0]-1,1]-phase_times[phase_times.shape[0]-1,0])
+else:
+    # Display starting phase information and set phase initial time
+    info.displayInfo('2','Import known clustering data')
+    phase_init_time = time.time()
+    # Get clusters data file path
+    info.displayInfo('5','Loading data from clusters data file (.clusters)...')
+    cluster_file_path = dirs_dict['cluster_file_path']
+    # Open clusters data file
+    try:
+        cluster_file = open(cluster_file_path,'rb')
+    except Exception as message:
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayException(location.filename,location.lineno+1,message)
+    # Load cluster data from file
+    clst_dict = pickle.load(cluster_file)
+    # Close clusters data file
+    cluster_file.close()
+    # Check compatibility between the loaded clusters data and the input data file
+    info.displayInfo('5','Performing compatibility check on loaded data...')
+    clusteringMethods.checkClstCompatibility(copy.deepcopy(problem_dict),
+              copy.deepcopy(rg_dict),copy.deepcopy(clst_dict_read),copy.deepcopy(clst_dict))
+    # Set phase ending time and display finishing phase information
+    phase_end_time = time.time()
+    phase_names.append('Import known clustering data')
+    phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
+    info.displayInfo('3','Import known clustering data',
                 phase_times[phase_times.shape[0]-1,1]-phase_times[phase_times.shape[0]-1,0])
 #
 #                                         Offline stage: Compute cluster interaction tensors
 # ==========================================================================================
-# Display starting phase information and set phase initial time
-info.displayInfo('2','Compute cluster interaction tensors')
-phase_init_time = time.time()
-# Compute the cluster interaction tensors
-clusterInteractionTensors.computeClusterInteractionTensors(copy.deepcopy(dirs_dict),
+if not is_same_offstage:
+    # Display starting phase information and set phase initial time
+    info.displayInfo('2','Compute cluster interaction tensors')
+    phase_init_time = time.time()
+    # Compute the cluster interaction tensors
+    clusterInteractionTensors.computeClusterInteractionTensors(copy.deepcopy(dirs_dict),
                                         copy.deepcopy(problem_dict),copy.deepcopy(mat_dict),
                                                            copy.deepcopy(rg_dict),clst_dict)
-# Set phase ending time and display finishing phase information
-phase_end_time = time.time()
-phase_names.append('Compute cluster interaction tensors')
-phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
-info.displayInfo('3','Compute cluster interaction tensors',
+    # Set phase ending time and display finishing phase information
+    phase_end_time = time.time()
+    phase_names.append('Compute cluster interaction tensors')
+    phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
+    info.displayInfo('3','Compute cluster interaction tensors',
                 phase_times[phase_times.shape[0]-1,1]-phase_times[phase_times.shape[0]-1,0])
+else:
+    # Display starting phase information and set phase initial time
+    info.displayInfo('2','Import cluster interaction tensors')
+    phase_init_time = time.time()
+    # Get cluster interaction tensors file path
+    info.displayInfo('5','Loading clustering interaction tensors (.cit)...')
+    cit_file_path = dirs_dict['cit_file_path']
+    # Open clustering interaction tensors file
+    try:
+        cit_file = open(cit_file_path,'rb')
+    except Exception as message:
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayException(location.filename,location.lineno+1,message)
+    # Load clustering interaction tensors
+    [clst_dict['cit_1'],clst_dict['cit_2'],clst_dict['cit_0_freq']] = pickle.load(cit_file)
+    # Close clustering interaction tensors file
+    cit_file.close()
+    # Check compatibility between the loaded cluster interaction tensors and the material
+    # phases existent in the spatial discretization file
+    info.displayInfo('5','Performing compatibility check on loaded data...')
+    clusterInteractionTensors.checkCITCompatibility(copy.deepcopy(mat_dict),
+                                                                   copy.deepcopy(clst_dict))
+    # Set phase ending time and display finishing phase information
+    phase_end_time = time.time()
+    phase_names.append('Import cluster interaction tensors')
+    phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
+    info.displayInfo('3','Import cluster interaction tensors',
+                phase_times[phase_times.shape[0]-1,1]-phase_times[phase_times.shape[0]-1,0])
+#
 #                                                                                End program
 # ==========================================================================================
 # Get current time and date

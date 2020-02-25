@@ -209,3 +209,27 @@ def performClustering(dirs_dict,mat_dict,rg_dict,clst_dict):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Return
     return None
+#
+#                                                                Perform compatibility check
+#                                                (loading previously computed offline stage)
+# ==========================================================================================
+# Perform a compatibility check between the clustering parameters read from the input data
+# file and the previously computed offline stage loaded data
+def checkClstCompatibility(problem_dict,rg_dict,clst_dict_read,clst_dict):
+    # Check clustering method, clustering strategy and clustering solution method
+    keys = ['clustering_method','clustering_strategy','clustering_solution_method']
+    for key in keys:
+        if clst_dict[key] != clst_dict_read[key]:
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayError('E00044',location.filename,location.lineno+1,key,
+                                                         clst_dict_read[key],clst_dict[key])
+    # Check number of clusters associated to each material phase
+    if clst_dict['phase_nclusters'] != clst_dict_read['phase_nclusters']:
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00045',location.filename,location.lineno+1,
+                             clst_dict_read['phase_nclusters'],clst_dict['phase_nclusters'])
+    # Check spatial discretization
+    elif list(clst_dict['voxels_clusters'].shape) != rg_dict['n_voxels_dims']:
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00046',location.filename,location.lineno+1,
+                          rg_dict['n_voxels_dims'],list(clst_dict['voxels_clusters'].shape))

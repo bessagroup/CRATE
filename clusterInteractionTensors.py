@@ -445,3 +445,29 @@ def discreteCITIntegralI(comp_order,cluster_filter,Gop_1_filt_vox,Gop_2_filt_vox
                         np.sum(np.multiply(cluster_filter,Gop_0_freq_filt_vox[compi+compj]))
     # Return
     return [cit_1_integral_mf,cit_2_integral_mf,cit_0_freq_integral_mf]
+#
+#                                                                Perform compatibility check
+#                                                (loading previously computed offline stage)
+# ==========================================================================================
+# Perform a compatibility check between the material phases existent in the spatial
+# discretization file and the previously computed loaded cluster interaction tensors
+def checkCITCompatibility(mat_dict,clst_dict):
+    # Get material phases
+    material_phases = mat_dict['material_phases']
+    # Check number of cluster interaction tensors
+    if len(clst_dict['cit_1'].keys()) != len(material_phases)**2 or \
+                             len(clst_dict['cit_2'].keys()) != len(material_phases)**2 or  \
+                             len(clst_dict['cit_0_freq'].keys()) != len(material_phases)**2:
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00047',location.filename,location.lineno+1,
+                                        len(clst_dict['cit_1'].keys()),len(material_phases))
+    # Check cluster interaction tensors material phase pairs
+    for mat_phase_B in material_phases:
+        for mat_phase_A in material_phases:
+            mat_phase_pair = mat_phase_A + mat_phase_B
+            if mat_phase_pair not in clst_dict['cit_1'].keys() or \
+                                       mat_phase_pair not in clst_dict['cit_2'].keys() or  \
+                                       mat_phase_pair not in clst_dict['cit_0_freq'].keys():
+                location = inspect.getframeinfo(inspect.currentframe())
+                errors.displayError('E00048',location.filename,location.lineno+1,
+                                                             mat_phase_pair,material_phases)
