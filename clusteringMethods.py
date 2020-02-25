@@ -164,7 +164,7 @@ def performClustering(dirs_dict,mat_dict,rg_dict,clst_dict):
         print('\nidx_from_python:')
         print(voxels_clusters.flatten('F'))
         matlab_dic = {'idx_from_python':voxels_clusters.flatten('F')}
-        sio.savemat(dirs_dict['input_file_dir'] + '/' + dirs_dict['input_file_name'] +
+        sio.savemat(dirs_dict['input_file_dir'] + dirs_dict['input_file_name'] +
                                                                           '_idx',matlab_dic)
     # --------------------------------------------------------------------------------------
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

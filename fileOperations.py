@@ -102,7 +102,7 @@ def rmUnrequiredDirs(target_dir,required_dirnames):
 def setInputDataFilePath(path):
     # Set input data file path, directory, name and extension
     input_file_path = path
-    input_file_dir = ntpath.dirname(input_file_path)
+    input_file_dir = ntpath.dirname(input_file_path) + '/'
     input_file_name = ntpath.splitext(ntpath.basename(input_file_path))[-2]
     input_file_ext = ntpath.splitext(ntpath.basename(input_file_path))[-1]
     # Check if the input data file has the required '.dat' extension
@@ -155,7 +155,7 @@ def setInputDataFilePath(path):
 def setProblemDirs(input_file_name,input_file_dir):
     # Set problem name, directory
     problem_name = input_file_name
-    problem_dir = input_file_dir + '/' + problem_name + '/'
+    problem_dir = input_file_dir + problem_name + '/'
     # Set offline stage and post processing subdirectories
     offline_stage_dir = problem_dir + 'Offline_Stage' + '/'
     postprocess_dir = problem_dir + 'Post_Process' + '/'
