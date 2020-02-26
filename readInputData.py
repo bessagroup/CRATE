@@ -83,23 +83,6 @@ def searchOptionalKeywordLine(file,keyword):
             isFound = True
             return [isFound,line_number]
     return [isFound,line_number]
-# ------------------------------------------------------------------------------------------
-# Find the maximum number of specified material phase properties (not being used)
-def findMaxNumberProperties(file,file_path,keyword,keyword_line_number,n_material_phases):
-    max_n_properties = 0
-    line_number = keyword_line_number + 1
-    for iphase in range(1,n_material_phases+1):
-        phase_header = linecache.getline(file_path,line_number).strip().split(' ')
-        if phase_header[0] == '':
-            location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00005',location.filename,location.lineno+1,keyword,iphase)
-        elif phase_header[0] != str(iphase) or not checkPositiveInteger(phase_header[1]):
-            location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00005',location.filename,location.lineno+1,keyword,iphase)
-        if int(phase_header[1]) > max_n_properties:
-            max_n_properties = int(phase_header[1])
-        line_number = line_number + int(phase_header[1]) + 1
-    return max_n_properties
 #
 #                                                                  Read input data functions
 # ==========================================================================================
@@ -107,8 +90,8 @@ def findMaxNumberProperties(file,file_path,keyword,keyword_line_number,n_materia
 def readInputData(input_file,dirs_dict):
     # Get input file and problem directory and path data
     input_file_path = dirs_dict['input_file_path']
-    problem_name = dirs_dict['problem_name']
     problem_dir = dirs_dict['problem_dir']
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read strain formulation
     keyword = 'Strain_Formulation'
     max = 2
@@ -507,7 +490,7 @@ def readMacroscaleLoading(file,file_path,mac_load_type,strain_formulation,n_dim,
                                                                               mac_load_type)
                     mac_load['strain'][symmetric_indexes[1,i],1] = \
                                       mac_load['strain'][symmetric_indexes[0,i],1]
-            if mac_load_type == 2:
+            elif mac_load_type == 2:
                 isEqual = np.allclose(
                           mac_load['stress'][symmetric_indexes[0,i],1],
                           mac_load['stress'][symmetric_indexes[1,i],1],atol=1e-10)

@@ -81,10 +81,12 @@ def displayError(code,*args):
                    ' material phase is not properly specified ' + '\n' + \
                    indent + 'potentially due to one of the following reasons: \n\n' + \
                    indent + '1. Missing material phase header specification;' + '\n' + \
-                   indent + '2. Material phase header specification wrong format;' + '\n' + \
+                   indent + '2. Material phase header specification wrong format;' + \
+                   '\n' + \
                    indent + '3. Material phase label must be a positive integer;' + '\n' + \
                    indent + '4. Duplicated material phase label;' + '\n' + \
-                   indent + '5. Material phase number of properties must be a positive integer;' + '\n\n' + \
+                   indent + '5. Material phase number of properties must be a positive ' + \
+                   'integer;' + '\n\n' + \
                    'Suggestion:' + '\n\n' + \
                    indent + 'The keyword - {} - should be specified p.e. as' + '\n\n' + \
                    indent + '{}' + '\n' + \
@@ -557,10 +559,7 @@ def displayWarning(code,*args):
         elif args[2] == 2:
             arguments = ['stress',]
         elif args[2] == 3:
-            if args[3] == 0:
-                arguments = ['strain',]
-            elif args[3] == 1:
-                arguments = ['stress',]
+            arguments == [args[3],]
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'A non-symmetric macroscale {} tensor was prescribed under ' + \
