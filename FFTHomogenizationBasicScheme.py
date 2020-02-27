@@ -143,7 +143,7 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
     material_properties_ref['v'] = \
                 0.5*(min([material_properties[phase]['v'] for phase in material_phases]) + \
                      max([material_properties[phase]['v'] for phase in material_phases]))
-    # Compute compliance tensor (matricial form)
+    # Compute reference material compliance tensor (matricial form)
     Se_tensor_mf_ref = np.zeros((len(comp_order),len(comp_order)))
     Se_tensor_mf_ref = \
          np.linalg.inv(getElasticityTensor(problem_type,n_dim,comp_order,\
