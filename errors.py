@@ -519,6 +519,14 @@ def displayError(code,*args):
                    indent + 'In particular, the clustering discretization of the ' + \
                    'material phase {} has been specified' + '\n' + \
                    indent + 'more than once.'
+    elif code == 'E00051':
+        arguments = [args[2],args[3]]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The elastic property - {} - of material phase {} ' + \
+                   'hasn\'t been specified in ' + '\n' + \
+                   indent + 'the input data file and is needed to compute the ' + \
+                   'associated elasticity tensor.'
     #print(template_header.format(*header,width=output_width))
     #print(template.format(*values,width=output_width))
     #print(template_footer.format(*footer,width=output_width))

@@ -59,26 +59,29 @@ def packageProblem(strain_formulation,problem_type,n_dim,comp_order_sym,comp_ord
 # ------------------------------------------------------------------------------------------
 # Package data associated to the material phases
 def packageMaterialPhases(n_material_phases,material_properties):
-    # Initialize dictionary with existent material phases in the microstructure
+    # Initialize list with existent material phases in the microstructure
     material_phases = list()
+    # Initialize dictionary with existent material phases volume fraction
+    material_phases_f = dict()
     # Initialize material phases dictionary
     mat_dict = dict()
     # Build material phases dictionary
     mat_dict['n_material_phases'] = n_material_phases
     mat_dict['material_properties'] = material_properties
     mat_dict['material_phases'] = material_phases
-
+    mat_dict['material_phases_f'] = material_phases_f
     # Return
     return mat_dict
 # ------------------------------------------------------------------------------------------
 # Package data associated to the macroscale loading
-def packageMacroscaleLoading(mac_load_type,mac_load,mac_load_typeidxs):
+def packageMacroscaleLoading(mac_load_type,mac_load,mac_load_presctype,n_load_increments):
     # Initialize macroscale loading dictionary
     macload_dict = dict()
     # Build macroscale loading dictionary
     macload_dict['mac_load_type'] = mac_load_type
     macload_dict['mac_load'] = mac_load
-    macload_dict['mac_load_typeidxs'] = mac_load_typeidxs
+    macload_dict['mac_load_presctype'] = mac_load_presctype
+    macload_dict['n_load_increments'] = n_load_increments
     # Return
     return macload_dict
 # ------------------------------------------------------------------------------------------
@@ -105,6 +108,9 @@ def packageRegularGrid(discret_file_path,rve_dims,mat_dict,problem_dict):
         location = inspect.getframeinfo(inspect.currentframe())
         errors.displayError('E00043',location.filename,location.lineno+1,idf_phases,
                                                                                   rg_phases)
+    # Set number of pixels/voxels in each dimension
+    n_voxels_dims = [regular_grid.shape[i] for i in range(len(regular_grid.shape))]
+    n_voxels = np.prod(n_voxels_dims)
     # Set material phases that are actually present in the microstructure
     material_phases = [str(x) for x in list(np.unique(regular_grid))]
     mat_dict['material_phases'] = material_phases
@@ -115,11 +121,16 @@ def packageRegularGrid(discret_file_path,rve_dims,mat_dict,problem_dict):
         idf_phases = list(np.sort([int(key) for key in material_properties.keys()]))
         rg_phases = list(np.unique(regular_grid))
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayWarning('W00002',location.filename,location.lineno+1,idf_phases,
-                                                                                  rg_phases)
-    # Set number of pixels/voxels in each dimension
-    n_voxels_dims = [regular_grid.shape[i] for i in range(len(regular_grid.shape))]
-    n_voxels = np.prod(n_voxels_dims)
+        errors.displayWarning('W00002',location.filename,location.lineno+1,idf_phases,                                                                                  rg_phases)
+    # Compute voxel volume
+    voxel_vol = np.prod([float(rve_dims[i])/n_voxels_dims[i] for i in range(len(rve_dims))])
+    # Compute RVE volume
+    rve_vol = np.prod(rve_dims)
+    # Compute volume fraction associated to each material phase existent in the
+    # microstructure
+    for phase in material_phases:
+        mat_dict['material_phases_f'][phase] = \
+                                      (np.sum(regular_grid == int(phase))*voxel_vol)/rve_vol
     # Flatten the regular grid array such that:
     #
     # 2D Problem (swipe 2-1)   - voxel(i,j) is stored in index = i*d2 + j, where d2 is the
@@ -175,6 +186,20 @@ def packageRGClustering(clustering_method,clustering_strategy,clustering_solutio
     clst_dict['clusters_f'] = clusters_f
     # Return
     return clst_dict
+# ------------------------------------------------------------------------------------------
+# Package data associated to the VTK output
+def packageAlgorithmicParameters(max_n_iterations,conv_tol,max_subincrem_level,
+                                                           su_max_n_iterations,su_conv_tol):
+    # Initialize algorithmic parameters dictionary
+    algpar_dict = dict()
+    # Build algorithmic parameters dictionary
+    algpar_dict['max_n_iterations'] = max_n_iterations
+    algpar_dict['conv_tol'] = conv_tol
+    algpar_dict['max_subincrem_level'] = max_subincrem_level
+    algpar_dict['su_max_n_iterations'] = su_max_n_iterations
+    algpar_dict['su_conv_tol'] = su_conv_tol
+    # Return
+    return algpar_dict
 # ------------------------------------------------------------------------------------------
 # Package data associated to the VTK output
 def packageVTK():

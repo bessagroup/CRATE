@@ -119,11 +119,11 @@ except FileNotFoundError as message:
     errors.displayException(location.filename,location.lineno+1,message)
 # Read input data according to analysis type
 info.displayInfo('5','Reading the input data file...')
-strain_formulation,problem_type,n_dim,comp_order_sym, comp_order_nsym,n_material_phases,\
-material_properties, mac_load_type,mac_load,mac_load_typeidxs,self_consistent_scheme, \
+strain_formulation,problem_type,n_dim,comp_order_sym,comp_order_nsym,n_material_phases,\
+material_properties, mac_load_type,mac_load,mac_load_presctype,self_consistent_scheme, \
 scs_max_n_iterations,scs_conv_tol,clustering_method,clustering_strategy, \
 clustering_solution_method,phase_n_clusters,n_load_increments,max_n_iterations,conv_tol, \
-max_subincrem_level,max_n_iterations,su_conv_tol,discret_file_path,rve_dims = \
+max_subincrem_level,su_max_n_iterations,su_conv_tol,discret_file_path,rve_dims = \
                                                      rid.readInputData(input_file,dirs_dict)
 # Close user input data file
 input_file.close()
@@ -136,7 +136,8 @@ info.displayInfo('5','Packaging material data...')
 mat_dict = packager.packageMaterialPhases(n_material_phases,material_properties)
 # Package data associated to the macroscale loading
 info.displayInfo('5','Packaging macroscale loading data...')
-macload_dict = packager.packageMacroscaleLoading(mac_load_type,mac_load,mac_load_typeidxs)
+macload_dict = packager.packageMacroscaleLoading(mac_load_type,mac_load,mac_load_presctype,
+                                                                          n_load_increments)
 # Package data associated to the spatial discretization file(s)
 info.displayInfo('5','Packaging regular grid data...')
 rg_dict = packager.packageRegularGrid(discret_file_path,rve_dims,mat_dict,
@@ -265,6 +266,23 @@ else:
     phase_names.append('Import cluster interaction tensors')
     phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
     info.displayInfo('3','Import cluster interaction tensors',
+                phase_times[phase_times.shape[0]-1,1]-phase_times[phase_times.shape[0]-1,0])
+#
+#                               Online stage: Solve discretized Lippmann-Schwinger equations
+# ==========================================================================================
+# Display starting phase information and set phase initial time
+info.displayInfo('2','Solve discretized Lippmann-Schwinger equations')
+phase_init_time = time.time()
+
+
+
+
+
+# Set phase ending time and display finishing phase information
+phase_end_time = time.time()
+phase_names.append('Solve discretized Lippmann-Schwinger equations')
+phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
+info.displayInfo('3','Solve discretized Lippmann-Schwinger equations',
                 phase_times[phase_times.shape[0]-1,1]-phase_times[phase_times.shape[0]-1,0])
 #
 #                                                                                End program

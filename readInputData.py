@@ -226,9 +226,9 @@ def readInputData(input_file,dirs_dict):
     isFound, keyword_line_number = searchOptionalKeywordLine(input_file,keyword)
     if isFound:
         max = '~'
-        max_n_iterations = readTypeAKeyword(input_file,input_file_path,keyword,max)
+        su_max_n_iterations = readTypeAKeyword(input_file,input_file_path,keyword,max)
     else:
-        max_n_iterations = 20
+        su_max_n_iterations = 20
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read material state update convergence tolerance (optional). If the associated
     # keyword is not found, then a default specification is assumed
@@ -263,7 +263,7 @@ def readInputData(input_file,dirs_dict):
             mac_load_typeidxs,self_consistent_scheme,scs_max_n_iterations,
             scs_conv_tol,clustering_method,clustering_strategy,clustering_solution_method,
             phase_n_clusters,n_load_increments,max_n_iterations,conv_tol,
-            max_subincrem_level,max_n_iterations,su_conv_tol,discret_file_path,rve_dims]
+            max_subincrem_level,su_max_n_iterations,su_conv_tol,discret_file_path,rve_dims]
 #
 # ------------------------------------------------------------------------------------------
 # Read a keyword of type A specification, characterized as follows:
@@ -534,8 +534,20 @@ def readMacroscaleLoading(file,file_path,mac_load_type,strain_formulation,n_dim,
             mac_load['strain'][i,:] = mac_load_copy['strain'][aux[comp_order_nsym[i]],:]
             mac_load['stress'][i,:] = mac_load_copy['stress'][aux[comp_order_nsym[i]],:]
             mac_load_typeidxs[i] = mac_load_typeidxs_copy[aux[comp_order_nsym[i]]]
+    # For convenience, store the prescribed macroscale strains and stresses components as
+    # the associated strings, i.e. 0 > 'strain' and 1 > 'stress', in a dictionary
+    if n_dim == 2:
+        aux = ['11','21','12','22']
+    else:
+        aux = ['11','21','31','12','22','32','13','23','33']
+    mac_load_presctype = dict()
+    for i in range(n_dim**2):
+        if mac_load_typeidxs[i] == 0:
+            mac_load_presctype[aux[i]] = 'strain'
+        else:
+            mac_load_presctype[aux[i]] = 'stress'
     # --------------------------------------------------------------------------------------
-    return mac_load, mac_load_typeidxs
+    return mac_load, mac_load_presctype
 # ------------------------------------------------------------------------------------------
 # Read the number of clusters associated to each material phase, specified as
 #
