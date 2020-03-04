@@ -12,12 +12,16 @@
 # Working with arrays
 import numpy as np
 import numpy.matlib
+# Shallow and deep copy operations
+import copy
 # Scientific computation
 import scipy.linalg
 # Tensorial operations
 import tensorOperations as top
 # Display errors, warnings and built-in exceptions
 import errors
+# Linear elastic constitutive model
+import linear_elastic
 
 
 def onlineStage():
@@ -66,7 +70,7 @@ def onlineStage():
                                                                  req_props[iprop],mat_phase)
         # Compute elasticity tensor (matricial form) for current material phase
         De_tensor_mf = np.zeros((len(comp_order),len(comp_order)))
-        De_tensor_mf = getElasticityTensor(problem_type,n_dim,comp_order,\
+        De_tensor_mf = linear_elastic.linear_elastic_ct(problem_type,n_dim,comp_order,\
                                                              material_properties[mat_phase])
         # Store material phase elasticity tensor (matricial form)
         De_tensors_mf[mat_phase] = De_tensor_mf
@@ -124,7 +128,7 @@ def onlineStage():
                                sum([material_phases_f[phase]*material_properties[phase]['v']
                                                               for phase in material_phases])
         # Compute reference material elasticity tensor (matricial form)
-        De_tensor_ref_mf = getElasticityTensor(problem_type,n_dim,comp_order,\
+        De_tensor_ref_mf = linear_elastic.linear_elastic_ct(problem_type,n_dim,comp_order,\
                                                                     material_properties_ref)
         # Compute reference material compliance tensor (matricial form)
         Se_tensor_mf_ref = np.linalg.inv(De_tensor_ref_mf)
@@ -202,10 +206,24 @@ def onlineStage():
                 #
                 #               Cluster material state update and consistent tangent modulus
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                for icluster in clusters:
-                    # Perform material state update
-
-                    # Compute consistent tangent modulus
+                # Loop over material phases
+                for mat_phase in material_phases:
+                    # Loop over material phase clusters
+                    for mat_cluster in phase_clusters[mat_phase]:
+                        # Get material cluster incremental strain
+                        # inc_strain = ...
+                        # Get material cluster last increment converged state variables
+                        state_variables_old = copy.deepcopy(clusters_state_old
+                        # Perform material cluster state update and compute associated
+                        # consistent tangent modulus
+                        state_variables,consistent_tangent = \
+                              materialInterface(problem_dict,mat_dict,mat_phase,mat_cluster,
+                                                             inc_strain,state_variables_old)
+                        # Store material cluster updated state variables and consistent
+                        # tangent modulus
+                        clusters_state[str(mat_cluster)] = state_variables
+                        clusters_consistent_tangent[str(mat_cluster)] = \
+                                                                       consistent_tangent_mf
                 #
                 #                                                   Global residual matrix 2
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -351,71 +369,6 @@ def onlineStage():
 #
 #                                                                    Complementary functions
 # ==========================================================================================
-# Compute the small strain elasticity tensor according to the problem type and material
-# constitutive model. Then store it in matricial form following Kelvin notation.
-#
-# The elasticity tensor is described as follows:
-#
-# A. Small strain:
-#
-#   A.1 Isotropic material:
-#
-#      General Hooke's Law: De = lambda*(IdyadI) + 2*miu*IIsym
-#
-#                           where | lambda, miu denote the Lamé parameters
-#                                 | I denotes the second-order identity tensor
-#                                 | IIsym denotes the fourth-order symmetric project. tensor
-#
-#      A.1.1 2D problem (plane strain) - Kelvin notation:
-#                            _                _
-#                           | 1-v   v      0   | (11)
-#          De =  E/(2*(1+v))|  v   1-v     0   | (22)
-#                           |_ 0    0   (1-2v)_| (12)
-#
-#      A.1.2 2D problem (plane stress) - Kelvin notation:
-#                           _              _
-#                          |  1   v     0   | (11)
-#          De =  E/(1-v**2)|  v   1     0   | (22)
-#                          |_ 0   0   (1-v)_| (12)
-#
-#     A.1.3 2D problem (axisymmetric) - Kelvin notation:
-#                            _                     _
-#                           | 1-v   v      0     v  | (11)
-#          De =  E/(2*(1+v))|  v   1-v     0     v  | (22)
-#                           |  0    0   (1-2v)   0  | (12)
-#                           |_ v    v      0    1-v_| (33)
-#
-#     A.1.4 3D problem - Kelvin notation:
-#                            _                                    _
-#                           | 1-v   v    v     0       0       0   | (11)
-#                           |  v   1-v   v     0       0       0   | (22)
-#          De =  E/(2*(1+v))|  v    v  1-v     0       0       0   | (33)
-#                           |  0    0    0  (1-2v)     0       0   | (12)
-#                           |  0    0    0     0    (1-2v)     0   | (23)
-#                           |_ 0    0    0     0       0    (1-2v)_| (13)
-#
-#    Note: E and v denote the Young modulus and the Poisson ratio respectively.
-#
-def getElasticityTensor(problem_type,n_dim,comp_order,properties):
-    # Get Young's Modulus and Poisson ratio
-    E = properties['E']
-    v = properties['v']
-    # Compute Lamé parameters
-    lam = (E*v)/((1.0+v)*(1.0-2.0*v))
-    miu = E/(2.0*(1.0+v))
-    # Set required fourth-order tensors
-    _,_,_,FOSym,FODiagTrace,_,_ = top.setIdentityTensors(n_dim)
-    # 2D problem (plane strain)
-    if problem_type == 1:
-        De_tensor = lam*FODiagTrace + 2.0*miu*FOSym
-        De_tensor_mf = top.setTensorMatricialForm(De_tensor,n_dim,comp_order)
-    # 3D problem
-    elif problem_type == 4:
-        De_tensor = lam*FODiagTrace + 2.0*miu*FOSym
-        De_tensor_mf = top.setTensorMatricialForm(De_tensor,n_dim,comp_order)
-    # Return
-    return De_tensor_mf
-# ------------------------------------------------------------------------------------------
 # Assemble the clustering interaction tensors into a single square matrix, sorted by
 # ascending order of material phase and by asceding order of cluster labels within each
 # material phase
