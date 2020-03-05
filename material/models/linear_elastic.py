@@ -18,7 +18,7 @@ import tensorOperations as top
 # ==========================================================================================
 # For a given increment of strain, perform the update of the material state variables and
 # compute the associated consistent tangent modulus
-def linear_elastic_suct(problem_type,n_dim,comp_order,material_properties,mat_phase,
+def suct(problem_type,n_dim,comp_order,material_properties,mat_phase,
                                                             inc_strain,state_variables_old):
     # Get material properties
     E = material_properties[mat_phase]['E']
@@ -61,12 +61,11 @@ def linear_elastic_suct(problem_type,n_dim,comp_order,material_properties,mat_ph
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Return updated state variables and consistent tangent modulus
     return [state_variables,consistent_tangent_mf]
-# ------------------------------------------------------------------------------------------
+#
 #                                                                 Consistent tangent modulus
 # ==========================================================================================
-# Compute the consistent tangent modulus (the so called elasticity tensor in the case of
-# the linear elastic constitutive model)
-def linear_elastic_ct(problem_type,n_dim,comp_order,properties):
+# Compute the consistent tangent modulus
+def ct(problem_type,n_dim,comp_order,properties):
     # Get Young's Modulus and Poisson ratio
     E = properties['E']
     v = properties['v']
@@ -86,3 +85,17 @@ def linear_elastic_ct(problem_type,n_dim,comp_order,properties):
     consistent_tangent_mf = top.setTensorMatricialForm(consistent_tangent,n_dim,comp_order)
     # Return
     return consistent_tangent_mf
+#
+#                                                               Required material properties
+#                                                                    (check input data file)
+# ==========================================================================================
+# Set the constitutive model required material properties:
+#
+# E - Young modulus
+# v - Poisson ratio
+#
+def set_required_properties():
+    # Set required material properties
+    req_material_properties = ['E','v']
+    # Return
+    return req_material_properties

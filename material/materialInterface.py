@@ -19,9 +19,9 @@ import numpy as np
 # modulus. The required material constitutive model procedures may be requested from
 # different sources:
 #
-# source = | 0 - UNNAMED program material procedures (default)
-#          | 1 - Links material procedures
-#          | 2 - Abaqus material procedures#
+# source = | 1 - UNNAMED program material procedures (default)
+#          | 2 - Links material procedures
+#          | 3 - Abaqus material procedures
 #
 def materialInterface(problem_dict,mat_dict,mat_phase,inc_strain,state_variables_old):
     # Get problem data
@@ -32,7 +32,7 @@ def materialInterface(problem_dict,mat_dict,mat_phase,inc_strain,state_variables
     material_phases = mat_dict['material_phases']
     material_properties = mat_dict['material_properties']
     material_phases_models = mat_dict['material_phases_models']
-    # Set consistutive model procedures source
+    # Set constitutive model procedures source
     model_source = material_phases_models[str(mat_phase)]['source']
     #
     #                                                    UNNAMED program material procedures
@@ -58,3 +58,20 @@ def materialInterface(problem_dict,mat_dict,mat_phase,inc_strain,state_variables
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     elif model_source == 3:
         pass
+#
+#                                                     Available material constitutive models
+#                                                                    (check input data file)
+# ==========================================================================================
+# Set the available material constitutive models from a given source
+def getAvailableConstitutiveModels(model_source):
+    if model_source == 1:
+        # UNNAMED program material constitutive models
+        available_mat_models = ['linear_elastic',]
+    elif model_source == 2:
+        # Links material constitutive models
+        pass
+    elif model_source == 3:
+        # Abaqus material constitutive models
+        pass
+    # Return
+    return available_mat_models
