@@ -13,6 +13,8 @@
 import os
 # Parse command-line options and arguments
 import sys
+# Import from string
+import importlib
 # Operations on files and directories
 import shutil
 # Working with arrays
@@ -29,6 +31,8 @@ import inspect
 import ntpath
 # Display errors, warnings and built-in exceptions
 import errors
+# Material interface
+import material.materialInterface
 #
 #                                                             Check input validity functions
 # ==========================================================================================
@@ -107,15 +111,10 @@ def readInputData(input_file,dirs_dict):
     problem_type = readTypeAKeyword(input_file,input_file_path,keyword,max)
     n_dim, comp_order_sym, comp_order_nsym = setProblemTypeParameters(problem_type)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Read number of material phases
-    keyword = 'Number_of_Material_Phases'
-    max = '~'
-    n_material_phases = readTypeAKeyword(input_file,input_file_path,keyword,max)
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Read material properties
-    keyword = 'Material_Properties'
-    material_properties = readMaterialProperties(input_file,input_file_path,keyword,
-                                                                          n_material_phases)
+    # Read number of material phases and the associated constitutive models and properties
+    keyword = 'Material_Phases'
+    n_material_phases,material_phases_models,material_properties = \
+                                  readMaterialProperties(input_file,input_file_path,keyword)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read macroscale loading
     keyword = 'Macroscale_Loading'
@@ -304,32 +303,50 @@ def readTypeBKeyword(file,file_path,keyword):
         errors.displayError('E00004',location.filename,location.lineno+1,keyword)
     return float(line[0])
 # ------------------------------------------------------------------------------------------
-# Read the material properties of the general heterogeneous material specified as follows:
+# Read the number of material phases and associated properties of the general heterogeneous
+# material specified as follows:
 #
-# Material_Properties
-# < phase_id > < number of properties >
+# Material_Phases < n_material_phases >
+# < phase_id > < model_name > < n_properties > [ < model_source > ]
 # < property1_name > < value >
 # < property2_name > < value >
-# < phase_id > < number of properties >
+# < phase_id > < model_name > < n_properties > [ < model_source > ]
 # < property1_name > < value >
+# < property2_name > < value >
 # ...
 #
-# and store it in a dictionary as
-#                                      _                       _
-#                                     |'property1_name' , value |
-#            dictionary['phase_id'] = |'property2_name' , value |
-#                                     |_     ...        ,  ... _|
+# Store the material phases properties in a dictionary as
 #
-def readMaterialProperties(file,file_path,keyword,n_material_phases):
+#    dictionary['phase_id'] = {'property1_name': value, 'property2_name': value, ...}
+#
+# and the material phases constitutive models in a dictionary as
+#
+#    dictionary['phase_id'] = {'name': model_name, 'source': model_source,
+#                              'suct_function': suct_function()}
+#
+def readMaterialProperties(file,file_path,keyword):
     keyword_line_number = searchKeywordLine(file,keyword)
+    line = linecache.getline(file_path,keyword_line_number).strip().split(' ')
+    if len(line) == 1:
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00052',location.filename,location.lineno+1,keyword)
+    elif not checkPositiveInteger(line[1]):
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00052',location.filename,location.lineno+1,keyword)
+    # Set number of material phases
+    n_material_phases = int(line[1])
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Initialize material phases properties and constitutive models dictionaries
     material_properties = dict()
+    material_phases_models = dict()
+    # Loop over material phases
     line_number = keyword_line_number + 1
     for i in range(n_material_phases):
         phase_header = linecache.getline(file_path,line_number).strip().split(' ')
         if phase_header[0] == '':
             location = inspect.getframeinfo(inspect.currentframe())
             errors.displayError('E00005',location.filename,location.lineno+1,keyword,i+1)
-        elif len(phase_header) != 2:
+        elif len(phase_header) not in [3,4]:
             location = inspect.getframeinfo(inspect.currentframe())
             errors.displayError('E00005',location.filename,location.lineno+1,keyword,i+1)
         elif not checkPositiveInteger(phase_header[0]):
@@ -338,40 +355,105 @@ def readMaterialProperties(file,file_path,keyword,n_material_phases):
         elif phase_header[0] in material_properties.keys():
             location = inspect.getframeinfo(inspect.currentframe())
             errors.displayError('E00005',location.filename,location.lineno+1,keyword,i+1)
-        elif not checkPositiveInteger(phase_header[1]):
+        # Set material phase
+        mat_phase = str(phase_header[0])
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set material phase constitutive model source
+        material_phases_models[mat_phase] = dict()
+        if len(phase_header) == 3:
+            # If the material phase constitutive model source has not been specified, then
+            # assume UNNAMED material procedures by default
+            model_source = 1
+            material_phases_models[mat_phase]['source'] = model_source
+        elif len(phase_header) == 4:
+            # Set constitutive model source
+            if not checkPositiveInteger(phase_header[3]):
+                location = inspect.getframeinfo(inspect.currentframe())
+                errors.displayError('E00053',location.filename,location.lineno+1,keyword,
+                                                                                  mat_phase)
+            elif int(phase_header[3]) not in [1,2,3]:
+                location = inspect.getframeinfo(inspect.currentframe())
+                errors.displayError('E00053',location.filename,location.lineno+1,keyword,
+                                                                                  mat_phase)
+            model_source = int(phase_header[3])
+            material_phases_models[mat_phase]['source'] = model_source
+            # Model sources 2 and 3 are not implemented yet...
+            if model_source in [2,3]:
+                location = inspect.getframeinfo(inspect.currentframe())
+                errors.displayError('E00054',location.filename,location.lineno+1,mat_phase)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set material phase constitutive model and associated procedures
+        if model_source == 1:
+            available_mat_models = \
+                     material.materialInterface.getAvailableConstitutiveModels(model_source)
+        if phase_header[1].lower() not in available_mat_models:
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayError('E00055',location.filename,location.lineno+1,mat_phase,
+                                                                               model_source)
+        model_name = phase_header[1]
+        material_phases_models[mat_phase]['name'] = model_name
+        if model_source == 1:
+            model_module = importlib.import_module('material.models.' + str(model_name))
+            if hasattr(model_module,'suct'):
+                material_phases_models[mat_phase]['suct_function'] = \
+                                                                getattr(model_module,'suct')
+            else:
+                location = inspect.getframeinfo(inspect.currentframe())
+                errors.displayError('E00056',location.filename,location.lineno+1,model_name)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set material phase constitutive model number of material properties
+        if model_source == 1:
+            if hasattr(model_module,'set_required_properties'):
+                set_required_properties = getattr(model_module,'set_required_properties')
+                required_properties = set_required_properties()
+                n_required_properties = len(required_properties)
+            else:
+                location = inspect.getframeinfo(inspect.currentframe())
+                errors.displayError('E00057',location.filename,location.lineno+1,keyword,
+                                                                                        i+1)
+        if not checkPositiveInteger(phase_header[2]):
             location = inspect.getframeinfo(inspect.currentframe())
             errors.displayError('E00005',location.filename,location.lineno+1,keyword,i+1)
-        mat_phase = str(phase_header[0])
-        n_properties = int(phase_header[1])
+        elif int(phase_header[2]) != n_required_properties:
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayError('E00058',location.filename,location.lineno+1,
+                                       int(phase_header[2]),mat_phase,n_required_properties)
+        n_properties = int(phase_header[2])
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set material phase properties
         material_properties[mat_phase] = dict()
-        for iproperty in range(n_properties):
-            property_line = linecache.getline(file_path,
-                                                 line_number+iproperty+1).strip().split(' ')
+        for j in range(n_properties):
+            property_line = linecache.getline(file_path,line_number+j+1).strip().split(' ')
             if property_line[0] == '':
                 location = inspect.getframeinfo(inspect.currentframe())
                 errors.displayError('E00006',location.filename,location.lineno+1,
-                                                              keyword,iproperty+1,mat_phase)
+                                                              keyword,j+1,mat_phase)
             elif len(property_line) != 2:
                 location = inspect.getframeinfo(inspect.currentframe())
                 errors.displayError('E00006',location.filename,location.lineno+1,
-                                                              keyword,iproperty+1,mat_phase)
+                                                              keyword,j+1,mat_phase)
             elif not checkValidName(property_line[0]):
                 location = inspect.getframeinfo(inspect.currentframe())
                 errors.displayError('E00006',location.filename,location.lineno+1,
-                                                              keyword,iproperty+1,mat_phase)
-            elif not checkNumber(property_line[1]):
+                                                              keyword,j+1,mat_phase)
+            elif property_line[0] not in required_properties:
                 location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayError('E00006',location.filename,location.lineno+1,
-                                                              keyword,iproperty+1,mat_phase)
+                errors.displayError('E00059',location.filename,location.lineno+1,
+                                                                 property_line[0],mat_phase)
             elif property_line[0] in material_properties[mat_phase].keys():
                 location = inspect.getframeinfo(inspect.currentframe())
                 errors.displayError('E00006',location.filename,location.lineno+1,
-                                                              keyword,iproperty+1,mat_phase)
+                keyword,j+1,mat_phase)
+            elif not checkNumber(property_line[1]):
+                location = inspect.getframeinfo(inspect.currentframe())
+                errors.displayError('E00006',location.filename,location.lineno+1,
+                                                              keyword,j+1,mat_phase)
             prop_name = str(property_line[0])
             prop_value = float(property_line[1])
             material_properties[mat_phase][prop_name] = prop_value
         line_number = line_number + n_properties + 1
-    return material_properties
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    return [n_material_phases,material_phases_models,material_properties]
 # ------------------------------------------------------------------------------------------
 # Read the macroscale loading conditions, specified as
 #
@@ -427,6 +509,7 @@ def readMacroscaleLoading(file,file_path,mac_load_type,strain_formulation,n_dim,
         mac_load['strain'] = np.full((n_dim**2,2),'ND',dtype=object)
         mac_load['stress'] = np.full((n_dim**2,2),'ND',dtype=object)
         presc_keyword = 'Mixed_Prescription_Index'
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     for load_keyword in loading_keywords:
         load_keyword_line_number = searchKeywordLine(file,load_keyword)
         for icomponent in range(n_dim**2):
@@ -454,6 +537,7 @@ def readMacroscaleLoading(file,file_path,mac_load_type,strain_formulation,n_dim,
             elif load_keyword == 'Macroscale_Stress':
                 mac_load['stress'][icomponent,0] = component_line[0]
                 mac_load['stress'][icomponent,1] = float(component_line[1])
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     if mac_load_type == 3:
         mac_load_typeidxs = np.zeros((n_dim**2),dtype=int)
         presc_keyword_line_number = searchKeywordLine(file,presc_keyword)
@@ -472,7 +556,7 @@ def readMacroscaleLoading(file,file_path,mac_load_type,strain_formulation,n_dim,
         else:
             mac_load_typeidxs = np.array([int(presc_line[i]) \
                                                            for i in range(len(presc_line))])
-    # --------------------------------------------------------------------------------------
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Check small strain formulation symmetry
     if strain_formulation == 1:
         if n_dim**2 == 4:
@@ -516,7 +600,7 @@ def readMacroscaleLoading(file,file_path,mac_load_type,strain_formulation,n_dim,
                                                                           mac_load_type,key)
                     mac_load[key][symmetric_indexes[1,i],1] = \
                                                      mac_load[key][symmetric_indexes[0,i],1]
-    # --------------------------------------------------------------------------------------
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Order macroscale strain and stress tensors according to the defined problem
     # nonsymmetric component order
     if n_dim == 2:
@@ -534,6 +618,7 @@ def readMacroscaleLoading(file,file_path,mac_load_type,strain_formulation,n_dim,
             mac_load['strain'][i,:] = mac_load_copy['strain'][aux[comp_order_nsym[i]],:]
             mac_load['stress'][i,:] = mac_load_copy['stress'][aux[comp_order_nsym[i]],:]
             mac_load_typeidxs[i] = mac_load_typeidxs_copy[aux[comp_order_nsym[i]]]
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # For convenience, store the prescribed macroscale strains and stresses components as
     # the associated strings, i.e. 0 > 'strain' and 1 > 'stress', in a dictionary
     if n_dim == 2:
@@ -546,7 +631,7 @@ def readMacroscaleLoading(file,file_path,mac_load_type,strain_formulation,n_dim,
             mac_load_presctype[aux[i]] = 'strain'
         else:
             mac_load_presctype[aux[i]] = 'stress'
-    # --------------------------------------------------------------------------------------
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return mac_load, mac_load_presctype
 # ------------------------------------------------------------------------------------------
 # Read the number of clusters associated to each material phase, specified as

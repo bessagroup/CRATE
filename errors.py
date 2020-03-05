@@ -89,17 +89,17 @@ def displayError(code,*args):
                    'integer;' + '\n\n' + \
                    'Suggestion:' + '\n\n' + \
                    indent + 'The keyword - {} - should be specified p.e. as' + '\n\n' + \
-                   indent + '{}' + '\n' + \
-                   indent + '1 2' + '\n' + \
+                   indent + '{}' + ' < n_material_phases >' + '\n' + \
+                   indent + '2 model1_name 2 [ < model_source > ]' + '\n' + \
                    indent + 'property1_name < value >' + '\n' + \
                    indent + 'property2_name < value >' + \
                    '\n' + \
-                   indent + '2 3' + '\n' + \
+                   indent + '5 model1_name 3' + '\n' + \
                    indent + 'property1_name < value >' + \
                    '\n' + \
                    indent + 'property2_name < value >' + \
                    '\n' + \
-                   indent + 'property3_name < value >' + '\n'
+                   indent + 'property3_name < value >'
     elif code == 'E00006':
         suffix = getOrdinalNumber(args[3])
         arguments = info.convertIterableToList(args[2:5]) + \
@@ -121,17 +121,17 @@ def displayError(code,*args):
                    'floating-point number);' + '\n\n' + \
                    'Suggestion:' + '\n\n' + \
                    indent + 'The keyword - {} - should be specified p.e. as' + '\n\n' + \
-                   indent + '{}' + '\n' + \
-                   indent + '1 2' + '\n' + \
+                   indent + '{}' + ' < n_material_phases >' + '\n' + \
+                   indent + '2 model1_name 2 [ < model_source > ]' + '\n' + \
                    indent + 'property1_name < value >' + '\n' + \
                    indent + 'property2_name < value >' + \
                    '\n' + \
-                   indent + '2 3' + '\n' + \
+                   indent + '5 model1_name 3' + '\n' + \
                    indent + 'property1_name < value >' + \
                    '\n' + \
                    indent + 'property2_name < value >' + \
                    '\n' + \
-                   indent + 'property3_name < value >' + '\n'
+                   indent + 'property3_name < value >'
     elif code == 'E00007':
         arguments = info.convertIterableToList(3*(args[2],))
         values = tuple(arguments)
@@ -527,6 +527,80 @@ def displayError(code,*args):
                    'hasn\'t been specified in ' + '\n' + \
                    indent + 'the input data file and is needed to compute the ' + \
                    'associated elasticity tensor.'
+    elif code == 'E00052':
+        arguments = 3*[args[2],]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
+                   'input data file.' + '\n' + \
+                   indent + 'In particular, the number of material phases ' + \
+                   'specification is missing or is not a' + '\n' + \
+                   indent + 'positive integer.' + '\n\n' + \
+                   'Suggestion:' + '\n\n' + \
+                   indent + 'The keyword - {} - should be specified p.e. as' + '\n\n' + \
+                   indent + '{}' + ' < n_material_phases >' + '\n' + \
+                   indent + '2 model1_name 2 [ < model_source > ]' + '\n' + \
+                   indent + 'property1_name < value >' + '\n' + \
+                   indent + 'property2_name < value >' + \
+                   '\n' + \
+                   indent + '5 model1_name 3' + '\n' + \
+                   indent + 'property1_name < value >' + \
+                   '\n' + \
+                   indent + 'property2_name < value >' + \
+                   '\n' + \
+                   indent + 'property3_name < value >'
+    elif code == 'E00053':
+        arguments = args[2:4]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
+                   'input data file\n' + \
+                   indent + 'In particular, the constitutive model source of the ' + \
+                   'material phase {} is not available' + '\n' + \
+                   indent + 'or has not been specified as a positive integer.'
+    elif code == 'E00054':
+        arguments = [args[2],]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The constitutive model source of the material phase {} ' + \
+                   'hasn\'t been implemented yet!'
+    elif code == 'E00055':
+        arguments = args[2:4]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The constitutive model of the material phase {} is not ' + \
+                   'available in the constitutive' + '\n' + \
+                   indent + 'model source {}.'
+    elif code == 'E00056':
+        arguments = [args[2],]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The suct() function required to perform the state ' + \
+                   'update and compute the consistent' + '\n' + \
+                   indent + 'tangent modulus of the constitutive model \'{}\' is ' + \
+                   'not defined.'
+    elif code == 'E00057':
+        arguments = [args[2],]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The set_required_properties() function required to set ' + \
+                   'the required material properties' + '\n' + \
+                   indent + 'of the constitutive model {} is not defined.'
+    elif code == 'E00058':
+        arguments = args[2:5]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The specified number of material properties ({}) for the ' + \
+                   'material phase {} does not' + '\n' + \
+                   indent + 'match the required number of properties of the associated ' + \
+                   'constitutive model ({}).'
+    elif code == 'E00059':
+        arguments = args[2:4]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The specified property \'{}\' for the material phase {} ' + \
+                   'does not belong to the required' + '\n' + \
+                   indent + 'properties of the associated constitutive model.'
     #print(template_header.format(*header,width=output_width))
     #print(template.format(*values,width=output_width))
     #print(template_footer.format(*footer,width=output_width))
