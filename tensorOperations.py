@@ -26,6 +26,7 @@ dyad22 = lambda A2,B2 : np.einsum('ij,kl -> ijkl',A2,B2)
 dot21_1 = lambda A2,B1 : np.einsum('ij,j -> i',A2,B1)
 dot12_1 = lambda A1,B2 : np.einsum('i,ij -> j',A1,B2)
 # Tensorial double contractions
+ddot22_1 = lambda A2,B2 : np.einsum('ij,ij',A2,B2)
 ddot44_1 = lambda A4,B4 : np.einsum('ijmn,mnkl -> ijkl',A4,B4)
 #
 #                                                                                  Operators

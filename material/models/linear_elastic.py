@@ -24,7 +24,7 @@ def suct(problem_type,n_dim,comp_order,material_properties,mat_phase,
     E = material_properties[mat_phase]['E']
     v = material_properties[mat_phase]['v']
     # Get last increment converged state variables
-    e_strain_mf_old = state_variables_old['e_strain_mf']
+    e_strain_old_mf = state_variables_old['e_strain_mf']
     #
     #                                                             Consistent tangent modulus
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -48,13 +48,14 @@ def suct(problem_type,n_dim,comp_order,material_properties,mat_phase,
     # Build incremental strain matricial form
     inc_strain_mf = top.setTensorMatricialForm(inc_strain,n_dim,comp_order)
     # Update elastic strain
-    e_strain_mf = e_strain_mf_old + inc_strain_mf
+    e_strain_mf = e_strain_old_mf + inc_strain_mf
     # Update stress
     stress_mf = np.matmul(De_tensor_mf,e_strain_mf)
     # Set state update fail flag
     is_su_fail = False
     # Store updated state variables in matricial form
     state_variables['e_strain_mf'] = e_strain_mf
+    state_variables['strain_mf'] = e_strain_mf
     state_variables['stress_mf'] = stress_mf
     state_variables['is_su_fail'] = is_su_fail
     #
