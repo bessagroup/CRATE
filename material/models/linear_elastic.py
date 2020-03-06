@@ -14,12 +14,43 @@ import numpy as np
 # Tensorial operations
 import tensorOperations as top
 #
+#
+#                                                                             Initialization
+# ==========================================================================================
+# Define material constitutive model state variables and build an initialized state
+# variables dictionary
+#
+# List of constitutive model state variables:
+#
+#   e_strain_mf | Elastic strain tensor (matricial form)
+#   strain_mf   | Total strain tensor (matricial form)
+#   is_su_fail  | State update failure flag
+#
+def init(problem_dict):
+    # Get problem data
+    n_dim = problem_dict['n_dim']
+    comp_order = problem_dict['comp_order_sym']
+    # Define constitutive model state variables (names and initialization)
+    state_variables_init = dict()
+    state_variables_init['e_strain_mf'] = \
+                          top.setTensorMatricialForm(np.zeros(n_dim,n_dim),n_dim,comp_order)
+    state_variables_init['strain_mf'] = \
+                          top.setTensorMatricialForm(np.zeros(n_dim,n_dim),n_dim,comp_order)
+    state_variables_init['stress_mf'] = \
+                          top.setTensorMatricialForm(np.zeros(n_dim,n_dim),n_dim,comp_order)
+    state_variables_init['stress_mf'] = False
+    # Return initialized state variables dictionary
+    return state_variables_init
+#
 #                                                State update and consistent tangent modulus
 # ==========================================================================================
 # For a given increment of strain, perform the update of the material state variables and
 # compute the associated consistent tangent modulus
-def suct(problem_type,n_dim,comp_order,material_properties,mat_phase,
-                                                            inc_strain,state_variables_old):
+def suct(problem_dict,material_properties,mat_phase,inc_strain,state_variables_old):
+    # Get problem data
+    problem_type = problem_dict['problem_type']
+    n_dim = problem_dict['n_dim']
+    comp_order = problem_dict['comp_order_sym']
     # Get material properties
     E = material_properties[mat_phase]['E']
     v = material_properties[mat_phase]['v']
@@ -34,11 +65,8 @@ def suct(problem_type,n_dim,comp_order,material_properties,mat_phase,
     # Set required fourth-order tensors
     _,_,_,FOSym,FODiagTrace,_,_ = top.setIdentityTensors(n_dim)
     # Compute consistent tangent modulus according to problem type
-    if problem_type == 1:
-        # 2D problem (plane strain)
-        consistent_tangent = lam*FODiagTrace + 2.0*miu*FOSym
-    elif problem_type == 4:
-        # 3D problem
+    if problem_type in [1,4]:
+        # 2D problem (plane strain) / 3D problem
         consistent_tangent = lam*FODiagTrace + 2.0*miu*FOSym
     # Build consistent tangent modulus matricial form
     consistent_tangent_mf = top.setTensorMatricialForm(consistent_tangent,n_dim,comp_order)
@@ -53,6 +81,8 @@ def suct(problem_type,n_dim,comp_order,material_properties,mat_phase,
     stress_mf = np.matmul(De_tensor_mf,e_strain_mf)
     # Set state update fail flag
     is_su_fail = False
+    # Initialize state variables dictionary
+    state_variables = init(problem_dict)
     # Store updated state variables in matricial form
     state_variables['e_strain_mf'] = e_strain_mf
     state_variables['strain_mf'] = e_strain_mf
@@ -66,7 +96,11 @@ def suct(problem_type,n_dim,comp_order,material_properties,mat_phase,
 #                                                                 Consistent tangent modulus
 # ==========================================================================================
 # Compute the consistent tangent modulus
-def ct(problem_type,n_dim,comp_order,properties):
+def ct(problem_dict,properties):
+    # Get problem data
+    problem_type = problem_dict['problem_type']
+    n_dim = problem_dict['n_dim']
+    comp_order = problem_dict['comp_order_sym']
     # Get Young's Modulus and Poisson ratio
     E = properties['E']
     v = properties['v']
@@ -76,11 +110,8 @@ def ct(problem_type,n_dim,comp_order,properties):
     # Set required fourth-order tensors
     _,_,_,FOSym,FODiagTrace,_,_ = top.setIdentityTensors(n_dim)
     # Compute consistent tangent modulus according to problem type
-    if problem_type == 1:
-        # 2D problem (plane strain)
-        consistent_tangent = lam*FODiagTrace + 2.0*miu*FOSym
-    elif problem_type == 4:
-        # 3D problem
+    if problem_type in [1,4]:
+        # 2D problem (plane strain) / 3D problem
         consistent_tangent = lam*FODiagTrace + 2.0*miu*FOSym
     # Build consistent tangent modulus matricial form
     consistent_tangent_mf = top.setTensorMatricialForm(consistent_tangent,n_dim,comp_order)
@@ -90,12 +121,14 @@ def ct(problem_type,n_dim,comp_order,properties):
 #                                                               Required material properties
 #                                                                    (check input data file)
 # ==========================================================================================
-# Set the constitutive model required material properties:
+# Set the constitutive model required material properties
+#
+# Material properties meaning:
 #
 # E - Young modulus
 # v - Poisson ratio
 #
-def set_required_properties():
+def setRequiredProperties():
     # Set required material properties
     req_material_properties = ['E','v']
     # Return

@@ -14,22 +14,28 @@ import numpy as np
 #
 #                                                                         Material Interface
 # ==========================================================================================
-# For a given material cluster subjected to a given increment of strain, perform the update
-# of the associated material state variables and compute the associated consistent tangent
-# modulus. The required material constitutive model procedures may be requested from
-# different sources:
+# Perform the required constitutive model procedures:
 #
-# source = | 1 - UNNAMED program material procedures (default)
-#          | 2 - Links material procedures
-#          | 3 - Abaqus material procedures
+#   1. Initialization
+#   --------------------------------------
+#   Define material constitutive model state variables and build an initialized state
+#   variables dictionary
 #
-def materialInterface(problem_dict,mat_dict,mat_phase,inc_strain,state_variables_old):
+#   2. State update and consistent tangent
+#   --------------------------------------
+#   For a given material state subjected to a given increment of strain, perform the update
+#   of the associated material state variables and compute the associated consistent tangent
+#   modulus.
+#
+# Note: The required constitutive model procedures are requested from the source specified
+#       for the associated material phase in the input data file
+#
+def materialInterface(procedure,problem_dict,mat_dict,mat_phase,*args):
     # Get problem data
     n_dim = problem_dict['n_dim']
     comp_order = problem_dict['comp_order_sym']
     problem_type = problem_dict['problem_type']
     # Get material data
-    material_phases = mat_dict['material_phases']
     material_properties = mat_dict['material_properties']
     material_phases_models = mat_dict['material_phases_models']
     # Set constitutive model procedures source
@@ -38,16 +44,29 @@ def materialInterface(problem_dict,mat_dict,mat_phase,inc_strain,state_variables
     #                                                    UNNAMED program material procedures
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     if model_source == 1:
-        # Set required arguments to perform the state update procedure and to compute the
-        # consistent tangent modulus
-        suct_args = (problem_type,n_dim,comp_order,material_properties,mat_phase,
-                                                             inc_strain,state_variables_old)
-        # Call constitutive model function to perform the state update procedure and to
-        # compute the consistent tangent modulus
-        state_variables,consistent_tangent_mf = \
-                          material_phases_models[str(mat_phase)]['suct_function'](suct_args)
-        # Return updated state variables and consistent tangent modulus
-        return [state_variables,consistent_tangent_mf]
+        #                                                                     Initialization
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        if procedure = 'init':
+            # Call constitutive model function to perform initialization procedure
+            state_variables = material_phases_models[str(mat_phase)]['init'](problem_dict)
+            # Return initialized state variables dictionary
+            return state_variables
+        #
+        #                                                State update and Consistent tangent
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        elif procedure = 'suct':
+            # Set required arguments to perform the state update procedure and to compute
+            # the consistent tangent modulus
+            inc_strain = args[0]
+            state_variables_old = args[1]
+            suct_args = \
+                 (problem_dict,material_properties,mat_phase,inc_strain,state_variables_old)
+            # Call constitutive model function to perform the state update procedure and to
+            # compute the consistent tangent modulus
+            state_variables,consistent_tangent_mf = \
+                                   material_phases_models[str(mat_phase)]['suct'](suct_args)
+            # Return updated state variables and consistent tangent modulus
+            return [state_variables,consistent_tangent_mf]
     #
     #                                                              Links material procedures
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

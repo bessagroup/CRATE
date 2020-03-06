@@ -187,7 +187,18 @@ def packageRGClustering(clustering_method,clustering_strategy,clustering_solutio
     # Return
     return clst_dict
 # ------------------------------------------------------------------------------------------
-# Package data associated to the VTK output
+# Package data associated to the self-consistent scheme
+def packageSCS(self_consistent_scheme,scs_max_n_iterations,scs_conv_tol):
+    # Initialize self-consistent scheme dictionary
+    scs_dict = dict()
+    # Build self-consistent scheme dictionary
+    scs_dict['self_consistent_scheme'] = self_consistent_scheme
+    scs_dict['scs_max_n_iterations'] = scs_max_n_iterations
+    scs_dict['scs_conv_tol'] = scs_conv_tol
+    # Return
+    return scs_dict
+# ------------------------------------------------------------------------------------------
+# Package data associated to algorithmic parameters related to the solution procedure
 def packageAlgorithmicParameters(max_n_iterations,conv_tol,max_subincrem_level,
                                                            su_max_n_iterations,su_conv_tol):
     # Initialize algorithmic parameters dictionary

@@ -150,6 +150,9 @@ if is_same_offstage:
     # Save copy of clustering dictionary for compatibility check procedure (loading
     # previously computed offline stage)
     clst_dict_read = copy.deepcopy(clst_dict)
+# Package data associated to the self-consistent scheme
+info.displayInfo('5','Packaging self-consistent scheme data...')
+scs_dict = packager.packageSCS(self_consistent_scheme,scs_max_n_iterations,scs_conv_tol)
 # Package data associated to the VTK output
 info.displayInfo('5','Packaging VTK output data...')
 vtk_dict = packager.packageVTK()

@@ -47,9 +47,28 @@ def onlineStage():
     mac_load = macload_dict['mac_load']
     mac_load_presctype = macload_dict['mac_load_presctype']
     n_load_increments = macload_dict['n_load_increments']
+    # Get self-consistent scheme data
+    self_consistent_scheme = scs_dict['self_consistent_scheme']
+    scs_max_n_iterations = scs_dict['scs_max_n_iterations']
+    scs_conv_tol = scs_dict['scs_conv_tol']
     # Get algorithmic parameters
     max_n_iterations = algpar_dict['max_n_iterations']
     conv_tol = algpar_dict['conv_tol']
+    #
+    #                                                                        Initializations
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Initialize clusters state variables dictionaries
+    clusters_state = dict()
+    clusters_state_old = dict()
+    # Initialize clusters state variables
+    for mat_phase in material_phases:
+        # Loop over material phase clusters
+        for cluster in phase_clusters[mat_phase]:
+            # Initialize state variables
+            clusters_state_old[str(cluster)] = \
+                                       materialInterface('init',copy.deepcopy(problem_dict),
+                                                          copy.deepcopy(mat_dict),mat_phase)
+    #
     #
     #                                                                       Identity tensors
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -66,8 +85,8 @@ def onlineStage():
     for mat_phase in material_phases:
         for cluster in phase_clusters[mat_phase]:
             # Compute elastic tangent
-            consistent_tangent_mf = linear_elastic.ct(problem_type,n_dim,comp_order,\
-                                                             material_properties[mat_phase])
+            consistent_tangent_mf = \
+               linear_elastic.ct(copy.deepcopy(problem_dict),material_properties[mat_phase])
             # Store material cluster elastic tangent
             clusters_De_mf[cluster] = consistent_tangent_mf
     #
@@ -111,7 +130,7 @@ def onlineStage():
                                sum([material_phases_f[phase]*material_properties[phase]['v']
                                                               for phase in material_phases])
     # Compute reference material elastic tangent (matricial form)
-    De_ref_mf = linear_elastic.ct(problem_type,n_dim,comp_order,material_properties_ref)
+    De_ref_mf = linear_elastic.ct(copy.deepcopy(problem_dict),material_properties_ref)
     # Compute reference material compliance tensor (matricial form)
     Se_ref_mf = np.linalg.inv(De_ref_mf)
     # Store reference material compliance tensor in a matrix similar to matricial form
@@ -218,10 +237,11 @@ def onlineStage():
                         inc_strain = \
                                   top.getTensorFromMatricialForm(tensor_mf,n_dim,comp_order)
                         # Get material cluster last increment converged state variables
-                        state_variables_old = copy.deepcopy(clusters_state_old)
+                        state_variables_old = \
+                                             copy.deepcopy(clusters_state_old[str(cluster)])
                         # Perform material cluster state update and compute associated
                         # consistent tangent modulus
-                        state_variables,consistent_tangent = \
+                        state_variables,consistent_tangent_mf = \
                                   materialInterface(problem_dict,mat_dict,mat_phase,cluster,
                                                              inc_strain,state_variables_old)
                         # Store material cluster updated state variables and consistent
@@ -406,34 +426,36 @@ def onlineStage():
             inc_mix_stress_mf[presc_strain_idxs] = inc_hom_stress_mf[presc_strain_idxs]
             #
             #                                                         Self-consistent scheme
-            #                                                             (regression-based)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Initialize self-consistent scheme system of linear equations coefficient
-            # matrix and right-hand side
-            scs_matrix = np.zeros((2,2))
-            scs_rhs = np.zeros(2)
-            # Get incremental macroscopic (prescribed) / homogenized (computed) strain and
-            # stress tensors
-            inc_mix_strain = top.getTensorFromMatricialForm(inc_mix_strain_mf,n_dim,
+            # Regression-based self-consistent scheme
+            if self_consistent_scheme == 1:
+                # Initialize self-consistent scheme system of linear equations coefficient
+                # matrix and right-hand side
+                scs_matrix = np.zeros((2,2))
+                scs_rhs = np.zeros(2)
+                # Get incremental macroscopic (prescribed) / homogenized (computed) strain
+                # and stress tensors
+                inc_mix_strain = top.getTensorFromMatricialForm(inc_mix_strain_mf,n_dim,
                                                                                  comp_order)
-            inc_mix_stress = top.getTensorFromMatricialForm(inc_mix_stress_mf,n_dim,
+                inc_mix_stress = top.getTensorFromMatricialForm(inc_mix_stress_mf,n_dim,
                                                                                  comp_order)
-            # Compute self-consistent scheme system of linear equations right-hand side
-            scs_rhs[0] = np.trace(inc_mix_stress)
-            scs_rhs[1] = top.ddot22_1(inc_mix_stress,inc_mix_strain)
-            # Compute self-consistent scheme system of linear equations coefficient matrix
-            scs_matrix[0,0] = np.trace(inc_mix_strain)*np.trace(SOId)
-            scs_matrix[0,1] = 2.0*np.trace(inc_mix_strain)
-            scs_matrix[1,0] = np.trace(inc_mix_strain)**2
-            scs_matrix[1,1] = 2.0*top.ddot22_1(inc_mix_strain,inc_mix_strain)
-            # Solve self-consistent scheme system of linear equations
-            scs_solution = numpy.linalg.solve(Jacobian,-residual)
-            # Get reference material Lamé parameters
-            lam_ref = scs_solution[0]
-            miu_ref = scs_solution[1]
-            # Compute reference material Young modulus and Poisson ratio
-            E_ref = (miu_ref*(3.0*lam_ref + 2.0*miu_ref))/(lam_ref + miu_ref)
-            v_ref = lam_ref/(2.0*(lam_ref + miu_ref))
+                # Compute self-consistent scheme system of linear equations right-hand side
+                scs_rhs[0] = np.trace(inc_mix_stress)
+                scs_rhs[1] = top.ddot22_1(inc_mix_stress,inc_mix_strain)
+                # Compute self-consistent scheme system of linear equations coefficient
+                # matrix
+                scs_matrix[0,0] = np.trace(inc_mix_strain)*np.trace(SOId)
+                scs_matrix[0,1] = 2.0*np.trace(inc_mix_strain)
+                scs_matrix[1,0] = np.trace(inc_mix_strain)**2
+                scs_matrix[1,1] = 2.0*top.ddot22_1(inc_mix_strain,inc_mix_strain)
+                # Solve self-consistent scheme system of linear equations
+                scs_solution = numpy.linalg.solve(Jacobian,-residual)
+                # Get reference material Lamé parameters
+                lam_ref = scs_solution[0]
+                miu_ref = scs_solution[1]
+                # Compute reference material Young modulus and Poisson ratio
+                E_ref = (miu_ref*(3.0*lam_ref + 2.0*miu_ref))/(lam_ref + miu_ref)
+                v_ref = lam_ref/(2.0*(lam_ref + miu_ref))
             # Compute iterative variation of the reference material Young modulus and
             # Poisson ratio (convergence evaluation purpose only)
             d_E_ref = E_ref - material_properties_ref['E']
@@ -459,7 +481,7 @@ def onlineStage():
             #                                             Reference material elastic tangent
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Compute reference material elastic tangent (matricial form)
-            De_ref_mf = linear_elastic.ct(problem_type,n_dim,comp_order, \
+            De_ref_mf = linear_elastic.ct(copy.deepcopy(problem_type),n_dim,comp_order, \
                                                                     material_properties_ref)
             # Compute reference material compliance tensor (matricial form)
             Se_ref_mf = np.linalg.inv(De_ref_mf)
@@ -482,14 +504,17 @@ def onlineStage():
         #                                                                 Increment VTK file
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+        #                                                                 switch
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
         #
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Increment increment counter
-        inc = inc + 1
-        # Last increment?
-
-
-
+        # Return if the last macroscale loading increment was completed successfuly,
+        # otherwise increment the increment counter
+        if inc == n_load_increments:
+            return
+        else:
+            inc = inc + 1
 #
 #                                                                    Complementary functions
 # ==========================================================================================

@@ -572,20 +572,13 @@ def displayError(code,*args):
                    'available in the constitutive' + '\n' + \
                    indent + 'model source {}.'
     elif code == 'E00056':
-        arguments = [args[2],]
+        arguments = [args[2],args[3]]
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
-                   indent + 'The suct() function required to perform the state ' + \
-                   'update and compute the consistent' + '\n' + \
-                   indent + 'tangent modulus of the constitutive model \'{}\' is ' + \
-                   'not defined.'
+                   indent + 'The required {} function is not implemented for the ' + \
+                   'constitutive model \'{}\''
     elif code == 'E00057':
-        arguments = [args[2],]
-        values = tuple(arguments)
-        template = 'Details:' + '\n\n' + \
-                   indent + 'The set_required_properties() function required to set ' + \
-                   'the required material properties' + '\n' + \
-                   indent + 'of the constitutive model {} is not defined.'
+        pass
     elif code == 'E00058':
         arguments = args[2:5]
         values = tuple(arguments)

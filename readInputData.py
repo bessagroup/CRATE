@@ -394,23 +394,23 @@ def readMaterialProperties(file,file_path,keyword):
         material_phases_models[mat_phase]['name'] = model_name
         if model_source == 1:
             model_module = importlib.import_module('material.models.' + str(model_name))
-            if hasattr(model_module,'suct'):
-                material_phases_models[mat_phase]['suct_function'] = \
-                                                                getattr(model_module,'suct')
-            else:
-                location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayError('E00056',location.filename,location.lineno+1,model_name)
+            # Set material constitutive model required procedures
+            req_procedures = ['setRequiredProperties','init','suct']
+            # Check if the material constitutive model required procedures are available
+            for procedure in req_procedures:
+                if hasattr(model_module,procedure):
+                    material_phases_models[mat_phase][procedure] = \
+                                                             getattr(model_module,procedure)
+                else:
+                    location = inspect.getframeinfo(inspect.currentframe())
+                    errors.displayError('E00056',location.filename,location.lineno+1,
+                                                                       model_name,procedure)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set material phase constitutive model number of material properties
         if model_source == 1:
-            if hasattr(model_module,'set_required_properties'):
-                set_required_properties = getattr(model_module,'set_required_properties')
-                required_properties = set_required_properties()
-                n_required_properties = len(required_properties)
-            else:
-                location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayError('E00057',location.filename,location.lineno+1,keyword,
-                                                                                        i+1)
+            required_properties = \
+                                material_phases_models[mat_phase]['setRequiredProperties']()
+            n_required_properties = len(required_properties)
         if not checkPositiveInteger(phase_header[2]):
             location = inspect.getframeinfo(inspect.currentframe())
             errors.displayError('E00005',location.filename,location.lineno+1,keyword,i+1)
