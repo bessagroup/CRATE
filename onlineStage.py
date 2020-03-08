@@ -22,10 +22,14 @@ import tensorOperations as top
 import errors
 # Tensorial operations
 import tensorOperations as top
+# Material interface
+import material.materialInterface
 # Linear elastic constitutive model
-import linear_elastic
-
-
+import material.models.linear_elastic
+#
+#                                             Solution of the discretized Lippmann-Schwinger
+#                                                  system of nonlinear equilibrium equations
+# ==========================================================================================
 def onlineStage():
     #                                                                           General data
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -39,9 +43,9 @@ def onlineStage():
     # Get clusters data
     phase_n_clusters = clst_dict['phase_n_clusters']
     phase_clusters = clst_dict['phase_clusters']
-    cit_1 = clst_dict['cit_1']
-    cit_2 = clst_dict['cit_2']
-    cit_0_freq = clst_dict['cit_0_freq']
+    cit_1_mf = clst_dict['cit_1']
+    cit_2_mf = clst_dict['cit_2']
+    cit_0_freq_mf = clst_dict['cit_0_freq']
     # Get macroscale loading data
     mac_load_type = macload_dict['mac_load_type']
     mac_load = macload_dict['mac_load']
@@ -66,8 +70,10 @@ def onlineStage():
         for cluster in phase_clusters[mat_phase]:
             # Initialize state variables
             clusters_state_old[str(cluster)] = \
-                                       materialInterface('init',copy.deepcopy(problem_dict),
+                              material.materialInterface('init',copy.deepcopy(problem_dict),
                                                           copy.deepcopy(mat_dict),mat_phase)
+    # Get total number of clusters
+    n_total_clusters = sum([phase_n_clusters[mat_phase] for mat_phase in material_phases])
     #
     #
     #                                                                       Identity tensors
@@ -81,47 +87,20 @@ def onlineStage():
     #                                                                     (Zeliang approach)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Compute the elastic tangent (matricial form) associated to each material cluster
-    clusters_De_mf = dict()
-    for mat_phase in material_phases:
-        for cluster in phase_clusters[mat_phase]:
-            # Compute elastic tangent
-            consistent_tangent_mf = \
-               linear_elastic.ct(copy.deepcopy(problem_dict),material_properties[mat_phase])
-            # Store material cluster elastic tangent
-            clusters_De_mf[cluster] = consistent_tangent_mf
+    clusters_De_mf = clustersElasticTangent(copy.deepcopy(problem_dict),material_properties,
+                                                             material_phases,phase_clusters)
     #
     #                                                            Macroscale incremental loop
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Initialize incremental loading data
-    inc_mac_load_mf = dict()
-    if mac_load_type == 1:
-        inc_mac_load_mf['strain'] = \
-                                  setIncMacLoadMF(mac_load['strain'][:,1])/n_load_increments
-    elif mac_load_type == 2:
-        inc_mac_load_mf['stress'] = \
-                                  setIncMacLoadMF(mac_load['stress'][:,1])/n_load_increments
-    else:
-        inc_mac_load_mf['strain'] = \
-                                  setIncMacLoadMF(mac_load['strain'][:,1])/n_load_increments
-        inc_mac_load_mf['stress'] = \
-                                  setIncMacLoadMF(mac_load['stress'][:,1])/n_load_increments
-    # Compute number of prescribed macroscale stress components
-    n_presc_mac_stress = sum([mac_load_presctype[comp] == 'stress' for comp in comp_order])
-    # Set macroscale strain and stress prescribed components indexes
-    presc_strain_idxs = list()
-    presc_stress_idxs = list()
-    for i in range(len(comp_order)):
-        comp = comp_order[i]
-        if mac_load_presctype[comp] == 'strain':
-            presc_strain_idxs.append(i)
-        else:
-            presc_stress_idxs.append(i)
+    # Set the incremental macroscale load data
+    inc_mac_load_mf,n_presc_mac_stress,presc_strain_idxs,presc_stress_idxs = \
+        setMacroscaleLoadIncrements(copy.deepcopy(problem_dict),copy.deepcopy(macload_dict))
     #
     #                                                     Reference material elastic tangent
     #                                                                        (initial guess)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Set reference material elastic properties initial guess based on the volume
-    # averages of the material phases elastic properties
+    # Set reference material elastic properties initial guess based on the volume averages
+    # of the material phases elastic properties
     material_properties_ref = dict()
     material_properties_ref['E'] = \
                                sum([material_phases_f[phase]*material_properties[phase]['E']
@@ -129,31 +108,27 @@ def onlineStage():
     material_properties_ref['v'] = \
                                sum([material_phases_f[phase]*material_properties[phase]['v']
                                                               for phase in material_phases])
-    # Compute reference material elastic tangent (matricial form)
-    De_ref_mf = linear_elastic.ct(copy.deepcopy(problem_dict),material_properties_ref)
-    # Compute reference material compliance tensor (matricial form)
-    Se_ref_mf = np.linalg.inv(De_ref_mf)
-    # Store reference material compliance tensor in a matrix similar to matricial form
-    # but without any coefficients associated
-    Se_ref_matrix = np.zeros(Se_ref_mf.shape)
-    for i in range(len(comp_order)):
-        comp = comp_order[i]
-        index = tuple([int(j) for j in comp])
-        Se_ref_matrix[index] = (1.0/top.kelvinFactor(i,comp_order))*Se_ref_mf
+    # Compute the reference material elastic tangent (matricial form) and compliance tensor
+    # (matrix)
+    De_ref_mf,Se_ref_matrix = \
+             refMaterialElasticTangents(copy.deepcopy(problem_dict),material_properties_ref)
     #
     #                                                               Incremental loading loop
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Initialize increment counter
     inc = 1
-    # Loop over incremental loads
+    # Start incremental loading loop
     while True:
         #                                                        Incremental macroscale load
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Initialize strain tensor which contains the macroscale prescribed incremental
-        # strain components and the incremental homogenized strain components
-        # (non-prescribed components). Initialize a similar stress tensor
+        # Initialize strain tensor where each component is defined as follows:
+        # (a) Incremental macroscale strain (if prescribed macroscale strain component)
+        # (b) Incremental homogenized strain (if non-prescribed macroscale strain component)
         inc_mix_strain_mf = np.zeros(len(comp_order))
         inc_mix_strain_mf[presc_strain_idxs] = inc_mac_load_mf['strain'][presc_strain_idxs]
+        # Initialize stress tensor where each component is defined as follows:
+        # (a) Incremental macroscale stress (if prescribed macroscale stress component)
+        # (b) Incremental homogenized stress (if non-prescribed macroscale stress component)
         inc_mix_stress_mf = np.zeros(len(comp_order))
         inc_mix_stress_mf[presc_stress_idxs] = inc_mac_load_mf['stress'][presc_stress_idxs]
         #
@@ -161,34 +136,16 @@ def onlineStage():
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize self-consistent scheme iteration counter
         scs_iter = 0
+        # Start self-consistent scheme iterative loop
         while True:
             #
             #                                             Cluster interaction tensors update
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Get reference material Young modulus and Poisson ratio
-            E_ref = material_properties_ref['E']
-            v_ref = material_properties_ref['v']
-            # Compute reference material Lamé parameters
-            lam_ref = (E_ref*v_ref)/((1.0 + v_ref)*(1.0 - 2.0*v_ref))
-            miu_ref = E_ref/(2.0*(1.0 + v_ref))
-            # Compute Green operator's reference material coefficients
-            Gop_factor_1 = 1.0/(4.0*miu_ref)
-            Gop_factor_2 = (lambda_ref + miu_ref)/(miu_ref*(lambda_ref + 2.0*miu_ref))
-            Gop_factor_0_freq = \
-                            numpy.matlib.repmat(Se_ref_mf,n_total_clusters,n_total_clusters)
-            # Assemble global material independent cluster interaction matrices
-            global_cit_1_mf = assembleCIT(material_phases,phase_n_clusters,phase_clusters,
-                                                                           comp_order,cit_1)
-            global_cit_2_mf = assembleCIT(material_phases,phase_n_clusters,phase_clusters,
-                                                                           comp_order,cit_2)
-            global_cit_0_freq_mf = assembleCIT(material_phases,phase_n_clusters,
-                                                       phase_clusters,comp_order,cit_0_freq)
-            # Get total number of clusters
-            n_total_clusters = \
-                         sum([phase_n_clusters[mat_phase] for mat_phase in material_phases])
-            # Assemble global cluster interaction matrix
-            global_cit_mf = Gop_factor_1*global_cit_1_mf + Gop_factor_2*global_cit_2_mf + \
-                                         np.multiply(Gop_factor_0_freq,global_cit_0_freq_mf)
+            # Update cluster interaction tensors and assemble global cluster interaction
+            # matrix
+            global_cit_mf = updateCITs(copy.deepcopy(problem_dict),material_properties_ref,
+                                Se_ref_mf,material_phases,n_total_clusters,phase_n_clusters,
+                                             phase_clusters,cit_1_mf,cit_2_mf,cit_0_freq_mf)
             #
             #                                                       Global residual matrix 1
             #                                                             (Zeliang approach)
@@ -219,38 +176,17 @@ def onlineStage():
             #                                                  Newton-Raphson iterative loop
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Initialize Newton-Raphson iteration counter
-            iter = 0
+            nr_iter = 0
+            # Start Newton-Raphson iterative loop
             while True:
                 #
                 #               Cluster material state update and consistent tangent modulus
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Initialize material cluster strain range indexes
-                i_init = 0
-                i_end = i_init + len(comp_order)
-                # Loop over material phases
-                for mat_phase in material_phases:
-                    # Loop over material phase clusters
-                    for cluster in phase_clusters[mat_phase]:
-                        # Get material cluster incremental strain (matricial form)
-                        inc_strain_mf = gbl_inc_strain_mf[i_init,i_end]
-                        # Build material cluster incremental strain tensor
-                        inc_strain = \
-                                  top.getTensorFromMatricialForm(tensor_mf,n_dim,comp_order)
-                        # Get material cluster last increment converged state variables
-                        state_variables_old = \
-                                             copy.deepcopy(clusters_state_old[str(cluster)])
-                        # Perform material cluster state update and compute associated
-                        # consistent tangent modulus
-                        state_variables,consistent_tangent_mf = \
-                                  materialInterface(problem_dict,mat_dict,mat_phase,cluster,
-                                                             inc_strain,state_variables_old)
-                        # Store material cluster updated state variables and consistent
-                        # tangent modulus
-                        clusters_state[str(cluster)] = state_variables
-                        clusters_D_mf[str(cluster)] = consistent_tangent_mf
-                        # Update cluster strain range indexes
-                        i_init = i_init + len(comp_order)
-                        i_end = i_init + len(comp_order)
+                # Perform clusters material state update and compute associated consistent
+                # tangent modulus
+                clusters_state,clusters_D_mf = \
+                                   clustersSUCT(copy.deepcopy(problem_dict),material_phases,
+                                        phase_clusters,gbl_inc_strain_mf,clusters_state_old)
                 #
                 #                                                   Global residual matrix 2
                 #                                                         (Zeliang approach)
@@ -289,99 +225,54 @@ def onlineStage():
                              np.matmul(global_cit_mf,scipy.linalg.block_diag(*diff_D_De_mf))
                 #
                 #                                      Incremental homogenized stress tensor
-                #                                                (non-prescribed components)
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Compute the incremental homogenized stress tensor (matricial form) if
+                # there are prescribed macroscale stress components
                 if n_presc_mac_stress > 0:
-                    # Initialize incremental homogenized stress tensor (matricial form)
-                    inc_hom_stress_mf = np.zeros(len(comp_order))
-                    # Loop over material phases
-                    for mat_phase in material_phases:
-                        # Loop over material phase clusters
-                        for cluster in phase_clusters[mat_phase]:
-                            # Get material cluster stress tensor (matricial form)
-                            stress_mf = clusters_state[str(cluster)]['stress_mf']
-                            # Get material cluster last converged increment stress tensor
-                            # (matricial form)
-                            stress_old_mf = clusters_state_old[str(cluster)]['stress_mf']
-                            # Compute material cluster incremental stress tensor (matricial
-                            # form)
-                            inc_stress_mf = stress_mf - stress_old_mf
-                            # Add material cluster contribution to incremental homogenized
-                            # stress tensor (matricial form)
-                            inc_hom_stress_mf = inc_hom_stress_mf + \
-                                                      clusters_f[str(cluster)]*inc_stress_mf
-                    # Assemble the incremental homogenized stress tensor non-prescribed
-                    # components
-                    inc_mix_stress_mf[presc_strain_idxs] = \
-                                                        inc_hom_stress_mf[presc_strain_idxs]
+                    _,inc_hom_stress_mf = \
+                              incHomogenizedStrainStressTensors(copy.deepcopy(problem_dict),
+                                                  material_phases,phase_clusters,clusters_f,
+                                                          clusters_state,clusters_state_old)
                 #
-                #                                                  Global residual functions
+                #                                   Discretized Lippmann-Schwinger system of
+                #                                  nonlinear equilibrium equations residuals
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Initialize residual vector
-                residual = np.zeros(n_total_clusters*len(comp_order) + n_presc_mac_stress)
-                # Compute clusters residuals
-                residual[0:n_total_clusters*len(comp_order)] = gbl_inc_strain_mf + \
-                                    np.matmul(global_cit_De_De_ref_mf,gbl_inc_strain_mf) + \
-                                    np.matmul(global_cit_D_De_mf,gbl_inc_strain_mf) - \
-                         numpy.matlib.repmat(inc_mix_strain_mf['strain'],1,n_total_clusters)
-                # Compute macroscale stress residual
-                if n_presc_mac_stress > 0:
-                    residual[n_total_clusters*len(comp_order):] = \
-                                                    inc_hom_stress_mf[presc_stress_idxs] - \
-                                                    inc_mix_stress_mf[presc_stress_idxs]
+                # Build discretized Lippmann-Schwinger system of nonlinear equilibrium
+                # equations residuals
+                arg = inc_hom_stress_mf if n_presc_mac_stress > 0 else None
+                residual = buildResidual(copy.deepcopy(problem_dict),n_total_clusters,
+                                     n_presc_mac_stress,presc_stress_idxs,gbl_inc_strain_mf,
+                                                 global_cit_De_De_ref_mf,global_cit_D_De_mf,
+                                                    inc_mix_strain_mf,inc_mix_stress_mf,arg)
                 #
                 #                                                     Convergence evaluation
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Work in progress here...
-
-
-
+                # Compute error serving to check iterative convergence
+                # error = ...
+                # Control Newton-Raphson iteration loop flow
                 if error < conv_tol:
+                    # Leave Newton-Raphson iterative loop (converged solution)
                     break
-                elif iter == max_n_iterations:
+                elif nr_iter == max_n_iterations:
+                    # Maximum number of Newton-Raphson iterations reached
                     print('error')
                 else:
                     # Increment iteration counter
-                    iter = iter + 1
-
-
+                    nr_iter = nr_iter + 1
                 #
-                #                                                            Jacobian matrix
+                #                                   Discretized Lippmann-Schwinger system of
+                #                                   nonlinear equilibrium equations Jacobian
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Initialize Jacobian matrix
-                Jacobian = np.zeros(2*(n_total_clusters + n_presc_mac_stress,))
-                # Compute Jacobian matrix component 11
-                i_init = 0
-                i_end = n_total_clusters*len(comp_order)
-                j_init = 0
-                j_end = n_total_clusters*len(comp_order)
-                Jacobian[i_init:i_end,j_init:j_end] = \
-                                  scipy.linalg.block_diag(*(n_total_clusters*[FOId_mf])) + \
-                                                                      global_cit_D_De_ref_mf
-                # Compute macroscale loading related Jacobian matrix components
-                if n_presc_mac_stress > 0:
-                    # Compute Jacobian matrix component 12
-                    i_init = 0
-                    i_end = n_total_clusters*len(comp_order)
-                    j_init = n_total_clusters*len(comp_order)
-                    j_end = n_total_clusters*len(comp_order) + len(comp_order)
-                    Jacobian[i_init:i_end,j_init:j_end] = \
-                                      numpy.matlib.repmat(-1.0*FOId_mf[:,presc_stress_idxs],
-                                                                         n_total_clusters,1)
-                    # Compute Jacobian matrix component 21
-                    i_init = n_total_clusters*len(comp_order)
-                    i_end = n_total_clusters*len(comp_order) + len(comp_order)
-                    j_init = 0
-                    j_end = n_total_clusters*len(comp_order)
-                    for mat_phase in material_phases:
-                        for cluster in phase_clusters[mat_phase]:
-                            aux_sum = aux_sum + \
-                                             clusters_f[str(cluster)]*clusters_D_mf[cluster]
-                    Jacobian[i_init:i_end,j_init:j_end] = aux_sum
+                # Build discretized Lippmann-Schwinger system of nonlinear equilibrium
+                # equations Jacobian
+                Jacobian = buildJacobian(copy.deepcopy(problem_dict),n_total_clusters,
+                                n_presc_mac_stress,presc_stress_idxs,global_cit_D_De_ref_mf,
+                                                                   clusters_f,clusters_D_mf)
                 #
-                #                                                 System of linear equations
+                #                                   Discretized Lippmann-Schwinger system of
+                #                                           linearized equilibrium equations
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Solve Lippmann-Schwinger system of linear equilibrium equations
+                # Solve Lippmann-Schwinger system of linearized equilibrium equations
                 d_iter = numpy.linalg.solve(Jacobian,-residual)
                 #
                 #                                       Incremental strains iterative update
@@ -396,30 +287,10 @@ def onlineStage():
             #
             #                              Incremental homogenized strain and stress tensors
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Initialize incremental homogenized strain and stress tensors (matricial form)
-            inc_hom_strain_mf = np.zeros(len(comp_order))
-            inc_hom_stress_mf = np.zeros(len(comp_order))
-            # Loop over material phases
-            for mat_phase in material_phases:
-                # Loop over material phase clusters
-                for cluster in phase_clusters[mat_phase]:
-                    # Get material cluster strain and stress tensor (matricial form)
-                    strain_mf = clusters_state[str(cluster)]['strain_mf']
-                    stress_mf = clusters_state[str(cluster)]['stress_mf']
-                    # Get material cluster last converged increment strain and stress
-                    # tensors (matricial form)
-                    strain_old_mf = clusters_state_old[str(cluster)]['strain_mf']
-                    stress_old_mf = clusters_state_old[str(cluster)]['stress_mf']
-                    # Compute material cluster incremental strain and stress tensors
-                    # (matricial form)
-                    inc_strain_mf = strain_mf - strain_old_mf
-                    inc_stress_mf = stress_mf - stress_old_mf
-                    # Add material cluster contribution to incremental homogenized
-                    # strain and stress tensors (matricial form)
-                    inc_hom_strain_mf = inc_hom_strain_mf + \
-                                                      clusters_f[str(cluster)]*inc_strain_mf
-                    inc_hom_stress_mf = inc_hom_stress_mf + \
-                                                      clusters_f[str(cluster)]*inc_stress_mf
+            # Compute incremental homogenized strain and stress tensors (matricial form)
+            inc_hom_strain_mf,inc_hom_stress_mf = \
+              incHomogenizedStrainStressTensors(copy.deepcopy(problem_dict),material_phases,
+                                phase_clusters,clusters_f,clusters_state,clusters_state_old)
             # Assemble the incremental homogenized strain and stress tensor non-prescribed
             # components
             inc_mix_strain_mf[presc_stress_idxs] = inc_hom_strain_mf[presc_stress_idxs]
@@ -427,71 +298,40 @@ def onlineStage():
             #
             #                                                         Self-consistent scheme
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Regression-based self-consistent scheme
-            if self_consistent_scheme == 1:
-                # Initialize self-consistent scheme system of linear equations coefficient
-                # matrix and right-hand side
-                scs_matrix = np.zeros((2,2))
-                scs_rhs = np.zeros(2)
-                # Get incremental macroscopic (prescribed) / homogenized (computed) strain
-                # and stress tensors
-                inc_mix_strain = top.getTensorFromMatricialForm(inc_mix_strain_mf,n_dim,
-                                                                                 comp_order)
-                inc_mix_stress = top.getTensorFromMatricialForm(inc_mix_stress_mf,n_dim,
-                                                                                 comp_order)
-                # Compute self-consistent scheme system of linear equations right-hand side
-                scs_rhs[0] = np.trace(inc_mix_stress)
-                scs_rhs[1] = top.ddot22_1(inc_mix_stress,inc_mix_strain)
-                # Compute self-consistent scheme system of linear equations coefficient
-                # matrix
-                scs_matrix[0,0] = np.trace(inc_mix_strain)*np.trace(SOId)
-                scs_matrix[0,1] = 2.0*np.trace(inc_mix_strain)
-                scs_matrix[1,0] = np.trace(inc_mix_strain)**2
-                scs_matrix[1,1] = 2.0*top.ddot22_1(inc_mix_strain,inc_mix_strain)
-                # Solve self-consistent scheme system of linear equations
-                scs_solution = numpy.linalg.solve(Jacobian,-residual)
-                # Get reference material Lamé parameters
-                lam_ref = scs_solution[0]
-                miu_ref = scs_solution[1]
-                # Compute reference material Young modulus and Poisson ratio
-                E_ref = (miu_ref*(3.0*lam_ref + 2.0*miu_ref))/(lam_ref + miu_ref)
-                v_ref = lam_ref/(2.0*(lam_ref + miu_ref))
-            # Compute iterative variation of the reference material Young modulus and
-            # Poisson ratio (convergence evaluation purpose only)
-            d_E_ref = E_ref - material_properties_ref['E']
-            d_v_ref = v_ref - material_properties_ref['v']
-            # Update reference material elastic properties
-            material_properties_ref['E'] = E_ref
-            material_properties_ref['v'] = v_ref
+            # Update reference material elastic properties through a given self-consistent
+            # scheme
+            E_ref,v_ref = SCS_UpdateRefMatElasticProperties(self_consistent_scheme,n_dim,
+                                             comp_order,inc_mix_strain_mf,inc_mix_stress_mf)
             #
             #                                                         Convergence evaluation
             #                                                       (self-consistent scheme)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Work in progress here...
-
+            # Compute iterative variation of the reference material Young modulus and
+            # Poisson ratio
+            d_E_ref = E_ref - material_properties_ref['E']
+            d_v_ref = v_ref - material_properties_ref['v']
+            # Compute metric serving to check self-consistent scheme iterative convergence
+            # scs_iter_change = ...
+            # Control self-consistent scheme iteration loop flow
             if scs_iter_change < scs_conv_tol:
+                # Leave self-consistent scheme iterative loop (converged solution)
                 break
-            elif iter == scs_max_n_iterations:
+            elif scs_iter == scs_max_n_iterations:
+                # Maximum number of self-consistent scheme iterations reached
                 print('error')
             else:
+                # Update reference material elastic properties
+                material_properties_ref['E'] = E_ref
+                material_properties_ref['v'] = v_ref
                 # Increment self-consistent scheme iteration counter
                 scs_iter = scs_iter + 1
-
             #
             #                                             Reference material elastic tangent
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Compute reference material elastic tangent (matricial form)
-            De_ref_mf = linear_elastic.ct(copy.deepcopy(problem_type),n_dim,comp_order, \
-                                                                    material_properties_ref)
-            # Compute reference material compliance tensor (matricial form)
-            Se_ref_mf = np.linalg.inv(De_ref_mf)
-            # Store reference material compliance tensor in a matrix similar to matricial
-            # form but without any coefficients associated
-            Se_ref_matrix = np.zeros(Se_ref_mf.shape)
-            for i in range(len(comp_order)):
-                comp = comp_order[i]
-                index = tuple([int(j) for j in comp])
-                Se_ref_matrix[index] = (1.0/top.kelvinFactor(i,comp_order))*Se_ref_mf
+            # Compute the reference material elastic tangent (matricial form) and compliance
+            # tensor (matrix)
+            De_ref_mf,Se_ref_matrix = \
+             refMaterialElasticTangents(copy.deepcopy(problem_dict),material_properties_ref)
         #
         #                                              Homogenized strain and stress tensors
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -504,9 +344,10 @@ def onlineStage():
         #                                                                 Increment VTK file
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        #                                                                 switch
+        #                                                          Converged state variables
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+        # Update the last increment converged state variables
+        clusters_state_old = copy.deepcopy(clusters_state)
         #
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return if the last macroscale loading increment was completed successfuly,
@@ -518,15 +359,159 @@ def onlineStage():
 #
 #                                                                    Complementary functions
 # ==========================================================================================
+# Compute the elastic tangent (matricial form) associated to each material cluster
+def clustersElasticTangent(problem_dict,material_properties,material_phases,phase_clusters):
+    # Initialize dictionary with the clusters elastic tangent (matricial form)
+    clusters_De_mf = dict()
+    # Loop over material phases
+    for mat_phase in material_phases:
+        # Loop over material phase clusters
+        for cluster in phase_clusters[mat_phase]:
+            # Compute elastic tangent
+            consistent_tangent_mf = \
+               linear_elastic.ct(copy.deepcopy(problem_dict),material_properties[mat_phase])
+            # Store material cluster elastic tangent
+            clusters_De_mf[cluster] = consistent_tangent_mf
+    # Return
+    return clusters_De_mf
+# ------------------------------------------------------------------------------------------
+# Set the incremental macroscale load data
+def setMacroscaleLoadIncrements(problem_dict,macload_dict):
+    # Get problem data
+    n_dim = problem_dict['n_dim']
+    comp_order = problem_dict['comp_order_sym']
+    # Get macroscale loading data
+    mac_load_type = macload_dict['mac_load_type']
+    mac_load = macload_dict['mac_load']
+    mac_load_presctype = macload_dict['mac_load_presctype']
+    n_load_increments = macload_dict['n_load_increments']
+    # Set incremental macroscale loading
+    inc_mac_load_mf = dict()
+    load_types = {1:['strain',],2:['stress',],3:['strain','stress']}
+    for load_type in load_types[mac_load_type]:
+        inc_mac_load_mf[load_type] = \
+                setIncMacLoadMF(n_dim,comp_order,mac_load[load_type][:,1])/n_load_increments
+    # Compute number of prescribed macroscale stress components
+    n_presc_mac_stress = sum([mac_load_presctype[comp] == 'stress' for comp in comp_order])
+    # Set macroscale strain and stress prescribed components indexes
+    presc_strain_idxs = list()
+    presc_stress_idxs = list()
+    for i in range(len(comp_order)):
+        comp = comp_order[i]
+        if mac_load_presctype[comp] == 'strain':
+            presc_strain_idxs.append(i)
+        else:
+            presc_stress_idxs.append(i)
+    # Return
+    return [inc_mac_load_mf,n_presc_mac_stress,presc_strain_idxs,presc_stress_idxs]
+#
+# Under a small strain formulation, set the incremental macroscopic load strain or stress
+# tensor matricial form according to Kelvin notation
+def setIncMacLoadMF(n_dim,comp_order,inc_mac_load_vector):
+    # Build incremental macroscale load tensor
+    k = 0
+    for j in range(n_dim):
+        for i in range(n_dim):
+            inc_mac_load[i,j] = inc_mac_load_vector[k]
+            k = k + 1
+    # Set incremental macroscopic load matricial form
+    inc_mac_load_mf = top.setTensorMatricialForm(inc_mac_load,n_dim,comp_order)
+    # Return
+    return inc_mac_load_mf
+# ------------------------------------------------------------------------------------------
+# Compute the reference material elastic tangent (matricial form) and compliance tensor
+# (matrix)
+def refMaterialElasticTangents(problem_dict,material_properties_ref):
+    # Get problem data
+    comp_order = problem_dict['comp_order_sym']
+    # Compute reference material elastic tangent (matricial form)
+    De_ref_mf = linear_elastic.ct(copy.deepcopy(problem_dict),material_properties_ref)
+    # Compute reference material compliance tensor (matricial form)
+    Se_ref_mf = np.linalg.inv(De_ref_mf)
+    # Store reference material compliance tensor in a matrix similar to matricial form
+    # but without any associated coefficients
+    Se_ref_matrix = np.zeros(Se_ref_mf.shape)
+    for i in range(len(comp_order)):
+        comp = comp_order[i]
+        index = tuple([int(j) for j in comp])
+        Se_ref_matrix[index] = (1.0/top.kelvinFactor(i,comp_order))*Se_ref_mf
+    # Return
+    return [De_ref_mf,Se_ref_matrix]
+# ------------------------------------------------------------------------------------------
+# Perform clusters material state update and compute associated consistent tangent modulus
+def clustersSUCT(problem_dict,material_phases,phase_clusters,gbl_inc_strain_mf,
+                                                                        clusters_state_old):
+    # Get problem data
+    n_dim = problem_dict['n_dim']
+    comp_order = problem_dict['comp_order_sym']
+    # Initialize material cluster strain range indexes
+    i_init = 0
+    i_end = i_init + len(comp_order)
+    # Loop over material phases
+    for mat_phase in material_phases:
+        # Loop over material phase clusters
+        for cluster in phase_clusters[mat_phase]:
+            # Get material cluster incremental strain (matricial form)
+            inc_strain_mf = gbl_inc_strain_mf[i_init,i_end]
+            # Build material cluster incremental strain tensor
+            inc_strain = \
+                  top.getTensorFromMatricialForm(inc_strain_mf,n_dim,comp_order)
+            # Get material cluster last increment converged state variables
+            state_variables_old = \
+                                 copy.deepcopy(clusters_state_old[str(cluster)])
+            # Perform material cluster state update and compute associated
+            # consistent tangent modulus
+            state_variables,consistent_tangent_mf = \
+                        material.materialInterface('suct',problem_dict,mat_dict,
+                                       mat_phase,inc_strain,state_variables_old)
+            # Store material cluster updated state variables and consistent
+            # tangent modulus
+            clusters_state[str(cluster)] = state_variables
+            clusters_D_mf[str(cluster)] = consistent_tangent_mf
+            # Update cluster strain range indexes
+            i_init = i_init + len(comp_order)
+            i_end = i_init + len(comp_order)
+    # Return
+    return [clusters_state,clusters_D_mf]
+# ------------------------------------------------------------------------------------------
+# Update cluster interaction tensors and assemble global cluster interaction matrix
+def updateCITs(problem_dict,material_properties_ref,Se_ref_mf,material_phases,
+          n_total_clusters,phase_n_clusters,phase_clusters,cit_1_mf,cit_2_mf,cit_0_freq_mf):
+    # Get problem data
+    n_dim = problem_dict['n_dim']
+    comp_order = problem_dict['comp_order_sym']
+    # Get reference material Young modulus and Poisson ratio
+    E_ref = material_properties_ref['E']
+    v_ref = material_properties_ref['v']
+    # Compute reference material Lamé parameters
+    lam_ref = (E_ref*v_ref)/((1.0 + v_ref)*(1.0 - 2.0*v_ref))
+    miu_ref = E_ref/(2.0*(1.0 + v_ref))
+    # Compute Green operator's reference material coefficients
+    Gop_factor_1 = 1.0/(4.0*miu_ref)
+    Gop_factor_2 = (lam_ref + miu_ref)/(miu_ref*(lam_ref + 2.0*miu_ref))
+    Gop_factor_0_freq = numpy.matlib.repmat(Se_ref_mf,n_total_clusters,n_total_clusters)
+    # Assemble global material independent cluster interaction matrices
+    global_cit_1_mf = assembleCIT(material_phases,phase_n_clusters,phase_clusters,
+                                                                        comp_order,cit_1_mf)
+    global_cit_2_mf = assembleCIT(material_phases,phase_n_clusters,phase_clusters,
+                                                                        comp_order,cit_2_mf)
+    global_cit_0_freq_mf = assembleCIT(material_phases,phase_n_clusters,
+                                                    phase_clusters,comp_order,cit_0_freq_mf)
+    # Assemble global cluster interaction matrix
+    global_cit_mf = Gop_factor_1*global_cit_1_mf + Gop_factor_2*global_cit_2_mf + \
+                                         np.multiply(Gop_factor_0_freq,global_cit_0_freq_mf)
+    # Return
+    return global_cit_mf
+#
 # Assemble the clustering interaction tensors into a single square matrix, sorted by
 # ascending order of material phase and by asceding order of cluster labels within each
 # material phase
-def assembleCIT(material_phases,phase_n_clusters,phase_clusters,comp_order,cit_X):
+def assembleCIT(material_phases,phase_n_clusters,phase_clusters,comp_order,cit_X_mf):
     # Get total number of clusters
     n_total_clusters = sum([phase_n_clusters[mat_phase] for mat_phase in material_phases])
     # Initialize global clustering interaction matrix
-    global_cit_X = \
-       np.zeros((n_total_clusters*len(comp_order),n_total_clusters*len(comp_order)))
+    global_cit_X_mf = \
+               np.zeros((n_total_clusters*len(comp_order),n_total_clusters*len(comp_order)))
     # Initialize row and column cluster indexes
     jclst = 0
     # Loop over material phases
@@ -549,25 +534,151 @@ def assembleCIT(material_phases,phase_n_clusters,phase_clusters,comp_order,cit_X
                     j_init = jclst*len(comp_order)
                     j_end = j_init + len(comp_order)
                     # Assemble cluster interaction tensor
-                    global_cit_X[i_init:i_end,j_init,j_end] = \
-                                                         cit_X[mat_phase_pair][cluster_pair]
+                    global_cit_X_mf[i_init:i_end,j_init,j_end] = \
+                                                      cit_X_mf[mat_phase_pair][cluster_pair]
                     # Increment row cluster index
                     iclst = iclst + 1
             # Increment column cluster index
             jclst = jclst + 1
     # Return
-    return global_cit_X
+    return global_cit_X_mf
 # ------------------------------------------------------------------------------------------
-# Under a small strain formulation, set the incremental macroscopic load matricial form
-# according to Kelvin notation
-def setIncMacLoadMF(n_dim,comp_order,inc_mac_load_vector):
-    # Build incremental macroscale load tensor
-    k = 0
-    for j in range(n_dim):
-        for i in range(n_dim):
-            inc_mac_load[i,j] = inc_mac_load_vector[k]
-            k = k + 1
-    # Set incremental macroscopic load matricial form
-    inc_mac_load_mf = top.setTensorMatricialForm(inc_mac_load,n_dim,comp_order)
+# Compute residuals of the discretized Lippmann-Schwinger system of nonlinear equilibrium
+# equations
+def buildResidual(problem_dict,n_total_clusters,n_presc_mac_stress,presc_stress_idxs,
+             gbl_inc_strain_mf,global_cit_De_De_ref_mf,global_cit_D_De_mf,inc_mix_strain_mf,
+                                                                   inc_mix_stress_mf,*args):
+    # Get problem data
+    comp_order = problem_dict['comp_order_sym']
+    # Initialize residual vector
+    residual = np.zeros(n_total_clusters*len(comp_order) + n_presc_mac_stress)
+    # Compute clusters equilibrium residuals
+    residual[0:n_total_clusters*len(comp_order)] = gbl_inc_strain_mf + \
+                                    np.matmul(global_cit_De_De_ref_mf,gbl_inc_strain_mf) + \
+                                         np.matmul(global_cit_D_De_mf,gbl_inc_strain_mf) - \
+                         numpy.matlib.repmat(inc_mix_strain_mf['strain'],1,n_total_clusters)
+    # Compute additional residual if there are prescribed macroscale stress components
+    if n_presc_mac_stress > 0:
+        # Get incremental homogenized stress tensor (matricial form)
+        inc_hom_stress_mf = args[0]
+        # Compute prescribed macroscale stress components residual
+        residual[n_total_clusters*len(comp_order):] = \
+                 inc_hom_stress_mf[presc_stress_idxs] - inc_mix_stress_mf[presc_stress_idxs]
     # Return
-    return inc_mac_load_mf
+    return residual
+# ------------------------------------------------------------------------------------------
+# Compute Jacobian matrix of the discretized Lippmann-Schwinger system of nonlinear
+# equilibrium equations
+def buildJacobian(problem_dict,n_total_clusters,n_presc_mac_stress,presc_stress_idxs,
+                                           global_cit_D_De_ref_mf,clusters_f,clusters_D_mf):
+    # Get problem data
+    n_dim = problem_dict['n_dim']
+    comp_order = problem_dict['comp_order_sym']
+    # Set fourth-order identity tensor (matricial form)
+    _,FOId,_,_,_,_,_ = top.setIdentityTensors(n_dim)
+    FOId_mf = top.setTensorMatricialForm(FOId,n_dim,comp_order)
+    # Initialize Jacobian matrix
+    Jacobian = np.zeros(2*(n_total_clusters + n_presc_mac_stress,))
+    # Compute Jacobian matrix component solely related with the clusters equilibrium
+    # residuals
+    i_init = 0
+    i_end = n_total_clusters*len(comp_order)
+    j_init = 0
+    j_end = n_total_clusters*len(comp_order)
+    Jacobian[i_init:i_end,j_init:j_end] = \
+                      scipy.linalg.block_diag(*(n_total_clusters*[FOId_mf])) + \
+                                                          global_cit_D_De_ref_mf
+    # Compute Jacobian matrix components arising due to the prescribed macroscale stress
+    # components
+    if n_presc_mac_stress > 0:
+        # Compute Jacobian matrix component related with the clusters equilibrium residuals
+        i_init = 0
+        i_end = n_total_clusters*len(comp_order)
+        j_init = n_total_clusters*len(comp_order)
+        j_end = n_total_clusters*len(comp_order) + len(comp_order)
+        Jacobian[i_init:i_end,j_init:j_end] = \
+                   numpy.matlib.repmat(-1.0*FOId_mf[:,presc_stress_idxs],n_total_clusters,1)
+        # Compute Jacobian matrix component related with the prescribed macroscale stress
+        # components
+        i_init = n_total_clusters*len(comp_order)
+        i_end = n_total_clusters*len(comp_order) + len(comp_order)
+        j_init = 0
+        j_end = n_total_clusters*len(comp_order)
+        for mat_phase in material_phases:
+            for cluster in phase_clusters[mat_phase]:
+                aux_sum = aux_sum + clusters_f[str(cluster)]*clusters_D_mf[cluster]
+        Jacobian[i_init:i_end,j_init:j_end] = aux_sum
+    # Return
+    return Jacobian
+# ------------------------------------------------------------------------------------------
+# Compute incremental homogenized strain and stress tensors (matricial form)
+def incHomogenizedStrainStressTensors(problem_dict,material_phases,phase_clusters,
+                                              clusters_f,clusters_state,clusters_state_old):
+    # Get problem data
+    comp_order = problem_dict['comp_order_sym']
+    # Initialize incremental homogenized strain and stress tensors (matricial form)
+    inc_hom_strain_mf = np.zeros(len(comp_order))
+    inc_hom_stress_mf = np.zeros(len(comp_order))
+    # Loop over material phases
+    for mat_phase in material_phases:
+        # Loop over material phase clusters
+        for cluster in phase_clusters[mat_phase]:
+            # Get material cluster strain and stress tensor (matricial form)
+            strain_mf = clusters_state[str(cluster)]['strain_mf']
+            stress_mf = clusters_state[str(cluster)]['stress_mf']
+            # Get material cluster last converged increment strain and stress
+            # tensors (matricial form)
+            strain_old_mf = clusters_state_old[str(cluster)]['strain_mf']
+            stress_old_mf = clusters_state_old[str(cluster)]['stress_mf']
+            # Compute material cluster incremental strain and stress tensors
+            # (matricial form)
+            inc_strain_mf = strain_mf - strain_old_mf
+            inc_stress_mf = stress_mf - stress_old_mf
+            # Add material cluster contribution to incremental homogenized
+            # strain and stress tensors (matricial form)
+            inc_hom_strain_mf = inc_hom_strain_mf + \
+                                              clusters_f[str(cluster)]*inc_strain_mf
+            inc_hom_stress_mf = inc_hom_stress_mf + \
+                                              clusters_f[str(cluster)]*inc_stress_mf
+    # Return
+    return [inc_hom_strain_mf,inc_hom_stress_mf]
+# ------------------------------------------------------------------------------------------
+# Update reference material elastic properties through a given self-consistent scheme
+def SCS_UpdateRefMatElasticProperties(self_consistent_scheme,problem_dict,
+                                                       inc_mix_strain_mf,inc_mix_stress_mf):
+    # Get problem data
+    n_dim = problem_dict['n_dim']
+    comp_order = problem_dict['comp_order_sym']
+    # Set second-order identity tensor
+    SOId,_,_,_,_,_,_ = top.setIdentityTensors(n_dim)
+    SOId_mf = top.setTensorMatricialForm(SOId,n_dim,comp_order)
+    # Perform self-consistent scheme to update the reference material elastic properties
+    # 1. Regression-based scheme
+    # 2. Projection-based scheme
+    if self_consistent_scheme == 1:
+        # Initialize self-consistent scheme system of linear equations coefficient matrix
+        # and right-hand side
+        scs_matrix = np.zeros((2,2))
+        scs_rhs = np.zeros(2)
+        # Get incremental strain and stress tensors containing the associated macroscale
+        # prescribed components and the homogenized components
+        inc_mix_strain = top.getTensorFromMatricialForm(inc_mix_strain_mf,n_dim,comp_order)
+        inc_mix_stress = top.getTensorFromMatricialForm(inc_mix_stress_mf,n_dim,comp_order)
+        # Compute self-consistent scheme system of linear equations right-hand side
+        scs_rhs[0] = np.trace(inc_mix_stress)
+        scs_rhs[1] = top.ddot22_1(inc_mix_stress,inc_mix_strain)
+        # Compute self-consistent scheme system of linear equations coefficient matrix
+        scs_matrix[0,0] = np.trace(inc_mix_strain)*np.trace(SOId)
+        scs_matrix[0,1] = 2.0*np.trace(inc_mix_strain)
+        scs_matrix[1,0] = np.trace(inc_mix_strain)**2
+        scs_matrix[1,1] = 2.0*top.ddot22_1(inc_mix_strain,inc_mix_strain)
+        # Solve self-consistent scheme system of linear equations
+        scs_solution = numpy.linalg.solve(scs_matrix,scs_rhs)
+        # Get reference material Lamé parameters
+        lam_ref = scs_solution[0]
+        miu_ref = scs_solution[1]
+        # Compute reference material Young modulus and Poisson ratio
+        E_ref = (miu_ref*(3.0*lam_ref + 2.0*miu_ref))/(lam_ref + miu_ref)
+        v_ref = lam_ref/(2.0*(lam_ref + miu_ref))
+    # Return
+    return [E_ref,v_ref]
