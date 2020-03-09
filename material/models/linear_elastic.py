@@ -30,6 +30,7 @@ def init(problem_dict):
     # Get problem data
     n_dim = problem_dict['n_dim']
     comp_order = problem_dict['comp_order_sym']
+    problem_type = problem_dict['problem_type']
     # Define constitutive model state variables (names and initialization)
     state_variables_init = dict()
     state_variables_init['e_strain_mf'] = \
@@ -38,7 +39,11 @@ def init(problem_dict):
                           top.setTensorMatricialForm(np.zeros(n_dim,n_dim),n_dim,comp_order)
     state_variables_init['stress_mf'] = \
                           top.setTensorMatricialForm(np.zeros(n_dim,n_dim),n_dim,comp_order)
-    state_variables_init['stress_mf'] = False
+    state_variables_init['is_su_fail'] = False
+    # Set additional out-of-plane stress component in a 2D plane strain problem (output
+    # purpose only)
+    if problem_type == 1:
+        state_variables_init['stress_33'] = 0.0
     # Return initialized state variables dictionary
     return state_variables_init
 #
@@ -79,6 +84,11 @@ def suct(problem_dict,material_properties,mat_phase,inc_strain,state_variables_o
     e_strain_mf = e_strain_old_mf + inc_strain_mf
     # Update stress
     stress_mf = np.matmul(De_tensor_mf,e_strain_mf)
+    # Compute out-of-plane stress component in a 2D plane strain problem (output purpose
+    # only)
+    if problem_type == 1:
+        stress_33 = \
+                   lam*(stress_mf[comp_order.index('11')]*stress_mf[comp_order.index('22')])
     # Set state update fail flag
     is_su_fail = False
     # Initialize state variables dictionary
@@ -88,6 +98,8 @@ def suct(problem_dict,material_properties,mat_phase,inc_strain,state_variables_o
     state_variables['strain_mf'] = e_strain_mf
     state_variables['stress_mf'] = stress_mf
     state_variables['is_su_fail'] = is_su_fail
+    if problem_type == 1:
+        state_variables['stress_33'] = stress_33
     #
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Return updated state variables and consistent tangent modulus

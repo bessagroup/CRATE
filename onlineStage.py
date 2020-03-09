@@ -61,6 +61,11 @@ def onlineStage():
     #
     #                                                                        Initializations
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Initialize homogenized strain and stress tensors
+    hom_strain_mf = np.zeros(len(comp_order))
+    hom_strain_old_mf = np.zeros(len(comp_order))
+    hom_stress_mf = np.zeros(len(comp_order))
+    hom_stress_old_mf = np.zeros(len(comp_order))
     # Initialize clusters state variables dictionaries
     clusters_state = dict()
     clusters_state_old = dict()
@@ -74,14 +79,6 @@ def onlineStage():
                                                           copy.deepcopy(mat_dict),mat_phase)
     # Get total number of clusters
     n_total_clusters = sum([phase_n_clusters[mat_phase] for mat_phase in material_phases])
-    #
-    #
-    #                                                                       Identity tensors
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Set fourth-order identity tensor
-    SOId,FOId,_,_,_,_,_ = top.setIdentityTensors(n_dim)
-    # Set fourth-order identity tensor matricial form
-    FOId_mf = top.setTensorMatricialForm(FOId,n_dim,comp_order)
     #
     #                                                      Material clusters elastic tangent
     #                                                                     (Zeliang approach)
@@ -229,10 +226,12 @@ def onlineStage():
                 # Compute the incremental homogenized stress tensor (matricial form) if
                 # there are prescribed macroscale stress components
                 if n_presc_mac_stress > 0:
-                    _,inc_hom_stress_mf = \
-                              incHomogenizedStrainStressTensors(copy.deepcopy(problem_dict),
-                                                  material_phases,phase_clusters,clusters_f,
-                                                          clusters_state,clusters_state_old)
+                    # Compute homogenized stress tensor (matricial form)
+                    _,hom_stress_mf = \
+                                homogenizedStrainStressTensors(problem_dict,material_phases,
+                                                   phase_clusters,clusters_f,clusters_state)
+                    # Compute incremental homogenized stress tensor
+                    inc_hom_stress_mf = hom_stress_mf - hom_stress_old_mf
                 #
                 #                                   Discretized Lippmann-Schwinger system of
                 #                                  nonlinear equilibrium equations residuals
@@ -287,11 +286,14 @@ def onlineStage():
             #
             #                              Incremental homogenized strain and stress tensors
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Compute homogenized strain and stress tensors (matricial form)
+            hom_strain_mf,hom_stress_mf = \
+                                homogenizedStrainStressTensors(problem_dict,material_phases,
+                                                   phase_clusters,clusters_f,clusters_state)
             # Compute incremental homogenized strain and stress tensors (matricial form)
-            inc_hom_strain_mf,inc_hom_stress_mf = \
-              incHomogenizedStrainStressTensors(copy.deepcopy(problem_dict),material_phases,
-                                phase_clusters,clusters_f,clusters_state,clusters_state_old)
-            # Assemble the incremental homogenized strain and stress tensor non-prescribed
+            inc_hom_strain_mf = hom_strain_mf - hom_strain_old_mf
+            inc_hom_stress_mf = hom_stress_mf - hom_stress_old_mf
+            # Assemble the incremental homogenized strain and stress tensors non-prescribed
             # components
             inc_mix_strain_mf[presc_stress_idxs] = inc_hom_strain_mf[presc_stress_idxs]
             inc_mix_stress_mf[presc_strain_idxs] = inc_hom_stress_mf[presc_strain_idxs]
@@ -335,19 +337,40 @@ def onlineStage():
         #
         #                                              Homogenized strain and stress tensors
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        #
+        # Build homogenized strain tensor
+        hom_strain = top.getTensorFromMatricialForm(hom_strain_mf,n_dim,comp_order)
+        # Build homogenized stress tensor
+        hom_stress = top.getTensorFromMatricialForm(hom_stress_mf,n_dim,comp_order)
+        # Compute homogenized out-of-plane stress component in a 2D plane strain problem /
+        # strain component in a 2D plane stress problem (output purpose only)
+        if problem_type == 1:
+            hom_stress_33 = outofplaneHomogenizedComp(problem_type,material_phases,
+                                phase_clusters,clusters_f,clusters_state,clusters_state_old)
         #
         #                                  Write increment homogenized results to .hres file
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
+        # Initialize homogenized results dictionary
+        hom_results = dict()
+        # Build homogenized results dictionary
+        hom_results['hom_strain'] = hom_strain
+        hom_results['hom_stress'] = hom_stress
+        if problem_type == 1:
+            hom_results['hom_stress_33'] = hom_stress_33
+        # Write increment homogenized results to associated output file (.hres)
+        writeHomResFile(hres_file_path,problem_type,inc,hom_results)
         #                                                                 Increment VTK file
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
 
         #                                                          Converged state variables
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Update the last increment converged state variables
         clusters_state_old = copy.deepcopy(clusters_state)
+        # Update the last increment converged homogenized strain and stress tensors
+        # (matricial form)
+        hom_strain_old_mf = hom_strain_mf
+        hom_stress_old_mf = hom_stress_mf
         #
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return if the last macroscale loading increment was completed successfuly,
@@ -611,9 +634,9 @@ def buildJacobian(problem_dict,n_total_clusters,n_presc_mac_stress,presc_stress_
     # Return
     return Jacobian
 # ------------------------------------------------------------------------------------------
-# Compute incremental homogenized strain and stress tensors (matricial form)
-def incHomogenizedStrainStressTensors(problem_dict,material_phases,phase_clusters,
-                                              clusters_f,clusters_state,clusters_state_old):
+# Compute homogenized strain and stress tensors (matricial form)
+def homogenizedStrainStressTensors(problem_dict,material_phases,phase_clusters,clusters_f,
+                                                                            clusters_state):
     # Get problem data
     comp_order = problem_dict['comp_order_sym']
     # Initialize incremental homogenized strain and stress tensors (matricial form)
@@ -626,22 +649,35 @@ def incHomogenizedStrainStressTensors(problem_dict,material_phases,phase_cluster
             # Get material cluster strain and stress tensor (matricial form)
             strain_mf = clusters_state[str(cluster)]['strain_mf']
             stress_mf = clusters_state[str(cluster)]['stress_mf']
-            # Get material cluster last converged increment strain and stress
-            # tensors (matricial form)
-            strain_old_mf = clusters_state_old[str(cluster)]['strain_mf']
-            stress_old_mf = clusters_state_old[str(cluster)]['stress_mf']
-            # Compute material cluster incremental strain and stress tensors
+            # Add material cluster contribution to homogenized strain and stress tensors
             # (matricial form)
-            inc_strain_mf = strain_mf - strain_old_mf
-            inc_stress_mf = stress_mf - stress_old_mf
-            # Add material cluster contribution to incremental homogenized
-            # strain and stress tensors (matricial form)
-            inc_hom_strain_mf = inc_hom_strain_mf + \
-                                              clusters_f[str(cluster)]*inc_strain_mf
-            inc_hom_stress_mf = inc_hom_stress_mf + \
-                                              clusters_f[str(cluster)]*inc_stress_mf
+            hom_strain_mf = hom_strain_mf + clusters_f[str(cluster)]*strain_mf
+            hom_stress_mf = hom_stress_mf + clusters_f[str(cluster)]*stress_mf
     # Return
-    return [inc_hom_strain_mf,inc_hom_stress_mf]
+    return [hom_strain_mf,hom_stress_mf]
+# ------------------------------------------------------------------------------------------
+# Compute homogenized out-of-plane strain or stress component in 2D plane strain and plane
+# stress problems (output purpose only)
+def outofplaneHomogenizedComp(problem_type,material_phases,phase_clusters,clusters_f,
+                                                         clusters_state,clusters_state_old):
+    # Set out-of-plane stress component (2D plane strain problem) / strain component
+    # (2D plane stress problem)
+    if problem_type == 1:
+        comp_name = 'stress_33'
+    elif problem_type == 2:
+        comp_name = 'strain_33'
+    # Initialize homogenized out-of-plane component
+    hom_comp = 0.0
+    # Loop over material phases
+    for mat_phase in material_phases:
+        # Loop over material phase clusters
+        for cluster in phase_clusters[mat_phase]:
+            # Add material cluster contribution to the homogenized out-of-plane component
+            # component
+            hom_comp = hom_comp + \
+                            clusters_f[str(cluster)]*clusters_state[str(cluster)][comp_name]
+    # Return
+    return hom_comp
 # ------------------------------------------------------------------------------------------
 # Update reference material elastic properties through a given self-consistent scheme
 def SCS_UpdateRefMatElasticProperties(self_consistent_scheme,problem_dict,
