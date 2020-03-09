@@ -61,7 +61,7 @@ def writeVTKClusterFile(vtk_dict,dirs_dict,rg_dict,clst_dict):
     writeVTKFileHeader(vtk_file,vtk_dict)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Write VTK dataset element
-    dataset_parameters ,piece_parameters = setImageDataParameters(n_voxels_dims,rve_dims)
+    dataset_parameters,piece_parameters = setImageDataParameters(n_voxels_dims,rve_dims)
     writeVTKOpenDatasetElement(vtk_file,vtk_dict,dataset_parameters)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Open VTK dataset element piece
@@ -103,14 +103,14 @@ def writeVTKClusterFile(vtk_dict,dirs_dict,rg_dict,clst_dict):
 #                                                Write macroscale loading increment VTK file
 # ==========================================================================================
 # Write VTK file associated to a given macroscale loading increment
-def writeVTKMacroLoadIncrement(input_file_name,postprocess_dir,vtk_dict,rg_dict,clst_dict):
-    # Set VTK macroscale loading increment file extension
-    if vtk_dict['type'] == 'ImageData':
-        vtk_file_ext = '.vti'
-    elif vtk_dict['type'] == 'UnstructuredGrid':
-        vtk_file_ext = '.vtu'
+def writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,rg_dict,clst_dict):
+    #info.displayInfo('5','Writing macroscale loading increment VTK file...') # Revert
+    # Get input data file name
+    input_file_name = dirs_dict['input_file_name']
+    # Get post processing directory
+    postprocess_dir = dirs_dict['postprocess_dir']
     # Set VTK macroscale loading increment file name and path
-    vtk_inc_file_name = input_file_name + '_' + str(increment) + vtk_file_ext
+    vtk_inc_file_name = input_file_name + '_' + str(increment) + '.vti'
     vtk_inc_file_path = postprocess_dir + 'VTK/' + vtk_inc_file_name
     # Open VTK macroscale loading increment file (append mode)
     if os.path.isfile(vtk_inc_file_path):
@@ -125,7 +125,6 @@ def writeVTKMacroLoadIncrement(input_file_name,postprocess_dir,vtk_dict,rg_dict,
     else:
         vtk_dict['byte_order'] = 'BigEndian'
     vtk_dict['header_type'] = 'UInt64'
-    vtk_dict['precision'] = 'SinglePrecision' # Remove
     writeVTKFileHeader(vtk_file,vtk_dict)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Write VTK dataset element
@@ -135,8 +134,7 @@ def writeVTKMacroLoadIncrement(input_file_name,postprocess_dir,vtk_dict,rg_dict,
         # Get RVE dimensions
         rve_dims = rg_dict['rve_dims']
         # Set VTK dataset element parameters
-        dataset_parameters, piece_parameters = \
-                                              setImageDataParameters(n_voxels_dims,rve_dims)
+        dataset_parameters,piece_parameters = setImageDataParameters(n_voxels_dims,rve_dims)
     elif vtk_dict['type'] == 'UnstructuredGrid':
         print('Error: VTK UnstructuredGrid dataset element is not implemeted yet!')
     writeVTKOpenDatasetElement(vtk_file,vtk_dict,dataset_parameters)
@@ -144,6 +142,36 @@ def writeVTKMacroLoadIncrement(input_file_name,postprocess_dir,vtk_dict,rg_dict,
     # Open VTK dataset element piece
     writeVTKOpenPiece(vtk_file,piece_parameters)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Open VTK dataset element piece cell data
+    writeVTKOpenCellData(vtk_file)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    # Set output variables common to all material constitutive models
+    common_var_list = ['e_strain','strain','stress']
+    # Loop over common state variables
+    for var in common_var_list:
+        # Initialize regular grid shape array
+        rg_array = copy.deepcopy(voxels_clusters)
+        # Loop over material phases
+        for mat_phase in material_phases:
+            # Loop over material phase clusters
+            for cluster in phase_clusters[mat_phase]:
+                if isinstance(clusters_state[var],numpy.ndarray):
+
+                    np.where(rg_array == cluster, )
+
+
+
+
+    # Loop over common output variables
+
+
+    for var in common_var_list:
+
+        if isinstance()
+    # Write VTK cell
+
+
     # Write VTK cell data array
     #data_list = list(...)
     #min_val = min(data_list)
@@ -153,6 +181,11 @@ def writeVTKMacroLoadIncrement(input_file_name,postprocess_dir,vtk_dict,rg_dict,
     #writeVTKOpenCellData(vtk_file)
     #writeVTKCellDataArray(vtk_file,vtk_dict,data_list,data_parameters)
     #writeVTKCloseCellData(vtk_file)
+
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Close VTK dataset element piece cell data
+    writeVTKCloseCellData(vtk_file)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Close VTK dataset element piece
     writeVTKClosePiece(vtk_file)
