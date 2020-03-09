@@ -103,7 +103,7 @@ def writeVTKClusterFile(vtk_dict,dirs_dict,rg_dict,clst_dict):
 #                                                Write macroscale loading increment VTK file
 # ==========================================================================================
 # Write VTK file associated to a given macroscale loading increment
-def writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,rg_dict,clst_dict):
+def writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,problem_dict,rg_dict,clst_dict):
     #info.displayInfo('5','Writing macroscale loading increment VTK file...') # Revert
     # Get input data file name
     input_file_name = dirs_dict['input_file_name']
@@ -145,22 +145,63 @@ def writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,rg_dict,clst_dict):
     # Open VTK dataset element piece cell data
     writeVTKOpenCellData(vtk_file)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Get problem data
+    comp_order_sym = problem_dict['comp_order_sym']
+    comp_order_nsym = problem_dict['comp_order_nsym']
 
     # Set output variables common to all material constitutive models
-    common_var_list = ['e_strain','strain','stress']
+    common_var_list = ['e_strain_mf','strain_mf','stress_mf']
     # Loop over common state variables
-    for var in common_var_list:
+    for var_name in common_var_list:
         # Initialize regular grid shape array
         rg_array = copy.deepcopy(voxels_clusters)
         # Loop over material phases
         for mat_phase in material_phases:
             # Loop over material phase clusters
             for cluster in phase_clusters[mat_phase]:
-                if isinstance(clusters_state[var],numpy.ndarray):
+                # Get
+                var,var_type = processVar(var_name,cluster,clusters_state,comp_order_sym,comp_order_nsym)
+                if var_type in ['int','bool']:
+                    np.where(rg_array == cluster,var,rg_array)
+                elif var_type == 'vector':
+                    for i in range(len(var)):
+                        np.where(rg_array == cluster,var[i],rg_array)
+                elif var_type == 'sym_matrix':
+                    for comp in comp_order_sym:
+                        np.where(rg_array == cluster,var[i],rg_array)
 
-                    np.where(rg_array == cluster, )
 
+        # Write VTK cell data array
+        data_list = list(rg_array.flatten('F'))
+        min_val = min(data_list)
+        max_val = max(data_list)
+        data_parameters = {'Name':'','format':'ascii','RangeMin':min_val,'RangeMax':max_val}
 
+    def processVar(var_name,cluster,clusters_state,comp_order_sym,comp_order_nsym):
+        # Get stored state variable
+        stored_var = clusters_state[str(cluster)][var_name]
+        # Build
+        if isinstance(stored_var,int) or isinstance(stored_var,np.integer):
+            var_type = 'int'
+            var = stored_var
+        elif isinstance(stored_var,bool):
+            var_type = 'bool'
+            var = stored_var
+        elif isinstance(stored_var,numpy.ndarray) and len(stored_var.shape) == 1:
+            if var_name.split('_')[-1] == 'mf':
+                if len(stored_var) == comp_order_sym:
+                    var_type = 'sym_matrix'
+                    var = top.getTensorFromMatricialForm(stored_var,n_dim,comp_order_sym)
+                else:
+                    var_type = 'nsym_matrix'
+                    var = top.getTensorFromMatricialForm(stored_var,n_dim,comp_order_nsym)
+        else:
+            var_type = 'matrix'
+            var = stored_var
+        # Return
+        return [var,var_type]
+
+    kelvinFactor(idx,comp_order)
 
 
     # Loop over common output variables
