@@ -120,11 +120,11 @@ except FileNotFoundError as message:
 # Read input data according to analysis type
 info.displayInfo('5','Reading the input data file...')
 strain_formulation,problem_type,n_dim,comp_order_sym,comp_order_nsym,n_material_phases,\
-material_properties, mac_load_type,mac_load,mac_load_presctype,self_consistent_scheme, \
-scs_max_n_iterations,scs_conv_tol,clustering_method,clustering_strategy, \
-clustering_solution_method,phase_n_clusters,n_load_increments,max_n_iterations,conv_tol, \
-max_subincrem_level,su_max_n_iterations,su_conv_tol,discret_file_path,rve_dims = \
-                                                     rid.readInputData(input_file,dirs_dict)
+material_phases_models,material_properties,mac_load_type,mac_load,mac_load_presctype, \
+self_consistent_scheme,scs_max_n_iterations,scs_conv_tol,clustering_method, \
+clustering_strategy,clustering_solution_method,phase_n_clusters,n_load_increments, \
+max_n_iterations,conv_tol,max_subincrem_level,su_max_n_iterations,su_conv_tol, \
+discret_file_path,rve_dims = rid.readInputData(input_file,dirs_dict)
 # Close user input data file
 input_file.close()
 # Package data associated to problem general parameters
@@ -133,7 +133,8 @@ problem_dict = packager.packageProblem(strain_formulation,problem_type,n_dim,com
                                                                             comp_order_nsym)
 # Package data associated to the material phases
 info.displayInfo('5','Packaging material data...')
-mat_dict = packager.packageMaterialPhases(n_material_phases,material_properties)
+mat_dict = packager.packageMaterialPhases(n_material_phases,material_phases_models,
+                                                                        material_properties)
 # Package data associated to the macroscale loading
 info.displayInfo('5','Packaging macroscale loading data...')
 macload_dict = packager.packageMacroscaleLoading(mac_load_type,mac_load,mac_load_presctype,
@@ -190,6 +191,7 @@ if not is_same_offstage:
     clusteringMethods.performClustering(copy.deepcopy(dirs_dict),copy.deepcopy(mat_dict),
                                                            copy.deepcopy(rg_dict),clst_dict)
     # Write clustering VTK file
+    info.displayInfo('5','Writing cluster VTK file...')
     VTKOutput.writeVTKClusterFile(vtk_dict,copy.deepcopy(dirs_dict),copy.deepcopy(rg_dict),
                                                                    copy.deepcopy(clst_dict))
     # Set phase ending time and display finishing phase information

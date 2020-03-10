@@ -258,8 +258,8 @@ def readInputData(input_file,dirs_dict):
     rve_dims = readRVEDimensions(input_file,input_file_path,keyword,n_dim)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return [strain_formulation,problem_type,n_dim,comp_order_sym,comp_order_nsym,
-            n_material_phases,material_properties,mac_load_type,mac_load,
-            mac_load_typeidxs,self_consistent_scheme,scs_max_n_iterations,
+            n_material_phases,material_phases_models,material_properties,mac_load_type,
+            mac_load,mac_load_typeidxs,self_consistent_scheme,scs_max_n_iterations,
             scs_conv_tol,clustering_method,clustering_strategy,clustering_solution_method,
             phase_n_clusters,n_load_increments,max_n_iterations,conv_tol,
             max_subincrem_level,su_max_n_iterations,su_conv_tol,discret_file_path,rve_dims]

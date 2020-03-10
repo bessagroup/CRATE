@@ -58,7 +58,7 @@ def packageProblem(strain_formulation,problem_type,n_dim,comp_order_sym,comp_ord
     return problem_dict
 # ------------------------------------------------------------------------------------------
 # Package data associated to the material phases
-def packageMaterialPhases(n_material_phases,material_properties):
+def packageMaterialPhases(n_material_phases,material_phases_models,material_properties):
     # Initialize list with existent material phases in the microstructure
     material_phases = list()
     # Initialize dictionary with existent material phases volume fraction
@@ -67,6 +67,7 @@ def packageMaterialPhases(n_material_phases,material_properties):
     mat_dict = dict()
     # Build material phases dictionary
     mat_dict['n_material_phases'] = n_material_phases
+    mat_dict['material_phases_models'] = material_phases_models
     mat_dict['material_properties'] = material_properties
     mat_dict['material_phases'] = material_phases
     mat_dict['material_phases_f'] = material_phases_f
