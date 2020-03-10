@@ -22,6 +22,10 @@ import tensorOperations as top
 import errors
 # Tensorial operations
 import tensorOperations as top
+# Homogenized results output
+import homogenizedResultsOutput
+# VTK output
+import VTKOutput
 # Material interface
 import material.materialInterface
 # Linear elastic constitutive model
@@ -33,6 +37,9 @@ import material.models.linear_elastic
 def onlineStage():
     #                                                                           General data
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Get input data file name and post processing directory
+    input_file_name = dirs_dict['input_file_name']
+    postprocess_dir = dirs_dict['postprocess_dir']
     # Get problem data
     n_dim = problem_dict['n_dim']
     comp_order = problem_dict['comp_order_sym']
@@ -74,11 +81,22 @@ def onlineStage():
         # Loop over material phase clusters
         for cluster in phase_clusters[mat_phase]:
             # Initialize state variables
+            clusters_state[str(cluster)] = \
+                              material.materialInterface('init',copy.deepcopy(problem_dict),
+                                                          copy.deepcopy(mat_dict),mat_phase)
             clusters_state_old[str(cluster)] = \
                               material.materialInterface('init',copy.deepcopy(problem_dict),
                                                           copy.deepcopy(mat_dict),mat_phase)
     # Get total number of clusters
     n_total_clusters = sum([phase_n_clusters[mat_phase] for mat_phase in material_phases])
+    #
+    #                                                                 Initial state VTK file
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Open VTK collection file
+    VTKOutput.openVTKCollectionFile(input_file_name,postprocess_dir)
+    # Write VTK file associated to the initial state
+    VTKOutput.writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,problem_dict,mat_dict,rg_dict,
+                                                                 clst_dict,0,clusters_state)
     #
     #                                                      Material clusters elastic tangent
     #                                                                     (Zeliang approach)
@@ -357,12 +375,15 @@ def onlineStage():
         if problem_type == 1:
             hom_results['hom_stress_33'] = hom_stress_33
         # Write increment homogenized results to associated output file (.hres)
-        writeHomResFile(hres_file_path,problem_type,inc,hom_results)
+        homogenizedResultsOutput.writeHomResFile(hres_file_path,problem_type,inc,
+                                                                                hom_results)
+        #
         #                                                                 Increment VTK file
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-
+        # Write VTK file associated to a given macroscale loading increment
+        VTKOutput.writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,problem_dict,mat_dict,
+                                                       rg_dict,clst_dict,inc,clusters_state)
+        #
         #                                                          Converged state variables
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Update the last increment converged state variables
@@ -376,6 +397,9 @@ def onlineStage():
         # Return if the last macroscale loading increment was completed successfuly,
         # otherwise increment the increment counter
         if inc == n_load_increments:
+            # Close VTK collection file
+            VTKOutput.closeVTKCollectionFile(input_file_name,postprocess_dir)
+            # Finish online stage
             return
         else:
             inc = inc + 1

@@ -46,7 +46,7 @@ def materialInterface(procedure,problem_dict,mat_dict,mat_phase,*args):
     if model_source == 1:
         #                                                                     Initialization
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        if procedure = 'init':
+        if procedure == 'init':
             # Call constitutive model function to perform initialization procedure
             state_variables = material_phases_models[str(mat_phase)]['init'](problem_dict)
             # Return initialized state variables dictionary
@@ -54,7 +54,7 @@ def materialInterface(procedure,problem_dict,mat_dict,mat_phase,*args):
         #
         #                                                State update and Consistent tangent
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        elif procedure = 'suct':
+        elif procedure == 'suct':
             # Set required arguments to perform the state update procedure and to compute
             # the consistent tangent modulus
             inc_strain = args[0]

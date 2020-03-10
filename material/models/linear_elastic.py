@@ -34,11 +34,11 @@ def init(problem_dict):
     # Define constitutive model state variables (names and initialization)
     state_variables_init = dict()
     state_variables_init['e_strain_mf'] = \
-                          top.setTensorMatricialForm(np.zeros(n_dim,n_dim),n_dim,comp_order)
+                        top.setTensorMatricialForm(np.zeros((n_dim,n_dim)),n_dim,comp_order)
     state_variables_init['strain_mf'] = \
-                          top.setTensorMatricialForm(np.zeros(n_dim,n_dim),n_dim,comp_order)
+                        top.setTensorMatricialForm(np.zeros((n_dim,n_dim)),n_dim,comp_order)
     state_variables_init['stress_mf'] = \
-                          top.setTensorMatricialForm(np.zeros(n_dim,n_dim),n_dim,comp_order)
+                        top.setTensorMatricialForm(np.zeros((n_dim,n_dim)),n_dim,comp_order)
     state_variables_init['is_su_fail'] = False
     # Set additional out-of-plane stress component in a 2D plane strain problem (output
     # purpose only)

@@ -13,12 +13,14 @@
 import os
 # Parse command-line options and arguments
 import sys
+# Import from string
+import importlib
 # Working with arrays
 import numpy as np
 # Shallow and deep copies
 import copy
-# Display messages
-import info
+# Tensorial operations
+import tensorOperations as top
 #
 #                                                                           Global variables
 # ==========================================================================================
@@ -29,7 +31,6 @@ indent = '  '
 # ==========================================================================================
 # Write VTK file with the clustering discretization
 def writeVTKClusterFile(vtk_dict,dirs_dict,rg_dict,clst_dict):
-    #info.displayInfo('5','Writing cluster VTK file...') # Revert
     # Get input data file name
     input_file_name = dirs_dict['input_file_name']
     # Get offline stage directory
@@ -77,6 +78,7 @@ def writeVTKClusterFile(vtk_dict,dirs_dict,rg_dict,clst_dict):
     data_parameters = {'Name':'Material phase','format':'ascii','RangeMin':min_val,
                                                                          'RangeMax':max_val}
     writeVTKCellDataArray(vtk_file,vtk_dict,data_list,data_parameters)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Write VTK cell data array - Clusters
     data_list = list(voxels_clusters.flatten('F'))
     min_val = min(data_list)
@@ -103,18 +105,17 @@ def writeVTKClusterFile(vtk_dict,dirs_dict,rg_dict,clst_dict):
 #                                                Write macroscale loading increment VTK file
 # ==========================================================================================
 # Write VTK file associated to a given macroscale loading increment
-def writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,problem_dict,rg_dict,clst_dict):
-    #info.displayInfo('5','Writing macroscale loading increment VTK file...') # Revert
+def writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,
+                                                                        inc,clusters_state):
     # Get input data file name
     input_file_name = dirs_dict['input_file_name']
     # Get post processing directory
     postprocess_dir = dirs_dict['postprocess_dir']
     # Set VTK macroscale loading increment file name and path
-    vtk_inc_file_name = input_file_name + '_' + str(increment) + '.vti'
+    vtk_inc_file_name = input_file_name + '_' + str(inc) + '.vti'
     vtk_inc_file_path = postprocess_dir + 'VTK/' + vtk_inc_file_name
     # Open VTK macroscale loading increment file (append mode)
-    if os.path.isfile(vtk_inc_file_path):
-        os.remove(vtk_inc_file_path)
+    open(vtk_inc_file_path,'w').close()
     vtk_file = open(vtk_inc_file_path,'a')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Write VTK file header
@@ -129,6 +130,9 @@ def writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,problem_dict,rg_dict,clst_dict
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Write VTK dataset element
     if vtk_dict['type'] == 'ImageData':
+        # Get regular grid data
+        n_voxels_dims = rg_dict['n_voxels_dims']
+        rve_dims = rg_dict['rve_dims']
         # Get number of pixels/voxels in each dimension and total number of pixels/voxels
         n_voxels_dims = rg_dict['n_voxels_dims']
         # Get RVE dimensions
@@ -146,84 +150,85 @@ def writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,problem_dict,rg_dict,clst_dict
     writeVTKOpenCellData(vtk_file)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Get problem data
-    comp_order_sym = problem_dict['comp_order_sym']
-    comp_order_nsym = problem_dict['comp_order_nsym']
-
-    # Set output variables common to all material constitutive models
-    common_var_list = ['e_strain_mf','strain_mf','stress_mf']
+    problem_type = problem_dict['problem_type']
+    # Get material data
+    material_phases = mat_dict['material_phases']
+    material_phases_models = mat_dict['material_phases_models']
+    # Get clustering data
+    phase_clusters = clst_dict['phase_clusters']
+    voxels_clusters = clst_dict['voxels_clusters']
+    # Get material constitutive models associated to existent material phases in the
+    # microstructure
+    material_models = list(np.unique([material_phases_models[mat_phase]['name'] \
+                                                         for mat_phase in material_phases]))
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set state variables common to all material constitutive models
+    if problem_type == 1:
+        common_var_list = ['stress_mf','stress_33']
+    else:
+        common_var_list = ['stress_mf']
     # Loop over common state variables
     for var_name in common_var_list:
-        # Initialize regular grid shape array
-        rg_array = copy.deepcopy(voxels_clusters)
-        # Loop over material phases
-        for mat_phase in material_phases:
-            # Loop over material phase clusters
-            for cluster in phase_clusters[mat_phase]:
-                # Get
-                var,var_type = processVar(var_name,cluster,clusters_state,comp_order_sym,comp_order_nsym)
-                if var_type in ['int','bool']:
-                    np.where(rg_array == cluster,var,rg_array)
-                elif var_type == 'vector':
-                    for i in range(len(var)):
-                        np.where(rg_array == cluster,var[i],rg_array)
-                elif var_type == 'sym_matrix':
-                    for comp in comp_order_sym:
-                        np.where(rg_array == cluster,var[i],rg_array)
-
-
-        # Write VTK cell data array
-        data_list = list(rg_array.flatten('F'))
-        min_val = min(data_list)
-        max_val = max(data_list)
-        data_parameters = {'Name':'','format':'ascii','RangeMin':min_val,'RangeMax':max_val}
-
-    def processVar(var_name,cluster,clusters_state,comp_order_sym,comp_order_nsym):
-        # Get stored state variable
-        stored_var = clusters_state[str(cluster)][var_name]
-        # Build
-        if isinstance(stored_var,int) or isinstance(stored_var,np.integer):
-            var_type = 'int'
-            var = stored_var
-        elif isinstance(stored_var,bool):
-            var_type = 'bool'
-            var = stored_var
-        elif isinstance(stored_var,numpy.ndarray) and len(stored_var.shape) == 1:
-            if var_name.split('_')[-1] == 'mf':
-                if len(stored_var) == comp_order_sym:
-                    var_type = 'sym_matrix'
-                    var = top.getTensorFromMatricialForm(stored_var,n_dim,comp_order_sym)
-                else:
-                    var_type = 'nsym_matrix'
-                    var = top.getTensorFromMatricialForm(stored_var,n_dim,comp_order_nsym)
-        else:
-            var_type = 'matrix'
-            var = stored_var
-        # Return
-        return [var,var_type]
-
-    kelvinFactor(idx,comp_order)
-
-
-    # Loop over common output variables
-
-
-    for var in common_var_list:
-
-        if isinstance()
-    # Write VTK cell
-
-
-    # Write VTK cell data array
-    #data_list = list(...)
-    #min_val = min(data_list)
-    #max_val = max(data_list)
-    #data_parameters = {'Name':'?','format':'ascii','NumberofComponents':1,
-    #                                                 'RangeMin':min_val,'RangeMax':max_val}
-    #writeVTKOpenCellData(vtk_file)
-    #writeVTKCellDataArray(vtk_file,vtk_dict,data_list,data_parameters)
-    #writeVTKCloseCellData(vtk_file)
-
-
+        # Loop over material constitutive models
+        for model_name in material_models:
+            # Get constitutive model module
+            model_module = importlib.import_module('material.models.' + str(model_name))
+            # Get constitutive model state variables dictionary
+            init_procedure = getattr(model_module,'init')
+            model_state_variables = init_procedure(problem_dict)
+            # Skip state variable output if it isn't defined for at least one constitutive
+            # model
+            if var_name not in model_state_variables.keys():
+                break
+        # Get state variable descriptors
+        var,var_type,var_n_comp = setOutputVariable(0,problem_dict,var_name,
+                                                                      model_state_variables)
+        # Loop over state variable components
+        for icomp in range(var_n_comp):
+            # Loop over material constitutive models
+            for model_name in material_models:
+                # Build state variable cell data array
+                rg_array = buildVarCellDataArray(model_name,var_name,var_type,icomp,
+                         problem_dict,material_phases,material_phases_models,phase_clusters,
+                                                             voxels_clusters,clusters_state)
+            # Set output variable data name
+            data_name = setDataName(problem_dict,var_name,var_type,icomp,True)
+            # Write VTK cell data array
+            data_list = list(rg_array.flatten('F'))
+            min_val = min(data_list)
+            max_val = max(data_list)
+            data_parameters = {'Name':data_name,'format':'ascii','RangeMin':min_val,
+                                                                         'RangeMax':max_val}
+            writeVTKCellDataArray(vtk_file,vtk_dict,data_list,data_parameters)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Loop over material constitutive models
+    for model_name in material_models:
+        # Get constitutive model module
+        model_module = importlib.import_module('material.models.' + str(model_name))
+        # Get constitutive model state variables dictionary
+        init_procedure = getattr(model_module,'init')
+        model_state_variables = init_procedure(problem_dict)
+        # Loop over constitutive model state variables
+        for var_name in list(set(model_state_variables.keys()) - set(common_var_list)):
+            # Get state variable descriptors
+            var,var_type,var_n_comp = setOutputVariable(0,problem_dict,var_name,
+                                                                      model_state_variables)
+            # Loop over state variable components
+            for icomp in range(var_n_comp):
+                # Build state variable cell data array
+                rg_array = buildVarCellDataArray(model_name,var_name,var_type,icomp,
+                         problem_dict,material_phases,material_phases_models,phase_clusters,
+                                                             voxels_clusters,clusters_state)
+                # Set output variable data name
+                data_name = \
+                          setDataName(problem_dict,var_name,var_type,icomp,False,model_name)
+                # Write VTK cell data array
+                data_list = list(rg_array.flatten('F'))
+                min_val = min(data_list)
+                max_val = max(data_list)
+                data_parameters = {'Name':data_name,'format':'ascii','RangeMin':min_val,
+                                                                         'RangeMax':max_val}
+                writeVTKCellDataArray(vtk_file,vtk_dict,data_list,data_parameters)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Close VTK dataset element piece cell data
     writeVTKCloseCellData(vtk_file)
@@ -237,8 +242,23 @@ def writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,problem_dict,rg_dict,clst_dict
     # Write VTK file footer
     writeVTKFileFooter(vtk_file)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Close clustering VTK file
+    # Close VTK file
     vtk_file.close()
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Open VTK collection file (remove)
+    if inc == 0:
+        openVTKCollectionFile(input_file_name,postprocess_dir)
+
+
+
+    # Add macroscale loading increment VTK file to VTK collection file
+    writeVTKCollectionFile(input_file_name,postprocess_dir,inc,vtk_inc_file_path)
+
+
+
+    # Close VTK collection file (remove)
+    if inc == 4:
+        closeVTKCollectionFile(input_file_name,postprocess_dir)
 #
 #                                                                  Write VTK collection file
 # ==========================================================================================
@@ -248,8 +268,6 @@ def openVTKCollectionFile(input_file_name,postprocess_dir):
     vtk_pvd_file_name = input_file_name + '.pvd'
     vtk_pvd_file_path = postprocess_dir + vtk_pvd_file_name
     # Open VTK collection file (append mode)
-    if os.path.isfile(vtk_pvd_file_path):
-        os.remove(vtk_pvd_file_path)
     vtk_file = open(vtk_pvd_file_path,'a')
     # Set endianness
     if sys.byteorder == 'little':
@@ -263,7 +281,10 @@ def openVTKCollectionFile(input_file_name,postprocess_dir):
                    'byte_order=' + enclose(byte_order) + '>' + '\n')
     # Open VTK collection element
     vtk_file.write(indent + '<' + 'Collection' + '>' + '\n')
+    # Close VTK collection file
+    vtk_file.close()
 # ------------------------------------------------------------------------------------------
+# Add time step VTK file
 def writeVTKCollectionFile(input_file_name,postprocess_dir,time_step,time_step_file_path):
     # Set VTK collection file name and path
     vtk_pvd_file_name = input_file_name + '.pvd'
@@ -271,8 +292,10 @@ def writeVTKCollectionFile(input_file_name,postprocess_dir,time_step,time_step_f
     # Open VTK collection file (append mode)
     vtk_file = open(vtk_pvd_file_path,'a')
     # Add time step VTK file
-    vtk_file.write(2*indent + '<' + 'Dataset' + 'time_step=' + enclose(time_step) + ' ' + \
-                              'file=' + enclose(time_step_file_path) + '>' + '\n')
+    vtk_file.write(2*indent + '<' + 'DataSet' + ' ' + 'timestep=' + enclose(time_step) + \
+                                 ' ' + 'file=' + enclose(time_step_file_path) + '/>' + '\n')
+    # Close VTK collection file
+    vtk_file.close()
 # ------------------------------------------------------------------------------------------
 # Close VTK collection file
 def closeVTKCollectionFile(input_file_name,postprocess_dir):
@@ -285,6 +308,8 @@ def closeVTKCollectionFile(input_file_name,postprocess_dir):
     vtk_file.write(indent + '<' + '/Collection' + '>' + '\n')
     # Close VTK collection file
     vtk_file.write('<' + '/VTKFile' + '>' + '\n')
+    # Close VTK collection file
+    vtk_file.close()
 #
 #                                                                    Complementary functions
 # ==========================================================================================
@@ -418,3 +443,107 @@ def writeVTKCellDataArray(vtk_file,vtk_dict,data_list,data_parameters):
             vtk_file.write(template1.format(*aux_list[i]))
     # Write VTK data array footer
     vtk_file.write(4*indent + '<' + '/DataArray' + '>' + '\n')
+#
+#                                                                    Complementary functions
+# ==========================================================================================
+# Set state variable descriptors and format required to output associated cell data array
+def setOutputVariable(mode,problem_dict,var_name,*args):
+    # Get problem data
+    n_dim = problem_dict['n_dim']
+    comp_order_sym = problem_dict['comp_order_sym']
+    comp_order_nsym = problem_dict['comp_order_nsym']
+    # Get stored state variable for output
+    if mode == 0:
+        model_state_variables = args[0]
+        stored_var = model_state_variables[var_name]
+    else:
+        cluster = args[0]
+        clusters_state = args[1]
+        stored_var = clusters_state[str(cluster)][var_name]
+    # Set output state variable descriptors
+    if isinstance(stored_var,int) or isinstance(stored_var,np.integer):
+        var_type = 'int'
+        var_n_comp = 1
+        var = stored_var
+    elif isinstance(stored_var,float) or isinstance(stored_var,np.float):
+        var_type = 'float'
+        var_n_comp = 1
+        var = stored_var
+    elif isinstance(stored_var,bool):
+        var_type = 'bool'
+        var_n_comp = 1
+        var = stored_var
+    elif isinstance(stored_var,np.ndarray) and len(stored_var.shape) == 1:
+        if var_name.split('_')[-1] == 'mf':
+            if len(stored_var) == len(comp_order_sym):
+                var_type = 'sym_matrix_mf'
+                var_n_comp = len(comp_order_sym)
+                var = top.getTensorFromMatricialForm(stored_var,n_dim,comp_order_sym)
+            else:
+                var_type = 'nsym_matrix_mf'
+                var_n_comp = len(comp_order_nsym)
+                var = top.getTensorFromMatricialForm(stored_var,n_dim,comp_order_nsym)
+    else:
+        var_type = 'matrix'
+        var_n_comp = len(comp_order_nsym)
+        var = stored_var
+    # Return
+    return [var,var_type,var_n_comp]
+# ------------------------------------------------------------------------------------------
+# Build given constitutive model state variable cell data array
+def buildVarCellDataArray(model_name,var_name,var_type,icomp,problem_dict,material_phases,
+                      material_phases_models,phase_clusters,voxels_clusters,clusters_state):
+    # Get problem data
+    comp_order_sym = problem_dict['comp_order_sym']
+    comp_order_nsym = problem_dict['comp_order_nsym']
+    # Initialize regular grid shape array
+    rg_array = copy.deepcopy(voxels_clusters)
+    # Loop over material phases
+    for mat_phase in material_phases:
+        if material_phases_models[mat_phase]['name'] == model_name:
+            # Loop over material phase clusters
+            for cluster in phase_clusters[mat_phase]:
+                # Get material cluster state variable
+                cluster_var,_,_ = \
+                           setOutputVariable(1,problem_dict,var_name,cluster,clusters_state)
+                # Assemble material cluster state variable
+                if var_type in ['int','bool','float']:
+                    rg_array = np.where(rg_array == cluster,cluster_var,rg_array)
+                elif var_type == 'vector':
+                    rg_array = np.where(rg_array == cluster,cluster_var[icomp],rg_array)
+                elif var_type == 'sym_matrix_mf':
+                    idx = tuple([int(x) - 1 for x in comp_order_sym[icomp]])
+                    rg_array = np.where(rg_array == cluster,cluster_var[idx],rg_array)
+                elif var_type == 'nsym_matrix_mf':
+                    idx = tuple([int(x) - 1 for x in comp_order_nsym[icomp]])
+                    rg_array = np.where(rg_array == cluster,cluster_var[idx],rg_array)
+                else:
+                    idx = tuple([int(x) - 1 for x in comp_order_nsym[icomp]])
+                    rg_array = np.where(rg_array == cluster,cluster_var[idx],rg_array)
+    # Return
+    return rg_array
+# ------------------------------------------------------------------------------------------
+# Set state variable cell data array name
+def setDataName(problem_dict,var_name,var_type,index,is_common_var,*args):
+    # Set cell data array name prefix
+    if is_common_var:
+        prefix = ''
+    else:
+        model_name = args[0]
+        prefix = model_name + ': '
+    # Get problem data
+    comp_order_sym = problem_dict['comp_order_sym']
+    comp_order_nsym = problem_dict['comp_order_nsym']
+    # Set output variable name
+    if var_type in ['int','bool','float']:
+        data_name = prefix + var_name
+    elif var_type == 'vector':
+        data_name = prefix + var_name + '_' + str(index)
+    elif var_type == 'sym_matrix_mf':
+        data_name = prefix + var_name[:-3] + '_' + comp_order_sym[index]
+    elif var_type == 'nsym_matrix_mf':
+        data_name = prefix + var_name[:-3] + '_' + comp_order_nsym[index]
+    else:
+        data_name = prefix + var_name + '_' + comp_order_nsym[index]
+    # Return
+    return data_name
