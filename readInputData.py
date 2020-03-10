@@ -111,6 +111,10 @@ def readInputData(input_file,dirs_dict):
     problem_type = readTypeAKeyword(input_file,input_file_path,keyword,max)
     n_dim, comp_order_sym, comp_order_nsym = setProblemTypeParameters(problem_type)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Read RVE dimensions
+    keyword = 'RVE_Dimensions'
+    rve_dims = readRVEDimensions(input_file,input_file_path,keyword,n_dim)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read number of material phases and the associated constitutive models and properties
     keyword = 'Material_Phases'
     n_material_phases,material_phases_models,material_properties = \
@@ -253,9 +257,15 @@ def readInputData(input_file,dirs_dict):
         location = inspect.getframeinfo(inspect.currentframe())
         errors.displayException(location.filename,location.lineno+1,message)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Read RVE dimensions
-    keyword = 'RVE_Dimensions'
-    rve_dims = readRVEDimensions(input_file,input_file_path,keyword,n_dim)
+    # Read VTK output options
+    keyword = 'VTK_Output'
+    isFound, keyword_line_number = searchOptionalKeywordLine(input_file,keyword)
+    if isFound:
+        
+    else:
+        is_VTK_output = False
+
+
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return [strain_formulation,problem_type,n_dim,comp_order_sym,comp_order_nsym,
             n_material_phases,material_phases_models,material_properties,mac_load_type,
