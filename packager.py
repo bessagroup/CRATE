@@ -214,12 +214,19 @@ def packageAlgorithmicParameters(max_n_iterations,conv_tol,max_subincrem_level,
     return algpar_dict
 # ------------------------------------------------------------------------------------------
 # Package data associated to the VTK output
-def packageVTK():
+def packageVTK(is_VTK_output,*args):
     # Initialize VTK dictionary
     vtk_dict = dict()
     # Build VTK dictionary
-    vtk_dict['format'] = 'ascii'
-    vtk_dict['precision'] = 'SinglePrecision'
+    vtk_dict['is_VTK_output'] = is_VTK_output
+    if is_VTK_output:
+        vtk_format = args[0]
+        vtk_inc_div = args[1]
+        vtk_vars = args[2]
+        vtk_dict['vtk_format'] = 'ascii'   # Change to vtk_format when binary is implemented
+        vtk_dict['vtk_inc_div'] = vtk_inc_div
+        vtk_dict['vtk_vars'] = vtk_vars
+        vtk_dict['vtk_precision'] = 'SinglePrecision'
     # Return
     return vtk_dict
 #

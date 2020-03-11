@@ -65,6 +65,10 @@ def onlineStage():
     # Get algorithmic parameters
     max_n_iterations = algpar_dict['max_n_iterations']
     conv_tol = algpar_dict['conv_tol']
+    # Get VTK output parameters
+    is_VTK_output = vtk_dict['is_VTK_output']
+    if is_VTK_output:
+        vtk_inc_div = vtk_dict['vtk_inc_div']
     #
     #                                                                        Initializations
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -92,11 +96,12 @@ def onlineStage():
     #
     #                                                                 Initial state VTK file
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Open VTK collection file
-    VTKOutput.openVTKCollectionFile(input_file_name,postprocess_dir)
-    # Write VTK file associated to the initial state
-    VTKOutput.writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,problem_dict,mat_dict,rg_dict,
-                                                                 clst_dict,0,clusters_state)
+    if is_VTK_output:
+        # Open VTK collection file
+        VTKOutput.openVTKCollectionFile(input_file_name,postprocess_dir)
+        # Write VTK file associated to the initial state
+        VTKOutput.writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,problem_dict,mat_dict,
+                                                         rg_dict,clst_dict,0,clusters_state)
     #
     #                                                      Material clusters elastic tangent
     #                                                                     (Zeliang approach)
@@ -380,8 +385,9 @@ def onlineStage():
         #
         #                                                                 Increment VTK file
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Write VTK file associated to a given macroscale loading increment
-        VTKOutput.writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,problem_dict,mat_dict,
+        # Write VTK file associated to the macroscale loading increment
+        if is_VTK_output and inc % vtk_inc_div == 0:
+            VTKOutput.writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,problem_dict,mat_dict,
                                                        rg_dict,clst_dict,inc,clusters_state)
         #
         #                                                          Converged state variables
@@ -398,7 +404,8 @@ def onlineStage():
         # otherwise increment the increment counter
         if inc == n_load_increments:
             # Close VTK collection file
-            VTKOutput.closeVTKCollectionFile(input_file_name,postprocess_dir)
+            if is_VTK_output:
+                VTKOutput.closeVTKCollectionFile(input_file_name,postprocess_dir)
             # Finish online stage
             return
         else:

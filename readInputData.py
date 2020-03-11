@@ -21,6 +21,8 @@ import shutil
 import numpy as np
 # Shallow and deep copy operations
 import copy
+# Display messages
+import info
 # Regular expressions
 import re
 # Read specific lines from file
@@ -31,6 +33,10 @@ import inspect
 import ntpath
 # Display errors, warnings and built-in exceptions
 import errors
+# Manage files and directories
+import fileOperations
+# Packager
+import packager
 # Material interface
 import material.materialInterface
 #
@@ -88,13 +94,14 @@ def searchOptionalKeywordLine(file,keyword):
             return [isFound,line_number]
     return [isFound,line_number]
 #
-#                                                                  Read input data functions
+#                                                                       Read input data file
 # ==========================================================================================
 # Read the input data file
 def readInputData(input_file,dirs_dict):
     # Get input file and problem directory and path data
     input_file_path = dirs_dict['input_file_path']
     problem_dir = dirs_dict['problem_dir']
+    postprocess_dir = dirs_dict['postprocess_dir']
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read strain formulation
     keyword = 'Strain_Formulation'
@@ -109,7 +116,7 @@ def readInputData(input_file,dirs_dict):
     keyword = 'Problem_Type'
     max = 4
     problem_type = readTypeAKeyword(input_file,input_file_path,keyword,max)
-    n_dim, comp_order_sym, comp_order_nsym = setProblemTypeParameters(problem_type)
+    n_dim,comp_order_sym,comp_order_nsym = setProblemTypeParameters(problem_type)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read RVE dimensions
     keyword = 'RVE_Dimensions'
@@ -124,14 +131,14 @@ def readInputData(input_file,dirs_dict):
     keyword = 'Macroscale_Loading'
     max = 3
     mac_load_type = readTypeAKeyword(input_file,input_file_path,keyword,max)
-    mac_load, mac_load_typeidxs = \
-                   readMacroscaleLoading(input_file,input_file_path,mac_load_type,
+    mac_load,mac_load_presctype = \
+                             readMacroscaleLoading(input_file,input_file_path,mac_load_type,
                                                    strain_formulation,n_dim,comp_order_nsym)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read self consistent scheme (optional). If the associated keyword is not found, then
     # a default specification is assumed
     keyword = 'Self_Consistent_Scheme'
-    isFound, keyword_line_number = searchOptionalKeywordLine(input_file,keyword)
+    isFound,keyword_line_number = searchOptionalKeywordLine(input_file,keyword)
     if isFound:
         max = 2
         self_consistent_scheme = readTypeAKeyword(input_file,input_file_path,keyword,max)
@@ -141,7 +148,7 @@ def readInputData(input_file,dirs_dict):
     # Read self consistent scheme maximum number of iterations (optional). If the associated
     # keyword is not found, then a default specification is assumed
     keyword = 'SCS_Max_Number_of_Iterations'
-    isFound, keyword_line_number = searchOptionalKeywordLine(input_file,keyword)
+    isFound,keyword_line_number = searchOptionalKeywordLine(input_file,keyword)
     if isFound:
         max = '~'
         scs_max_n_iterations = readTypeAKeyword(input_file,input_file_path,keyword,max)
@@ -151,7 +158,7 @@ def readInputData(input_file,dirs_dict):
     # Read self consistent scheme convergence tolerance (optional). If the associated
     # keyword is not found, then a default specification is assumed
     keyword = 'SCS_Convergence_Tolerance'
-    isFound, keyword_line_number = searchOptionalKeywordLine(input_file,keyword)
+    isFound,keyword_line_number = searchOptionalKeywordLine(input_file,keyword)
     if isFound:
         max = '~'
         scs_conv_tol = readTypeBKeyword(input_file,input_file_path,keyword)
@@ -166,7 +173,7 @@ def readInputData(input_file,dirs_dict):
     # Read clustering strategy (optional). If the associated keyword is not found, then a
     # default specification is assumed
     keyword = 'Clustering_Strategy'
-    isFound, keyword_line_number = searchOptionalKeywordLine(input_file,keyword)
+    isFound,keyword_line_number = searchOptionalKeywordLine(input_file,keyword)
     if isFound:
         max = 1
         clustering_strategy = readTypeAKeyword(input_file,input_file_path,keyword,max)
@@ -176,7 +183,7 @@ def readInputData(input_file,dirs_dict):
     # Read clustering solution method (optional). If the associated keyword is not found,
     # then a default specification is assumed
     keyword = 'Clustering_Solution_Method'
-    isFound, keyword_line_number = searchOptionalKeywordLine(input_file,keyword)
+    isFound,keyword_line_number = searchOptionalKeywordLine(input_file,keyword)
     if isFound:
         max = 1
         clustering_solution_method = \
@@ -197,7 +204,7 @@ def readInputData(input_file,dirs_dict):
     # Read maximum number of iterations to solve each load increment (optional). If the
     # associated keyword is not found, then a default specification is assumed
     keyword = 'Max_Number_of_Iterations'
-    isFound, keyword_line_number = searchOptionalKeywordLine(input_file,keyword)
+    isFound,keyword_line_number = searchOptionalKeywordLine(input_file,keyword)
     if isFound:
         max = '~'
         max_n_iterations = readTypeAKeyword(input_file,input_file_path,keyword,max)
@@ -207,7 +214,7 @@ def readInputData(input_file,dirs_dict):
     # Read convergence tolerance to solve each load increment (optional). If the associated
     # keyword is not found, then a default specification is assumed
     keyword = 'Convergence_Tolerance'
-    isFound, keyword_line_number = searchOptionalKeywordLine(input_file,keyword)
+    isFound,keyword_line_number = searchOptionalKeywordLine(input_file,keyword)
     if isFound:
         conv_tol = readTypeBKeyword(input_file,input_file_path,keyword)
     else:
@@ -216,7 +223,7 @@ def readInputData(input_file,dirs_dict):
     # Read maximum level of subincrementation allowed (optional). If the associated
     # keyword is not found, then a default specification is assumed
     keyword = 'Max_SubIncrem_Level'
-    isFound, keyword_line_number = searchOptionalKeywordLine(input_file,keyword)
+    isFound,keyword_line_number = searchOptionalKeywordLine(input_file,keyword)
     if isFound:
         max = '~'
         max_subincrem_level = readTypeAKeyword(input_file,input_file_path,keyword,max)
@@ -226,7 +233,7 @@ def readInputData(input_file,dirs_dict):
     # Read material state update maximum number of iterations (optional). If the associated
     # keyword is not found, then a default specification is assumed
     keyword = 'SU_Max_Number_of_Iterations'
-    isFound, keyword_line_number = searchOptionalKeywordLine(input_file,keyword)
+    isFound,keyword_line_number = searchOptionalKeywordLine(input_file,keyword)
     if isFound:
         max = '~'
         su_max_n_iterations = readTypeAKeyword(input_file,input_file_path,keyword,max)
@@ -236,7 +243,7 @@ def readInputData(input_file,dirs_dict):
     # Read material state update convergence tolerance (optional). If the associated
     # keyword is not found, then a default specification is assumed
     keyword = 'SU_Convergence_Tolerance'
-    isFound, keyword_line_number = searchOptionalKeywordLine(input_file,keyword)
+    isFound,keyword_line_number = searchOptionalKeywordLine(input_file,keyword)
     if isFound:
         su_conv_tol = readTypeBKeyword(input_file,input_file_path,keyword)
     else:
@@ -246,7 +253,7 @@ def readInputData(input_file,dirs_dict):
     # [WIP - Implement the case of several spatial discretization files]
     keyword = 'Discretization_File'
     valid_exts = ['.rgmsh']
-    discret_file_path, discret_file_ext = \
+    discret_file_path,discret_file_ext = \
                    readDiscretizationFilePath(input_file,input_file_path,keyword,valid_exts)
     # Copy the spatial discretization file to the problem directory and update the absolute
     # path to the copied file
@@ -259,29 +266,56 @@ def readInputData(input_file,dirs_dict):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read VTK output options
     keyword = 'VTK_Output'
-    isFound, keyword_line_number = searchOptionalKeywordLine(input_file,keyword)
+    isFound,keyword_line_number = searchOptionalKeywordLine(input_file,keyword)
     if isFound:
-        
+        is_VTK_output = True
+        vtk_format,vtk_inc_div,vtk_vars = \
+                      readVTKOptions(input_file,input_file_path,keyword,keyword_line_number)
+        # Create VTK folder in post processing directory
+        fileOperations.makeDirectory(postprocess_dir + 'VTK/','overwrite')
     else:
         is_VTK_output = False
-
-
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    return [strain_formulation,problem_type,n_dim,comp_order_sym,comp_order_nsym,
-            n_material_phases,material_phases_models,material_properties,mac_load_type,
-            mac_load,mac_load_typeidxs,self_consistent_scheme,scs_max_n_iterations,
-            scs_conv_tol,clustering_method,clustering_strategy,clustering_solution_method,
-            phase_n_clusters,n_load_increments,max_n_iterations,conv_tol,
-            max_subincrem_level,su_max_n_iterations,su_conv_tol,discret_file_path,rve_dims]
+    # Package problem general data
+    info.displayInfo('5','Packaging problem general data...')
+    problem_dict = packager.packageProblem(strain_formulation,problem_type,n_dim,
+                                                             comp_order_sym,comp_order_nsym)
+    # Package data associated to the material phases
+    info.displayInfo('5','Packaging material data...')
+    mat_dict = packager.packageMaterialPhases(n_material_phases,material_phases_models,
+                                                                        material_properties)
+    # Package data associated to the macroscale loading
+    info.displayInfo('5','Packaging macroscale loading data...')
+    macload_dict = packager.packageMacroscaleLoading(mac_load_type,mac_load,
+                                                       mac_load_presctype,n_load_increments)
+    # Package data associated to the spatial discretization file(s)
+    info.displayInfo('5','Packaging regular grid data...')
+    rg_dict = packager.packageRegularGrid(discret_file_path,rve_dims,mat_dict,problem_dict)
+    # Package data associated to the clustering
+    info.displayInfo('5','Packaging clustering data...')
+    clst_dict = packager.packageRGClustering(clustering_method,clustering_strategy,
+                                        clustering_solution_method,phase_n_clusters,rg_dict)
+    # Package data associated to the self-consistent scheme
+    info.displayInfo('5','Packaging self-consistent scheme data...')
+    scs_dict = packager.packageSCS(self_consistent_scheme,scs_max_n_iterations,scs_conv_tol)
+    # Package data associated to the VTK output
+    info.displayInfo('5','Packaging VTK output data...')
+    if is_VTK_output:
+        vtk_dict = packager.packageVTK(is_VTK_output,vtk_format,vtk_inc_div,vtk_vars)
+    else:
+        vtk_dict = packager.packageVTK(is_VTK_output)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    return [problem_dict,mat_dict,macload_dict,rg_dict,clst_dict,scs_dict,vtk_dict]
 #
-# ------------------------------------------------------------------------------------------
+#                                                                  Read input data functions
+# ==========================================================================================
 # Read a keyword of type A specification, characterized as follows:
 #
 # < keyword > < positive integer >
 #
 def readTypeAKeyword(file,file_path,keyword,max):
     keyword_line_number = searchKeywordLine(file,keyword)
-    line = linecache.getline(file_path,keyword_line_number).strip().split(' ')
+    line = linecache.getline(file_path,keyword_line_number).split()
     if len(line) == 1:
         location = inspect.getframeinfo(inspect.currentframe())
         errors.displayError('E00007',location.filename,location.lineno+1,keyword)
@@ -301,7 +335,7 @@ def readTypeAKeyword(file,file_path,keyword,max):
 #
 def readTypeBKeyword(file,file_path,keyword):
     keyword_line_number = searchKeywordLine(file,keyword)
-    line = linecache.getline(file_path,keyword_line_number+1).strip().split(' ')
+    line = linecache.getline(file_path,keyword_line_number+1).split()
     if line == '':
         location = inspect.getframeinfo(inspect.currentframe())
         errors.displayError('E00004',location.filename,location.lineno+1,keyword)
@@ -336,7 +370,7 @@ def readTypeBKeyword(file,file_path,keyword):
 #
 def readMaterialProperties(file,file_path,keyword):
     keyword_line_number = searchKeywordLine(file,keyword)
-    line = linecache.getline(file_path,keyword_line_number).strip().split(' ')
+    line = linecache.getline(file_path,keyword_line_number).split()
     if len(line) == 1:
         location = inspect.getframeinfo(inspect.currentframe())
         errors.displayError('E00052',location.filename,location.lineno+1,keyword)
@@ -352,7 +386,7 @@ def readMaterialProperties(file,file_path,keyword):
     # Loop over material phases
     line_number = keyword_line_number + 1
     for i in range(n_material_phases):
-        phase_header = linecache.getline(file_path,line_number).strip().split(' ')
+        phase_header = linecache.getline(file_path,line_number).split()
         if phase_header[0] == '':
             location = inspect.getframeinfo(inspect.currentframe())
             errors.displayError('E00005',location.filename,location.lineno+1,keyword,i+1)
@@ -433,7 +467,7 @@ def readMaterialProperties(file,file_path,keyword):
         # Set material phase properties
         material_properties[mat_phase] = dict()
         for j in range(n_properties):
-            property_line = linecache.getline(file_path,line_number+j+1).strip().split(' ')
+            property_line = linecache.getline(file_path,line_number+j+1).split()
             if property_line[0] == '':
                 location = inspect.getframeinfo(inspect.currentframe())
                 errors.displayError('E00006',location.filename,location.lineno+1,
@@ -524,7 +558,7 @@ def readMacroscaleLoading(file,file_path,mac_load_type,strain_formulation,n_dim,
         load_keyword_line_number = searchKeywordLine(file,load_keyword)
         for icomponent in range(n_dim**2):
             component_line = linecache.getline(file_path,
-                                   load_keyword_line_number+icomponent+1).strip().split(' ')
+                                              load_keyword_line_number+icomponent+1).split()
             if component_line[0] == '':
                 location = inspect.getframeinfo(inspect.currentframe())
                 errors.displayError('E00008',location.filename,location.lineno+1,
@@ -551,8 +585,7 @@ def readMacroscaleLoading(file,file_path,mac_load_type,strain_formulation,n_dim,
     if mac_load_type == 3:
         mac_load_typeidxs = np.zeros((n_dim**2),dtype=int)
         presc_keyword_line_number = searchKeywordLine(file,presc_keyword)
-        presc_line = \
-                 linecache.getline(file_path,presc_keyword_line_number+1).strip().split(' ')
+        presc_line = linecache.getline(file_path,presc_keyword_line_number+1).split()
         if presc_line[0] == '':
             location = inspect.getframeinfo(inspect.currentframe())
             errors.displayError('E00011',location.filename,location.lineno+1,presc_keyword)
@@ -658,7 +691,7 @@ def readPhaseClustering(file,file_path,keyword,n_material_phases,material_proper
     phase_n_clusters = dict()
     line_number = searchKeywordLine(file,keyword) + 1
     for iphase in range(n_material_phases):
-        line = linecache.getline(file_path,line_number+iphase).strip().split(' ')
+        line = linecache.getline(file_path,line_number+iphase).split()
         if line[0] == '':
             location = inspect.getframeinfo(inspect.currentframe())
             errors.displayError('E00013',location.filename,location.lineno+1,keyword,\
@@ -734,7 +767,7 @@ def readDiscretizationFilePath(file,file_path,keyword,valid_exts):
 #
 def readRVEDimensions(file,file_path,keyword,n_dim):
     keyword_line_number = searchKeywordLine(file,keyword)
-    line = linecache.getline(file_path,keyword_line_number+1).strip().split(' ')
+    line = linecache.getline(file_path,keyword_line_number+1).split()
     if line == '':
         location = inspect.getframeinfo(inspect.currentframe())
         errors.displayError('E00031',location.filename,location.lineno+1,keyword)
@@ -749,6 +782,34 @@ def readRVEDimensions(file,file_path,keyword,n_dim):
     for i in range(n_dim):
         rve_dims.append(float(line[i]))
     return rve_dims
+# ------------------------------------------------------------------------------------------
+# Read the VTK output options specified as follows:
+#
+# VTK_Output [ < options > ]
+#
+# where the options are | format:          ascii (default) or binary
+#                       | increments:      all (default) or every < positive_integer >
+#                       | state variables: all_variables (default) or common_variables
+#
+def readVTKOptions(file,file_path,keyword,keyword_line_number):
+    line = linecache.getline(file_path,keyword_line_number).split()
+    line = [x.lower() if not checkNumber(x) else x for x in line]
+    if 'binary' in line:
+        vtk_format = 'binary'
+    else:
+        vtk_format = 'ascii'
+    if 'every' in line:
+        if not checkPositiveInteger(line[line.index('every') + 1]):
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayError('E00057',location.filename,location.lineno+1,keyword)
+        vtk_inc_div = int(line[line.index('every') + 1])
+    else:
+        vtk_inc_div = 1
+    if 'common_variables' in line:
+        vtk_vars = 'common_variables'
+    else:
+        vtk_vars = 'all'
+    return [vtk_format,vtk_inc_div,vtk_vars]
 #
 #                                                                      Consistency functions
 # ==========================================================================================

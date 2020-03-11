@@ -578,7 +578,12 @@ def displayError(code,*args):
                    indent + 'The required {} function is not implemented for the ' + \
                    'constitutive model \'{}\''
     elif code == 'E00057':
-        pass
+        arguments = args[2]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The option \'every\' of the keyword - {} - must be ' + \
+                   'must be followed by a positive' + '\n' + \
+                   indent + 'integer.'
     elif code == 'E00058':
         arguments = args[2:5]
         values = tuple(arguments)

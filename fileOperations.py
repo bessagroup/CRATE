@@ -72,11 +72,11 @@ def userAction(message):
 #                                                                       Directory operations
 # ==========================================================================================
 # Make directory (both overwrite and no overwrite (default) options available)
-def makeDirectory(dir, default = 'no_overwrite'):
+def makeDirectory(dir, option = 'no_overwrite'):
     try:
-        if default is None or default == 'no_overwrite':
+        if option is None or option == 'no_overwrite':
             os.mkdir(dir)
-        elif default == 'overwrite':
+        elif option == 'overwrite':
             if not os.path.exists(dir):
                 os.mkdir(dir)
             else:

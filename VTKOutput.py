@@ -31,6 +31,8 @@ indent = '  '
 # ==========================================================================================
 # Write VTK file with the clustering discretization
 def writeVTKClusterFile(vtk_dict,dirs_dict,rg_dict,clst_dict):
+    # Get VTK output parameters
+    vtk_format = vtk_dict['vtk_format']
     # Get input data file name
     input_file_name = dirs_dict['input_file_name']
     # Get offline stage directory
@@ -75,7 +77,7 @@ def writeVTKClusterFile(vtk_dict,dirs_dict,rg_dict,clst_dict):
     data_list = list(regular_grid.flatten('F'))
     min_val = min(data_list)
     max_val = max(data_list)
-    data_parameters = {'Name':'Material phase','format':'ascii','RangeMin':min_val,
+    data_parameters = {'Name':'Material phase','format':vtk_format,'RangeMin':min_val,
                                                                          'RangeMax':max_val}
     writeVTKCellDataArray(vtk_file,vtk_dict,data_list,data_parameters)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -83,7 +85,7 @@ def writeVTKClusterFile(vtk_dict,dirs_dict,rg_dict,clst_dict):
     data_list = list(voxels_clusters.flatten('F'))
     min_val = min(data_list)
     max_val = max(data_list)
-    data_parameters = {'Name':'Cluster','format':'ascii','RangeMin':min_val,
+    data_parameters = {'Name':'Cluster','format':vtk_format,'RangeMin':min_val,
                                                                          'RangeMax':max_val}
     writeVTKCellDataArray(vtk_file,vtk_dict,data_list,data_parameters)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -107,6 +109,9 @@ def writeVTKClusterFile(vtk_dict,dirs_dict,rg_dict,clst_dict):
 # Write VTK file associated to a given macroscale loading increment
 def writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,
                                                                         inc,clusters_state):
+    # Get VTK output parameters
+    vtk_format = vtk_dict['vtk_format']
+    vtk_vars = vtk_dict['vtk_vars']
     # Get input data file name
     input_file_name = dirs_dict['input_file_name']
     # Get post processing directory
@@ -115,7 +120,6 @@ def writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,problem_dict,mat_dict,rg_dict,
     vtk_inc_file_name = input_file_name + '_' + str(inc) + '.vti'
     vtk_inc_file_path = postprocess_dir + 'VTK/' + vtk_inc_file_name
     # Open VTK macroscale loading increment file (append mode)
-    open(vtk_inc_file_path,'w').close()
     vtk_file = open(vtk_inc_file_path,'a')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Write VTK file header
@@ -197,38 +201,39 @@ def writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,problem_dict,mat_dict,rg_dict,
             data_list = list(rg_array.flatten('F'))
             min_val = min(data_list)
             max_val = max(data_list)
-            data_parameters = {'Name':data_name,'format':'ascii','RangeMin':min_val,
+            data_parameters = {'Name':data_name,'format':vtk_format,'RangeMin':min_val,
                                                                          'RangeMax':max_val}
             writeVTKCellDataArray(vtk_file,vtk_dict,data_list,data_parameters)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Loop over material constitutive models
-    for model_name in material_models:
-        # Get constitutive model module
-        model_module = importlib.import_module('material.models.' + str(model_name))
-        # Get constitutive model state variables dictionary
-        init_procedure = getattr(model_module,'init')
-        model_state_variables = init_procedure(problem_dict)
-        # Loop over constitutive model state variables
-        for var_name in list(set(model_state_variables.keys()) - set(common_var_list)):
-            # Get state variable descriptors
-            var,var_type,var_n_comp = setOutputVariable(0,problem_dict,var_name,
+    if vtk_vars == 'all':
+        # Loop over material constitutive models
+        for model_name in material_models:
+            # Get constitutive model module
+            model_module = importlib.import_module('material.models.' + str(model_name))
+            # Get constitutive model state variables dictionary
+            init_procedure = getattr(model_module,'init')
+            model_state_variables = init_procedure(problem_dict)
+            # Loop over constitutive model state variables
+            for var_name in list(set(model_state_variables.keys()) - set(common_var_list)):
+                # Get state variable descriptors
+                var,var_type,var_n_comp = setOutputVariable(0,problem_dict,var_name,
                                                                       model_state_variables)
-            # Loop over state variable components
-            for icomp in range(var_n_comp):
-                # Build state variable cell data array
-                rg_array = buildVarCellDataArray(model_name,var_name,var_type,icomp,
-                         problem_dict,material_phases,material_phases_models,phase_clusters,
-                                                             voxels_clusters,clusters_state)
-                # Set output variable data name
-                data_name = \
+                # Loop over state variable components
+                for icomp in range(var_n_comp):
+                    # Build state variable cell data array
+                    rg_array = buildVarCellDataArray(model_name,var_name,var_type,icomp,
+                                        problem_dict,material_phases,material_phases_models,
+                                              phase_clusters,voxels_clusters,clusters_state)
+                    # Set output variable data name
+                    data_name = \
                           setDataName(problem_dict,var_name,var_type,icomp,False,model_name)
-                # Write VTK cell data array
-                data_list = list(rg_array.flatten('F'))
-                min_val = min(data_list)
-                max_val = max(data_list)
-                data_parameters = {'Name':data_name,'format':'ascii','RangeMin':min_val,
-                                                                         'RangeMax':max_val}
-                writeVTKCellDataArray(vtk_file,vtk_dict,data_list,data_parameters)
+                    # Write VTK cell data array
+                    data_list = list(rg_array.flatten('F'))
+                    min_val = min(data_list)
+                    max_val = max(data_list)
+                    data_parameters = {'Name':data_name,'format':vtk_format,
+                                                      'RangeMin':min_val,'RangeMax':max_val}
+                    writeVTKCellDataArray(vtk_file,vtk_dict,data_list,data_parameters)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Close VTK dataset element piece cell data
     writeVTKCloseCellData(vtk_file)
@@ -245,20 +250,8 @@ def writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,problem_dict,mat_dict,rg_dict,
     # Close VTK file
     vtk_file.close()
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Open VTK collection file (remove)
-    if inc == 0:
-        openVTKCollectionFile(input_file_name,postprocess_dir)
-
-
-
     # Add macroscale loading increment VTK file to VTK collection file
     writeVTKCollectionFile(input_file_name,postprocess_dir,inc,vtk_inc_file_path)
-
-
-
-    # Close VTK collection file (remove)
-    if inc == 4:
-        closeVTKCollectionFile(input_file_name,postprocess_dir)
 #
 #                                                                  Write VTK collection file
 # ==========================================================================================
@@ -397,10 +390,10 @@ def writeVTKCellDataArray(vtk_file,vtk_dict,data_list,data_parameters):
         data_type = 'Int32'
         frmt = 'd'
     else:
-        if vtk_dict['precision'] == 'SinglePrecision':
+        if vtk_dict['vtk_precision'] == 'SinglePrecision':
             data_type = 'Float32'
             frmt = '16.8e'
-        elif vtk_dict['precision'] == 'DoublePrecision':
+        elif vtk_dict['vtk_precision'] == 'DoublePrecision':
             data_type = 'Float64'
             frmt = '25.16e'
     # Set cell data array parameters
