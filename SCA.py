@@ -229,7 +229,8 @@ else:
         location = inspect.getframeinfo(inspect.currentframe())
         errors.displayException(location.filename,location.lineno+1,message)
     # Load clustering interaction tensors
-    [clst_dict['cit_1'],clst_dict['cit_2'],clst_dict['cit_0_freq']] = pickle.load(cit_file)
+    [clst_dict['cit_1_mf'],clst_dict['cit_2_mf'],clst_dict['cit_0_freq_mf']] = \
+                                                                       pickle.load(cit_file)
     # Close clustering interaction tensors file
     cit_file.close()
     # Check compatibility between the loaded cluster interaction tensors and the material

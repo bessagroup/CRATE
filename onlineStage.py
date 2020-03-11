@@ -50,9 +50,9 @@ def onlineStage():
     # Get clusters data
     phase_n_clusters = clst_dict['phase_n_clusters']
     phase_clusters = clst_dict['phase_clusters']
-    cit_1_mf = clst_dict['cit_1']
-    cit_2_mf = clst_dict['cit_2']
-    cit_0_freq_mf = clst_dict['cit_0_freq']
+    cit_1_mf = clst_dict['cit_1_mf']
+    cit_2_mf = clst_dict['cit_2_mf']
+    cit_0_freq_mf = clst_dict['cit_0_freq_mf']
     # Get macroscale loading data
     mac_load_type = macload_dict['mac_load_type']
     mac_load = macload_dict['mac_load']

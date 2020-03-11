@@ -61,14 +61,14 @@ def computeClusterInteractionTensors(dirs_dict,problem_dict,mat_dict,rg_dict,cls
     clusters_f = clst_dict['clusters_f']
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Initialize cluster interaction tensors dictionaries
-    cit_1 = dict()
-    cit_2 = dict()
-    cit_0_freq = dict()
+    cit_1_mf = dict()
+    cit_2_mf = dict()
+    cit_0_freq_mf = dict()
     for mat_phase_B in material_phases:
         for mat_phase_A in material_phases:
-            cit_1[mat_phase_A+mat_phase_B] = dict()
-            cit_2[mat_phase_A+mat_phase_B] = dict()
-            cit_0_freq[mat_phase_A+mat_phase_B] = dict()
+            cit_1_mf[mat_phase_A+mat_phase_B] = dict()
+            cit_2_mf[mat_phase_A+mat_phase_B] = dict()
+            cit_0_freq_mf[mat_phase_A+mat_phase_B] = dict()
     # Compute Green operator material independent terms
     Gop_1_DFT_vox, Gop_2_DFT_vox, Gop_0_freq_DFT_vox = \
                          GreenOperatorMatIndTerms(n_dim,rve_dims,comp_order,n_voxels_dims)
@@ -205,14 +205,14 @@ def computeClusterInteractionTensors(dirs_dict,problem_dict,mat_dict,rg_dict,cls
                     # ----------------------------------------------------------------------
                     # Store cluster interaction tensor between material phase A cluster and
                     # material phase B cluster
-                    cluster_pair = str(clusterI)+str(clusterJ)
-                    cit_1[mat_phase_pair][cluster_pair] = cit_1_pair_mf
-                    cit_2[mat_phase_pair][cluster_pair] = cit_2_pair_mf
-                    cit_0_freq[mat_phase_pair][cluster_pair] = cit_0_freq_pair_mf
+                    cluster_pair = str(clusterI) + str(clusterJ)
+                    cit_1_mf[mat_phase_pair][cluster_pair] = cit_1_pair_mf
+                    cit_2_mf[mat_phase_pair][cluster_pair] = cit_2_pair_mf
+                    cit_0_freq_mf[mat_phase_pair][cluster_pair] = cit_0_freq_pair_mf
     # Store clustering interaction tensors
-    clst_dict['cit_1'] = cit_1
-    clst_dict['cit_2'] = cit_2
-    clst_dict['cit_0_freq'] = cit_0_freq
+    clst_dict['cit_1_mf'] = cit_1_mf
+    clst_dict['cit_2_mf'] = cit_2_mf
+    clst_dict['cit_0_freq_mf'] = cit_0_freq_mf
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Open file which contains all the required information associated to the clustering
     # discretization
@@ -223,7 +223,7 @@ def computeClusterInteractionTensors(dirs_dict,problem_dict,mat_dict,rg_dict,cls
         errors.displayException(location.filename,location.lineno+1,message)
     # Dump clustering interaction tensors
     info.displayInfo('5','Storing cluster interaction tensors file (.cti)...')
-    pickle.dump([cit_1,cit_2,cit_0_freq],cit_file)
+    pickle.dump([cit_1_mf,cit_2_mf,cit_0_freq_mf],cit_file)
     # Close file
     cit_file.close()
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -453,19 +453,19 @@ def checkCITCompatibility(mat_dict,clst_dict):
     # Get material phases
     material_phases = mat_dict['material_phases']
     # Check number of cluster interaction tensors
-    if len(clst_dict['cit_1'].keys()) != len(material_phases)**2 or \
-                             len(clst_dict['cit_2'].keys()) != len(material_phases)**2 or  \
-                             len(clst_dict['cit_0_freq'].keys()) != len(material_phases)**2:
+    if len(clst_dict['cit_1_mf'].keys()) != len(material_phases)**2 or \
+                          len(clst_dict['cit_2_mf'].keys()) != len(material_phases)**2 or  \
+                          len(clst_dict['cit_0_freq_mf'].keys()) != len(material_phases)**2:
         location = inspect.getframeinfo(inspect.currentframe())
         errors.displayError('E00047',location.filename,location.lineno+1,
-                                        len(clst_dict['cit_1'].keys()),len(material_phases))
+                                     len(clst_dict['cit_1_mf'].keys()),len(material_phases))
     # Check cluster interaction tensors material phase pairs
     for mat_phase_B in material_phases:
         for mat_phase_A in material_phases:
             mat_phase_pair = mat_phase_A + mat_phase_B
-            if mat_phase_pair not in clst_dict['cit_1'].keys() or \
-                                       mat_phase_pair not in clst_dict['cit_2'].keys() or  \
-                                       mat_phase_pair not in clst_dict['cit_0_freq'].keys():
+            if mat_phase_pair not in clst_dict['cit_1_mf'].keys() or \
+                                    mat_phase_pair not in clst_dict['cit_2_mf'].keys() or  \
+                                    mat_phase_pair not in clst_dict['cit_0_freq_mf'].keys():
                 location = inspect.getframeinfo(inspect.currentframe())
                 errors.displayError('E00048',location.filename,location.lineno+1,
                                                              mat_phase_pair,material_phases)
