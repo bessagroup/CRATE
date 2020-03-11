@@ -599,6 +599,14 @@ def displayError(code,*args):
                    indent + 'The specified property \'{}\' for the material phase {} ' + \
                    'does not belong to the required' + '\n' + \
                    indent + 'properties of the associated constitutive model.'
+    elif code == 'E00060':
+        arguments = args[2:4]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The VTK output cell data array associated to the state ' + \
+                   'variable \'{}\' of the' + '\n' + \
+                   indent + 'constitutive model \'{}\' was not specified for all ' + \
+                   'pixels (2D) / voxels (3D).'
     #print(template_header.format(*header,width=output_width))
     #print(template.format(*values,width=output_width))
     #print(template_footer.format(*footer,width=output_width))

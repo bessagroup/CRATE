@@ -19,6 +19,10 @@ import importlib
 import numpy as np
 # Shallow and deep copies
 import copy
+# Inspect file name and line
+import inspect
+# Display errors, warnings and built-in exceptions
+import errors
 # Tensorial operations
 import tensorOperations as top
 #
@@ -180,8 +184,7 @@ def writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,problem_dict,mat_dict,rg_dict,
             # Get constitutive model state variables dictionary
             init_procedure = getattr(model_module,'init')
             model_state_variables = init_procedure(problem_dict)
-            # Skip state variable output if it isn't defined for at least one constitutive
-            # model
+            # Skip state variable output if it is not defined for all constitutive models
             if var_name not in model_state_variables.keys():
                 break
         # Get state variable descriptors
@@ -491,6 +494,8 @@ def buildVarCellDataArray(model_name,var_name,var_type,icomp,problem_dict,materi
     comp_order_nsym = problem_dict['comp_order_nsym']
     # Initialize regular grid shape array
     rg_array = copy.deepcopy(voxels_clusters)
+    rg_array = rg_array.astype(str)
+    rg_array = rg_array.astype(object)
     # Loop over material phases
     for mat_phase in material_phases:
         if material_phases_models[mat_phase]['name'] == model_name:
@@ -501,18 +506,37 @@ def buildVarCellDataArray(model_name,var_name,var_type,icomp,problem_dict,materi
                            setOutputVariable(1,problem_dict,var_name,cluster,clusters_state)
                 # Assemble material cluster state variable
                 if var_type in ['int','bool','float']:
-                    rg_array = np.where(rg_array == cluster,cluster_var,rg_array)
+                    rg_array = np.where(rg_array == str(cluster),cluster_var,rg_array)
                 elif var_type == 'vector':
-                    rg_array = np.where(rg_array == cluster,cluster_var[icomp],rg_array)
+                    rg_array = \
+                              np.where(rg_array == str(cluster),cluster_var[icomp],rg_array)
                 elif var_type == 'sym_matrix_mf':
                     idx = tuple([int(x) - 1 for x in comp_order_sym[icomp]])
-                    rg_array = np.where(rg_array == cluster,cluster_var[idx],rg_array)
+                    rg_array = np.where(rg_array == str(cluster),cluster_var[idx],rg_array)
                 elif var_type == 'nsym_matrix_mf':
                     idx = tuple([int(x) - 1 for x in comp_order_nsym[icomp]])
-                    rg_array = np.where(rg_array == cluster,cluster_var[idx],rg_array)
+                    rg_array = np.where(rg_array == str(cluster),cluster_var[idx],rg_array)
                 else:
                     idx = tuple([int(x) - 1 for x in comp_order_nsym[icomp]])
-                    rg_array = np.where(rg_array == cluster,cluster_var[idx],rg_array)
+                    rg_array = np.where(rg_array == str(cluster),cluster_var[idx],rg_array)
+        else:
+            # Loop over material phase clusters
+            for cluster in phase_clusters[mat_phase]:
+                # Assemble a default state variable value for all clusters for which the
+                # associated material phase is not governed by the given material
+                # constitutive model (required for valid output cell data array)
+                if var_type in ['int']:
+                    rg_array = np.where(rg_array == str(cluster),int(0),rg_array)
+                elif var_type in ['bool']:
+                    rg_array = np.where(rg_array == str(cluster),False,rg_array)
+                else:
+                    rg_array = np.where(rg_array == str(cluster),float(0),rg_array)
+    # Check if the state variable has been specified for every pixels (2D) / voxels (3D)
+    # in order to build a valid output cell data array
+    if any(isinstance(x,str) for x in list(rg_array.flatten('F'))):
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00060',location.filename,location.lineno+1,var_name,
+                                                                                 model_name)
     # Return
     return rg_array
 # ------------------------------------------------------------------------------------------
