@@ -13,6 +13,8 @@
 import sys
 # Working with arrays
 import numpy as np
+# Inspect file name and line
+import inspect
 # Display messages
 import info
 #
@@ -607,10 +609,36 @@ def displayError(code,*args):
                    'variable \'{}\' of the' + '\n' + \
                    indent + 'constitutive model \'{}\' was not specified for all ' + \
                    'pixels (2D) / voxels (3D).'
-    #print(template_header.format(*header,width=output_width))
-    #print(template.format(*values,width=output_width))
-    #print(template_footer.format(*footer,width=output_width))
-    #sys.exit(1)
+    elif code == 'E00061':
+        arguments = args[2:7]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The maximum number of iterations ({}) has been reached ' + \
+                   'when solving solving the' + '\n' + \
+                   indent + 'Lippmann-Schwinger nonlinear system of equilibrium ' + \
+                   'equations associated to the' + '\n' + \
+                   indent + 'macroscale load increment {}.' + '\n\n' + \
+                   indent + 'The normalized errors associated to the ' + \
+                   'residuals finished the iterative process with' + '\n' + \
+                   indent + 'the following values:' + '\n\n' + \
+                   2*indent + 'Clusters equilibrium residuals error: {:16.8e}' + '\n\n' + \
+                   2*indent + 'Macroscale stress residuals error   : {:16.8e}'
+    elif code == 'E00062':
+        arguments = args[2:7]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The self-consistent scheme maximum number of iterations ' + \
+                   '({}) has been reached when' + '\n' + \
+                   indent + 'solving the macroscale load increment {}.' + '\n\n' + \
+                   indent + 'The normalized iterative changes of the reference ' + \
+                   'material elastic properties finished' + '\n' + \
+                   indent + 'the iterative process with the following values:' + '\n\n' + \
+                   2*indent + 'Normalized iterative change - E : {:16.8e}' + '\n\n' + \
+                   2*indent + 'Normalized iterative change - v : {:16.8e}'
+    print(template_header.format(*header,width=output_width))
+    print(template.format(*values,width=output_width))
+    print(template_footer.format(*footer,width=output_width))
+    sys.exit(1)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display error
     if code in ['E00001','E00002','E00010']:
