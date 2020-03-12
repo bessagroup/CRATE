@@ -296,6 +296,10 @@ def readInputData(input_file,dirs_dict):
     # Package data associated to the self-consistent scheme
     info.displayInfo('5','Packaging self-consistent scheme data...')
     scs_dict = packager.packageSCS(self_consistent_scheme,scs_max_n_iterations,scs_conv_tol)
+    # Package data associated to the self-consistent scheme
+    info.displayInfo('5','Packaging algorithmic data...')
+    algpar_dict = packager.packageAlgorithmicParameters(max_n_iterations,conv_tol,
+                                        max_subincrem_level,su_max_n_iterations,su_conv_tol)
     # Package data associated to the VTK output
     info.displayInfo('5','Packaging VTK output data...')
     if is_VTK_output:
@@ -303,7 +307,8 @@ def readInputData(input_file,dirs_dict):
     else:
         vtk_dict = packager.packageVTK(is_VTK_output)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    return [problem_dict,mat_dict,macload_dict,rg_dict,clst_dict,scs_dict,vtk_dict]
+    return [problem_dict,mat_dict,macload_dict,rg_dict,clst_dict,scs_dict,algpar_dict,
+                                                                                   vtk_dict]
 #
 #                                                                  Read input data functions
 # ==========================================================================================

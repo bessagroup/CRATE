@@ -119,7 +119,7 @@ except FileNotFoundError as message:
     errors.displayException(location.filename,location.lineno+1,message)
 # Read input data according to analysis type
 info.displayInfo('5','Reading the input data file...')
-problem_dict,mat_dict,macload_dict,rg_dict,clst_dict,scs_dict,vtk_dict = \
+problem_dict,mat_dict,macload_dict,rg_dict,clst_dict,scs_dict,algpar_dict,vtk_dict = \
                                                      rid.readInputData(input_file,dirs_dict)
 # Close user input data file
 input_file.close()

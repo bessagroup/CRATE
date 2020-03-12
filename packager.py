@@ -220,7 +220,7 @@ def packageVTK(is_VTK_output,*args):
     # Build VTK dictionary
     vtk_dict['is_VTK_output'] = is_VTK_output
     if is_VTK_output:
-        vtk_format = args[0]
+        # vtk_format = args[0]
         vtk_inc_div = args[1]
         vtk_vars = args[2]
         vtk_dict['vtk_format'] = 'ascii'   # Change to vtk_format when binary is implemented
