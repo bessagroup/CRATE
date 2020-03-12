@@ -334,7 +334,6 @@ def GreenOperatorMatIndTerms(n_dim,rve_dims,comp_order,n_voxels_dims):
         print('  Frequency point = ', val_voxel_freqs)
         print('  Norm            = ', '{:>11.4e}'.format(val_voxel_freqs_norm))
         for i in range(len(mf_indexes)):
-            mf_idx = mf_indexes[i]
             comp = ''.join([str(x+1) for x in fo_indexes[i]])
             print('  Component ' + comp + ': ', \
                                 '{:>11.4e}'.format(Gop_1_DFT_vox[comp][val_voxel_idx]))
@@ -343,7 +342,6 @@ def GreenOperatorMatIndTerms(n_dim,rve_dims,comp_order,n_voxels_dims):
         print('  Frequency point = ', val_voxel_freqs)
         print('  Norm            = ', '{:>11.4e}'.format(val_voxel_freqs_norm))
         for i in range(len(mf_indexes)):
-            mf_idx = mf_indexes[i]
             comp = ''.join([str(x+1) for x in fo_indexes[i]])
             print('  Component ' + comp + ': ', \
                                 '{:>11.4e}'.format(Gop_2_DFT_vox[comp][val_voxel_idx]))
@@ -351,7 +349,6 @@ def GreenOperatorMatIndTerms(n_dim,rve_dims,comp_order,n_voxels_dims):
         print('  Frequency point = ', val_voxel_freqs)
         print('  Norm            = ', '{:>11.4e}'.format(val_voxel_freqs_norm))
         for i in range(len(mf_indexes)):
-            mf_idx = mf_indexes[i]
             comp = ''.join([str(x+1) for x in fo_indexes[i]])
             print('  Component ' + comp + ': ', \
                                 '{:>11.4e}'.format(Gop_0_freq_DFT_vox[comp][(0,0,0)]))

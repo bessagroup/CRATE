@@ -158,7 +158,7 @@ if __name__ == '__main__':
     strain_formulation = 1
     problem_type = 4
     n_dim, comp_order_sym, comp_order_nsym = rid.setProblemTypeParameters(problem_type)
-    problem_dict()
+    problem_dict = dict()
     problem_dict['strain_formulation'] = strain_formulation
     problem_dict['problem_type'] = problem_type
     problem_dict['n_dim'] = n_dim
