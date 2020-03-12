@@ -11,8 +11,6 @@
 # ==========================================================================================
 # Operating system related functions
 import os
-# Parse command-line options and arguments
-import sys
 # Import from string
 import importlib
 # Operations on files and directories

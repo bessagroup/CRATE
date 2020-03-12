@@ -293,8 +293,6 @@ def GreenOperatorMatIndTerms(n_dim,rve_dims,comp_order,n_voxels_dims):
                                        np.zeros(tuple(n_voxels_dims)) for idx in fo_indexes}
     # Compute Green operator matricial form components
     for i in range(len(mf_indexes)):
-        # Get matrix index
-        mf_idx = mf_indexes[i]
         # Get fourth-order tensor indexes
         fo_idx = fo_indexes[i]
         # Get Green operator component
@@ -417,8 +415,6 @@ def discreteCITConvolutionJ(comp_order,cluster_filter_DFT,Gop_1_DFT_vox,Gop_2_DF
 # cluster J. Store the resulting fourth-order tensor in matricial form
 def discreteCITIntegralI(comp_order,cluster_filter,Gop_1_filt_vox,Gop_2_filt_vox,\
                                                                        Gop_0_freq_filt_vox):
-    # Set matricial form components
-    comps = list(it.product(comp_order,comp_order))
     # Initialize discrete integral
     cit_1_integral_mf = np.zeros((len(comp_order),len(comp_order)))
     cit_2_integral_mf = np.zeros((len(comp_order),len(comp_order)))

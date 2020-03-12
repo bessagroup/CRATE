@@ -9,16 +9,12 @@
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
-# Operating system related functions
-import os
 # Working with arrays
 import numpy as np
 # Shallow and deep copy operations
 import copy
 # Extract information from path
 import ntpath
-# Generate efficient iterators
-import itertools as it
 # Display messages
 import info
 # Read user input data file
@@ -65,7 +61,6 @@ import FFTHomogenizationBasicScheme
 def computeClusteringQuantities(problem_dict,mat_dict,rg_dict,clst_dict):
     # Get problem data
     strain_formulation = problem_dict['strain_formulation']
-    problem_type = problem_dict['problem_type']
     n_dim = problem_dict['n_dim']
     comp_order_sym = problem_dict['comp_order_sym']
     # Get clustering data
@@ -74,13 +69,9 @@ def computeClusteringQuantities(problem_dict,mat_dict,rg_dict,clst_dict):
     # Get the required data from the spatial discretization file(s) according to the
     # chosen solution method to compute the cluster-defining quantities
     if clustering_solution_method == 1:
-        # Get the spatial discretization file (regular grid of pixels/voxels)
-        regular_grid = rg_dict['regular_grid']
         # Get number of pixels/voxels in each dimension and total number of pixels/voxels
         n_voxels_dims = rg_dict['n_voxels_dims']
         n_voxels = np.prod(n_voxels_dims)
-        # Get RVE dimensions
-        rve_dims = rg_dict['rve_dims']
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Compute the required cluster-defining quantities according to the adopted clustering
     # strategy and set clustering processes quantities list
