@@ -9,8 +9,6 @@
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
-# Operating system related functions
-import os
 # Working with arrays
 import numpy as np
 # Unsupervised clustering algorithms
@@ -21,8 +19,6 @@ import pickle
 import inspect
 # Generate efficient iterators
 import itertools as it
-# Shallow and deep copy operations
-import copy
 # Display messages
 import info
 # Display errors, warnings and built-in exceptions
@@ -41,7 +37,6 @@ def performClustering(dirs_dict,mat_dict,rg_dict,clst_dict):
     cluster_file_path = dirs_dict['cluster_file_path']
     # Get material data
     material_phases = mat_dict['material_phases']
-    material_properties = mat_dict['material_properties']
     # Get regular grid data
     rve_dims = rg_dict['rve_dims']
     n_voxels_dims = rg_dict['n_voxels_dims']

@@ -142,8 +142,8 @@ if not is_same_offstage:
     phase_init_time = time.time()
     # Compute the quantities required to perform the clustering according to the strategy
     # adopted
-    clusteringQuantities.computeClusteringQuantities(copy.deepcopy(problem_dict),
-                                   copy.deepcopy(mat_dict),copy.deepcopy(rg_dict),clst_dict)
+    clusteringQuantities.computeClusteringQuantities(copy.deepcopy(dirs_dict),
+       copy.deepcopy(problem_dict),copy.deepcopy(mat_dict),copy.deepcopy(rg_dict),clst_dict)
     # Set phase ending time and display finishing phase information
     phase_end_time = time.time()
     phase_names.append('Compute cluster-defining quantities')

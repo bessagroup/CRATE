@@ -13,8 +13,6 @@
 import sys
 # Working with arrays
 import numpy as np
-# Inspect file name and line
-import inspect
 # Generate efficient iterators
 import itertools as it
 # Finite Differences Method
@@ -216,8 +214,6 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
                                        np.zeros(tuple(n_voxels_dims)) for idx in fo_indexes}
     # Compute Green operator matricial form components
     for i in range(len(mf_indexes)):
-        # Get matrix index
-        mf_idx = mf_indexes[i]
         # Get fourth-order tensor indexes
         fo_idx = fo_indexes[i]
         # Get Green operator component
@@ -255,7 +251,6 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
         print('  c1 = ', '{:>11.4e}'.format(c1))
         print('  c2 = ', '{:>11.4e}\n'.format(c2))
         for i in range(len(mf_indexes)):
-            mf_idx = mf_indexes[i]
             comp = ''.join([str(x+1) for x in fo_indexes[i]])
             print('  Component ' + comp + ': ', \
                             '{:>11.4e}'.format(Green_operator_DFT_vox[comp][val_voxel_idx]))

@@ -21,6 +21,8 @@ import info
 import readInputData as rid
 # FFT-Based Homogenization Method (Moulinec, H. and Suquet, P., 1998)
 import FFTHomogenizationBasicScheme
+# Links interface
+import LinksInterface
 #
 #                                                        Compute cluster-defining quantities
 # ==========================================================================================
@@ -29,13 +31,16 @@ import FFTHomogenizationBasicScheme
 # similar points. Moreover, several clustering processes may be performed (each one based
 # on a different quantity) and then merged in some way to obtain a unique RVE clustering
 # discretization.
-# According to the adopted clustering strategy, all the required quantities (usually based
-# on the solution of a microscale equilibrium problem) are computed and stored in a format
-# dependent on the type of spatial discretization. A list is also build where the quantities
-# to be used in each required clustering discretization are specified. The storage is
-# performed for each type of spatial discretization as detailed below:
+# According to the adopted clustering strategy, all the required quantities are computed
+# by solving a microscale equilibrium problem through a given method. The storage of such
+# quantities is described below for the cases where the microscale problem is solved with
+# an FFT-based homogenization method (spatial discretization in a regular grid of pixels/
+# voxels) or with the FEM-based homogenization method (spatial discretization in a regular
+# finite element mesh). A list is also build where the quantities to be used in each
+# required clustering discretization are specified. The storage is performed for each type
+# of solution method as follows:
 #
-# A. Spatial discretization in a regular grid of pixels/voxels
+# A. FFT-based homogenization (spatial discretization in a regular grid of pixels/voxels):
 #
 #    Consider the case where one desires to perform three clustering processes, the first
 #    one based on a scalar variable 'a', the second based on a first-order tensorial
@@ -58,20 +63,30 @@ import FFTHomogenizationBasicScheme
 #          tensor with major or minor simmetries, only the independent components may be
 #          stored in the clustering array
 #
-def computeClusteringQuantities(problem_dict,mat_dict,rg_dict,clst_dict):
+# B. FEM-based homogenization (spatial discretization in a regular finite element mesh)
+#
+#   If the microscale equilibrium problem is to be solved with the Finite Element Method
+#   based on computational homogenization, then a regular mesh of quadrilateral (2D) /
+#   hexahedral (3D) finite elements (linear or quadratic) shall be generated in total
+#   consistency with the regular grid of pixels/voxels (i.e. there is a perfect spatial
+#   match quadrilateral finite element - pixel or hexahedral finite element - voxel). In
+#   this way, by averaging the value of any given quantity over the finite element Gauss
+#   sampling points, the storage previously described for the regular grid of pixels/voxels
+#   applies.
+#
+def computeClusteringQuantities(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict):
     # Get problem data
     strain_formulation = problem_dict['strain_formulation']
     n_dim = problem_dict['n_dim']
     comp_order_sym = problem_dict['comp_order_sym']
+    # Get regular grid data
+    n_voxels_dims = rg_dict['n_voxels_dims']
+    rg_file_name = rg_dict['rg_file_name']
     # Get clustering data
     clustering_solution_method = clst_dict['clustering_solution_method']
     clustering_strategy = clst_dict['clustering_strategy']
-    # Get the required data from the spatial discretization file(s) according to the
-    # chosen solution method to compute the cluster-defining quantities
-    if clustering_solution_method == 1:
-        # Get number of pixels/voxels in each dimension and total number of pixels/voxels
-        n_voxels_dims = rg_dict['n_voxels_dims']
-        n_voxels = np.prod(n_voxels_dims)
+    # Compute total number of voxels
+    n_voxels = np.prod(n_voxels_dims)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Compute the required cluster-defining quantities according to the adopted clustering
     # strategy and set clustering processes quantities list
@@ -97,10 +112,24 @@ def computeClusteringQuantities(problem_dict,mat_dict,rg_dict,clst_dict):
                 else:
                     mac_strain[so_idx] = 1.0
                     mac_strain[so_idx[::-1]] = 1.0
-                # Solve RVE static equilibrium problem
-                strain_vox = FFTHomogenizationBasicScheme.FFTHomogenizationBasicScheme(
+                # Solve the microscale equilibrium problem through a given homogenization
+                # method and get the strain concentation tensor components associated to the
+                # imposed macroscale strain loading component
+                if clustering_solution_method == 1:
+                    # Run Moulinec and Suquet FFT-based homogenization method and get the
+                    # strain concentration tensor components
+                    strain_vox = FFTHomogenizationBasicScheme.FFTHomogenizationBasicScheme(
                                          copy.deepcopy(problem_dict),copy.deepcopy(rg_dict),
-                                         copy.deepcopy(mat_dict),mac_strain)
+                                                         copy.deepcopy(mat_dict),mac_strain)
+                elif clustering_solution_method == 2:
+                    # Generate microscale problem Links input data file
+                    fe_file_name = rg_file_name + '_SCT_' + compi
+                    LinksInterface.writeLinksInputDataFile(fe_file_name,dirs_dict,
+                                         problem_dict,mat_dict,rg_dict,clst_dict,mac_strain)
+                    # Run Links (FEM-based homogenization method)
+                    # ... run program links here
+                    # Get the strain concentration tensor components
+                    # strain_vox =
                 # Assemble strain concentration tensor components associated to the imposed
                 # macroscale strain loading component
                 for j in range(len(comp_order_sym)):

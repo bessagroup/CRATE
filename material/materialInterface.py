@@ -9,8 +9,6 @@
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
-# Working with arrays
-import numpy as np
 #
 #                                                                         Material Interface
 # ==========================================================================================
@@ -31,10 +29,6 @@ import numpy as np
 #       for the associated material phase in the input data file
 #
 def materialInterface(procedure,problem_dict,mat_dict,mat_phase,*args):
-    # Get problem data
-    n_dim = problem_dict['n_dim']
-    comp_order = problem_dict['comp_order_sym']
-    problem_type = problem_dict['problem_type']
     # Get material data
     material_properties = mat_dict['material_properties']
     material_phases_models = mat_dict['material_phases_models']
@@ -88,7 +82,7 @@ def getAvailableConstitutiveModels(model_source):
         available_mat_models = ['linear_elastic',]
     elif model_source == 2:
         # Links material constitutive models
-        pass
+        available_mat_models = ['ELASTIC','VON_MISES']
     elif model_source == 3:
         # Abaqus material constitutive models
         pass

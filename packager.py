@@ -96,8 +96,11 @@ def packageRegularGrid(discret_file_path,rve_dims,mat_dict,problem_dict):
     info.displayInfo('5','Reading discretization file...')
     if ntpath.splitext(ntpath.basename(discret_file_path))[-1] == '.npy':
         regular_grid = np.load(discret_file_path)
+        rg_file_name = \
+                ntpath.splitext(ntpath.splitext(ntpath.basename(discret_file_path))[-2])[-2]
     else:
         regular_grid = np.loadtxt(discret_file_path)
+        rg_file_name = ntpath.splitext(ntpath.basename(discret_file_path))[-2]
     # Check validity of regular grid of pixels/voxels
     if len(regular_grid.shape) not in [2,3]:
         location = inspect.getframeinfo(inspect.currentframe())
@@ -161,12 +164,13 @@ def packageRegularGrid(discret_file_path,rve_dims,mat_dict,problem_dict):
     rg_dict['regular_grid_flat'] = regular_grid_flat
     rg_dict['voxels_idx_flat'] = voxels_idx_flat
     rg_dict['phase_voxel_flatidx'] = phase_voxel_flatidx
+    rg_dict['rg_file_name'] = rg_file_name
     # Return
     return rg_dict
 # ------------------------------------------------------------------------------------------
 # Package data associated to the clustering on a regular grid of pixels/voxels
-def packageRGClustering(clustering_method,clustering_strategy,clustering_solution_method,\
-                                                                  phase_n_clusters,rg_dict):
+def packageRGClustering(clustering_method,clustering_strategy,clustering_solution_method,
+                                                       Links_dict,phase_n_clusters,rg_dict):
     # Get regular grid data
     n_voxels_dims = rg_dict['n_voxels_dims']
     # Initialize array with voxels cluster labels
@@ -181,6 +185,8 @@ def packageRGClustering(clustering_method,clustering_strategy,clustering_solutio
     clst_dict['clustering_method'] = clustering_method
     clst_dict['clustering_strategy'] = clustering_strategy
     clst_dict['clustering_solution_method'] = clustering_solution_method
+    if clustering_solution_method == 2:
+        clst_dict['Links_dict'] = Links_dict
     clst_dict['phase_n_clusters'] = phase_n_clusters
     clst_dict['phase_clusters'] = phase_clusters
     clst_dict['voxels_clusters'] = voxels_clusters

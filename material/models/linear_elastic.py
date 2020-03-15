@@ -83,7 +83,7 @@ def suct(problem_dict,material_properties,mat_phase,inc_strain,state_variables_o
     # Update elastic strain
     e_strain_mf = e_strain_old_mf + inc_strain_mf
     # Update stress
-    stress_mf = np.matmul(De_tensor_mf,e_strain_mf)
+    stress_mf = np.matmul(consistent_tangent_mf,e_strain_mf)
     # Compute out-of-plane stress component in a 2D plane strain problem (output purpose
     # only)
     if problem_type == 1:

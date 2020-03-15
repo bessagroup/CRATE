@@ -11,8 +11,6 @@
 # ==========================================================================================
 # Operating system related functions
 import os
-# Working with arrays
-import numpy as np
 #
 #                                                      Write homogenized results output file
 # ==========================================================================================

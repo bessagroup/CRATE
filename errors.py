@@ -580,7 +580,7 @@ def displayError(code,*args):
                    indent + 'The required {} function is not implemented for the ' + \
                    'constitutive model \'{}\''
     elif code == 'E00057':
-        arguments = args[2]
+        arguments = [args[2],]
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The option \'every\' of the keyword - {} - must be ' + \
@@ -635,10 +635,69 @@ def displayError(code,*args):
                    indent + 'the iterative process with the following values:' + '\n\n' + \
                    2*indent + 'Normalized iterative change - E : {:16.8e}' + '\n\n' + \
                    2*indent + 'Normalized iterative change - v : {:16.8e}'
-    print(template_header.format(*header,width=output_width))
-    print(template.format(*values,width=output_width))
-    print(template_footer.format(*footer,width=output_width))
-    sys.exit(1)
+    elif code == 'E00063':
+        arguments = 3*[args[2],]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The specification of the Links finite element order ' + \
+                   'keyword - {} - is either' + '\n' + \
+                   indent + 'missing or is invalid (must be \'linear\' or ' + \
+                   '\'quadratic\').'  + '\n\n' + \
+                   'Suggestion:' + '\n\n' + \
+                   indent + 'The keyword - {} - should be specified p.e. as' + '\n\n' + \
+                   indent + '{}' + ' ' + 'quadratic'
+    elif code == 'E00064':
+        arguments = 3*[args[2],]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The specification of the Links microscale boundary ' + \
+                   'condition keyword - ' + '\n' + \
+                   indent + '{} - is either missing or is invalid.' + '\n\n' + \
+                   indent + 'Available boundary conditions: \'Taylor_Condition\'' + '\n' + \
+                   indent + 31*' ' + '\'Linear_Condition\'' + '\n' + \
+                   indent + 31*' ' + '\'Periodic_Condition\'' + '\n' + \
+                   indent + 31*' ' + '\'Uniform_Traction_Condition\'' + '\n' + \
+                   indent + 31*' ' + '\'Uniform_Traction_Condition_II\'' + '\n' + \
+                   indent + 31*' ' + '\'Mortar_Periodic_Condition\'' + '\n' + \
+                   indent + 31*' ' + '\'Mortar_Periodic_Condition_LM\'' + '\n\n' + \
+                   'Suggestion:' + '\n\n' + \
+                   indent + 'The keyword - {} - should be specified p.e. as' + '\n\n' + \
+                   indent + '{}' + ' ' + 'Periodic_Condition'
+    elif code == 'E00065':
+        arguments = 3*[args[2],]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The specification of the Links convergence tolerance ' + \
+                   'keyword -' + '\n' + \
+                   indent + '{} - is either missing or is invalid (must be ' + \
+                   'a non-negative' + '\n' + \
+                   indent + 'floating-point number).'  + '\n\n' + \
+                   'Suggestion:' + '\n\n' + \
+                   indent + 'The keyword - {} - should be specified p.e. as' + '\n\n' + \
+                   indent + '{}' + '\n' + \
+                   indent + '1e-6'
+    elif code == 'E00066':
+        arguments = [args[2],]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'Attempt to overwrite an existing Links input data file ' + \
+                   'in the \'Offline_State/Links/\'' + '\n' + \
+                   indent + 'directory.' + '\n\n' + \
+                   indent + 'Existing file: {}'
+    elif code == 'E00067':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'In order to solve the offline stage (computation of the ' + \
+                   'clustering quantities) microscale' + '\n' + \
+                   indent + 'equilibrium problems with the program Links it is ' + \
+                   'mandatory that all the specified' + '\n' + \
+                   indent + 'material constitutive models have the corresponding ' + \
+                   'source (2).'
+    # print(template_header.format(*header,width=output_width))
+    # print(template.format(*values,width=output_width))
+    # print(template_footer.format(*footer,width=output_width))
+    # sys.exit(1)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display error
     if code in ['E00001','E00002','E00010']:

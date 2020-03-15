@@ -35,6 +35,8 @@ import errors
 import fileOperations
 # Packager
 import packager
+# Links interface
+import LinksInterface
 # Material interface
 import material.materialInterface
 #
@@ -183,11 +185,22 @@ def readInputData(input_file,dirs_dict):
     keyword = 'Clustering_Solution_Method'
     isFound,keyword_line_number = searchOptionalKeywordLine(input_file,keyword)
     if isFound:
-        max = 1
+        max = 2
         clustering_solution_method = \
                                     readTypeAKeyword(input_file,input_file_path,keyword,max)
     else:
         clustering_solution_method = 1
+    # Read clustering solution method parameters
+    Links_dict = ()
+    if clustering_solution_method == 2:
+        # Check if all materials have material source 2!!
+        for mat_phase in material_properties.keys():
+            if material_phases_models[mat_phase]['source'] != 2:
+                location = inspect.getframeinfo(inspect.currentframe())
+                errors.displayError('E00067',location.filename,location.lineno+1)
+        # Build Links dictionary
+        Links_dict = LinksInterface.readLinksParameters(input_file,input_file_path,
+                       problem_type,checkNumber,searchKeywordLine,searchOptionalKeywordLine)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read number of cluster associated to each material phase
     keyword = 'Number_of_Clusters'
@@ -248,10 +261,9 @@ def readInputData(input_file,dirs_dict):
         su_conv_tol = 1e-6
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read the spatial discretization file absolute path
-    # [WIP - Implement the case of several spatial discretization files]
     keyword = 'Discretization_File'
     valid_exts = ['.rgmsh']
-    discret_file_path,discret_file_ext = \
+    discret_file_path = \
                    readDiscretizationFilePath(input_file,input_file_path,keyword,valid_exts)
     # Copy the spatial discretization file to the problem directory and update the absolute
     # path to the copied file
@@ -261,6 +273,8 @@ def readInputData(input_file,dirs_dict):
     except IOError as message:
         location = inspect.getframeinfo(inspect.currentframe())
         errors.displayException(location.filename,location.lineno+1,message)
+    # Store spatial discretization file absolute path
+    dirs_dict['discret_file_path'] = discret_file_path
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read VTK output options
     keyword = 'VTK_Output'
@@ -292,7 +306,7 @@ def readInputData(input_file,dirs_dict):
     # Package data associated to the clustering
     info.displayInfo('5','Packaging clustering data...')
     clst_dict = packager.packageRGClustering(clustering_method,clustering_strategy,
-                                        clustering_solution_method,phase_n_clusters,rg_dict)
+                             clustering_solution_method,Links_dict,phase_n_clusters,rg_dict)
     # Package data associated to the self-consistent scheme
     info.displayInfo('5','Packaging self-consistent scheme data...')
     scs_dict = packager.packageSCS(self_consistent_scheme,scs_max_n_iterations,scs_conv_tol)
@@ -424,16 +438,15 @@ def readMaterialProperties(file,file_path,keyword):
                                                                                   mat_phase)
             model_source = int(phase_header[3])
             material_phases_models[mat_phase]['source'] = model_source
-            # Model sources 2 and 3 are not implemented yet...
-            if model_source in [2,3]:
+            # Model source 3 is not implemented yet...
+            if model_source in [3,]:
                 location = inspect.getframeinfo(inspect.currentframe())
                 errors.displayError('E00054',location.filename,location.lineno+1,mat_phase)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set material phase constitutive model and associated procedures
-        if model_source == 1:
-            available_mat_models = \
+        available_mat_models = \
                      material.materialInterface.getAvailableConstitutiveModels(model_source)
-        if phase_header[1].lower() not in available_mat_models:
+        if phase_header[1] not in available_mat_models:
             location = inspect.getframeinfo(inspect.currentframe())
             errors.displayError('E00055',location.filename,location.lineno+1,mat_phase,
                                                                                model_source)
@@ -446,18 +459,24 @@ def readMaterialProperties(file,file_path,keyword):
             # Check if the material constitutive model required procedures are available
             for procedure in req_procedures:
                 if hasattr(model_module,procedure):
+                    # Get material constitutive model procedures
                     material_phases_models[mat_phase][procedure] = \
                                                              getattr(model_module,procedure)
                 else:
                     location = inspect.getframeinfo(inspect.currentframe())
                     errors.displayError('E00056',location.filename,location.lineno+1,
                                                                        model_name,procedure)
+        elif model_source == 2:
+            # Get material constitutive model procedures
+            setRequiredProperties,writeMaterialProperties = \
+                                          LinksInterface.LinksMaterialProcedures(model_name)
+            material_phases_models[mat_phase]['setRequiredProperties'] = \
+                                                                       setRequiredProperties
+            material_phases_models[mat_phase]['writeMaterialProperties'] = \
+                                                                     writeMaterialProperties
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Set material phase constitutive model number of material properties
-        if model_source == 1:
-            required_properties = \
-                                material_phases_models[mat_phase]['setRequiredProperties']()
-            n_required_properties = len(required_properties)
+        required_properties = material_phases_models[mat_phase]['setRequiredProperties']()
+        n_required_properties = len(required_properties)
         if not checkPositiveInteger(phase_header[2]):
             location = inspect.getframeinfo(inspect.currentframe())
             errors.displayError('E00005',location.filename,location.lineno+1,keyword,i+1)
@@ -741,16 +760,13 @@ def readDiscretizationFilePath(file,file_path,keyword,valid_exts):
             location = inspect.getframeinfo(inspect.currentframe())
             errors.displayError('E00015',location.filename,location.lineno+1,keyword,\
                                                                                  valid_exts)
-        discret_file_ext = \
-                 ntpath.splitext(ntpath.splitext(ntpath.basename(discret_file_path))[0])[-1]
-        return [discret_file_path,discret_file_ext]
+        return discret_file_path
     else:
         if not ntpath.splitext(ntpath.basename(discret_file_path))[-1] in valid_exts:
             location = inspect.getframeinfo(inspect.currentframe())
             errors.displayError('E00015',location.filename,location.lineno+1,keyword,\
                                                                                  valid_exts)
-        discret_file_ext = ntpath.splitext(ntpath.basename(discret_file_path))[-1]
-        return [discret_file_path,discret_file_ext]
+        return discret_file_path
 # ------------------------------------------------------------------------------------------
 # Read the RVE dimensions specified as follows:
 #
