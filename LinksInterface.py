@@ -11,6 +11,8 @@
 # ==========================================================================================
 # Operating system related functions
 import os
+# Subprocess management
+import subprocess
 # Working with arrays
 import numpy as np
 # Extract information from path
@@ -28,15 +30,30 @@ import fileOperations
 #                                                                          (input data file)
 # ==========================================================================================
 # Read the parameters from the input data file required to generate the Links input data
-# file
-def readLinksParameters(file,file_path,problem_type,checkNumber,searchKeywordLine,
-                                                                 searchOptionalKeywordLine):
+# file and solve the microscale equilibrium problem
+def readLinksParameters(file,file_path,problem_type,checkNumber,checkPositiveInteger,
+                                               searchKeywordLine,searchOptionalKeywordLine):
     # Initialize Links parameters dictionary
     Links_dict = dict()
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set Links problem type
     problem_type_converter = {'1':2, '2':1, '3':3, '4':6}
     Links_dict['analysis_type'] = problem_type_converter[str(problem_type)]
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Read the Links binary absolute path
+    keyword = 'Links_bin'
+    line_number = searchKeywordLine(file,keyword) + 1
+    Links_bin_path = linecache.getline(file_path,line_number).strip()
+    if not os.path.isabs(Links_bin_path):
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00068',location.filename,location.lineno+1,keyword, \
+                                                                             Links_bin_path)
+    elif not os.path.isfile(Links_bin_path):
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00068',location.filename,location.lineno+1,keyword, \
+                                                                             Links_bin_path)
+    # Store Links binary absolute path
+    Links_dict['Links_bin_path'] = Links_bin_path
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read the finite element order (linear or quadratic). If the associated keyword is not
     # found, then a default specification is assumed
@@ -97,6 +114,23 @@ def readLinksParameters(file,file_path,problem_type,checkNumber,searchKeywordLin
     # Store convergence tolerance
     Links_dict['convergence_tolerance'] = convergence_tolerance
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Read elemental average output mode. If the associated keyword is not found, then a
+    # default specification is assumed
+    keyword = 'Links_Element_Average_Output_Mode'
+    isFound,keyword_line_number = searchOptionalKeywordLine(file,keyword)
+    if isFound:
+        if len(line) == 1:
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayError('E00069',location.filename,location.lineno+1,keyword)
+        elif not checkPositiveInteger(line[1]):
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayError('E00069',location.filename,location.lineno+1,keyword)
+        element_avg_output_mode = int(line[1])
+    else:
+        element_avg_output_mode = 1
+    # Store element average output mode
+    Links_dict['element_avg_output_mode'] = element_avg_output_mode
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return Links_dict
 #
 #                                                           Links input data file generation
@@ -124,22 +158,23 @@ def writeLinksInputDataFile(file_name,dirs_dict,problem_dict,mat_dict,rg_dict,cl
     analysis_type = Links_dict['analysis_type']
     boundary_type = Links_dict['boundary_type']
     convergence_tolerance = Links_dict['convergence_tolerance']
+    element_avg_output_mode = Links_dict['element_avg_output_mode']
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set and create offline stage Links directory if it does not exist
     os_Links_dir = offline_stage_dir + 'Links' + '/'
     if not os.path.exists(os_Links_dir):
         fileOperations.makeDirectory(os_Links_dir)
     # Set Links input data file path
-    file_path = os_Links_dir + file_name + '.rve'
+    Links_file_path = os_Links_dir + file_name + '.rve'
     # Abort if attempting to overwrite an existing Links input data file
-    if os.path.isfile(file_path):
+    if os.path.isfile(Links_file_path):
         location = inspect.getframeinfo(inspect.currentframe())
         errors.displayError('E00066',location.filename,location.lineno+1,
-                                                                 ntpath.basename(file_path))
+                                                           ntpath.basename(Links_file_path))
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set additional Links input data file parameters (fixed)
     title = 'Links input data file generated automatically by UNNAMED program'
-    large_strain_formulation = 'ON'
+    large_strain_formulation = 'OFF'
     number_of_increments = 1
     solver = 'PARDISO'
     parallel_solver = 4
@@ -149,13 +184,13 @@ def writeLinksInputDataFile(file_name,dirs_dict,problem_dict,mat_dict,rg_dict,cl
                                                                       regular_grid,fe_order)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Open Links input data file
-    Links_file = open(file_path,'w')
+    Links_file = open(Links_file_path,'w')
     # Format file structure
     write_list = ['\n' + 'TITLE ' + '\n' + title + '\n'] + \
                  ['\n' + 'ANALYSIS_TYPE ' + str(analysis_type) + '\n'] + \
                  ['\n' + 'LARGE_STRAIN_FORMULATION ' + large_strain_formulation + '\n'] + \
                  ['\n' + 'Boundary_Type ' + boundary_type + '\n'] + \
-                 ['\n' + 'Prescribed_Deformation_Gradient' + '\n'] + \
+                 ['\n' + 'Prescribed_Epsilon' + '\n'] + \
                  [' '.join([str('{:16.8e}'.format(mac_strain[i,j]))
                           for j in range(n_dim)]) + '\n' for i in range(n_dim)] + ['\n'] + \
                  ['Number_of_Increments ' + str(number_of_increments) + '\n'] + \
@@ -163,15 +198,17 @@ def writeLinksInputDataFile(file_name,dirs_dict,problem_dict,mat_dict,rg_dict,cl
                                                                                    '\n'] + \
                  ['\n' + 'SOLVER ' + solver + '\n'] + \
                  ['\n' + 'PARALLEL_SOLVER ' + str(parallel_solver) + '\n'] + \
-                 ['\n' + 'VTK_OUTPUT' + '\n']
+                 ['\n' + 'VTK_OUTPUT' + '\n'] + \
+                 ['\n' + 'Element_Average_Output ' + str(element_avg_output_mode) + '\n']
     # Write Links input data file
     Links_file.writelines(write_list)
     # Close Links input data file
     Links_file.close()
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Append finite element mesh to Links input data file
-    writeLinksFEMesh(file_path,n_dim,n_material_phases,material_phases,material_properties,
-                       material_phases_models,fe_order,coords,connectivities,element_phases)
+    writeLinksFEMesh(Links_file_path,n_dim,n_material_phases,material_phases,
+                  material_properties,material_phases_models,fe_order,coords,connectivities,
+                                                                             element_phases)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Create a file containing solely the Links finite element mesh data if it does not
     # exist yet
@@ -180,6 +217,9 @@ def writeLinksInputDataFile(file_name,dirs_dict,problem_dict,mat_dict,rg_dict,cl
         writeLinksFEMesh(mesh_path,n_dim,n_material_phases,material_phases,
                                  material_properties,material_phases_models,fe_order,coords,
                                                               connectivities,element_phases)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Return
+    return Links_file_path
 #
 #                                                                  Links finite element mesh
 # ==========================================================================================
@@ -413,3 +453,68 @@ def LinksMaterialProcedures(model_name):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Return
     return [setRequiredProperties,writeMaterialProperties]
+#
+#                                                                         Links program call
+# ==========================================================================================
+# Solve a given microscale equilibrium problem with program Links
+def runLinks(Links_bin_path,Links_file_path):
+    # Call program Links
+    subprocess.run([Links_bin_path,Links_file_path],stdout=subprocess.PIPE,\
+                                                                     stderr=subprocess.PIPE)
+    # Check if the microscale equilibrium problem was successfully solved
+    screen_file_name = ntpath.splitext(ntpath.basename(Links_file_path))[0]
+    screen_file_path = ntpath.dirname(Links_file_path) + '/' + \
+                                       screen_file_name + '/' + screen_file_name + '.screen'
+    if not os.path.isfile(screen_file_path):
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00071',location.filename,location.lineno+1,screen_file_path)
+    else:
+        is_solved = False
+        screen_file = open(screen_file_path,'r')
+        screen_file.seek(0)
+        line_number = 0
+        for line in screen_file:
+            line_number = line_number + 1
+            if 'Program L I N K S successfully completed.' in line:
+                is_solved = True
+                break
+        if not is_solved:
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayError('E00072',location.filename,location.lineno+1,
+                                                           ntpath.basename(Links_file_path))
+#
+#                                                                 Post process Links results
+# ==========================================================================================
+# Get the elementwise average strain tensor components
+def getStrainVox(Links_file_path,n_dim,comp_order,n_voxels_dims):
+    # Initialize strain tensor
+    strain_vox = {comp: np.zeros(tuple(n_voxels_dims)) for comp in comp_order}
+    # Set elementwise average output file path and check file existence
+    elagv_file_name = ntpath.splitext(ntpath.basename(Links_file_path))[0]
+    elagv_file_path = ntpath.dirname(Links_file_path) + '/' + \
+                                          elagv_file_name + '/' + elagv_file_name + '.elavg'
+    if not os.path.isfile(elagv_file_path):
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00070',location.filename,location.lineno+1,elagv_file_path)
+    # Load elementwise average strain tensor components
+    elagv_array = np.genfromtxt(elagv_file_path,autostrip=True)
+    # Get Links strain components order
+    Links_comp_order_sym,_ = getLinksCompOrder(n_dim)
+    # Loop over Links strain components
+    for i in range(len(Links_comp_order_sym)):
+        # Get Links strain component
+        Links_comp = Links_comp_order_sym[i]
+        # Store elementwise average strain component
+        strain_vox[Links_comp] = elagv_array[i,:].reshape(n_voxels_dims,order='F')
+    # Return
+    return strain_vox
+# ------------------------------------------------------------------------------------------
+# Set Links strain/stress components order in symmetric and nonsymmetric cases
+def getLinksCompOrder(n_dim):
+    if n_dim == 2:
+        Links_comp_order_sym = ['11','22','12']
+        Links_comp_order_nsym = ['11','21','12','22']
+    else:
+        Links_comp_order_sym = ['11','22','33','12','23','13']
+        Links_comp_order_nsym = ['11','21','31','12','22','32','13','23','33']
+    return [Links_comp_order_sym,Links_comp_order_nsym]

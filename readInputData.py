@@ -200,7 +200,8 @@ def readInputData(input_file,dirs_dict):
                 errors.displayError('E00067',location.filename,location.lineno+1)
         # Build Links dictionary
         Links_dict = LinksInterface.readLinksParameters(input_file,input_file_path,
-                       problem_type,checkNumber,searchKeywordLine,searchOptionalKeywordLine)
+                            problem_type,checkNumber,checkPositiveInteger,searchKeywordLine,
+                                                                  searchOptionalKeywordLine)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read number of cluster associated to each material phase
     keyword = 'Number_of_Clusters'

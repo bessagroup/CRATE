@@ -123,13 +123,16 @@ def computeClusteringQuantities(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dic
                                                          copy.deepcopy(mat_dict),mac_strain)
                 elif clustering_solution_method == 2:
                     # Generate microscale problem Links input data file
-                    fe_file_name = rg_file_name + '_SCT_' + compi
-                    LinksInterface.writeLinksInputDataFile(fe_file_name,dirs_dict,
-                                         problem_dict,mat_dict,rg_dict,clst_dict,mac_strain)
+                    Links_file_name = rg_file_name + '_SCT_' + compi
+                    Links_file_path = \
+                                     LinksInterface.writeLinksInputDataFile(Links_file_name,
+                               dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,mac_strain)
                     # Run Links (FEM-based homogenization method)
-                    # ... run program links here
+                    Links_bin_path = clst_dict['Links_dict']['Links_bin_path']
+                    LinksInterface.runLinks(Links_bin_path,Links_file_path)
                     # Get the strain concentration tensor components
-                    # strain_vox =
+                    strain_vox = LinksInterface.getStrainVox(Links_file_path,n_dim,
+                                                               comp_order_sym,n_voxels_dims)
                 # Assemble strain concentration tensor components associated to the imposed
                 # macroscale strain loading component
                 for j in range(len(comp_order_sym)):

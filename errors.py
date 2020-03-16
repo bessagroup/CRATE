@@ -694,6 +694,53 @@ def displayError(code,*args):
                    'mandatory that all the specified' + '\n' + \
                    indent + 'material constitutive models have the corresponding ' + \
                    'source (2).'
+    elif code == 'E00068':
+        arguments = args[2:4]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
+                   'input data file. ' + '\n' + \
+                   indent + 'In particular, the specified path to the Links binary ' + \
+                   'is not an absolute path (mandatory)' + '\n' + \
+                   indent + 'or does not exist.' + '\n\n' + \
+                   indent + '{}'
+    elif code == 'E00069':
+        arguments = 3*[args[2],]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The specification of the Links element average output ' + \
+                   'mode keyword -' + '\n' + \
+                   indent + '{} - is either missing or is invalid (must be ' + \
+                   'a positive' + '\n' + \
+                   indent + 'integer).'  + '\n\n' + \
+                   'Suggestion:' + '\n\n' + \
+                   indent + 'The keyword - {} - should be specified p.e. as' + '\n\n' + \
+                   indent + '{} 1'
+    elif code == 'E00070':
+        arguments = [args[2],]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The following Links elementwise average output file has ' + \
+                   'not been found. Most probably the' + '\n' + \
+                   indent + 'file has not been written by the Links program.' + '\n\n' + \
+                   indent + '{}'
+    elif code == 'E00071':
+        arguments = [args[2],]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The following Links screen output file has ' + \
+                   'not been found. Most probably the file has' + '\n' + \
+                   indent + 'not been written by the Links program.' + '\n\n' + \
+                   indent + '{}'
+    elif code == 'E00072':
+        arguments = [args[2],]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The program Links could not successfully solve the ' + \
+                   'following microscale equilibrium' + '\n' + \
+                   indent + 'problem:' + '\n\n' + \
+                   indent + '{}' + '\n\n' + \
+                   indent + 'Check the associated \'.screen\' file for more details.'
     # print(template_header.format(*header,width=output_width))
     # print(template.format(*values,width=output_width))
     # print(template_footer.format(*footer,width=output_width))
