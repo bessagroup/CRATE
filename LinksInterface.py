@@ -25,6 +25,8 @@ import inspect
 import errors
 # Manage files and directories
 import fileOperations
+# Tensorial operations
+import tensorOperations as top
 #
 #                                                                    Links parameters reader
 #                                                                          (input data file)
@@ -435,6 +437,7 @@ def LinksMaterialProcedures(model_name):
             req_material_properties = ['density','E','v']
             # Return
             return req_material_properties
+        # ----------------------------------------------------------------------------------
         # Append Links constitutive model properties specification to a given data file
         def writeMaterialProperties(file_path,mat_phase,properties):
             # Open data file to append Links constitutive model properties
@@ -450,9 +453,32 @@ def LinksMaterialProcedures(model_name):
             data_file.writelines(write_list)
             # Close data file
             data_file.close()
+        # ----------------------------------------------------------------------------------
+        # Define material constitutive model state variables and build an initialized state
+        # variables dictionary
+        def init(problem_dict):
+            # Get problem data
+            n_dim = problem_dict['n_dim']
+            comp_order = problem_dict['comp_order_sym']
+            problem_type = problem_dict['problem_type']
+            # Define constitutive model state variables (names and initialization)
+            state_variables_init = dict()
+            state_variables_init['e_strain_mf'] = \
+                        top.setTensorMatricialForm(np.zeros((n_dim,n_dim)),n_dim,comp_order)
+            state_variables_init['strain_mf'] = \
+                        top.setTensorMatricialForm(np.zeros((n_dim,n_dim)),n_dim,comp_order)
+            state_variables_init['stress_mf'] = \
+                        top.setTensorMatricialForm(np.zeros((n_dim,n_dim)),n_dim,comp_order)
+            state_variables_init['is_su_fail'] = False
+            # Set additional out-of-plane stress component in a 2D plane strain problem
+            # (output purpose only)
+            if problem_type == 1:
+                state_variables_init['stress_33'] = 0.0
+            # Return initialized state variables dictionary
+            return state_variables_init
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Return
-    return [setRequiredProperties,writeMaterialProperties]
+    return [setRequiredProperties,writeMaterialProperties,init]
 #
 #                                                                         Links program call
 # ==========================================================================================

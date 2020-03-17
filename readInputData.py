@@ -469,12 +469,13 @@ def readMaterialProperties(file,file_path,keyword):
                                                                        model_name,procedure)
         elif model_source == 2:
             # Get material constitutive model procedures
-            setRequiredProperties,writeMaterialProperties = \
+            setRequiredProperties,writeMaterialProperties,init = \
                                           LinksInterface.LinksMaterialProcedures(model_name)
             material_phases_models[mat_phase]['setRequiredProperties'] = \
                                                                        setRequiredProperties
             material_phases_models[mat_phase]['writeMaterialProperties'] = \
                                                                      writeMaterialProperties
+            material_phases_models[mat_phase]['init'] = init
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         required_properties = material_phases_models[mat_phase]['setRequiredProperties']()
         n_required_properties = len(required_properties)

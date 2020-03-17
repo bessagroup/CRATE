@@ -14,7 +14,21 @@ import numpy as np
 # Tensorial operations
 import tensorOperations as top
 #
+#                                                               Required material properties
+#                                                                    (check input data file)
+# ==========================================================================================
+# Set the constitutive model required material properties
 #
+# Material properties meaning:
+#
+# E - Young modulus
+# v - Poisson ratio
+#
+def setRequiredProperties():
+    # Set required material properties
+    req_material_properties = ['E','v']
+    # Return
+    return req_material_properties
 #                                                                             Initialization
 # ==========================================================================================
 # Define material constitutive model state variables and build an initialized state
@@ -129,19 +143,3 @@ def ct(problem_dict,properties):
     consistent_tangent_mf = top.setTensorMatricialForm(consistent_tangent,n_dim,comp_order)
     # Return
     return consistent_tangent_mf
-#
-#                                                               Required material properties
-#                                                                    (check input data file)
-# ==========================================================================================
-# Set the constitutive model required material properties
-#
-# Material properties meaning:
-#
-# E - Young modulus
-# v - Poisson ratio
-#
-def setRequiredProperties():
-    # Set required material properties
-    req_material_properties = ['E','v']
-    # Return
-    return req_material_properties

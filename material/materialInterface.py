@@ -82,7 +82,7 @@ def getAvailableConstitutiveModels(model_source):
         available_mat_models = ['linear_elastic',]
     elif model_source == 2:
         # Links material constitutive models
-        available_mat_models = ['ELASTIC','VON_MISES']
+        available_mat_models = ['ELASTIC',]
     elif model_source == 3:
         # Abaqus material constitutive models
         pass
