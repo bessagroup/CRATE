@@ -164,6 +164,8 @@ def writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,problem_dict,mat_dict,rg_dict,
     # Get material data
     material_phases = mat_dict['material_phases']
     material_phases_models = mat_dict['material_phases_models']
+    # Get regular grid data
+    regular_grid = rg_dict['regular_grid']
     # Get clustering data
     phase_clusters = clst_dict['phase_clusters']
     voxels_clusters = clst_dict['voxels_clusters']
@@ -171,6 +173,22 @@ def writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,problem_dict,mat_dict,rg_dict,
     # microstructure
     material_models = list(np.unique([material_phases_models[mat_phase]['name'] \
                                                          for mat_phase in material_phases]))
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Write VTK cell data array - Material phases
+    data_list = list(regular_grid.flatten('F'))
+    min_val = min(data_list)
+    max_val = max(data_list)
+    data_parameters = {'Name':'Material phase','format':vtk_format,'RangeMin':min_val,
+                                                                         'RangeMax':max_val}
+    writeVTKCellDataArray(vtk_file,vtk_dict,data_list,data_parameters)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Write VTK cell data array - Clusters
+    data_list = list(voxels_clusters.flatten('F'))
+    min_val = min(data_list)
+    max_val = max(data_list)
+    data_parameters = {'Name':'Cluster','format':vtk_format,'RangeMin':min_val,
+                                                                         'RangeMax':max_val}
+    writeVTKCellDataArray(vtk_file,vtk_dict,data_list,data_parameters)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set state variables common to all material constitutive models
     if problem_type == 1:
@@ -214,7 +232,7 @@ def writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,problem_dict,mat_dict,rg_dict,
                                                              voxels_clusters,clusters_state)
             # Set output variable data name
             data_name = setDataName(problem_dict,var_name,var_type,icomp,True)
-            # Write VTK cell data array
+            # Write VTK cell data array - State variable
             data_list = list(rg_array.flatten('F'))
             min_val = min(data_list)
             max_val = max(data_list)
@@ -256,7 +274,7 @@ def writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,problem_dict,mat_dict,rg_dict,
                     # Set output variable data name
                     data_name = \
                           setDataName(problem_dict,var_name,var_type,icomp,False,model_name)
-                    # Write VTK cell data array
+                    # Write VTK cell data array - State variable
                     data_list = list(rg_array.flatten('F'))
                     min_val = min(data_list)
                     max_val = max(data_list)
