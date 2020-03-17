@@ -25,6 +25,8 @@ import inspect
 import errors
 # Tensorial operations
 import tensorOperations as top
+# Links interface
+import LinksInterface
 #
 #                                                                           Global variables
 # ==========================================================================================
@@ -179,10 +181,22 @@ def writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,problem_dict,mat_dict,rg_dict,
     for var_name in common_var_list:
         # Loop over material constitutive models
         for model_name in material_models:
-            # Get constitutive model module
-            model_module = importlib.import_module('material.models.' + str(model_name))
+            # Loop over material phases
+            for mat_phase in material_phases:
+                if material_phases_models[mat_phase]['name'] == model_name:
+                    # Get constitutive model source
+                    model_source = material_phases_models[mat_phase]['source']
+                    break
+            # Get constitutive model initialize procedure according to source
+            if model_source == 1:
+                # Get constitutive model module
+                model_module = importlib.import_module('material.models.' + str(model_name))
+                # Get constitutive model initialize procedure
+                init_procedure = getattr(model_module,'init')
+            elif model_source == 2:
+                # Get constitutive model initialize procedure
+                _,_,init_procedure = LinksInterface.LinksMaterialProcedures(model_name)
             # Get constitutive model state variables dictionary
-            init_procedure = getattr(model_module,'init')
             model_state_variables = init_procedure(problem_dict)
             # Skip state variable output if it is not defined for all constitutive models
             if var_name not in model_state_variables.keys():
@@ -211,10 +225,22 @@ def writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,problem_dict,mat_dict,rg_dict,
     if vtk_vars == 'all':
         # Loop over material constitutive models
         for model_name in material_models:
-            # Get constitutive model module
-            model_module = importlib.import_module('material.models.' + str(model_name))
+            # Loop over material phases
+            for mat_phase in material_phases:
+                if material_phases_models[mat_phase]['name'] == model_name:
+                    # Get constitutive model source
+                    model_source = material_phases_models[mat_phase]['source']
+                    break
+            # Get constitutive model initialize procedure according to source
+            if model_source == 1:
+                # Get constitutive model module
+                model_module = importlib.import_module('material.models.' + str(model_name))
+                # Get constitutive model initialize procedure
+                init_procedure = getattr(model_module,'init')
+            elif model_source == 2:
+                # Get constitutive model initialize procedure
+                _,_,init_procedure = LinksInterface.LinksMaterialProcedures(model_name)
             # Get constitutive model state variables dictionary
-            init_procedure = getattr(model_module,'init')
             model_state_variables = init_procedure(problem_dict)
             # Loop over constitutive model state variables
             for var_name in list(set(model_state_variables.keys()) - set(common_var_list)):
