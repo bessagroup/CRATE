@@ -63,6 +63,8 @@ import clusteringQuantities
 import clusteringMethods
 # Cluster interaction tensors computation
 import clusterInteractionTensors
+# Online stage
+import onlineStage
 # VTK output
 import VTKOutput
 #
@@ -245,16 +247,15 @@ else:
     info.displayInfo('3','Import cluster interaction tensors',
                 phase_times[phase_times.shape[0]-1,1]-phase_times[phase_times.shape[0]-1,0])
 #
-#                               Online stage: Solve discretized Lippmann-Schwinger equations
+#                                 Online stage: Solve reduced microscale equilibrium problem
 # ==========================================================================================
 # Display starting phase information and set phase initial time
 info.displayInfo('2','Solve discretized Lippmann-Schwinger equations')
 phase_init_time = time.time()
-
-
-
-
-
+# Solve the reduced microscale equilibrium problem through solution of the clusterwise
+# discretized Lippmann-Schwinger system of equilibrium equations
+onlineStage.onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,
+                                                              scs_dict,algpar_dict,vtk_dict)
 # Set phase ending time and display finishing phase information
 phase_end_time = time.time()
 phase_names.append('Solve discretized Lippmann-Schwinger equations')
