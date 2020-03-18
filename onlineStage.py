@@ -71,6 +71,14 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
     is_VTK_output = vtk_dict['is_VTK_output']
     if is_VTK_output:
         vtk_inc_div = vtk_dict['vtk_inc_div']
+    # --------------------------------------------------------------------------------------
+    is_Validation = 10*[True,]
+    # Validation:
+    if is_Validation[0]:
+        print('\n' + 'Online Stage validation' + '\n' + 23*'-')
+        np.set_printoptions(linewidth = np.inf)
+        np.set_printoptions(formatter={'float':'{: 11.4e}'.format})
+    # --------------------------------------------------------------------------------------
     #
     #                                                                        Initializations
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -88,13 +96,20 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
         for cluster in phase_clusters[mat_phase]:
             # Initialize state variables
             clusters_state[str(cluster)] = \
-                              material.materialInterface('init',copy.deepcopy(problem_dict),
-                                                          copy.deepcopy(mat_dict),mat_phase)
+                                        material.materialInterface.materialInterface('init',
+                              copy.deepcopy(problem_dict),copy.deepcopy(mat_dict),mat_phase)
             clusters_state_old[str(cluster)] = \
-                              material.materialInterface('init',copy.deepcopy(problem_dict),
-                                                          copy.deepcopy(mat_dict),mat_phase)
+                                        material.materialInterface.materialInterface('init',
+                              copy.deepcopy(problem_dict),copy.deepcopy(mat_dict),mat_phase)
     # Get total number of clusters
     n_total_clusters = sum([phase_n_clusters[mat_phase] for mat_phase in material_phases])
+    # --------------------------------------------------------------------------------------
+    # Validation:
+    if is_Validation[1]:
+        section = 'Initializations'
+        print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
+        print('\n' + 'n_total_clusters = ' + str(n_total_clusters))
+    # --------------------------------------------------------------------------------------
     #
     #                                                                 Initial state VTK file
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -106,17 +121,42 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                                                          rg_dict,clst_dict,0,clusters_state)
     #
     #                                                      Material clusters elastic tangent
-    #                                                                     (Zeliang approach)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Compute the elastic tangent (matricial form) associated to each material cluster
     clusters_De_mf = clustersElasticTangent(copy.deepcopy(problem_dict),material_properties,
                                                              material_phases,phase_clusters)
+    # --------------------------------------------------------------------------------------
+    # Validation:
+    if is_Validation[2]:
+        section = 'Material clusters elastic tangent'
+        print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
+        for cluster in range(n_total_clusters):
+            print('\n' + 'clusters_De_mf[cluster = ' + str(cluster) + ']:' + '\n')
+            print(clusters_De_mf[cluster])
+    # --------------------------------------------------------------------------------------
     #
     #                                                            Macroscale incremental loop
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set the incremental macroscale load data
-    inc_mac_load_mf,n_presc_mac_stress,presc_strain_idxs,presc_stress_idxs = \
-        setMacroscaleLoadIncrements(copy.deepcopy(problem_dict),copy.deepcopy(macload_dict))
+    inc_mac_load_mf,n_presc_mac_strain,n_presc_mac_stress,presc_strain_idxs, \
+                presc_stress_idxs = setMacroscaleLoadIncrements(copy.deepcopy(problem_dict),
+                                                                copy.deepcopy(macload_dict))
+    # --------------------------------------------------------------------------------------
+    # Validation:
+    if is_Validation[3]:
+        section = 'Macroscale load increments'
+        print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
+        if n_presc_mac_strain > 0:
+            print('\n' + 'n_presc_mac_strain = ' + str(n_presc_mac_strain))
+            print('\n' + 'presc_strain_idxs = ' + str(presc_strain_idxs))
+            print('\n' + 'inc_mac_load_mf[strain]:' + '\n')
+            print(inc_mac_load_mf['strain'])
+        if n_presc_mac_stress > 0:
+            print('\n' + 'n_presc_mac_stress = ' + str(n_presc_mac_stress))
+            print('\n' + 'presc_stress_idxs = ' + str(presc_stress_idxs))
+            print('\n' + 'inc_mac_load_mf[stress]:' + '\n')
+            print(inc_mac_load_mf['stress'])
+    # --------------------------------------------------------------------------------------
     #
     #                                                     Reference material elastic tangent
     #                                                                        (initial guess)
@@ -134,6 +174,18 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
     # (matrix)
     De_ref_mf,Se_ref_matrix = \
              refMaterialElasticTangents(copy.deepcopy(problem_dict),material_properties_ref)
+    # --------------------------------------------------------------------------------------
+    # Validation:
+    if is_Validation[4]:
+        section = 'Reference material elastic tangent'
+        print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
+        print('\n' + 'material_properties_ref[\'E\'] = '+ str(material_properties_ref['E']))
+        print('\n' + 'material_properties_ref[\'v\'] = '+ str(material_properties_ref['v']))
+        print('\n' + 'De_ref_mf:' + '\n')
+        print(De_ref_mf)
+        print('\n' + 'Se_ref_matrix:' + '\n')
+        print(Se_ref_matrix)
+    # --------------------------------------------------------------------------------------
     #
     #                                                               Incremental loading loop
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -451,7 +503,8 @@ def setMacroscaleLoadIncrements(problem_dict,macload_dict):
     for load_type in load_types[mac_load_type]:
         inc_mac_load_mf[load_type] = \
                 setIncMacLoadMF(n_dim,comp_order,mac_load[load_type][:,1])/n_load_increments
-    # Compute number of prescribed macroscale stress components
+    # Compute number of prescribed macroscale strain and stress components
+    n_presc_mac_strain = sum([mac_load_presctype[comp] == 'strain' for comp in comp_order])
     n_presc_mac_stress = sum([mac_load_presctype[comp] == 'stress' for comp in comp_order])
     # Set macroscale strain and stress prescribed components indexes
     presc_strain_idxs = list()
@@ -463,7 +516,8 @@ def setMacroscaleLoadIncrements(problem_dict,macload_dict):
         else:
             presc_stress_idxs.append(i)
     # Return
-    return [inc_mac_load_mf,n_presc_mac_stress,presc_strain_idxs,presc_stress_idxs]
+    return [inc_mac_load_mf,n_presc_mac_strain,n_presc_mac_stress,presc_strain_idxs,
+                                                                          presc_stress_idxs]
 #
 # Under a small strain formulation, set the incremental macroscopic load strain or stress
 # tensor matricial form according to Kelvin notation
@@ -494,10 +548,10 @@ def refMaterialElasticTangents(problem_dict,material_properties_ref):
     # Store reference material compliance tensor in a matrix similar to matricial form
     # but without any associated coefficients
     Se_ref_matrix = np.zeros(Se_ref_mf.shape)
-    for i in range(len(comp_order)):
-        comp = comp_order[i]
-        index = tuple([int(j) for j in comp])
-        Se_ref_matrix[index] = (1.0/top.kelvinFactor(i,comp_order))*Se_ref_mf
+    for j in range(len(comp_order)):
+        for i in range(len(comp_order)):
+            Se_ref_matrix[i,j] = (1.0/top.kelvinFactor(i,comp_order))*\
+                                         (1.0/top.kelvinFactor(j,comp_order))*Se_ref_mf[i,j]
     # Return
     return [De_ref_mf,Se_ref_matrix]
 # ------------------------------------------------------------------------------------------
