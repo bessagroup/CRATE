@@ -199,12 +199,26 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
         # (a) Incremental macroscale strain (if prescribed macroscale strain component)
         # (b) Incremental homogenized strain (if non-prescribed macroscale strain component)
         inc_mix_strain_mf = np.zeros(len(comp_order))
-        inc_mix_strain_mf[presc_strain_idxs] = inc_mac_load_mf['strain'][presc_strain_idxs]
+        if n_presc_mac_strain > 0:
+            inc_mix_strain_mf[presc_strain_idxs] = \
+                                                inc_mac_load_mf['strain'][presc_strain_idxs]
         # Initialize stress tensor where each component is defined as follows:
         # (a) Incremental macroscale stress (if prescribed macroscale stress component)
         # (b) Incremental homogenized stress (if non-prescribed macroscale stress component)
         inc_mix_stress_mf = np.zeros(len(comp_order))
-        inc_mix_stress_mf[presc_stress_idxs] = inc_mac_load_mf['stress'][presc_stress_idxs]
+        if n_presc_mac_stress > 0:
+            inc_mix_stress_mf[presc_stress_idxs] = \
+                                                inc_mac_load_mf['stress'][presc_stress_idxs]
+        # ----------------------------------------------------------------------------------
+        # Validation:
+        if is_Validation[5]:
+            section = 'Incremental macroscale load'
+            print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
+            print('\n' + 'inc_mix_strain_mf:' + '\n')
+            print(inc_mix_strain_mf)
+            print('\n' + 'inc_mix_stress_mf:' + '\n')
+            print(inc_mix_stress_mf)
+        # ----------------------------------------------------------------------------------
         #
         #                                              Self-consistent scheme iterative loop
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
