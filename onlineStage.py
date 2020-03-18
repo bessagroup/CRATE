@@ -31,6 +31,7 @@ import material.materialInterface
 # Linear elastic constitutive model
 import material.models.linear_elastic
 #
+is_Validation = 10*[True,]
 #                                             Solution of the discretized Lippmann-Schwinger
 #                                                  system of nonlinear equilibrium equations
 # ==========================================================================================
@@ -72,7 +73,6 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
     if is_VTK_output:
         vtk_inc_div = vtk_dict['vtk_inc_div']
     # --------------------------------------------------------------------------------------
-    is_Validation = 10*[True,]
     # Validation:
     if is_Validation[0]:
         print('\n' + 'Online Stage validation' + '\n' + 23*'-')
@@ -229,6 +229,12 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
             #
             #                                             Cluster interaction tensors update
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # ------------------------------------------------------------------------------
+            # Validation:
+            if is_Validation[6]:
+                section = 'Cluster interaction tensors update'
+                print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
+            # ------------------------------------------------------------------------------
             # Update cluster interaction tensors and assemble global cluster interaction
             # matrix
             global_cit_mf = updateCITs(copy.deepcopy(problem_dict),material_properties_ref,
@@ -634,6 +640,22 @@ def updateCITs(problem_dict,material_properties_ref,Se_ref_matrix,material_phase
     # Assemble global cluster interaction matrix
     global_cit_mf = Gop_factor_1*global_cit_1_mf + Gop_factor_2*global_cit_2_mf + \
                                          np.multiply(Gop_factor_0_freq,global_cit_0_freq_mf)
+    # --------------------------------------------------------------------------------------
+    # Validation:
+    if is_Validation[6]:
+        print('\n' + 'global_cit_1_mf:' + '\n')
+        print(global_cit_1_mf)
+        print('\n' + 'global_cit_2_mf:' + '\n')
+        print(global_cit_2_mf)
+        print('\n' + 'global_cit_0_freq_mf:' + '\n')
+        print(global_cit_0_freq_mf)
+        print('\n' + 'Gop_factor_1: ' + str(Gop_factor_1))
+        print('\n' + 'Gop_factor_2: ' + str(Gop_factor_2))
+        print('\n' + 'Gop_factor_0_freq: ' + '\n')
+        print(Gop_factor_0_freq)
+        print('\n' + 'global_cit_mf: ' + '\n')
+        print(global_cit_mf)
+    # --------------------------------------------------------------------------------------
     # Return
     return global_cit_mf
 #
@@ -662,13 +684,25 @@ def assembleCIT(material_phases,phase_n_clusters,phase_clusters,comp_order,cit_X
                 for clusterI in phase_clusters[mat_phase_A]:
                     # Set cluster pair
                     cluster_pair = str(clusterI)+str(clusterJ)
+                    # ----------------------------------------------------------------------
+                    # Validation:
+                    if False:
+                        section = 'assembleCIT'
+                        print('\n' + '>>>> ' + section + ' ' + (92-len(section)-4)*'-')
+                        print('\n' + 'mat_phase_A: ' + mat_phase_A + \
+                                                      '  (clusterI: ' + str(clusterI) + ')')
+                        print(       'mat_phase_B: ' + mat_phase_B + \
+                                                      '  (clusterJ: ' + str(clusterJ) + ')')
+                        print('\n' + 'cit_X_mf[mat_phase_pair][cluster_pair]:' + '\n')
+                        print(cit_X_mf[mat_phase_pair][cluster_pair])
+                    # ----------------------------------------------------------------------
                     # Set assembling ranges
                     i_init = iclst*len(comp_order)
                     i_end = i_init + len(comp_order)
                     j_init = jclst*len(comp_order)
                     j_end = j_init + len(comp_order)
                     # Assemble cluster interaction tensor
-                    global_cit_X_mf[i_init:i_end,j_init,j_end] = \
+                    global_cit_X_mf[i_init:i_end,j_init:j_end] = \
                                                       cit_X_mf[mat_phase_pair][cluster_pair]
                     # Increment row cluster index
                     iclst = iclst + 1
