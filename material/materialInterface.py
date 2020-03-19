@@ -58,7 +58,7 @@ def materialInterface(procedure,problem_dict,mat_dict,mat_phase,*args):
             # Call constitutive model function to perform the state update procedure and to
             # compute the consistent tangent modulus
             state_variables,consistent_tangent_mf = \
-                                   material_phases_models[str(mat_phase)]['suct'](suct_args)
+                                  material_phases_models[str(mat_phase)]['suct'](*suct_args)
             # Return updated state variables and consistent tangent modulus
             return [state_variables,consistent_tangent_mf]
     #

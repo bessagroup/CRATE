@@ -31,7 +31,7 @@ import material.materialInterface
 # Linear elastic constitutive model
 import material.models.linear_elastic
 #
-is_Validation = 10*[True,]
+is_Validation = 20*[True,]
 #                                             Solution of the discretized Lippmann-Schwinger
 #                                                  system of nonlinear equilibrium equations
 # ==========================================================================================
@@ -132,7 +132,7 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
         print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
         for cluster in range(n_total_clusters):
             print('\n' + 'clusters_De_mf[cluster = ' + str(cluster) + ']:' + '\n')
-            print(clusters_De_mf[cluster])
+            print(clusters_De_mf[str(cluster)])
     # --------------------------------------------------------------------------------------
     #
     #                                                            Macroscale incremental loop
@@ -191,6 +191,11 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Initialize increment counter
     inc = 1
+    # --------------------------------------------------------------------------------------
+    # Validation:
+    if any(is_Validation):
+        print('\n' + (92 - len(' Increment ' + str(inc)))*'-' + ' Increment ' + str(inc))
+    # --------------------------------------------------------------------------------------
     # Start incremental loading loop
     while True:
         #                                                        Incremental macroscale load
@@ -224,6 +229,12 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize self-consistent scheme iteration counter
         scs_iter = 0
+        # ----------------------------------------------------------------------------------
+        # Validation:
+        if any(is_Validation):
+            print('\n' + (92 - len(' SCS Iteration: ' + str(scs_iter)))*'-' + \
+                                                         ' SCS Iteration: ' + str(scs_iter))
+        # ----------------------------------------------------------------------------------
         # Start self-consistent scheme iterative loop
         while True:
             #
@@ -251,7 +262,7 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
             diff_De_De_ref_mf = list()
             for mat_phase in material_phases:
                 for cluster in phase_clusters[mat_phase]:
-                    diff_De_De_ref_mf.append(clusters_De_mf[cluster] - De_ref_mf)
+                    diff_De_De_ref_mf.append(clusters_De_mf[str(cluster)] - De_ref_mf)
             # Build global matrix similar to the global cluster interaction matrix but where
             # each cluster interaction tensor is double contracted with the difference
             # between the associated material phase elastic tangent and the reference
@@ -266,11 +277,27 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
             # Set incremental homogenized components initial iterative guess
             inc_mix_strain_mf[presc_stress_idxs] = 0.0
             inc_mix_stress_mf[presc_strain_idxs] = 0.0
+            # ------------------------------------------------------------------------------
+            # Validation:
+            if is_Validation[7]:
+                section = 'Cluster incremental strains initial guess'
+                print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
+                print('\n' + 'inc_mix_strain_mf:' + '\n')
+                print(inc_mix_strain_mf)
+                print('\n' + 'inc_mix_stress_mf:' + '\n')
+                print(inc_mix_stress_mf)
+            # ------------------------------------------------------------------------------
             #
             #                                                  Newton-Raphson iterative loop
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Initialize Newton-Raphson iteration counter
             nr_iter = 0
+            # ------------------------------------------------------------------------------
+            # Validation:
+            if any(is_Validation):
+                print('\n' + (92 - len(' NR Iteration: ' + str(nr_iter)))*'-' + \
+                                                          ' NR Iteration: ' + str(nr_iter))
+            # ------------------------------------------------------------------------------
             # Start Newton-Raphson iterative loop
             while True:
                 #
@@ -278,6 +305,12 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Perform clusters material state update and compute associated consistent
                 # tangent modulus
+                # --------------------------------------------------------------------------
+                # Validation:
+                if is_Validation[8]:
+                    section = 'Cluster su and ct'
+                    print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
+                # --------------------------------------------------------------------------
                 clusters_state,clusters_D_mf = \
                            clustersSUCT(copy.deepcopy(problem_dict),copy.deepcopy(mat_dict),
                                         phase_clusters,gbl_inc_strain_mf,clusters_state_old)
@@ -292,8 +325,8 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                 diff_D_De_mf = list()
                 for mat_phase in material_phases:
                     for cluster in phase_clusters[mat_phase]:
-                        diff_D_De_mf.append(clusters_D_mf[cluster] -
-                                                                    clusters_De_mf[cluster])
+                        diff_D_De_mf.append(clusters_D_mf[str(cluster)] -
+                                                               clusters_De_mf[str(cluster)])
                 # Build global matrix similar to the global cluster interaction matrix but
                 # where each cluster interaction tensor is double contracted with the
                 # difference between the associated material phase consistent tangent
@@ -311,13 +344,24 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                 diff_D_De_ref_mf = list()
                 for mat_phase in material_phases:
                     for cluster in phase_clusters[mat_phase]:
-                        diff_D_De_ref_mf.append(clusters_De_mf[cluster] - De_ref_mf)
+                        diff_D_De_ref_mf.append(clusters_De_mf[str(cluster)] - De_ref_mf)
                 # Build global matrix similar to the global cluster interaction matrix but
                 # where each cluster interaction tensor is double contracted with the
                 # difference between the associated material cluster consistent tangent
                 # and the reference material elastic tangent
                 global_cit_D_De_ref_mf = \
-                             np.matmul(global_cit_mf,scipy.linalg.block_diag(*diff_D_De_mf))
+                         np.matmul(global_cit_mf,scipy.linalg.block_diag(*diff_D_De_ref_mf))
+                # --------------------------------------------------------------------------
+                # Validation:
+                if is_Validation[9]:
+                    section = 'Global residual matrix 3 (my approach)'
+                    print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
+                    for i in range(len(diff_D_De_ref_mf)):
+                        print('\n' + 'diff_D_De_ref_mf[' + str(i) + ']:' + '\n')
+                        print(diff_D_De_ref_mf[i])
+                    print('\n' + 'global_cit_D_De_ref_mf:' + '\n')
+                    print(global_cit_D_De_ref_mf)
+                # --------------------------------------------------------------------------
                 #
                 #                          Incremental homogenized strain and stress tensors
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -328,6 +372,20 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                 # Compute incremental homogenized strain and stress tensors (matricial form)
                 inc_hom_strain_mf = hom_strain_mf - hom_strain_old_mf
                 inc_hom_stress_mf = hom_stress_mf - hom_stress_old_mf
+                # --------------------------------------------------------------------------
+                # Validation:
+                if is_Validation[10]:
+                    section = 'Incremental homogenized strain and stress tensors'
+                    print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
+                    print('\n' + 'hom_strain_mf:' + '\n')
+                    print(hom_strain_mf)
+                    print('\n' + 'hom_stress_mf:' + '\n')
+                    print(hom_stress_mf)
+                    print('\n' + 'inc_hom_strain_mf:' + '\n')
+                    print(inc_hom_strain_mf)
+                    print('\n' + 'inc_hom_stress_mf:' + '\n')
+                    print(inc_hom_stress_mf)
+                # --------------------------------------------------------------------------
                 #
                 #
                 #                                   Discretized Lippmann-Schwinger system of
@@ -503,7 +561,7 @@ def clustersElasticTangent(problem_dict,material_properties,material_phases,phas
                               material.models.linear_elastic.ct(copy.deepcopy(problem_dict),
                                                              material_properties[mat_phase])
             # Store material cluster elastic tangent
-            clusters_De_mf[cluster] = consistent_tangent_mf
+            clusters_De_mf[str(cluster)] = consistent_tangent_mf
     # Return
     return clusters_De_mf
 # ------------------------------------------------------------------------------------------
@@ -593,7 +651,7 @@ def clustersSUCT(problem_dict,mat_dict,phase_clusters,gbl_inc_strain_mf,clusters
         # Loop over material phase clusters
         for cluster in phase_clusters[mat_phase]:
             # Get material cluster incremental strain (matricial form)
-            inc_strain_mf = gbl_inc_strain_mf[i_init,i_end]
+            inc_strain_mf = gbl_inc_strain_mf[i_init:i_end]
             # Build material cluster incremental strain tensor
             inc_strain = \
                   top.getTensorFromMatricialForm(inc_strain_mf,n_dim,comp_order)
@@ -603,12 +661,29 @@ def clustersSUCT(problem_dict,mat_dict,phase_clusters,gbl_inc_strain_mf,clusters
             # Perform material cluster state update and compute associated
             # consistent tangent modulus
             state_variables,consistent_tangent_mf = \
-                        material.materialInterface('suct',problem_dict,mat_dict,
+                  material.materialInterface.materialInterface('suct',problem_dict,mat_dict,
                                                    mat_phase,inc_strain,state_variables_old)
             # Store material cluster updated state variables and consistent
             # tangent modulus
             clusters_state[str(cluster)] = state_variables
             clusters_D_mf[str(cluster)] = consistent_tangent_mf
+            # ------------------------------------------------------------------------------
+            # Validation:
+            if is_Validation[8]:
+                print('\n' + 'cluster: ' + str(cluster))
+                print('\n' + 'state_variables[\'e_strain_mf\']:' + '\n')
+                print(state_variables['e_strain_mf'])
+                print('\n' + 'state_variables[\'strain_mf\']:' + '\n')
+                print(state_variables['strain_mf'])
+                print('\n' + 'state_variables[\'stress_mf\']:' + '\n')
+                print(state_variables['stress_mf'])
+                print('\n' + 'state_variables[\'stress_33\']:' + \
+                                                          str(state_variables['stress_33']))
+                print('\n' + 'state_variables[\'is_su_fail\']:' + \
+                                                         str(state_variables['is_su_fail']))
+                print('\n' + 'consistent_tangent_mf:' + '\n')
+                print(consistent_tangent_mf)
+            # ------------------------------------------------------------------------------
             # Update cluster strain range indexes
             i_init = i_init + len(comp_order)
             i_end = i_init + len(comp_order)
