@@ -102,7 +102,7 @@ def suct(problem_dict,material_properties,mat_phase,inc_strain,state_variables_o
     # only)
     if problem_type == 1:
         stress_33 = \
-                   lam*(stress_mf[comp_order.index('11')]*stress_mf[comp_order.index('22')])
+             lam*(e_strain_mf[comp_order.index('11')] + e_strain_mf[comp_order.index('22')])
     # Set state update fail flag
     is_su_fail = False
     # Initialize state variables dictionary
