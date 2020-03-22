@@ -386,8 +386,6 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                     print('\n' + 'inc_hom_stress_mf:' + '\n')
                     print(inc_hom_stress_mf)
                 # --------------------------------------------------------------------------
-                #
-                #
                 #                                   Discretized Lippmann-Schwinger system of
                 #                                  nonlinear equilibrium equations residuals
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -396,17 +394,27 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                 arg = inc_hom_stress_mf if n_presc_mac_stress > 0 else None
                 residual = buildResidual(copy.deepcopy(problem_dict),n_total_clusters,
                                      n_presc_mac_stress,presc_stress_idxs,gbl_inc_strain_mf,
-                                                 global_cit_De_De_ref_mf,global_cit_D_De_mf,
-                                                    inc_mix_strain_mf,inc_mix_stress_mf,arg)
+                                 global_cit_D_De_ref_mf,inc_mix_strain_mf,inc_mix_stress_mf,
+                                                                                        arg)
+                # --------------------------------------------------------------------------
+                # Validation:
+                if is_Validation[11]:
+                    section = 'Lippmann-Schwinger SNLE residuals'
+                    print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
+                    print('\n' + 'residual:' + '\n')
+                    print(residual)
+                # --------------------------------------------------------------------------
                 #
                 #                                                     Convergence evaluation
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Check Newton-Raphson iterative procedure convergence
                 is_converged_A,is_converged_B,error_B1,error_B2 = \
-                    checkNRConvergence(comp_order,mac_load_presctype,n_total_clusters,
-                      inc_mac_load_mf,inc_hom_strain_mf,inc_hom_stress_mf,inc_mix_strain_mf,
+                          checkNRConvergence(comp_order,mac_load_presctype,n_total_clusters,
+                                       inc_mac_load_mf,n_presc_mac_stress,inc_hom_strain_mf,
+                                                        inc_hom_stress_mf,inc_mix_strain_mf,
                                                         inc_mix_stress_mf,residual,conv_tol)
                 # Control Newton-Raphson iteration loop flow
+                is_converged_A = True
                 if is_converged_A and is_converged_B:
                     # Leave Newton-Raphson iterative loop (converged solution)
                     break
@@ -418,31 +426,69 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                 else:
                     # Increment iteration counter
                     nr_iter = nr_iter + 1
+                    # ----------------------------------------------------------------------
+                    # Validation:
+                    if any(is_Validation):
+                        print('\n' + (92 - len(' NR Iteration: ' + str(nr_iter)))*'-' + \
+                                                           ' NR Iteration: ' + str(nr_iter))
+                    # ----------------------------------------------------------------------
                 #
                 #                                   Discretized Lippmann-Schwinger system of
                 #                                   nonlinear equilibrium equations Jacobian
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Build discretized Lippmann-Schwinger system of nonlinear equilibrium
                 # equations Jacobian
-                Jacobian = buildJacobian(copy.deepcopy(problem_dict),n_total_clusters,
-                                n_presc_mac_stress,presc_stress_idxs,global_cit_D_De_ref_mf,
-                                                                   clusters_f,clusters_D_mf)
+                Jacobian = buildJacobian(copy.deepcopy(problem_dict),material_phases,
+                       phase_clusters,n_total_clusters,n_presc_mac_stress,presc_stress_idxs,
+                                            global_cit_D_De_ref_mf,clusters_f,clusters_D_mf)
+                # --------------------------------------------------------------------------
+                # Validation:
+                if is_Validation[13]:
+                    section = 'Lippmann-Schwinger SNLE Jacobian'
+                    print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
+                    print('\n' + 'Jacobian:' + '\n')
+                    print(Jacobian)
+                # --------------------------------------------------------------------------
                 #
                 #                                   Discretized Lippmann-Schwinger system of
                 #                                           linearized equilibrium equations
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Solve Lippmann-Schwinger system of linearized equilibrium equations
                 d_iter = numpy.linalg.solve(Jacobian,-residual)
+                # --------------------------------------------------------------------------
+                # Validation:
+                if is_Validation[14]:
+                    section = 'Lippmann-Schwinger SLE solution'
+                    print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
+                    print('\n' + 'd_iter:' + '\n')
+                    print(d_iter)
+                # --------------------------------------------------------------------------
                 #
                 #                                       Incremental strains iterative update
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Update clusters incremental strain
                 gbl_inc_strain_mf = gbl_inc_strain_mf + \
                                                   d_iter[0:n_total_clusters*len(comp_order)]
+                print('\n' + 'inc_mix_strain_mf (before update):' + '\n')
+                print(inc_mix_strain_mf)
+                print('\n' + ' d_iter[n_total_clusters*len(comp_order):' + '\n')
+                print( d_iter[n_total_clusters*len(comp_order):])
                 # Update homogenized incremental strain components
                 if n_presc_mac_stress > 0:
                     inc_mix_strain_mf[presc_stress_idxs] = \
+                                                   inc_mix_strain_mf[presc_stress_idxs] +  \
                                                    d_iter[n_total_clusters*len(comp_order):]
+                # --------------------------------------------------------------------------
+                # Validation:
+                if is_Validation[15]:
+                    section = 'Incremental strains iterative update'
+                    print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
+                    print('\n' + 'gbl_inc_strain_mf:' + '\n')
+                    print(gbl_inc_strain_mf)
+                    if n_presc_mac_stress > 0:
+                        print('\n' + 'inc_mix_strain_mf:' + '\n')
+                        print(inc_mix_strain_mf)
+                # --------------------------------------------------------------------------
             #
             #                              Incremental homogenized strain and stress tensors
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -455,15 +501,44 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
             inc_hom_stress_mf = hom_stress_mf - hom_stress_old_mf
             # Assemble the incremental homogenized strain and stress tensors non-prescribed
             # components
-            inc_mix_strain_mf[presc_stress_idxs] = inc_hom_strain_mf[presc_stress_idxs]
-            inc_mix_stress_mf[presc_strain_idxs] = inc_hom_stress_mf[presc_strain_idxs]
+            if n_presc_mac_stress > 0:
+                inc_mix_strain_mf[presc_stress_idxs] = inc_hom_strain_mf[presc_stress_idxs]
+            if n_presc_mac_strain > 0:
+                inc_mix_stress_mf[presc_strain_idxs] = inc_hom_stress_mf[presc_strain_idxs]
+            # ------------------------------------------------------------------------------
+            # Validation:
+            if is_Validation[16]:
+                section = 'Incremental homogenized strain and stress tensors'
+                print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
+                print('\n' + 'hom_strain_mf:' + '\n')
+                print(hom_strain_mf)
+                print('\n' + 'hom_stress_mf:' + '\n')
+                print(hom_stress_mf)
+                print('\n' + 'inc_hom_strain_mf:' + '\n')
+                print(inc_hom_strain_mf)
+                print('\n' + 'inc_hom_stress_mf:' + '\n')
+                print(inc_hom_stress_mf)
+                print('\n' + 'inc_mix_strain_mf:' + '\n')
+                print(inc_mix_strain_mf)
+                print('\n' + 'inc_mix_stress_mf:' + '\n')
+                print(inc_mix_stress_mf)
+            # ------------------------------------------------------------------------------
             #
             #                                                         Self-consistent scheme
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Update reference material elastic properties through a given self-consistent
             # scheme
-            E_ref,v_ref = SCS_UpdateRefMatElasticProperties(self_consistent_scheme,n_dim,
-                                             comp_order,inc_mix_strain_mf,inc_mix_stress_mf)
+            E_ref,v_ref = SCS_UpdateRefMatElasticProperties(self_consistent_scheme,
+                                           problem_dict,inc_mix_strain_mf,inc_mix_stress_mf)
+            # ------------------------------------------------------------------------------
+            # Validation:
+            if is_Validation[17]:
+                section = 'Self-consistent scheme'
+                print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
+                print('\n' + 'E_ref = ' + str(E_ref))
+                print('\n' + 'v_ref = ' + str(v_ref))
+                sys.exit(1)
+            # ------------------------------------------------------------------------------
             #
             #                                                         Convergence evaluation
             #                                                       (self-consistent scheme)
@@ -677,8 +752,8 @@ def clustersSUCT(problem_dict,mat_dict,phase_clusters,gbl_inc_strain_mf,clusters
                 print(state_variables['strain_mf'])
                 print('\n' + 'state_variables[\'stress_mf\']:' + '\n')
                 print(state_variables['stress_mf'])
-                print('\n' + 'state_variables[\'stress_33\']:' + \
-                                                          str(state_variables['stress_33']))
+                print('\n' + 'state_variables[\'stress_33\']: ' + \
+                                            '{:11.4e}'.format(state_variables['stress_33']))
                 print('\n' + 'state_variables[\'is_su_fail\']:' + \
                                                          str(state_variables['is_su_fail']))
                 print('\n' + 'consistent_tangent_mf:' + '\n')
@@ -789,7 +864,7 @@ def assembleCIT(material_phases,phase_n_clusters,phase_clusters,comp_order,cit_X
 # Compute residuals of the discretized Lippmann-Schwinger system of nonlinear equilibrium
 # equations
 def buildResidual(problem_dict,n_total_clusters,n_presc_mac_stress,presc_stress_idxs,
-             gbl_inc_strain_mf,global_cit_De_De_ref_mf,global_cit_D_De_mf,inc_mix_strain_mf,
+                                 gbl_inc_strain_mf,global_cit_D_De_ref_mf,inc_mix_strain_mf,
                                                                    inc_mix_stress_mf,*args):
     # Get problem data
     comp_order = problem_dict['comp_order_sym']
@@ -797,9 +872,8 @@ def buildResidual(problem_dict,n_total_clusters,n_presc_mac_stress,presc_stress_
     residual = np.zeros(n_total_clusters*len(comp_order) + n_presc_mac_stress)
     # Compute clusters equilibrium residuals
     residual[0:n_total_clusters*len(comp_order)] = gbl_inc_strain_mf + \
-                                    np.matmul(global_cit_De_De_ref_mf,gbl_inc_strain_mf) + \
-                                         np.matmul(global_cit_D_De_mf,gbl_inc_strain_mf) - \
-                         numpy.matlib.repmat(inc_mix_strain_mf['strain'],1,n_total_clusters)
+                                     np.matmul(global_cit_D_De_ref_mf,gbl_inc_strain_mf) - \
+                                   numpy.matlib.repmat(inc_mix_strain_mf,1,n_total_clusters)
     # Compute additional residual if there are prescribed macroscale stress components
     if n_presc_mac_stress > 0:
         # Get incremental homogenized stress tensor (matricial form)
@@ -821,7 +895,7 @@ def buildJacobian(problem_dict,material_phases,phase_clusters,n_total_clusters,
     _,FOId,_,_,_,_,_ = top.setIdentityTensors(n_dim)
     FOId_mf = top.setTensorMatricialForm(FOId,n_dim,comp_order)
     # Initialize Jacobian matrix
-    Jacobian = np.zeros(2*(n_total_clusters + n_presc_mac_stress,))
+    Jacobian = np.zeros(2*(n_total_clusters*len(comp_order) + n_presc_mac_stress,))
     # Compute Jacobian matrix component solely related with the clusters equilibrium
     # residuals
     i_init = 0
@@ -829,8 +903,8 @@ def buildJacobian(problem_dict,material_phases,phase_clusters,n_total_clusters,
     j_init = 0
     j_end = n_total_clusters*len(comp_order)
     Jacobian[i_init:i_end,j_init:j_end] = \
-                      scipy.linalg.block_diag(*(n_total_clusters*[FOId_mf])) + \
-                                                          global_cit_D_De_ref_mf
+                                 scipy.linalg.block_diag(*(n_total_clusters*[FOId_mf,])) + \
+                                                                      global_cit_D_De_ref_mf
     # Compute Jacobian matrix components arising due to the prescribed macroscale stress
     # components
     if n_presc_mac_stress > 0:
@@ -843,15 +917,17 @@ def buildJacobian(problem_dict,material_phases,phase_clusters,n_total_clusters,
                    numpy.matlib.repmat(-1.0*FOId_mf[:,presc_stress_idxs],n_total_clusters,1)
         # Compute Jacobian matrix component related with the prescribed macroscale stress
         # components
-        i_init = n_total_clusters*len(comp_order)
-        i_end = n_total_clusters*len(comp_order) + len(comp_order)
-        j_init = 0
-        j_end = n_total_clusters*len(comp_order)
-        aux_sum = 0
+        jclst = 0
         for mat_phase in material_phases:
             for cluster in phase_clusters[mat_phase]:
-                aux_sum = aux_sum + clusters_f[str(cluster)]*clusters_D_mf[cluster]
-        Jacobian[i_init:i_end,j_init:j_end] = aux_sum
+                f_D_mf = clusters_f[str(cluster)]*clusters_D_mf[str(cluster)]
+                for k in range(len(presc_stress_idxs)):
+                    i = n_total_clusters*len(comp_order) + k
+                    j_init = jclst*len(comp_order)
+                    j_end = j_init + len(comp_order)
+                    Jacobian[i,j_init:j_end] = f_D_mf[presc_stress_idxs[k],:]
+                # Increment column cluster index
+                jclst = jclst + 1
     # Return
     return Jacobian
 # ------------------------------------------------------------------------------------------
@@ -943,41 +1019,57 @@ def SCS_UpdateRefMatElasticProperties(self_consistent_scheme,problem_dict,
 # nonlinear system of equilibrium equations associated to a given macroscale load
 # increment
 def checkNRConvergence(comp_order,mac_load_presctype,n_total_clusters,inc_mac_load_mf,
-                                      inc_hom_strain_mf,inc_hom_stress_mf,inc_mix_strain_mf,
+                   n_presc_mac_stress,inc_hom_strain_mf,inc_hom_stress_mf,inc_mix_strain_mf,
                                                        inc_mix_stress_mf,residual,conv_tol):
     # Initialize criterion convergence flag
     is_converged_A = True
     # Loop over strain/stress components
-    for i in len(comp_order):
+    for i in range(len(comp_order)):
         comp = comp_order[i]
         # If the prescribed incremental macroscale component is null, then skip its
         # evaluation
-        if inc_mac_load_mf[mac_load_presctype[comp]] < 1e-6:
+        if inc_mac_load_mf[mac_load_presctype[comp]][i] < 1e-6:
             continue
         # Compute error to check if the incremental homogenized strain/stress component
         # converged to the prescribed macroscale value
         if mac_load_presctype[comp] == 'strain':
-            error_A = (inc_hom_strain_mf[i] - inc_mac_load_mf['strain'][i])/ \
-                                                                inc_mac_load_mf['strain'][i]
+            error_A = abs((inc_hom_strain_mf[i] - inc_mac_load_mf['strain'][i])/ \
+                                                               inc_mac_load_mf['strain'][i])
         else:
-            error_A = (inc_hom_stress_mf[i] - inc_mac_load_mf['stress'][i])/ \
-                                                                inc_mac_load_mf['stress'][i]
+            error_A = abs((inc_hom_stress_mf[i] - inc_mac_load_mf['stress'][i])/ \
+                                                               inc_mac_load_mf['stress'][i])
         # If at least one of the strain/stress components did not converge according to the
         # defined convergence tolerance, then switch the criterion convergence flag to False
         # and leave criterion evaluation
-        if error_A < conv_tol:
+        if error_A > conv_tol:
             is_converged_A = False
             break
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Compute error associated to the clusters equilibrium residuals
-    error_B1 = np.norm(residual[0:n_total_clusters*len(comp_order)])/ \
-                                                                  np.norm(inc_mix_strain_mf)
+    error_B1 = np.linalg.norm(residual[0:n_total_clusters*len(comp_order)])/ \
+                                                           np.linalg.norm(inc_mix_strain_mf)
     # Compute error associated to the prescribed macroscale stress components residuals
-    error_B2 = np.norm(residual[n_total_clusters*len(comp_order):])/ \
-                                                                  np.norm(inc_mix_stress_mf)
+    error_B2 = None
+    if n_presc_mac_stress > 0:
+        error_B2 = np.linalg.norm(residual[n_total_clusters*len(comp_order):])/ \
+                                                           np.linalg.norm(inc_mix_stress_mf)
     # Criterion convergence flag is True if both residual errors converged according to the
     # defined convergence tolerance
-    is_converged_B = (error_B1 < conv_tol) and (error_B2 < conv_tol)
+    if n_presc_mac_stress > 0:
+        is_converged_B = (error_B1 < conv_tol) and (error_B2 < conv_tol)
+    else:
+        is_converged_B = error_B1 < conv_tol
+    # --------------------------------------------------------------------------------------
+    # Validation:
+    if is_Validation[12]:
+        section = 'Convergence evaluation'
+        print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
+        print('\n' + 'error_A (at break) = ' + str(error_A))
+        print('\n' + 'error_B1 = ' + str(error_B1))
+        print('\n' + 'error_B2 = ' + str(error_B2))
+        print('\n' + 'is_converged_A = ' + str(is_converged_A))
+        print('\n' + 'is_converged_B = ' + str(is_converged_B))
+    # --------------------------------------------------------------------------------------
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return [is_converged_A,is_converged_B,error_B1,error_B2]
 # ------------------------------------------------------------------------------------------

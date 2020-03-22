@@ -610,18 +610,20 @@ def displayError(code,*args):
                    indent + 'constitutive model \'{}\' was not specified for all ' + \
                    'pixels (2D) / voxels (3D).'
     elif code == 'E00061':
-        arguments = args[2:7]
+        arguments = args[2:6]
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The maximum number of iterations ({}) has been reached ' + \
-                   'when solving solving the' + '\n' + \
+                   'when solving the' + '\n' + \
                    indent + 'Lippmann-Schwinger nonlinear system of equilibrium ' + \
                    'equations associated to the' + '\n' + \
                    indent + 'macroscale load increment {}.' + '\n\n' + \
                    indent + 'The normalized errors associated to the ' + \
                    'residuals finished the iterative process with' + '\n' + \
                    indent + 'the following values:' + '\n\n' + \
-                   2*indent + 'Clusters equilibrium residuals error: {:16.8e}' + '\n\n' + \
+                   2*indent + 'Clusters equilibrium residuals error: {:16.8e}'
+        if args[5] != None:
+            template = template + '\n\n' + \
                    2*indent + 'Macroscale stress residuals error   : {:16.8e}'
     elif code == 'E00062':
         arguments = args[2:7]
