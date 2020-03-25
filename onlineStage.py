@@ -512,7 +512,7 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                                     n_presc_mac_strain,n_presc_mac_stress,presc_strain_idxs,
                                       presc_stress_idxs,inc_hom_strain_mf,residual,conv_tol)
                     info.displayInfo('9','iter',nr_iter,time.time() - nr_iter_init_time,
-                                                                 error_A1,error_A3,error_A2)
+                                                                 error_A1,error_A2,error_A3)
                 else:
                     is_converged_A,is_converged_B,error_B1,error_B2 = \
                           checkNRConvergence(comp_order,mac_load_presctype,n_total_clusters,
@@ -682,6 +682,7 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                 break
             elif scs_iter == scs_max_n_iterations:
                 # Maximum number of self-consistent scheme iterations reached
+                location = inspect.getframeinfo(inspect.currentframe())
                 errors.displayError('E00062',location.filename,location.lineno+1,
                                          scs_max_n_iterations,inc,norm_d_E_ref,norm_d_v_ref)
             else:
@@ -1327,8 +1328,10 @@ def checkNRConvergence2(comp_order,n_total_clusters,inc_mac_load_mf,n_presc_mac_
     # Set strain and stress normalization factors
     if n_presc_mac_strain > 0:
         strain_norm_factor = np.linalg.norm(inc_mac_load_mf['strain'][[presc_strain_idxs]])
+    elif not np.allclose(inc_hom_strain_mf,np.zeros(inc_hom_strain_mf.shape),atol=1e-10):
+        strain_norm_factor = np.linalg.norm(inc_hom_strain_mf)
     else:
-        strain_norm_factor = inc_hom_strain_mf
+        strain_norm_factor = 1
     if n_presc_mac_stress > 0:
         stress_norm_factor = np.linalg.norm(inc_mac_load_mf['stress'][[presc_stress_idxs]])
     # Compute error associated to the clusters equilibrium residuals
