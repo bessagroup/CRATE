@@ -15,6 +15,10 @@ import sys
 import numpy as np
 # Date and time
 import time
+# Terminal colors
+import colorama
+# Regular expressions
+import re
 # Manage files and directories
 import fileOperations
 #
@@ -27,13 +31,19 @@ def setDisplayFeatures():
     indent = '  '
     asterisk_line = '*'*output_width
     tilde_line = '~'*output_width
-    displayFeatures = (output_width,dashed_line,indent,asterisk_line,tilde_line)
+    equal_line = '='*output_width
+    displayFeatures = (output_width,dashed_line,indent,asterisk_line,tilde_line,equal_line)
     return displayFeatures
 # ------------------------------------------------------------------------------------------
 # Convert iterable to list
 def convertIterableToList(iterable):
     list = [ element for element in iterable ]
     return list
+# ------------------------------------------------------------------------------------------
+# Remove ANSI escape sequences from string
+def escapeANSI(string):
+    ansi_escape = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
+    return ansi_escape.sub('', string)
 #
 #                                                                         Set print function
 # ==========================================================================================
@@ -42,7 +52,10 @@ def print2(*objects):
     print(*objects)
     # Print to '.screen file'
     screen_file = open(fileOperations.screen_file_path,'a')
-    print(*objects,file = screen_file)
+    objects_esc = list()
+    for i in range(len(objects)):
+        objects_esc.append(escapeANSI(objects[i]))
+    print(*objects_esc,file = screen_file)
     screen_file.close()
 #
 #                                                                           Display function
@@ -56,7 +69,7 @@ def displayInfo(code,*args,**kwargs):
     # Get display features
     displayFeatures = setDisplayFeatures()
     output_width, dashed_line, indent = displayFeatures[0:3]
-    tilde_line = displayFeatures[4]
+    tilde_line, equal_line = displayFeatures[4:6]
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set informations and formats to display
     if code == '-1':
@@ -143,6 +156,100 @@ def displayInfo(code,*args,**kwargs):
             arguments = ['',]
             info = tuple(arguments)
             template = '\n' + 2*indent + '> Completed all clustering processes!'
+    elif code == '7':
+        mode = args[0]
+        if mode == 'init':
+            arguments = args[1:]
+            info = tuple(arguments)
+            template = colorama.Fore.CYAN + \
+                       '\n' + \
+                       indent + 'Increment number: {:3d}' + '\n' + \
+                       indent + equal_line[:-len(indent)] + \
+                       colorama.Style.RESET_ALL
+        elif mode == 'end':
+            space1 = (output_width - 84)*' '
+            space2 = (output_width - (len('Homogenized strain tensor') + 48))*' '
+            space3 = (output_width - (len('Increment run time (s): ') + 44))*' '
+            hom_strain = args[1]
+            hom_stress = args[2]
+            arguments = list()
+            for i in range(3):
+                for j in range(3):
+                    arguments.append(hom_strain[i,j])
+                for j in range(3):
+                    arguments.append(hom_stress[i,j])
+            arguments = arguments + [args[3],args[4]]
+            info = tuple(arguments)
+            template = '\n\n' + \
+                       indent + equal_line[:-len(indent)] + '\n' + \
+                       indent + 7*' ' + 'Homogenized strain tensor (\u03B5)' + space2 + \
+                                           'Homogenized stress tensor (\u03C3)' + '\n\n' + \
+                       indent + ' [' + 3*'{:>12.4e}' + '  ]' + space1 + \
+                                                      '[' + 3*'{:>12.4e}' + '  ]' + '\n' + \
+                       indent + ' [' + 3*'{:>12.4e}' + '  ]' + space1 + \
+                                                      '[' + 3*'{:>12.4e}' + '  ]' + '\n' + \
+                       indent + ' [' + 3*'{:>12.4e}' + '  ]' + space1 + \
+                                                      '[' + 3*'{:>12.4e}' + '  ]' + '\n' + \
+                       '\n' + indent + equal_line[:-len(indent)] + '\n' + \
+                       indent + 'Increment run time (s): {:>11.4e}' + space3 + \
+                                                'Total run time (s): {:>11.4e}' + '\n\n' + \
+                       colorama.Style.RESET_ALL
+    elif code == '8':
+        mode = args[0]
+        if mode == 'init':
+            if args[1] == 0:
+                format = '-'
+            else:
+                format = '{:.4e}'
+            arguments = args[1:]
+            info = tuple(arguments)
+            template = colorama.Fore.YELLOW + \
+                       '\n\n' + indent + 'Self-consistent scheme iteration: {:3d}' + \
+                       '\n' + \
+                       indent + tilde_line[:-len(indent)] + '\n' + \
+                       indent + 'Normalized changes | Young modulus (E): ' + format + \
+                       '\n' + \
+                       indent + '                   | Poisson ratio (\u03BD): ' + format + \
+                       '\n' + \
+                       indent + tilde_line[:-len(indent)] + '\n' + \
+                       colorama.Style.RESET_ALL
+        elif mode == 'end':
+            arguments = args[1:]
+            info = tuple(arguments)
+            template = indent + dashed_line[:-len(indent)] + \
+                       '\n\n' + indent + tilde_line[:-len(indent)] + '\n' + \
+                       indent + 'Iteration run time (s): {:>11.4e}' + \
+                       colorama.Style.RESET_ALL
+    elif code == '9':
+        mode = args[0]
+        space1 = (output_width - (len('Iteration') + len('Normalized residuals') + 19))*' '
+        space2 = (output_width - (len('Number') + len('Run time (s)') + \
+                                            len('Equilibrium    Mac. constraint') + 19))*' '
+        if mode == 'init':
+            arguments = args[1:]
+            info = tuple(arguments)
+            template = indent + 5*' ' + 'Iteration' + space1 + \
+                                                           'Normalized residuals' + '\n' + \
+                       indent + ' Number    Run time (s)' + space2 + \
+                                      'Equilibrium    Mac. strain    Mac. stress' + '\n' + \
+                       indent + dashed_line[:-len(indent)] + \
+                       colorama.Style.RESET_ALL
+        elif mode == 'iter':
+            if not isinstance(args[4],float):
+                arguments = list(args[1:4]) + [args[5],]
+                info = tuple(arguments)
+                template = indent + ' {:^6d}    {:^12.4e}' + space2 + \
+                                                    '{:>11.4e}         -          {:^11.4e}'
+            elif not isinstance(args[5],float):
+                arguments = args[1:5]
+                info = tuple(arguments)
+                template = indent + ' {:^6d}    {:^12.4e}' + space2 + \
+                                                          '{:>11.4e}     {:^11.4e}        -'
+            else:
+                arguments = args[1:]
+                info = tuple(arguments)
+                template = indent + ' {:^6d}    {:^12.4e}' + space2 + \
+                                                      '{:>11.4e}     {:^11.4e}    {:^11.4e}'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display information
     print2(template.format(*info,width=output_width))

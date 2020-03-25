@@ -9,13 +9,19 @@
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
+# Parse command-line options and arguments
+import sys
 # Working with arrays
 import numpy as np
 import numpy.matlib
 # Inspect file name and line
 import inspect
+# Date and time
+import time
 # Shallow and deep copy operations
 import copy
+# Display messages
+import info
 # Scientific computation
 import scipy.linalg
 # Display errors, warnings and built-in exceptions
@@ -30,8 +36,36 @@ import VTKOutput
 import material.materialInterface
 # Linear elastic constitutive model
 import material.models.linear_elastic
+#                                                                          Validation output
+# ==========================================================================================
+# Set validation flags (terminal output)
+#  0. Validation header
+#  1. Initializations
+#  2. Material clusters elastic tangent
+#  3. Macroscale load increments
+#  4. Reference material elastic tangent
+#  5. Incremental macroscale load
+#  6. Cluster incremental strains initial guess
+#  7. Cluster interaction tensors update
+#  8. Global residual matrix 1 (Zeliang approach)
+#  9. Clusters material state update and consistent tangent
+# 10. Global residual matrix 2 (Zeliang approach)
+# 11. Global residual matrix 3 (My approach)
+# 12. Incremental homogenized strain and stress tensors
+# 13. Lippmann-Schwinger SNLE residuals
+# 14. Convergence evaluation
+# 15. Lippmann-Schwinger SNLE Jacobian
+# 16. Lippmann-Schwinger SLE solution
+# 17. Incremental strains iterative update
+# 18. Incremental homogenized strain and stress tensors
+# 19. Self-consistent scheme
+# 20. Self-consistent scheme convergence evaluation
+# 21. Homogenized strain and stress tensors
+output_idx = []
+is_Validation = [False for i in range(22)]
+for i in output_idx:
+    is_Validation[i] = True
 #
-is_Validation = 20*[True,]
 #                                             Solution of the discretized Lippmann-Schwinger
 #                                                  system of nonlinear equilibrium equations
 # ==========================================================================================
@@ -82,6 +116,8 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
     #
     #                                                                        Initializations
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set online stage initial time
+    os_init_time = time.time()
     # Set far-field implementation flag
     is_farfield_implementation = True
     # Initialize homogenized strain and stress tensors
@@ -193,6 +229,9 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Initialize increment counter
     inc = 1
+    info.displayInfo('7','init',inc)
+    # Set increment initial time
+    inc_init_time = time.time()
     # --------------------------------------------------------------------------------------
     # Validation:
     if any(is_Validation):
@@ -229,11 +268,42 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                 print('\n' + 'inc_mix_stress_mf:' + '\n')
                 print(inc_mix_stress_mf)
             # ------------------------------------------------------------------------------
+        #                                Cluster incremental strains initial iterative guess
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set clusters strain initial iterative guess
+        gbl_inc_strain_mf = np.zeros((n_total_clusters*len(comp_order)))
+        # Set additional initial iterative guesses
+        if is_farfield_implementation:
+            # Set far-field strain initial iterative guess
+            inc_farfield_strain_mf = np.zeros(len(comp_order))
+        else:
+            # Set incremental homogenized components initial iterative guess
+            inc_mix_strain_mf[presc_stress_idxs] = 0.0
+            inc_mix_stress_mf[presc_strain_idxs] = 0.0
+        # ----------------------------------------------------------------------------------
+        # Validation:
+        if is_Validation[6]:
+            section = 'Cluster incremental strains initial guess'
+            print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
+            print('\n' + 'gbl_inc_strain_mf:' + '\n')
+            print(gbl_inc_strain_mf)
+            if is_farfield_implementation:
+                print('\n' + 'inc_farfield_strain_mf:' + '\n')
+                print(inc_farfield_strain_mf)
+            else:
+                print('\n' + 'inc_mix_strain_mf:' + '\n')
+                print(inc_mix_strain_mf)
+                print('\n' + 'inc_mix_stress_mf:' + '\n')
+                print(inc_mix_stress_mf)
+        # ----------------------------------------------------------------------------------
         #
         #                                              Self-consistent scheme iterative loop
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize self-consistent scheme iteration counter
         scs_iter = 0
+        info.displayInfo('8','init',scs_iter)
+        # Set self-consistent scheme iteration initial time
+        scs_iter_init_time = time.time()
         # ----------------------------------------------------------------------------------
         # Validation:
         if any(is_Validation):
@@ -247,7 +317,7 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # ------------------------------------------------------------------------------
             # Validation:
-            if is_Validation[6]:
+            if is_Validation[7]:
                 section = 'Cluster interaction tensors update'
                 print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
             # ------------------------------------------------------------------------------
@@ -274,34 +344,27 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
             # material elastic tangent
             global_cit_De_De_ref_mf = \
                         np.matmul(global_cit_mf,scipy.linalg.block_diag(*diff_De_De_ref_mf))
-            #
-            #                            Cluster incremental strains initial iterative guess
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Set clusters strain initial iterative guess
-            gbl_inc_strain_mf = np.zeros((n_total_clusters*len(comp_order)))
-            # Set additional initial iterative guesses
-            if not is_farfield_implementation:
-                # Set far-field strain initial iterative guess
-                farfield_strain_mf = np.zeros(len(comp_order))
-            else:
-                # Set incremental homogenized components initial iterative guess
-                inc_mix_strain_mf[presc_stress_idxs] = 0.0
-                inc_mix_stress_mf[presc_strain_idxs] = 0.0
             # ------------------------------------------------------------------------------
             # Validation:
-            if is_Validation[7]:
-                section = 'Cluster incremental strains initial guess'
+            if is_Validation[8]:
+                section = 'Global residual matrix 1 (Zeliang approach)'
                 print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
-                print('\n' + 'inc_mix_strain_mf:' + '\n')
-                print(inc_mix_strain_mf)
-                print('\n' + 'inc_mix_stress_mf:' + '\n')
-                print(inc_mix_stress_mf)
+                for i in range(len(diff_De_De_ref_mf)):
+                    print('\n' + 'diff_De_De_ref_mf[' + str(i) + ']:' + '\n')
+                    print(diff_De_De_ref_mf[i])
+                print('\n' + 'global_cit_De_De_ref_mf:' + '\n')
+                print(global_cit_De_De_ref_mf)
             # ------------------------------------------------------------------------------
+            #
+
             #
             #                                                  Newton-Raphson iterative loop
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Initialize Newton-Raphson iteration counter
             nr_iter = 0
+            info.displayInfo('9','init')
+            # Set Newton-Raphson iteration initial time
+            nr_iter_init_time = time.time()
             # ------------------------------------------------------------------------------
             # Validation:
             if any(is_Validation):
@@ -317,7 +380,7 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                 # tangent modulus
                 # --------------------------------------------------------------------------
                 # Validation:
-                if is_Validation[8]:
+                if is_Validation[9]:
                     section = 'Cluster su and ct'
                     print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
                 # --------------------------------------------------------------------------
@@ -343,6 +406,17 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                 # and elastic tangent
                 global_cit_D_De_mf = \
                              np.matmul(global_cit_mf,scipy.linalg.block_diag(*diff_D_De_mf))
+                # --------------------------------------------------------------------------
+                # Validation:
+                if is_Validation[10]:
+                    section = 'Global residual matrix 2 (Zeliang approach)'
+                    print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
+                    for i in range(len(diff_D_De_mf)):
+                        print('\n' + 'diff_D_De_mf[' + str(i) + ']:' + '\n')
+                        print(diff_D_De_mf[i])
+                    print('\n' + 'global_cit_D_De_mf:' + '\n')
+                    print(global_cit_D_De_mf)
+                # --------------------------------------------------------------------------
                 #
                 #                                                   Global residual matrix 3
                 #                                                         ( My approach :) )
@@ -354,7 +428,7 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                 diff_D_De_ref_mf = list()
                 for mat_phase in material_phases:
                     for cluster in phase_clusters[mat_phase]:
-                        diff_D_De_ref_mf.append(clusters_De_mf[str(cluster)] - De_ref_mf)
+                        diff_D_De_ref_mf.append(clusters_D_mf[str(cluster)] - De_ref_mf)
                 # Build global matrix similar to the global cluster interaction matrix but
                 # where each cluster interaction tensor is double contracted with the
                 # difference between the associated material cluster consistent tangent
@@ -363,7 +437,7 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                          np.matmul(global_cit_mf,scipy.linalg.block_diag(*diff_D_De_ref_mf))
                 # --------------------------------------------------------------------------
                 # Validation:
-                if is_Validation[9]:
+                if is_Validation[11]:
                     section = 'Global residual matrix 3 (my approach)'
                     print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
                     for i in range(len(diff_D_De_ref_mf)):
@@ -384,7 +458,7 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                 inc_hom_stress_mf = hom_stress_mf - hom_stress_old_mf
                 # --------------------------------------------------------------------------
                 # Validation:
-                if is_Validation[10]:
+                if is_Validation[12]:
                     section = 'Incremental homogenized strain and stress tensors'
                     print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
                     print('\n' + 'hom_strain_mf:' + '\n')
@@ -395,6 +469,14 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                     print(inc_hom_strain_mf)
                     print('\n' + 'inc_hom_stress_mf:' + '\n')
                     print(inc_hom_stress_mf)
+                    if is_farfield_implementation:
+                        print('\n' + 'inc_farfield_strain_mf:' + '\n')
+                        print(inc_farfield_strain_mf)
+                    else:
+                        print('\n' + 'inc_mix_strain_mf:' + '\n')
+                        print(inc_mix_strain_mf)
+                        print('\n' + 'inc_mix_stress_mf:' + '\n')
+                        print(inc_mix_stress_mf)
                 # --------------------------------------------------------------------------
                 #                                   Discretized Lippmann-Schwinger system of
                 #                                  nonlinear equilibrium equations residuals
@@ -405,7 +487,7 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                     residual = buildResidual2(copy.deepcopy(problem_dict),n_total_clusters,
                                  presc_strain_idxs,global_cit_D_De_ref_mf,inc_hom_strain_mf,
                                         inc_hom_stress_mf,inc_mac_load_mf,gbl_inc_strain_mf,
-                                                                         farfield_strain_mf)
+                                                                     inc_farfield_strain_mf)
                 else:
                     arg = inc_hom_stress_mf if n_presc_mac_stress > 0 else None
                     residual = buildResidual(copy.deepcopy(problem_dict),n_total_clusters,
@@ -414,7 +496,7 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                                                                                         arg)
                 # --------------------------------------------------------------------------
                 # Validation:
-                if is_Validation[11]:
+                if is_Validation[13]:
                     section = 'Lippmann-Schwinger SNLE residuals'
                     print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
                     print('\n' + 'residual:' + '\n')
@@ -427,7 +509,10 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                 if is_farfield_implementation:
                     is_converged,error_A1,error_A2,error_A3 = \
                         checkNRConvergence2(comp_order,n_total_clusters,inc_mac_load_mf,
-                                     n_presc_mac_stress,inc_hom_strain_mf,residual,conv_tol)
+                                    n_presc_mac_strain,n_presc_mac_stress,presc_strain_idxs,
+                                      presc_stress_idxs,inc_hom_strain_mf,residual,conv_tol)
+                    info.displayInfo('9','iter',nr_iter,time.time() - nr_iter_init_time,
+                                                                 error_A1,error_A3,error_A2)
                 else:
                     is_converged_A,is_converged_B,error_B1,error_B2 = \
                           checkNRConvergence(comp_order,mac_load_presctype,n_total_clusters,
@@ -447,6 +532,8 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                 else:
                     # Increment iteration counter
                     nr_iter = nr_iter + 1
+                    # Set Newton-Raphson iteration initial time
+                    nr_iter_init_time = time.time()
                     # ----------------------------------------------------------------------
                     # Validation:
                     if any(is_Validation):
@@ -469,11 +556,11 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                                             global_cit_D_De_ref_mf,clusters_f,clusters_D_mf)
                 # --------------------------------------------------------------------------
                 # Validation:
-                if is_Validation[13]:
+                if is_Validation[15]:
                     section = 'Lippmann-Schwinger SNLE Jacobian'
                     print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
                     print('\n' + 'Jacobian:' + '\n')
-                    print(Jacobian)
+                    print(Jacobian[0:6,0:6])
                 # --------------------------------------------------------------------------
                 #
                 #                                   Discretized Lippmann-Schwinger system of
@@ -483,7 +570,7 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                 d_iter = numpy.linalg.solve(Jacobian,-residual)
                 # --------------------------------------------------------------------------
                 # Validation:
-                if is_Validation[14]:
+                if is_Validation[16]:
                     section = 'Lippmann-Schwinger SLE solution'
                     print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
                     print('\n' + 'd_iter:' + '\n')
@@ -498,7 +585,7 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                 # Update additional quantities
                 if is_farfield_implementation:
                     # Update far-field strain
-                    farfield_strain_mf = farfield_strain_mf + \
+                    inc_farfield_strain_mf = inc_farfield_strain_mf + \
                                                    d_iter[n_total_clusters*len(comp_order):]
                 else:
                     # Update homogenized incremental strain components
@@ -508,14 +595,18 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                                                    d_iter[n_total_clusters*len(comp_order):]
                 # --------------------------------------------------------------------------
                 # Validation:
-                if is_Validation[15]:
+                if is_Validation[17]:
                     section = 'Incremental strains iterative update'
                     print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
                     print('\n' + 'gbl_inc_strain_mf:' + '\n')
                     print(gbl_inc_strain_mf)
-                    if n_presc_mac_stress > 0:
-                        print('\n' + 'inc_mix_strain_mf:' + '\n')
-                        print(inc_mix_strain_mf)
+                    if is_farfield_implementation:
+                        print('\n' + 'inc_farfield_strain_mf:' + '\n')
+                        print(inc_farfield_strain_mf)
+                    else:
+                        if n_presc_mac_stress > 0:
+                            print('\n' + 'inc_mix_strain_mf:' + '\n')
+                            print(inc_mix_strain_mf)
                 # --------------------------------------------------------------------------
             #
             #                              Incremental homogenized strain and stress tensors
@@ -538,7 +629,7 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                                                         inc_hom_stress_mf[presc_strain_idxs]
             # ------------------------------------------------------------------------------
             # Validation:
-            if is_Validation[16]:
+            if is_Validation[18]:
                 section = 'Incremental homogenized strain and stress tensors'
                 print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
                 print('\n' + 'hom_strain_mf:' + '\n')
@@ -549,10 +640,14 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                 print(inc_hom_strain_mf)
                 print('\n' + 'inc_hom_stress_mf:' + '\n')
                 print(inc_hom_stress_mf)
-                print('\n' + 'inc_mix_strain_mf:' + '\n')
-                print(inc_mix_strain_mf)
-                print('\n' + 'inc_mix_stress_mf:' + '\n')
-                print(inc_mix_stress_mf)
+                if is_farfield_implementation:
+                    print('\n' + 'inc_farfield_strain_mf:' + '\n')
+                    print(inc_farfield_strain_mf)
+                else:
+                    print('\n' + 'inc_mix_strain_mf:' + '\n')
+                    print(inc_mix_strain_mf)
+                    print('\n' + 'inc_mix_stress_mf:' + '\n')
+                    print(inc_mix_stress_mf)
             # ------------------------------------------------------------------------------
             #
             #                                                         Self-consistent scheme
@@ -567,12 +662,11 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                                            problem_dict,inc_mix_strain_mf,inc_mix_stress_mf)
             # ------------------------------------------------------------------------------
             # Validation:
-            if is_Validation[17]:
+            if is_Validation[19]:
                 section = 'Self-consistent scheme'
                 print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
                 print('\n' + 'E_ref = ' + str(E_ref))
                 print('\n' + 'v_ref = ' + str(v_ref))
-                sys.exit(1)
             # ------------------------------------------------------------------------------
             #
             #                                                         Convergence evaluation
@@ -581,6 +675,7 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
             # Check self-consistent scheme iterative procedure convergence
             is_scs_conv_E,is_scs_conv_v,norm_d_E_ref,norm_d_v_ref = \
                        checkSCSConvergence(E_ref,v_ref,material_properties_ref,scs_conv_tol)
+            info.displayInfo('8','end',time.time() - scs_iter_init_time)
             # Control self-consistent scheme iteration loop flow
             if is_scs_conv_E and is_scs_conv_v:
                 # Leave self-consistent scheme iterative loop (converged solution)
@@ -595,6 +690,15 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                 material_properties_ref['v'] = v_ref
                 # Increment self-consistent scheme iteration counter
                 scs_iter = scs_iter + 1
+                info.displayInfo('8','init',scs_iter,norm_d_E_ref,norm_d_v_ref)
+                # Set self-consistent scheme iteration initial time
+                scs_iter_init_time = time.time()
+                # --------------------------------------------------------------------------
+                # Validation:
+                if any(is_Validation):
+                    print('\n' + (92 - len(' SCS Iteration: ' + str(scs_iter)))*'-' + \
+                                                         ' SCS Iteration: ' + str(scs_iter))
+                # --------------------------------------------------------------------------
             #
             #                                             Reference material elastic tangent
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -602,6 +706,20 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
             # tensor (matrix)
             De_ref_mf,Se_ref_matrix = \
              refMaterialElasticTangents(copy.deepcopy(problem_dict),material_properties_ref)
+            # ------------------------------------------------------------------------------
+            # Validation:
+            if is_Validation[4]:
+                section = 'Reference material elastic tangent'
+                print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
+                print('\n' + 'material_properties_ref[\'E\'] = ' + \
+                                                          str(material_properties_ref['E']))
+                print('\n' + 'material_properties_ref[\'v\'] = ' + \
+                                                          str(material_properties_ref['v']))
+                print('\n' + 'De_ref_mf:' + '\n')
+                print(De_ref_mf)
+                print('\n' + 'Se_ref_matrix:' + '\n')
+                print(Se_ref_matrix)
+            # ------------------------------------------------------------------------------
         #
         #                                              Homogenized strain and stress tensors
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -614,6 +732,19 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
         if problem_type == 1:
             hom_stress_33 = outofplaneHomogenizedComp(problem_type,material_phases,
                                 phase_clusters,clusters_f,clusters_state,clusters_state_old)
+        # ----------------------------------------------------------------------------------
+        # Validation:
+        if is_Validation[21]:
+            section = 'Homogenized strain and stress tensors'
+            print('\n' + 'hom_strain:' + '\n')
+            print(hom_strain)
+            print('\n' + 'hom_stress:' + '\n')
+            print(hom_stress)
+            if problem_type == 1:
+                print('\n' + 'hom_stress_33' + '{:11.4e}'.format(hom_stress_33))
+            if inc == 2 and nr_iter > 0:
+                sys.exit(1)
+        # ----------------------------------------------------------------------------------
         #
         #                                  Write increment homogenized results to .hres file
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -647,6 +778,8 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return if the last macroscale loading increment was completed successfuly,
         # otherwise increment the increment counter
+        info.displayInfo('7','end',hom_strain,hom_stress,\
+                                     time.time() - inc_init_time,time.time() - os_init_time)
         if inc == n_load_increments:
             # Close VTK collection file
             if is_VTK_output:
@@ -655,6 +788,9 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
             return
         else:
             inc = inc + 1
+            info.displayInfo('7','init',inc)
+            # Set increment initial time
+            inc_init_time = time.time()
 #
 #                                                                    Complementary functions
 # ==========================================================================================
@@ -779,7 +915,7 @@ def clustersSUCT(problem_dict,mat_dict,phase_clusters,gbl_inc_strain_mf,clusters
             clusters_D_mf[str(cluster)] = consistent_tangent_mf
             # ------------------------------------------------------------------------------
             # Validation:
-            if is_Validation[8]:
+            if is_Validation[9]:
                 print('\n' + 'cluster: ' + str(cluster))
                 print('\n' + 'state_variables[\'e_strain_mf\']:' + '\n')
                 print(state_variables['e_strain_mf'])
@@ -828,7 +964,7 @@ def updateCITs(problem_dict,material_properties_ref,Se_ref_matrix,material_phase
                                          np.multiply(Gop_factor_0_freq,global_cit_0_freq_mf)
     # --------------------------------------------------------------------------------------
     # Validation:
-    if is_Validation[6]:
+    if is_Validation[7]:
         print('\n' + 'global_cit_1_mf:' + '\n')
         print(global_cit_1_mf)
         print('\n' + 'global_cit_2_mf:' + '\n')
@@ -924,7 +1060,7 @@ def buildResidual(problem_dict,n_total_clusters,n_presc_mac_stress,presc_stress_
 # equations (far-field strain implementation)
 def buildResidual2(problem_dict,n_total_clusters,presc_strain_idxs,global_cit_D_De_ref_mf,
                       inc_hom_strain_mf,inc_hom_stress_mf,inc_mac_load_mf,gbl_inc_strain_mf,
-                                                                        farfield_strain_mf):
+                                                                    inc_farfield_strain_mf):
     # Get problem data
     comp_order = problem_dict['comp_order_sym']
     # Initialize residual vector
@@ -932,7 +1068,7 @@ def buildResidual2(problem_dict,n_total_clusters,presc_strain_idxs,global_cit_D_
     # Compute clusters equilibrium residuals
     residual[0:n_total_clusters*len(comp_order)] = gbl_inc_strain_mf + \
                                      np.matmul(global_cit_D_De_ref_mf,gbl_inc_strain_mf) - \
-                                  numpy.matlib.repmat(farfield_strain_mf,1,n_total_clusters)
+                              numpy.matlib.repmat(inc_farfield_strain_mf,1,n_total_clusters)
     # Compute homogenization constraints residuals
     for i in range(len(comp_order)):
         if i in presc_strain_idxs:
@@ -952,8 +1088,8 @@ def buildJacobian(problem_dict,material_phases,phase_clusters,n_total_clusters,
     n_dim = problem_dict['n_dim']
     comp_order = problem_dict['comp_order_sym']
     # Set fourth-order identity tensor (matricial form)
-    _,FOId,_,_,_,_,_ = top.setIdentityTensors(n_dim)
-    FOId_mf = top.setTensorMatricialForm(FOId,n_dim,comp_order)
+    _,_,_,FOSym,_,_,_ = top.setIdentityTensors(n_dim)
+    FOSym_mf = top.setTensorMatricialForm(FOSym,n_dim,comp_order)
     # Initialize Jacobian matrix
     Jacobian = np.zeros(2*(n_total_clusters*len(comp_order) + n_presc_mac_stress,))
     # Compute Jacobian matrix component solely related with the clusters equilibrium
@@ -963,7 +1099,7 @@ def buildJacobian(problem_dict,material_phases,phase_clusters,n_total_clusters,
     j_init = 0
     j_end = n_total_clusters*len(comp_order)
     Jacobian[i_init:i_end,j_init:j_end] = \
-                                 scipy.linalg.block_diag(*(n_total_clusters*[FOId_mf,])) + \
+                                scipy.linalg.block_diag(*(n_total_clusters*[FOSym_mf,])) + \
                                                                       global_cit_D_De_ref_mf
     # Compute Jacobian matrix components arising due to the prescribed macroscale stress
     # components
@@ -974,7 +1110,7 @@ def buildJacobian(problem_dict,material_phases,phase_clusters,n_total_clusters,
         j_init = n_total_clusters*len(comp_order)
         j_end = n_total_clusters*len(comp_order) + len(comp_order)
         Jacobian[i_init:i_end,j_init:j_end] = \
-                   numpy.matlib.repmat(-1.0*FOId_mf[:,presc_stress_idxs],n_total_clusters,1)
+                  numpy.matlib.repmat(-1.0*FOSym_mf[:,presc_stress_idxs],n_total_clusters,1)
         # Compute Jacobian matrix component related with the prescribed macroscale stress
         # components
         jclst = 0
@@ -998,9 +1134,9 @@ def buildJacobian2(problem_dict,material_phases,phase_clusters,n_total_clusters,
     # Get problem data
     n_dim = problem_dict['n_dim']
     comp_order = problem_dict['comp_order_sym']
-    # Set fourth-order identity tensor (matricial form)
-    _,FOId,_,_,_,_,_ = top.setIdentityTensors(n_dim)
-    FOId_mf = top.setTensorMatricialForm(FOId,n_dim,comp_order)
+    # Set fourth-order symmetric projection tensor (matricial form)
+    _,_,_,FOSym,_,_,_ = top.setIdentityTensors(n_dim)
+    FOSym_mf = top.setTensorMatricialForm(FOSym,n_dim,comp_order)
     # Initialize Jacobian matrix
     Jacobian = np.zeros(2*(n_total_clusters*len(comp_order) + len(comp_order),))
     # Compute Jacobian matrix component 11
@@ -1009,7 +1145,7 @@ def buildJacobian2(problem_dict,material_phases,phase_clusters,n_total_clusters,
     j_init = 0
     j_end = n_total_clusters*len(comp_order)
     Jacobian[i_init:i_end,j_init:j_end] = \
-                                 scipy.linalg.block_diag(*(n_total_clusters*[FOId_mf,])) + \
+                                scipy.linalg.block_diag(*(n_total_clusters*[FOSym_mf,])) + \
                                                                       global_cit_D_De_ref_mf
     # Compute Jacobian matrix component 12
     i_init = 0
@@ -1017,7 +1153,7 @@ def buildJacobian2(problem_dict,material_phases,phase_clusters,n_total_clusters,
     j_init = n_total_clusters*len(comp_order)
     j_end = n_total_clusters*len(comp_order) + len(comp_order)
     Jacobian[i_init:i_end,j_init:j_end] = \
-                                        numpy.matlib.repmat(-1.0*FOId_mf,n_total_clusters,1)
+                                       numpy.matlib.repmat(-1.0*FOSym_mf,n_total_clusters,1)
     # Compute Jacobian matrix component 21
     for k in range(len(comp_order)):
         i = n_total_clusters*len(comp_order) + k
@@ -1025,10 +1161,10 @@ def buildJacobian2(problem_dict,material_phases,phase_clusters,n_total_clusters,
         for mat_phase in material_phases:
             for cluster in phase_clusters[mat_phase]:
                 if k in presc_strain_idxs:
-                    f_FOId_mf = clusters_f[str(cluster)]*FOId_mf
+                    f_FOSym_mf = clusters_f[str(cluster)]*FOSym_mf
                     j_init = jclst*len(comp_order)
                     j_end = j_init + len(comp_order)
-                    Jacobian[i,j_init:j_end] = f_FOId_mf[k,:]
+                    Jacobian[i,j_init:j_end] = f_FOSym_mf[k,:]
                 else:
                     f_D_mf = clusters_f[str(cluster)]*clusters_D_mf[str(cluster)]
                     j_init = jclst*len(comp_order)
@@ -1168,7 +1304,7 @@ def checkNRConvergence(comp_order,mac_load_presctype,n_total_clusters,inc_mac_lo
         is_converged_B = error_B1 < conv_tol
     # --------------------------------------------------------------------------------------
     # Validation:
-    if is_Validation[12]:
+    if is_Validation[14]:
         section = 'Convergence evaluation'
         print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
         print('\n' + 'error_A (at break) = ' + str(error_A))
@@ -1193,7 +1329,8 @@ def checkNRConvergence2(comp_order,n_total_clusters,inc_mac_load_mf,n_presc_mac_
         strain_norm_factor = np.linalg.norm(inc_mac_load_mf['strain'][[presc_strain_idxs]])
     else:
         strain_norm_factor = inc_hom_strain_mf
-    stress_norm_factor = np.linalg.norm(inc_mac_load_mf['stress'][[presc_stress_idxs]])
+    if n_presc_mac_stress > 0:
+        stress_norm_factor = np.linalg.norm(inc_mac_load_mf['stress'][[presc_stress_idxs]])
     # Compute error associated to the clusters equilibrium residuals
     error_A1 = np.linalg.norm(residual[0:n_total_clusters*len(comp_order)])/ \
                                                                           strain_norm_factor
@@ -1217,9 +1354,14 @@ def checkNRConvergence2(comp_order,n_total_clusters,inc_mac_load_mf,n_presc_mac_
                                                                    and (error_A3 < conv_tol)
     # --------------------------------------------------------------------------------------
     # Validation:
-    if is_Validation[12]:
+    if is_Validation[14]:
         section = 'Convergence evaluation'
         print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
+        print('\n' + 'error_A1 = ' + str(error_A1))
+        print('\n' + 'error_A2 = ' + str(error_A2))
+        print('\n' + 'error_A3 = ' + str(error_A3))
+        print('\n' + 'is_converged = ' + str(is_converged))
+        print('\n' + 'conv_tol = ' + str(conv_tol))
     # --------------------------------------------------------------------------------------
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return [is_converged,error_A1,error_A2,error_A3]
@@ -1238,5 +1380,15 @@ def checkSCSConvergence(E_ref,v_ref,material_properties_ref,scs_conv_tol):
     # convergence tolerance
     is_scs_conv_E = norm_d_E_ref < scs_conv_tol
     is_scs_conv_v = norm_d_v_ref < scs_conv_tol
+    # ------------------------------------------------------------------------------
+    # Validation:
+    if is_Validation[20]:
+        section = 'Self-consistent scheme convergence evaluation'
+        print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
+        print('\n' + 'd_E_ref = ' + '{:11.4e}'.format(d_E_ref))
+        print('\n' + 'd_v_ref = ' + '{:11.4e}'.format(d_v_ref))
+        print('\n' + 'norm_d_E_ref = ' + '{:11.4e}'.format(norm_d_E_ref))
+        print('\n' + 'norm_d_v_ref = ' + '{:11.4e}'.format(norm_d_v_ref))
+    # ------------------------------------------------------------------------------
     # Return
     return [is_scs_conv_E,is_scs_conv_v,norm_d_E_ref,norm_d_v_ref]
