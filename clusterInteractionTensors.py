@@ -99,8 +99,8 @@ def computeClusterInteractionTensors(dirs_dict,problem_dict,mat_dict,rg_dict,cls
             # characteristic function and each of Green operator material independent
             # terms
             Gop_1_filt_vox,Gop_2_filt_vox,Gop_0_freq_filt_vox = \
-                                     discreteCITConvolutionJ(comp_order,clusterJ_filter_DFT,
-                                             Gop_1_DFT_vox,Gop_2_DFT_vox,Gop_0_freq_DFT_vox)
+                                  discreteCITConvolutionJ(comp_order,rve_dims,n_voxels_dims,
+                         clusterJ_filter_DFT,Gop_1_DFT_vox,Gop_2_DFT_vox,Gop_0_freq_DFT_vox)
             # ------------------------------------------------------------------------------
             # Validation:
             if False and mat_phase_B == '2' and clusterJ == 2:
@@ -378,8 +378,8 @@ def getClusterFilter(cluster,voxels_clusters):
 # and each of Green operator material independent terms (frequency domain). Return the
 # convolution in the spatial domain by performing an Inverse Discrete Fourier Transform
 # (IDFT)
-def discreteCITConvolutionJ(comp_order,cluster_filter_DFT,Gop_1_DFT_vox,Gop_2_DFT_vox,\
-                                                                        Gop_0_freq_DFT_vox):
+def discreteCITConvolutionJ(comp_order,rve_dims,n_voxels_dims,cluster_filter_DFT,
+                                            Gop_1_DFT_vox,Gop_2_DFT_vox,Gop_0_freq_DFT_vox):
     # Initialize discrete convolution (spatial and frequency domain)
     Gop_1_filt_DFT_vox = copy.deepcopy(Gop_1_DFT_vox)
     Gop_2_filt_DFT_vox = copy.deepcopy(Gop_2_DFT_vox)
@@ -387,6 +387,9 @@ def discreteCITConvolutionJ(comp_order,cluster_filter_DFT,Gop_1_DFT_vox,Gop_2_DF
     Gop_1_filt_vox = copy.deepcopy(Gop_1_DFT_vox)
     Gop_2_filt_vox = copy.deepcopy(Gop_1_DFT_vox)
     Gop_0_freq_filt_vox = copy.deepcopy(Gop_1_DFT_vox)
+    # Compute RVE volume and total number of voxels
+    rve_vol = np.prod(rve_dims)
+    n_voxels = np.prod(n_voxels_dims)
     # Loop over Green operator components
     for i in range(len(comp_order)):
         compi = comp_order[i]
@@ -394,11 +397,14 @@ def discreteCITConvolutionJ(comp_order,cluster_filter_DFT,Gop_1_DFT_vox,Gop_2_DF
             compj = comp_order[j]
             # Perform discrete convolution in the frequency domain
             Gop_1_filt_DFT_vox[compi+compj] = \
-                             np.multiply(cluster_filter_DFT,Gop_1_filt_DFT_vox[compi+compj])
+                                          (rve_vol/n_voxels)*np.multiply(cluster_filter_DFT,
+                                                            Gop_1_filt_DFT_vox[compi+compj])
             Gop_2_filt_DFT_vox[compi+compj] = \
-                             np.multiply(cluster_filter_DFT,Gop_2_filt_DFT_vox[compi+compj])
+                                          (rve_vol/n_voxels)*np.multiply(cluster_filter_DFT,
+                                                            Gop_2_filt_DFT_vox[compi+compj])
             Gop_0_freq_filt_DFT_vox[compi+compj] = \
-                        np.multiply(cluster_filter_DFT,Gop_0_freq_filt_DFT_vox[compi+compj])
+                                          (rve_vol/n_voxels)*np.multiply(cluster_filter_DFT,
+                                                       Gop_0_freq_filt_DFT_vox[compi+compj])
             # Perform an Inverse Discrete Fourier Transform (IDFT) by means of Fast Fourier
             # Transform (FFT)
             Gop_1_filt_vox[compi+compj] = \
