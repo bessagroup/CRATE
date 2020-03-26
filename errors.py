@@ -15,6 +15,8 @@ import sys
 import numpy as np
 # Inspect file name and line
 import inspect
+# Terminal colors
+import colorama
 # Display messages
 import info
 #
@@ -749,6 +751,9 @@ def displayError(code,*args):
     # sys.exit(1)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display error
+    error_color = colorama.Fore.RED
+    template_header = error_color + template_header + colorama.Style.RESET_ALL
+    template_footer = error_color + template_footer + colorama.Style.RESET_ALL
     if code in ['E00001','E00002','E00010']:
         print(template_header.format(*header,width=output_width))
         print(template.format(*values,width=output_width))
@@ -808,6 +813,9 @@ def displayWarning(code,*args):
                     indent + 'will be ignored.'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display warning
+    warning_color = colorama.Fore.YELLOW
+    template_header = warning_color + template_header + colorama.Style.RESET_ALL
+    template_footer = warning_color + template_footer + colorama.Style.RESET_ALL
     info.print2(template_header.format(*header,width=output_width))
     info.print2(template.format(*values,width=output_width))
     info.print2(template_footer.format(*footer,width=output_width))
@@ -834,6 +842,9 @@ def displayException(*args):
     template = 'Details:' + '\n\n' + \
                 indent + '{}'
     # Display built-in exception
+    exception_color = colorama.Fore.RED
+    template_header = exception_color + template_header + colorama.Style.RESET_ALL
+    template_footer = exception_color + template_footer + colorama.Style.RESET_ALL
     info.print2(template_header.format(*header,width=output_width))
     info.print2(template.format(*values,width=output_width))
     info.print2(template_footer.format(*footer,width=output_width))

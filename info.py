@@ -192,8 +192,7 @@ def displayInfo(code,*args,**kwargs):
                                                       '[' + 3*'{:>12.4e}' + '  ]' + '\n' + \
                        '\n' + indent + equal_line[:-len(indent)] + '\n' + \
                        indent + 'Increment run time (s): {:>11.4e}' + space3 + \
-                                                'Total run time (s): {:>11.4e}' + '\n\n' + \
-                       colorama.Style.RESET_ALL
+                                                'Total run time (s): {:>11.4e}' + '\n\n'
     elif code == '8':
         mode = args[0]
         if mode == 'init':
@@ -218,8 +217,7 @@ def displayInfo(code,*args,**kwargs):
             info = tuple(arguments)
             template = indent + dashed_line[:-len(indent)] + \
                        '\n\n' + indent + tilde_line[:-len(indent)] + '\n' + \
-                       indent + 'Iteration run time (s): {:>11.4e}' + \
-                       colorama.Style.RESET_ALL
+                       indent + 'Iteration run time (s): {:>11.4e}'
     elif code == '9':
         mode = args[0]
         space1 = (output_width - (len('Iteration') + len('Normalized residuals') + 19))*' '
@@ -232,8 +230,7 @@ def displayInfo(code,*args,**kwargs):
                                                            'Normalized residuals' + '\n' + \
                        indent + ' Number    Run time (s)' + space2 + \
                                       'Equilibrium    Mac. strain    Mac. stress' + '\n' + \
-                       indent + dashed_line[:-len(indent)] + \
-                       colorama.Style.RESET_ALL
+                       indent + dashed_line[:-len(indent)]
         elif mode == 'iter':
             if not isinstance(args[4],float):
                 arguments = list(args[1:4]) + [args[5],]
