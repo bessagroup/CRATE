@@ -77,7 +77,7 @@ def searchKeywordLine(file,keyword):
     line_number = 0
     for line in file:
         line_number = line_number + 1
-        if keyword in line and line.strip()[0]!='#':
+        if keyword in line.split() and line.strip()[0]!='#':
             return line_number
     location = inspect.getframeinfo(inspect.currentframe())
     errors.displayError('E00003',location.filename,location.lineno+1,keyword)
@@ -89,7 +89,7 @@ def searchOptionalKeywordLine(file,keyword):
     line_number = 0
     for line in file:
         line_number = line_number + 1
-        if keyword in line and line.strip()[0]!='#':
+        if keyword in line.split() and line.strip()[0]!='#':
             isFound = True
             return [isFound,line_number]
     return [isFound,line_number]
