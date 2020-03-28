@@ -612,7 +612,7 @@ def displayError(code,*args):
                    indent + 'constitutive model \'{}\' was not specified for all ' + \
                    'pixels (2D) / voxels (3D).'
     elif code == 'E00061':
-        arguments = args[2:6]
+        arguments = args[2:7]
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The maximum number of iterations ({}) has been reached ' + \
@@ -625,6 +625,9 @@ def displayError(code,*args):
                    indent + 'the following values:' + '\n\n' + \
                    2*indent + 'Clusters equilibrium residuals error: {:16.8e}'
         if args[5] != None:
+            template = template + '\n\n' + \
+                   2*indent + 'Macroscale strain residuals error   : {:16.8e}'
+        if args[6] != None:
             template = template + '\n\n' + \
                    2*indent + 'Macroscale stress residuals error   : {:16.8e}'
     elif code == 'E00062':
@@ -745,6 +748,22 @@ def displayError(code,*args):
                    indent + 'problem:' + '\n\n' + \
                    indent + '{}' + '\n\n' + \
                    indent + 'Check the associated \'.screen\' file for more details.'
+    elif code == 'E00073':
+        arguments = args[2:6]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The maximum number of iterations ({}) has been reached ' + \
+                   'when solving the' + '\n' + \
+                   indent + 'Lippmann-Schwinger nonlinear system of equilibrium ' + \
+                   'equations associated to the' + '\n' + \
+                   indent + 'macroscale load increment {}.' + '\n\n' + \
+                   indent + 'The normalized errors associated to the ' + \
+                   'residuals finished the iterative process with' + '\n' + \
+                   indent + 'the following values:' + '\n\n' + \
+                   2*indent + 'Clusters equilibrium residuals error: {:16.8e}'
+        if args[5] != None:
+            template = template + '\n\n' + \
+                   2*indent + 'Macroscale stress residuals error   : {:16.8e}'
     # print(template_header.format(*header,width=output_width))
     # print(template.format(*values,width=output_width))
     # print(template_footer.format(*footer,width=output_width))

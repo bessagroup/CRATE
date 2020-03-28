@@ -220,9 +220,8 @@ def displayInfo(code,*args,**kwargs):
                        indent + 'Iteration run time (s): {:>11.4e}'
     elif code == '9':
         mode = args[0]
-        space1 = (output_width - (len('Iteration') + len('Normalized residuals') + 19))*' '
-        space2 = (output_width - (len('Number') + len('Run time (s)') + \
-                                            len('Equilibrium    Mac. constraint') + 19))*' '
+        space1 = (output_width - 48)*' '
+        space2 = (output_width - 67)*' '
         if mode == 'init':
             arguments = args[1:]
             info = tuple(arguments)
@@ -242,6 +241,29 @@ def displayInfo(code,*args,**kwargs):
                 info = tuple(arguments)
                 template = indent + ' {:^6d}    {:^12.4e}' + space2 + \
                                                           '{:>11.4e}     {:^11.4e}        -'
+            else:
+                arguments = args[1:]
+                info = tuple(arguments)
+                template = indent + ' {:^6d}    {:^12.4e}' + space2 + \
+                                                      '{:>11.4e}     {:^11.4e}    {:^11.4e}'
+    elif code == '10':
+        mode = args[0]
+        space1 = (output_width - 55)*' '
+        space2 = (output_width - 67)*' '
+        if mode == 'init':
+            arguments = args[1:]
+            info = tuple(arguments)
+            template = indent + 5*' ' + 'Iteration' + space1 + \
+                                         'Normalized residuals       Norm. error' + '\n' + \
+                       indent + ' Number    Run time (s)' + space2 + \
+                                      'Equilibrium    Mac. stress    Hom. Strain' + '\n' + \
+                       indent + dashed_line[:-len(indent)]
+        elif mode == 'iter':
+            if not isinstance(args[4],float):
+                arguments = list(args[1:4]) + [args[5],]
+                info = tuple(arguments)
+                template = indent + ' {:^6d}    {:^12.4e}' + space2 + \
+                                                    '{:>11.4e}         -          {:^11.4e}'
             else:
                 arguments = args[1:]
                 info = tuple(arguments)
