@@ -681,8 +681,12 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return if the last macroscale loading increment was completed successfuly,
         # otherwise increment the increment counter
-        info.displayInfo('7','end',hom_strain,hom_stress,\
-                                     time.time() - inc_init_time,time.time() - os_init_time)
+        if problem_type == 1:
+            info.displayInfo('7','end',problem_type,hom_strain,hom_stress,\
+                       time.time() - inc_init_time,time.time() - os_init_time,hom_stress_33)
+        else:
+            info.displayInfo('7','end',problem_type,hom_strain,hom_stress,\
+                       time.time() - inc_init_time,time.time() - os_init_time)
         if inc == n_load_increments:
             # Close VTK collection file
             if is_VTK_output:

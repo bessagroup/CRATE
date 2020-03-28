@@ -15,6 +15,8 @@ import sys
 import numpy as np
 # Date and time
 import time
+# Shallow and deep copy operations
+import copy
 # Terminal colors
 import colorama
 # Regular expressions
@@ -170,15 +172,25 @@ def displayInfo(code,*args,**kwargs):
             space1 = (output_width - 84)*' '
             space2 = (output_width - (len('Homogenized strain tensor') + 48))*' '
             space3 = (output_width - (len('Increment run time (s): ') + 44))*' '
-            hom_strain = args[1]
-            hom_stress = args[2]
+            problem_type = args[1]
+            hom_strain = args[2]
+            hom_stress = args[3]
+            hom_strain_out = np.zeros((3,3))
+            hom_stress_out = np.zeros((3,3))
+            if problem_type == 1:
+                hom_strain_out[0:2,0:2] = hom_strain
+                hom_stress_out[0:2,0:2] = hom_stress
+                hom_stress_out[2,2] = args[6]
+            else:
+                hom_strain_out = copy.deepcopy(hom_strain)
+                hom_stress_out = copy.deepcopy(hom_stress)
             arguments = list()
             for i in range(3):
                 for j in range(3):
-                    arguments.append(hom_strain[i,j])
+                    arguments.append(hom_strain_out[i,j])
                 for j in range(3):
-                    arguments.append(hom_stress[i,j])
-            arguments = arguments + [args[3],args[4]]
+                    arguments.append(hom_stress_out[i,j])
+            arguments = arguments + [args[4],args[5]]
             info = tuple(arguments)
             template = '\n\n' + \
                        indent + equal_line[:-len(indent)] + '\n' + \
