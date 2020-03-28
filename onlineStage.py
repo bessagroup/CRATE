@@ -575,11 +575,11 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
             #                                                       (self-consistent scheme)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Check self-consistent scheme iterative procedure convergence
-            is_scs_conv_E,is_scs_conv_v,norm_d_E_ref,norm_d_v_ref = \
+            is_scs_converged,norm_d_E_ref,norm_d_v_ref = \
                        checkSCSConvergence(E_ref,v_ref,material_properties_ref,scs_conv_tol)
             info.displayInfo('8','end',time.time() - scs_iter_init_time)
             # Control self-consistent scheme iteration loop flow
-            if is_scs_conv_E and is_scs_conv_v:
+            if is_scs_converged:
                 # Leave self-consistent scheme iterative loop (converged solution)
                 break
             elif scs_iter == scs_max_n_iterations:
@@ -1271,11 +1271,10 @@ def checkSCSConvergence(E_ref,v_ref,material_properties_ref,scs_conv_tol):
     # Poisson ratio
     norm_d_E_ref = abs(d_E_ref/E_ref)
     norm_d_v_ref = abs(d_v_ref/v_ref)
-    # The self-consistent scheme convergence flags are True if the normalized iterative
-    # change of the reference material elastic property converged according to the defined
+    # The self-consistent scheme convergence flag is True if the normalized iterative
+    # change of the reference material elastic properties converged according to the defined
     # convergence tolerance
-    is_scs_conv_E = norm_d_E_ref < scs_conv_tol
-    is_scs_conv_v = norm_d_v_ref < scs_conv_tol
+    is_scs_converged = (norm_d_E_ref < scs_conv_tol) and (norm_d_v_ref < scs_conv_tol)
     # ------------------------------------------------------------------------------
     # Validation:
     if is_Validation[20]:
@@ -1287,4 +1286,4 @@ def checkSCSConvergence(E_ref,v_ref,material_properties_ref,scs_conv_tol):
         print('\n' + 'norm_d_v_ref = ' + '{:11.4e}'.format(norm_d_v_ref))
     # ------------------------------------------------------------------------------
     # Return
-    return [is_scs_conv_E,is_scs_conv_v,norm_d_E_ref,norm_d_v_ref]
+    return [is_scs_converged,norm_d_E_ref,norm_d_v_ref]
