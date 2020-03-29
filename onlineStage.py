@@ -770,12 +770,23 @@ def setIncMacLoadMF(n_dim,comp_order,inc_mac_load_vector):
 # (matrix)
 def refMaterialElasticTangents(problem_dict,material_properties_ref):
     # Get problem data
+    n_dim = problem_dict['n_dim']
     comp_order = problem_dict['comp_order_sym']
     # Compute reference material elastic tangent (matricial form)
     De_ref_mf = \
       material.models.linear_elastic.ct(copy.deepcopy(problem_dict),material_properties_ref)
+    # Get reference material Young modulus and Poisson ratio
+    E_ref = material_properties_ref['E']
+    v_ref = material_properties_ref['v']
+    # Compute reference material Lamé parameters
+    lam_ref = (E_ref*v_ref)/((1.0 + v_ref)*(1.0 - 2.0*v_ref))
+    miu_ref = E_ref/(2.0*(1.0 + v_ref))
+    # Compute reference material compliance tensor
+    _,FOId,_,FOSym,FODiagTrace,_,_ = top.setIdentityTensors(n_dim)
+    Se_ref = -(lam_ref/(2*miu_ref*(3*lam_ref+2*miu_ref)))*FODiagTrace + \
+                                                                   (1.0/(2.0*miu_ref))*FOSym
     # Compute reference material compliance tensor (matricial form)
-    Se_ref_mf = np.linalg.inv(De_ref_mf)
+    Se_ref_mf = top.setTensorMatricialForm(Se_ref,n_dim,comp_order)
     # Store reference material compliance tensor in a matrix similar to matricial form
     # but without any associated coefficients
     Se_ref_matrix = np.zeros(Se_ref_mf.shape)
