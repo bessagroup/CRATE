@@ -270,7 +270,7 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
             # ------------------------------------------------------------------------------
         #                                Cluster incremental strains initial iterative guess
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Set clusters strain initial iterative guess
+        # Set clusters incremental strain initial iterative guess
         gbl_inc_strain_mf = np.zeros((n_total_clusters*len(comp_order)))
         # Set additional initial iterative guesses
         if is_farfield_formulation:
@@ -450,7 +450,8 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                     is_converged,error_A1,error_A2,error_A3 = \
                         checkNRConvergence2(comp_order,n_total_clusters,inc_mac_load_mf,
                                     n_presc_mac_strain,n_presc_mac_stress,presc_strain_idxs,
-                                      presc_stress_idxs,inc_hom_strain_mf,residual,conv_tol)
+                                      presc_stress_idxs,inc_hom_strain_mf,inc_hom_stress_mf,
+                                                                          residual,conv_tol)
                     info.displayInfo('9','iter',nr_iter,time.time() - nr_iter_init_time,
                                                                  error_A1,error_A2,error_A3)
                 else:
@@ -1184,14 +1185,22 @@ def checkNRConvergence(comp_order,n_total_clusters,inc_mac_load_mf,n_presc_mac_s
     # Initialize criterion convergence flag
     is_converged = False
     # Set strain and stress normalization factors
-    if n_presc_mac_strain > 0:
+    if n_presc_mac_strain > 0 and \
+                             not np.allclose(inc_mac_load_mf['strain'][[presc_strain_idxs]],
+                 np.zeros(inc_mac_load_mf['strain'][[presc_strain_idxs]].shape),atol=1e-10):
         strain_norm_factor = np.linalg.norm(inc_mac_load_mf['strain'][[presc_strain_idxs]])
     elif not np.allclose(inc_hom_strain_mf,np.zeros(inc_hom_strain_mf.shape),atol=1e-10):
         strain_norm_factor = np.linalg.norm(inc_hom_strain_mf)
     else:
         strain_norm_factor = 1
-    if n_presc_mac_stress > 0:
+    if n_presc_mac_stress > 0 and \
+                     not np.allclose(inc_mac_load_mf['stress'][[presc_stress_idxs]],
+                 np.zeros(inc_mac_load_mf['stress'][[presc_stress_idxs]].shape),atol=1e-10):
         stress_norm_factor = np.linalg.norm(inc_mac_load_mf['stress'][[presc_stress_idxs]])
+    elif not np.allclose(inc_hom_stress_mf,np.zeros(inc_hom_stress_mf.shape),atol=1e-10):
+        stress_norm_factor = np.linalg.norm(inc_hom_stress_mf)
+    else:
+        stress_norm_factor = 1
     # Compute error associated to the clusters equilibrium residuals
     error_A1 = np.linalg.norm(residual[0:n_total_clusters*len(comp_order)])/ \
                                                                           strain_norm_factor
@@ -1230,23 +1239,32 @@ def checkNRConvergence(comp_order,n_total_clusters,inc_mac_load_mf,n_presc_mac_s
 # increment
 def checkNRConvergence2(comp_order,n_total_clusters,inc_mac_load_mf,n_presc_mac_strain,
                                      n_presc_mac_stress,presc_strain_idxs,presc_stress_idxs,
-                                                       inc_hom_strain_mf,residual,conv_tol):
+                                     inc_hom_strain_mf,inc_hom_stress_mf,residual,conv_tol):
     # Initialize criterion convergence flag
     is_converged = False
     # Set strain and stress normalization factors
-    if n_presc_mac_strain > 0:
+    if n_presc_mac_strain > 0 and \
+                             not np.allclose(inc_mac_load_mf['strain'][[presc_strain_idxs]],
+                 np.zeros(inc_mac_load_mf['strain'][[presc_strain_idxs]].shape),atol=1e-10):
         strain_norm_factor = np.linalg.norm(inc_mac_load_mf['strain'][[presc_strain_idxs]])
     elif not np.allclose(inc_hom_strain_mf,np.zeros(inc_hom_strain_mf.shape),atol=1e-10):
         strain_norm_factor = np.linalg.norm(inc_hom_strain_mf)
     else:
         strain_norm_factor = 1
-    if n_presc_mac_stress > 0:
+    if n_presc_mac_stress > 0 and \
+                     not np.allclose(inc_mac_load_mf['stress'][[presc_stress_idxs]],
+                 np.zeros(inc_mac_load_mf['stress'][[presc_stress_idxs]].shape),atol=1e-10):
         stress_norm_factor = np.linalg.norm(inc_mac_load_mf['stress'][[presc_stress_idxs]])
+    elif not np.allclose(inc_hom_stress_mf,np.zeros(inc_hom_stress_mf.shape),atol=1e-10):
+        stress_norm_factor = np.linalg.norm(inc_hom_stress_mf)
+    else:
+        stress_norm_factor = 1
     # Compute error associated to the clusters equilibrium residuals
     error_A1 = np.linalg.norm(residual[0:n_total_clusters*len(comp_order)])/ \
                                                                           strain_norm_factor
     # Compute error associated to the homogenization constraints residuals
     aux = residual[n_total_clusters*len(comp_order):]
+    print(aux)
     if n_presc_mac_strain > 0:
         error_A2 = np.linalg.norm(aux[presc_strain_idxs])/strain_norm_factor
     if n_presc_mac_stress > 0:
