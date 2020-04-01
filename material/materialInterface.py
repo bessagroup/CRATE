@@ -28,7 +28,7 @@
 # Note: The required constitutive model procedures are requested from the source specified
 #       for the associated material phase in the input data file
 #
-def materialInterface(procedure,problem_dict,mat_dict,mat_phase,*args):
+def materialInterface(procedure,problem_dict,mat_dict,algpar_dict,mat_phase,*args):
     # Get material data
     material_properties = mat_dict['material_properties']
     material_phases_models = mat_dict['material_phases_models']
@@ -53,8 +53,8 @@ def materialInterface(procedure,problem_dict,mat_dict,mat_phase,*args):
             # the consistent tangent modulus
             inc_strain = args[0]
             state_variables_old = args[1]
-            suct_args = \
-                 (problem_dict,material_properties,mat_phase,inc_strain,state_variables_old)
+            suct_args = (problem_dict,algpar_dict,material_properties,mat_phase,
+                                                             inc_strain,state_variables_old)
             # Call constitutive model function to perform the state update procedure and to
             # compute the consistent tangent modulus
             state_variables,consistent_tangent_mf = \
@@ -79,7 +79,7 @@ def materialInterface(procedure,problem_dict,mat_dict,mat_phase,*args):
 def getAvailableConstitutiveModels(model_source):
     if model_source == 1:
         # UNNAMED program material constitutive models
-        available_mat_models = ['linear_elastic',]
+        available_mat_models = ['linear_elastic','von_mises']
     elif model_source == 2:
         # Links material constitutive models
         available_mat_models = ['ELASTIC',]

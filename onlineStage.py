@@ -135,10 +135,12 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
             # Initialize state variables
             clusters_state[str(cluster)] = \
                                         material.materialInterface.materialInterface('init',
-                              copy.deepcopy(problem_dict),copy.deepcopy(mat_dict),mat_phase)
+                            copy.deepcopy(problem_dict),copy.deepcopy(mat_dict),algpar_dict,
+                                                                                  mat_phase)
             clusters_state_old[str(cluster)] = \
                                         material.materialInterface.materialInterface('init',
-                              copy.deepcopy(problem_dict),copy.deepcopy(mat_dict),mat_phase)
+                            copy.deepcopy(problem_dict),copy.deepcopy(mat_dict),algpar_dict,
+                                                                                  mat_phase)
     # Get total number of clusters
     n_total_clusters = sum([phase_n_clusters[mat_phase] for mat_phase in material_phases])
     # --------------------------------------------------------------------------------------
@@ -358,7 +360,7 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                 # --------------------------------------------------------------------------
                 clusters_state,clusters_D_mf = \
                            clustersSUCT(copy.deepcopy(problem_dict),copy.deepcopy(mat_dict),
-                                        phase_clusters,gbl_inc_strain_mf,clusters_state_old)
+                            algpar_dict,phase_clusters,gbl_inc_strain_mf,clusters_state_old)
                 #
                 #                                         Global interaction residual matrix
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -799,7 +801,8 @@ def refMaterialElasticTangents(problem_dict,material_properties_ref):
     return [De_ref_mf,Se_ref_matrix]
 # ------------------------------------------------------------------------------------------
 # Perform clusters material state update and compute associated consistent tangent modulus
-def clustersSUCT(problem_dict,mat_dict,phase_clusters,gbl_inc_strain_mf,clusters_state_old):
+def clustersSUCT(problem_dict,mat_dict,algpar_dict,phase_clusters,gbl_inc_strain_mf,
+                                                                        clusters_state_old):
     # Get problem data
     n_dim = problem_dict['n_dim']
     comp_order = problem_dict['comp_order_sym']
@@ -818,16 +821,14 @@ def clustersSUCT(problem_dict,mat_dict,phase_clusters,gbl_inc_strain_mf,clusters
             # Get material cluster incremental strain (matricial form)
             inc_strain_mf = gbl_inc_strain_mf[i_init:i_end]
             # Build material cluster incremental strain tensor
-            inc_strain = \
-                  top.getTensorFromMatricialForm(inc_strain_mf,n_dim,comp_order)
+            inc_strain = top.getTensorFromMatricialForm(inc_strain_mf,n_dim,comp_order)
             # Get material cluster last increment converged state variables
-            state_variables_old = \
-                                 copy.deepcopy(clusters_state_old[str(cluster)])
+            state_variables_old = copy.deepcopy(clusters_state_old[str(cluster)])
             # Perform material cluster state update and compute associated
             # consistent tangent modulus
             state_variables,consistent_tangent_mf = \
                   material.materialInterface.materialInterface('suct',problem_dict,mat_dict,
-                                                   mat_phase,inc_strain,state_variables_old)
+                                       algpar_dict,mat_phase,inc_strain,state_variables_old)
             # Store material cluster updated state variables and consistent
             # tangent modulus
             clusters_state[str(cluster)] = state_variables
@@ -1264,7 +1265,6 @@ def checkNRConvergence2(comp_order,n_total_clusters,inc_mac_load_mf,n_presc_mac_
                                                                           strain_norm_factor
     # Compute error associated to the homogenization constraints residuals
     aux = residual[n_total_clusters*len(comp_order):]
-    print(aux)
     if n_presc_mac_strain > 0:
         error_A2 = np.linalg.norm(aux[presc_strain_idxs])/strain_norm_factor
     if n_presc_mac_stress > 0:

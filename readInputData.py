@@ -39,6 +39,8 @@ import packager
 import LinksInterface
 # Material interface
 import material.materialInterface
+# Isotropic hardening laws
+import material.setIsotropicHardening
 #
 #                                                             Check input validity functions
 # ==========================================================================================
@@ -377,9 +379,15 @@ def readTypeBKeyword(file,file_path,keyword):
 # < property2_name > < value >
 # ...
 #
+# In the case of a constitutive model that involves a given strain hardening law, then one
+# of the properties specifies the type of hardening law and the associated parameters. In
+# the particular case of a piecewise linear isotropic hardening law, a list of the
+# hardening curve points must be provided below the property main specification.
+#
 # Store the material phases properties in a dictionary as
 #
-#    dictionary['phase_id'] = {'property1_name': value, 'property2_name': value, ...}
+#    dictionary['phase_id'] = {'property1_name': value, 'property2_name': value,
+#            ['hardeningLaw:' hardeningLaw(), 'hardening_parameters': hardening_parameters]}
 #
 # and the material phases constitutive models in a dictionary as
 #
@@ -490,13 +498,11 @@ def readMaterialProperties(file,file_path,keyword):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set material phase properties
         material_properties[mat_phase] = dict()
+        property_header_line = line_number
         for j in range(n_properties):
-            property_line = linecache.getline(file_path,line_number+j+1).split()
+            property_header_line = property_header_line + 1
+            property_line = linecache.getline(file_path,property_header_line).split()
             if property_line[0] == '':
-                location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayError('E00006',location.filename,location.lineno+1,
-                                                              keyword,j+1,mat_phase)
-            elif len(property_line) != 2:
                 location = inspect.getframeinfo(inspect.currentframe())
                 errors.displayError('E00006',location.filename,location.lineno+1,
                                                               keyword,j+1,mat_phase)
@@ -511,14 +517,94 @@ def readMaterialProperties(file,file_path,keyword):
             elif property_line[0] in material_properties[mat_phase].keys():
                 location = inspect.getframeinfo(inspect.currentframe())
                 errors.displayError('E00006',location.filename,location.lineno+1,
-                keyword,j+1,mat_phase)
-            elif not checkNumber(property_line[1]):
-                location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayError('E00006',location.filename,location.lineno+1,
-                                                              keyword,j+1,mat_phase)
-            prop_name = str(property_line[0])
-            prop_value = float(property_line[1])
-            material_properties[mat_phase][prop_name] = prop_value
+                                                                      keyword,j+1,mat_phase)
+            # Read material property or hardening law
+            if str(property_line[0]) == 'IHL':
+                # Get available isotropic hardening types
+                available_hardening_types = \
+                                          material.setIsotropicHardening.getAvailableTypes()
+                # Check if specified isotropic hardening type is available
+                if property_line[1] not in available_hardening_types:
+                    location = inspect.getframeinfo(inspect.currentframe())
+                    errors.displayError('E00074',location.filename,location.lineno+1,
+                                       property_line[1],mat_phase,available_hardening_types)
+                else:
+                    hardening_type = str(property_line[1])
+                # Get parameters required by isotropic hardening type
+                req_hardening_parameters = \
+                        material.setIsotropicHardening.setRequiredParameters(hardening_type)
+                # Check if the required number of hardening parameters is specified
+                if len(property_line[2:]) != len(req_hardening_parameters):
+                    location = inspect.getframeinfo(inspect.currentframe())
+                    location = inspect.getframeinfo(inspect.currentframe())
+                    errors.displayError('E00075',location.filename,location.lineno+1,
+                                            len(property_line[2:]),mat_phase,hardening_type,
+                                     len(req_hardening_parameters),req_hardening_parameters)
+                # Initialize material phase hardening parameters dictionary
+                hardening_parameters = dict()
+                # Read hardening parameters
+                if hardening_type == 'piecewise_linear':
+                    # Read number of hardening curve points
+                    if not checkPositiveInteger(property_line[2]):
+                        location = inspect.getframeinfo(inspect.currentframe())
+                        errors.displayError('E00076',location.filename,location.lineno+1,
+                                                                   mat_phase,hardening_type)
+                    else:
+                        n_hardening_points = int(property_line[2])
+                    # Read hardening curve points
+                    hardening_points = np.zeros((n_hardening_points,2))
+                    for k in range(n_hardening_points):
+                        hardening_point_line = \
+                               linecache.getline(file_path,property_header_line+1+k).split()
+                        if hardening_point_line[0] == '':
+                            location = inspect.getframeinfo(inspect.currentframe())
+                            errors.displayError('E00077',location.filename,
+                                                            location.lineno+1,k+1,mat_phase)
+                        elif len(hardening_point_line) != 2:
+                            location = inspect.getframeinfo(inspect.currentframe())
+                            errors.displayError('E00077',location.filename,
+                                                            location.lineno+1,k+1,mat_phase)
+                        elif not checkNumber(hardening_point_line[0]) or \
+                                                   not checkNumber(hardening_point_line[1]):
+                            location = inspect.getframeinfo(inspect.currentframe())
+                            errors.displayError('E00077',location.filename,
+                                                            location.lineno+1,k+1,mat_phase)
+                        hardening_points[k,0] = float(hardening_point_line[0])
+                        hardening_points[k,1] = float(hardening_point_line[1])
+                    # Assemble hardening parameters
+                    hardening_parameters['hardening_points'] = hardening_points
+                    # Fix line numbers by adding the number of hardening curve points
+                    property_header_line = property_header_line + n_hardening_points
+                    line_number = line_number + n_hardening_points
+                else:
+                    # Loop over and assemble required hardening parameters
+                    for k in range(len(req_hardening_parameters)):
+                        if not checkNumber(property_line[2 + k]):
+                            location = inspect.getframeinfo(inspect.currentframe())
+                            errors.displayError('E00078',location.filename,
+                                                            location.lineno+1,k+1,mat_phase)
+                        else:
+                            hardening_parameters[str(req_hardening_parameters[k])] = \
+                                                                 float(property_line[2 + k])
+                # Get material phase hardening law
+                hardeningLaw = \
+                              material.setIsotropicHardening.setHardeningLaw(hardening_type)
+                # Store material phase hardening law and parameters
+                material_properties[mat_phase]['hardeningLaw'] = hardeningLaw
+                material_properties[mat_phase]['hardening_parameters'] = \
+                                                                        hardening_parameters
+            else:
+                if len(property_line) != 2:
+                    location = inspect.getframeinfo(inspect.currentframe())
+                    errors.displayError('E00006',location.filename,location.lineno+1,
+                                                                      keyword,j+1,mat_phase)
+                elif not checkNumber(property_line[1]):
+                    location = inspect.getframeinfo(inspect.currentframe())
+                    errors.displayError('E00006',location.filename,location.lineno+1,
+                                                                  keyword,j+1,mat_phase)
+                prop_name = str(property_line[0])
+                prop_value = float(property_line[1])
+                material_properties[mat_phase][prop_name] = prop_value
         line_number = line_number + n_properties + 1
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return [n_material_phases,material_phases_models,material_properties]

@@ -38,6 +38,7 @@ def setRequiredProperties():
 #
 #   e_strain_mf | Elastic strain tensor (matricial form)
 #   strain_mf   | Total strain tensor (matricial form)
+#   stress_mf   | Cauchy stress tensor (matricial form)
 #   is_su_fail  | State update failure flag
 #
 def init(problem_dict):
@@ -65,7 +66,8 @@ def init(problem_dict):
 # ==========================================================================================
 # For a given increment of strain, perform the update of the material state variables and
 # compute the associated consistent tangent modulus
-def suct(problem_dict,material_properties,mat_phase,inc_strain,state_variables_old):
+def suct(problem_dict,algpar_dict,material_properties,mat_phase,inc_strain,
+                                                                       state_variables_old):
     # Get problem data
     problem_type = problem_dict['problem_type']
     n_dim = problem_dict['n_dim']
@@ -75,6 +77,8 @@ def suct(problem_dict,material_properties,mat_phase,inc_strain,state_variables_o
     v = material_properties[mat_phase]['v']
     # Get last increment converged state variables
     e_strain_old_mf = state_variables_old['e_strain_mf']
+    # Set state update fail flag
+    is_su_fail = False
     #
     #                                                             Consistent tangent modulus
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -103,8 +107,6 @@ def suct(problem_dict,material_properties,mat_phase,inc_strain,state_variables_o
     if problem_type == 1:
         stress_33 = \
              lam*(e_strain_mf[comp_order.index('11')] + e_strain_mf[comp_order.index('22')])
-    # Set state update fail flag
-    is_su_fail = False
     # Initialize state variables dictionary
     state_variables = init(problem_dict)
     # Store updated state variables in matricial form

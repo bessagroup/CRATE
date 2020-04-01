@@ -764,6 +764,87 @@ def displayError(code,*args):
         if args[5] != None:
             template = template + '\n\n' + \
                    2*indent + 'Macroscale stress residuals error   : {:16.8e}'
+    elif code == 'E00074':
+        arguments = [args[2],args[3]] + args[4]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The specified isotropic hardening type ({}) for the ' + \
+                   'material phase {} is not available.'+ '\n\n' + \
+                   'Suggestion:' + '\n\n' + \
+                   indent + 'Select one of the available types of isotropic hardening:' + \
+                   '\n\n' + indent + len(args[4])*'{}, ' + '\b\b '
+    elif code == 'E00075':
+        arguments = list(args[2:6]) + args[6]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The specified number of parameters ({}) for the isotropic ' + \
+                   'hardening law of material' + '\n' + \
+                   indent + 'phase {} ({}) does not match the number of ' + \
+                   'required parameters ({}).' + '\n\n' + \
+                   'Suggestion:' + '\n\n' + \
+                   indent + 'Required isotropic hardening law parameters (sorted): ' + \
+                   len(args[6])*'{}, ' + '\b\b '
+    elif code == 'E00076':
+        arguments = args[2:4]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The number of hardening curve points specified for the ' + \
+                   'material phase {} isotropic' + '\n' + \
+                   indent + 'hardening law ({}) must be at least 1.'
+    elif code == 'E00077':
+        suffix = getOrdinalNumber(args[2])
+        arguments = args[2:4]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The {}' + suffix + ' point of the hardening curve of the ' + \
+                   'material phase {} is either missing or not' + '\n' + \
+                   indent + 'properly specified.' + '\n\n' + \
+                   'Suggestion:' + '\n\n' + \
+                   indent + 'The hardening curve must be specified as follows:' + '\n\n' + \
+                   indent + 'IHL piecewise_linear 3' + '\n' + \
+                   indent + '< acc_p_strain_0 > < yield_stress_0 >' + '\n' + \
+                   indent + '< acc_p_strain_1 > < yield_stress_1 >' + '\n' + \
+                   indent + '< acc_p_strain_2 > < yield_stress_2 >'
+    elif code == 'E00078':
+        suffix = getOrdinalNumber(args[2])
+        arguments = args[2:4]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The {}' + suffix + ' parameter of the isotropic hardening ' + \
+                   'law of material phase {} is invalid' + '\n' + \
+                   indent + '(must be a integer or floating-point number).'
+    elif code == 'E00079':
+        arguments = [args[2],]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'Unknown type of isotropic hardening ({}).'
+    elif code == 'E00080':
+        arguments = [args[2],]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The points of the piecewise linear isotropic hardening ' + \
+                   'law must be specified in asceding' + '\n' + \
+                   indent + 'order of accumulated plastic strain.'
+    elif code == 'E00081':
+        arguments = [args[2],]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'At least one point of the piecewise linear isotropic ' + \
+                   'hardening law has been specified' + '\n' + \
+                   indent + 'with an invalid accumulated plastic strain (must be ' + \
+                   'non-negative).'
+    elif code == 'E00082':
+        arguments = args[2:5]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The maximum number of iterations ({}) has been achieved ' + \
+                   'without reaching convergence' + '\n' + \
+                   indent + 'while performing the state update of the material phase {}.' +\
+                   '\n\n' + \
+                   indent + 'The normalized error associated to the return-mapping ' + \
+                   'residuals finished the iterative' + '\n' + \
+                   indent + 'process with the following value:' + '\n\n' + \
+                   2*indent + 'Return-mapping residual error: {:16.8e}'
     # print(template_header.format(*header,width=output_width))
     # print(template.format(*values,width=output_width))
     # print(template_footer.format(*footer,width=output_width))
