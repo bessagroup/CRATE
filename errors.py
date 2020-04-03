@@ -845,6 +845,12 @@ def displayError(code,*args):
                    'residuals finished the iterative' + '\n' + \
                    indent + 'process with the following value:' + '\n\n' + \
                    2*indent + 'Return-mapping residual error: {:16.8e}'
+    elif code == 'E00083':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'Unknown tensor\'s nature to be stored in matricial form ' + \
+                   'following the Voigt notation.'
     # print(template_header.format(*header,width=output_width))
     # print(template.format(*values,width=output_width))
     # print(template_footer.format(*footer,width=output_width))

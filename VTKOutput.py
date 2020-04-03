@@ -25,8 +25,8 @@ import inspect
 import errors
 # Tensorial operations
 import tensorOperations as top
-# Links interface
-import LinksInterface
+# Links related procedures
+import Links.material.LinksMaterialModels as LinksMat
 #
 #                                                                           Global variables
 # ==========================================================================================
@@ -213,7 +213,7 @@ def writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,problem_dict,mat_dict,rg_dict,
                 init_procedure = getattr(model_module,'init')
             elif model_source == 2:
                 # Get constitutive model initialize procedure
-                _,_,init_procedure = LinksInterface.LinksMaterialProcedures(model_name)
+                _,init_procedure,_,_,_ = LinksMat.LinksMaterialProcedures(model_name)
             # Get constitutive model state variables dictionary
             model_state_variables = init_procedure(problem_dict)
             # Skip state variable output if it is not defined for all constitutive models
@@ -257,7 +257,7 @@ def writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,problem_dict,mat_dict,rg_dict,
                 init_procedure = getattr(model_module,'init')
             elif model_source == 2:
                 # Get constitutive model initialize procedure
-                _,_,init_procedure = LinksInterface.LinksMaterialProcedures(model_name)
+                _,init_procedure,_,_,_ = LinksMat.LinksMaterialProcedures(model_name)
             # Get constitutive model state variables dictionary
             model_state_variables = init_procedure(problem_dict)
             # Loop over constitutive model state variables

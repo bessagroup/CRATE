@@ -9,6 +9,8 @@
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
+# Links related procedures
+import Links.material.LinksSUCT as LinksSUCT
 #
 #                                                                         Material Interface
 # ==========================================================================================
@@ -65,6 +67,28 @@ def materialInterface(procedure,problem_dict,mat_dict,algpar_dict,mat_phase,*arg
     #                                                              Links material procedures
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     elif model_source == 2:
+        #                                                                     Initialization
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        if procedure == 'init':
+            # Call constitutive model function to perform initialization procedure
+            state_variables = material_phases_models[str(mat_phase)]['init'](problem_dict)
+            # Return initialized state variables dictionary
+            return state_variables
+        #
+        #                                                State update and Consistent tangent
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        elif procedure == 'suct':
+            # Set required arguments to perform the state update procedure and to compute
+            # the consistent tangent modulus
+            inc_strain = args[0]
+            state_variables_old = args[1]
+            suct_args = (problem_dict,material_properties,material_phases_models,mat_phase,
+                        inc_strain,state_variables_old)
+            # Call constitutive model function to perform the state update procedure and to
+            # compute the consistent tangent modulus
+            state_variables,consistent_tangent_mf = LinksSUCT.suct(*suct_args)
+            # Return updated state variables and consistent tangent modulus
+            return [state_variables,consistent_tangent_mf]
         pass
     #
     #                                                             Abaqus material procedures

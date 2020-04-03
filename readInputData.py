@@ -35,8 +35,9 @@ import errors
 import fileOperations
 # Packager
 import packager
-# Links interface
-import LinksInterface
+# Links related procedures
+import Links.ioput.readLinksInputData as LinksRLID
+import Links.material.LinksMaterialModels as LinksMat
 # Material interface
 import material.materialInterface
 # Isotropic hardening laws
@@ -201,9 +202,10 @@ def readInputData(input_file,dirs_dict):
                 location = inspect.getframeinfo(inspect.currentframe())
                 errors.displayError('E00067',location.filename,location.lineno+1)
         # Build Links dictionary
-        Links_dict = LinksInterface.readLinksParameters(input_file,input_file_path,
-                            problem_type,checkNumber,checkPositiveInteger,searchKeywordLine,
-                                                                  searchOptionalKeywordLine)
+        Links_dict = LinksRLID.readLinksInputData(input_file,input_file_path,problem_type,
+                                                  checkNumber,checkPositiveInteger,
+                                                  searchKeywordLine,
+                                                  searchOptionalKeywordLine)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read number of cluster associated to each material phase
     keyword = 'Number_of_Clusters'
@@ -477,13 +479,15 @@ def readMaterialProperties(file,file_path,keyword):
                                                                        model_name,procedure)
         elif model_source == 2:
             # Get material constitutive model procedures
-            setRequiredProperties,writeMaterialProperties,init = \
-                                          LinksInterface.LinksMaterialProcedures(model_name)
+            setRequiredProperties,init,writeMaterialProperties,linksXPROPS,linksXXXXVA = \
+                LinksMat.LinksMaterialProcedures(model_name)
             material_phases_models[mat_phase]['setRequiredProperties'] = \
                                                                        setRequiredProperties
+            material_phases_models[mat_phase]['init'] = init
             material_phases_models[mat_phase]['writeMaterialProperties'] = \
                                                                      writeMaterialProperties
-            material_phases_models[mat_phase]['init'] = init
+            material_phases_models[mat_phase]['linksXPROPS'] = linksXPROPS
+            material_phases_models[mat_phase]['linksXXXXVA'] = linksXXXXVA
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         required_properties = material_phases_models[mat_phase]['setRequiredProperties']()
         n_required_properties = len(required_properties)
@@ -605,6 +609,14 @@ def readMaterialProperties(file,file_path,keyword):
                 prop_name = str(property_line[0])
                 prop_value = float(property_line[1])
                 material_properties[mat_phase][prop_name] = prop_value
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set Links constitutive model required integer and real material properties arrays
+        if model_source == 2:
+            IPROPS,RPROPS = linksXPROPS(material_properties[mat_phase])
+            material_properties[mat_phase]['IPROPS'] = IPROPS
+            material_properties[mat_phase]['RPROPS'] = RPROPS
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Skip to the next material phase
         line_number = line_number + n_properties + 1
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return [n_material_phases,material_phases_models,material_properties]
