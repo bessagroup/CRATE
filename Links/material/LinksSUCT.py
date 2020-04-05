@@ -36,7 +36,7 @@ def suct(problem_dict,material_properties,material_phases_models,mat_phase,inc_s
     # Get Links compiled binary (compilation with 'python' flag)
     links = Links(bin='/home/bernardoferreira/Documents/Links/bin/LINKS.so')
     # Set check sent/received data flag
-    is_check_data = True
+    is_check_data = False
     #
     #                                                             Links interfaces arguments
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -95,7 +95,8 @@ def suct(problem_dict,material_properties,material_phases_models,mat_phase,inc_s
     LALGVA_py = LALGVA.value
     RALGVA_py = RALGVA.value
     # Check data received from the Links interface
-    checkReceivedData('matisu',STRES_py,RSTAVA_py,LALGVA_py,RALGVA_py)
+    if is_check_data:
+        checkReceivedData('matisu',STRES_py,RSTAVA_py,LALGVA_py,RALGVA_py)
     #
     #                                             Links consistent tangent modulus interface
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -117,7 +118,8 @@ def suct(problem_dict,material_properties,material_phases_models,mat_phase,inc_s
     DMATX_py = DMATX.value
     AMATX_py = AMATX.value
     # Check data received from the Links interface
-    checkReceivedData('matict',DMATX_py,AMATX_py)
+    if is_check_data:
+        checkReceivedData('matict',DMATX_py,AMATX_py)
     #
     #                                                                           State update
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

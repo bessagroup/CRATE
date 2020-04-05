@@ -84,11 +84,11 @@ def setHardeningLaw(type):
             # perform linear interpolation to compute the yield stress
             yield_stress = np.interp(acc_p_strain,a,b,b[0],b[-1])
             # Get hardening slope
-            if acc_p_strain <= a[0] or acc_p_strain >= a[-1]:
+            if acc_p_strain < a[0] or acc_p_strain >= a[-1]:
                 H = 0
             else:
                 # Get hardening curve interval
-                x0 = list(filter(lambda i: i < acc_p_strain, a[::-1]))[0]
+                x0 = list(filter(lambda i: i <= acc_p_strain, a[::-1]))[0]
                 y0 = b[a.index(x0)]
                 x1 = list(filter(lambda i: i > acc_p_strain, a))[0]
                 y1 = b[a.index(x1)]

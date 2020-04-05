@@ -790,7 +790,7 @@ def displayError(code,*args):
         template = 'Details:' + '\n\n' + \
                    indent + 'The number of hardening curve points specified for the ' + \
                    'material phase {} isotropic' + '\n' + \
-                   indent + 'hardening law ({}) must be at least 1.'
+                   indent + 'hardening law ({}) must be at least 2.'
     elif code == 'E00077':
         suffix = getOrdinalNumber(args[2])
         arguments = args[2:4]
@@ -851,6 +851,14 @@ def displayError(code,*args):
         template = 'Details:' + '\n\n' + \
                    indent + 'Unknown tensor\'s nature to be stored in matricial form ' + \
                    'following the Voigt notation.'
+    elif code == 'E00084':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'In order to be used in the UNNAMED program online stage, ' + \
+                   'the Links constitutive model must' + '\n' + \
+                   indent + 'return the total strain tensor or the required data to ' + \
+                   'compute it.'
     # print(template_header.format(*header,width=output_width))
     # print(template.format(*values,width=output_width))
     # print(template_footer.format(*footer,width=output_width))

@@ -54,10 +54,11 @@ def init(problem_dict):
                         top.setTensorMatricialForm(np.zeros((n_dim,n_dim)),n_dim,comp_order)
     state_variables_init['stress_mf'] = \
                         top.setTensorMatricialForm(np.zeros((n_dim,n_dim)),n_dim,comp_order)
+    state_variables_init['is_plast'] = False
     state_variables_init['is_su_fail'] = False
-    # Set additional out-of-plane stress component in a 2D plane strain problem (output
-    # purpose only)
+    # Set additional out-of-plane strain and stress components
     if problem_type == 1:
+        state_variables_init['e_strain_33'] = 0.0
         state_variables_init['stress_33'] = 0.0
     # Return initialized state variables dictionary
     return state_variables_init

@@ -41,7 +41,7 @@ def Dd(i,j):
           sys.exit(1)
     value = 1 if i == j else 0
     return value
-#                                                                       Set identity tensors
+#                                                                    Common identity tensors
 # ==========================================================================================
 # Set the following common identity tensors:
 #
@@ -342,7 +342,7 @@ def kelvinFactor(idx,comp_order):
                 factor = factor*np.sqrt(2)
     return factor
 #
-#                                                                    Condense matricial form
+#                                                                Matricial form condensation
 # ==========================================================================================
 # Perform the condensation of a given matrix A (n x m), returning a matrix B (p,q) with the
 # matrix A elements specified by a given list of p rows indexes and q columns indexes. The
@@ -386,6 +386,67 @@ def getCondensedMatrix(matrix,rows,cols):
     matrix_cnd = matrix[rows_matrix,cols_matrix]
     # Return condensed matrix
     return matrix_cnd
+#
+#                                         Strain/Stress 2D < > 3D matricial form conversions
+# ==========================================================================================
+# Given a 2D strain tensor (matricial form) associated to a given 2D problem type, build the
+# corresponding 3D counterpart by including the appropriate out-of-plain strain components
+def getStrain3DmfFrom2Dmf(problem_dict,mf_2d,comp_33):
+    import readInputData as rid
+    # Get problem type
+    problem_type = problem_dict['problem_type']
+    # Get 2D strain/stress components order in symmetric and nonsymmetric cases
+    _,comp_order_sym_2d,comp_order_nsym_2d = rid.setProblemTypeParameters(problem_type)
+    # Get 3D strain/stress components order in symmetric and nonsymmetric cases
+    _,comp_order_sym_3d,comp_order_nsym_3d = rid.setProblemTypeParameters(4)
+    # Set required strain/stress component order according to strain tensor symmetry
+    if len(mf_2d) == len(comp_order_sym_2d):
+        comp_order_2d = comp_order_sym_2d
+        comp_order_3d = comp_order_sym_3d
+    else:
+        comp_order_2d = comp_order_nsym_2d
+        comp_order_3d = comp_order_nsym_3d
+    # Build 3D strain tensor (matricial form)
+    mf_3d = np.zeros(len(comp_order_3d))
+    if problem_type == 1:
+        for i in range(len(comp_order_2d)):
+            comp = comp_order_2d[i]
+            mf_3d[comp_order_3d.index(comp)] = mf_2d[i]
+        mf_3d[comp_order_3d.index('33')] = comp_33
+    # Return
+    return mf_3d
+# ------------------------------------------------------------------------------------------
+# Given a 3D strain/stress second-order tensor (matricial form) or a 3D strain/stress
+# related fourth-order tensor associated to a given 2D problem type, build the reduced 2D
+# counterpart including only the in-plain strain/stress components
+def get2DmfFrom3Dmf(problem_dict,mf_3d):
+    import readInputData as rid
+    # Get problem type
+    problem_type = problem_dict['problem_type']
+    # Get 2D strain/stress components order in symmetric and nonsymmetric cases
+    _,comp_order_sym_2d,comp_order_nsym_2d = rid.setProblemTypeParameters(problem_type)
+    # Get 3D strain/stress components order in symmetric and nonsymmetric cases
+    _,comp_order_sym_3d,comp_order_nsym_3d = rid.setProblemTypeParameters(4)
+    # Set required strain/stress component order according to strain tensor symmetry
+    if len(mf_3d) == len(comp_order_sym_3d):
+        comp_order_2d = comp_order_sym_2d
+        comp_order_3d = comp_order_sym_3d
+    else:
+        comp_order_2d = comp_order_nsym_2d
+        comp_order_3d = comp_order_nsym_3d
+    # Build 2D tensor (matricial form)
+    mf_2d = np.zeros(len(mf_3d.shape)*(len(comp_order_2d),))
+    if len(mf_3d.shape) == 1:
+        for i in range(len(comp_order_2d)):
+            comp = comp_order_2d[i]
+            mf_2d[i] = mf_3d[comp_order_3d.index(comp)]
+    elif len(mf_3d.shape) == 2:
+        for j in range(len(comp_order_2d)):
+            comp_j = comp_order_2d[j]
+            for i in range(len(comp_order_2d)):
+                comp_i = comp_order_2d[i]
+                mf_2d[i,j] = mf_3d[comp_order_3d.index(comp_i),comp_order_3d.index(comp_j)]
+    return mf_2d
 #
 #                                                                     Validation (temporary)
 # ==========================================================================================

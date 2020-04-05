@@ -525,8 +525,11 @@ def readMaterialProperties(file,file_path,keyword):
             # Read material property or hardening law
             if str(property_line[0]) == 'IHL':
                 # Get available isotropic hardening types
-                available_hardening_types = \
+                if model_source == 1:
+                    available_hardening_types = \
                                           material.setIsotropicHardening.getAvailableTypes()
+                elif model_source == 2:
+                    available_hardening_types = ['piecewise_linear']
                 # Check if specified isotropic hardening type is available
                 if property_line[1] not in available_hardening_types:
                     location = inspect.getframeinfo(inspect.currentframe())
@@ -549,7 +552,8 @@ def readMaterialProperties(file,file_path,keyword):
                 # Read hardening parameters
                 if hardening_type == 'piecewise_linear':
                     # Read number of hardening curve points
-                    if not checkPositiveInteger(property_line[2]):
+                    if not checkPositiveInteger(property_line[2]) and \
+                                                                  int(property_line[2]) < 2:
                         location = inspect.getframeinfo(inspect.currentframe())
                         errors.displayError('E00076',location.filename,location.lineno+1,
                                                                    mat_phase,hardening_type)
@@ -576,6 +580,7 @@ def readMaterialProperties(file,file_path,keyword):
                         hardening_points[k,0] = float(hardening_point_line[0])
                         hardening_points[k,1] = float(hardening_point_line[1])
                     # Assemble hardening parameters
+                    hardening_parameters['n_hardening_points'] = n_hardening_points
                     hardening_parameters['hardening_points'] = hardening_points
                     # Fix line numbers by adding the number of hardening curve points
                     property_header_line = property_header_line + n_hardening_points
