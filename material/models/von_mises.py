@@ -144,7 +144,10 @@ def suct(problem_dict,algpar_dict,material_properties,mat_phase,inc_strain,
     # Compute deviatoric trial stress
     dev_trial_stress_mf = np.matmul(FODevProjSym_mf,trial_stress_mf)
     # Compute flow vector
-    flow_vector_mf = \
+    if np.allclose(dev_trial_stress_mf,np.zeros(dev_trial_stress_mf.shape),atol=1e-10):
+        flow_vector_mf = np.zeros(dev_trial_stress_mf.shape)
+    else:
+        flow_vector_mf = \
                   np.sqrt(3.0/2.0)*(dev_trial_stress_mf/np.linalg.norm(dev_trial_stress_mf))
     # Compute von Mises equivalent trial stress
     vm_trial_stress = np.sqrt(3.0/2.0)*np.linalg.norm(dev_trial_stress_mf)
