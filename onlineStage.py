@@ -50,7 +50,7 @@ import material.models.linear_elastic
 #  8. Global residual matrix 1 (Zeliang approach) (removed)
 #  9. Clusters material state update and consistent tangent
 # 10. Global residual matrix 2 (Zeliang approach) (removed)
-# 11. Global interaction residual matrix
+# 11. Global interaction Jacobian matrix
 # 12. Incremental homogenized strain and stress tensors
 # 13. Lippmann-Schwinger SNLE residuals
 # 14. Convergence evaluation
@@ -362,34 +362,6 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                            clustersSUCT(copy.deepcopy(problem_dict),copy.deepcopy(mat_dict),
                             algpar_dict,phase_clusters,gbl_inc_strain_mf,clusters_state_old)
                 #
-                #                                         Global interaction residual matrix
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Build list which stores the difference between each material cluster
-                # consistent tangent (matricial form) and the reference material elastic
-                # tangent (matricial form), sorted by ascending order of material phase
-                # and by ascending order of cluster labels within each material phase
-                diff_D_De_ref_mf = list()
-                for mat_phase in material_phases:
-                    for cluster in phase_clusters[mat_phase]:
-                        diff_D_De_ref_mf.append(clusters_D_mf[str(cluster)] - De_ref_mf)
-                # Build global matrix similar to the global cluster interaction matrix but
-                # where each cluster interaction tensor is double contracted with the
-                # difference between the associated material cluster consistent tangent
-                # and the reference material elastic tangent
-                global_cit_D_De_ref_mf = \
-                         np.matmul(global_cit_mf,scipy.linalg.block_diag(*diff_D_De_ref_mf))
-                # --------------------------------------------------------------------------
-                # Validation:
-                if is_Validation[11]:
-                    section = 'Global interaction residual matrix'
-                    print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
-                    for i in range(len(diff_D_De_ref_mf)):
-                        print('\n' + 'diff_D_De_ref_mf[' + str(i) + ']:' + '\n')
-                        print(diff_D_De_ref_mf[i])
-                    print('\n' + 'global_cit_D_De_ref_mf:' + '\n')
-                    print(global_cit_D_De_ref_mf)
-                # --------------------------------------------------------------------------
-                #
                 #                          Incremental homogenized strain and stress tensors
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Compute homogenized strain and stress tensors (matricial form)
@@ -427,22 +399,32 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                 # Build discretized Lippmann-Schwinger system of nonlinear equilibrium
                 # equations residuals
                 if is_farfield_formulation:
-                    residual = buildResidual2(copy.deepcopy(problem_dict),n_total_clusters,
-                                 presc_strain_idxs,global_cit_D_De_ref_mf,inc_hom_strain_mf,
-                                        inc_hom_stress_mf,inc_mac_load_mf,gbl_inc_strain_mf,
-                                                                     inc_farfield_strain_mf)
+                    residual = buildResidual2(problem_dict,material_phases,phase_clusters,
+                                              n_total_clusters,presc_strain_idxs,
+                                              global_cit_mf,clusters_state,
+                                              clusters_state_old,De_ref_mf,
+                                              inc_hom_strain_mf,inc_hom_stress_mf,
+                                              inc_mac_load_mf,gbl_inc_strain_mf,
+                                              inc_farfield_strain_mf)
                 else:
-                    residual = buildResidual(copy.deepcopy(problem_dict),n_total_clusters,
-                                     n_presc_mac_stress,presc_stress_idxs,gbl_inc_strain_mf,
-                                                   global_cit_D_De_ref_mf,inc_mix_strain_mf,
-                                                        inc_hom_stress_mf,inc_mix_stress_mf)
+                    residual = buildResidual(problem_dict,material_phases,phase_clusters,
+                                             n_total_clusters,n_presc_mac_stress,
+                                             presc_stress_idxs,global_cit_mf,clusters_state,
+                                             clusters_state_old,De_ref_mf,gbl_inc_strain_mf,
+                                             inc_mix_strain_mf,inc_hom_stress_mf,
+                                             inc_mix_stress_mf)
+
                 # --------------------------------------------------------------------------
                 # Validation:
                 if is_Validation[13]:
                     section = 'Lippmann-Schwinger SNLE residuals'
                     print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
                     print('\n' + 'residual:' + '\n')
-                    print(residual)
+                    #print(residual)
+                    for i in range(len(residual)):
+                        print('{:13.4e}'.format(residual[i]))
+                        if i != 0 and (i + 1) % 6 == 0:
+                            print('')
                 # --------------------------------------------------------------------------
                 #
                 #                                                     Convergence evaluation
@@ -490,6 +472,34 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                         print('\n' + (92 - len(' NR Iteration: ' + str(nr_iter)))*'-' + \
                                                            ' NR Iteration: ' + str(nr_iter))
                     # ----------------------------------------------------------------------
+                #
+                #                                         Global interaction Jacobian matrix
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Build list which stores the difference between each material cluster
+                # consistent tangent (matricial form) and the reference material elastic
+                # tangent (matricial form), sorted by ascending order of material phase
+                # and by ascending order of cluster labels within each material phase
+                diff_D_De_ref_mf = list()
+                for mat_phase in material_phases:
+                    for cluster in phase_clusters[mat_phase]:
+                        diff_D_De_ref_mf.append(clusters_D_mf[str(cluster)] - De_ref_mf)
+                # Build global matrix similar to the global cluster interaction matrix but
+                # where each cluster interaction tensor is double contracted with the
+                # difference between the associated material cluster consistent tangent
+                # and the reference material elastic tangent
+                global_cit_D_De_ref_mf = \
+                         np.matmul(global_cit_mf,scipy.linalg.block_diag(*diff_D_De_ref_mf))
+                # --------------------------------------------------------------------------
+                # Validation:
+                if is_Validation[11]:
+                    section = 'Global interaction Jacobian matrix'
+                    print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
+                    for i in range(len(diff_D_De_ref_mf)):
+                        print('\n' + 'diff_D_De_ref_mf[' + str(i) + ']:' + '\n')
+                        print(diff_D_De_ref_mf[i])
+                    print('\n' + 'global_cit_D_De_ref_mf:' + '\n')
+                    print(global_cit_D_De_ref_mf)
+                # --------------------------------------------------------------------------
                 #
                 #                                   Discretized Lippmann-Schwinger system of
                 #                                   nonlinear equilibrium equations Jacobian
@@ -846,6 +856,8 @@ def clustersSUCT(problem_dict,mat_dict,algpar_dict,phase_clusters,gbl_inc_strain
                 if n_dim == 2:
                     print('\n' + 'state_variables[\'stress_33\']: ' + \
                                             '{:11.4e}'.format(state_variables['stress_33']))
+                print('\n' + 'state_variables[\'is_plast\']:' + \
+                                                           str(state_variables['is_plast']))
                 print('\n' + 'state_variables[\'is_su_fail\']:' + \
                                                          str(state_variables['is_su_fail']))
                 print('\n' + 'consistent_tangent_mf:' + '\n')
@@ -955,16 +967,40 @@ def assembleCIT(material_phases,phase_n_clusters,phase_clusters,comp_order,cit_X
 # ------------------------------------------------------------------------------------------
 # Compute residuals of the discretized Lippmann-Schwinger system of nonlinear equilibrium
 # equations
-def buildResidual(problem_dict,n_total_clusters,n_presc_mac_stress,presc_stress_idxs,
-                                 gbl_inc_strain_mf,global_cit_D_De_ref_mf,inc_mix_strain_mf,
-                                                       inc_hom_stress_mf,inc_mix_stress_mf):
+def buildResidual(problem_dict,material_phases,phase_clusters,n_total_clusters,
+                  n_presc_mac_stress,presc_stress_idxs,global_cit_mf,clusters_state,
+                  clusters_state_old,De_ref_mf,gbl_inc_strain_mf,inc_mix_strain_mf,
+                  inc_hom_stress_mf,inc_mix_stress_mf):
+    # Get problem data
+    comp_order = problem_dict['comp_order_sym']
+    # Initialize clusters incremental polarization stress
+    global_inc_pol_stress_mf = np.zeros_like(gbl_inc_strain_mf)
+    # Initialize material cluster strain range indexes
+    i_init = 0
+    i_end = i_init + len(comp_order)
+    # Loop over material phases
+    for mat_phase in material_phases:
+        # Loop over material phase clusters
+        for cluster in phase_clusters[mat_phase]:
+            # Compute material cluster incremental stress (matricial form)
+            inc_stress_mf = clusters_state[str(cluster)]['stress_mf'] - \
+                            clusters_state_old[str(cluster)]['stress_mf']
+            # Get material cluster incremental strain (matricial form)
+            inc_strain_mf = gbl_inc_strain_mf[i_init:i_end]
+            # Add cluster incremental polarization stress to global array
+            global_inc_pol_stress_mf[i_init:i_end] = inc_stress_mf - \
+                                                     np.matmul(De_ref_mf,inc_strain_mf)
+            # Update cluster strain range indexes
+            i_init = i_init + len(comp_order)
+            i_end = i_init + len(comp_order)
     # Get problem data
     comp_order = problem_dict['comp_order_sym']
     # Initialize residual vector
     residual = np.zeros(n_total_clusters*len(comp_order) + n_presc_mac_stress)
     # Compute clusters equilibrium residuals
-    residual[0:n_total_clusters*len(comp_order)] = gbl_inc_strain_mf + \
-                                     np.matmul(global_cit_D_De_ref_mf,gbl_inc_strain_mf) - \
+    residual[0:n_total_clusters*len(comp_order)] = \
+                                   gbl_inc_strain_mf + \
+                                   np.matmul(global_cit_mf,global_inc_pol_stress_mf) - \
                                    numpy.matlib.repmat(inc_mix_strain_mf,1,n_total_clusters)
     # Compute additional residual if there are prescribed macroscale stress components
     if n_presc_mac_stress > 0:
@@ -976,16 +1012,38 @@ def buildResidual(problem_dict,n_total_clusters,n_presc_mac_stress,presc_stress_
 # ------------------------------------------------------------------------------------------
 # Compute residuals of the discretized Lippmann-Schwinger system of nonlinear equilibrium
 # equations (far-field strain formulation)
-def buildResidual2(problem_dict,n_total_clusters,presc_strain_idxs,global_cit_D_De_ref_mf,
-                      inc_hom_strain_mf,inc_hom_stress_mf,inc_mac_load_mf,gbl_inc_strain_mf,
-                                                                    inc_farfield_strain_mf):
+def buildResidual2(problem_dict,material_phases,phase_clusters,n_total_clusters,
+                   presc_strain_idxs,global_cit_mf,clusters_state,clusters_state_old,
+                   De_ref_mf,inc_hom_strain_mf,inc_hom_stress_mf,inc_mac_load_mf,
+                   gbl_inc_strain_mf,inc_farfield_strain_mf):
     # Get problem data
     comp_order = problem_dict['comp_order_sym']
+    # Initialize clusters incremental polarization stress
+    global_inc_pol_stress_mf = np.zeros_like(gbl_inc_strain_mf)
+    # Initialize material cluster strain range indexes
+    i_init = 0
+    i_end = i_init + len(comp_order)
+    # Loop over material phases
+    for mat_phase in material_phases:
+        # Loop over material phase clusters
+        for cluster in phase_clusters[mat_phase]:
+            # Compute material cluster incremental stress (matricial form)
+            inc_stress_mf = clusters_state[str(cluster)]['stress_mf'] - \
+                            clusters_state_old[str(cluster)]['stress_mf']
+            # Get material cluster incremental strain (matricial form)
+            inc_strain_mf = gbl_inc_strain_mf[i_init:i_end]
+            # Add cluster incremental polarization stress to global array
+            global_inc_pol_stress_mf[i_init:i_end] = inc_stress_mf - \
+                                                     np.matmul(De_ref_mf,inc_strain_mf)
+            # Update cluster strain range indexes
+            i_init = i_init + len(comp_order)
+            i_end = i_init + len(comp_order)
     # Initialize residual vector
     residual = np.zeros(n_total_clusters*len(comp_order) + len(comp_order))
     # Compute clusters equilibrium residuals
-    residual[0:n_total_clusters*len(comp_order)] = gbl_inc_strain_mf + \
-                                     np.matmul(global_cit_D_De_ref_mf,gbl_inc_strain_mf) - \
+    residual[0:n_total_clusters*len(comp_order)] = \
+                              gbl_inc_strain_mf + \
+                              np.matmul(global_cit_mf,global_inc_pol_stress_mf) - \
                               numpy.matlib.repmat(inc_farfield_strain_mf,1,n_total_clusters)
     # Compute homogenization constraints residuals
     for i in range(len(comp_order)):
