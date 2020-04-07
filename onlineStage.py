@@ -574,7 +574,7 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
             # Update reference material elastic properties through a given self-consistent
             # scheme
             E_ref,v_ref = SCS_UpdateRefMatElasticProperties(self_consistent_scheme,
-                                           problem_dict,inc_hom_strain_mf,inc_hom_stress_mf)
+                   problem_dict,material_properties_ref,inc_hom_strain_mf,inc_hom_stress_mf)
             # ------------------------------------------------------------------------------
             # Validation:
             if is_Validation[19]:
@@ -1198,7 +1198,7 @@ def outofplaneHomogenizedComp(problem_type,material_phases,phase_clusters,cluste
 # ------------------------------------------------------------------------------------------
 # Update reference material elastic properties through a given self-consistent scheme
 def SCS_UpdateRefMatElasticProperties(self_consistent_scheme,problem_dict,
-                                                               inc_strain_mf,inc_stress_mf):
+                                       material_properties_ref,inc_strain_mf,inc_stress_mf):
     # Get problem data
     n_dim = problem_dict['n_dim']
     comp_order = problem_dict['comp_order_sym']
@@ -1223,11 +1223,45 @@ def SCS_UpdateRefMatElasticProperties(self_consistent_scheme,problem_dict,
         scs_matrix[0,1] = 2.0*np.trace(inc_strain)
         scs_matrix[1,0] = np.trace(inc_strain)**2
         scs_matrix[1,1] = 2.0*top.ddot22_1(inc_strain,inc_strain)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Limitation 1: Under pure shear loading conditions the first equation of the
+        # self-consistent scheme system of linear equations vanishes (derivative with
+        # respect to lambda). In this case, adopt the previous converged lambda and compute
+        # miu from the second equation of the the self-consistent scheme system of linear
+        # equations
+        if (abs(np.trace(inc_strain))/np.linalg.norm(inc_strain)) < 1e-10:
+            # Get previous converged reference material elastic properties
+            E_ref_old = material_properties_ref['E']
+            v_ref_old = material_properties_ref['v']
+            # Compute previous converged lambda
+            lam_ref = (E_ref_old*v_ref_old)/((1.0 + v_ref_old)*(1.0 - 2.0*v_ref_old))
+            # Compute miu
+            miu_ref = scs_rhs[1]/scs_matrix[1,1]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Limitation 2: Under hydrostatic loading conditions both equations of the
+        # self-consistent scheme system of linear equations become linearly dependent. In
+        # this case, assume that the ratio between lambda and miu is the same as in the
+        # previous converged values and solve the first equation of self-consistent scheme
+        # system of linear equations
+        elif np.all([abs(inc_strain[0,0] - inc_strain[i,i])/np.linalg.norm(inc_strain)
+                                                            < 1e-10 for i in range(n_dim)]):
+            # Get previous converged reference material elastic properties
+            E_ref_old = material_properties_ref['E']
+            v_ref_old = material_properties_ref['v']
+            # Compute previous converged reference material Lamé parameters
+            lam_ref_old = (E_ref_old*v_ref_old)/((1.0 + v_ref_old)*(1.0 - 2.0*v_ref_old))
+            miu_ref_old = E_ref_old/(2.0*(1.0 + v_ref_old))
+            # Compute reference material Lamé parameters
+            lam_ref = (scs_rhs[0]/scs_matrix[0,0])*(lam_ref_old/(lam_ref_old + miu_ref_old))
+            miu_ref = (scs_rhs[0]/scs_matrix[0,0])*(miu_ref_old/(lam_ref_old + miu_ref_old))
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Solve self-consistent scheme system of linear equations
-        scs_solution = numpy.linalg.solve(scs_matrix,scs_rhs)
-        # Get reference material Lamé parameters
-        lam_ref = scs_solution[0]
-        miu_ref = scs_solution[1]
+        else:
+            scs_solution = numpy.linalg.solve(scs_matrix,scs_rhs)
+            # Get reference material Lamé parameters
+            lam_ref = scs_solution[0]
+            miu_ref = scs_solution[1]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute reference material Young modulus and Poisson ratio
         E_ref = (miu_ref*(3.0*lam_ref + 2.0*miu_ref))/(lam_ref + miu_ref)
         v_ref = lam_ref/(2.0*(lam_ref + miu_ref))
