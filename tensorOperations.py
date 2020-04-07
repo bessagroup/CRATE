@@ -70,9 +70,9 @@ def setIdentityTensors(n_dim):
     # Set fourth-order 'diagonal trace' tensor
     FODiagTrace = dyad22(SOId,SOId)
     # Set fourth-order deviatoric projection tensor
-    FODevProj = FOId - (1.0/np.trace(SOId))*FODiagTrace
+    FODevProj = FOId - (1.0/3.0)*FODiagTrace
     # Set fourth-order deviatoric projection tensor (second order symmetric tensors)
-    FODevProjSym = FOSym - (1.0/np.trace(SOId))*FODiagTrace
+    FODevProjSym = FOSym - (1.0/3.0)*FODiagTrace
     # Return
     return [SOId,FOId,FOTransp,FOSym,FODiagTrace,FODevProj,FODevProjSym]
 #
