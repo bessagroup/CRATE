@@ -125,7 +125,8 @@ def packageRegularGrid(discret_file_path,rve_dims,mat_dict,problem_dict):
         idf_phases = list(np.sort([int(key) for key in material_properties.keys()]))
         rg_phases = list(np.unique(regular_grid))
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayWarning('W00002',location.filename,location.lineno+1,idf_phases,                                                                                  rg_phases)
+        errors.displayWarning('W00002',location.filename,location.lineno+1,idf_phases,
+                                                                                  rg_phases)
     # Compute voxel volume
     voxel_vol = np.prod([float(rve_dims[i])/n_voxels_dims[i] for i in range(len(rve_dims))])
     # Compute RVE volume
