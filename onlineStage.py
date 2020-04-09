@@ -203,13 +203,13 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set reference material elastic properties initial guess based on the volume averages
     # of the material phases elastic properties
+    E_ref = sum([material_phases_f[phase]*material_properties[phase]['E']
+                                                              for phase in material_phases])
+    v_ref = sum([material_phases_f[phase]*material_properties[phase]['v']
+                                                              for phase in material_phases])
     material_properties_ref = dict()
-    material_properties_ref['E'] = \
-                               sum([material_phases_f[phase]*material_properties[phase]['E']
-                                                              for phase in material_phases])
-    material_properties_ref['v'] = \
-                               sum([material_phases_f[phase]*material_properties[phase]['v']
-                                                              for phase in material_phases])
+    material_properties_ref['E'] = E_ref
+    material_properties_ref['v'] = v_ref
     # Compute the reference material elastic tangent (matricial form) and compliance tensor
     # (matrix)
     De_ref_mf,Se_ref_matrix = \
@@ -303,7 +303,7 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize self-consistent scheme iteration counter
         scs_iter = 0
-        info.displayInfo('8','init',scs_iter)
+        info.displayInfo('8','init',scs_iter,E_ref,v_ref)
         # Set self-consistent scheme iteration initial time
         scs_iter_init_time = time.time()
         # ----------------------------------------------------------------------------------
@@ -606,7 +606,7 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                 material_properties_ref['v'] = v_ref
                 # Increment self-consistent scheme iteration counter
                 scs_iter = scs_iter + 1
-                info.displayInfo('8','init',scs_iter,norm_d_E_ref,norm_d_v_ref)
+                info.displayInfo('8','init',scs_iter,E_ref,norm_d_E_ref,v_ref,norm_d_v_ref)
                 # Set self-consistent scheme iteration initial time
                 scs_iter_init_time = time.time()
                 # --------------------------------------------------------------------------

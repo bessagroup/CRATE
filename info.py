@@ -209,18 +209,22 @@ def displayInfo(code,*args,**kwargs):
         mode = args[0]
         if mode == 'init':
             if args[1] == 0:
-                format = '-'
+                format_1 = '{:.4e}'
+                format_2 = '-'
             else:
-                format = '{:.4e}'
+                format_1 = '{:.4e}'
+                format_2 = '{:.4e}'
             arguments = args[1:]
             info = tuple(arguments)
             template = colorama.Fore.YELLOW + \
                        '\n\n' + indent + 'Self-consistent scheme iteration: {:3d}' + \
                        '\n' + \
                        indent + tilde_line[:-len(indent)] + '\n' + \
-                       indent + 'Normalized changes | Young modulus (E): ' + format + \
+                       indent + 'Young modulus (E): ' + format_1 + \
+                       '  (norm. change: ' + format_2 + ')' + \
                        '\n' + \
-                       indent + '                   | Poisson ratio (\u03BD): ' + format + \
+                       indent + 'Poisson ratio (\u03BD): ' + format_1 + \
+                       '  (norm. change: ' + format_2 + ')' + \
                        '\n' + \
                        indent + tilde_line[:-len(indent)] + '\n' + \
                        colorama.Style.RESET_ALL
