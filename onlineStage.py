@@ -399,8 +399,8 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Compute the material effective tangent modulus
                 eff_tangent_mf = \
-                    effectiveTangentModulus(problem_dict,material_phases,phase_clusters,
-                                            clusters_f,clusters_D_mf,global_cit_D_De_ref_mf)
+                    effectiveTangentModulus(problem_dict,material_phases,n_total_clusters,
+                             phase_clusters,clusters_f,clusters_D_mf,global_cit_D_De_ref_mf)
                 #
                 #                          Incremental homogenized strain and stress tensors
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1229,14 +1229,26 @@ def outofplaneHomogenizedComp(problem_type,material_phases,phase_clusters,cluste
     return hom_comp
 # ------------------------------------------------------------------------------------------
 # Compute effective tangent modulus
-def effectiveTangentModulus(problem_dict,material_phases,phase_clusters,clusters_f,
-                                                      clusters_D_mf,global_cit_D_De_ref_mf):
+def effectiveTangentModulus(problem_dict,material_phases,n_total_clusters,phase_clusters,
+                                           clusters_f,clusters_D_mf,global_cit_D_De_ref_mf):
     # Get problem data
     n_dim = problem_dict['n_dim']
     comp_order = problem_dict['comp_order_sym']
     # Set second-order identity tensor
     _,_,_,FOSym,_,_,_ = top.setIdentityTensors(n_dim)
     FOSym_mf = top.setTensorMatricialForm(FOSym,n_dim,comp_order)
+    # Compute cluster strain concentration tensors system of linear equations coefficient
+    # matrix (derivatives of clusters equilibrium residuals)
+    csct_matrix = scipy.linalg.block_diag(*(n_total_clusters*[FOSym_mf,])) + \
+                                                                      global_cit_D_De_ref_mf
+    # Compute cluster strain concentration tensors system of linear equations coefficient
+    # right-hand side
+    csct_rhs = numpy.matlib.repmat(FOSym_mf,n_total_clusters,1)
+    # Initialize system solution matrix
+    csct_solution = np.zeros((n_total_clusters*len(comp_order),len(comp_order)))
+    # Solve cluster strain concentration tensors system of linear equations
+    for i in range(len(comp_order)):
+        csct_solution[:,i] = numpy.linalg.solve(csct_matrix,csct_rhs[:,i])
     # Initialize effective tangent modulus
     eff_tangent_mf = np.zeros((len(comp_order),len(comp_order)))
     # Initialize cluster index
@@ -1251,8 +1263,7 @@ def effectiveTangentModulus(problem_dict,material_phases,phase_clusters,clusters
             # Get material cluster consistent tangent (matricial form)
             cluster_D_mf = clusters_D_mf[str(cluster)]
             # Get material cluster strain concentration tensor
-            cluster_sct_mf = np.linalg.inv(FOSym_mf + \
-                                          global_cit_D_De_ref_mf[i_init:i_end,i_init:i_end])
+            cluster_sct_mf = csct_solution[i_init:i_end,:]
             # Add material cluster contribution to effective tangent modulus
             eff_tangent_mf = eff_tangent_mf + \
                              cluster_f*np.matmul(cluster_D_mf,cluster_sct_mf)
