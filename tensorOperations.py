@@ -389,9 +389,10 @@ def getCondensedMatrix(matrix,rows,cols):
 #
 #                                         Strain/Stress 2D < > 3D matricial form conversions
 # ==========================================================================================
-# Given a 2D strain tensor (matricial form) associated to a given 2D problem type, build the
-# corresponding 3D counterpart by including the appropriate out-of-plain strain components
-def getStrain3DmfFrom2Dmf(problem_dict,mf_2d,comp_33):
+# Given a 2D strain/stress tensor (matricial form) associated to a given 2D problem type,
+# build the corresponding 3D counterpart by including the appropriate out-of-plain strain
+# components
+def getStrainStress3DmfFrom2Dmf(problem_dict,mf_2d,comp_33):
     import readInputData as rid
     # Get problem type
     problem_type = problem_dict['problem_type']

@@ -121,9 +121,9 @@ def suct(problem_dict,algpar_dict,material_properties,mat_phase,inc_strain,
         comp_order = comp_order_sym
         # Build strain tensors (matricial form) by including the appropriate out-of-plain
         # components
-        inc_strain_mf = top.getStrain3DmfFrom2Dmf(problem_dict,inc_strain_mf,0.0)
+        inc_strain_mf = top.getStrainStress3DmfFrom2Dmf(problem_dict,inc_strain_mf,0.0)
         e_strain_old_mf = \
-                     top.getStrain3DmfFrom2Dmf(problem_dict,e_strain_old_mf,e_strain_33_old)
+               top.getStrainStress3DmfFrom2Dmf(problem_dict,e_strain_old_mf,e_strain_33_old)
     #
     #                                                                           State update
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
