@@ -859,6 +859,12 @@ def displayError(code,*args):
                    'the Links constitutive model must' + '\n' + \
                    indent + 'return the total strain tensor or the required data to ' + \
                    'compute it.'
+    elif code == 'E00085':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The projection-based self-consistent scheme is only ' + \
+                   'implemented for the 3D case.'
     # print(template_header.format(*header,width=output_width))
     # print(template.format(*values,width=output_width))
     # print(template_footer.format(*footer,width=output_width))
