@@ -50,7 +50,7 @@ import material.models.linear_elastic
 #  8. Global residual matrix 1 (Zeliang approach) (removed)
 #  9. Clusters material state update and consistent tangent
 # 10. Global residual matrix 2 (Zeliang approach) (removed)
-# 11. Global interaction Jacobian matrix
+# 11. Global cluster interaction - tangent matrix
 # 12. Incremental homogenized strain and stress tensors
 # 13. Lippmann-Schwinger SNLE residuals
 # 14. Convergence evaluation
@@ -362,15 +362,58 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                            clustersSUCT(copy.deepcopy(problem_dict),copy.deepcopy(mat_dict),
                             algpar_dict,phase_clusters,gbl_inc_strain_mf,clusters_state_old)
                 #
+                #                                Global cluster interaction - tangent matrix
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Build list which stores the difference between each material cluster
+                # consistent tangent (matricial form) and the reference material elastic
+                # tangent (matricial form), sorted by ascending order of material phase
+                # and by ascending order of cluster labels within each material phase
+                diff_D_De_ref_mf = list()
+                for mat_phase in material_phases:
+                    for cluster in phase_clusters[mat_phase]:
+                        diff_D_De_ref_mf.append(clusters_D_mf[str(cluster)] - De_ref_mf)
+                # Build global matrix similar to the global cluster interaction matrix but
+                # where each cluster interaction tensor is double contracted with the
+                # difference between the associated material cluster consistent tangent
+                # and the reference material elastic tangent
+                global_cit_D_De_ref_mf = \
+                         np.matmul(global_cit_mf,scipy.linalg.block_diag(*diff_D_De_ref_mf))
+                # --------------------------------------------------------------------------
+                # Validation:
+                if is_Validation[11]:
+                    section = 'Global interaction Jacobian matrix'
+                    print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
+                    for i in range(len(diff_D_De_ref_mf)):
+                        print('\n' + 'diff_D_De_ref_mf[' + str(i) + ']:' + '\n')
+                        print(diff_D_De_ref_mf[i])
+                    print('\n' + 'global_cit_D_De_ref_mf:' + '\n')
+                    print(global_cit_D_De_ref_mf)
+                # --------------------------------------------------------------------------
+                #
+                #                                                  Effective tangent modulus
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Compute the material effective tangent modulus
+                eff_tangent_mf = \
+                    effectiveTangentModulus(problem_dict,material_phases,phase_clusters,
+                                            clusters_f,clusters_D_mf,global_cit_D_De_ref_mf)
+                #
                 #                          Incremental homogenized strain and stress tensors
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Compute homogenized strain and stress tensors (matricial form)
                 hom_strain_mf,hom_stress_mf = \
                                 homogenizedStrainStressTensors(problem_dict,material_phases,
                                                    phase_clusters,clusters_f,clusters_state)
+                # Compute homogenized out-of-plane stress component in a 2D plane strain
+                # problem / strain component in a 2D plane stress problem
+                if problem_type == 1:
+                    hom_stress_33 = outofplaneHomogenizedComp(problem_type,material_phases,
+                                                  phase_clusters,clusters_f,clusters_state,
+                                                  clusters_state_old)
                 # Compute incremental homogenized strain and stress tensors (matricial form)
                 inc_hom_strain_mf = hom_strain_mf - hom_strain_old_mf
                 inc_hom_stress_mf = hom_stress_mf - hom_stress_old_mf
+                if problem_type == 1:
+                    inc_hom_stress_33 = hom_stress_33 - hom_stress_33_old
                 # --------------------------------------------------------------------------
                 # Validation:
                 if is_Validation[12]:
@@ -413,7 +456,6 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                                              clusters_state_old,De_ref_mf,gbl_inc_strain_mf,
                                              inc_mix_strain_mf,inc_hom_stress_mf,
                                              inc_mix_stress_mf)
-
                 # --------------------------------------------------------------------------
                 # Validation:
                 if is_Validation[13]:
@@ -472,34 +514,6 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                         print('\n' + (92 - len(' NR Iteration: ' + str(nr_iter)))*'-' + \
                                                            ' NR Iteration: ' + str(nr_iter))
                     # ----------------------------------------------------------------------
-                #
-                #                                         Global interaction Jacobian matrix
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Build list which stores the difference between each material cluster
-                # consistent tangent (matricial form) and the reference material elastic
-                # tangent (matricial form), sorted by ascending order of material phase
-                # and by ascending order of cluster labels within each material phase
-                diff_D_De_ref_mf = list()
-                for mat_phase in material_phases:
-                    for cluster in phase_clusters[mat_phase]:
-                        diff_D_De_ref_mf.append(clusters_D_mf[str(cluster)] - De_ref_mf)
-                # Build global matrix similar to the global cluster interaction matrix but
-                # where each cluster interaction tensor is double contracted with the
-                # difference between the associated material cluster consistent tangent
-                # and the reference material elastic tangent
-                global_cit_D_De_ref_mf = \
-                         np.matmul(global_cit_mf,scipy.linalg.block_diag(*diff_D_De_ref_mf))
-                # --------------------------------------------------------------------------
-                # Validation:
-                if is_Validation[11]:
-                    section = 'Global interaction Jacobian matrix'
-                    print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
-                    for i in range(len(diff_D_De_ref_mf)):
-                        print('\n' + 'diff_D_De_ref_mf[' + str(i) + ']:' + '\n')
-                        print(diff_D_De_ref_mf[i])
-                    print('\n' + 'global_cit_D_De_ref_mf:' + '\n')
-                    print(global_cit_D_De_ref_mf)
-                # --------------------------------------------------------------------------
                 #
                 #                                   Discretized Lippmann-Schwinger system of
                 #                                   nonlinear equilibrium equations Jacobian
@@ -1196,14 +1210,39 @@ def outofplaneHomogenizedComp(problem_type,material_phases,phase_clusters,cluste
     # Return
     return hom_comp
 # ------------------------------------------------------------------------------------------
-# Update reference material elastic properties through a given self-consistent scheme
-def SCS_UpdateRefMatElasticProperties(self_consistent_scheme,problem_dict,
-                                       material_properties_ref,inc_strain_mf,inc_stress_mf):
+# Compute effective tangent modulus
+def effectiveTangentModulus(problem_dict,material_phases,phase_clusters,clusters_f,
+                                                      clusters_D_mf,global_cit_D_De_ref_mf):
     # Get problem data
     n_dim = problem_dict['n_dim']
     comp_order = problem_dict['comp_order_sym']
     # Set second-order identity tensor
-    SOId,_,_,_,_,_,_ = top.setIdentityTensors(n_dim)
+    _,_,_,FOSym,_,_,_ = top.setIdentityTensors(n_dim)
+    FOSym_mf = top.setTensorMatricialForm(FOSym,n_dim,comp_order)
+    # Initialize effective tangent modulus
+    eff_tangent_mf = np.zeros((len(comp_order),len(comp_order)))
+    # Initialize cluster index
+    i_init = 0
+    i_end = i_init + len(comp_order)
+    # Loop over material phases
+    for mat_phase in material_phases:
+        # Loop over material phase clusters
+        for cluster in phase_clusters[mat_phase]:
+            # Get material cluster volume fraction
+            cluster_f = clusters_f[str(cluster)]
+            # Get material cluster consistent tangent (matricial form)
+            cluster_D_mf = clusters_D_mf[str(cluster)]
+            # Get material cluster strain concentration tensor
+            cluster_sct_mf = np.linalg.inv(FOSym_mf + \
+                                          global_cit_D_De_ref_mf[i_init:i_end,i_init:i_end])
+            # Add material cluster contribution to effective tangent modulus
+            eff_tangent_mf = eff_tangent_mf + \
+                             cluster_f*np.matmul(cluster_D_mf,cluster_sct_mf)
+            # Increment cluster index
+            i_init = i_init + len(comp_order)
+            i_end = i_init + len(comp_order)
+    # Return
+    return eff_tangent_mf
     # Perform self-consistent scheme to update the reference material elastic properties
     # 1. Regression-based scheme
     # 2. Projection-based scheme
