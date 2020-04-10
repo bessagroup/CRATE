@@ -139,13 +139,13 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
         for cluster in phase_clusters[mat_phase]:
             # Initialize state variables
             clusters_state[str(cluster)] = \
-                                        material.materialInterface.materialInterface('init',
-                            copy.deepcopy(problem_dict),copy.deepcopy(mat_dict),algpar_dict,
-                                                                                  mat_phase)
+                material.materialInterface.materialInterface('init',problem_dict,mat_dict,
+                                                             clst_dict,algpar_dict,
+                                                             mat_phase)
             clusters_state_old[str(cluster)] = \
-                                        material.materialInterface.materialInterface('init',
-                            copy.deepcopy(problem_dict),copy.deepcopy(mat_dict),algpar_dict,
-                                                                                  mat_phase)
+                material.materialInterface.materialInterface('init',problem_dict,mat_dict,
+                                                             clst_dict,algpar_dict,
+                                                             mat_phase)
     # Get total number of clusters
     n_total_clusters = sum([phase_n_clusters[mat_phase] for mat_phase in material_phases])
     # --------------------------------------------------------------------------------------
@@ -364,8 +364,8 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                     print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
                 # --------------------------------------------------------------------------
                 clusters_state,clusters_D_mf = \
-                           clustersSUCT(copy.deepcopy(problem_dict),copy.deepcopy(mat_dict),
-                            algpar_dict,phase_clusters,gbl_inc_strain_mf,clusters_state_old)
+                    clustersSUCT(problem_dict,mat_dict,clst_dict,algpar_dict,phase_clusters,
+                                 gbl_inc_strain_mf,clusters_state_old)
                 #
                 #                                Global cluster interaction - tangent matrix
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -843,8 +843,8 @@ def refMaterialElasticTangents(problem_dict,material_properties_ref):
     return [De_ref_mf,Se_ref_matrix]
 # ------------------------------------------------------------------------------------------
 # Perform clusters material state update and compute associated consistent tangent modulus
-def clustersSUCT(problem_dict,mat_dict,algpar_dict,phase_clusters,gbl_inc_strain_mf,
-                                                                        clusters_state_old):
+def clustersSUCT(problem_dict,mat_dict,clst_dict,algpar_dict,phase_clusters,
+                                                      gbl_inc_strain_mf,clusters_state_old):
     # Get problem data
     n_dim = problem_dict['n_dim']
     comp_order = problem_dict['comp_order_sym']
@@ -870,7 +870,7 @@ def clustersSUCT(problem_dict,mat_dict,algpar_dict,phase_clusters,gbl_inc_strain
             # consistent tangent modulus
             state_variables,consistent_tangent_mf = \
                   material.materialInterface.materialInterface('suct',problem_dict,mat_dict,
-                                       algpar_dict,mat_phase,inc_strain,state_variables_old)
+                             clst_dict,algpar_dict,mat_phase,inc_strain,state_variables_old)
             # Store material cluster updated state variables and consistent
             # tangent modulus
             clusters_state[str(cluster)] = state_variables

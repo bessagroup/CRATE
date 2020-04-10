@@ -186,7 +186,7 @@ def packageRGClustering(clustering_method,clustering_strategy,clustering_solutio
     clst_dict['clustering_method'] = clustering_method
     clst_dict['clustering_strategy'] = clustering_strategy
     clst_dict['clustering_solution_method'] = clustering_solution_method
-    if clustering_solution_method == 2:
+    if len(Links_dict.keys()) > 0:
         clst_dict['Links_dict'] = Links_dict
     clst_dict['phase_n_clusters'] = phase_n_clusters
     clst_dict['phase_clusters'] = phase_clusters

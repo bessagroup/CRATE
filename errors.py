@@ -871,6 +871,16 @@ def displayError(code,*args):
         template = 'Details:' + '\n\n' + \
                    indent + 'The discrete Dirac\'s delta function only accepts two ' + \
                    'integer indexes as arguments.'
+    elif code == 'E00087':
+        arguments = args[2:4]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
+                   'input data file. ' + '\n' + \
+                   indent + 'In particular, the specified path to the Links python ' + \
+                   'binary is not an absolute path' + '\n' + \
+                   indent + '(mandatory) or does not exist.' + '\n\n' + \
+                   indent + '{}'
     # print(template_header.format(*header,width=output_width))
     # print(template.format(*values,width=output_width))
     # print(template_footer.format(*footer,width=output_width))

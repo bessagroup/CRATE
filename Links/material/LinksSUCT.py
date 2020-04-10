@@ -25,8 +25,8 @@ from Links.interface.conversion import Reference
 # ==========================================================================================
 # For a given increment of strain, perform the update of the material state variables and
 # compute the associated consistent tangent modulus
-def suct(problem_dict,material_properties,material_phases_models,mat_phase,inc_strain,
-                                                                       state_variables_old):
+def suct(problem_dict,clst_dict,material_properties,material_phases_models,mat_phase,
+                                                            inc_strain,state_variables_old):
     # Get problem parameters
     strain_formulation = problem_dict['strain_formulation']
     problem_type = problem_dict['problem_type']
@@ -34,7 +34,8 @@ def suct(problem_dict,material_properties,material_phases_models,mat_phase,inc_s
     # Set Links parameters
     Links_comp_order_sym,_ = LinksUtil.getLinksCompOrder(n_dim)
     # Get Links compiled binary (compilation with 'python' flag)
-    links = Links(bin='/home/bernardoferreira/Documents/Links/bin/LINKS.so')
+    print(clst_dict.keys())
+    links = Links(bin=clst_dict['Links_dict']['Links_python_bin_path'])
     # Set check sent/received data flag
     is_check_data = False
     #

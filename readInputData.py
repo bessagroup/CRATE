@@ -130,6 +130,27 @@ def readInputData(input_file,dirs_dict):
     n_material_phases,material_phases_models,material_properties = \
                                   readMaterialProperties(input_file,input_file_path,keyword)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Read the Links python binary absolute path if at least one material phase has the
+    # associated constitutive model source set as Links
+    is_Links_python_bin = False
+    for mat_phase in material_properties.keys():
+        if material_phases_models[mat_phase]['source'] == 2:
+            # Read the Links python binary absolute path
+            keyword = 'Links_python_bin'
+            line_number = searchKeywordLine(input_file,keyword) + 1
+            Links_python_bin_path = linecache.getline(input_file_path,line_number).strip()
+            if not os.path.isabs(Links_python_bin_path):
+                location = inspect.getframeinfo(inspect.currentframe())
+                errors.displayError('E00087',location.filename,location.lineno+1,keyword, \
+                                                                      Links_python_bin_path)
+            elif not os.path.isfile(Links_python_bin_path):
+                location = inspect.getframeinfo(inspect.currentframe())
+                errors.displayError('E00087',location.filename,location.lineno+1,keyword, \
+                                                                      Links_python_bin_path)
+            else:
+                is_Links_python_bin = True
+                break
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read macroscale loading
     keyword = 'Macroscale_Loading'
     max = 3
@@ -194,9 +215,10 @@ def readInputData(input_file,dirs_dict):
     else:
         clustering_solution_method = 1
     # Read clustering solution method parameters
-    Links_dict = ()
+    Links_dict = dict()
     if clustering_solution_method == 2:
-        # Check if all materials have material source 2!!
+        # Check if all the material phases have the associated constitutive model source set
+        # as Links
         for mat_phase in material_properties.keys():
             if material_phases_models[mat_phase]['source'] != 2:
                 location = inspect.getframeinfo(inspect.currentframe())
@@ -206,6 +228,10 @@ def readInputData(input_file,dirs_dict):
                                                   checkNumber,checkPositiveInteger,
                                                   searchKeywordLine,
                                                   searchOptionalKeywordLine)
+    # If at least one material phase has the associated constitutive model source set as
+    # Links add Links python binary to Links dictionary
+    if is_Links_python_bin:
+        Links_dict['Links_python_bin_path'] = Links_python_bin_path
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read number of cluster associated to each material phase
     keyword = 'Number_of_Clusters'
