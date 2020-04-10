@@ -865,6 +865,12 @@ def displayError(code,*args):
         template = 'Details:' + '\n\n' + \
                    indent + 'The projection-based self-consistent scheme is only ' + \
                    'implemented for the 3D case.'
+    elif code == 'E00086':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The discrete Dirac\'s delta function only accepts two ' + \
+                   'integer indexes as arguments.'
     # print(template_header.format(*header,width=output_width))
     # print(template.format(*values,width=output_width))
     # print(template_footer.format(*footer,width=output_width))

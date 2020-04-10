@@ -36,9 +36,8 @@ ddot44_1 = lambda A4,B4 : np.einsum('ijmn,mnkl -> ijkl',A4,B4)
 def Dd(i,j):
     if (not isinstance(i,int) and not isinstance(i,np.integer)) or \
                                    (not isinstance(j,int) and not isinstance(j,np.integer)):
-          print('\nAbort: The discrete Dirac\'s delta function only accepts two ' + \
-                'integer indexes as arguments.\n')
-          sys.exit(1)
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayError('E00086',location.filename,location.lineno+1)
     value = 1 if i == j else 0
     return value
 #                                                                    Common identity tensors
