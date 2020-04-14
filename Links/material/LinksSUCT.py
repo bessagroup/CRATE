@@ -34,7 +34,7 @@ def suct(problem_dict,clst_dict,material_properties,material_phases_models,mat_p
     # Set Links parameters
     Links_comp_order_sym,_ = LinksUtil.getLinksCompOrder(n_dim)
     # Get Links compiled binary (compilation with 'python' flag)
-    print(clst_dict.keys())
+    print(clst_dict['Links_dict']['Links_python_bin_path'])
     links = Links(bin=clst_dict['Links_dict']['Links_python_bin_path'])
     # Set check sent/received data flag
     is_check_data = False

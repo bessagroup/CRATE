@@ -74,7 +74,7 @@ def userAction(message):
 # Make directory (both overwrite and no overwrite (default) options available)
 def makeDirectory(dir, option = 'no_overwrite'):
     try:
-        if option is None or option == 'no_overwrite':
+        if option == 'no_overwrite':
             os.mkdir(dir)
         elif option == 'overwrite':
             if not os.path.exists(dir):
