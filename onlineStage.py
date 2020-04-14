@@ -156,6 +156,27 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
         print('\n' + 'n_total_clusters = ' + str(n_total_clusters))
     # --------------------------------------------------------------------------------------
     #
+    #                                         Initial state homogenized results (.hres file)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Build homogenized strain tensor
+    hom_strain = top.getTensorFromMatricialForm(hom_strain_mf,n_dim,comp_order)
+    # Build homogenized stress tensor
+    hom_stress = top.getTensorFromMatricialForm(hom_stress_mf,n_dim,comp_order)
+    # Compute homogenized out-of-plane stress component in a 2D plane strain problem /
+    # strain component in a 2D plane stress problem (output purpose only)
+    if problem_type == 1:
+        hom_stress_33 = outofplaneHomogenizedComp(problem_type,material_phases,
+                            phase_clusters,clusters_f,clusters_state,clusters_state_old)
+    # Initialize homogenized results dictionary
+    hom_results = dict()
+    # Build homogenized results dictionary
+    hom_results['hom_strain'] = hom_strain
+    hom_results['hom_stress'] = hom_stress
+    if problem_type == 1:
+        hom_results['hom_stress_33'] = hom_stress_33
+    # Write increment homogenized results to associated output file (.hres)
+    homogenizedResultsOutput.writeHomResFile(hres_file_path,problem_type,0,hom_results)
+    #
     #                                                                 Initial state VTK file
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     if is_VTK_output:
@@ -692,7 +713,7 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                 sys.exit(1)
         # ----------------------------------------------------------------------------------
         #
-        #                                  Write increment homogenized results to .hres file
+        #                                         Increment homogenized results (.hres file)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize homogenized results dictionary
         hom_results = dict()
