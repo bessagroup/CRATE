@@ -136,7 +136,7 @@ def readInputData(input_file,dirs_dict):
     for mat_phase in material_properties.keys():
         if material_phases_models[mat_phase]['source'] == 2:
             # Read the Links python binary absolute path
-            keyword = 'Links_python_bin'
+            keyword = 'Links_Python_bin'
             line_number = searchKeywordLine(input_file,keyword) + 1
             Links_python_bin_path = linecache.getline(input_file_path,line_number).strip()
             if not os.path.isabs(Links_python_bin_path):

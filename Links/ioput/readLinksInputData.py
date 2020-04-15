@@ -49,7 +49,7 @@ def readLinksInputData(file,file_path,problem_type,checkNumber,checkPositiveInte
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read the finite element order (linear or quadratic). If the associated keyword is not
     # found, then a default specification is assumed
-    keyword = 'Links_FE_order'
+    keyword = 'Links_FE_Order'
     isFound,keyword_line_number = searchOptionalKeywordLine(file,keyword)
     if isFound:
         line = linecache.getline(file_path,keyword_line_number).split()
@@ -67,7 +67,7 @@ def readLinksInputData(file,file_path,problem_type,checkNumber,checkPositiveInte
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read microscale boundary condition. If the associated keyword is not found, then a
     # default specification is assumed
-    keyword = 'Links_boundary_type'
+    keyword = 'Links_Boundary_Type'
     isFound,keyword_line_number = searchOptionalKeywordLine(file,keyword)
     if isFound:
         line = linecache.getline(file_path,keyword_line_number).split()
@@ -87,7 +87,7 @@ def readLinksInputData(file,file_path,problem_type,checkNumber,checkPositiveInte
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read convergence tolerance. If the associated keyword is not found, then a default
     # specification is assumed
-    keyword = 'Links_convergence_tolerance'
+    keyword = 'Links_Convergence_Tolerance'
     isFound,keyword_line_number = searchOptionalKeywordLine(file,keyword)
     if isFound:
         line = linecache.getline(file_path,keyword_line_number+1).split()
