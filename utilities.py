@@ -20,7 +20,8 @@
 #
 # Notes:
 #
-#   1. Add stress_vox to the output of FFTHomogenizationBasicScheme()
+#   1. Add stress_vox, phase_names and phase_times to the output of
+#      FFTHomogenizationBasicScheme()
 #   2. Choose the appropriate convergence tolerance
 #   3. Choose the appropriate convergence criterion
 #
@@ -54,12 +55,12 @@ def utility1():
         rve_dims = [1.0,1.0]
         discret_file_path = '/media/bernardoferreira/HDD/FEUP PhD/Studies/seminar/' + \
                             'microstructures/2D/main/regular_grids/' + \
-                            'Disk_50_0.3_700_700.rgmsh.npy'
+                            'Disk_50_0.3_800_800.rgmsh.npy'
     else:
         rve_dims = [1.0,1.0,1.0]
         discret_file_path = '/media/bernardoferreira/HDD/FEUP PhD/Studies/seminar/' + \
                             'microstructures/3D/main/regular_grids/' + \
-                            'Sphere_20_0.2_30_30_30.rgmsh.npy'
+                            'Sphere_20_0.2_80_80_80.rgmsh.npy'
     # Read spatial discretization file and set regular grid data
     regular_grid = np.load(discret_file_path)
     n_voxels_dims = [regular_grid.shape[i] for i in range(len(regular_grid.shape))]
@@ -94,12 +95,12 @@ def utility1():
     discret_file_basename = \
         ntpath.splitext(ntpath.splitext(ntpath.basename(discret_file_path))[-2])[-2]
     if problem_type == 1:
-        output_dir = \
-           '/media/bernardoferreira/HDD/FEUP PhD/Studies/seminar/offline_stage/main/2D/FFT/'
+        output_dir = '/media/bernardoferreira/HDD/FEUP PhD/Studies/seminar/' + \
+                     'offline_stage/main/2D/FFT/'
     else:
-        output_dir = \
-           '/media/bernardoferreira/HDD/FEUP PhD/Studies/seminar/offline_stage/main/3D/FFT/'
-    output_dir = output_dir + '/' + discret_file_basename + '_' + loading + '/'
+        output_dir = '/media/bernardoferreira/HDD/FEUP PhD/Studies/seminar/' + \
+                     'offline_stage/main/3D/FFT/'
+    output_dir = output_dir + discret_file_basename + '_' + loading + '/'
     fileOperations.makeDirectory(output_dir,option='overwrite')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set absolute path of the file where the error for the diferent convergence criteria
@@ -110,8 +111,8 @@ def utility1():
     # Start timer
     time_init = time.time()
     # Compute FFT solution
-    strain_vox, stress_vox = FFT.FFTHomogenizationBasicScheme(problem_dict,rg_dict,
-                                                              mat_dict,mac_strain)
+    strain_vox, stress_vox, phase_names, phase_times = \
+        FFT.FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain)
     # Stop timer
     time_end = time.time()
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -152,7 +153,7 @@ def utility1():
             hom_strain[idx[::-1]] = hom_strain[idx]
             hom_stress[idx[::-1]] = hom_stress[idx]
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Set results output format
+    # Set homogenized results output format
     displayFeatures = info.setDisplayFeatures()
     output_width = displayFeatures[0]
     indent = displayFeatures[2]
@@ -180,11 +181,35 @@ def utility1():
                                               '[' + 3*'{:>12.4e}' + '  ]' + '\n' + \
                '\n' + indent + equal_line[:-len(indent)] + '\n' + \
                indent + 'Total run time (s): {:>11.4e}' + '\n\n'
-    # Output results to default stdout
+    # Output homogenized results to default stdout
     print(template.format(*info,width=output_width))
-    # Output results to results file
+    # Output homogenized results to results file
     results_file_path = output_dir + 'results.dat'
     open(results_file_path, 'w').close()
+    results_file = open(results_file_path,'a')
+    print(template.format(*info,width=output_width),file = results_file)
+    results_file.close()
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Compute time profile quantities
+    total_time = phase_times[0,1] - phase_times[0,0]
+    number_of_phases = len(phase_names)
+    phase_durations = [ phase_times[i,1] - phase_times[i,0] \
+                                                         for i in range(0,number_of_phases)]
+    for i in range(0,number_of_phases):
+        phase_durations.insert(3*i,phase_names[i])
+        phase_durations.insert(3*i+2,(phase_durations[3*i+1]/total_time)*100)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set time profile output format
+    arguments = ['Phase','Duration (s)','%'] + phase_durations[3:]
+    info = tuple(arguments)
+    template = indent + 'Execution times (1 iteration): \n\n' + \
+               2*indent + '{:50}{:^20}{:^5}' + '\n' + \
+               2*indent + 75*'-' + '\n' + \
+               (2*indent + '{:50}{:^20.2e}{:>5.2f} \n')*(number_of_phases-1) + \
+               2*indent + 75*'-' + '\n'
+    # Output time profile to default stdout
+    print(template.format(*info,width=output_width))
+    # Output time profile to results file
     results_file = open(results_file_path,'a')
     print(template.format(*info,width=output_width),file = results_file)
     results_file.close()
@@ -318,7 +343,7 @@ def utility3():
     #                                                                            Data import
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set discretization file path (.rgmsh file)
-    discret_file_path = '/media/bernardoferreira/HDD/FEUP PhD/Studies/seminar/microstructures/3D/main/regular_grids/Sphere_20_0.2_70_70_70.rgmsh.npy'
+    discret_file_path = '/media/bernardoferreira/HDD/FEUP PhD/Studies/seminar/microstructures/3D/main/regular_grids/Sphere_20_0.2_100_100_100.rgmsh.npy'
     # Read the spatial discretization file (regular grid of pixels/voxels)
     if ntpath.splitext(ntpath.basename(discret_file_path))[-1] == '.npy':
         regular_grid = np.load(discret_file_path)
@@ -342,14 +367,19 @@ def utility3():
     #                                         (finite element mesh nodes and connectivities)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     if True:
-        # Set Links input data file path
-        Links_file_path = ntpath.dirname(discret_file_path) + '/' + rg_file_name + '.femsh'
         # Get problem dimension
         n_dim = len(n_voxels_dims)
         # Set RVE dimensions
         rve_dims = n_dim*[1.0,]
         # Set finite element order
         fe_order = 'quadratic'
+        # Set Links input data file path
+        if fe_order == 'linear':
+            Links_file_path = ntpath.dirname(discret_file_path) + '/' + \
+                              rg_file_name + '_L' + '.femsh'
+        else:
+            Links_file_path = ntpath.dirname(discret_file_path) + '/' + \
+                              rg_file_name + '_Q' + '.femsh'
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Generate Links finite element mesh
         coords,connectivities,element_phases = \
@@ -392,6 +422,258 @@ def utility3():
         # Close data file
         data_file.close()
 # ------------------------------------------------------------------------------------------
+#
+#                                                                 Discrete frequencies loops
+# ==========================================================================================
+# Assessment of efficient implementations of computations perform over discrete frequencies
+def utility4():
+    # Import modules
+    import numpy as np
+    import numpy.matlib
+    import numpy.linalg
+    import time
+    import itertools as it
+    import copy
+    import tensorOperations as top
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set numpy default print options
+    np.set_printoptions(precision=4,linewidth=np.inf)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set problem dimension
+    n_dim = 2
+    # Set strain/stress component order
+    if n_dim == 2:
+        comp_order_sym = ['11','22','12']
+    else:
+        comp_order_sym = ['11','22','33','12','23','13']
+    comp_order = comp_order_sym
+    # Set RVE dimensions
+    rve_dims = n_dim*[1.0,]
+    # Set number of voxels on each dimension
+    n = [10,12,13]
+    n_voxels_dims = [i for i in n[0:n_dim]]
+    # Set material properties
+    material_properties_ref = dict()
+    material_properties_ref['E'] = 100
+    material_properties_ref['v'] = 0.3
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set discrete frequencies (rad/m) for each dimension
+    freqs_dims = list()
+    for i in range(n_dim):
+        # Set sampling spatial period
+        sampling_period = rve_dims[i]/n_voxels_dims[i]
+        # Set discrete frequencies
+        freqs_dims.append(2*np.pi*np.fft.fftfreq(n_voxels_dims[i],sampling_period))
+    # Initialize time arrays
+    phase_names = ['']
+    phase_times = np.zeros((1,2))
+    #
+    #                                                      Reference material Green operator
+    #                           (original version - standard loop over discrete frequencies)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # --------------------------------------------------------------------------------------
+    # Time profile
+    phase_init_time = time.time()
+    # --------------------------------------------------------------------------------------
+    # The fourth-order Green operator for the reference material is computed for every
+    # pixel/voxel and stored as follows:
+    #
+    # A. 2D problem (plane strain):
+    #
+    #   Green_operator_DFT_vox[comp] = array(d1,d2),
+    #
+    #                        where | di is the number of pixels in dimension i
+    #                              | comp is the component that would be stored in matricial
+    #                              |      form ('1111', '2211', '1211', '1122', ...)
+    #
+    # B. 3D problem:
+    #
+    #   Green_operator_DFT_vox[comp] = array(d1,d2,d3),
+    #
+    #                        where | di is the number of pixels in dimension i
+    #                              | comp is the component that would be stored in matricial
+    #                              |     form ('1111', '2211', '3311', '1211', ...)
+    #
+    # Get reference material Young modulus and Poisson coeficient
+    E_ref = material_properties_ref['E']
+    v_ref = material_properties_ref['v']
+    # Compute reference material Lamé parameters
+    lam_ref = (E_ref*v_ref)/((1.0 + v_ref)*(1.0 - 2.0*v_ref))
+    miu_ref = E_ref/(2.0*(1.0 + v_ref))
+    # Compute Green operator reference material related constants
+    c1 = 1.0/(4.0*miu_ref)
+    c2 = (miu_ref + lam_ref)/(miu_ref*(lam_ref + 2.0*miu_ref))
+    # Set Green operator matricial form components
+    comps = list(it.product(comp_order,comp_order))
+    # Set mapping between Green operator fourth-order tensor and matricial form components
+    fo_indexes = list()
+    mf_indexes = list()
+    for i in range(len(comp_order)**2):
+        fo_indexes.append([int(x)-1 for x in list(comps[i][0]+comps[i][1])])
+        mf_indexes.append([x for x in \
+                             [comp_order.index(comps[i][0]),comp_order.index(comps[i][1])]])
+    # Initialize Green operator
+    Green_operator_DFT_vox = {''.join([str(x+1) for x in idx]): \
+                                       np.zeros(tuple(n_voxels_dims)) for idx in fo_indexes}
+    # Compute Green operator matricial form components
+    for i in range(len(mf_indexes)):
+        # Get fourth-order tensor indexes
+        fo_idx = fo_indexes[i]
+        # Get Green operator component
+        comp = ''.join([str(x+1) for x in fo_idx])
+        # Loop over discrete frequencies
+        for freq_coord in it.product(*freqs_dims):
+            # Get discrete frequency index
+            freq_idx = tuple([list(freqs_dims[x]).index(freq_coord[x]) for \
+                                                                         x in range(n_dim)])
+            # Skip zero-frequency computation (prescribed macroscale strain)
+            if freq_idx == n_dim*(0,):
+                continue
+            # Compute frequency vector norm
+            freq_norm = np.linalg.norm(freq_coord)
+            # Compute first material independent term of Green operator
+            first_term = (1.0/freq_norm**2)*(
+                   top.Dd(fo_idx[0],fo_idx[2])*freq_coord[fo_idx[1]]*freq_coord[fo_idx[3]] +
+                   top.Dd(fo_idx[0],fo_idx[3])*freq_coord[fo_idx[1]]*freq_coord[fo_idx[2]] +
+                   top.Dd(fo_idx[1],fo_idx[3])*freq_coord[fo_idx[0]]*freq_coord[fo_idx[2]] +
+                   top.Dd(fo_idx[1],fo_idx[2])*freq_coord[fo_idx[0]]*freq_coord[fo_idx[3]])
+            # Compute second material independent term of Green operator
+            second_term = -(1.0/freq_norm**4)*(freq_coord[fo_idx[0]]*freq_coord[fo_idx[1]]*
+                                               freq_coord[fo_idx[2]]*freq_coord[fo_idx[3]])
+            # Compute Green operator matricial form component for current voxel
+            Green_operator_DFT_vox[comp][freq_idx] = c1*first_term + c2*second_term
+    # --------------------------------------------------------------------------------------
+    # Time profile
+    phase_end_time = time.time()
+    phase_names.append('Original version')
+    phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
+    # --------------------------------------------------------------------------------------
+    # Copy Green_operator_DFT_vox (comparison)
+    GOP_old = copy.deepcopy(Green_operator_DFT_vox)
+    #
+    #                                                      Reference material Green operator
+    #                                                                          (new version)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # --------------------------------------------------------------------------------------
+    # Time profile
+    phase_init_time = time.time()
+    # --------------------------------------------------------------------------------------
+    # The fourth-order Green operator for the reference material is computed for every
+    # pixel/voxel and stored as follows:
+    #
+    # A. 2D problem (plane strain):
+    #
+    #   Green_operator_DFT_vox[comp] = array(d1,d2),
+    #
+    #                        where | di is the number of pixels in dimension i
+    #                              | comp is the component that would be stored in matricial
+    #                              |      form ('1111', '2211', '1211', '1122', ...)
+    #
+    # B. 3D problem:
+    #
+    #   Green_operator_DFT_vox[comp] = array(d1,d2,d3),
+    #
+    #                        where | di is the number of pixels in dimension i
+    #                              | comp is the component that would be stored in matricial
+    #                              |     form ('1111', '2211', '3311', '1211', ...)
+    #
+    # Get reference material Young modulus and Poisson coeficient
+    E_ref = material_properties_ref['E']
+    v_ref = material_properties_ref['v']
+    # Compute reference material Lamé parameters
+    lam_ref = (E_ref*v_ref)/((1.0 + v_ref)*(1.0 - 2.0*v_ref))
+    miu_ref = E_ref/(2.0*(1.0 + v_ref))
+    # Compute Green operator reference material related constants
+    c1 = 1.0/(4.0*miu_ref)
+    c2 = (miu_ref + lam_ref)/(miu_ref*(lam_ref + 2.0*miu_ref))
+    # Set Green operator matricial form components
+    comps = list(it.product(comp_order,comp_order))
+    # Set mapping between Green operator fourth-order tensor and matricial form components
+    fo_indexes = list()
+    mf_indexes = list()
+    for i in range(len(comp_order)**2):
+        fo_indexes.append([int(x)-1 for x in list(comps[i][0]+comps[i][1])])
+        mf_indexes.append([x for x in \
+                             [comp_order.index(comps[i][0]),comp_order.index(comps[i][1])]])
+    # Set optimized variables
+    var1 = [*np.meshgrid(*freqs_dims,indexing = 'ij')]
+    var2 = dict()
+    for fo_idx in fo_indexes:
+        if str(fo_idx[1]) + str(fo_idx[3]) not in var2.keys():
+            var2[str(fo_idx[1]) + str(fo_idx[3])] = \
+                np.multiply(var1[fo_idx[1]],var1[fo_idx[3]])
+        if str(fo_idx[1]) + str(fo_idx[2]) not in var2.keys():
+            var2[str(fo_idx[1]) + str(fo_idx[2])] = \
+                np.multiply(var1[fo_idx[1]],var1[fo_idx[2]])
+        if str(fo_idx[0]) + str(fo_idx[2]) not in var2.keys():
+            var2[str(fo_idx[0]) + str(fo_idx[2])] = \
+                np.multiply(var1[fo_idx[0]],var1[fo_idx[2]])
+        if str(fo_idx[0]) + str(fo_idx[3]) not in var2.keys():
+            var2[str(fo_idx[0]) + str(fo_idx[3])] = \
+                np.multiply(var1[fo_idx[0]],var1[fo_idx[3]])
+        if ''.join([str(x) for x in fo_idx]) not in var2.keys():
+            var2[''.join([str(x) for x in fo_idx])] = \
+                np.multiply(np.multiply(var1[fo_idx[0]],var1[fo_idx[1]]),
+                            np.multiply(var1[fo_idx[2]],var1[fo_idx[3]]))
+    if n_dim == 2:
+        var3 = np.sqrt(np.add(np.square(var1[0]),np.square(var1[1])))
+    else:
+        var3 = np.sqrt(np.add(np.add(np.square(var1[0]),np.square(var1[1])),
+                              np.square(var1[2])))
+    # Initialize Green operator
+    Gop_DFT_vox = {''.join([str(x+1) for x in idx]): \
+                                       np.zeros(tuple(n_voxels_dims)) for idx in fo_indexes}
+    # Compute Green operator matricial form components
+    for i in range(len(mf_indexes)):
+        # Get fourth-order tensor indexes
+        fo_idx = fo_indexes[i]
+        # Get Green operator component
+        comp = ''.join([str(x+1) for x in fo_idx])
+        # Set optimized variables
+        var4 = [fo_idx[0] == fo_idx[2],fo_idx[0] == fo_idx[3],
+                fo_idx[1] == fo_idx[3],fo_idx[1] == fo_idx[2]]
+        var5 = [str(fo_idx[1]) + str(fo_idx[3]),str(fo_idx[1]) + str(fo_idx[2]),
+                str(fo_idx[0]) + str(fo_idx[2]),str(fo_idx[0]) + str(fo_idx[3])]
+        # Compute first material independent term of Green operator
+        first_term = np.zeros(tuple(n_voxels_dims))
+        for j in range(len(var4)):
+            if var4[j]:
+                first_term = np.add(first_term,var2[var5[j]])
+        first_term = np.divide(first_term,np.square(var3),where = var3 != 0)
+        # Compute second material independent term of Green operator
+        second_term = -1.0*np.divide(var2[''.join([str(x) for x in fo_idx])],
+                                     np.square(np.square(var3)),where = var3 != 0)
+        # Compute Green operator matricial form component
+        Gop_DFT_vox[comp] = c1*first_term + c2*second_term
+    # --------------------------------------------------------------------------------------
+    # Time profile
+    phase_end_time = time.time()
+    phase_names.append('New version')
+    phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
+    # --------------------------------------------------------------------------------------
+    # Copy Green_operator_DFT_vox
+    GOP_new = copy.deepcopy(Gop_DFT_vox)
+    #
+    #                                                                             Comparison
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Check if all the Green operator has the same value between the original version
+    # (reference) and the new implementation
+    print('\n' + 'Green operator computation')
+    print('--------------------------')
+    print('\n' + 'Same values as the original implementation?' + '\n')
+    for fo_idx in fo_indexes:
+        comp = ''.join([str(x+1) for x in fo_idx])
+        print(comp + ': ' + str(np.allclose(GOP_old[comp],GOP_new[comp],atol=1e-10)))
+    # Compare computation times
+    number_of_phases = len(phase_names)
+    phase_durations = [ phase_times[i,1] - phase_times[i,0] \
+                                                     for i in range(0,number_of_phases)]
+    print('\n' + 'Performance comparison - time (s):')
+    print('\n' + ' time (ref)   time (new)   speedup' + '\n' + 35*'-')
+    print('{:11.4e}  {:11.4e} {:>9.1f}'.format(phase_durations[1],phase_durations[2],
+                                               phase_durations[1]/phase_durations[2]))
+    print('')
+# ------------------------------------------------------------------------------------------
 if __name__ == '__main__':
-    utility1()
-    #utility3()
+    #utility1()
+    utility4()
