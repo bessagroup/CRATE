@@ -464,9 +464,11 @@ def utility4():
         sampling_period = rve_dims[i]/n_voxels_dims[i]
         # Set discrete frequencies
         freqs_dims.append(2*np.pi*np.fft.fftfreq(n_voxels_dims[i],sampling_period))
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Initialize time arrays
     phase_names = ['']
     phase_times = np.zeros((1,2))
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     #
     #                                                      Reference material Green operator
     #                           (original version - standard loop over discrete frequencies)
@@ -666,14 +668,201 @@ def utility4():
         print(comp + ': ' + str(np.allclose(GOP_old[comp],GOP_new[comp],atol=1e-10)))
     # Compare computation times
     number_of_phases = len(phase_names)
-    phase_durations = [ phase_times[i,1] - phase_times[i,0] \
-                                                     for i in range(0,number_of_phases)]
+    phase_durations = [phase_times[i,1] - phase_times[i,0] \
+                                                         for i in range(0,number_of_phases)]
     print('\n' + 'Performance comparison - time (s):')
     print('\n' + ' time (ref)   time (new)   speedup' + '\n' + 35*'-')
     print('{:11.4e}  {:11.4e} {:>9.1f}'.format(phase_durations[1],phase_durations[2],
                                                phase_durations[1]/phase_durations[2]))
     print('')
 # ------------------------------------------------------------------------------------------
+def utility5():
+    # Import modules
+    import sys
+    import numpy as np
+    import time
+    import copy
+    import itertools as it
+    import tensorOperations as top
+    import FFTHomogenizationBasicScheme as FFT
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set numpy default print options
+    np.set_printoptions(precision=4,linewidth=np.inf)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set problem type
+    problem_type = 4
+    # Set problem dimension, strain/stress component order and spatial discretization file
+    # path
+    if problem_type == 1:
+        n_dim = 2
+        comp_order_sym = ['11','22','12']
+        discret_file_path = '/media/bernardoferreira/HDD/FEUP PhD/Studies/' + \
+                            'seminar/microstructures/2D/main/regular_grids/' + \
+                            'Disk_50_0.3_100_100.rgmsh.npy'
+    else:
+        n_dim = 3
+        comp_order_sym = ['11','22','33','12','23','13']
+        discret_file_path = '/media/bernardoferreira/HDD/FEUP PhD/Studies/' + \
+                            'seminar/microstructures/3D/main/regular_grids/' + \
+                            'Sphere_20_0.2_30_30_30.rgmsh.npy'
+    comp_order = comp_order_sym
+    # Set RVE dimensions
+    rve_dims = n_dim*[1.0,]
+    # Set number of voxels on each dimension
+    n = [10,12,13]
+    n_voxels_dims = [i for i in n[0:n_dim]]
+    # Read spatial discretization file and set regular grid data
+    regular_grid = np.load(discret_file_path)
+    n_voxels_dims = [regular_grid.shape[i] for i in range(len(regular_grid.shape))]
+    # Set material properties
+    material_properties = dict()
+    material_properties['1'] = dict()
+    material_properties['1']['E'] = 100
+    material_properties['1']['v'] = 0.30
+    material_properties['2'] = dict()
+    material_properties['2']['E'] = 500
+    material_properties['2']['v'] = 0.19
+    material_phases = [str(x) for x in list(np.unique(regular_grid))]
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Compute the elasticity tensors (matricial form) associated to each material phase
+    De_tensors_mf = dict()
+    for mat_phase in material_phases:
+        # Set required elastic properties according to material phase constitutive model
+        req_props = ['E','v']
+        for iprop in range(len(req_props)):
+            if req_props[iprop] not in material_properties[mat_phase]:
+                values = tuple([req_props[iprop],mat_phase])
+                template = '\nAbort: The elastic property - {} - of material phase {} ' + \
+                           'hasn\'t been specified in ' + '\n' + \
+                           'the input data file (FFTHomogenizationBasicScheme.py).\n'
+                print(template.format(*values))
+                sys.exit(1)
+        # Compute elasticity tensor (matricial form) for current material phase
+        De_tensor_mf = np.zeros((len(comp_order),len(comp_order)))
+        De_tensor_mf = FFT.getElasticityTensor(problem_type,n_dim,comp_order,\
+                                                             material_properties[mat_phase])
+        # Store material phase elasticity tensor (matricial form)
+        De_tensors_mf[mat_phase] = De_tensor_mf
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set discrete frequencies (rad/m) for each dimension
+    freqs_dims = list()
+    for i in range(n_dim):
+        # Set sampling spatial period
+        sampling_period = rve_dims[i]/n_voxels_dims[i]
+        # Set discrete frequencies
+        freqs_dims.append(2*np.pi*np.fft.fftfreq(n_voxels_dims[i],sampling_period))
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Initialize strain and stress tensors
+    strain_vox = {comp: np.ones(tuple(n_voxels_dims)) for comp in comp_order}
+    stress_vox = {comp: np.zeros(tuple(n_voxels_dims)) for comp in comp_order}
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Initialize time arrays
+    phase_names = ['']
+    phase_times = np.zeros((1,2))
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #
+    #                                                                          Update stress
+    #                           (original version - standard loop over discrete frequencies)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # --------------------------------------------------------------------------------------
+    # Time profile
+    phase_init_time = time.time()
+    # --------------------------------------------------------------------------------------
+    # Loop over discrete frequencies
+    for freq_coord in it.product(*freqs_dims):
+        # Get voxel material phase
+        voxel_idx = tuple([list(freqs_dims[x]).index(freq_coord[x]) for x in range(n_dim)])
+        mat_phase = str(regular_grid[voxel_idx])
+        # Get material phase elasticity tensor (matricial form)
+        De_tensor_mf = De_tensors_mf[mat_phase]
+        # Get strain vector for current discrete frequency
+        strain_mf = np.zeros(len(comp_order))
+        for i in range(len(comp_order)):
+            comp = comp_order[i]
+            strain_mf[i] = top.kelvinFactor(i,comp_order)*strain_vox[comp][voxel_idx]
+        # Update stress for current discrete frequency
+        stress_mf = np.zeros(len(comp_order))
+        stress_mf = top.dot21_1(De_tensor_mf,strain_mf)
+        for i in range(len(comp_order)):
+            comp = comp_order[i]
+            stress_vox[comp][voxel_idx] = (1.0/top.kelvinFactor(i,comp_order))*stress_mf[i]
+    # --------------------------------------------------------------------------------------
+    # Time profile
+    phase_end_time = time.time()
+    phase_names.append('Original version')
+    phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
+    # --------------------------------------------------------------------------------------
+    # Copy stress_vox (comparison)
+    stress_vox_old = copy.deepcopy(stress_vox)
+    #
+    #                                                                          Update stress
+    #                                                                          (new version)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # --------------------------------------------------------------------------------------
+    # Time profile
+    phase_init_time = time.time()
+    # --------------------------------------------------------------------------------------
+    # Set optimized variables
+    var1 = np.zeros(tuple(n_voxels_dims))
+    var2 = np.zeros(tuple(n_voxels_dims))
+    for mat_phase in material_phases:
+        E = material_properties[mat_phase]['E']
+        v = material_properties[mat_phase]['v']
+        var1[regular_grid == int(mat_phase)] = (E*v)/((1.0 + v)*(1.0 - 2.0*v))
+        var2[regular_grid == int(mat_phase)] = np.multiply(2,E/(2.0*(1.0 + v)))
+    var5 = np.add(var1,var2)
+    # Update stress
+    if problem_type == 1:
+        stress_vox['11'] = np.add(np.multiply(var5,strain_vox['11']),
+                                  np.multiply(var1,strain_vox['22']))
+        stress_vox['22'] = np.add(np.multiply(var5,strain_vox['22']),
+                                  np.multiply(var1,strain_vox['11']))
+        stress_vox['12'] = np.multiply(var2,strain_vox['12'])
+    else:
+        stress_vox['11'] = np.add(np.multiply(var5,strain_vox['11']),
+                                  np.multiply(var1,np.add(strain_vox['22'],
+                                                          strain_vox['33'])))
+        stress_vox['22'] = np.add(np.multiply(var5,strain_vox['22']),
+                                  np.multiply(var1,np.add(strain_vox['11'],
+                                                          strain_vox['33'])))
+        stress_vox['33'] = np.add(np.multiply(var5,strain_vox['33']),
+                                  np.multiply(var1,np.add(strain_vox['11'],
+                                                          strain_vox['22'])))
+        stress_vox['12'] = np.multiply(var2,strain_vox['12'])
+        stress_vox['23'] = np.multiply(var2,strain_vox['23'])
+        stress_vox['13'] = np.multiply(var2,strain_vox['13'])
+    # --------------------------------------------------------------------------------------
+    # Time profile
+    phase_end_time = time.time()
+    phase_names.append('New version')
+    phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
+    # --------------------------------------------------------------------------------------
+    # Copy stress_vox (comparison)
+    stress_vox_new = copy.deepcopy(stress_vox)
+    #
+    #                                                                             Comparison
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Check if all the Green operator has the same value between the original version
+    # (reference) and the new implementation
+    print('\n' + 'Stress update')
+    print('-------------')
+    print('\n' + 'Same values as the original implementation?' + '\n')
+    for comp in comp_order:
+        print(comp + ': ' + str(np.allclose(stress_vox_old[comp],stress_vox_new[comp],
+                                            atol=1e-10)))
+    # Compare computation times
+    number_of_phases = len(phase_names)
+    phase_durations = [phase_times[i,1] - phase_times[i,0] \
+                                                         for i in range(0,number_of_phases)]
+    print('\n' + 'Performance comparison - time (s):')
+    print('\n' + ' time (ref)   time (new)   speedup' + '\n' + 35*'-')
+    print('{:11.4e}  {:11.4e} {:>9.1f}'.format(phase_durations[1],phase_durations[2],
+                                               phase_durations[1]/phase_durations[2]))
+    print('')
+# ------------------------------------------------------------------------------------------
+
+
 if __name__ == '__main__':
     #utility1()
-    utility4()
+    #utility4()
+    utility5()
