@@ -696,24 +696,12 @@ def utility5():
     if problem_type == 1:
         n_dim = 2
         comp_order_sym = ['11','22','12']
-        discret_file_path = '/media/bernardoferreira/HDD/FEUP PhD/Studies/' + \
-                            'seminar/microstructures/2D/main/regular_grids/' + \
-                            'Disk_50_0.3_100_100.rgmsh.npy'
     else:
         n_dim = 3
         comp_order_sym = ['11','22','33','12','23','13']
-        discret_file_path = '/media/bernardoferreira/HDD/FEUP PhD/Studies/' + \
-                            'seminar/microstructures/3D/main/regular_grids/' + \
-                            'Sphere_20_0.2_30_30_30.rgmsh.npy'
     comp_order = comp_order_sym
     # Set RVE dimensions
     rve_dims = n_dim*[1.0,]
-    # Set number of voxels on each dimension
-    n = [10,12,13]
-    n_voxels_dims = [i for i in n[0:n_dim]]
-    # Read spatial discretization file and set regular grid data
-    regular_grid = np.load(discret_file_path)
-    n_voxels_dims = [regular_grid.shape[i] for i in range(len(regular_grid.shape))]
     # Set material properties
     material_properties = dict()
     material_properties['1'] = dict()
@@ -722,7 +710,14 @@ def utility5():
     material_properties['2'] = dict()
     material_properties['2']['E'] = 500
     material_properties['2']['v'] = 0.19
-    material_phases = [str(x) for x in list(np.unique(regular_grid))]
+    material_phases = list(material_properties.keys())
+    n_material_phases = len(material_phases)
+    # Set number of voxels on each dimension
+    n = [10,10,10]
+    n_voxels_dims = [i for i in n[0:n_dim]]
+    # Set random regular grid
+    regular_grid = \
+                  np.random.randint(1,high=n_material_phases+1,size=n_voxels_dims,dtype=int)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Compute the elasticity tensors (matricial form) associated to each material phase
     De_tensors_mf = dict()
