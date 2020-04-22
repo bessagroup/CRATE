@@ -81,25 +81,33 @@ def utility1():
     material_phases = [str(x) for x in list(np.unique(regular_grid))]
     mat_dict['material_phases'] = material_phases
     # Set macroscale strain loading
+    loading = 'pureshear'
     if n_dim == 2:
-        loading = 'uniaxial'
-        mac_strain = np.array([[ 5.0e-3 , 0.0e-3 ],
-                               [ 0.0e-3 , 0.0e-3 ]])
+        if loading == 'uniaxial':
+            mac_strain = np.array([[ 5.0e-3 , 0.0e-3 ],
+                                   [ 0.0e-3 , 0.0e-3 ]])
+        elif loading == 'pureshear':
+            mac_strain = np.array([[ 0.0e-3 , 5.0e-3 ],
+                                   [ 5.0e-3 , 0.0e-3 ]])
     else:
-        loading = 'uniaxial'
-        mac_strain = np.array([[ 5.0e-3 , 0.0e-3 , 0.0e-3 ],
-                               [ 0.0e-3 , 0.0e-3 , 0.0e-3 ],
-                               [ 0.0e-3 , 0.0e-3 , 0.0e-3 ]])
+        if loading == 'uniaxial':
+            mac_strain = np.array([[ 5.0e-3 , 0.0e-3 , 0.0e-3 ],
+                                   [ 0.0e-3 , 0.0e-3 , 0.0e-3 ],
+                                   [ 0.0e-3 , 0.0e-3 , 0.0e-3 ]])
+        elif loading == 'pureshear':
+            mac_strain = np.array([[ 0.0e-3 , 5.0e-3 , 5.0e-3 ],
+                                   [ 5.0e-3 , 0.0e-3 , 5.0e-3 ],
+                                   [ 5.0e-3 , 5.0e-3 , 0.0e-3 ]])
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set output directory
     discret_file_basename = \
         ntpath.splitext(ntpath.splitext(ntpath.basename(discret_file_path))[-2])[-2]
     if problem_type == 1:
         output_dir = '/media/bernardoferreira/HDD/FEUP PhD/Studies/seminar/' + \
-                     'offline_stage/main/2D/FFT/'
+                     'offline_stage/main/2D/FFT_NEW/'
     else:
         output_dir = '/media/bernardoferreira/HDD/FEUP PhD/Studies/seminar/' + \
-                     'offline_stage/main/3D/FFT/'
+                     'offline_stage/main/3D/FFT_NEW/'
     output_dir = output_dir + discret_file_basename + '_' + loading + '/'
     fileOperations.makeDirectory(output_dir,option='overwrite')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -798,34 +806,34 @@ def utility5():
     phase_init_time = time.time()
     # --------------------------------------------------------------------------------------
     # Set optimized variables
-    var1 = np.zeros(tuple(n_voxels_dims))
-    var2 = np.zeros(tuple(n_voxels_dims))
+    var6 = np.zeros(tuple(n_voxels_dims))
+    var7 = np.zeros(tuple(n_voxels_dims))
     for mat_phase in material_phases:
         E = material_properties[mat_phase]['E']
         v = material_properties[mat_phase]['v']
-        var1[regular_grid == int(mat_phase)] = (E*v)/((1.0 + v)*(1.0 - 2.0*v))
-        var2[regular_grid == int(mat_phase)] = np.multiply(2,E/(2.0*(1.0 + v)))
-    var5 = np.add(var1,var2)
+        var6[regular_grid == int(mat_phase)] = (E*v)/((1.0 + v)*(1.0 - 2.0*v))
+        var7[regular_grid == int(mat_phase)] = np.multiply(2,E/(2.0*(1.0 + v)))
+    var8 = np.add(var6,var7)
     # Update stress
     if problem_type == 1:
-        stress_vox['11'] = np.add(np.multiply(var5,strain_vox['11']),
-                                  np.multiply(var1,strain_vox['22']))
-        stress_vox['22'] = np.add(np.multiply(var5,strain_vox['22']),
-                                  np.multiply(var1,strain_vox['11']))
-        stress_vox['12'] = np.multiply(var2,strain_vox['12'])
+        stress_vox['11'] = np.add(np.multiply(var8,strain_vox['11']),
+                                  np.multiply(var6,strain_vox['22']))
+        stress_vox['22'] = np.add(np.multiply(var8,strain_vox['22']),
+                                  np.multiply(var6,strain_vox['11']))
+        stress_vox['12'] = np.multiply(var7,strain_vox['12'])
     else:
-        stress_vox['11'] = np.add(np.multiply(var5,strain_vox['11']),
-                                  np.multiply(var1,np.add(strain_vox['22'],
+        stress_vox['11'] = np.add(np.multiply(var8,strain_vox['11']),
+                                  np.multiply(var6,np.add(strain_vox['22'],
                                                           strain_vox['33'])))
-        stress_vox['22'] = np.add(np.multiply(var5,strain_vox['22']),
-                                  np.multiply(var1,np.add(strain_vox['11'],
+        stress_vox['22'] = np.add(np.multiply(var8,strain_vox['22']),
+                                  np.multiply(var6,np.add(strain_vox['11'],
                                                           strain_vox['33'])))
-        stress_vox['33'] = np.add(np.multiply(var5,strain_vox['33']),
-                                  np.multiply(var1,np.add(strain_vox['11'],
+        stress_vox['33'] = np.add(np.multiply(var8,strain_vox['33']),
+                                  np.multiply(var6,np.add(strain_vox['11'],
                                                           strain_vox['22'])))
-        stress_vox['12'] = np.multiply(var2,strain_vox['12'])
-        stress_vox['23'] = np.multiply(var2,strain_vox['23'])
-        stress_vox['13'] = np.multiply(var2,strain_vox['13'])
+        stress_vox['12'] = np.multiply(var7,strain_vox['12'])
+        stress_vox['23'] = np.multiply(var7,strain_vox['23'])
+        stress_vox['13'] = np.multiply(var7,strain_vox['13'])
     # --------------------------------------------------------------------------------------
     # Time profile
     phase_end_time = time.time()
