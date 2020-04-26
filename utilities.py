@@ -863,8 +863,121 @@ def utility5():
                                                phase_durations[1]/phase_durations[2]))
     print('')
 # ------------------------------------------------------------------------------------------
-
-
+#
+#                                                                              2D elasticity
+# ==========================================================================================
+def utility6():
+    # Import modules
+    import numpy as np
+    import tensorOperations as top
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Validation header
+    print('\n\n' + 'Clarify questions about 2D plane strain elasticity')
+    print(         '--------------------------------------------------')
+    np.set_printoptions(linewidth = np.inf)
+    np.set_printoptions(formatter={'float':'{: 11.4e}'.format})
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set Young modulus and Poisson ratio
+    E = 210e3
+    v = 0.3
+    # Compute Bulk modulus and shear modulus
+    K = E/(3.0*(1.0 - 2.0*v))
+    G = E/(2.0*(1.0+v))
+    # Compute Lamé parameters
+    lam = (E*v)/((1.0+v)*(1.0-2.0*v))
+    miu = E/(2.0*(1.0+v))
+    # Print assumed elastic constants
+    print('\n' + 'Assumed elastic properties:' + '\n')
+    print('E =   ', '{: 11.4e}'.format(E))
+    print('v =   ', '{: 11.4e}'.format(v))
+    print('K =   ', '{: 11.4e}'.format(K))
+    print('G =   ', '{: 11.4e}'.format(G))
+    print('lam = ', '{: 11.4e}'.format(lam))
+    print('miu = ', '{: 11.4e}'.format(miu))
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    print('\n' + 92*'-')
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Print header
+    print('\n' + '3D standard elasticity (stored with Kelvin notation):' + '\n')
+    # Set dimensions and components order
+    n_dim = 3
+    comp_order = ['11','22','33','12','23','13']
+    # Set required fourth-order tensors
+    SOId,FOId,FOTransp,FOSym,FODiagTrace,FODevProj,FODevProjSym = \
+                                                               top.setIdentityTensors(n_dim)
+    # Compute consistent tangent modulus (Lamé parameters)
+    consistent_tangent = lam*FODiagTrace + 2.0*miu*FOSym
+    # Build consistent tangent modulus (Lamé parameters) matricial form
+    consistent_tangent_mf = top.setTensorMatricialForm(consistent_tangent,n_dim,comp_order)
+    # Print consistent tangent modulus (Lamé parameters)
+    print('\n' + '>> consistent_tangent = lam*FODiagTrace + 2.0*miu*FOSym')
+    print('\n' + 'consistent_tangent_mf (Lamé parameters):' + '\n')
+    print(consistent_tangent_mf)
+    # Compute consistent tangent modulus (bulk and shear modulii)
+    consistent_tangent = K*FODiagTrace + 2.0*G*FODevProjSym
+    # Build consistent tangent modulus (bulk and shear modulii) matricial form
+    consistent_tangent_mf = top.setTensorMatricialForm(consistent_tangent,n_dim,comp_order)
+    # Print consistent tangent modulus (bulk and shear modulii)
+    print('\n\n' + '>> consistent_tangent = K*FODiagTrace + 2.0*G*(FOSym - ' + \
+                                                                   '(1.0/3.0)*FODiagTrace)')
+    print('\n' + 'consistent_tangent_mf (bulk and shear modulii):' + '\n')
+    print(consistent_tangent_mf)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    print('\n' + 92*'-')
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Print header
+    print('\n' + '2D plane strain elasticity (stored with Kelvin notation):' + '\n')
+    # Set dimensions and components order
+    n_dim = 2
+    comp_order = ['11','22','12']
+    # Set required fourth-order tensors
+    SOId,FOId,FOTransp,FOSym,FODiagTrace,FODevProj,FODevProjSym = \
+                                                               top.setIdentityTensors(n_dim)
+    # Compute consistent tangent modulus (Lamé parameters)
+    consistent_tangent = lam*FODiagTrace + 2.0*miu*FOSym
+    # Build consistent tangent modulus (Lamé parameters) matricial form
+    consistent_tangent_mf = top.setTensorMatricialForm(consistent_tangent,n_dim,comp_order)
+    # Print consistent tangent modulus (Lamé parameters)
+    print('\n' + '>> consistent_tangent = lam*FODiagTrace + 2.0*miu*FOSym')
+    print('\n' + 'consistent_tangent_mf (Lamé parameters):' + '\n')
+    print(consistent_tangent_mf)
+    # Compute consistent tangent modulus (bulk and shear modulii)
+    consistent_tangent = K*FODiagTrace + 2.0*G*FODevProjSym
+    # Build consistent tangent modulus (bulk and shear modulii) matricial form
+    consistent_tangent_mf = top.setTensorMatricialForm(consistent_tangent,n_dim,comp_order)
+    # Print consistent tangent modulus (bulk and shear modulii)
+    print('\n\n' + '>> consistent_tangent = K*FODiagTrace + 2.0*G*(FOSym - ' + \
+                                                                   '(1.0/3.0)*FODiagTrace)')
+    print('\n' + 'consistent_tangent_mf (bulk and shear modulii):' + '\n')
+    print(consistent_tangent_mf)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    print('\n' + 92*'-')
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Print header
+    print('\n' + '2D "bulk modulus" plane strain elasticity ' + \
+                                                    '(stored with Kelvin notation):' + '\n')
+    # Set dimensions and components order
+    n_dim = 2
+    comp_order = ['11','22','12']
+    # Set required fourth-order tensors
+    SOId,FOId,FOTransp,FOSym,FODiagTrace,_,_ = top.setIdentityTensors(n_dim)
+    # Set fourth-order deviatoric projection tensor (second order symmetric tensors)
+    FODevProjSym = FOSym - (1.0/2.0)*FODiagTrace
+    # Compute 2D bulk modulus
+    K2d = K + (1.0/3.0)*miu
+    print('\n' + '>> K2d = K + (1.0/3.0)*miu =', '{:11.4e}'.format(K2d))
+    # Compute consistent tangent modulus (bulk and shear modulii)
+    consistent_tangent = K2d*FODiagTrace + 2.0*G*FODevProjSym
+    # Build consistent tangent modulus (bulk and shear modulii) matricial form
+    consistent_tangent_mf = top.setTensorMatricialForm(consistent_tangent,n_dim,comp_order)
+    # Print consistent tangent modulus (bulk and shear modulii)
+    print('\n' + '>> consistent_tangent = K2d*FODiagTrace + 2.0*G*(FOSym - ' + \
+                                                                   '(1.0/2.0)*FODiagTrace)')
+    print('\n' + 'consistent_tangent_mf (2d bulk modulus and shear modulus):' + '\n')
+    print(consistent_tangent_mf)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    print('\n' + 92*'-' + '\n')
+# ------------------------------------------------------------------------------------------
 if __name__ == '__main__':
     #utility1()
     #utility4()
