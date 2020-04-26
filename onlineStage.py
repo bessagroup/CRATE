@@ -945,8 +945,9 @@ def updateCITs(problem_dict,material_properties_ref,Se_ref_matrix,material_phase
     global_cit_0_freq_mf = assembleCIT(material_phases,phase_n_clusters,
                                                     phase_clusters,comp_order,cit_0_freq_mf)
     # Assemble global cluster interaction matrix
-    global_cit_mf = Gop_factor_1*global_cit_1_mf + Gop_factor_2*global_cit_2_mf + \
-                                         np.multiply(Gop_factor_0_freq,global_cit_0_freq_mf)
+    global_cit_mf = np.add(np.add(np.multiply(Gop_factor_1,global_cit_1_mf), \
+                                  np.multiply(Gop_factor_2,global_cit_2_mf)), \
+                           np.multiply(Gop_factor_0_freq,global_cit_0_freq_mf))
     # --------------------------------------------------------------------------------------
     # Validation:
     if is_Validation[7]:
@@ -1052,9 +1053,9 @@ def buildResidual(problem_dict,material_phases,phase_clusters,n_total_clusters,
     residual = np.zeros(n_total_clusters*len(comp_order) + n_presc_mac_stress)
     # Compute clusters equilibrium residuals
     residual[0:n_total_clusters*len(comp_order)] = \
-                                   gbl_inc_strain_mf + \
-                                   np.matmul(global_cit_mf,global_inc_pol_stress_mf) - \
-                                   numpy.matlib.repmat(inc_mix_strain_mf,1,n_total_clusters)
+        np.subtract(np.add(gbl_inc_strain_mf,
+                           np.matmul(global_cit_mf,global_inc_pol_stress_mf)), \
+                    numpy.matlib.repmat(inc_mix_strain_mf,1,n_total_clusters))
     # Compute additional residual if there are prescribed macroscale stress components
     if n_presc_mac_stress > 0:
         # Compute prescribed macroscale stress components residual
@@ -1095,9 +1096,9 @@ def buildResidual2(problem_dict,material_phases,phase_clusters,n_total_clusters,
     residual = np.zeros(n_total_clusters*len(comp_order) + len(comp_order))
     # Compute clusters equilibrium residuals
     residual[0:n_total_clusters*len(comp_order)] = \
-                              gbl_inc_strain_mf + \
-                              np.matmul(global_cit_mf,global_inc_pol_stress_mf) - \
-                              numpy.matlib.repmat(inc_farfield_strain_mf,1,n_total_clusters)
+        np.subtract(np.add(gbl_inc_strain_mf,
+                           np.matmul(global_cit_mf,global_inc_pol_stress_mf)), \
+                    numpy.matlib.repmat(inc_farfield_strain_mf,1,n_total_clusters))
     # Compute homogenization constraints residuals
     for i in range(len(comp_order)):
         if i in presc_strain_idxs:
@@ -1221,8 +1222,8 @@ def homogenizedStrainStressTensors(problem_dict,material_phases,phase_clusters,c
             stress_mf = clusters_state[str(cluster)]['stress_mf']
             # Add material cluster contribution to homogenized strain and stress tensors
             # (matricial form)
-            hom_strain_mf = hom_strain_mf + clusters_f[str(cluster)]*strain_mf
-            hom_stress_mf = hom_stress_mf + clusters_f[str(cluster)]*stress_mf
+            hom_strain_mf = np.add(hom_strain_mf,clusters_f[str(cluster)]*strain_mf)
+            hom_stress_mf = np.add(hom_stress_mf,clusters_f[str(cluster)]*stress_mf)
     # Return
     return [hom_strain_mf,hom_stress_mf]
 # ------------------------------------------------------------------------------------------
@@ -1260,8 +1261,8 @@ def effectiveTangentModulus(problem_dict,material_phases,n_total_clusters,phase_
     FOSym_mf = top.setTensorMatricialForm(FOSym,n_dim,comp_order)
     # Compute cluster strain concentration tensors system of linear equations coefficient
     # matrix (derivatives of clusters equilibrium residuals)
-    csct_matrix = scipy.linalg.block_diag(*(n_total_clusters*[FOSym_mf,])) + \
-                                                                      global_cit_D_De_ref_mf
+    csct_matrix = np.add(scipy.linalg.block_diag(*(n_total_clusters*[FOSym_mf,])), \
+                         global_cit_D_De_ref_mf)
     # Compute cluster strain concentration tensors system of linear equations coefficient
     # right-hand side
     csct_rhs = numpy.matlib.repmat(FOSym_mf,n_total_clusters,1)
