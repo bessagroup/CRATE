@@ -289,10 +289,10 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
         for j in range(len(var4)):
             if var4[j]:
                 first_term = np.add(first_term,var2[var5[j]])
-        first_term = np.divide(first_term,np.square(var3),where = var3 != 0)
+        first_term = np.divide(first_term,np.square(var3),where = abs(var3) > 1e-10)
         # Compute second material independent term of Green operator
         second_term = -1.0*np.divide(var2[''.join([str(x) for x in fo_idx])],
-                                     np.square(np.square(var3)),where = var3 != 0)
+                                     np.square(np.square(var3)),where = abs(var3) > 1e-10)
         # Compute Green operator matricial form component
         Gop_DFT_vox[comp] = c1*first_term + c2*second_term
     # --------------------------------------------------------------------------------------
