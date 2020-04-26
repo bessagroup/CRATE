@@ -863,6 +863,190 @@ def utility5():
                                                phase_durations[1]/phase_durations[2]))
     print('')
 # ------------------------------------------------------------------------------------------
+def utility7():
+    # Import modules
+    import numpy as np
+    import numpy.matlib
+    import numpy.linalg
+    import itertools as it
+    import copy
+    import tensorOperations as top
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set numpy default print options
+    np.set_printoptions(precision=4,linewidth=np.inf)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set problem dimension
+    n_dim = 3
+    # Set strain/stress component order
+    if n_dim == 2:
+        comp_order_sym = ['11','22','12']
+    else:
+        comp_order_sym = ['11','22','33','12','23','13']
+    comp_order = comp_order_sym
+    # Set RVE dimensions
+    rve_dims = n_dim*[1.0,]
+    # Set number of voxels on each dimension
+    n = [10,10,10]
+    n_voxels_dims = [i for i in n[0:n_dim]]
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set discrete frequencies (rad/m) for each dimension
+    freqs_dims = list()
+    for i in range(n_dim):
+        # Set sampling spatial period
+        sampling_period = rve_dims[i]/n_voxels_dims[i]
+        # Set discrete frequencies
+        freqs_dims.append(2*np.pi*np.fft.fftfreq(n_voxels_dims[i],sampling_period))
+    #
+    #                                    Reference material Green operator (CIT computation)
+    #                           (original version - standard loop over discrete frequencies)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set Green operator matricial form components
+    comps = list(it.product(comp_order,comp_order))
+    # Set mapping between Green operator fourth-order tensor and matricial form components
+    fo_indexes = list()
+    mf_indexes = list()
+    for i in range(len(comp_order)**2):
+        fo_indexes.append([int(x)-1 for x in list(comps[i][0]+comps[i][1])])
+        mf_indexes.append([x for x in \
+                             [comp_order.index(comps[i][0]),comp_order.index(comps[i][1])]])
+    # Initialize Green operator material independent terms
+    Gop_1_DFT_vox = {''.join([str(x+1) for x in idx]): \
+                                       np.zeros(tuple(n_voxels_dims)) for idx in fo_indexes}
+    Gop_2_DFT_vox = {''.join([str(x+1) for x in idx]): \
+                                       np.zeros(tuple(n_voxels_dims)) for idx in fo_indexes}
+    Gop_0_freq_DFT_vox = {''.join([str(x+1) for x in idx]): \
+                                       np.zeros(tuple(n_voxels_dims)) for idx in fo_indexes}
+    # Compute Green operator matricial form components
+    for i in range(len(mf_indexes)):
+        # Get fourth-order tensor indexes
+        fo_idx = fo_indexes[i]
+        # Get Green operator component
+        comp = ''.join([str(x+1) for x in fo_idx])
+        # Loop over discrete frequencies
+        for freq_coord in it.product(*freqs_dims):
+            # Get discrete frequency index
+            freq_idx = tuple([list(freqs_dims[x]).index(freq_coord[x]) for \
+                                                                         x in range(n_dim)])
+            # Set Green operator zero-frequency term to unit at zero-frequency. Skip the
+            # zero-frequency computation for the remaining Green operator terms
+            if freq_idx == n_dim*(0,):
+                Gop_0_freq_DFT_vox[comp][freq_idx] = 1.0
+                continue
+            # Compute frequency vector norm
+            freq_norm = np.linalg.norm(freq_coord)
+            # Compute first material independent term of Green operator
+            Gop_1_DFT_vox[comp][freq_idx] = (1.0/freq_norm**2)*(
+                   top.Dd(fo_idx[0],fo_idx[2])*freq_coord[fo_idx[1]]*freq_coord[fo_idx[3]] +
+                   top.Dd(fo_idx[0],fo_idx[3])*freq_coord[fo_idx[1]]*freq_coord[fo_idx[2]] +
+                   top.Dd(fo_idx[1],fo_idx[3])*freq_coord[fo_idx[0]]*freq_coord[fo_idx[2]] +
+                   top.Dd(fo_idx[1],fo_idx[2])*freq_coord[fo_idx[0]]*freq_coord[fo_idx[3]])
+            # Compute second material independent term of Green operator
+            Gop_2_DFT_vox[comp][freq_idx] = -(1.0/freq_norm**4)*\
+                                               (freq_coord[fo_idx[0]]*freq_coord[fo_idx[1]]*
+                                               freq_coord[fo_idx[2]]*freq_coord[fo_idx[3]])
+    # --------------------------------------------------------------------------------------
+    # Copy Gop_X_DFT_vox
+    Gop_1_DFT_vox_old = copy.deepcopy(Gop_1_DFT_vox)
+    Gop_2_DFT_vox_old = copy.deepcopy(Gop_2_DFT_vox)
+    Gop_0_freq_DFT_vox_old = copy.deepcopy(Gop_0_freq_DFT_vox)
+    #
+    #                                    Reference material Green operator (CIT computation)
+    #                                                                          (new version)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set Green operator matricial form components
+    comps = list(it.product(comp_order,comp_order))
+    # Set mapping between Green operator fourth-order tensor and matricial form components
+    fo_indexes = list()
+    mf_indexes = list()
+    for i in range(len(comp_order)**2):
+        fo_indexes.append([int(x)-1 for x in list(comps[i][0]+comps[i][1])])
+        mf_indexes.append([x for x in \
+                             [comp_order.index(comps[i][0]),comp_order.index(comps[i][1])]])
+    # Set optimized variables
+    var1 = [*np.meshgrid(*freqs_dims,indexing = 'ij')]
+    var2 = dict()
+    for fo_idx in fo_indexes:
+        if str(fo_idx[1]) + str(fo_idx[3]) not in var2.keys():
+            var2[str(fo_idx[1]) + str(fo_idx[3])] = \
+                np.multiply(var1[fo_idx[1]],var1[fo_idx[3]])
+        if str(fo_idx[1]) + str(fo_idx[2]) not in var2.keys():
+            var2[str(fo_idx[1]) + str(fo_idx[2])] = \
+                np.multiply(var1[fo_idx[1]],var1[fo_idx[2]])
+        if str(fo_idx[0]) + str(fo_idx[2]) not in var2.keys():
+            var2[str(fo_idx[0]) + str(fo_idx[2])] = \
+                np.multiply(var1[fo_idx[0]],var1[fo_idx[2]])
+        if str(fo_idx[0]) + str(fo_idx[3]) not in var2.keys():
+            var2[str(fo_idx[0]) + str(fo_idx[3])] = \
+                np.multiply(var1[fo_idx[0]],var1[fo_idx[3]])
+        if ''.join([str(x) for x in fo_idx]) not in var2.keys():
+            var2[''.join([str(x) for x in fo_idx])] = \
+                np.multiply(np.multiply(var1[fo_idx[0]],var1[fo_idx[1]]),
+                            np.multiply(var1[fo_idx[2]],var1[fo_idx[3]]))
+    if n_dim == 2:
+        var3 = np.sqrt(np.add(np.square(var1[0]),np.square(var1[1])))
+    else:
+        var3 = np.sqrt(np.add(np.add(np.square(var1[0]),np.square(var1[1])),
+                              np.square(var1[2])))
+    # Initialize Green operator material independent terms
+    Gop_1_DFT_vox = {''.join([str(x+1) for x in idx]): \
+                                       np.zeros(tuple(n_voxels_dims)) for idx in fo_indexes}
+    Gop_2_DFT_vox = {''.join([str(x+1) for x in idx]): \
+                                       np.zeros(tuple(n_voxels_dims)) for idx in fo_indexes}
+    Gop_0_freq_DFT_vox = {''.join([str(x+1) for x in idx]): \
+                                       np.zeros(tuple(n_voxels_dims)) for idx in fo_indexes}
+    # Compute Green operator matricial form components
+    for i in range(len(mf_indexes)):
+        # Get fourth-order tensor indexes
+        fo_idx = fo_indexes[i]
+        # Get Green operator component
+        comp = ''.join([str(x+1) for x in fo_idx])
+        # Set optimized variables
+        var4 = [fo_idx[0] == fo_idx[2],fo_idx[0] == fo_idx[3],
+                fo_idx[1] == fo_idx[3],fo_idx[1] == fo_idx[2]]
+        var5 = [str(fo_idx[1]) + str(fo_idx[3]),str(fo_idx[1]) + str(fo_idx[2]),
+                str(fo_idx[0]) + str(fo_idx[2]),str(fo_idx[0]) + str(fo_idx[3])]
+
+        # Compute first material independent term of Green operator
+        first_term = np.zeros(tuple(n_voxels_dims))
+        for j in range(len(var4)):
+            if var4[j]:
+                first_term = np.add(first_term,var2[var5[j]])
+        first_term = np.divide(first_term,np.square(var3),where = abs(var3) > 1e-10)
+        Gop_1_DFT_vox[comp] = copy.copy(first_term)
+        # Compute second material independent term of Green operator
+        Gop_2_DFT_vox[comp] = -1.0*np.divide(var2[''.join([str(x) for x in fo_idx])],
+                                     np.square(np.square(var3)),where = abs(var3) > 1e-10)
+        # Compute Green operator zero-frequency term
+        Gop_0_freq_DFT_vox[comp][tuple(n_dim*(0,))] = 1.0
+    # --------------------------------------------------------------------------------------
+    # Copy Gop_X_DFT_vox
+    Gop_1_DFT_vox_new = copy.deepcopy(Gop_1_DFT_vox)
+    Gop_2_DFT_vox_new = copy.deepcopy(Gop_2_DFT_vox)
+    Gop_0_freq_DFT_vox_new = copy.deepcopy(Gop_0_freq_DFT_vox)
+    #
+    #                                                                             Comparison
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Check if all the Green operator has the same value between the original version
+    # (reference) and the new implementation
+    print('\n' + 'Green operator computation')
+    print('--------------------------')
+    print('\n' + 'Same values as the original implementation?' + '\n')
+    print('\n' + 'Gop_1_DFT_vox:' + '\n')
+    for fo_idx in fo_indexes:
+        comp = ''.join([str(x+1) for x in fo_idx])
+        print(comp + ': ' + str(np.allclose(Gop_1_DFT_vox_old[comp],
+                                            Gop_1_DFT_vox_new[comp],atol=1e-10)))
+    print('\n' + 'Gop_2_DFT_vox:' + '\n')
+    for fo_idx in fo_indexes:
+        comp = ''.join([str(x+1) for x in fo_idx])
+        print(comp + ': ' + str(np.allclose(Gop_2_DFT_vox_old[comp],
+                                            Gop_2_DFT_vox_new[comp],atol=1e-10)))
+    print('\n' + 'Gop_0_freq_DFT_vox:' + '\n')
+    for fo_idx in fo_indexes:
+        comp = ''.join([str(x+1) for x in fo_idx])
+        print(comp + ': ' + str(np.allclose(Gop_0_freq_DFT_vox_old[comp],
+                                            Gop_0_freq_DFT_vox_new[comp],atol=1e-10)))
+    print('')
 #
 #                                                                              2D elasticity
 # ==========================================================================================
@@ -979,6 +1163,4 @@ def utility6():
     print('\n' + 92*'-' + '\n')
 # ------------------------------------------------------------------------------------------
 if __name__ == '__main__':
-    #utility1()
-    #utility4()
-    utility5()
+    utility7()
