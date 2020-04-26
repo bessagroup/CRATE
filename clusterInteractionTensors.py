@@ -176,12 +176,13 @@ def computeClusterInteractionTensors(dirs_dict,problem_dict,mat_dict,rg_dict,cls
                     # Compute cluster interaction tensor between the material phase A
                     # cluster and the material phase B cluster
                     rve_vol = np.prod(rve_dims)
-                    cit_1_pair_mf = \
-                                 (1.0/(clusters_f[str(clusterI)]*rve_vol))*cit_1_integral_mf
-                    cit_2_pair_mf = \
-                                 (1.0/(clusters_f[str(clusterI)]*rve_vol))*cit_2_integral_mf
+                    cit_1_pair_mf = np.multiply((1.0/(clusters_f[str(clusterI)]*rve_vol)),
+                                                cit_1_integral_mf)
+                    cit_2_pair_mf = np.multiply((1.0/(clusters_f[str(clusterI)]*rve_vol)),
+                                                cit_2_integral_mf)
                     cit_0_freq_pair_mf = \
-                            (1.0/(clusters_f[str(clusterI)]*rve_vol))*cit_0_freq_integral_mf
+                        np.multiply((1.0/(clusters_f[str(clusterI)]*rve_vol)),
+                                    cit_0_freq_integral_mf)
                     # ----------------------------------------------------------------------
                     # Validation:
                     if False and mat_phase_B == '2' and clusterJ == 2 and \
@@ -418,14 +419,14 @@ def discreteCITConvolutionJ(comp_order,rve_dims,n_voxels_dims,cluster_filter_DFT
             compj = comp_order[j]
             # Perform discrete convolution in the frequency domain
             Gop_1_filt_DFT_vox[compi+compj] = \
-                                          (rve_vol/n_voxels)*np.multiply(cluster_filter_DFT,
-                                                            Gop_1_filt_DFT_vox[compi+compj])
+                np.multiply((rve_vol/n_voxels),np.multiply(cluster_filter_DFT,
+                                                           Gop_1_filt_DFT_vox[compi+compj]))
             Gop_2_filt_DFT_vox[compi+compj] = \
-                                          (rve_vol/n_voxels)*np.multiply(cluster_filter_DFT,
-                                                            Gop_2_filt_DFT_vox[compi+compj])
+                np.multiply((rve_vol/n_voxels),np.multiply(cluster_filter_DFT,
+                                                           Gop_2_filt_DFT_vox[compi+compj]))
             Gop_0_freq_filt_DFT_vox[compi+compj] = \
-                                          (rve_vol/n_voxels)*np.multiply(cluster_filter_DFT,
-                                                       Gop_0_freq_filt_DFT_vox[compi+compj])
+                np.multiply((rve_vol/n_voxels),np.multiply(cluster_filter_DFT,
+                                                      Gop_0_freq_filt_DFT_vox[compi+compj]))
             # Perform an Inverse Discrete Fourier Transform (IDFT) by means of Fast Fourier
             # Transform (FFT)
             Gop_1_filt_vox[compi+compj] = \
