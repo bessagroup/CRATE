@@ -284,6 +284,31 @@ def GreenOperatorMatIndTerms(n_dim,rve_dims,comp_order,n_voxels_dims):
         fo_indexes.append([int(x)-1 for x in list(comps[i][0]+comps[i][1])])
         mf_indexes.append([x for x in \
                              [comp_order.index(comps[i][0]),comp_order.index(comps[i][1])]])
+    # Set optimized variables
+    var1 = [*np.meshgrid(*freqs_dims,indexing = 'ij')]
+    var2 = dict()
+    for fo_idx in fo_indexes:
+        if str(fo_idx[1]) + str(fo_idx[3]) not in var2.keys():
+            var2[str(fo_idx[1]) + str(fo_idx[3])] = \
+                np.multiply(var1[fo_idx[1]],var1[fo_idx[3]])
+        if str(fo_idx[1]) + str(fo_idx[2]) not in var2.keys():
+            var2[str(fo_idx[1]) + str(fo_idx[2])] = \
+                np.multiply(var1[fo_idx[1]],var1[fo_idx[2]])
+        if str(fo_idx[0]) + str(fo_idx[2]) not in var2.keys():
+            var2[str(fo_idx[0]) + str(fo_idx[2])] = \
+                np.multiply(var1[fo_idx[0]],var1[fo_idx[2]])
+        if str(fo_idx[0]) + str(fo_idx[3]) not in var2.keys():
+            var2[str(fo_idx[0]) + str(fo_idx[3])] = \
+                np.multiply(var1[fo_idx[0]],var1[fo_idx[3]])
+        if ''.join([str(x) for x in fo_idx]) not in var2.keys():
+            var2[''.join([str(x) for x in fo_idx])] = \
+                np.multiply(np.multiply(var1[fo_idx[0]],var1[fo_idx[1]]),
+                            np.multiply(var1[fo_idx[2]],var1[fo_idx[3]]))
+    if n_dim == 2:
+        var3 = np.sqrt(np.add(np.square(var1[0]),np.square(var1[1])))
+    else:
+        var3 = np.sqrt(np.add(np.add(np.square(var1[0]),np.square(var1[1])),
+                              np.square(var1[2])))
     # Initialize Green operator material independent terms
     Gop_1_DFT_vox = {''.join([str(x+1) for x in idx]): \
                                        np.zeros(tuple(n_voxels_dims)) for idx in fo_indexes}
@@ -297,28 +322,24 @@ def GreenOperatorMatIndTerms(n_dim,rve_dims,comp_order,n_voxels_dims):
         fo_idx = fo_indexes[i]
         # Get Green operator component
         comp = ''.join([str(x+1) for x in fo_idx])
-        # Loop over discrete frequencies
-        for freq_coord in it.product(*freqs_dims):
-            # Get discrete frequency index
-            freq_idx = tuple([list(freqs_dims[x]).index(freq_coord[x]) for \
-                                                                         x in range(n_dim)])
-            # Set Green operator zero-frequency term to unit at zero-frequency. Skip the
-            # zero-frequency computation for the remaining Green operator terms
-            if freq_idx == n_dim*(0,):
-                Gop_0_freq_DFT_vox[comp][freq_idx] = 1.0
-                continue
-            # Compute frequency vector norm
-            freq_norm = np.linalg.norm(freq_coord)
-            # Compute first material independent term of Green operator
-            Gop_1_DFT_vox[comp][freq_idx] = (1.0/freq_norm**2)*(
-                   top.Dd(fo_idx[0],fo_idx[2])*freq_coord[fo_idx[1]]*freq_coord[fo_idx[3]] +
-                   top.Dd(fo_idx[0],fo_idx[3])*freq_coord[fo_idx[1]]*freq_coord[fo_idx[2]] +
-                   top.Dd(fo_idx[1],fo_idx[3])*freq_coord[fo_idx[0]]*freq_coord[fo_idx[2]] +
-                   top.Dd(fo_idx[1],fo_idx[2])*freq_coord[fo_idx[0]]*freq_coord[fo_idx[3]])
-            # Compute second material independent term of Green operator
-            Gop_2_DFT_vox[comp][freq_idx] = -(1.0/freq_norm**4)*\
-                                               (freq_coord[fo_idx[0]]*freq_coord[fo_idx[1]]*
-                                               freq_coord[fo_idx[2]]*freq_coord[fo_idx[3]])
+        # Set optimized variables
+        var4 = [fo_idx[0] == fo_idx[2],fo_idx[0] == fo_idx[3],
+                fo_idx[1] == fo_idx[3],fo_idx[1] == fo_idx[2]]
+        var5 = [str(fo_idx[1]) + str(fo_idx[3]),str(fo_idx[1]) + str(fo_idx[2]),
+                str(fo_idx[0]) + str(fo_idx[2]),str(fo_idx[0]) + str(fo_idx[3])]
+
+        # Compute first material independent term of Green operator
+        first_term = np.zeros(tuple(n_voxels_dims))
+        for j in range(len(var4)):
+            if var4[j]:
+                first_term = np.add(first_term,var2[var5[j]])
+        first_term = np.divide(first_term,np.square(var3),where = abs(var3) > 1e-10)
+        Gop_1_DFT_vox[comp] = copy.copy(first_term)
+        # Compute second material independent term of Green operator
+        Gop_2_DFT_vox[comp] = -1.0*np.divide(var2[''.join([str(x) for x in fo_idx])],
+                                     np.square(np.square(var3)),where = abs(var3) > 1e-10)
+        # Compute Green operator zero-frequency term
+        Gop_0_freq_DFT_vox[comp][tuple(n_dim*(0,))] = 1.0
     # --------------------------------------------------------------------------------------
     # Validation:
     if False:
