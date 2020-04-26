@@ -1470,9 +1470,10 @@ def checkNRConvergence(comp_order,n_total_clusters,inc_mac_load_mf,n_presc_mac_s
     is_converged = False
     # Set strain and stress normalization factors
     if n_presc_mac_strain > 0 and \
-                             not np.allclose(inc_mac_load_mf['strain'][[presc_strain_idxs]],
-                 np.zeros(inc_mac_load_mf['strain'][[presc_strain_idxs]].shape),atol=1e-10):
-        strain_norm_factor = np.linalg.norm(inc_mac_load_mf['strain'][[presc_strain_idxs]])
+                        not np.allclose(inc_mac_load_mf['strain'][tuple(presc_strain_idxs)],
+            np.zeros(inc_mac_load_mf['strain'][tuple(presc_strain_idxs)].shape),atol=1e-10):
+        strain_norm_factor = \
+            np.linalg.norm(inc_mac_load_mf['strain'][tuple(presc_strain_idxs)])
     elif not np.allclose(inc_hom_strain_mf,np.zeros(inc_hom_strain_mf.shape),atol=1e-10):
         strain_norm_factor = np.linalg.norm(inc_hom_strain_mf)
     else:
@@ -1528,9 +1529,10 @@ def checkNRConvergence2(comp_order,n_total_clusters,inc_mac_load_mf,n_presc_mac_
     is_converged = False
     # Set strain and stress normalization factors
     if n_presc_mac_strain > 0 and \
-                             not np.allclose(inc_mac_load_mf['strain'][[presc_strain_idxs]],
-                 np.zeros(inc_mac_load_mf['strain'][[presc_strain_idxs]].shape),atol=1e-10):
-        strain_norm_factor = np.linalg.norm(inc_mac_load_mf['strain'][[presc_strain_idxs]])
+                        not np.allclose(inc_mac_load_mf['strain'][tuple(presc_strain_idxs)],
+            np.zeros(inc_mac_load_mf['strain'][tuple(presc_strain_idxs)].shape),atol=1e-10):
+        strain_norm_factor = \
+            np.linalg.norm(inc_mac_load_mf['strain'][tuple(presc_strain_idxs)])
     elif not np.allclose(inc_hom_strain_mf,np.zeros(inc_hom_strain_mf.shape),atol=1e-10):
         strain_norm_factor = np.linalg.norm(inc_hom_strain_mf)
     else:
