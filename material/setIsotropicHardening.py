@@ -43,11 +43,11 @@ def setRequiredParameters(type):
     elif type == 'linear':
         req_hardening_parameters = ['s0','a']
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Linear isotropic hardening
+    # Swift isotropic hardening
     elif type == 'swift':
         req_hardening_parameters = ['s0','a','b']
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Linear isotropic hardening
+    # Ramberg-Osgood isotropic hardening
     elif type == 'ramberg_osgood':
         req_hardening_parameters = ['s0','a','b']
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
