@@ -329,7 +329,8 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize self-consistent scheme iteration counter
         scs_iter = 0
-        info.displayInfo('8','init',scs_iter,E_ref,v_ref)
+        info.displayInfo('8','init',scs_iter,material_properties_ref['E'],
+                         material_properties_ref['v'])
         # Set self-consistent scheme iteration initial time
         scs_iter_init_time = time.time()
         # ----------------------------------------------------------------------------------
