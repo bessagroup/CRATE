@@ -121,7 +121,7 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
     # Set online stage initial time
     os_init_time = time.time()
     # Set far-field formulation flag
-    is_farfield_formulation = False
+    is_farfield_formulation = True
     # Initialize homogenized strain and stress tensors
     hom_strain_mf = np.zeros(len(comp_order))
     hom_strain_old_mf = np.zeros(len(comp_order))
