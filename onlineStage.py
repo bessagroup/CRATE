@@ -982,26 +982,26 @@ def assembleCIT(material_phases,phase_n_clusters,phase_clusters,comp_order,cit_X
     # Loop over material phases
     for mat_phase_B in material_phases:
         # Loop over material phase B clusters
-        for clusterJ in phase_clusters[mat_phase_B]:
+        for cluster_J in phase_clusters[mat_phase_B]:
             # Initialize row cluster index
             iclst = 0
             # Loop over material phases
             for mat_phase_A in material_phases:
                 # Set material phase pair
-                mat_phase_pair = mat_phase_A + mat_phase_B
+                mat_phase_pair = mat_phase_A + '_' + mat_phase_B
                 # Loop over material phase A clusters
-                for clusterI in phase_clusters[mat_phase_A]:
+                for cluster_I in phase_clusters[mat_phase_A]:
                     # Set cluster pair
-                    cluster_pair = str(clusterI)+str(clusterJ)
+                    cluster_pair = str(cluster_I) + '_' + str(cluster_J)
                     # ----------------------------------------------------------------------
                     # Validation:
                     if False:
                         section = 'assembleCIT'
                         print('\n' + '>>>> ' + section + ' ' + (92-len(section)-4)*'-')
                         print('\n' + 'mat_phase_A: ' + mat_phase_A + \
-                                                      '  (clusterI: ' + str(clusterI) + ')')
+                                                    '  (cluster_I: ' + str(cluster_I) + ')')
                         print(       'mat_phase_B: ' + mat_phase_B + \
-                                                      '  (clusterJ: ' + str(clusterJ) + ')')
+                                                    '  (cluster_J: ' + str(cluster_J) + ')')
                         print('\n' + 'cit_X_mf[mat_phase_pair][cluster_pair]:' + '\n')
                         print(cit_X_mf[mat_phase_pair][cluster_pair])
                     # ----------------------------------------------------------------------
