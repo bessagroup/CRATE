@@ -1365,7 +1365,8 @@ def SCS_UpdateRefMatElasticProperties(self_consistent_scheme,problem_dict,inc_st
         # respect to lambda). In this case, adopt the previous converged lambda and compute
         # miu from the second equation of the the self-consistent scheme system of linear
         # equations
-        if (abs(np.trace(inc_strain))/np.linalg.norm(inc_strain)) < 1e-10:
+        if (abs(np.trace(inc_strain))/np.linalg.norm(inc_strain)) < 1e-10 or \
+            np.linalg.solve(scs_matrix,scs_rhs)[0] < 0:
             # Get previous converged reference material elastic properties
             E_ref_old = material_properties_ref['E']
             v_ref_old = material_properties_ref['v']
