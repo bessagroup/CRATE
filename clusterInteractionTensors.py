@@ -483,7 +483,7 @@ def checkCITCompatibility(mat_dict,clst_dict):
     # Check cluster interaction tensors material phase pairs
     for mat_phase_B in material_phases:
         for mat_phase_A in material_phases:
-            mat_phase_pair = mat_phase_A + mat_phase_B
+            mat_phase_pair = mat_phase_A + '_' + mat_phase_B
             if mat_phase_pair not in clst_dict['cit_1_mf'].keys() or \
                                     mat_phase_pair not in clst_dict['cit_2_mf'].keys() or  \
                                     mat_phase_pair not in clst_dict['cit_0_freq_mf'].keys():
