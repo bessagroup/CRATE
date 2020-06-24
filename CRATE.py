@@ -43,6 +43,9 @@
 #     M. A. Bessa and W. K. Liu (2016)
 #   > Implementation of suitable interfaces with the multi-scale finite element code Links
 #     (CM2S research group, Faculty of Engineering, University of Porto)
+#   > All the details about this release can be found in the PhD seminar of Bernardo P.
+#     Ferreira ("Accurate and efficient multi-scale analyses of nonlinear heterogeneous
+#     materials based on clustering-based reduced order models", University of Porto, 2020)
 #
 # ==========================================================================================
 #                                                                             Import modules
