@@ -1,8 +1,8 @@
 #
-# Packager Module (UNNAMED Program)
+# Packager Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# ...
+# Module containing procedures related to the packaging of objects in specific dictionaries.
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | February 2020 | Initial coding.

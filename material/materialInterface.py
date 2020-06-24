@@ -1,8 +1,10 @@
 #
-# Material Interface (UNNAMED Program)
+# Material Interface (CRATE Program)
 # ==========================================================================================
 # Summary:
-# ...
+# Module containing CRATE's material constitutive models interface, allowing to perform the
+# state update and the computation of the consistent tangent modulus of constitutive models
+# from different sources.
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | February 2020 | Initial coding.
@@ -38,7 +40,7 @@ def materialInterface(procedure,problem_dict,mat_dict,clst_dict,algpar_dict,mat_
     # Set constitutive model procedures source
     model_source = material_phases_models[str(mat_phase)]['source']
     #
-    #                                                    UNNAMED program material procedures
+    #                                                              CRATE material procedures
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     if model_source == 1:
         #                                                                     Initialization
@@ -103,7 +105,7 @@ def materialInterface(procedure,problem_dict,mat_dict,clst_dict,algpar_dict,mat_
 # Set the available material constitutive models from a given source
 def getAvailableConstitutiveModels(model_source):
     if model_source == 1:
-        # UNNAMED program material constitutive models
+        # CRATE material constitutive models
         available_mat_models = ['linear_elastic','von_mises']
     elif model_source == 2:
         # Links material constitutive models

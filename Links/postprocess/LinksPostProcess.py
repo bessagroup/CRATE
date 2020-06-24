@@ -1,8 +1,9 @@
 #
-# Links Post-Processing Module (UNNAMED Program)
+# Links Post-Processing Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# ...
+# Module containing procedures related to the post-processing of results outputed by the
+# finite element code Links.
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | April 2020 | Initial coding.

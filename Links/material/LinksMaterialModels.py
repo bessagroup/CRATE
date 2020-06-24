@@ -1,8 +1,9 @@
 #
-# Links Materials Constitutive Models Module (UNNAMED Program)
+# Links Materials Constitutive Models Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# ...
+# Module containing procedures related to the definition of the finite element code Links
+# constitutive models.
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | April 2020 | Initial coding.

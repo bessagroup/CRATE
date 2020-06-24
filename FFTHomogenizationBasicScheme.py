@@ -1,8 +1,11 @@
 #
-# Moulinec and Suquet FFT-Based Homogenization Method Module (UNNAMED Program)
+# Moulinec and Suquet FFT-Based Homogenization Method Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# ...
+# Implementation of the FFT-based homogenization basic scheme proposed by H. Moulinec
+# and P. Suquet ("A numerical method for computing the overall response of nonlinear
+# composites with complex microstructure" Comp Methods Appl M 157 (1998):69-94) for the
+# solution of microscale equilibrium problems of linear elastic heterogeneous materials.
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | January 2020 | Initial coding.

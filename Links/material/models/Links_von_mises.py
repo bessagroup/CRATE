@@ -1,8 +1,9 @@
 #
-# Links Von Mises Constitutive Model Module (UNNAMED Program)
+# Links Von Mises Constitutive Model Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# ...
+# Procedures related to the infinitesimal strain isotropic elastoplastic von Mises
+# constitutive model with isotropic strain hardening from finite element code Links.
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | April 2020 | Initial coding.

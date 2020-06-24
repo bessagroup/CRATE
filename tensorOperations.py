@@ -1,8 +1,9 @@
 #
-# Tensor Operations Module (UNNAMED Program)
+# Tensor Operations Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# ...
+# Module containing procedures related to tensorial and matricial operations (e.g algebraic
+# tensorial operations, matricial form storage, common tensorial operators).
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | January 2020 | Initial coding.

@@ -1,8 +1,9 @@
 #
-# Errors and Warnings Module (UNNAMED Program)
+# Errors and Warnings Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# ...
+# Module containing procedures associated to execution errors, warnings and built-in
+# exceptions.
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | January 2020 | Initial coding.
@@ -855,7 +856,7 @@ def displayError(code,*args):
         arguments = ['',]
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
-                   indent + 'In order to be used in the UNNAMED program online stage, ' + \
+                   indent + 'In order to be used in the CRATE program online stage, ' + \
                    'the Links constitutive model must' + '\n' + \
                    indent + 'return the total strain tensor or the required data to ' + \
                    'compute it.'

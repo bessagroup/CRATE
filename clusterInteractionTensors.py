@@ -1,8 +1,9 @@
 #
-# Cluster Interaction Tensors Computation Module (UNNAMED Program)
+# Cluster Interaction Tensors Computation Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# ...
+# Module containing procedures related to the computation of the fourth-order cluster
+# interaction tensors (material independent components).
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | February 2020 | Initial coding.

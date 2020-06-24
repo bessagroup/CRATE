@@ -1,8 +1,9 @@
 #
-# Linear Elastic Constitutive Model (UNNAMED Program)
+# Linear Elastic Constitutive Model (CRATE Program)
 # ==========================================================================================
 # Summary:
-# ...
+# Procedures related to the infinitesimal strain isotropic linear elastic constitutive
+# model.
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | February 2020 | Initial coding.

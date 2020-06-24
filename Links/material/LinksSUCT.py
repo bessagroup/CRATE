@@ -1,8 +1,9 @@
 #
-# Links State Update and Consistent Tangent Modulus Interface Module (UNNAMED Program)
+# Links State Update and Consistent Tangent Modulus Interface Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# ...
+# Module containing procedures related to the state update and consistent tangent modulus of
+# the finite element code Links constitutive models.
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | April 2020 | Initial coding.

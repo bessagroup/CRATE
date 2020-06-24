@@ -1,8 +1,10 @@
 #
-# Write Homogenized Results Output Module (UNNAMED Program)
+# Homogenized Results Output Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# ...
+# Module containing procedures related to the output file where the homogenized results are
+# stored. Some post-process computations are also performed here, essentially derived from
+# the homogenized strain and stress tensors.
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | March 2020 | Initial coding.

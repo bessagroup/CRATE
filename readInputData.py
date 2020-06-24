@@ -1,8 +1,9 @@
 #
-# Input Data Reader Module (UNNAMED Program)
+# Input Data Reader Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# ...
+# Module containing procedures related to the read and extraction of data from the user
+# provided input data file. All the relevant data is stored in suitable dictionaries.
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | January 2020 | Initial coding.
@@ -460,7 +461,7 @@ def readMaterialProperties(file,file_path,keyword):
         material_phases_models[mat_phase] = dict()
         if len(phase_header) == 3:
             # If the material phase constitutive model source has not been specified, then
-            # assume UNNAMED material procedures by default
+            # assume CRATE material procedures by default
             model_source = 1
             material_phases_models[mat_phase]['source'] = model_source
         elif len(phase_header) == 4:

@@ -1,8 +1,10 @@
 #
-# Information Module
+# Information Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# ...
+# Module containing procedures related to the print of informative data to the default
+# standard output device (usually the terminal). In general, this data is associated to the
+# program launch, to the progress of the main execution phases and to the program end.
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | January 2020 | Initial coding.
@@ -93,7 +95,7 @@ def displayInfo(code,*args,**kwargs):
                         '\n')
             sys.exit(1)
     elif code == '0':
-        arguments = ['Brand New Shiny Unnamed Program','v1.0.0'] + \
+        arguments = ['CRATE','v1.0.0'] + \
                     convertIterableToList(2*[args[0],]) + convertIterableToList(args[1:3])
         info = tuple(arguments)
         template = '\n' + tilde_line + '\n{:^{width}}\n' + '{:^{width}}\n\n' + \

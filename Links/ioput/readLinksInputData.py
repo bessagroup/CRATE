@@ -1,8 +1,9 @@
 #
-# Links Input Data Reader Module (UNNAMED Program)
+# Links Input Data Reader Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# ...
+# Module containing procedures related to the extraction of the required Links parameters
+# specified in CRATE's input data file.
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | April 2020 | Initial coding.

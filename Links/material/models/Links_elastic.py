@@ -1,8 +1,9 @@
 #
-# Links Elastic Constitutive Model Module (UNNAMED Program)
+# Links Elastic Constitutive Model Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# ...
+# Procedures related to the infinitesimal strain isotropic linear elastic constitutive
+# model from finite element code Links.
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | April 2020 | Initial coding.

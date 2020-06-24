@@ -1,8 +1,10 @@
 #
-# Links Utilities Module (UNNAMED Program)
+# Links Utilities Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# ...
+# Module containing procedures related to consistency operations required to implement a
+# suitable interface with the multi-scale finite element code Links (e.g. strain/stress
+# component order, tensorial matricial storage convention, ...).
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | April 2020 | Initial coding.

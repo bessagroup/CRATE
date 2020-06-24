@@ -1,8 +1,9 @@
 #
-# Von Mises (Isotropic Hardening) Constitutive Model (UNNAMED Program)
+# Von Mises (Isotropic Hardening) Constitutive Model (CRATE Program)
 # ==========================================================================================
 # Summary:
-# ...
+# Procedures related to the infinitesimal strain isotropic von Mises elastoplastic
+# constitutive model with isotropic strain hardening.
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | March 2020 | Initial coding.

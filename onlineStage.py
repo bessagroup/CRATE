@@ -1,8 +1,10 @@
 #
-# Online Stage Module (UNNAMED Program)
+# Online Stage Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# ...
+# Module containing the solution procedure of the Lippmann-Schwinger nonlinear system of
+# equilibrium equations embedded in a self-consistent scheme, the core of the
+# Self-Consistent Clustering Analysis (SCA) online stage.
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | February 2020 | Initial coding.

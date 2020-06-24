@@ -1,8 +1,9 @@
 #
-# Links Execution Module (UNNAMED Program)
+# Links Execution Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# ...
+# Module containing procedures required to call the finite element code Links in order to
+# solve a microscale equilibrium problem.
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | April 2020 | Initial coding.

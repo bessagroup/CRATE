@@ -1,8 +1,13 @@
 #
-# Write VTK (XML format) Module (UNNAMED Program)
+# VTK (XML format) Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# ...
+# Module containing procedures related to the output of the data associated to snapshots
+# (macroscale loading increments) of the microscale equilibrium problem solution into VTK
+# files (XML format). This files contain the data associated to the microstructure (material
+# phases, clusters, ...) and to the problem local fields (strain, stress, internal
+# variables, ...), allowing the spatial visualization through suitable VTK-reading software
+# (e.g. Paraview).
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | February 2020 | Initial coding.

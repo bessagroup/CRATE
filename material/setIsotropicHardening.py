@@ -1,8 +1,9 @@
 #
-# Isotropic hardening laws (UNNAMED Program)
+# Isotropic hardening laws (CRATE Program)
 # ==========================================================================================
 # Summary:
-# ...
+# Module containing procedures related to the definition of material isotropic strain
+# hardening laws.
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | March 2020 | Initial coding.

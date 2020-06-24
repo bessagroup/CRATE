@@ -1,8 +1,10 @@
 #
-# File Operations Module (UNNAMED Program)
+# File Operations Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# ...
+# Module containing procedures related to operations on files, directories and associated
+# paths. Among these operations is the definition of the results folder associated to a
+# given problem input data file, directory where all the related output is stored.
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | January 2020 | Initial coding.

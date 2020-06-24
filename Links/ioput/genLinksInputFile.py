@@ -1,8 +1,10 @@
 #
-# Links Input Data File Generator Module (UNNAMED Program)
+# Links Input Data File Generator Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# ...
+# Module containing procedures related to the generation of a finite element code Links'
+# input data file, including the discretization of the RVE in a regular quadrilateral (2D) /
+# hexahedral (3D) finite element mesh.
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | April 2020 | Initial coding.
@@ -62,7 +64,7 @@ def writeLinksInputDataFile(file_name,dirs_dict,problem_dict,mat_dict,rg_dict,cl
                                                            ntpath.basename(Links_file_path))
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set additional Links input data file parameters (fixed)
-    title = 'Links input data file generated automatically by UNNAMED program'
+    title = 'Links input data file generated automatically by CRATE program'
     large_strain_formulation = 'OFF'
     number_of_increments = 1
     solver = 'PARDISO'

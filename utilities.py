@@ -1,5 +1,5 @@
 #
-# Utilities Module (UNNAMED Program)
+# Utilities Module (CRATE Program)
 # ==========================================================================================
 # Summary:
 # Module which serves only the purpose of implementing utilities functions which have easy

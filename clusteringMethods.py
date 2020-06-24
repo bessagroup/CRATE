@@ -1,8 +1,10 @@
 #
-# Perform Clustering Module (UNNAMED Program)
+# Perform Clustering Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# ...
+# Module containing procedures related to the clustering-based domain decomposition of the
+# representative volume element (RVE) into the cluster-reduced representative volume
+# element (CRVE).
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | February 2020 | Initial coding.

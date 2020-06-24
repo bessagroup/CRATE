@@ -1,11 +1,24 @@
 #
-# Self-Consistent Clustering Analysis (SCA) - Clustering Reduced Order Model
+# CRATE - Clustering-based Nonlinear Analysis of Materials
 # ==========================================================================================
 # Summary:
-# ...
+# Program suitable to perform accurate and efficient multi-scale nonlinear analyses of
+# materials mainly relying on a clustering-based reduced order modeling approach coupled
+# with computational homogenization.
 # ------------------------------------------------------------------------------------------
 # Description:
-# ...
+# CRATE has been designed with the main purpose of performing accurate and efficient
+# multi-scale analyses of heterogeneous materials, a crucial task in the development of
+# new materials with innovative and enhanced properties. This goal is achieved through the
+# coupling between first-order computational homogenization and a clustering-based reduced
+# order modeling approach, allowing the solution of a given microscale equilibrium problem
+# formulated in the standard way: define the representative volume element (RVE) of the
+# heterogeneous material under analyses, enforce first-order macroscale strain and/or stress
+# loading constraints, solve the microscale equilibrium problem and compute the
+# heterogeneous material first-order homogenized response. The clustering-based reduced
+# order modeling approach comes into play by compressing the RVE into a cluster-reduced
+# representative volume element (CRVE), aiming to reduce the overall computational cost of
+# the analysis at the expense of an acceptable decrease of accuracy.
 # ------------------------------------------------------------------------------------------
 # Author(s):
 # This program initial version was coded by Bernardo P. Ferreira (bpferreira@fe.up.pt,
@@ -16,20 +29,21 @@
 # CM2S research group, Department of Mechanical Engineering, Faculty of Engineering,
 # University of Porto).
 # ------------------------------------------------------------------------------------------
-# Credits:
-# This program structure was inspired on the original Self-Consistent Clustering Analysis
-# Matlab code implemented and developed by Dr. Zeliang Liu and Dr. Miguel A. Bessa in the
-# course of the research published in "Self-consistent clustering analysis: an efficient
-# multi-scale scheme for inelastic heterogeneous materials. Comp Methods Appl M 305 (2016):
-# 319-341 (Liu, Z., Bessa, M.A. and Liu, W.K.)".
-#
-# ------------------------------------------------------------------------------------------
 # Licensing and Copyrights:
 # ...
 # ------------------------------------------------------------------------------------------
 # Development history:
-# Z.Liu & M.A.Bessa    |     2016     | Original SCA Matlab code (see credits)
-# Bernardo P. Ferreira | January 2020 | Initial coding.
+#
+# Release v1.0.0 - Bernardo P. Ferreira (June 2020)
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#   > Initial coding.
+#   > Implementation of the FFT-based homogenization basic scheme proposed by H. Moulinec
+#     and P. Suquet (1994).
+#   > Implementation of the Self-Consistent Clustering Analysis (SCA) proposed by Z. Liu,
+#     M. A. Bessa and W. K. Liu (2016)
+#   > Implementation of suitable interfaces with the multi-scale finite element code Links
+#     (CM2S research group, Faculty of Engineering, University of Porto)
+#
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================

@@ -1,8 +1,10 @@
 #
-# Cluster-defining Quantities Computation Module (UNNAMED Program)
+# Cluster-defining Quantities Computation Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# ...
+# Module containing procedures related to the computation of the physical metrics serving
+# as a basis to perform the clustering-based domain decomposition, as well as to the
+# different strategies available to perform the model reduction.
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | January 2020 | Initial coding.
