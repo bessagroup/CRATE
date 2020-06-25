@@ -188,7 +188,7 @@ def readInputData(input_file,dirs_dict):
         max = '~'
         scs_conv_tol = readTypeBKeyword(input_file,input_file_path,keyword)
     else:
-        scs_conv_tol = 1e-6
+        scs_conv_tol = 1e-4
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read clustering method
     keyword = 'Clustering_Method'
