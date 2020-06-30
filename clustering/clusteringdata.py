@@ -1,10 +1,10 @@
 #
-# Cluster-defining Quantities Computation Module (CRATE Program)
+# Cluster-defining Data Computation Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# Module containing procedures related to the computation of the physical metrics serving
-# as a basis to perform the clustering-based domain decomposition, as well as to the
-# different strategies available to perform the model reduction.
+# Procedures related to the computation of the physical metrics serving as a basis to
+# perform the clustering-based domain decomposition, as well as to the different strategies
+# available to perform the model reduction.
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | January 2020 | Initial coding.
@@ -19,10 +19,10 @@ import copy
 import ntpath
 # Display messages
 import ioput.info as info
-# Read user input data file
-import ioput.readinputdata as rid
+# Matricial operations
+import tensor.matrixoperations as mop
 # FFT-Based Homogenization Method (Moulinec, H. and Suquet, P., 1998)
-import FFTHomogenizationBasicScheme
+import clustering.solution.ffthombasicscheme as ffthom
 # Links related procedures
 import Links.ioput.genLinksInputFile as LinksGLIF
 import Links.execution.LinksExecution as LinksExec
@@ -78,7 +78,7 @@ import Links.postprocess.LinksPostProcess as LinksPP
 #   sampling points, the storage previously described for the regular grid of pixels/voxels
 #   applies.
 #
-def computeClusteringQuantities(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict):
+def compclusteringdata(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict):
     # Get problem data
     strain_formulation = problem_dict['strain_formulation']
     n_dim = problem_dict['n_dim']
@@ -100,7 +100,7 @@ def computeClusteringQuantities(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dic
         # array according to the number of independent strain components
         if strain_formulation == 1:
             n_clustering_var = len(comp_order_sym)**2
-        clst_quantities = np.zeros((n_voxels,n_clustering_var))
+        clst_quantities = np.zeros((n_voxels, n_clustering_var))
         clst_dataidxs = [list(range(n_clustering_var)),]
         # Small strain formulation
         if strain_formulation == 1:
@@ -108,9 +108,9 @@ def computeClusteringQuantities(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dic
             # Loop over independent strain components
             for i in range(len(comp_order_sym)):
                 compi = comp_order_sym[i]
-                so_idx = tuple([int(x)-1 for x in list(comp_order_sym[i])])
+                so_idx = tuple([int(x) - 1 for x in list(comp_order_sym[i])])
                 # Set macroscopic strain loading
-                mac_strain = np.zeros((n_dim,n_dim))
+                mac_strain = np.zeros((n_dim, n_dim))
                 if compi[0] == compi[1]:
                     mac_strain[so_idx] = 1.0
                 else:
@@ -122,27 +122,28 @@ def computeClusteringQuantities(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dic
                 if clustering_solution_method == 1:
                     # Run Moulinec and Suquet FFT-based homogenization method and get the
                     # strain concentration tensor components
-                    strain_vox = FFTHomogenizationBasicScheme.FFTHomogenizationBasicScheme(
-                                         copy.deepcopy(problem_dict),copy.deepcopy(rg_dict),
-                                                         copy.deepcopy(mat_dict),mac_strain)
+                    strain_vox = ffthom.ffthombasicscheme(copy.deepcopy(problem_dict),
+                                                          copy.deepcopy(rg_dict),
+                                                          copy.deepcopy(mat_dict),
+                                                          mac_strain)
                 elif clustering_solution_method == 2:
                     # Generate microscale problem Links input data file
                     Links_file_name = rg_file_name + '_SCT_' + compi
-                    Links_file_path = \
-                        LinksGLIF.writeLinksInputDataFile(Links_file_name,dirs_dict,
-                                                          problem_dict,mat_dict,rg_dict,
-                                                          clst_dict,mac_strain)
+                    Links_file_path = LinksGLIF.writeLinksInputDataFile(
+                        Links_file_name, dirs_dict, problem_dict, mat_dict, rg_dict,
+                        clst_dict, mac_strain)
                     # Run Links (FEM-based homogenization method)
                     Links_bin_path = clst_dict['Links_dict']['Links_bin_path']
-                    LinksExec.runLinks(Links_bin_path,Links_file_path)
+                    LinksExec.runLinks(Links_bin_path, Links_file_path)
                     # Get the strain concentration tensor components
-                    strain_vox = LinksPP.getLinksStrainVox(Links_file_path,n_dim,
-                                                      comp_order_sym,n_voxels_dims)
+                    strain_vox = LinksPP.getLinksStrainVox(Links_file_path, n_dim,
+                                                           comp_order_sym, n_voxels_dims)
                 # Assemble strain concentration tensor components associated to the imposed
                 # macroscale strain loading component
                 for j in range(len(comp_order_sym)):
                     compj = comp_order_sym[j]
-                    clst_quantities[:,i*len(comp_order_sym)+j] = strain_vox[compj].flatten()
+                    clst_quantities[:, i*len(comp_order_sym) + j] = \
+                        strain_vox[compj].flatten()
                 # --------------------------------------------------------------------------
                 # Validation:
                 if __name__ == '__main__':
@@ -167,18 +168,16 @@ def computeClusteringQuantities(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dic
             # Validation:
             if __name__ == '__main__':
                 print('\nClustering quantities array row - Voxel ', val_voxel_idx, ':')
-                print(clst_quantities[val_voxel_row,:])
+                print(clst_quantities[val_voxel_row, :])
                 print('\nClustering processes list:')
                 print(clst_dataidxs)
             # ------------------------------------------------------------------------------
-    # Return
-    return None
 #
 #                                                                     Validation (temporary)
 # ==========================================================================================
 if __name__ == '__main__':
     # Set functions being validated
-    val_functions = ['computeClusteringQuantities()',]
+    val_functions = ['compclusteringdata()',]
     # Display validation header
     print('\nValidation: ',(len(val_functions)*'{}, ').format(*val_functions), 3*'\b', ' ')
     print(92*'-')
@@ -224,6 +223,6 @@ if __name__ == '__main__':
     clst_dict['clustering_strategy'] = clustering_strategy
     clst_dict['clustering_solution_method'] = clustering_solution_method
     # Call function
-    computeClusteringQuantities(problem_dict,mat_dict,rg_dict,clst_dict)
+    compclusteringdata(problem_dict,mat_dict,rg_dict,clst_dict)
     # Display validation footer
     print('\n' + 92*'-' + '\n')

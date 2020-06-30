@@ -72,7 +72,7 @@ import tensor.matrixoperations as mop
 #         form. The matricial form follows the Kelvin notation when symmetry conditions
 #         exist and is performed columnwise otherwise.
 #
-def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
+def ffthombasicscheme(problem_dict, rg_dict, mat_dict, mac_strain):
     # --------------------------------------------------------------------------------------
     # Time profile
     is_time_profile = False
@@ -84,9 +84,9 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
         # Initialize time profile variables
         start_time_s = time.time()
         phase_names = ['']
-        phase_times = np.zeros((1,2))
+        phase_times = np.zeros((1, 2))
         phase_names[0] = 'Total'
-        phase_times[0,:] = [start_time_s,0.0]
+        phase_times[0, :] = [start_time_s, 0.0]
         # Set validation return flag
         is_validation_return = True
         # Set convergence output flag
@@ -131,7 +131,7 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
     if is_time_profile:
         phase_end_time = time.time()
         phase_names.append('Input arguments')
-        phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
+        phase_times = np.append(phase_times, [[phase_init_time, phase_end_time]], axis=0)
     # --------------------------------------------------------------------------------------
     #
     #                                                     Material phases elasticity tensors
@@ -155,7 +155,7 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
     if is_time_profile:
         phase_end_time = time.time()
         phase_names.append('Material phases elasticity tensors')
-        phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
+        phase_times = np.append(phase_times, [[phase_init_time, phase_end_time]], axis=0)
     # --------------------------------------------------------------------------------------
     #
     #                                                  Reference material elastic properties
@@ -171,17 +171,17 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
     # convergence)
     material_properties_ref = dict()
     material_properties_ref['E'] = \
-                0.5*(min([material_properties[phase]['E'] for phase in material_phases]) + \
-                     max([material_properties[phase]['E'] for phase in material_phases]))
+        0.5*(min([material_properties[phase]['E'] for phase in material_phases]) + \
+             max([material_properties[phase]['E'] for phase in material_phases]))
     material_properties_ref['v'] = \
-                0.5*(min([material_properties[phase]['v'] for phase in material_phases]) + \
-                     max([material_properties[phase]['v'] for phase in material_phases]))
+        0.5*(min([material_properties[phase]['v'] for phase in material_phases]) + \
+             max([material_properties[phase]['v'] for phase in material_phases]))
     # --------------------------------------------------------------------------------------
     # Time profile
     if is_time_profile:
         phase_end_time = time.time()
         phase_names.append('Reference material elastic properties')
-        phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
+        phase_times = np.append(phase_times, [[phase_init_time, phase_end_time]], axis=0)
     # --------------------------------------------------------------------------------------
     #
     #                                                               Frequency discretization
@@ -197,13 +197,13 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
         # Set sampling spatial period
         sampling_period = rve_dims[i]/n_voxels_dims[i]
         # Set discrete frequencies
-        freqs_dims.append(2*np.pi*np.fft.fftfreq(n_voxels_dims[i],sampling_period))
+        freqs_dims.append(2*np.pi*np.fft.fftfreq(n_voxels_dims[i], sampling_period))
     # --------------------------------------------------------------------------------------
     # Time profile
     if is_time_profile:
         phase_end_time = time.time()
         phase_names.append('Frequency discretization')
-        phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
+        phase_times = np.append(phase_times, [[phase_init_time, phase_end_time]], axis=0)
     # --------------------------------------------------------------------------------------
     #
     #                                                      Reference material Green operator
@@ -242,42 +242,42 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
     c1 = 1.0/(4.0*miu_ref)
     c2 = (miu_ref + lam_ref)/(miu_ref*(lam_ref + 2.0*miu_ref))
     # Set Green operator matricial form components
-    comps = list(it.product(comp_order,comp_order))
+    comps = list(it.product(comp_order, comp_order))
     # Set mapping between Green operator fourth-order tensor and matricial form components
     fo_indexes = list()
     mf_indexes = list()
     for i in range(len(comp_order)**2):
-        fo_indexes.append([int(x)-1 for x in list(comps[i][0]+comps[i][1])])
+        fo_indexes.append([int(x) - 1 for x in list(comps[i][0] + comps[i][1])])
         mf_indexes.append([x for x in \
-                             [comp_order.index(comps[i][0]),comp_order.index(comps[i][1])]])
+                          [comp_order.index(comps[i][0]), comp_order.index(comps[i][1])]])
     # Set optimized variables
-    var1 = [*np.meshgrid(*freqs_dims,indexing = 'ij')]
+    var1 = [*np.meshgrid(*freqs_dims, indexing = 'ij')]
     var2 = dict()
     for fo_idx in fo_indexes:
         if str(fo_idx[1]) + str(fo_idx[3]) not in var2.keys():
             var2[str(fo_idx[1]) + str(fo_idx[3])] = \
-                np.multiply(var1[fo_idx[1]],var1[fo_idx[3]])
+                np.multiply(var1[fo_idx[1]], var1[fo_idx[3]])
         if str(fo_idx[1]) + str(fo_idx[2]) not in var2.keys():
             var2[str(fo_idx[1]) + str(fo_idx[2])] = \
-                np.multiply(var1[fo_idx[1]],var1[fo_idx[2]])
+                np.multiply(var1[fo_idx[1]], var1[fo_idx[2]])
         if str(fo_idx[0]) + str(fo_idx[2]) not in var2.keys():
             var2[str(fo_idx[0]) + str(fo_idx[2])] = \
-                np.multiply(var1[fo_idx[0]],var1[fo_idx[2]])
+                np.multiply(var1[fo_idx[0]], var1[fo_idx[2]])
         if str(fo_idx[0]) + str(fo_idx[3]) not in var2.keys():
             var2[str(fo_idx[0]) + str(fo_idx[3])] = \
-                np.multiply(var1[fo_idx[0]],var1[fo_idx[3]])
+                np.multiply(var1[fo_idx[0]], var1[fo_idx[3]])
         if ''.join([str(x) for x in fo_idx]) not in var2.keys():
             var2[''.join([str(x) for x in fo_idx])] = \
-                np.multiply(np.multiply(var1[fo_idx[0]],var1[fo_idx[1]]),
-                            np.multiply(var1[fo_idx[2]],var1[fo_idx[3]]))
+                np.multiply(np.multiply(var1[fo_idx[0]], var1[fo_idx[1]]),
+                            np.multiply(var1[fo_idx[2]], var1[fo_idx[3]]))
     if n_dim == 2:
-        var3 = np.sqrt(np.add(np.square(var1[0]),np.square(var1[1])))
+        var3 = np.sqrt(np.add(np.square(var1[0]), np.square(var1[1])))
     else:
-        var3 = np.sqrt(np.add(np.add(np.square(var1[0]),np.square(var1[1])),
+        var3 = np.sqrt(np.add(np.add(np.square(var1[0]), np.square(var1[1])),
                               np.square(var1[2])))
     # Initialize Green operator
     Gop_DFT_vox = {''.join([str(x+1) for x in idx]): \
-                                       np.zeros(tuple(n_voxels_dims)) for idx in fo_indexes}
+        np.zeros(tuple(n_voxels_dims)) for idx in fo_indexes}
     # Compute Green operator matricial form components
     for i in range(len(mf_indexes)):
         # Get fourth-order tensor indexes
@@ -285,19 +285,19 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
         # Get Green operator component
         comp = ''.join([str(x+1) for x in fo_idx])
         # Set optimized variables
-        var4 = [fo_idx[0] == fo_idx[2],fo_idx[0] == fo_idx[3],
-                fo_idx[1] == fo_idx[3],fo_idx[1] == fo_idx[2]]
+        var4 = [fo_idx[0] == fo_idx[2], fo_idx[0] == fo_idx[3],
+                fo_idx[1] == fo_idx[3], fo_idx[1] == fo_idx[2]]
         var5 = [str(fo_idx[1]) + str(fo_idx[3]),str(fo_idx[1]) + str(fo_idx[2]),
                 str(fo_idx[0]) + str(fo_idx[2]),str(fo_idx[0]) + str(fo_idx[3])]
         # Compute first material independent term of Green operator
         first_term = np.zeros(tuple(n_voxels_dims))
         for j in range(len(var4)):
             if var4[j]:
-                first_term = np.add(first_term,var2[var5[j]])
-        first_term = np.divide(first_term,np.square(var3),where = abs(var3) > 1e-10)
+                first_term = np.add(first_term, var2[var5[j]])
+        first_term = np.divide(first_term, np.square(var3), where = abs(var3) > 1e-10)
         # Compute second material independent term of Green operator
         second_term = -1.0*np.divide(var2[''.join([str(x) for x in fo_idx])],
-                                     np.square(np.square(var3)),where = abs(var3) > 1e-10)
+                                     np.square(np.square(var3)), where = abs(var3) > 1e-10)
         # Compute Green operator matricial form component
         Gop_DFT_vox[comp] = c1*first_term + c2*second_term
     # --------------------------------------------------------------------------------------
@@ -305,7 +305,7 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
     if is_time_profile:
         phase_end_time = time.time()
         phase_names.append('Reference material Green operator')
-        phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
+        phase_times = np.append(phase_times, [[phase_init_time, phase_end_time]], axis=0)
     # --------------------------------------------------------------------------------------
     #
     #                                                                       Iterative scheme
@@ -323,7 +323,7 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
     if is_time_profile:
         phase_end_time = time.time()
         phase_names.append('Strain and stress tensors initialization')
-        phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
+        phase_times = np.append(phase_times, [[phase_init_time, phase_end_time]],axis=0)
     # --------------------------------------------------------------------------------------
     #
     #                                                                Initial iterative guess
@@ -336,27 +336,27 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
     # Set strain initial iterative guess
     for comp in comp_order:
         so_idx = tuple([int(x) - 1 for x in comp])
-        strain_vox[comp] = np.full(regular_grid.shape,mac_strain[so_idx])
+        strain_vox[comp] = np.full(regular_grid.shape, mac_strain[so_idx])
     # Compute stress initial iterative guess
     if problem_type == 1:
-        stress_vox['11'] = np.add(np.multiply(var8,strain_vox['11']),
-                                  np.multiply(var6,strain_vox['22']))
-        stress_vox['22'] = np.add(np.multiply(var8,strain_vox['22']),
-                                  np.multiply(var6,strain_vox['11']))
-        stress_vox['12'] = np.multiply(var7,strain_vox['12'])
+        stress_vox['11'] = np.add(np.multiply(var8, strain_vox['11']),
+                                  np.multiply(var6, strain_vox['22']))
+        stress_vox['22'] = np.add(np.multiply(var8, strain_vox['22']),
+                                  np.multiply(var6, strain_vox['11']))
+        stress_vox['12'] = np.multiply(var7, strain_vox['12'])
     else:
-        stress_vox['11'] = np.add(np.multiply(var8,strain_vox['11']),
-                                  np.multiply(var6,np.add(strain_vox['22'],
-                                                          strain_vox['33'])))
-        stress_vox['22'] = np.add(np.multiply(var8,strain_vox['22']),
-                                  np.multiply(var6,np.add(strain_vox['11'],
-                                                          strain_vox['33'])))
-        stress_vox['33'] = np.add(np.multiply(var8,strain_vox['33']),
-                                  np.multiply(var6,np.add(strain_vox['11'],
-                                                          strain_vox['22'])))
-        stress_vox['12'] = np.multiply(var7,strain_vox['12'])
-        stress_vox['23'] = np.multiply(var7,strain_vox['23'])
-        stress_vox['13'] = np.multiply(var7,strain_vox['13'])
+        stress_vox['11'] = np.add(np.multiply(var8, strain_vox['11']),
+                                  np.multiply(var6, np.add(strain_vox['22'],
+                                                           strain_vox['33'])))
+        stress_vox['22'] = np.add(np.multiply(var8, strain_vox['22']),
+                                  np.multiply(var6, np.add(strain_vox['11'],
+                                                           strain_vox['33'])))
+        stress_vox['33'] = np.add(np.multiply(var8, strain_vox['33']),
+                                  np.multiply(var6, np.add(strain_vox['11'],
+                                                           strain_vox['22'])))
+        stress_vox['12'] = np.multiply(var7, strain_vox['12'])
+        stress_vox['23'] = np.multiply(var7, strain_vox['23'])
+        stress_vox['13'] = np.multiply(var7, strain_vox['13'])
     # Compute average stress norm (convergence criterion)
     avg_stress_norm = 0
     for i in range(len(comp_order)):
@@ -372,7 +372,7 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
     if is_time_profile:
         phase_end_time = time.time()
         phase_names.append('Initial iterative guess')
-        phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
+        phase_times = np.append(phase_times, [[phase_init_time, phase_end_time]], axis=0)
     # --------------------------------------------------------------------------------------
     #
     #                                                Strain Discrete Fourier Transform (DFT)
@@ -383,21 +383,21 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
         phase_init_time = time.time()
     # --------------------------------------------------------------------------------------
     # Compute strain Discrete Fourier Transform (DFT)
-    strain_DFT_vox = \
-                 {comp: np.zeros(tuple(n_voxels_dims),dtype=complex) for comp in comp_order}
+    strain_DFT_vox = {comp: np.zeros(tuple(n_voxels_dims), dtype=complex) \
+                      for comp in comp_order}
     for comp in comp_order:
         # Discrete Fourier Transform (DFT) by means of Fast Fourier Transform (FFT)
         strain_DFT_vox[comp] = np.fft.fftn(strain_vox[comp])
     # Store macroscale strain DFT at the zero-frequency
     freq_0_idx = n_dim*(0,)
-    mac_strain_DFT_0 = np.zeros((n_dim,n_dim))
+    mac_strain_DFT_0 = np.zeros((n_dim, n_dim))
     mac_strain_DFT_0 = np.array([strain_DFT_vox[comp][freq_0_idx] for comp in comp_order])
     # --------------------------------------------------------------------------------------
     # Time profile
     if is_time_profile:
         phase_end_time = time.time()
         phase_names.append('Strain Discrete Fourier Transform (DFT)')
-        phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
+        phase_times = np.append(phase_times, [[phase_init_time, phase_end_time]], axis=0)
     # --------------------------------------------------------------------------------------
     #
     #                                                                       Iterative scheme
@@ -415,8 +415,8 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
             phase_init_time = time.time()
         # ----------------------------------------------------------------------------------
         # Compute stress Discrete Fourier Transform (DFT)
-        stress_DFT_vox = \
-                 {comp: np.zeros(tuple(n_voxels_dims),dtype=complex) for comp in comp_order}
+        stress_DFT_vox = {comp: np.zeros(tuple(n_voxels_dims), dtype=complex) \
+                          for comp in comp_order}
         for comp in comp_order:
             # Discrete Fourier Transform (DFT) by means of Fast Fourier Transform (FFT)
             stress_DFT_vox[comp] = np.fft.fftn(stress_vox[comp])
@@ -425,7 +425,8 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
         if is_time_profile:
             phase_end_time = time.time()
             phase_names.append('Stress Discrete Fourier Transform (DFT)')
-            phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
+            phase_times = np.append(phase_times, [[phase_init_time, phase_end_time]],
+                                    axis=0)
         # ----------------------------------------------------------------------------------
         #
         #                                                             Convergence evaluation
@@ -439,16 +440,16 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
         if conv_criterion == 1:
             # Discrete error as proposed in (Moulinec, H. and Suquet, P., 1998)
             error_sum = 0
-            stress_DFT_0_mf = np.zeros(len(comp_order),dtype=complex)
-            div_stress_DFT = {str(comp+1): np.zeros(tuple(n_voxels_dims),dtype=complex) \
-                                                                   for comp in range(n_dim)}
+            stress_DFT_0_mf = np.zeros(len(comp_order), dtype=complex)
+            div_stress_DFT = {str(comp+1): np.zeros(tuple(n_voxels_dims), dtype=complex) \
+                              for comp in range(n_dim)}
             # Loop over discrete frequencies
             for freq_coord in it.product(*freqs_dims):
                 # Get discrete frequency index
                 freq_idx = tuple([list(freqs_dims[x]).index(freq_coord[x]) \
-                                                                     for x in range(n_dim)])
+                                  for x in range(n_dim)])
                 # Initialize stress tensor Discrete Fourier Transform (DFT) matricial form
-                stress_DFT_mf = np.zeros(len(comp_order),dtype=complex)
+                stress_DFT_mf = np.zeros(len(comp_order), dtype=complex)
                 for i in range(len(comp_order)):
                     comp = comp_order[i]
                     # Build stress tensor Discrete Fourier Transform (DFT) matricial form
@@ -460,29 +461,29 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
                         stress_DFT_0_mf[i] = \
                             mop.kelvinfactor(i,comp_order)*stress_DFT_vox[comp][freq_idx]
                 # Build stress tensor Discrete Fourier Transform (DFT)
-                stress_DFT = np.zeros((n_dim,n_dim),dtype=complex)
-                stress_DFT = mop.gettensorfrommf(stress_DFT_mf,n_dim,comp_order)
+                stress_DFT = np.zeros((n_dim, n_dim), dtype=complex)
+                stress_DFT = mop.gettensorfrommf(stress_DFT_mf, n_dim, comp_order)
                 # Add discrete frequency contribution to discrete error required sum
                 error_sum = error_sum + \
-                    np.linalg.norm(top.dot12_1(1j*np.asarray(freq_coord),stress_DFT))**2
+                    np.linalg.norm(top.dot12_1(1j*np.asarray(freq_coord), stress_DFT))**2
                 # Compute stress divergence Discrete Fourier Transform (DFT)
                 for i in range(n_dim):
-                    div_stress_DFT[str(i+1)][freq_idx] = \
-                        top.dot12_1(1j*np.asarray(freq_coord),stress_DFT)[i]
+                    div_stress_DFT[str(i + 1)][freq_idx] = \
+                        top.dot12_1(1j*np.asarray(freq_coord), stress_DFT)[i]
             # Compute discrete error serving to check convergence
             discrete_error_1 = np.sqrt(error_sum/n_voxels)/np.linalg.norm(stress_DFT_0_mf)
             # Compute stress divergence Inverse Discrete Fourier Transform (IDFT)
-            div_stress = {str(comp+1): np.zeros(tuple(n_voxels_dims)) \
-                                                                   for comp in range(n_dim)}
+            div_stress = {str(comp + 1): np.zeros(tuple(n_voxels_dims)) \
+                          for comp in range(n_dim)}
             for i in range(n_dim):
                 # Inverse Discrete Fourier Transform (IDFT) by means of Fast Fourier
                 # Transform (FFT)
-                div_stress[str(i+1)] = np.real(np.fft.ifftn(div_stress_DFT[str(i+1)]))
+                div_stress[str(i + 1)] = np.real(np.fft.ifftn(div_stress_DFT[str(i + 1)]))
         # ----------------------------------------------------------------------------------
         # Convergence criterion 2:
         if conv_criterion == 2:
             # Discrete error based on the average stress norm
-            discrete_error_2 = abs(avg_stress_norm-avg_stress_norm_old)/avg_stress_norm
+            discrete_error_2 = abs(avg_stress_norm - avg_stress_norm_old)/avg_stress_norm
         # ----------------------------------------------------------------------------------
         # Validation:
         if is_conv_output:
@@ -503,14 +504,14 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
                                  'offline_stage/main/3D/FFT_NEW/' + \
                                  'Sphere_20_0.2_30_30_30_uniaxial/convergence_table.dat'
             if conv_criterion == 1:
-                writeIterationConvergence(conv_file_path,'iteration',\
-                                          iter,discrete_error_1,0.0)
+                writeIterationConvergence(conv_file_path, 'iteration', iter,
+                                          discrete_error_1, 0.0)
             elif conv_criterion == 2:
-                writeIterationConvergence(conv_file_path,'iteration',\
-                                          iter,0.0,discrete_error_2)
+                writeIterationConvergence(conv_file_path,'iteration', iter, 0.0,
+                                          discrete_error_2)
             else:
-                writeIterationConvergence(conv_file_path,'iteration',\
-                                          iter,discrete_error_1,discrete_error_2)
+                writeIterationConvergence(conv_file_path,'iteration', iter,
+                                          discrete_error_1, discrete_error_2)
         # ----------------------------------------------------------------------------------
         # Check if the solution converged (return) and if the maximum number of iterations
         # was reached (stop execution)
@@ -533,7 +534,7 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
         if iter == max_n_iterations:
             # Stop execution
             print('\nAbort: The maximum number of iterations was reached before ' + \
-                  'solution convergence \n(FFTHomogenizationBasicScheme.py).')
+                  'solution convergence \n(ffthombasicscheme.py).')
             sys.exit(1)
         # Increment iteration counter
         iter = iter + 1
@@ -542,7 +543,8 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
         if is_time_profile:
             phase_end_time = time.time()
             phase_names.append('Convergence evaluation')
-            phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
+            phase_times = np.append(phase_times, [[phase_init_time, phase_end_time]],
+                                    axis=0)
         # ----------------------------------------------------------------------------------
         #
         #                                                                      Strain update
@@ -558,13 +560,13 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
             aux = 0
             for j in range(len(comp_order)):
                 compj = comp_order[j]
-                idx1 = [comp_order.index(compi),comp_order.index(compj)]
+                idx1 = [comp_order.index(compi), comp_order.index(compj)]
                 idx2 = comp_order.index(compj)
                 aux = np.add(aux,np.multiply(
-                                 mop.kelvinfactor(idx1,comp_order)*Gop_DFT_vox[compi+compj],
-                                 mop.kelvinfactor(idx2,comp_order)*stress_DFT_vox[compj]))
+                    mop.kelvinfactor(idx1, comp_order)*Gop_DFT_vox[compi + compj],
+                    mop.kelvinfactor(idx2, comp_order)*stress_DFT_vox[compj]))
             strain_DFT_vox[compi] = np.subtract(strain_DFT_vox[compi],
-                                                (1.0/mop.kelvinfactor(i,comp_order))*aux)
+                (1.0/mop.kelvinfactor(i, comp_order))*aux)
             # Enforce macroscopic strain at the zero-frequency strain component
             freq_0_idx = n_dim*(0,)
             strain_DFT_vox[compi][freq_0_idx] = mac_strain_DFT_0[i]
@@ -573,7 +575,8 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
         if is_time_profile:
             phase_end_time = time.time()
             phase_names.append('Update strain')
-            phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
+            phase_times = np.append(phase_times, [[phase_init_time, phase_end_time]],
+                                    axis=0)
         # ----------------------------------------------------------------------------------
         #
         #                                   Strain Inverse Discrete Fourier Transform (IDFT)
@@ -593,7 +596,8 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
         if is_time_profile:
             phase_end_time = time.time()
             phase_names.append('Strain Inverse Discrete Fourier Transform (IDFT)')
-            phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
+            phase_times = np.append(phase_times, [[phase_init_time, phase_end_time]],
+                                    axis=0)
         # ----------------------------------------------------------------------------------
         #
         #                                                                      Stress update
@@ -605,24 +609,24 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
         # ----------------------------------------------------------------------------------
         # Update stress
         if problem_type == 1:
-            stress_vox['11'] = np.add(np.multiply(var8,strain_vox['11']),
-                                      np.multiply(var6,strain_vox['22']))
-            stress_vox['22'] = np.add(np.multiply(var8,strain_vox['22']),
-                                      np.multiply(var6,strain_vox['11']))
-            stress_vox['12'] = np.multiply(var7,strain_vox['12'])
+            stress_vox['11'] = np.add(np.multiply(var8, strain_vox['11']),
+                                      np.multiply(var6, strain_vox['22']))
+            stress_vox['22'] = np.add(np.multiply(var8, strain_vox['22']),
+                                      np.multiply(var6, strain_vox['11']))
+            stress_vox['12'] = np.multiply(var7, strain_vox['12'])
         else:
-            stress_vox['11'] = np.add(np.multiply(var8,strain_vox['11']),
-                                      np.multiply(var6,np.add(strain_vox['22'],
-                                                              strain_vox['33'])))
-            stress_vox['22'] = np.add(np.multiply(var8,strain_vox['22']),
-                                      np.multiply(var6,np.add(strain_vox['11'],
-                                                              strain_vox['33'])))
-            stress_vox['33'] = np.add(np.multiply(var8,strain_vox['33']),
-                                      np.multiply(var6,np.add(strain_vox['11'],
-                                                              strain_vox['22'])))
-            stress_vox['12'] = np.multiply(var7,strain_vox['12'])
-            stress_vox['23'] = np.multiply(var7,strain_vox['23'])
-            stress_vox['13'] = np.multiply(var7,strain_vox['13'])
+            stress_vox['11'] = np.add(np.multiply(var8, strain_vox['11']),
+                                      np.multiply(var6, np.add(strain_vox['22'],
+                                                               strain_vox['33'])))
+            stress_vox['22'] = np.add(np.multiply(var8, strain_vox['22']),
+                                      np.multiply(var6, np.add(strain_vox['11'],
+                                                               strain_vox['33'])))
+            stress_vox['33'] = np.add(np.multiply(var8, strain_vox['33']),
+                                      np.multiply(var6, np.add(strain_vox['11'],
+                                                               strain_vox['22'])))
+            stress_vox['12'] = np.multiply(var7, strain_vox['12'])
+            stress_vox['23'] = np.multiply(var7, strain_vox['23'])
+            stress_vox['13'] = np.multiply(var7, strain_vox['13'])
         # Compute average stress norm (convergence criterion)
         avg_stress_norm_old = avg_stress_norm
         avg_stress_norm = 0
@@ -638,9 +642,10 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
         if is_time_profile:
             phase_end_time = time.time()
             phase_names.append('Update stress')
-            phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
+            phase_times = np.append(phase_times, [[phase_init_time, phase_end_time]],
+                                    axis=0)
             end_time_s = time.time()
-            phase_times[0,1] = end_time_s
+            phase_times[0, 1] = end_time_s
             is_time_profile = False
         # ----------------------------------------------------------------------------------
 #
@@ -691,23 +696,23 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
 #
 #    Note: E and v denote the Young modulus and the Poisson ratio respectively.
 #
-def getElasticityTensor(problem_type,n_dim,comp_order,properties):
+def getElasticityTensor(problem_type, n_dim, comp_order, properties):
     # Get Young's Modulus and Poisson ratio
     E = properties['E']
     v = properties['v']
     # Compute Lamé parameters
-    lam = (E*v)/((1.0+v)*(1.0-2.0*v))
-    miu = E/(2.0*(1.0+v))
+    lam = (E*v)/((1.0 + v)*(1.0-2.0*v))
+    miu = E/(2.0*(1.0 + v))
     # Set required fourth-order tensors
-    _,_,_,fosym,fodiagtrace,_,_ = top.getidoperators(n_dim)
+    _, _, _, fosym, fodiagtrace, _, _ = top.getidoperators(n_dim)
     # 2D problem (plane strain)
     if problem_type == 1:
         De_tensor = lam*fodiagtrace + 2.0*miu*fosym
-        De_tensor_mf = mop.gettensormf(De_tensor,n_dim,comp_order)
+        De_tensor_mf = mop.gettensormf(De_tensor, n_dim, comp_order)
     # 3D problem
     elif problem_type == 4:
         De_tensor = lam*fodiagtrace + 2.0*miu*fosym
-        De_tensor_mf = mop.gettensormf(De_tensor,n_dim,comp_order)
+        De_tensor_mf = mop.gettensormf(De_tensor, n_dim, comp_order)
     # Return
     return De_tensor_mf
 #
@@ -738,39 +743,38 @@ def writeVoxelStressDivergence(file_path,mode,voxel_idx,*args):
               (n_dim*'{:>11.4e}  ').format(*[div_stress[str(i+1)][voxel_idx] \
                                                           for i in range(n_dim)]),file=file)
 # ------------------------------------------------------------------------------------------
-def writeIterationConvergence(file_path,mode,*args):
+def writeIterationConvergence(file_path, mode, *args):
     if mode == 'header':
         # Open file where the iteration convergence metrics are written
-        open(file_path,'w').close()
-        file = open(file_path,'a')
+        open(file_path, 'w').close()
+        file = open(file_path, 'a')
         # Write file header
-        print('\nFFT Homogenization Basic Scheme Convergence',file=file)
-        print('-------------------------------------------',file=file)
+        print('\nFFT Homogenization Basic Scheme Convergence', file=file)
+        print('-------------------------------------------', file=file)
         # Write stress divergence tensor header
-        print('\nIter' + 5*' ' + 'error 1' +  7*' ' + 'error 2',file=file)
+        print('\nIter' + 5*' ' + 'error 1' +  7*' ' + 'error 2', file=file)
         # Close file where the stress divergence tensor will be written
         file.close()
     else:
         # Open file where the stress divergence tensor are written
-        file = open(file_path,'a')
+        file = open(file_path, 'a')
         # Get iteration and stress divergence tensor
         iter = args[0]
         error1 = args[1]
         error2 = args[2]
         # Write iterative value of stress divergence tensor
-        print('{:>4d} '.format(iter), \
-              '{:>11.4e}'.format(error1), '  {:>11.4e}'.format(error2),file=file)
+        print('{:>4d} '.format(iter), '{:>11.4e}'.format(error1),
+              '  {:>11.4e}'.format(error2),file=file)
 # ------------------------------------------------------------------------------------------
 if __name__ == '__main__':
     # Set functions being validated
-    val_functions = ['FFTHomogenizationBasicScheme()','getElasticityTensor()']
+    val_functions = ['ffthombasicscheme()','getElasticityTensor()']
     # Display validation header
     print('\nValidation: ',(len(val_functions)*'{}, ').format(*val_functions), 3*'\b', ' ')
     print(92*'-')
     # Set functions arguments:
     # Set problem type
     problem_type = 1
-    import ioput.readinputdata as rid
     # Set problem parameters (number of dimensions and components order)
     n_dim, comp_order_sym, comp_order_nsym = mop.getproblemtypeparam(problem_type)
     # Set problem data
@@ -833,7 +837,7 @@ if __name__ == '__main__':
                      'ConvergenceEvolution.dat'
     writeIterationConvergence(conv_file_path,'header')
     # Call function
-    strain_vox = FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain)
+    strain_vox = ffthombasicscheme(problem_dict,rg_dict,mat_dict,mac_strain)
     # Write VTK file with material phases
     import ioput.vtkoutput as vtkoutput
     import copy
