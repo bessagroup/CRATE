@@ -19,11 +19,11 @@ import inspect
 # Shallow and deep copy operations
 import copy
 # Display messages
-import info
+import ioput.info as info
 # Generate efficient iterators
 import itertools as it
 # Display errors, warnings and built-in exceptions
-import errors
+import ioput.errors as errors
 # Tensorial operations
 import tensorOperations as top
 #
@@ -222,9 +222,9 @@ def computeClusterInteractionTensors(dirs_dict,problem_dict,mat_dict,rg_dict,cls
         cit_file = open(cit_file_path,'wb')
     except Exception as message:
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayException(location.filename,location.lineno+1,message)
+        errors.displayexception(location.filename,location.lineno+1,message)
     # Dump clustering interaction tensors
-    info.displayInfo('5','Storing cluster interaction tensors file (.cti)...')
+    info.displayinfo('5','Storing cluster interaction tensors file (.cti)...')
     pickle.dump([cit_1_mf,cit_2_mf,cit_0_freq_mf],cit_file)
     # Close file
     cit_file.close()
@@ -384,10 +384,10 @@ def getClusterFilter(cluster,voxels_clusters):
     # Check if valid cluster
     if not isinstance(cluster,int) and not isinstance(cluster,np.integer):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00040',location.filename,location.lineno+1)
+        errors.displayerror('E00040',location.filename,location.lineno+1)
     elif cluster not in voxels_clusters:
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00041',location.filename,location.lineno+1)
+        errors.displayerror('E00041',location.filename,location.lineno+1)
     # Build cluster filter (spatial domain)
     cluster_filter = voxels_clusters == cluster
     # Perform Discrete Fourier Transform (DFT) by means of Fast Fourier Transform (FFT)
@@ -479,7 +479,7 @@ def checkCITCompatibility(mat_dict,clst_dict):
                           len(clst_dict['cit_2_mf'].keys()) != len(material_phases)**2 or  \
                           len(clst_dict['cit_0_freq_mf'].keys()) != len(material_phases)**2:
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00047',location.filename,location.lineno+1,
+        errors.displayerror('E00047',location.filename,location.lineno+1,
                                      len(clst_dict['cit_1_mf'].keys()),len(material_phases))
     # Check cluster interaction tensors material phase pairs
     for mat_phase_B in material_phases:
@@ -489,5 +489,5 @@ def checkCITCompatibility(mat_dict,clst_dict):
                                     mat_phase_pair not in clst_dict['cit_2_mf'].keys() or  \
                                     mat_phase_pair not in clst_dict['cit_0_freq_mf'].keys():
                 location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayError('E00048',location.filename,location.lineno+1,
+                errors.displayerror('E00048',location.filename,location.lineno+1,
                                                              mat_phase_pair,material_phases)

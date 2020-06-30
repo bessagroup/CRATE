@@ -65,15 +65,15 @@ import inspect
 # Shallow and deep copy operations
 import copy
 # Display messages
-import info
+import ioput.info as info
 # Display errors, warnings and built-in exceptions
-import errors
+import ioput.errors as errors
 # Read user input data file
-import readInputData as rid
+import ioput.readinputdata as rid
 # Manage files and directories
 import fileOperations
 # Packager
-import packager
+import ioput.packager as packager
 # Clustering quantities computation
 import clusteringQuantities
 # Perform clustering
@@ -83,26 +83,26 @@ import clusterInteractionTensors
 # Online stage
 import onlineStage
 # VTK output
-import VTKOutput
+import ioput.vtkoutput as vtkoutput
 #
 #                             Check user input data file and create problem main directories
 # ==========================================================================================
 # Check if the input data file path was provided
 if len(sys.argv[1:]) == 0:
     location = inspect.getframeinfo(inspect.currentframe())
-    errors.displayError('E00001',location.filename,location.lineno+1)
+    errors.displayerror('E00001',location.filename,location.lineno+1)
 elif not os.path.isfile(str(sys.argv[1])):
     location = inspect.getframeinfo(inspect.currentframe())
-    errors.displayError('E00001',location.filename,location.lineno+1)
+    errors.displayerror('E00001',location.filename,location.lineno+1)
 # Set input data file name, path and directory
 input_file_name,input_file_path,input_file_dir = \
-                                       fileOperations.setInputDataFilePath(str(sys.argv[1]))
+                                       fileOperations.setinputdatafilepath(str(sys.argv[1]))
 # Set problem name, directory and main subdirectories
 problem_name,problem_dir,offline_stage_dir,postprocess_dir,is_same_offstage,\
 cluster_file_path,cit_file_path,hres_file_path \
-                             = fileOperations.setProblemDirs(input_file_name,input_file_dir)
+                             = fileOperations.setproblemdirs(input_file_name,input_file_dir)
 # Package data associated to directories and paths
-dirs_dict = packager.packageDirsPaths(input_file_name,input_file_path,input_file_dir,
+dirs_dict = packager.packdirpaths(input_file_name,input_file_path,input_file_dir,
                                  problem_name,problem_dir,offline_stage_dir,postprocess_dir,
                                  cluster_file_path,cit_file_path,hres_file_path)
 # Open user input data file
@@ -110,7 +110,7 @@ try:
     input_file = open(input_file_path,'r')
 except FileNotFoundError as message:
     location = inspect.getframeinfo(inspect.currentframe())
-    errors.displayException(location.filename,location.lineno+1,message)
+    errors.displayexception(location.filename,location.lineno+1,message)
 #
 #                                                                              Start program
 # ==========================================================================================
@@ -123,23 +123,23 @@ phase_times = np.zeros((1,2))
 phase_names[0] = 'Total'
 phase_times[0,:] = [start_time_s,0.0]
 # Display starting program header
-info.displayInfo('0',problem_name,start_time,start_date)
+info.displayinfo('0',problem_name,start_time,start_date)
 #
 #                                                                  Read user input data file
 # ==========================================================================================
 # Display starting phase information and set phase initial time
-info.displayInfo('2','Read input data file')
+info.displayinfo('2','Read input data file')
 phase_init_time = time.time()
 # Open user input data file
 try:
     input_file = open(input_file_path,'r')
 except FileNotFoundError as message:
     location = inspect.getframeinfo(inspect.currentframe())
-    errors.displayException(location.filename,location.lineno+1,message)
+    errors.displayexception(location.filename,location.lineno+1,message)
 # Read input data according to analysis type
-info.displayInfo('5','Reading the input data file...')
+info.displayinfo('5','Reading the input data file...')
 problem_dict,mat_dict,macload_dict,rg_dict,clst_dict,scs_dict,algpar_dict,vtk_dict = \
-                                                     rid.readInputData(input_file,dirs_dict)
+                                                 rid.readinputdatafile(input_file,dirs_dict)
 # Close user input data file
 input_file.close()
 # Save copy of clustering dictionary for compatibility check procedure (loading previously
@@ -150,14 +150,14 @@ if is_same_offstage:
 phase_end_time = time.time()
 phase_names.append('Read input data')
 phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
-info.displayInfo('3','Read input data file',
+info.displayinfo('3','Read input data file',
                 phase_times[phase_times.shape[0]-1,1]-phase_times[phase_times.shape[0]-1,0])
 #
 #                                      Offline stage: Compute clustering-defining quantities
 # ==========================================================================================
 if not is_same_offstage:
     # Display starting phase information and set phase initial time
-    info.displayInfo('2','Compute cluster-defining quantities')
+    info.displayinfo('2','Compute cluster-defining quantities')
     phase_init_time = time.time()
     # Compute the quantities required to perform the clustering according to the strategy
     # adopted
@@ -167,62 +167,62 @@ if not is_same_offstage:
     phase_end_time = time.time()
     phase_names.append('Compute cluster-defining quantities')
     phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
-    info.displayInfo('3','Compute cluster-defining quantities',
+    info.displayinfo('3','Compute cluster-defining quantities',
                 phase_times[phase_times.shape[0]-1,1]-phase_times[phase_times.shape[0]-1,0])
 #
 #                                                          Offline stage: Perform clustering
 # ==========================================================================================
 if not is_same_offstage:
     # Display starting phase information and set phase initial time
-    info.displayInfo('2','Perform clustering')
+    info.displayinfo('2','Perform clustering')
     phase_init_time = time.time()
     # Perform the clustering according to the selected method and adopted strategy
     clusteringMethods.performClustering(copy.deepcopy(dirs_dict),copy.deepcopy(mat_dict),
                                                            copy.deepcopy(rg_dict),clst_dict)
     # Write clustering VTK file
     if vtk_dict['is_VTK_output']:
-        info.displayInfo('5','Writing cluster VTK file...')
-        VTKOutput.writeVTKClusterFile(vtk_dict,copy.deepcopy(dirs_dict),
+        info.displayinfo('5','Writing cluster VTK file...')
+        vtkoutput.writevtkclusterfile(vtk_dict,copy.deepcopy(dirs_dict),
                                             copy.deepcopy(rg_dict),copy.deepcopy(clst_dict))
     # Set phase ending time and display finishing phase information
     phase_end_time = time.time()
     phase_names.append('Perform clustering')
     phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
-    info.displayInfo('3','Perform clustering',
+    info.displayinfo('3','Perform clustering',
                 phase_times[phase_times.shape[0]-1,1]-phase_times[phase_times.shape[0]-1,0])
 else:
     # Display starting phase information and set phase initial time
-    info.displayInfo('2','Import known clustering data')
+    info.displayinfo('2','Import known clustering data')
     phase_init_time = time.time()
     # Get clusters data file path
-    info.displayInfo('5','Loading data from clusters data file (.clusters)...')
+    info.displayinfo('5','Loading data from clusters data file (.clusters)...')
     cluster_file_path = dirs_dict['cluster_file_path']
     # Open clusters data file
     try:
         cluster_file = open(cluster_file_path,'rb')
     except Exception as message:
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayException(location.filename,location.lineno+1,message)
+        errors.displayexception(location.filename,location.lineno+1,message)
     # Load cluster data from file
     clst_dict = pickle.load(cluster_file)
     # Close clusters data file
     cluster_file.close()
     # Check compatibility between the loaded clusters data and the input data file
-    info.displayInfo('5','Performing compatibility check on loaded data...')
+    info.displayinfo('5','Performing compatibility check on loaded data...')
     clusteringMethods.checkClstCompatibility(copy.deepcopy(problem_dict),
               copy.deepcopy(rg_dict),copy.deepcopy(clst_dict_read),copy.deepcopy(clst_dict))
     # Set phase ending time and display finishing phase information
     phase_end_time = time.time()
     phase_names.append('Import known clustering data')
     phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
-    info.displayInfo('3','Import known clustering data',
+    info.displayinfo('3','Import known clustering data',
                 phase_times[phase_times.shape[0]-1,1]-phase_times[phase_times.shape[0]-1,0])
 #
 #                                         Offline stage: Compute cluster interaction tensors
 # ==========================================================================================
 if not is_same_offstage:
     # Display starting phase information and set phase initial time
-    info.displayInfo('2','Compute cluster interaction tensors')
+    info.displayinfo('2','Compute cluster interaction tensors')
     phase_init_time = time.time()
     # Compute the cluster interaction tensors
     clusterInteractionTensors.computeClusterInteractionTensors(copy.deepcopy(dirs_dict),
@@ -232,21 +232,21 @@ if not is_same_offstage:
     phase_end_time = time.time()
     phase_names.append('Compute cluster interaction tensors')
     phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
-    info.displayInfo('3','Compute cluster interaction tensors',
+    info.displayinfo('3','Compute cluster interaction tensors',
                 phase_times[phase_times.shape[0]-1,1]-phase_times[phase_times.shape[0]-1,0])
 else:
     # Display starting phase information and set phase initial time
-    info.displayInfo('2','Import cluster interaction tensors')
+    info.displayinfo('2','Import cluster interaction tensors')
     phase_init_time = time.time()
     # Get cluster interaction tensors file path
-    info.displayInfo('5','Loading clustering interaction tensors (.cit)...')
+    info.displayinfo('5','Loading clustering interaction tensors (.cit)...')
     cit_file_path = dirs_dict['cit_file_path']
     # Open clustering interaction tensors file
     try:
         cit_file = open(cit_file_path,'rb')
     except Exception as message:
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayException(location.filename,location.lineno+1,message)
+        errors.displayexception(location.filename,location.lineno+1,message)
     # Load clustering interaction tensors
     [clst_dict['cit_1_mf'],clst_dict['cit_2_mf'],clst_dict['cit_0_freq_mf']] = \
                                                                        pickle.load(cit_file)
@@ -254,20 +254,20 @@ else:
     cit_file.close()
     # Check compatibility between the loaded cluster interaction tensors and the material
     # phases existent in the spatial discretization file
-    info.displayInfo('5','Performing compatibility check on loaded data...')
+    info.displayinfo('5','Performing compatibility check on loaded data...')
     clusterInteractionTensors.checkCITCompatibility(copy.deepcopy(mat_dict),
                                                                    copy.deepcopy(clst_dict))
     # Set phase ending time and display finishing phase information
     phase_end_time = time.time()
     phase_names.append('Import cluster interaction tensors')
     phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
-    info.displayInfo('3','Import cluster interaction tensors',
+    info.displayinfo('3','Import cluster interaction tensors',
                 phase_times[phase_times.shape[0]-1,1]-phase_times[phase_times.shape[0]-1,0])
 #
 #                                 Online stage: Solve reduced microscale equilibrium problem
 # ==========================================================================================
 # Display starting phase information and set phase initial time
-info.displayInfo('2','Solve discretized Lippmann-Schwinger equations')
+info.displayinfo('2','Solve discretized Lippmann-Schwinger equations')
 phase_init_time = time.time()
 # Solve the reduced microscale equilibrium problem through solution of the clusterwise
 # discretized Lippmann-Schwinger system of equilibrium equations
@@ -277,7 +277,7 @@ onlineStage.onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macloa
 phase_end_time = time.time()
 phase_names.append('Solve discretized Lippmann-Schwinger equations')
 phase_times = np.append(phase_times,[[phase_init_time,phase_end_time]],axis=0)
-info.displayInfo('3','Solve discretized Lippmann-Schwinger equations',
+info.displayinfo('3','Solve discretized Lippmann-Schwinger equations',
                 phase_times[phase_times.shape[0]-1,1]-phase_times[phase_times.shape[0]-1,0])
 #
 #                                                                                End program
@@ -288,4 +288,4 @@ end_time = time.strftime("%Hh%Mm%Ss")
 end_time_s = time.time()
 phase_times[0,1] = end_time_s
 # Display ending program message
-info.displayInfo('1',end_time,end_date,problem_name,phase_names,phase_times)
+info.displayinfo('1',end_time,end_date,problem_name,phase_names,phase_times)

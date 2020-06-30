@@ -15,7 +15,7 @@ import numpy as np
 # Inspect file name and line
 import inspect
 # Display errors, warnings and built-in exceptions
-import errors
+import ioput.errors as errors
 #
 #                                                                   Isotropic hardening laws
 # ==========================================================================================
@@ -55,7 +55,7 @@ def setRequiredParameters(type):
     # Unknown isotropic hardening type
     else:
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00078',location.filename,location.lineno+1,type)
+        errors.displayerror('E00078',location.filename,location.lineno+1,type)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Return
     return req_hardening_parameters
@@ -75,10 +75,10 @@ def setHardeningLaw(type):
             # order
             if not np.all(np.diff(a) > 0):
                 location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayError('E00080',location.filename,location.lineno+1,type)
+                errors.displayerror('E00080',location.filename,location.lineno+1,type)
             elif not np.all([i >= 0 for i in a]):
                 location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayError('E00081',location.filename,location.lineno+1,type)
+                errors.displayerror('E00081',location.filename,location.lineno+1,type)
             # If the value of the accumulated plastic strain is either below or above the
             # provided hardening curve points, then simply assume the yield stress
             # associated with the first or last provided points, respectively. Otherwise,
@@ -149,7 +149,7 @@ def setHardeningLaw(type):
     # Unknown isotropic hardening type
     else:
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00078',location.filename,location.lineno+1,type)
+        errors.displayerror('E00078',location.filename,location.lineno+1,type)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Return
     return hardeningLaw

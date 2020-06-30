@@ -19,7 +19,7 @@ import ntpath
 # Inspect file name and line
 import inspect
 # Display errors, warnings and built-in exceptions
-import errors
+import ioput.errors as errors
 # Links related procedures
 import Links.LinksUtilities as LinksUtil
 #
@@ -35,7 +35,7 @@ def getLinksStrainVox(Links_file_path,n_dim,comp_order,n_voxels_dims):
                                           elagv_file_name + '/' + elagv_file_name + '.elavg'
     if not os.path.isfile(elagv_file_path):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00070',location.filename,location.lineno+1,elagv_file_path)
+        errors.displayerror('E00070',location.filename,location.lineno+1,elagv_file_path)
     # Load elementwise average strain tensor components
     elagv_array = np.genfromtxt(elagv_file_path,autostrip=True)
     # Get Links strain components order

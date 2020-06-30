@@ -24,7 +24,7 @@ import inspect
 # Generate efficient iterators
 import itertools as it
 # Display errors, warnings and built-in exceptions
-import errors
+import ioput.errors as errors
 # Manage files and directories
 import fileOperations
 # Tensorial operations
@@ -50,11 +50,11 @@ def readLinksParameters(file,file_path,problem_type,checkNumber,checkPositiveInt
     Links_bin_path = linecache.getline(file_path,line_number).strip()
     if not os.path.isabs(Links_bin_path):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00068',location.filename,location.lineno+1,keyword, \
+        errors.displayerror('E00068',location.filename,location.lineno+1,keyword, \
                                                                              Links_bin_path)
     elif not os.path.isfile(Links_bin_path):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00068',location.filename,location.lineno+1,keyword, \
+        errors.displayerror('E00068',location.filename,location.lineno+1,keyword, \
                                                                              Links_bin_path)
     # Store Links binary absolute path
     Links_dict['Links_bin_path'] = Links_bin_path
@@ -67,10 +67,10 @@ def readLinksParameters(file,file_path,problem_type,checkNumber,checkPositiveInt
         line = linecache.getline(file_path,keyword_line_number).split()
         if len(line) == 1:
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00063',location.filename,location.lineno+1,keyword)
+            errors.displayerror('E00063',location.filename,location.lineno+1,keyword)
         elif line[1] not in ['linear','quadratic']:
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00063',location.filename,location.lineno+1,keyword)
+            errors.displayerror('E00063',location.filename,location.lineno+1,keyword)
         fe_order = line[1]
     else:
         fe_order = 'quadratic'
@@ -85,12 +85,12 @@ def readLinksParameters(file,file_path,problem_type,checkNumber,checkPositiveInt
         line = linecache.getline(file_path,keyword_line_number).split()
         if len(line) == 1:
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00064',location.filename,location.lineno+1,keyword)
+            errors.displayerror('E00064',location.filename,location.lineno+1,keyword)
         elif line[1] not in ['Taylor_Condition','Linear_Condition','Periodic_Condition',
                                'Uniform_Traction_Condition','Uniform_Traction_Condition_II',
                                 'Mortar_Periodic_Condition','Mortar_Periodic_Condition_LM']:
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00064',location.filename,location.lineno+1,keyword)
+            errors.displayerror('E00064',location.filename,location.lineno+1,keyword)
         boundary_type = line[1]
     else:
         boundary_type = 'Periodic_Condition'
@@ -105,13 +105,13 @@ def readLinksParameters(file,file_path,problem_type,checkNumber,checkPositiveInt
         line = linecache.getline(file_path,keyword_line_number+1).split()
         if line == '':
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00065',location.filename,location.lineno+1,keyword)
+            errors.displayerror('E00065',location.filename,location.lineno+1,keyword)
         elif len(line) != 1:
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00065',location.filename,location.lineno+1,keyword)
+            errors.displayerror('E00065',location.filename,location.lineno+1,keyword)
         elif not checkNumber(line[0]) or float(line[0]) <= 0:
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00065',location.filename,location.lineno+1,keyword)
+            errors.displayerror('E00065',location.filename,location.lineno+1,keyword)
         convergence_tolerance = float(line[0])
     else:
         convergence_tolerance = 1e-6
@@ -125,10 +125,10 @@ def readLinksParameters(file,file_path,problem_type,checkNumber,checkPositiveInt
     if isFound:
         if len(line) == 1:
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00069',location.filename,location.lineno+1,keyword)
+            errors.displayerror('E00069',location.filename,location.lineno+1,keyword)
         elif not checkPositiveInteger(line[1]):
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00069',location.filename,location.lineno+1,keyword)
+            errors.displayerror('E00069',location.filename,location.lineno+1,keyword)
         element_avg_output_mode = int(line[1])
     else:
         element_avg_output_mode = 1
@@ -167,13 +167,13 @@ def writeLinksInputDataFile(file_name,dirs_dict,problem_dict,mat_dict,rg_dict,cl
     # Set and create offline stage Links directory if it does not exist
     os_Links_dir = offline_stage_dir + 'Links' + '/'
     if not os.path.exists(os_Links_dir):
-        fileOperations.makeDirectory(os_Links_dir)
+        fileOperations.makedirectory(os_Links_dir)
     # Set Links input data file path
     Links_file_path = os_Links_dir + file_name + '.rve'
     # Abort if attempting to overwrite an existing Links input data file
     if os.path.isfile(Links_file_path):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00066',location.filename,location.lineno+1,
+        errors.displayerror('E00066',location.filename,location.lineno+1,
                                                            ntpath.basename(Links_file_path))
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set additional Links input data file parameters (fixed)
@@ -601,7 +601,7 @@ def runLinks(Links_bin_path,Links_file_path):
                                        screen_file_name + '/' + screen_file_name + '.screen'
     if not os.path.isfile(screen_file_path):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00071',location.filename,location.lineno+1,screen_file_path)
+        errors.displayerror('E00071',location.filename,location.lineno+1,screen_file_path)
     else:
         is_solved = False
         screen_file = open(screen_file_path,'r')
@@ -614,7 +614,7 @@ def runLinks(Links_bin_path,Links_file_path):
                 break
         if not is_solved:
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00072',location.filename,location.lineno+1,
+            errors.displayerror('E00072',location.filename,location.lineno+1,
                                                            ntpath.basename(Links_file_path))
 #
 #                                                                 Post process Links results
@@ -629,7 +629,7 @@ def getStrainVox(Links_file_path,n_dim,comp_order,n_voxels_dims):
                                           elagv_file_name + '/' + elagv_file_name + '.elavg'
     if not os.path.isfile(elagv_file_path):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00070',location.filename,location.lineno+1,elagv_file_path)
+        errors.displayerror('E00070',location.filename,location.lineno+1,elagv_file_path)
     # Load elementwise average strain tensor components
     elagv_array = np.genfromtxt(elagv_file_path,autostrip=True)
     # Get Links strain components order
@@ -678,30 +678,30 @@ def setTensorMatricialFormLinks(tensor,n_dim,comp_order,nature):
     # Check input arguments validity
     if tensor_order not in [2,4]:
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00023',location.filename,location.lineno+1)
+        errors.displayerror('E00023',location.filename,location.lineno+1)
     elif any([ int(x) not in range(1,n_dim+1) for x in list(''.join(comp_order))]):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00024',location.filename,location.lineno+1)
+        errors.displayerror('E00024',location.filename,location.lineno+1)
     elif any([tensor.shape[i] != n_dim for i in range(len(tensor.shape))]):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00025',location.filename,location.lineno+1)
+        errors.displayerror('E00025',location.filename,location.lineno+1)
     elif any([len(comp) != 2 for comp in comp_order]):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00024',location.filename,location.lineno+1)
+        errors.displayerror('E00024',location.filename,location.lineno+1)
     elif len(list(dict.fromkeys(comp_order))) != len(comp_order):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00026',location.filename,location.lineno+1)
+        errors.displayerror('E00026',location.filename,location.lineno+1)
     # Set Voigt notation flag
     if len(comp_order) == n_dim**2:
         isVoigtNotation = False
     elif len(comp_order) == sum(range(n_dim+1)):
         if nature not in ['strain','stress','elasticity','compliance']:
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00083',location.filename,location.lineno+1)
+            errors.displayerror('E00083',location.filename,location.lineno+1)
         isVoigtNotation = True
     else:
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00027',location.filename,location.lineno+1)
+        errors.displayerror('E00027',location.filename,location.lineno+1)
     # Store tensor according to tensor order
     if tensor_order == 2:
         # Set second-order and matricial form indexes
@@ -756,39 +756,39 @@ def getTensorFromMatricialFormLinks(tensor_mf,n_dim,comp_order,nature):
         tensor_order = 2
         if tensor_mf.shape[0] != n_dim**2 and tensor_mf.shape[0] != sum(range(n_dim+1)):
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00028',location.filename,location.lineno+1)
+            errors.displayerror('E00028',location.filename,location.lineno+1)
     elif len(tensor_mf.shape) == 2:
         tensor_order = 4
         if tensor_mf.shape[0] != tensor_mf.shape[1]:
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00029',location.filename,location.lineno+1)
+            errors.displayerror('E00029',location.filename,location.lineno+1)
         elif tensor_mf.shape[0] != n_dim**2 and tensor_mf.shape[0] != sum(range(n_dim+1)):
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00028',location.filename,location.lineno+1)
+            errors.displayerror('E00028',location.filename,location.lineno+1)
     else:
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00030',location.filename,location.lineno+1)
+        errors.displayerror('E00030',location.filename,location.lineno+1)
     # Check input arguments validity
     if any([ int(x) not in range(1,n_dim+1) for x in list(''.join(comp_order))]):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00024',location.filename,location.lineno+1)
+        errors.displayerror('E00024',location.filename,location.lineno+1)
     elif any([len(comp) != 2 for comp in comp_order]):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00024',location.filename,location.lineno+1)
+        errors.displayerror('E00024',location.filename,location.lineno+1)
     elif len(list(dict.fromkeys(comp_order))) != len(comp_order):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00026',location.filename,location.lineno+1)
+        errors.displayerror('E00026',location.filename,location.lineno+1)
     # Set Voigt notation flag
     if len(comp_order) == n_dim**2:
         isVoigtNotation = False
     elif len(comp_order) == sum(range(n_dim+1)):
         if nature not in ['strain','stress','elasticity','compliance']:
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00083',location.filename,location.lineno+1)
+            errors.displayerror('E00083',location.filename,location.lineno+1)
         isVoigtNotation = True
     else:
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00027',location.filename,location.lineno+1)
+        errors.displayerror('E00027',location.filename,location.lineno+1)
     # Get tensor according to tensor order
     if tensor_order == 2:
         # Set second-order and matricial form indexes

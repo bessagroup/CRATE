@@ -32,10 +32,11 @@ def utility1():
     import itertools as it
     import ntpath
     import time
-    import info
+    import ioput.info as info
     import fileOperations
-    import readInputData as rid
+    import ioput.readinputdata as rid
     import FFTHomogenizationBasicScheme as FFT
+    import ioput.ioutilities as ioutil
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set numpy default print options
     np.set_printoptions(precision=4,linewidth=np.inf)
@@ -109,7 +110,7 @@ def utility1():
         output_dir = '/media/bernardoferreira/HDD/FEUP PhD/Studies/seminar/' + \
                      'offline_stage/main/3D/FFT_NEW/'
     output_dir = output_dir + discret_file_basename + '_' + loading + '/'
-    fileOperations.makeDirectory(output_dir,option='overwrite')
+    fileOperations.makedirectory(output_dir,option='overwrite')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set absolute path of the file where the error for the diferent convergence criteria
     # is written at every iteration
@@ -162,10 +163,10 @@ def utility1():
             hom_stress[idx[::-1]] = hom_stress[idx]
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set homogenized results output format
-    displayFeatures = info.setDisplayFeatures()
-    output_width = displayFeatures[0]
-    indent = displayFeatures[2]
-    equal_line = displayFeatures[5]
+    display_features = ioutil.setdisplayfeatures()
+    output_width = display_features[0]
+    indent = display_features[2]
+    equal_line = display_features[5]
     arguments = list()
     for i in range(3):
         for j in range(3):
@@ -242,7 +243,7 @@ def utility2(vtk_dict,dirs_dict,rg_dict,clst_dict,comp_order_sym,strain_vox,stre
     # Import modules
     import os
     import sys
-    import VTKOutput
+    import ioput.vtkoutput as vtkoutput
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Get VTK output parameters
     vtk_format = vtk_dict['vtk_format']
@@ -274,18 +275,18 @@ def utility2(vtk_dict,dirs_dict,rg_dict,clst_dict,comp_order_sym,strain_vox,stre
     else:
         vtk_dict['byte_order'] = 'BigEndian'
     vtk_dict['header_type'] = 'UInt64'
-    VTKOutput.writeVTKFileHeader(vtk_file,vtk_dict)
+    vtkoutput.writevtk_fileheader(vtk_file,vtk_dict)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Write VTK dataset element
     dataset_parameters,piece_parameters = \
-        VTKOutput.setImageDataParameters(n_voxels_dims,rve_dims)
-    VTKOutput.writeVTKOpenDatasetElement(vtk_file,vtk_dict,dataset_parameters)
+        vtkoutput.setimagedataparam(n_voxels_dims,rve_dims)
+    vtkoutput.writevtk_opendatasetelem(vtk_file,vtk_dict,dataset_parameters)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Open VTK dataset element piece
-    VTKOutput.writeVTKOpenPiece(vtk_file,piece_parameters)
+    vtkoutput.writevtk_openpiece(vtk_file,piece_parameters)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Open VTK dataset element piece cell data
-    VTKOutput.writeVTKOpenCellData(vtk_file)
+    vtkoutput.writevtk_opencelldata(vtk_file)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Write VTK cell data array - Material phases
     data_list = list(regular_grid.flatten('F'))
@@ -293,7 +294,7 @@ def utility2(vtk_dict,dirs_dict,rg_dict,clst_dict,comp_order_sym,strain_vox,stre
     max_val = max(data_list)
     data_parameters = {'Name':'Material phase','format':vtk_format,'RangeMin':min_val,
                                                                          'RangeMax':max_val}
-    VTKOutput.writeVTKCellDataArray(vtk_file,vtk_dict,data_list,data_parameters)
+    vtkoutput.writevtk_celldataarray(vtk_file,vtk_dict,data_list,data_parameters)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Write VTK cell data array - Clusters
     data_list = list(voxels_clusters.flatten('F'))
@@ -301,7 +302,7 @@ def utility2(vtk_dict,dirs_dict,rg_dict,clst_dict,comp_order_sym,strain_vox,stre
     max_val = max(data_list)
     data_parameters = {'Name':'Cluster','format':vtk_format,'RangeMin':min_val,
                                                                          'RangeMax':max_val}
-    VTKOutput.writeVTKCellDataArray(vtk_file,vtk_dict,data_list,data_parameters)
+    vtkoutput.writevtk_celldataarray(vtk_file,vtk_dict,data_list,data_parameters)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Write VTK cell data array - Strain tensor
     for comp in comp_order_sym:
@@ -310,7 +311,7 @@ def utility2(vtk_dict,dirs_dict,rg_dict,clst_dict,comp_order_sym,strain_vox,stre
         max_val = max(data_list)
         data_parameters = {'Name':'e_strain_' + comp,'format':vtk_format,'RangeMin':min_val,
                                                                          'RangeMax':max_val}
-        VTKOutput.writeVTKCellDataArray(vtk_file,vtk_dict,data_list,data_parameters)
+        vtkoutput.writevtk_celldataarray(vtk_file,vtk_dict,data_list,data_parameters)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Write VTK cell data array - Stress tensor
     for comp in comp_order_sym:
@@ -319,19 +320,19 @@ def utility2(vtk_dict,dirs_dict,rg_dict,clst_dict,comp_order_sym,strain_vox,stre
         max_val = max(data_list)
         data_parameters = {'Name':'stress_' + comp,'format':vtk_format,'RangeMin':min_val,
                                                                          'RangeMax':max_val}
-        VTKOutput.writeVTKCellDataArray(vtk_file,vtk_dict,data_list,data_parameters)
+        vtkoutput.writevtk_celldataarray(vtk_file,vtk_dict,data_list,data_parameters)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Close VTK dataset element piece cell data
-    VTKOutput.writeVTKCloseCellData(vtk_file)
+    vtkoutput.writevtk_closecelldata(vtk_file)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Close VTK dataset element piece
-    VTKOutput.writeVTKClosePiece(vtk_file)
+    vtkoutput.writevtk_closepiece(vtk_file)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Close VTK dataset element
-    VTKOutput.writeVTKCloseDatasetElement(vtk_file,vtk_dict)
+    vtkoutput.writevtk_closedatasetelem(vtk_file,vtk_dict)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Write VTK file footer
-    VTKOutput.writeVTKFileFooter(vtk_file)
+    vtkoutput.writevtk_filefooter(vtk_file)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Close clustering VTK file
     vtk_file.close()

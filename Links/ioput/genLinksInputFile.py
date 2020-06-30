@@ -20,7 +20,7 @@ import inspect
 # Extract information from path
 import ntpath
 # Display errors, warnings and built-in exceptions
-import errors
+import ioput.errors as errors
 # Manage files and directories
 import fileOperations
 #
@@ -54,13 +54,13 @@ def writeLinksInputDataFile(file_name,dirs_dict,problem_dict,mat_dict,rg_dict,cl
     # Set and create offline stage Links directory if it does not exist
     os_Links_dir = offline_stage_dir + 'Links' + '/'
     if not os.path.exists(os_Links_dir):
-        fileOperations.makeDirectory(os_Links_dir)
+        fileOperations.makedirectory(os_Links_dir)
     # Set Links input data file path
     Links_file_path = os_Links_dir + file_name + '.rve'
     # Abort if attempting to overwrite an existing Links input data file
     if os.path.isfile(Links_file_path):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00066',location.filename,location.lineno+1,
+        errors.displayerror('E00066',location.filename,location.lineno+1,
                                                            ntpath.basename(Links_file_path))
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set additional Links input data file parameters (fixed)

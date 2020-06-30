@@ -15,7 +15,7 @@ import numpy as np
 # Inspect file name and line
 import inspect
 # Display errors, warnings and built-in exceptions
-import errors
+import ioput.errors as errors
 # Tensorial operations
 import tensorOperations as top
 # Links related procedures
@@ -204,7 +204,7 @@ def setLinksModelProcedures():
                     n_dim,comp_order)
             state_variables['strain_mf'] = np.zeros_like(RSTAVA[0:idx])
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00084',location.filename,location.lineno+1)
+            errors.displayerror('E00084',location.filename,location.lineno+1)
             if problem_type == 1:
                 state_variables['e_strain_33'] = RSTAVA[idx]
             state_variables['acc_p_strain'] = RSTAVA[-1]

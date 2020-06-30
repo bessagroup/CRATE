@@ -19,7 +19,7 @@ import ntpath
 # Inspect file name and line
 import inspect
 # Display errors, warnings and built-in exceptions
-import errors
+import ioput.errors as errors
 #
 #                                                                    Links execution process
 # ==========================================================================================
@@ -34,7 +34,7 @@ def runLinks(Links_bin_path,Links_file_path):
                                        screen_file_name + '/' + screen_file_name + '.screen'
     if not os.path.isfile(screen_file_path):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00071',location.filename,location.lineno+1,screen_file_path)
+        errors.displayerror('E00071',location.filename,location.lineno+1,screen_file_path)
     else:
         is_solved = False
         screen_file = open(screen_file_path,'r')
@@ -47,5 +47,5 @@ def runLinks(Links_bin_path,Links_file_path):
                 break
         if not is_solved:
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00072',location.filename,location.lineno+1,
+            errors.displayerror('E00072',location.filename,location.lineno+1,
                                                            ntpath.basename(Links_file_path))

@@ -18,9 +18,9 @@ import copy
 # Extract information from path
 import ntpath
 # Display messages
-import info
+import ioput.info as info
 # Read user input data file
-import readInputData as rid
+import ioput.readinputdata as rid
 # FFT-Based Homogenization Method (Moulinec, H. and Suquet, P., 1998)
 import FFTHomogenizationBasicScheme
 # Links related procedures
@@ -104,7 +104,7 @@ def computeClusteringQuantities(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dic
         clst_dataidxs = [list(range(n_clustering_var)),]
         # Small strain formulation
         if strain_formulation == 1:
-            info.displayInfo('5','Computing strain concentration tensors...')
+            info.displayinfo('5','Computing strain concentration tensors...')
             # Loop over independent strain components
             for i in range(len(comp_order_sym)):
                 compi = comp_order_sym[i]

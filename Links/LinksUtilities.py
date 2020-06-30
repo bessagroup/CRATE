@@ -18,7 +18,7 @@ import itertools as it
 # Inspect file name and line
 import inspect
 # Display errors, warnings and built-in exceptions
-import errors
+import ioput.errors as errors
 #
 #                                                       Links strain/stress components order
 # ==========================================================================================
@@ -54,33 +54,33 @@ def setTensorMatricialFormLinks(tensor,n_dim,comp_order,nature):
     # Check input arguments validity
     if tensor_order not in [2,4]:
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00023',location.filename,location.lineno+1)
+        errors.displayerror('E00023',location.filename,location.lineno+1)
     elif any([ int(x) not in range(1,n_dim+1) for x in list(''.join(comp_order))]):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00024',location.filename,location.lineno+1)
+        errors.displayerror('E00024',location.filename,location.lineno+1)
     elif any([tensor.shape[i] != n_dim for i in range(len(tensor.shape))]):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00025',location.filename,location.lineno+1)
+        errors.displayerror('E00025',location.filename,location.lineno+1)
     elif any([len(comp) != 2 for comp in comp_order]):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00024',location.filename,location.lineno+1)
+        errors.displayerror('E00024',location.filename,location.lineno+1)
     elif len(list(dict.fromkeys(comp_order))) != len(comp_order):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00026',location.filename,location.lineno+1)
+        errors.displayerror('E00026',location.filename,location.lineno+1)
     # Set Voigt notation flag
     if len(comp_order) == n_dim**2:
         isVoigtNotation = False
     elif len(comp_order) == sum(range(n_dim+1)):
         if nature not in ['strain','stress','elasticity','compliance']:
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00083',location.filename,location.lineno+1)
+            errors.displayerror('E00083',location.filename,location.lineno+1)
         if nature in ['strain','compliance']:
             isVoigtNotation = True
         else:
             isVoigtNotation = False
     else:
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00027',location.filename,location.lineno+1)
+        errors.displayerror('E00027',location.filename,location.lineno+1)
     # Store tensor according to tensor order
     if tensor_order == 2:
         # Set second-order and matricial form indexes
@@ -135,42 +135,42 @@ def getTensorFromMatricialFormLinks(tensor_mf,n_dim,comp_order,nature):
         tensor_order = 2
         if tensor_mf.shape[0] != n_dim**2 and tensor_mf.shape[0] != sum(range(n_dim+1)):
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00028',location.filename,location.lineno+1)
+            errors.displayerror('E00028',location.filename,location.lineno+1)
     elif len(tensor_mf.shape) == 2:
         tensor_order = 4
         if tensor_mf.shape[0] != tensor_mf.shape[1]:
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00029',location.filename,location.lineno+1)
+            errors.displayerror('E00029',location.filename,location.lineno+1)
         elif tensor_mf.shape[0] != n_dim**2 and tensor_mf.shape[0] != sum(range(n_dim+1)):
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00028',location.filename,location.lineno+1)
+            errors.displayerror('E00028',location.filename,location.lineno+1)
     else:
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00030',location.filename,location.lineno+1)
+        errors.displayerror('E00030',location.filename,location.lineno+1)
     # Check input arguments validity
     if any([ int(x) not in range(1,n_dim+1) for x in list(''.join(comp_order))]):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00024',location.filename,location.lineno+1)
+        errors.displayerror('E00024',location.filename,location.lineno+1)
     elif any([len(comp) != 2 for comp in comp_order]):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00024',location.filename,location.lineno+1)
+        errors.displayerror('E00024',location.filename,location.lineno+1)
     elif len(list(dict.fromkeys(comp_order))) != len(comp_order):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00026',location.filename,location.lineno+1)
+        errors.displayerror('E00026',location.filename,location.lineno+1)
     # Set Voigt notation flag
     if len(comp_order) == n_dim**2:
         isVoigtNotation = False
     elif len(comp_order) == sum(range(n_dim+1)):
         if nature not in ['strain','stress','elasticity','compliance']:
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00083',location.filename,location.lineno+1)
+            errors.displayerror('E00083',location.filename,location.lineno+1)
         if nature in ['strain','compliance']:
             isVoigtNotation = True
         else:
             isVoigtNotation = False
     else:
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00027',location.filename,location.lineno+1)
+        errors.displayerror('E00027',location.filename,location.lineno+1)
     # Get tensor according to tensor order
     if tensor_order == 2:
         # Set second-order and matricial form indexes

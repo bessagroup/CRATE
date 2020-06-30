@@ -2,8 +2,7 @@
 # Errors and Warnings Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# Module containing procedures associated to execution errors, warnings and built-in
-# exceptions.
+# Display execution errors, warnings and built-in exceptions.
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | January 2020 | Initial coding.
@@ -18,23 +17,23 @@ import numpy as np
 import inspect
 # Terminal colors
 import colorama
-# Display messages
-import info
+# I/O utilities
+import ioput.ioutilities as ioutil
 #
 #                                                                    Display errors function
 # ==========================================================================================
 # Set and display runtime errors
-def displayError(code,*args):
+def displayerror(code, *args):
     # Get display features
-    displayFeatures = info.setDisplayFeatures()
-    output_width, dashed_line, indent, asterisk_line = displayFeatures[0:4]
+    display_features = ioutil.setdisplayfeatures()
+    output_width, dashed_line, indent, asterisk_line = display_features[0:4]
     # Set error display header and footer
-    header = tuple(info.convertIterableToList(['!! Error !!',code]) + \
-                  info.convertIterableToList(args[0:2]))
+    header = tuple(ioutil.convertiterabletolist(['!! Error !!', code]) + \
+                   ioutil.convertiterabletolist(args[0:2]))
     template_header = '\n' + asterisk_line + '\n' + \
                       '{:^{width}}' + '\n\n' + 'Code: {}' + '\n\n' + \
                       'Traceback: {} (at line {})' + '\n\n'
-    footer = tuple(info.convertIterableToList(('Program Aborted',)))
+    footer = tuple(ioutil.convertiterabletolist(('Program Aborted',)))
     template_footer = '\n' + asterisk_line + '\n\n' + \
                       '{:^{width}}' + '\n'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -57,7 +56,7 @@ def displayError(code,*args):
                    indent + 'The input data file name must only contain letters, ' + \
                    'numbers or underscores.'
     elif code == 'E00003':
-        arguments = info.convertIterableToList([args[2],])
+        arguments = ioutil.convertiterabletolist([args[2],])
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been found in the input data file.'
@@ -75,9 +74,9 @@ def displayError(code,*args):
                    indent + '{}' + '\n' + \
                    indent + '< value >'
     elif code == 'E00005':
-        suffix = getOrdinalNumber(args[3])
-        arguments = info.convertIterableToList(args[2:4]) + \
-                    info.convertIterableToList(2*(args[2],))
+        suffix = getordinalnumber(args[3])
+        arguments = ioutil.convertiterabletolist(args[2:4]) + \
+                        ioutil.convertiterabletolist(2*(args[2],))
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
@@ -106,9 +105,9 @@ def displayError(code,*args):
                    '\n' + \
                    indent + 'property3_name < value >'
     elif code == 'E00006':
-        suffix = getOrdinalNumber(args[3])
-        arguments = info.convertIterableToList(args[2:5]) + \
-                    info.convertIterableToList(2*(args[2],))
+        suffix = getordinalnumber(args[3])
+        arguments = ioutil.convertiterabletolist(args[2:5]) + \
+                        ioutil.convertiterabletolist(2*(args[2],))
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
@@ -138,7 +137,7 @@ def displayError(code,*args):
                    '\n' + \
                    indent + 'property3_name < value >'
     elif code == 'E00007':
-        arguments = info.convertIterableToList(3*(args[2],))
+        arguments = ioutil.convertiterabletolist(3*(args[2],))
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
@@ -151,9 +150,9 @@ def displayError(code,*args):
                    indent + 'The keyword - {} - should be specified as' + '\n\n' + \
                    indent + '{} < option or value >'
     elif code == 'E00008':
-        suffix = getOrdinalNumber(args[3])
-        arguments = info.convertIterableToList(args[2:4]) + \
-                    info.convertIterableToList(2*(args[2],))
+        suffix = getordinalnumber(args[3])
+        arguments = ioutil.convertiterabletolist(args[2:4]) + \
+                        ioutil.convertiterabletolist(2*(args[2],))
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
@@ -175,7 +174,7 @@ def displayError(code,*args):
                    indent + 'descriptor_name_12 < value >' + '\n' + \
                    indent + 'descriptor_name_22 < value >'
     elif code == 'E00009':
-        arguments = info.convertIterableToList(args[2:4])
+        arguments = ioutil.convertiterabletolist(args[2:4])
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'It was requested the consideration of the previously ' + \
@@ -207,8 +206,8 @@ def displayError(code,*args):
                    indent + '{}' + '\n' + \
                    indent + '0 0 1 0'
     elif code == 'E00012':
-        component = ['12','13','23']
-        arguments = [component[args[2]],component[args[2]][::-1]]
+        component = ['12', '13', '23']
+        arguments = [component[args[2]], component[args[2]][::-1]]
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
         indent + 'A different kind of macroscale prescription (strain or stress) has ' + \
@@ -218,8 +217,8 @@ def displayError(code,*args):
         indent + 'Please prescribe both components as either macroscale strain or ' + \
         'macroscale stress.'
     elif code == 'E00013':
-        suffix = getOrdinalNumber(args[3])
-        arguments = info.convertIterableToList(args[2:4] + 2*(args[2],))
+        suffix = getordinalnumber(args[3])
+        arguments = ioutil.convertiterabletolist(args[2:4] + 2*(args[2],))
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
@@ -247,7 +246,7 @@ def displayError(code,*args):
                    indent + '{}'
     elif code == 'E00015':
         n_valid_exts = len(args[3])
-        arguments = [args[2],] + info.convertIterableToList(args[3])
+        arguments = [args[2],] + ioutil.convertiterabletolist(args[3])
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
@@ -394,7 +393,7 @@ def displayError(code,*args):
                    'bounds when performing the ' + '\n' + \
                    indent + 'corresponding condensation.'
     elif code == 'E00036':
-        suffix = getOrdinalNumber(args[2])
+        suffix = getordinalnumber(args[2])
         arguments = [args[2],]
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
@@ -443,12 +442,12 @@ def displayError(code,*args):
                    indent + 'file (\'.rgmsh\') that has not been specified in the ' + \
                    'input data file.' + '\n\n' + \
                    indent + 'Material phases (input data file):      ' + \
-                                                len(args[2])*('{}, ') + '\b\b ' + '\n\n' + \
+                   len(args[2])*('{}, ') + '\b\b ' + '\n\n' + \
                    indent + 'Material phases (regular grid file):    ' + \
-                                                             len(args[3])*('{}, ') + '\b\b '
+                   len(args[3])*('{}, ') + '\b\b '
     elif code == 'E00044':
-        arguments = [' '.join(args[2].split('_')),' '.join(args[2].split('_')),
-                                               args[3],' '.join(args[2].split('_')),args[4]]
+        arguments = [' '.join(args[2].split('_')), ' '.join(args[2].split('_')),
+                     args[3], ' '.join(args[2].split('_')), args[4]]
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The {} read in the input data file does not match the one ' + \
@@ -457,10 +456,10 @@ def displayError(code,*args):
                    indent + '{} (input data file):    {}' + '\n\n' + \
                    indent + '{} (clusters data file): {}'
     elif code == 'E00045':
-        list1 = [ '\'' + key + '\': ' + '{:2s}'.format(str(args[2][key]))
-                                                   for key in np.sort(list(args[2].keys()))]
-        list2 = [ '\'' + key + '\': ' + '{:2s}'.format(str(args[3][key]))
-                                                   for key in np.sort(list(args[3].keys()))]
+        list1 = ['\'' + key + '\': ' + '{:2s}'.format(str(args[2][key]))
+                 for key in np.sort(list(args[2].keys()))]
+        list2 = ['\'' + key + '\': ' + '{:2s}'.format(str(args[3][key]))
+                 for key in np.sort(list(args[3].keys()))]
         arguments = list1 + list2
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
@@ -469,10 +468,10 @@ def displayError(code,*args):
                    indent + 'the one loaded from the clusters data file (\'.clusters\').' +\
                    '\n\n' + \
                    indent + 'phase: n_clusters (input data file):    ' + \
-                                                               len(list1)*'{} ' + '\n\n' + \
+                   len(list1)*'{} ' + '\n\n' + \
                    indent + 'phase: n_clusters (clusters data file): ' + len(list2)*'{} '
     elif code == 'E00046':
-        arguments = [args[2],args[3]]
+        arguments = [args[2], args[3]]
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The regular grid read from the spatial discretization ' + \
@@ -483,7 +482,7 @@ def displayError(code,*args):
                    '\n\n' + \
                    indent + 'clustering grid dimensions (clusters data file): {}'
     elif code == 'E00047':
-        arguments = [args[2],args[3],args[3]**2]
+        arguments = [args[2], args[3], args[3]**2]
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                     indent + 'The number of cluster interaction tensors read from the ' + \
@@ -503,9 +502,9 @@ def displayError(code,*args):
                     indent + 'cluster interaction tensor \'{}\' has not been found.' + \
                     '\n\n' + \
                     indent + 'Material phases (input data file): ' + \
-                                                             len(args[3])*('{}, ') + '\b\b '
+                    len(args[3])*('{}, ') + '\b\b '
     elif code == 'E00049':
-        arguments = [args[2],args[3]] + list(np.sort(list(args[4])))
+        arguments = [args[2], args[3]] + list(np.sort(list(args[4])))
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
@@ -514,9 +513,9 @@ def displayError(code,*args):
                    'unknown material phase - {} - has' + '\n' + \
                    indent + 'been specified.' + '\n\n' + \
                    indent + 'Material phases (input data file): ' + \
-                                                             len(args[4])*('{}, ') + '\b\b '
+                   len(args[4])*('{}, ') + '\b\b '
     elif code == 'E00050':
-        arguments = [args[2],args[3]]
+        arguments = [args[2], args[3]]
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
@@ -525,7 +524,7 @@ def displayError(code,*args):
                    'material phase {} has been specified' + '\n' + \
                    indent + 'more than once.'
     elif code == 'E00051':
-        arguments = [args[2],args[3]]
+        arguments = [args[2], args[3]]
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The elastic property - {} - of material phase {} ' + \
@@ -577,7 +576,7 @@ def displayError(code,*args):
                    'available in the constitutive' + '\n' + \
                    indent + 'model source {}.'
     elif code == 'E00056':
-        arguments = [args[2],args[3]]
+        arguments = [args[2], args[3]]
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The required {} function is not implemented for the ' + \
@@ -766,7 +765,7 @@ def displayError(code,*args):
             template = template + '\n\n' + \
                    2*indent + 'Macroscale stress residuals error   : {:16.8e}'
     elif code == 'E00074':
-        arguments = [args[2],args[3]] + args[4]
+        arguments = [args[2], args[3]] + args[4]
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The specified isotropic hardening type ({}) for the ' + \
@@ -793,7 +792,7 @@ def displayError(code,*args):
                    'material phase {} isotropic' + '\n' + \
                    indent + 'hardening law ({}) must be at least 2.'
     elif code == 'E00077':
-        suffix = getOrdinalNumber(args[2])
+        suffix = getordinalnumber(args[2])
         arguments = args[2:4]
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
@@ -807,7 +806,7 @@ def displayError(code,*args):
                    indent + '< acc_p_strain_1 > < yield_stress_1 >' + '\n' + \
                    indent + '< acc_p_strain_2 > < yield_stress_2 >'
     elif code == 'E00078':
-        suffix = getOrdinalNumber(args[2])
+        suffix = getordinalnumber(args[2])
         arguments = args[2:4]
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
@@ -891,27 +890,27 @@ def displayError(code,*args):
     error_color = colorama.Fore.RED
     template_header = error_color + template_header + colorama.Style.RESET_ALL
     template_footer = error_color + template_footer + colorama.Style.RESET_ALL
-    if code in ['E00001','E00002','E00010']:
-        print(template_header.format(*header,width=output_width))
-        print(template.format(*values,width=output_width))
-        print(template_footer.format(*footer,width=output_width))
+    if code in ['E00001', 'E00002', 'E00010']:
+        print(template_header.format(*header, width=output_width))
+        print(template.format(*values, width=output_width))
+        print(template_footer.format(*footer, width=output_width))
     else:
-        info.print2(template_header.format(*header,width=output_width))
-        info.print2(template.format(*values,width=output_width))
-        info.print2(template_footer.format(*footer,width=output_width))
+        ioutil.print2(template_header.format(*header, width=output_width))
+        ioutil.print2(template.format(*values, width=output_width))
+        ioutil.print2(template_footer.format(*footer, width=output_width))
     # Abort program
     sys.exit(1)
 #
 #                                                                  Display warnings function
 # ==========================================================================================
 # Set and display runtime warnings
-def displayWarning(code,*args):
+def displaywarning(code, *args):
     # Get display features
-    displayFeatures = info.setDisplayFeatures()
-    output_width, dashed_line, indent, asterisk_line = displayFeatures[0:4]
+    display_features = ioutil.setdisplayfeatures()
+    output_width, dashed_line, indent, asterisk_line = display_features[0:4]
     # Set error display header and footer
-    header = tuple(info.convertIterableToList(['!! Warning !!',code]) + \
-                  info.convertIterableToList(args[0:2]))
+    header = tuple(ioutil.convertiterabletolist(['!! Warning !!',code]) + \
+                   ioutil.convertiterabletolist(args[0:2]))
     template_header = '\n' + asterisk_line + '\n' + \
                       '{:^{width}}' + '\n\n' + 'Code: {}' + '\n\n' + \
                       'Traceback: {} (at line {})' + '\n\n'
@@ -937,65 +936,65 @@ def displayWarning(code,*args):
         arguments = args[2] + args[3]
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
-                    indent + 'Not all the material phases specified in the input data ' + \
-                    'file are present in the RVE ' + '\n' + \
-                    indent + 'regular grid spatial discretization file (\'.rgmsh\').' + \
-                    '\n\n' + \
-                    indent + 'Material phases (input data file): ' + \
-                                                len(args[2])*('{}, ') + '\b\b ' + '\n\n' + \
-                    indent + 'Material phases (regular grid):    ' + \
-                                                len(args[3])*('{}, ') + '\b\b ' + '\n\n' + \
-                    indent + 'The number of material phases is going to be updated and ' + \
-                    'the non-present material phases ' + '\n' + \
-                    indent + 'will be ignored.'
+                   indent + 'Not all the material phases specified in the input data ' + \
+                   'file are present in the RVE ' + '\n' + \
+                   indent + 'regular grid spatial discretization file (\'.rgmsh\').' + \
+                   '\n\n' + \
+                   indent + 'Material phases (input data file): ' + \
+                   len(args[2])*('{}, ') + '\b\b ' + '\n\n' + \
+                   indent + 'Material phases (regular grid):    ' + \
+                   len(args[3])*('{}, ') + '\b\b ' + '\n\n' + \
+                   indent + 'The number of material phases is going to be updated and ' + \
+                   'the non-present material phases ' + '\n' + \
+                   indent + 'will be ignored.'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display warning
     warning_color = colorama.Fore.YELLOW
     template_header = warning_color + template_header + colorama.Style.RESET_ALL
     template_footer = warning_color + template_footer + colorama.Style.RESET_ALL
-    info.print2(template_header.format(*header,width=output_width))
-    info.print2(template.format(*values,width=output_width))
-    info.print2(template_footer.format(*footer,width=output_width))
+    ioutil.print2(template_header.format(*header, width=output_width))
+    ioutil.print2(template.format(*values, width=output_width))
+    ioutil.print2(template_footer.format(*footer, width=output_width))
 #
 #                                                       Display built-in exceptions function
 # ==========================================================================================
 # Display runtime built-in exceptions
-def displayException(*args):
+def displayexception(*args):
     # Get display features
-    displayFeatures = info.setDisplayFeatures()
-    output_width, dashed_line, indent, asterisk_line = displayFeatures[0:4]
+    display_features = ioutil.setdisplayfeatures()
+    output_width, dashed_line, indent, asterisk_line = display_features[0:4]
     # Set built-in exception display header and footer
     header = tuple(['!! Built-In Exception !!'] + \
-                  info.convertIterableToList(args[0:2]))
+                   ioutil.convertiterabletolist(args[0:2]))
     template_header = '\n' + asterisk_line + '\n' + \
                       '{:^{width}}' + '\n\n' + \
                       'Traceback: {} (at line {})' + '\n\n'
-    footer = tuple(info.convertIterableToList(('Program Aborted',)))
+    footer = tuple(ioutil.convertiterabletolist(('Program Aborted',)))
     template_footer = '\n' + asterisk_line + '\n\n' + \
                       '{:^{width}}' + '\n'
     # Set built-in exception to display
-    arguments = info.convertIterableToList([args[2],])
+    arguments = ioutil.convertiterabletolist([args[2],])
     values = tuple(arguments)
     template = 'Details:' + '\n\n' + \
-                indent + '{}'
+               indent + '{}'
     # Display built-in exception
     exception_color = colorama.Fore.RED
     template_header = exception_color + template_header + colorama.Style.RESET_ALL
     template_footer = exception_color + template_footer + colorama.Style.RESET_ALL
-    info.print2(template_header.format(*header,width=output_width))
-    info.print2(template.format(*values,width=output_width))
-    info.print2(template_footer.format(*footer,width=output_width))
+    ioutil.print2(template_header.format(*header, width=output_width))
+    ioutil.print2(template.format(*values, width=output_width))
+    ioutil.print2(template_footer.format(*footer, width=output_width))
     # Abort program
     sys.exit(1)
 #
-#                                                                    Complementary functions
+#                                                                              Miscellaneous
 # ==========================================================================================
 # Set ordinal number suffix
-def getOrdinalNumber(x):
+def getordinalnumber(x):
     suffix_list = ['st','nd','rd','th']
     if (not isinstance(x,int) and not isinstance(x,np.integer)) or x < 0:
         location = inspect.getframeinfo(inspect.currentframe())
-        displayError('E00037',location.filename,location.lineno+1)
+        displayerror('E00037', location.filename, location.lineno + 1)
     else:
         if int(str(x)[-1]) in range(1,4):
             suffix = suffix_list[int(str(x)[-1])-1]

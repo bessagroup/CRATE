@@ -22,9 +22,9 @@ import inspect
 # Generate efficient iterators
 import itertools as it
 # Display messages
-import info
+import ioput.info as info
 # Display errors, warnings and built-in exceptions
-import errors
+import ioput.errors as errors
 # Tensorial operations
 import tensorOperations as top
 # Imported for validation against Matlab only (remove)
@@ -58,10 +58,10 @@ def performClustering(dirs_dict,mat_dict,rg_dict,clst_dict):
     label_correction = 0
     # Perform clustering processes according to the selected clustering method
     if clustering_method == 1:
-        info.displayInfo('5','Performing K-Means clustering...')
+        info.displayinfo('5','Performing K-Means clustering...')
         # Loop over clustering processes (each with associated data indexes)
         for iclst in range(len(clst_dataidxs)):
-            info.displayInfo('6','progress',iclst+1,len(clst_dataidxs))
+            info.displayinfo('6','progress',iclst+1,len(clst_dataidxs))
             # Initialize current clustering process labels
             clst_process_lbls_flat = np.full(n_voxels,-1,dtype=int)
             # Get current clustering process data indexes
@@ -109,10 +109,10 @@ def performClustering(dirs_dict,mat_dict,rg_dict,clst_dict):
             # Check if all the training dataset points have been labeled
             if np.any(clst_process_lbls_flat == -1):
                 location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayError('E00036',location.filename,location.lineno+1,iclst+1)
+                errors.displayerror('E00036',location.filename,location.lineno+1,iclst+1)
             # Store current clustering process labels list
             clst_processes.append(list(clst_process_lbls_flat))
-        info.displayInfo('6','completed')
+        info.displayinfo('6','completed')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Perform RVE clustering discretization according to the selected clustering strategy
     if clustering_strategy == 1:
@@ -137,17 +137,17 @@ def performClustering(dirs_dict,mat_dict,rg_dict,clst_dict):
         for i in range(phase_n_clusters[mat_phase]):
             if old_clusters[i] in sort_dict.keys():
                 location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayError('E00038',location.filename,location.lineno+1)
+                errors.displayerror('E00038',location.filename,location.lineno+1)
             else:
                 sort_dict[old_clusters[i]] = new_clusters[i]
     # Check mapping dictionary
     if np.any(np.sort(list(sort_dict.keys())) != range(sum(phase_n_clusters.values()))):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00039',location.filename,location.lineno+1)
+        errors.displayerror('E00039',location.filename,location.lineno+1)
     elif np.any(np.sort([sort_dict[key] for key in sort_dict.keys()]) != \
                                                      range(sum(phase_n_clusters.values()))):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00039',location.filename,location.lineno+1)
+        errors.displayerror('E00039',location.filename,location.lineno+1)
     # Sort cluster labels in ascending order of material phase
     for voxel_idx in it.product(*[list(range(n_voxels_dims[i])) \
                                                        for i in range(len(n_voxels_dims))]):
@@ -197,9 +197,9 @@ def performClustering(dirs_dict,mat_dict,rg_dict,clst_dict):
         cluster_file = open(cluster_file_path,'wb')
     except Exception as message:
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayException(location.filename,location.lineno+1,message)
+        errors.displayexception(location.filename,location.lineno+1,message)
     # Dump clustering data
-    info.displayInfo('5','Storing clustering file (.clusters)...')
+    info.displayinfo('5','Storing clustering file (.clusters)...')
     pickle.dump(clst_dict,cluster_file)
     # Close file
     cluster_file.close()
@@ -218,15 +218,15 @@ def checkClstCompatibility(problem_dict,rg_dict,clst_dict_read,clst_dict):
     for key in keys:
         if clst_dict[key] != clst_dict_read[key]:
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00044',location.filename,location.lineno+1,key,
+            errors.displayerror('E00044',location.filename,location.lineno+1,key,
                                                          clst_dict_read[key],clst_dict[key])
     # Check number of clusters associated to each material phase
     if clst_dict['phase_n_clusters'] != clst_dict_read['phase_n_clusters']:
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00045',location.filename,location.lineno+1,
+        errors.displayerror('E00045',location.filename,location.lineno+1,
                            clst_dict_read['phase_n_clusters'],clst_dict['phase_n_clusters'])
     # Check spatial discretization
     elif list(clst_dict['voxels_clusters'].shape) != rg_dict['n_voxels_dims']:
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00046',location.filename,location.lineno+1,
+        errors.displayerror('E00046',location.filename,location.lineno+1,
                           rg_dict['n_voxels_dims'],list(clst_dict['voxels_clusters'].shape))

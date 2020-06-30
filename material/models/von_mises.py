@@ -15,9 +15,9 @@ import numpy as np
 # Inspect file name and line
 import inspect
 # Display errors, warnings and built-in exceptions
-import errors
+import ioput.errors as errors
 # Read user input data file
-import readInputData as rid
+import ioput.readinputdata as rid
 # Tensorial operations
 import tensorOperations as top
 #
@@ -193,7 +193,7 @@ def suct(problem_dict,algpar_dict,material_properties,mat_phase,inc_strain,
             elif nr_iter == su_max_n_iterations:
                 # Maximum number of Newton-Raphson iterations reached
                 location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayError('E00082',location.filename,location.lineno+1,
+                errors.displayerror('E00082',location.filename,location.lineno+1,
                                                         su_max_n_iterations,mat_phase,error)
             else:
                 # Increment iteration counter

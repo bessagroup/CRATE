@@ -17,7 +17,7 @@ import inspect
 # Generate efficient iterators
 import itertools as it
 # Display errors, warnings and built-in exceptions
-import errors
+import ioput.errors as errors
 #
 #                                                                       Tensorial operations
 # ==========================================================================================
@@ -38,7 +38,7 @@ def Dd(i,j):
     if (not isinstance(i,int) and not isinstance(i,np.integer)) or \
                                    (not isinstance(j,int) and not isinstance(j,np.integer)):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00086',location.filename,location.lineno+1)
+        errors.displayerror('E00086',location.filename,location.lineno+1)
     value = 1 if i == j else 0
     return value
 #                                                                    Common identity tensors
@@ -160,19 +160,19 @@ def setTensorMatricialForm(tensor,n_dim,comp_order):
     # Check input arguments validity
     if tensor_order not in [2,4]:
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00023',location.filename,location.lineno+1)
+        errors.displayerror('E00023',location.filename,location.lineno+1)
     elif any([ int(x) not in range(1,n_dim+1) for x in list(''.join(comp_order))]):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00024',location.filename,location.lineno+1)
+        errors.displayerror('E00024',location.filename,location.lineno+1)
     elif any([tensor.shape[i] != n_dim for i in range(len(tensor.shape))]):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00025',location.filename,location.lineno+1)
+        errors.displayerror('E00025',location.filename,location.lineno+1)
     elif any([len(comp) != 2 for comp in comp_order]):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00024',location.filename,location.lineno+1)
+        errors.displayerror('E00024',location.filename,location.lineno+1)
     elif len(list(dict.fromkeys(comp_order))) != len(comp_order):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00026',location.filename,location.lineno+1)
+        errors.displayerror('E00026',location.filename,location.lineno+1)
     # Set Kelvin notation flag
     if len(comp_order) == n_dim**2:
         isKelvinNotation = False
@@ -180,7 +180,7 @@ def setTensorMatricialForm(tensor,n_dim,comp_order):
         isKelvinNotation = True
     else:
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00027',location.filename,location.lineno+1)
+        errors.displayerror('E00027',location.filename,location.lineno+1)
     # Store tensor according to tensor order
     if tensor_order == 2:
         # Set second-order and matricial form indexes
@@ -235,28 +235,28 @@ def getTensorFromMatricialForm(tensor_mf,n_dim,comp_order):
         tensor_order = 2
         if tensor_mf.shape[0] != n_dim**2 and tensor_mf.shape[0] != sum(range(n_dim+1)):
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00028',location.filename,location.lineno+1)
+            errors.displayerror('E00028',location.filename,location.lineno+1)
     elif len(tensor_mf.shape) == 2:
         tensor_order = 4
         if tensor_mf.shape[0] != tensor_mf.shape[1]:
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00029',location.filename,location.lineno+1)
+            errors.displayerror('E00029',location.filename,location.lineno+1)
         elif tensor_mf.shape[0] != n_dim**2 and tensor_mf.shape[0] != sum(range(n_dim+1)):
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00028',location.filename,location.lineno+1)
+            errors.displayerror('E00028',location.filename,location.lineno+1)
     else:
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00030',location.filename,location.lineno+1)
+        errors.displayerror('E00030',location.filename,location.lineno+1)
     # Check input arguments validity
     if any([ int(x) not in range(1,n_dim+1) for x in list(''.join(comp_order))]):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00024',location.filename,location.lineno+1)
+        errors.displayerror('E00024',location.filename,location.lineno+1)
     elif any([len(comp) != 2 for comp in comp_order]):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00024',location.filename,location.lineno+1)
+        errors.displayerror('E00024',location.filename,location.lineno+1)
     elif len(list(dict.fromkeys(comp_order))) != len(comp_order):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00026',location.filename,location.lineno+1)
+        errors.displayerror('E00026',location.filename,location.lineno+1)
     # Set Kelvin notation flag
     if len(comp_order) == n_dim**2:
         isKelvinNotation = False
@@ -264,7 +264,7 @@ def getTensorFromMatricialForm(tensor_mf,n_dim,comp_order):
         isKelvinNotation = True
     else:
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00027',location.filename,location.lineno+1)
+        errors.displayerror('E00027',location.filename,location.lineno+1)
     # Get tensor according to tensor order
     if tensor_order == 2:
         # Set second-order and matricial form indexes
@@ -361,20 +361,20 @@ def getCondensedMatrix(matrix,rows,cols):
     # Check validity of rows and columns indexes to perform the condensation
     if not np.all([isinstance(rows[i],int) for i in range(len(rows))]):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00032',location.filename,location.lineno+1)
+        errors.displayerror('E00032',location.filename,location.lineno+1)
     elif not np.all([isinstance(cols[i],int) for i in range(len(cols))]):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00032',location.filename,location.lineno+1)
+        errors.displayerror('E00032',location.filename,location.lineno+1)
     elif len(list(dict.fromkeys(rows))) != len(rows) or \
                                                 len(list(dict.fromkeys(cols))) != len(cols):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00033',location.filename,location.lineno+1)
+        errors.displayerror('E00033',location.filename,location.lineno+1)
     elif np.any([rows[i] not in range(matrix.shape[0]) for i in range(len(rows))]):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00034',location.filename,location.lineno+1)
+        errors.displayerror('E00034',location.filename,location.lineno+1)
     elif np.any([cols[i] not in range(matrix.shape[1]) for i in range(len(cols))]):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayError('E00035',location.filename,location.lineno+1)
+        errors.displayerror('E00035',location.filename,location.lineno+1)
     # Build auxiliary matrices with rows and columns condensation indexes
     rows_matrix = np.zeros((len(rows),len(cols)),dtype=int)
     cols_matrix = np.zeros((len(rows),len(cols)),dtype=int)
@@ -393,7 +393,7 @@ def getCondensedMatrix(matrix,rows,cols):
 # build the corresponding 3D counterpart by including the appropriate out-of-plain strain
 # components
 def getStrainStress3DmfFrom2Dmf(problem_dict,mf_2d,comp_33):
-    import readInputData as rid
+    import ioput.readinputdata as rid
     # Get problem type
     problem_type = problem_dict['problem_type']
     # Get 2D strain/stress components order in symmetric and nonsymmetric cases
@@ -421,7 +421,7 @@ def getStrainStress3DmfFrom2Dmf(problem_dict,mf_2d,comp_33):
 # related fourth-order tensor associated to a given 2D problem type, build the reduced 2D
 # counterpart including only the in-plain strain/stress components
 def get2DmfFrom3Dmf(problem_dict,mf_3d):
-    import readInputData as rid
+    import ioput.readinputdata as rid
     # Get problem type
     problem_type = problem_dict['problem_type']
     # Get 2D strain/stress components order in symmetric and nonsymmetric cases

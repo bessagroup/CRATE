@@ -23,19 +23,19 @@ import time
 # Shallow and deep copy operations
 import copy
 # Display messages
-import info
+import ioput.info as info
 # Scientific computation
 import scipy.linalg
 # Display errors, warnings and built-in exceptions
-import errors
+import ioput.errors as errors
 # Read user input data file
-import readInputData as rid
+import ioput.readinputdata as rid
 # Tensorial operations
 import tensorOperations as top
 # Homogenized results output
-import homogenizedResultsOutput
+import ioput.homresoutput as hresout
 # VTK output
-import VTKOutput
+import ioput.vtkoutput as vtkoutput
 # Material interface
 import material.materialInterface
 # Linear elastic constitutive model
@@ -177,15 +177,15 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
     if problem_type == 1:
         hom_results['hom_stress_33'] = hom_stress_33
     # Write increment homogenized results to associated output file (.hres)
-    homogenizedResultsOutput.writeHomResFile(hres_file_path,problem_type,0,hom_results)
+    hresout.writehomresfile(hres_file_path,problem_type,0,hom_results)
     #
     #                                                                 Initial state VTK file
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     if is_VTK_output:
         # Open VTK collection file
-        VTKOutput.openVTKCollectionFile(input_file_name,postprocess_dir)
+        vtkoutput.openvtkcollectionfile(input_file_name,postprocess_dir)
         # Write VTK file associated to the initial state
-        VTKOutput.writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,problem_dict,mat_dict,
+        vtkoutput.writevtkmacincrement(vtk_dict,dirs_dict,problem_dict,mat_dict,
                                                          rg_dict,clst_dict,0,clusters_state)
     #
     #                                                      Material clusters elastic tangent
@@ -259,7 +259,7 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Initialize increment counter
     inc = 1
-    info.displayInfo('7','init',inc)
+    info.displayinfo('7','init',inc)
     # Set increment initial time
     inc_init_time = time.time()
     # --------------------------------------------------------------------------------------
@@ -331,7 +331,7 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize self-consistent scheme iteration counter
         scs_iter = 0
-        info.displayInfo('8','init',scs_iter,material_properties_ref['E'],
+        info.displayinfo('8','init',scs_iter,material_properties_ref['E'],
                          material_properties_ref['v'])
         # Set self-consistent scheme iteration initial time
         scs_iter_init_time = time.time()
@@ -363,9 +363,9 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
             # Initialize Newton-Raphson iteration counter
             nr_iter = 0
             if is_farfield_formulation:
-                info.displayInfo('9','init')
+                info.displayinfo('9','init')
             else:
-                info.displayInfo('10','init')
+                info.displayinfo('10','init')
             # Set Newton-Raphson iteration initial time
             nr_iter_init_time = time.time()
             # ------------------------------------------------------------------------------
@@ -507,7 +507,7 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                                     n_presc_mac_strain,n_presc_mac_stress,presc_strain_idxs,
                                       presc_stress_idxs,inc_hom_strain_mf,inc_hom_stress_mf,
                                                                           residual,conv_tol)
-                    info.displayInfo('9','iter',nr_iter,time.time() - nr_iter_init_time,
+                    info.displayinfo('9','iter',nr_iter,time.time() - nr_iter_init_time,
                                                                  error_A1,error_A2,error_A3)
                 else:
                     is_converged,error_A1,error_A2,error_inc_hom_strain = \
@@ -515,7 +515,7 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                                     n_presc_mac_strain,n_presc_mac_stress,presc_strain_idxs,
                                       presc_stress_idxs,inc_hom_strain_mf,inc_hom_stress_mf,
                                       inc_mix_strain_mf,inc_mix_stress_mf,residual,conv_tol)
-                    info.displayInfo('10','iter',nr_iter,time.time() - nr_iter_init_time,
+                    info.displayinfo('10','iter',nr_iter,time.time() - nr_iter_init_time,
                                                      error_A1,error_A2,error_inc_hom_strain)
                 # Control Newton-Raphson iteration loop flow
                 if is_converged:
@@ -526,11 +526,11 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                     location = inspect.getframeinfo(inspect.currentframe())
                     if is_farfield_formulation:
                         location = inspect.getframeinfo(inspect.currentframe())
-                        errors.displayError('E00061',location.filename,location.lineno+1,
+                        errors.displayerror('E00061',location.filename,location.lineno+1,
                                             max_n_iterations,inc,error_A1,error_A2,error_A3)
                     else:
                         location = inspect.getframeinfo(inspect.currentframe())
-                        errors.displayError('E00073',location.filename,location.lineno+1,
+                        errors.displayerror('E00073',location.filename,location.lineno+1,
                                                      max_n_iterations,inc,error_A1,error_A2)
                 else:
                     # Increment iteration counter
@@ -644,7 +644,7 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
             # Check self-consistent scheme iterative procedure convergence
             is_scs_converged,norm_d_E_ref,norm_d_v_ref = \
                        checkSCSConvergence(E_ref,v_ref,material_properties_ref,scs_conv_tol)
-            info.displayInfo('8','end',time.time() - scs_iter_init_time)
+            info.displayinfo('8','end',time.time() - scs_iter_init_time)
             # Control self-consistent scheme iteration loop flow
             if is_scs_converged:
                 # Leave self-consistent scheme iterative loop (converged solution)
@@ -652,7 +652,7 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
             elif scs_iter == scs_max_n_iterations:
                 # Maximum number of self-consistent scheme iterations reached
                 location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayError('E00062',location.filename,location.lineno+1,
+                errors.displayerror('E00062',location.filename,location.lineno+1,
                                          scs_max_n_iterations,inc,norm_d_E_ref,norm_d_v_ref)
             else:
                 # Update reference material elastic properties
@@ -660,7 +660,7 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
                 material_properties_ref['v'] = v_ref
                 # Increment self-consistent scheme iteration counter
                 scs_iter = scs_iter + 1
-                info.displayInfo('8','init',scs_iter,E_ref,norm_d_E_ref,v_ref,norm_d_v_ref)
+                info.displayinfo('8','init',scs_iter,E_ref,norm_d_E_ref,v_ref,norm_d_v_ref)
                 # Set self-consistent scheme iteration initial time
                 scs_iter_init_time = time.time()
                 # --------------------------------------------------------------------------
@@ -726,14 +726,13 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
         if problem_type == 1:
             hom_results['hom_stress_33'] = hom_stress_33
         # Write increment homogenized results to associated output file (.hres)
-        homogenizedResultsOutput.writeHomResFile(hres_file_path,problem_type,inc,
-                                                                                hom_results)
+        hresout.writehomresfile(hres_file_path,problem_type,inc,hom_results)
         #
         #                                                                 Increment VTK file
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Write VTK file associated to the macroscale loading increment
         if is_VTK_output and inc % vtk_inc_div == 0:
-            VTKOutput.writeVTKMacroLoadIncrement(vtk_dict,dirs_dict,problem_dict,mat_dict,
+            vtkoutput.writevtkmacincrement(vtk_dict,dirs_dict,problem_dict,mat_dict,
                                                        rg_dict,clst_dict,inc,clusters_state)
         #
         #                                                          Converged state variables
@@ -751,20 +750,20 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
         # Return if the last macroscale loading increment was completed successfuly,
         # otherwise increment the increment counter
         if problem_type == 1:
-            info.displayInfo('7','end',problem_type,hom_strain,hom_stress,\
+            info.displayinfo('7','end',problem_type,hom_strain,hom_stress,\
                        time.time() - inc_init_time,time.time() - os_init_time,hom_stress_33)
         else:
-            info.displayInfo('7','end',problem_type,hom_strain,hom_stress,\
+            info.displayinfo('7','end',problem_type,hom_strain,hom_stress,\
                        time.time() - inc_init_time,time.time() - os_init_time)
         if inc == n_load_increments:
             # Close VTK collection file
             if is_VTK_output:
-                VTKOutput.closeVTKCollectionFile(input_file_name,postprocess_dir)
+                vtkoutput.closevtkcollectionfile(input_file_name,postprocess_dir)
             # Finish online stage
             return
         else:
             inc = inc + 1
-            info.displayInfo('7','init',inc)
+            info.displayinfo('7','init',inc)
             # Set increment initial time
             inc_init_time = time.time()
 #
@@ -1415,7 +1414,7 @@ def SCS_UpdateRefMatElasticProperties(self_consistent_scheme,problem_dict,inc_st
             # computational cost, the projection-based self-consistent scheme is only
             # implemented for the 3D case
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayError('E00085',location.filename,location.lineno+1)
+            errors.displayerror('E00085',location.filename,location.lineno+1)
         else:
             # Get effective tangent modulus
             eff_tangent_mf = args[0]

@@ -768,7 +768,7 @@ if __name__ == '__main__':
     # Set functions arguments:
     # Set problem type
     problem_type = 1
-    import readInputData as rid
+    import ioput.readinputdata as rid
     # Set problem parameters (number of dimensions and components order)
     n_dim, comp_order_sym, comp_order_nsym = rid.setProblemTypeParameters(problem_type)
     # Set problem data
@@ -833,7 +833,7 @@ if __name__ == '__main__':
     # Call function
     strain_vox = FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain)
     # Write VTK file with material phases
-    import VTKOutput
+    import ioput.vtkoutput as vtkoutput
     import copy
     import ntpath
     dirs_dict = dict()
@@ -845,7 +845,7 @@ if __name__ == '__main__':
     vtk_dict = dict()
     vtk_dict['format'] = 'ascii'
     vtk_dict['precision'] = 'SinglePrecision'
-    VTKOutput.writeVTKClusterFile(vtk_dict,copy.deepcopy(dirs_dict),copy.deepcopy(rg_dict),
+    vtkoutput.writevtkclusterfile(vtk_dict,copy.deepcopy(dirs_dict),copy.deepcopy(rg_dict),
                                                                    copy.deepcopy(clst_dict))
     # 2D matplotlib plot
     import matplotlib
