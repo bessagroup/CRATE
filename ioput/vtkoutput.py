@@ -28,8 +28,8 @@ import copy
 import inspect
 # Display errors, warnings and built-in exceptions
 import ioput.errors as errors
-# Tensorial operations
-import tensorOperations as top
+# Matricial operations
+import tensor.matrixoperations as mop
 # Links related procedures
 import Links.material.LinksMaterialModels as LinksMat
 #
@@ -525,11 +525,11 @@ def setoutputvariable(mode, problem_dict, var_name, *args):
             if len(stored_var) == len(comp_order_sym):
                 var_type = 'sym_matrix_mf'
                 var_n_comp = len(comp_order_sym)
-                var = top.getTensorFromMatricialForm(stored_var, n_dim, comp_order_sym)
+                var = mop.gettensorfrommf(stored_var, n_dim, comp_order_sym)
             else:
                 var_type = 'nsym_matrix_mf'
                 var_n_comp = len(comp_order_nsym)
-                var = top.getTensorFromMatricialForm(stored_var, n_dim, comp_order_nsym)
+                var = mop.gettensorfrommf(stored_var, n_dim, comp_order_nsym)
     else:
         var_type = 'matrix'
         var_n_comp = len(comp_order_nsym)

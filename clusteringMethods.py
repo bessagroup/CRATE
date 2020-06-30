@@ -25,8 +25,8 @@ import itertools as it
 import ioput.info as info
 # Display errors, warnings and built-in exceptions
 import ioput.errors as errors
-# Tensorial operations
-import tensorOperations as top
+# Matricial operations
+import tensor.matrixoperations as mop
 # Imported for validation against Matlab only (remove)
 import scipy.io as sio
 #
@@ -71,7 +71,7 @@ def performClustering(dirs_dict,mat_dict,rg_dict,clst_dict):
                 # Set number of clusters
                 n_clusters = phase_n_clusters[mat_phase]
                 # Set clustering training dataset
-                dataset = top.getCondensedMatrix(clst_quantities,\
+                dataset = mop.getcondmatrix(clst_quantities,\
                                                 phase_voxel_flatidx[mat_phase],data_indexes)
                 # Perform kmeans clustering (Lloyd's algorithm)
                 kmeans = sklearn.cluster.KMeans(n_clusters,init = 'k-means++',n_init = 10,

@@ -44,7 +44,7 @@ def utility1():
     # Set problem type
     problem_type = 1
     # Set problem parameters
-    n_dim, comp_order_sym, comp_order_nsym = rid.setProblemTypeParameters(problem_type)
+    n_dim, comp_order_sym, comp_order_nsym = mop.getproblemtypeparam(problem_type)
     # Set problem data
     problem_dict = dict()
     problem_dict['problem_type'] = problem_type
@@ -443,7 +443,7 @@ def utility4():
     import time
     import itertools as it
     import copy
-    import tensorOperations as top
+    import tensor.tensoroperations as top
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set numpy default print options
     np.set_printoptions(precision=4,linewidth=np.inf)
@@ -544,10 +544,10 @@ def utility4():
             freq_norm = np.linalg.norm(freq_coord)
             # Compute first material independent term of Green operator
             first_term = (1.0/freq_norm**2)*(
-                   top.Dd(fo_idx[0],fo_idx[2])*freq_coord[fo_idx[1]]*freq_coord[fo_idx[3]] +
-                   top.Dd(fo_idx[0],fo_idx[3])*freq_coord[fo_idx[1]]*freq_coord[fo_idx[2]] +
-                   top.Dd(fo_idx[1],fo_idx[3])*freq_coord[fo_idx[0]]*freq_coord[fo_idx[2]] +
-                   top.Dd(fo_idx[1],fo_idx[2])*freq_coord[fo_idx[0]]*freq_coord[fo_idx[3]])
+                   top.dd(fo_idx[0],fo_idx[2])*freq_coord[fo_idx[1]]*freq_coord[fo_idx[3]] +
+                   top.dd(fo_idx[0],fo_idx[3])*freq_coord[fo_idx[1]]*freq_coord[fo_idx[2]] +
+                   top.dd(fo_idx[1],fo_idx[3])*freq_coord[fo_idx[0]]*freq_coord[fo_idx[2]] +
+                   top.dd(fo_idx[1],fo_idx[2])*freq_coord[fo_idx[0]]*freq_coord[fo_idx[3]])
             # Compute second material independent term of Green operator
             second_term = -(1.0/freq_norm**4)*(freq_coord[fo_idx[0]]*freq_coord[fo_idx[1]]*
                                                freq_coord[fo_idx[2]]*freq_coord[fo_idx[3]])
@@ -692,7 +692,8 @@ def utility5():
     import time
     import copy
     import itertools as it
-    import tensorOperations as top
+    import tensor.tensoroperations as top
+    import tensor.matrixoperations as mop
     import FFTHomogenizationBasicScheme as FFT
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set numpy default print options
@@ -783,13 +784,13 @@ def utility5():
         strain_mf = np.zeros(len(comp_order))
         for i in range(len(comp_order)):
             comp = comp_order[i]
-            strain_mf[i] = top.kelvinFactor(i,comp_order)*strain_vox[comp][voxel_idx]
+            strain_mf[i] = mop.kelvinfactor(i,comp_order)*strain_vox[comp][voxel_idx]
         # Update stress for current discrete frequency
         stress_mf = np.zeros(len(comp_order))
         stress_mf = top.dot21_1(De_tensor_mf,strain_mf)
         for i in range(len(comp_order)):
             comp = comp_order[i]
-            stress_vox[comp][voxel_idx] = (1.0/top.kelvinFactor(i,comp_order))*stress_mf[i]
+            stress_vox[comp][voxel_idx] = (1.0/mop.kelvinfactor(i,comp_order))*stress_mf[i]
     # --------------------------------------------------------------------------------------
     # Time profile
     phase_end_time = time.time()
@@ -871,7 +872,7 @@ def utility7():
     import numpy.linalg
     import itertools as it
     import copy
-    import tensorOperations as top
+    import tensor.tensoroperations as top
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set numpy default print options
     np.set_printoptions(precision=4,linewidth=np.inf)
@@ -937,10 +938,10 @@ def utility7():
             freq_norm = np.linalg.norm(freq_coord)
             # Compute first material independent term of Green operator
             Gop_1_DFT_vox[comp][freq_idx] = (1.0/freq_norm**2)*(
-                   top.Dd(fo_idx[0],fo_idx[2])*freq_coord[fo_idx[1]]*freq_coord[fo_idx[3]] +
-                   top.Dd(fo_idx[0],fo_idx[3])*freq_coord[fo_idx[1]]*freq_coord[fo_idx[2]] +
-                   top.Dd(fo_idx[1],fo_idx[3])*freq_coord[fo_idx[0]]*freq_coord[fo_idx[2]] +
-                   top.Dd(fo_idx[1],fo_idx[2])*freq_coord[fo_idx[0]]*freq_coord[fo_idx[3]])
+                   top.dd(fo_idx[0],fo_idx[2])*freq_coord[fo_idx[1]]*freq_coord[fo_idx[3]] +
+                   top.dd(fo_idx[0],fo_idx[3])*freq_coord[fo_idx[1]]*freq_coord[fo_idx[2]] +
+                   top.dd(fo_idx[1],fo_idx[3])*freq_coord[fo_idx[0]]*freq_coord[fo_idx[2]] +
+                   top.dd(fo_idx[1],fo_idx[2])*freq_coord[fo_idx[0]]*freq_coord[fo_idx[3]])
             # Compute second material independent term of Green operator
             Gop_2_DFT_vox[comp][freq_idx] = -(1.0/freq_norm**4)*\
                                                (freq_coord[fo_idx[0]]*freq_coord[fo_idx[1]]*
@@ -1054,7 +1055,8 @@ def utility7():
 def utility6():
     # Import modules
     import numpy as np
-    import tensorOperations as top
+    import tensor.tensoroperations as top
+    import tensor.matrixoperations as mop
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Validation header
     print('\n\n' + 'Clarify questions about 2D plane strain elasticity')
@@ -1088,23 +1090,23 @@ def utility6():
     n_dim = 3
     comp_order = ['11','22','33','12','23','13']
     # Set required fourth-order tensors
-    SOId,FOId,FOTransp,FOSym,FODiagTrace,FODevProj,FODevProjSym = \
-                                                               top.setIdentityTensors(n_dim)
+    soid,foid,fotransp,fosym,fodiagtrace,fodevproj,fodevprojsym = \
+                                                               top.getidoperators(n_dim)
     # Compute consistent tangent modulus (Lamé parameters)
-    consistent_tangent = lam*FODiagTrace + 2.0*miu*FOSym
+    consistent_tangent = lam*fodiagtrace + 2.0*miu*fosym
     # Build consistent tangent modulus (Lamé parameters) matricial form
-    consistent_tangent_mf = top.setTensorMatricialForm(consistent_tangent,n_dim,comp_order)
+    consistent_tangent_mf = mop.gettensormf(consistent_tangent,n_dim,comp_order)
     # Print consistent tangent modulus (Lamé parameters)
-    print('\n' + '>> consistent_tangent = lam*FODiagTrace + 2.0*miu*FOSym')
+    print('\n' + '>> consistent_tangent = lam*fodiagtrace + 2.0*miu*fosym')
     print('\n' + 'consistent_tangent_mf (Lamé parameters):' + '\n')
     print(consistent_tangent_mf)
     # Compute consistent tangent modulus (bulk and shear modulii)
-    consistent_tangent = K*FODiagTrace + 2.0*G*FODevProjSym
+    consistent_tangent = K*fodiagtrace + 2.0*G*fodevprojsym
     # Build consistent tangent modulus (bulk and shear modulii) matricial form
-    consistent_tangent_mf = top.setTensorMatricialForm(consistent_tangent,n_dim,comp_order)
+    consistent_tangent_mf = mop.gettensormf(consistent_tangent,n_dim,comp_order)
     # Print consistent tangent modulus (bulk and shear modulii)
-    print('\n\n' + '>> consistent_tangent = K*FODiagTrace + 2.0*G*(FOSym - ' + \
-                                                                   '(1.0/3.0)*FODiagTrace)')
+    print('\n\n' + '>> consistent_tangent = K*fodiagtrace + 2.0*G*(fosym - ' + \
+                                                                   '(1.0/3.0)*fodiagtrace)')
     print('\n' + 'consistent_tangent_mf (bulk and shear modulii):' + '\n')
     print(consistent_tangent_mf)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1116,23 +1118,23 @@ def utility6():
     n_dim = 2
     comp_order = ['11','22','12']
     # Set required fourth-order tensors
-    SOId,FOId,FOTransp,FOSym,FODiagTrace,FODevProj,FODevProjSym = \
-                                                               top.setIdentityTensors(n_dim)
+    soid,foid,fotransp,fosym,fodiagtrace,fodevproj,fodevprojsym = \
+                                                               top.getidoperators(n_dim)
     # Compute consistent tangent modulus (Lamé parameters)
-    consistent_tangent = lam*FODiagTrace + 2.0*miu*FOSym
+    consistent_tangent = lam*fodiagtrace + 2.0*miu*fosym
     # Build consistent tangent modulus (Lamé parameters) matricial form
-    consistent_tangent_mf = top.setTensorMatricialForm(consistent_tangent,n_dim,comp_order)
+    consistent_tangent_mf = mop.gettensormf(consistent_tangent,n_dim,comp_order)
     # Print consistent tangent modulus (Lamé parameters)
-    print('\n' + '>> consistent_tangent = lam*FODiagTrace + 2.0*miu*FOSym')
+    print('\n' + '>> consistent_tangent = lam*fodiagtrace + 2.0*miu*fosym')
     print('\n' + 'consistent_tangent_mf (Lamé parameters):' + '\n')
     print(consistent_tangent_mf)
     # Compute consistent tangent modulus (bulk and shear modulii)
-    consistent_tangent = K*FODiagTrace + 2.0*G*FODevProjSym
+    consistent_tangent = K*fodiagtrace + 2.0*G*fodevprojsym
     # Build consistent tangent modulus (bulk and shear modulii) matricial form
-    consistent_tangent_mf = top.setTensorMatricialForm(consistent_tangent,n_dim,comp_order)
+    consistent_tangent_mf = mop.gettensormf(consistent_tangent,n_dim,comp_order)
     # Print consistent tangent modulus (bulk and shear modulii)
-    print('\n\n' + '>> consistent_tangent = K*FODiagTrace + 2.0*G*(FOSym - ' + \
-                                                                   '(1.0/3.0)*FODiagTrace)')
+    print('\n\n' + '>> consistent_tangent = K*fodiagtrace + 2.0*G*(fosym - ' + \
+                                                                   '(1.0/3.0)*fodiagtrace)')
     print('\n' + 'consistent_tangent_mf (bulk and shear modulii):' + '\n')
     print(consistent_tangent_mf)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1145,19 +1147,19 @@ def utility6():
     n_dim = 2
     comp_order = ['11','22','12']
     # Set required fourth-order tensors
-    SOId,FOId,FOTransp,FOSym,FODiagTrace,_,_ = top.setIdentityTensors(n_dim)
+    soid,foid,fotransp,fosym,fodiagtrace,_,_ = top.getidoperators(n_dim)
     # Set fourth-order deviatoric projection tensor (second order symmetric tensors)
-    FODevProjSym = FOSym - (1.0/2.0)*FODiagTrace
+    fodevprojsym = fosym - (1.0/2.0)*fodiagtrace
     # Compute 2D bulk modulus
     K2d = K + (1.0/3.0)*miu
     print('\n' + '>> K2d = K + (1.0/3.0)*miu =', '{:11.4e}'.format(K2d))
     # Compute consistent tangent modulus (bulk and shear modulii)
-    consistent_tangent = K2d*FODiagTrace + 2.0*G*FODevProjSym
+    consistent_tangent = K2d*fodiagtrace + 2.0*G*fodevprojsym
     # Build consistent tangent modulus (bulk and shear modulii) matricial form
-    consistent_tangent_mf = top.setTensorMatricialForm(consistent_tangent,n_dim,comp_order)
+    consistent_tangent_mf = mop.gettensormf(consistent_tangent,n_dim,comp_order)
     # Print consistent tangent modulus (bulk and shear modulii)
-    print('\n' + '>> consistent_tangent = K2d*FODiagTrace + 2.0*G*(FOSym - ' + \
-                                                                   '(1.0/2.0)*FODiagTrace)')
+    print('\n' + '>> consistent_tangent = K2d*fodiagtrace + 2.0*G*(fosym - ' + \
+                                                                   '(1.0/2.0)*fodiagtrace)')
     print('\n' + 'consistent_tangent_mf (2d bulk modulus and shear modulus):' + '\n')
     print(consistent_tangent_mf)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

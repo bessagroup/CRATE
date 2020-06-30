@@ -28,10 +28,10 @@ import ioput.info as info
 import scipy.linalg
 # Display errors, warnings and built-in exceptions
 import ioput.errors as errors
-# Read user input data file
-import ioput.readinputdata as rid
 # Tensorial operations
-import tensorOperations as top
+import tensor.tensoroperations as top
+# Matricial operations
+import tensor.matrixoperations as mop
 # Homogenized results output
 import ioput.homresoutput as hresout
 # VTK output
@@ -161,9 +161,9 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
     #                                         Initial state homogenized results (.hres file)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Build homogenized strain tensor
-    hom_strain = top.getTensorFromMatricialForm(hom_strain_mf,n_dim,comp_order)
+    hom_strain = mop.gettensorfrommf(hom_strain_mf,n_dim,comp_order)
     # Build homogenized stress tensor
-    hom_stress = top.getTensorFromMatricialForm(hom_stress_mf,n_dim,comp_order)
+    hom_stress = mop.gettensorfrommf(hom_stress_mf,n_dim,comp_order)
     # Compute homogenized out-of-plane stress component in a 2D plane strain problem /
     # strain component in a 2D plane stress problem (output purpose only)
     if problem_type == 1:
@@ -694,9 +694,9 @@ def onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,s
         #                                              Homogenized strain and stress tensors
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Build homogenized strain tensor
-        hom_strain = top.getTensorFromMatricialForm(hom_strain_mf,n_dim,comp_order)
+        hom_strain = mop.gettensorfrommf(hom_strain_mf,n_dim,comp_order)
         # Build homogenized stress tensor
-        hom_stress = top.getTensorFromMatricialForm(hom_stress_mf,n_dim,comp_order)
+        hom_stress = mop.gettensorfrommf(hom_stress_mf,n_dim,comp_order)
         # Compute homogenized out-of-plane stress component in a 2D plane strain problem /
         # strain component in a 2D plane stress problem (output purpose only)
         if problem_type == 1:
@@ -830,7 +830,7 @@ def setIncMacLoadMF(n_dim,comp_order,inc_mac_load_vector):
             inc_mac_load[i,j] = inc_mac_load_vector[k]
             k = k + 1
     # Set incremental macroscopic load matricial form
-    inc_mac_load_mf = top.setTensorMatricialForm(inc_mac_load,n_dim,comp_order)
+    inc_mac_load_mf = mop.gettensormf(inc_mac_load,n_dim,comp_order)
     # Return
     return inc_mac_load_mf
 # ------------------------------------------------------------------------------------------
@@ -850,18 +850,18 @@ def refMaterialElasticTangents(problem_dict,material_properties_ref):
     lam_ref = (E_ref*v_ref)/((1.0 + v_ref)*(1.0 - 2.0*v_ref))
     miu_ref = E_ref/(2.0*(1.0 + v_ref))
     # Compute reference material compliance tensor
-    _,FOId,_,FOSym,FODiagTrace,_,_ = top.setIdentityTensors(n_dim)
-    Se_ref = -(lam_ref/(2*miu_ref*(3*lam_ref+2*miu_ref)))*FODiagTrace + \
-                                                                   (1.0/(2.0*miu_ref))*FOSym
+    _,foid,_,fosym,fodiagtrace,_,_ = top.getidoperators(n_dim)
+    Se_ref = -(lam_ref/(2*miu_ref*(3*lam_ref+2*miu_ref)))*fodiagtrace + \
+                                                                   (1.0/(2.0*miu_ref))*fosym
     # Compute reference material compliance tensor (matricial form)
-    Se_ref_mf = top.setTensorMatricialForm(Se_ref,n_dim,comp_order)
+    Se_ref_mf = mop.gettensormf(Se_ref,n_dim,comp_order)
     # Store reference material compliance tensor in a matrix similar to matricial form
     # but without any associated coefficients
     Se_ref_matrix = np.zeros(Se_ref_mf.shape)
     for j in range(len(comp_order)):
         for i in range(len(comp_order)):
-            Se_ref_matrix[i,j] = (1.0/top.kelvinFactor(i,comp_order))*\
-                                         (1.0/top.kelvinFactor(j,comp_order))*Se_ref_mf[i,j]
+            Se_ref_matrix[i,j] = (1.0/mop.kelvinfactor(i,comp_order))*\
+                                         (1.0/mop.kelvinfactor(j,comp_order))*Se_ref_mf[i,j]
     # Return
     return [De_ref_mf,Se_ref_matrix]
 # ------------------------------------------------------------------------------------------
@@ -886,7 +886,7 @@ def clustersSUCT(problem_dict,mat_dict,clst_dict,algpar_dict,phase_clusters,
             # Get material cluster incremental strain (matricial form)
             inc_strain_mf = gbl_inc_strain_mf[i_init:i_end]
             # Build material cluster incremental strain tensor
-            inc_strain = top.getTensorFromMatricialForm(inc_strain_mf,n_dim,comp_order)
+            inc_strain = mop.gettensorfrommf(inc_strain_mf,n_dim,comp_order)
             # Get material cluster last increment converged state variables
             state_variables_old = copy.deepcopy(clusters_state_old[str(cluster)])
             # Perform material cluster state update and compute associated
@@ -1120,8 +1120,8 @@ def buildJacobian(problem_dict,material_phases,phase_clusters,n_total_clusters,
     n_dim = problem_dict['n_dim']
     comp_order = problem_dict['comp_order_sym']
     # Set fourth-order identity tensor (matricial form)
-    _,_,_,FOSym,_,_,_ = top.setIdentityTensors(n_dim)
-    FOSym_mf = top.setTensorMatricialForm(FOSym,n_dim,comp_order)
+    _,_,_,fosym,_,_,_ = top.getidoperators(n_dim)
+    FOSym_mf = mop.gettensormf(fosym,n_dim,comp_order)
     # Initialize Jacobian matrix
     Jacobian = np.zeros(2*(n_total_clusters*len(comp_order) + n_presc_mac_stress,))
     # Compute Jacobian matrix component solely related with the clusters equilibrium
@@ -1167,8 +1167,8 @@ def buildJacobian2(problem_dict,material_phases,phase_clusters,n_total_clusters,
     n_dim = problem_dict['n_dim']
     comp_order = problem_dict['comp_order_sym']
     # Set fourth-order symmetric projection tensor (matricial form)
-    _,_,_,FOSym,_,_,_ = top.setIdentityTensors(n_dim)
-    FOSym_mf = top.setTensorMatricialForm(FOSym,n_dim,comp_order)
+    _,_,_,fosym,_,_,_ = top.getidoperators(n_dim)
+    FOSym_mf = mop.gettensormf(fosym,n_dim,comp_order)
     # Initialize Jacobian matrix
     Jacobian = np.zeros(2*(n_total_clusters*len(comp_order) + len(comp_order),))
     # Compute Jacobian matrix component 11
@@ -1259,8 +1259,8 @@ def effectiveTangentModulus(problem_dict,material_phases,n_total_clusters,phase_
     n_dim = problem_dict['n_dim']
     comp_order = problem_dict['comp_order_sym']
     # Set second-order identity tensor
-    _,_,_,FOSym,_,_,_ = top.setIdentityTensors(n_dim)
-    FOSym_mf = top.setTensorMatricialForm(FOSym,n_dim,comp_order)
+    _,_,_,fosym,_,_,_ = top.getidoperators(n_dim)
+    FOSym_mf = mop.gettensormf(fosym,n_dim,comp_order)
     # Compute cluster strain concentration tensors system of linear equations coefficient
     # matrix (derivatives of clusters equilibrium residuals)
     csct_matrix = np.add(scipy.linalg.block_diag(*(n_total_clusters*[FOSym_mf,])), \
@@ -1334,29 +1334,29 @@ def SCS_UpdateRefMatElasticProperties(self_consistent_scheme,problem_dict,inc_st
                 # Build the incremental strain/stress tensors (matricial form) by including
                 # the appropriate out-of-plain components
                 inc_strain_mf = \
-                             top.getStrainStress3DmfFrom2Dmf(problem_dict,inc_strain_mf,0.0)
+                             top.getstate3Dmffrom2Dmf(problem_dict,inc_strain_mf,0.0)
                 inc_stress_mf = \
-                   top.getStrainStress3DmfFrom2Dmf(problem_dict,inc_stress_mf,inc_stress_33)
+                   top.getstate3Dmffrom2Dmf(problem_dict,inc_stress_mf,inc_stress_33)
             # Solve the regression-based self-consistent scheme always considering the
             # 3D strain and stress tensors
             problem_type = 4
-            n_dim,comp_order_sym,_ = rid.setProblemTypeParameters(problem_type)
+            n_dim,comp_order_sym,_ = mop.getproblemtypeparam(problem_type)
             comp_order = comp_order_sym
         # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         # Set second-order identity tensor
-        SOId,_,_,_,_,_,_ = top.setIdentityTensors(n_dim)
+        soid,_,_,_,_,_,_ = top.getidoperators(n_dim)
         # Initialize self-consistent scheme system of linear equations coefficient matrix
         # and right-hand side
         scs_matrix = np.zeros((2,2))
         scs_rhs = np.zeros(2)
         # Get incremental strain and stress tensors
-        inc_strain = top.getTensorFromMatricialForm(inc_strain_mf,n_dim,comp_order)
-        inc_stress = top.getTensorFromMatricialForm(inc_stress_mf,n_dim,comp_order)
+        inc_strain = mop.gettensorfrommf(inc_strain_mf,n_dim,comp_order)
+        inc_stress = mop.gettensorfrommf(inc_stress_mf,n_dim,comp_order)
         # Compute self-consistent scheme system of linear equations right-hand side
         scs_rhs[0] = np.trace(inc_stress)
         scs_rhs[1] = top.ddot22_1(inc_stress,inc_strain)
         # Compute self-consistent scheme system of linear equations coefficient matrix
-        scs_matrix[0,0] = np.trace(inc_strain)*np.trace(SOId)
+        scs_matrix[0,0] = np.trace(inc_strain)*np.trace(soid)
         scs_matrix[0,1] = 2.0*np.trace(inc_strain)
         scs_matrix[1,0] = np.trace(inc_strain)**2
         scs_matrix[1,1] = 2.0*top.ddot22_1(inc_strain,inc_strain)
@@ -1423,8 +1423,8 @@ def SCS_UpdateRefMatElasticProperties(self_consistent_scheme,problem_dict,inc_st
             n_dim = problem_dict['n_dim']
             comp_order = problem_dict['comp_order_sym']
             # Set fourth-order deviatoric projection tensor (matricial form)
-            _,_,_,_,_,_,FODevProjSym = top.setIdentityTensors(n_dim)
-            FODevProjSym_mf = top.setTensorMatricialForm(FODevProjSym,n_dim,comp_order)
+            _,_,_,_,_,_,fodevprojsym = top.getidoperators(n_dim)
+            FODevProjSym_mf = mop.gettensormf(fodevprojsym,n_dim,comp_order)
             # Compute incremental deviatoric strain
             inc_dev_strain_mf = np.matmul(FODevProjSym_mf,inc_strain_mf)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -27,8 +27,8 @@ import itertools as it
 import ioput.errors as errors
 # Manage files and directories
 import fileOperations
-# Tensorial operations
-import tensorOperations as top
+# Matricial operations
+import tensor.matrixoperations as mop
 #
 #                                                                    Links parameters reader
 #                                                                          (input data file)
@@ -511,11 +511,11 @@ def LinksMaterialProcedures(model_name):
                 # Set Links STRES, RSTAVA, LALGVA and RALGVA arrays
                 i_end = len(comp_order)
                 STRES = np.zeros(NSTRE)
-                STRES[0:i_end] = setTensorMatricialFormLinks(top.getTensorFromMatricialForm(
+                STRES[0:i_end] = setTensorMatricialFormLinks(mop.gettensorfrommf(
                             stress_mf,n_dim,comp_order),n_dim,Links_comp_order,'stress')
                 RSTAVA = np.zeros(NSTRA)
                 RSTAVA[0:i_end] = \
-                                 setTensorMatricialFormLinks(top.getTensorFromMatricialForm(
+                                 setTensorMatricialFormLinks(mop.gettensorfrommf(
                               e_strain_mf,n_dim,comp_order),n_dim,Links_comp_order,'strain')
                 LALGVA = np.zeros(2,dtype = np.int32)
                 LALGVA[0] = int(is_su_fail)
@@ -537,13 +537,13 @@ def LinksMaterialProcedures(model_name):
                 # Get state variables
                 i_end = len(comp_order)
                 state_variables['e_strain_mf'] = \
-                             top.setTensorMatricialForm(getTensorFromMatricialFormLinks(
+                             mop.gettensormf(getTensorFromMatricialFormLinks(
                           RSTAVA[0:i_end],n_dim,Links_comp_order,'strain'),n_dim,comp_order)
                 state_variables['strain_mf'] = \
-                             top.setTensorMatricialForm(getTensorFromMatricialFormLinks(
+                             mop.gettensormf(getTensorFromMatricialFormLinks(
                           RSTAVA[0:i_end],n_dim,Links_comp_order,'strain'),n_dim,comp_order)
                 state_variables['stress_mf'] = \
-                             top.setTensorMatricialForm(getTensorFromMatricialFormLinks(
+                             mop.gettensormf(getTensorFromMatricialFormLinks(
                            STRES[0:i_end],n_dim,Links_comp_order,'strain'),n_dim,comp_order)
                 state_variables['is_su_fail'] = bool(LALGVA[0])
                 # Compute out-of-plane stress component in a 2D plane strain problem
@@ -572,11 +572,11 @@ def LinksMaterialProcedures(model_name):
             # Define constitutive model state variables (names and initialization)
             state_variables_init = dict()
             state_variables_init['e_strain_mf'] = \
-                        top.setTensorMatricialForm(np.zeros((n_dim,n_dim)),n_dim,comp_order)
+                        mop.gettensormf(np.zeros((n_dim,n_dim)),n_dim,comp_order)
             state_variables_init['strain_mf'] = \
-                        top.setTensorMatricialForm(np.zeros((n_dim,n_dim)),n_dim,comp_order)
+                        mop.gettensormf(np.zeros((n_dim,n_dim)),n_dim,comp_order)
             state_variables_init['stress_mf'] = \
-                        top.setTensorMatricialForm(np.zeros((n_dim,n_dim)),n_dim,comp_order)
+                        mop.gettensormf(np.zeros((n_dim,n_dim)),n_dim,comp_order)
             state_variables_init['is_su_fail'] = False
             # Set additional out-of-plane stress component in a 2D plane strain problem
             # (output purpose only)

@@ -34,6 +34,8 @@ import Links.ioput.readLinksInputData as LinksRLID
 import ioput.readprocedures as rproc
 # I/O utilities
 import ioput.ioutilities as ioutil
+# Matricial operations
+import tensor.matrixoperations as mop
 #
 #                                                                       Read input data file
 # ==========================================================================================
@@ -57,7 +59,7 @@ def readinputdatafile(input_file,dirs_dict):
     keyword = 'Problem_Type'
     max = 4
     problem_type = rproc.readtypeAkeyword(input_file, input_file_path, keyword, max)
-    n_dim, comp_order_sym, comp_order_nsym = setProblemTypeParameters(problem_type)
+    n_dim, comp_order_sym, comp_order_nsym = mop.getproblemtypeparam(problem_type)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read RVE dimensions
     keyword = 'RVE_Dimensions'
@@ -300,25 +302,3 @@ def readinputdatafile(input_file,dirs_dict):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return [problem_dict, mat_dict, macload_dict, rg_dict, clst_dict, scs_dict, algpar_dict,
             vtk_dict]
-#
-#                                                                      Consistency functions
-# ==========================================================================================
-# Set parameters dependent on the problem type
-def setProblemTypeParameters(problem_type):
-    # Set problem dimension and strain/stress components order in symmetric and nonsymmetric
-    # cases
-    if problem_type == 1:
-        n_dim = 2
-        comp_order_sym = ['11', '22', '12']
-        comp_order_nsym = ['11', '21', '12', '22']
-    elif problem_type == 2:
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00017', location.filename, location.lineno + 1, problem_type)
-    elif problem_type == 3:
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00017', location.filename, location.lineno + 1, problem_type)
-    elif problem_type == 4:
-        n_dim = 3
-        comp_order_sym = ['11', '22', '33', '12', '23', '13']
-        comp_order_nsym = ['11', '21', '31', '12', '22', '32', '13', '23', '33']
-    return [n_dim,comp_order_sym,comp_order_nsym]

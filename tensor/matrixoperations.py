@@ -1,9 +1,8 @@
 #
-# Tensor Operations Module (CRATE Program)
+# Matrix Operations Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# Module containing procedures related to tensorial and matricial operations (e.g algebraic
-# tensorial operations, matricial form storage, common tensorial operators).
+# Matrix operations (e.g. matricial form storage, condensation).
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | January 2020 | Initial coding.
@@ -18,71 +17,38 @@ import inspect
 import itertools as it
 # Display errors, warnings and built-in exceptions
 import ioput.errors as errors
+# Tensorial operations
+import tensor.tensoroperations as top
 #
-#                                                                       Tensorial operations
+#                                                                    Problem type parameters
 # ==========================================================================================
-# Tensorial products
-dyad22 = lambda A2,B2 : np.einsum('ij,kl -> ijkl',A2,B2)
-# Tensorial single contractions
-dot21_1 = lambda A2,B1 : np.einsum('ij,j -> i',A2,B1)
-dot12_1 = lambda A1,B2 : np.einsum('i,ij -> j',A1,B2)
-# Tensorial double contractions
-ddot22_1 = lambda A2,B2 : np.einsum('ij,ij',A2,B2)
-ddot42_1 = lambda A4,B2 : np.einsum('ijkl,kl -> ij',A4,B2)
-ddot44_1 = lambda A4,B4 : np.einsum('ijmn,mnkl -> ijkl',A4,B4)
-#
-#                                                                                  Operators
-# ==========================================================================================
-# Discrete Dirac's delta function (dij = 1 if i=j, dij = 0 if i!=j).
-def Dd(i,j):
-    if (not isinstance(i,int) and not isinstance(i,np.integer)) or \
-                                   (not isinstance(j,int) and not isinstance(j,np.integer)):
+# Get parameters dependent on the problem type
+def getproblemtypeparam(problem_type):
+    # Set problem dimension and strain/stress components order in symmetric and nonsymmetric
+    # cases
+    if problem_type == 1:
+        n_dim = 2
+        comp_order_sym = ['11', '22', '12']
+        comp_order_nsym = ['11', '21', '12', '22']
+    elif problem_type == 2:
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00086',location.filename,location.lineno+1)
-    value = 1 if i == j else 0
-    return value
-#                                                                    Common identity tensors
-# ==========================================================================================
-# Set the following common identity tensors:
+        errors.displayerror('E00017', location.filename, location.lineno + 1, problem_type)
+    elif problem_type == 3:
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayerror('E00017', location.filename, location.lineno + 1, problem_type)
+    elif problem_type == 4:
+        n_dim = 3
+        comp_order_sym = ['11', '22', '33', '12', '23', '13']
+        comp_order_nsym = ['11', '21', '31', '12', '22', '32', '13', '23', '33']
+    return [n_dim, comp_order_sym, comp_order_nsym]
 #
-#   Second-order identity tensor              > Tij = dii
-#   Fourth-order identity tensor              > Tijkl = dik*djl
-#   Fourth-order symmetric projection tensor  > Tijkl = 0.5*(dik*djl+dil*djk)
-#   Fourth-order 'diagonal trace' tensor      > Tijkl = dij*dkl
-#   Fourth-order deviatoric projection tensor > Tijkl = dik*djl-(1/3)*dij*dkl
-#   Fourth-order deviatoric projection tensor > Tijkl = 0.5*(dik*djl+dil*djk)-(1/3)*dij*dkl
-#            (second order symmetric tensors)
-#
-#   where 'd' represents the discrete Dirac delta.
-#
-def setIdentityTensors(n_dim):
-    # Set second-order identity tensor
-    SOId = np.eye(n_dim)
-    # Set fourth-order identity tensor and fourth-order transpose tensor
-    FOId = np.zeros((n_dim,n_dim,n_dim,n_dim))
-    FOTransp = np.zeros((n_dim,n_dim,n_dim,n_dim))
-    for i in range(n_dim):
-        for j in range(n_dim):
-            FOId[i,j,i,j] = 1.0
-            FOTransp[i,j,j,i] = 1.0
-    # Set fourth-order symmetric projection tensor
-    FOSym = 0.5*(FOId + FOTransp)
-    # Set fourth-order 'diagonal trace' tensor
-    FODiagTrace = dyad22(SOId,SOId)
-    # Set fourth-order deviatoric projection tensor
-    FODevProj = FOId - (1.0/3.0)*FODiagTrace
-    # Set fourth-order deviatoric projection tensor (second order symmetric tensors)
-    FODevProjSym = FOSym - (1.0/3.0)*FODiagTrace
-    # Return
-    return [SOId,FOId,FOTransp,FOSym,FODiagTrace,FODevProj,FODevProjSym]
-#
-#                                                               Tensorial < > Matricial Form
+#                                                    Tensorial < > Matricial form conversion
 # ==========================================================================================
 # Store a given second-order or fourth-order tensor in matricial form for a given number of
 # dimensions and given ordered component list. If the second-order tensor is symmetric or
 # the fourth-order tensor has minor symmetry (component list only contains independent
 # components), then the Kelvin notation is employed to perform the storage. The tensor
-# recovery from the associated matricial form follows an precisely inverse procedure.
+# recovery from the associated matricial form follows a precisely inverse procedure.
 #
 # For instance, assume the following four examples:
 #
@@ -154,44 +120,44 @@ def setIdentityTensors(n_dim):
 #
 # Note: The sr() stands for square-root of ().
 #
-def setTensorMatricialForm(tensor,n_dim,comp_order):
+def gettensormf(tensor, n_dim, comp_order):
     # Set tensor order
     tensor_order = len(tensor.shape)
     # Check input arguments validity
-    if tensor_order not in [2,4]:
+    if tensor_order not in [2, 4]:
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00023',location.filename,location.lineno+1)
-    elif any([ int(x) not in range(1,n_dim+1) for x in list(''.join(comp_order))]):
+        errors.displayerror('E00023', location.filename, location.lineno + 1)
+    elif any([ int(x) not in range(1, n_dim + 1) for x in list(''.join(comp_order))]):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00024',location.filename,location.lineno+1)
+        errors.displayerror('E00024', location.filename, location.lineno + 1)
     elif any([tensor.shape[i] != n_dim for i in range(len(tensor.shape))]):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00025',location.filename,location.lineno+1)
+        errors.displayerror('E00025', location.filename, location.lineno + 1)
     elif any([len(comp) != 2 for comp in comp_order]):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00024',location.filename,location.lineno+1)
+        errors.displayerror('E00024', location.filename, location.lineno + 1)
     elif len(list(dict.fromkeys(comp_order))) != len(comp_order):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00026',location.filename,location.lineno+1)
+        errors.displayerror('E00026', location.filename, location.lineno + 1)
     # Set Kelvin notation flag
     if len(comp_order) == n_dim**2:
         isKelvinNotation = False
-    elif len(comp_order) == sum(range(n_dim+1)):
+    elif len(comp_order) == sum(range(n_dim + 1)):
         isKelvinNotation = True
     else:
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00027',location.filename,location.lineno+1)
+        errors.displayerror('E00027', location.filename, location.lineno + 1)
     # Store tensor according to tensor order
     if tensor_order == 2:
         # Set second-order and matricial form indexes
         so_indexes = list()
         mf_indexes = list()
         for i in range(len(comp_order)):
-            so_indexes.append([int(x)-1 for x in list(comp_order[i])])
-            mf_indexes.append( comp_order.index(comp_order[i]))
+            so_indexes.append([int(x) - 1 for x in list(comp_order[i])])
+            mf_indexes.append(comp_order.index(comp_order[i]))
         # Initialize tensor matricial form
         if tensor.dtype == 'complex':
-            tensor_mf = np.zeros(len(comp_order),dtype=complex)
+            tensor_mf = np.zeros(len(comp_order), dtype=complex)
         else:
             tensor_mf = np.zeros(len(comp_order))
         # Store tensor in matricial form
@@ -204,19 +170,19 @@ def setTensorMatricialForm(tensor,n_dim,comp_order):
             tensor_mf[mf_idx] = factor*tensor[so_idx]
     elif tensor_order == 4:
         # Set cartesian product of component list
-        comps = list(it.product(comp_order,comp_order))
+        comps = list(it.product(comp_order, comp_order))
         # Set fourth-order and matricial form indexes
         fo_indexes = list()
         mf_indexes = list()
         for i in range(len(comp_order)**2):
-            fo_indexes.append([int(x)-1 for x in list(comps[i][0]+comps[i][1])])
+            fo_indexes.append([int(x) - 1 for x in list(comps[i][0]+comps[i][1])])
             mf_indexes.append([x for x in \
-                             [comp_order.index(comps[i][0]),comp_order.index(comps[i][1])]])
+                [comp_order.index(comps[i][0]), comp_order.index(comps[i][1])]])
         # Initialize tensor matricial form
         if tensor.dtype == 'complex':
-            tensor_mf = np.zeros((len(comp_order),len(comp_order)),dtype=complex)
+            tensor_mf = np.zeros((len(comp_order), len(comp_order)), dtype=complex)
         else:
-            tensor_mf = np.zeros((len(comp_order),len(comp_order)))
+            tensor_mf = np.zeros((len(comp_order), len(comp_order)))
         # Store tensor in matricial form
         for i in range(len(mf_indexes)):
             mf_idx = tuple(mf_indexes[i])
@@ -229,55 +195,55 @@ def setTensorMatricialForm(tensor,n_dim,comp_order):
     # Return
     return tensor_mf
 # ------------------------------------------------------------------------------------------
-def getTensorFromMatricialForm(tensor_mf,n_dim,comp_order):
+def gettensorfrommf(tensor_mf, n_dim, comp_order):
     # Set tensor order
     if len(tensor_mf.shape) == 1:
         tensor_order = 2
-        if tensor_mf.shape[0] != n_dim**2 and tensor_mf.shape[0] != sum(range(n_dim+1)):
+        if tensor_mf.shape[0] != n_dim**2 and tensor_mf.shape[0] != sum(range(n_dim + 1)):
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00028',location.filename,location.lineno+1)
+            errors.displayerror('E00028', location.filename, location.lineno + 1)
     elif len(tensor_mf.shape) == 2:
         tensor_order = 4
         if tensor_mf.shape[0] != tensor_mf.shape[1]:
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00029',location.filename,location.lineno+1)
-        elif tensor_mf.shape[0] != n_dim**2 and tensor_mf.shape[0] != sum(range(n_dim+1)):
+            errors.displayerror('E00029', location.filename, location.lineno + 1)
+        elif tensor_mf.shape[0] != n_dim**2 and tensor_mf.shape[0] != sum(range(n_dim + 1)):
             location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00028',location.filename,location.lineno+1)
+            errors.displayerror('E00028', location.filename, location.lineno + 1)
     else:
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00030',location.filename,location.lineno+1)
+        errors.displayerror('E00030', location.filename, location.lineno + 1)
     # Check input arguments validity
-    if any([ int(x) not in range(1,n_dim+1) for x in list(''.join(comp_order))]):
+    if any([int(x) not in range(1, n_dim + 1) for x in list(''.join(comp_order))]):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00024',location.filename,location.lineno+1)
+        errors.displayerror('E00024', location.filename, location.lineno + 1)
     elif any([len(comp) != 2 for comp in comp_order]):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00024',location.filename,location.lineno+1)
+        errors.displayerror('E00024', location.filename, location.lineno + 1)
     elif len(list(dict.fromkeys(comp_order))) != len(comp_order):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00026',location.filename,location.lineno+1)
+        errors.displayerror('E00026', location.filename, location.lineno + 1)
     # Set Kelvin notation flag
     if len(comp_order) == n_dim**2:
         isKelvinNotation = False
-    elif len(comp_order) == sum(range(n_dim+1)):
+    elif len(comp_order) == sum(range(n_dim + 1)):
         isKelvinNotation = True
     else:
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00027',location.filename,location.lineno+1)
+        errors.displayerror('E00027', location.filename, location.lineno + 1)
     # Get tensor according to tensor order
     if tensor_order == 2:
         # Set second-order and matricial form indexes
         so_indexes = list()
         mf_indexes = list()
         for i in range(len(comp_order)):
-            so_indexes.append([int(x)-1 for x in list(comp_order[i])])
-            mf_indexes.append( comp_order.index(comp_order[i]))
+            so_indexes.append([int(x) - 1 for x in list(comp_order[i])])
+            mf_indexes.append(comp_order.index(comp_order[i]))
         # Initialize tensor
         if tensor_mf.dtype == 'complex':
-            tensor = np.zeros(tensor_order*(n_dim ,),dtype=complex)
+            tensor = np.zeros(tensor_order*(n_dim,), dtype=complex)
         else:
-            tensor = np.zeros(tensor_order*(n_dim ,))
+            tensor = np.zeros(tensor_order*(n_dim,))
         # Get tensor from matricial form
         for i in range(len(mf_indexes)):
             mf_idx = mf_indexes[i]
@@ -289,17 +255,17 @@ def getTensorFromMatricialForm(tensor_mf,n_dim,comp_order):
             tensor[so_idx] = (1.0/factor)*tensor_mf[mf_idx]
     elif tensor_order == 4:
         # Set cartesian product of component list
-        comps = list(it.product(comp_order,comp_order))
+        comps = list(it.product(comp_order, comp_order))
         # Set fourth-order and matricial form indexes
         mf_indexes = list()
         fo_indexes = list()
         for i in range(len(comp_order)**2):
-            fo_indexes.append([int(x)-1 for x in list(comps[i][0]+comps[i][1])])
+            fo_indexes.append([int(x) - 1 for x in list(comps[i][0] + comps[i][1])])
             mf_indexes.append([x for x in \
-                             [comp_order.index(comps[i][0]),comp_order.index(comps[i][1])]])
+                [comp_order.index(comps[i][0]), comp_order.index(comps[i][1])]])
         # Initialize tensor
         if tensor_mf.dtype == 'complex':
-            tensor = np.zeros(tensor_order*(n_dim ,),dtype=complex)
+            tensor = np.zeros(tensor_order*(n_dim ,), dtype=complex)
         else:
             tensor = np.zeros(tensor_order*(n_dim ,))
         # Get tensor from matricial form
@@ -313,14 +279,14 @@ def getTensorFromMatricialForm(tensor_mf,n_dim,comp_order):
                 if fo_idx[0] != fo_idx[1] and fo_idx[2] != fo_idx[3]:
                     tensor[tuple(fo_idx[1::-1]+fo_idx[2:])] = (1.0/factor)*tensor_mf[mf_idx]
                     tensor[tuple(fo_idx[:2]+fo_idx[3:1:-1])] = \
-                                                              (1.0/factor)*tensor_mf[mf_idx]
+                        (1.0/factor)*tensor_mf[mf_idx]
                     tensor[tuple(fo_idx[1::-1]+fo_idx[3:1:-1])] = \
-                                                              (1.0/factor)*tensor_mf[mf_idx]
+                        (1.0/factor)*tensor_mf[mf_idx]
                 elif fo_idx[0] != fo_idx[1]:
                     tensor[tuple(fo_idx[1::-1]+fo_idx[2:])] = (1.0/factor)*tensor_mf[mf_idx]
                 elif fo_idx[2] != fo_idx[3]:
                     tensor[tuple(fo_idx[:2]+fo_idx[3:1:-1])] = \
-                                                              (1.0/factor)*tensor_mf[mf_idx]
+                        (1.0/factor)*tensor_mf[mf_idx]
             tensor[fo_idx] = (1.0/factor)*tensor_mf[mf_idx]
     # Return
     return tensor
@@ -329,8 +295,8 @@ def getTensorFromMatricialForm(tensor_mf,n_dim,comp_order):
 # second-order tensor or a minor simmetric fourth-order tensor in matricial form. For a
 # given component index in a given component list, this function returns the component's
 # associated Kelvin notation factor.
-def kelvinFactor(idx,comp_order):
-    if isinstance(idx,int) or isinstance(idx,np.integer):
+def kelvinfactor(idx, comp_order):
+    if isinstance(idx, int) or isinstance(idx, np.integer):
         if int(list(comp_order[idx])[0]) == int(list(comp_order[idx])[1]):
             factor = 1.0
         else:
@@ -357,33 +323,33 @@ def kelvinFactor(idx,comp_order):
 #
 # Note: Lists of rows and columns cannot contain duplicated indexes
 #
-def getCondensedMatrix(matrix,rows,cols):
+def getcondmatrix(matrix, rows, cols):
     # Check validity of rows and columns indexes to perform the condensation
-    if not np.all([isinstance(rows[i],int) for i in range(len(rows))]):
+    if not np.all([isinstance(rows[i], int) for i in range(len(rows))]):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00032',location.filename,location.lineno+1)
-    elif not np.all([isinstance(cols[i],int) for i in range(len(cols))]):
+        errors.displayerror('E00032', location.filename, location.lineno + 1)
+    elif not np.all([isinstance(cols[i], int) for i in range(len(cols))]):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00032',location.filename,location.lineno+1)
+        errors.displayerror('E00032', location.filename, location.lineno + 1)
     elif len(list(dict.fromkeys(rows))) != len(rows) or \
-                                                len(list(dict.fromkeys(cols))) != len(cols):
+            len(list(dict.fromkeys(cols))) != len(cols):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00033',location.filename,location.lineno+1)
+        errors.displayerror('E00033', location.filename, location.lineno + 1)
     elif np.any([rows[i] not in range(matrix.shape[0]) for i in range(len(rows))]):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00034',location.filename,location.lineno+1)
+        errors.displayerror('E00034', location.filename, location.lineno + 1)
     elif np.any([cols[i] not in range(matrix.shape[1]) for i in range(len(cols))]):
         location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00035',location.filename,location.lineno+1)
+        errors.displayerror('E00035', location.filename, location.lineno + 1)
     # Build auxiliary matrices with rows and columns condensation indexes
-    rows_matrix = np.zeros((len(rows),len(cols)),dtype=int)
-    cols_matrix = np.zeros((len(rows),len(cols)),dtype=int)
+    rows_matrix = np.zeros((len(rows), len(cols)), dtype=int)
+    cols_matrix = np.zeros((len(rows), len(cols)), dtype=int)
     for j in range(len(cols)):
-        rows_matrix[:,j] = rows
+        rows_matrix[:, j] = rows
     for i in range(len(rows)):
-        cols_matrix[i,:] = cols
+        cols_matrix[i, :] = cols
     # Build condensed matrix
-    matrix_cnd = matrix[rows_matrix,cols_matrix]
+    matrix_cnd = matrix[rows_matrix, cols_matrix]
     # Return condensed matrix
     return matrix_cnd
 #
@@ -392,14 +358,13 @@ def getCondensedMatrix(matrix,rows,cols):
 # Given a 2D strain/stress tensor (matricial form) associated to a given 2D problem type,
 # build the corresponding 3D counterpart by including the appropriate out-of-plain strain
 # components
-def getStrainStress3DmfFrom2Dmf(problem_dict,mf_2d,comp_33):
-    import ioput.readinputdata as rid
+def getstate3Dmffrom2Dmf(problem_dict, mf_2d, comp_33):
     # Get problem type
     problem_type = problem_dict['problem_type']
     # Get 2D strain/stress components order in symmetric and nonsymmetric cases
-    _,comp_order_sym_2d,comp_order_nsym_2d = rid.setProblemTypeParameters(problem_type)
+    _, comp_order_sym_2d, comp_order_nsym_2d = getproblemtypeparam(problem_type)
     # Get 3D strain/stress components order in symmetric and nonsymmetric cases
-    _,comp_order_sym_3d,comp_order_nsym_3d = rid.setProblemTypeParameters(4)
+    _, comp_order_sym_3d, comp_order_nsym_3d = getproblemtypeparam(4)
     # Set required strain/stress component order according to strain tensor symmetry
     if len(mf_2d) == len(comp_order_sym_2d):
         comp_order_2d = comp_order_sym_2d
@@ -420,14 +385,13 @@ def getStrainStress3DmfFrom2Dmf(problem_dict,mf_2d,comp_33):
 # Given a 3D strain/stress second-order tensor (matricial form) or a 3D strain/stress
 # related fourth-order tensor associated to a given 2D problem type, build the reduced 2D
 # counterpart including only the in-plain strain/stress components
-def get2DmfFrom3Dmf(problem_dict,mf_3d):
-    import ioput.readinputdata as rid
+def getstate2Dmffrom3Dmf(problem_dict, mf_3d):
     # Get problem type
     problem_type = problem_dict['problem_type']
     # Get 2D strain/stress components order in symmetric and nonsymmetric cases
-    _,comp_order_sym_2d,comp_order_nsym_2d = rid.setProblemTypeParameters(problem_type)
+    _, comp_order_sym_2d, comp_order_nsym_2d = getproblemtypeparam(problem_type)
     # Get 3D strain/stress components order in symmetric and nonsymmetric cases
-    _,comp_order_sym_3d,comp_order_nsym_3d = rid.setProblemTypeParameters(4)
+    _, comp_order_sym_3d, comp_order_nsym_3d = getproblemtypeparam(4)
     # Set required strain/stress component order according to strain tensor symmetry
     if len(mf_3d) == len(comp_order_sym_3d):
         comp_order_2d = comp_order_sym_2d
@@ -446,14 +410,14 @@ def get2DmfFrom3Dmf(problem_dict,mf_3d):
             comp_j = comp_order_2d[j]
             for i in range(len(comp_order_2d)):
                 comp_i = comp_order_2d[i]
-                mf_2d[i,j] = mf_3d[comp_order_3d.index(comp_i),comp_order_3d.index(comp_j)]
+                mf_2d[i,j] = mf_3d[comp_order_3d.index(comp_i), comp_order_3d.index(comp_j)]
     return mf_2d
 #
 #                                                                     Validation (temporary)
 # ==========================================================================================
 if __name__ == '__main__':
     # Set functions being validated
-    val_functions = ['setMatricialForm()','getTensorFromMatricialForm()']
+    val_functions = ['gettensormf()','gettensorfrommf()']
     # Display validation header
     print('\nValidation: ',(len(val_functions)*'{}, ').format(*val_functions), 3*'\b', ' ')
     print(92*'-')
@@ -464,9 +428,9 @@ if __name__ == '__main__':
     # Save original tensor
     original_tensor = tensor
     # Set tensor matricial form
-    tensor_mf = setTensorMatricialForm(tensor,n_dim,comp_order)
+    tensor_mf = gettensormf(tensor,n_dim,comp_order)
     # Get tensor back from matricial form
-    tensor = getTensorFromMatricialForm(tensor_mf,n_dim,comp_order)
+    tensor = gettensorfrommf(tensor_mf,n_dim,comp_order)
     # Display validation
     print('\nNumber of dimensions: ',n_dim)
     print('Component list      : ',comp_order)
@@ -477,57 +441,57 @@ if __name__ == '__main__':
 
 if __name__ == '__main__':
     # Set functions being validated
-    val_functions = ['setIdentityTensors()',]
+    val_functions = ['getidoperators()',]
     # Display validation header
     print('\nValidation: ',(len(val_functions)*'{}, ').format(*val_functions), 3*'\b', ' ')
     print(92*'-')
     # Set function arguments
     n_dim = 3
     # Set identity tensors
-    SOId,FOId,FOTransp,FOSym,FODiagTrace,FODevProj,FODevProjSym = setIdentityTensors(n_dim)
+    soid,foid,fotransp,fosym,fodiagtrace,fodevproj,fodevprojsym = top.getidoperators(n_dim)
     # Display validation
     print('\nCheck identity tensors:')
     print('\nSOId (matricial form):')
     comp_order = ['11','22','33','12','23','13']
-    print(setTensorMatricialForm(SOId,n_dim,comp_order))
+    print(gettensormf(soid,n_dim,comp_order))
     print('\nFOId (matricial form):')
     comp_order = ['11','21','31','12','22','32','13','23','33']
-    print(setTensorMatricialForm(FOId,n_dim,comp_order))
+    print(gettensormf(foid,n_dim,comp_order))
     print('\nFOTransp (matricial form):')
     comp_order = ['11','21','31','12','22','32','13','23','33']
-    print(setTensorMatricialForm(FOTransp,n_dim,comp_order))
+    print(gettensormf(fotransp,n_dim,comp_order))
     print('\nFOSym (matricial form):')
     comp_order = ['11','22','33','12','23','13']
-    print(setTensorMatricialForm(FOSym,n_dim,comp_order))
+    print(gettensormf(fosym,n_dim,comp_order))
     print('\nFODiagTrace (matricial form):')
     comp_order = ['11','22','33','12','23','13']
-    print(setTensorMatricialForm(FODiagTrace,n_dim,comp_order))
+    print(gettensormf(fodiagtrace,n_dim,comp_order))
     print('\nFODevProj (matricial form):')
     comp_order = ['11','21','31','12','22','32','13','23','33']
-    print(setTensorMatricialForm(FODevProj,n_dim,comp_order))
+    print(gettensormf(fodevproj,n_dim,comp_order))
     # Check tensor-matrix conversions
     print('\nCheck tensor-matrix conversions:\n')
-    print('SOId:       ', np.all(getTensorFromMatricialForm(setTensorMatricialForm(SOId,\
-                                                 n_dim,comp_order),n_dim,comp_order)==SOId))
-    print('FOId:       ', np.all(getTensorFromMatricialForm(setTensorMatricialForm(FOId,\
-                                                 n_dim,comp_order),n_dim,comp_order)==FOId))
-    print('FOTransp:   ', \
-                   np.all(getTensorFromMatricialForm(setTensorMatricialForm(FOTransp,\
-                                             n_dim,comp_order),n_dim,comp_order)==FOTransp))
-    print('FOSym:      ', np.all(getTensorFromMatricialForm(setTensorMatricialForm(FOSym,\
-                                                n_dim,comp_order),n_dim,comp_order)==FOSym))
-    print('FODiagTrace:', \
-              np.all(getTensorFromMatricialForm(setTensorMatricialForm(FODiagTrace,n_dim,\
-                                                comp_order),n_dim,comp_order)==FODiagTrace))
-    print('FODevProj:  ', \
-                 np.all(getTensorFromMatricialForm(setTensorMatricialForm(FODevProj,n_dim,\
-                                                  comp_order),n_dim,comp_order)==FODevProj))
+    print('soid:       ', np.all(gettensorfrommf(gettensormf(soid,\
+                                                 n_dim,comp_order),n_dim,comp_order)==soid))
+    print('foid:       ', np.all(gettensorfrommf(gettensormf(foid,\
+                                                 n_dim,comp_order),n_dim,comp_order)==foid))
+    print('fotransp:   ', \
+                   np.all(gettensorfrommf(gettensormf(fotransp,\
+                                             n_dim,comp_order),n_dim,comp_order)==fotransp))
+    print('fosym:      ', np.all(gettensorfrommf(gettensormf(fosym,\
+                                                n_dim,comp_order),n_dim,comp_order)==fosym))
+    print('fodiagtrace:', \
+              np.all(gettensorfrommf(gettensormf(fodiagtrace,n_dim,\
+                                                comp_order),n_dim,comp_order)==fodiagtrace))
+    print('fodevproj:  ', \
+                 np.all(gettensorfrommf(gettensormf(fodevproj,n_dim,\
+                                                  comp_order),n_dim,comp_order)==fodevproj))
     # Display validation footer
     print('\n' + 92*'-' + '\n')
 
 if __name__ == '__main__':
     # Set functions being validated
-    val_functions = ['getCondensedMatrix()',]
+    val_functions = ['getcondmatrix()',]
     # Display validation header
     print('\nValidation: ',(len(val_functions)*'{}, ').format(*val_functions), 3*'\b', ' ')
     print(92*'-')
@@ -536,7 +500,7 @@ if __name__ == '__main__':
     rows = [1,3]
     cols = [0,2,3]
     # Call function
-    matrix_cnd = getCondensedMatrix(matrix,rows,cols)
+    matrix_cnd = getcondmatrix(matrix,rows,cols)
     # Display validation
     print('\nrows:', rows)
     print('\ncols:', cols)

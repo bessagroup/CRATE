@@ -24,8 +24,8 @@ import ioput.info as info
 import itertools as it
 # Display errors, warnings and built-in exceptions
 import ioput.errors as errors
-# Tensorial operations
-import tensorOperations as top
+# Matricial operations
+import tensor.matrixoperations as mop
 #
 #                                                        Compute cluster interaction tensors
 # ==========================================================================================
@@ -455,13 +455,13 @@ def discreteCITIntegralI(comp_order,cluster_filter,Gop_1_filt_vox,Gop_2_filt_vox
             compj = comp_order[j]
             # Perform discrete integral over the spatial domain of material cluster I
             cit_1_integral_mf[i,j] = \
-                             top.kelvinFactor(i,comp_order)*top.kelvinFactor(j,comp_order)*\
+                             mop.kelvinfactor(i,comp_order)*mop.kelvinfactor(j,comp_order)*\
                              np.sum(np.multiply(cluster_filter,Gop_1_filt_vox[compi+compj]))
             cit_2_integral_mf[i,j] = \
-                             top.kelvinFactor(i,comp_order)*top.kelvinFactor(j,comp_order)*\
+                             mop.kelvinfactor(i,comp_order)*mop.kelvinfactor(j,comp_order)*\
                              np.sum(np.multiply(cluster_filter,Gop_2_filt_vox[compi+compj]))
             cit_0_freq_integral_mf[i,j] = \
-                             top.kelvinFactor(i,comp_order)*top.kelvinFactor(j,comp_order)*\
+                             mop.kelvinfactor(i,comp_order)*mop.kelvinfactor(j,comp_order)*\
                         np.sum(np.multiply(cluster_filter,Gop_0_freq_filt_vox[compi+compj]))
     # Return
     return [cit_1_integral_mf,cit_2_integral_mf,cit_0_freq_integral_mf]

@@ -14,8 +14,8 @@
 import numpy as np
 # Shallow and deep copy operations
 import copy
-# Tensorial operations
-import tensorOperations as top
+# Matricial operations
+import tensor.matrixoperations as mop
 # Links related procedures
 import Links.LinksUtilities as LinksUtil
 # Links interface classes
@@ -166,11 +166,11 @@ def linksXMATX(mode,*args):
         # Get consistent tangent modulus (matricial form)
         if problem_type == 1:
             consistent_tangent_mf = \
-                top.setTensorMatricialForm(LinksUtil.getTensorFromMatricialFormLinks(
+                mop.gettensormf(LinksUtil.getTensorFromMatricialFormLinks(
                      DMATX[0:3,0:3],n_dim,comp_order_sym,'elasticity'),n_dim,comp_order_sym)
         else:
             consistent_tangent_mf = \
-                top.setTensorMatricialForm(LinksUtil.getTensorFromMatricialFormLinks(
+                mop.gettensormf(LinksUtil.getTensorFromMatricialFormLinks(
                               DMATX,n_dim,comp_order_sym,'elasticity'),n_dim,comp_order_sym)
         # Return
         return consistent_tangent_mf

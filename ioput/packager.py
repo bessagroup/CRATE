@@ -257,7 +257,7 @@ if __name__ == '__main__':
         rve_dims = [1.0,1.0,1.0]
     n_material_phases = 2
     import ioput.readinputdata as rid
-    n_dim,_,_ = rid.setProblemTypeParameters(problem_type)
+    n_dim,_,_ = mop.getproblemtypeparam(problem_type)
     problem_dict = dict()
     problem_dict['n_dim'] = n_dim
     # Call function

@@ -13,7 +13,9 @@
 # Working with arrays
 import numpy as np
 # Tensorial operations
-import tensorOperations as top
+import tensor.tensoroperations as top
+# Matricial operations
+import tensor.matrixoperations as mop
 #
 #                                                               Required material properties
 #                                                                    (check input data file)
@@ -50,11 +52,11 @@ def init(problem_dict):
     # Define constitutive model state variables (names and initialization)
     state_variables_init = dict()
     state_variables_init['e_strain_mf'] = \
-                        top.setTensorMatricialForm(np.zeros((n_dim,n_dim)),n_dim,comp_order)
+                        mop.gettensormf(np.zeros((n_dim,n_dim)),n_dim,comp_order)
     state_variables_init['strain_mf'] = \
-                        top.setTensorMatricialForm(np.zeros((n_dim,n_dim)),n_dim,comp_order)
+                        mop.gettensormf(np.zeros((n_dim,n_dim)),n_dim,comp_order)
     state_variables_init['stress_mf'] = \
-                        top.setTensorMatricialForm(np.zeros((n_dim,n_dim)),n_dim,comp_order)
+                        mop.gettensormf(np.zeros((n_dim,n_dim)),n_dim,comp_order)
     state_variables_init['is_plast'] = False
     state_variables_init['is_su_fail'] = False
     # Set additional out-of-plane strain and stress components
@@ -88,18 +90,18 @@ def suct(problem_dict,algpar_dict,material_properties,mat_phase,inc_strain,
     lam = (E*v)/((1.0+v)*(1.0-2.0*v))
     miu = E/(2.0*(1.0+v))
     # Set required fourth-order tensors
-    _,_,_,FOSym,FODiagTrace,_,_ = top.setIdentityTensors(n_dim)
+    _,_,_,fosym,fodiagtrace,_,_ = top.getidoperators(n_dim)
     # Compute consistent tangent modulus according to problem type
     if problem_type in [1,4]:
         # 2D problem (plane strain) / 3D problem
-        consistent_tangent = lam*FODiagTrace + 2.0*miu*FOSym
+        consistent_tangent = lam*fodiagtrace + 2.0*miu*fosym
     # Build consistent tangent modulus matricial form
-    consistent_tangent_mf = top.setTensorMatricialForm(consistent_tangent,n_dim,comp_order)
+    consistent_tangent_mf = mop.gettensormf(consistent_tangent,n_dim,comp_order)
     #
     #                                                                           State update
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Build incremental strain matricial form
-    inc_strain_mf = top.setTensorMatricialForm(inc_strain,n_dim,comp_order)
+    inc_strain_mf = mop.gettensormf(inc_strain,n_dim,comp_order)
     # Update elastic strain
     e_strain_mf = e_strain_old_mf + inc_strain_mf
     # Update stress
@@ -138,12 +140,12 @@ def ct(problem_dict,properties):
     lam = (E*v)/((1.0+v)*(1.0-2.0*v))
     miu = E/(2.0*(1.0+v))
     # Set required fourth-order tensors
-    _,_,_,FOSym,FODiagTrace,_,_ = top.setIdentityTensors(n_dim)
+    _,_,_,fosym,fodiagtrace,_,_ = top.getidoperators(n_dim)
     # Compute consistent tangent modulus according to problem type
     if problem_type in [1,4]:
         # 2D problem (plane strain) / 3D problem
-        consistent_tangent = lam*FODiagTrace + 2.0*miu*FOSym
+        consistent_tangent = lam*fodiagtrace + 2.0*miu*fosym
     # Build consistent tangent modulus matricial form
-    consistent_tangent_mf = top.setTensorMatricialForm(consistent_tangent,n_dim,comp_order)
+    consistent_tangent_mf = mop.gettensormf(consistent_tangent,n_dim,comp_order)
     # Return
     return consistent_tangent_mf

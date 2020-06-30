@@ -16,8 +16,8 @@ import numpy as np
 import inspect
 # Display errors, warnings and built-in exceptions
 import ioput.errors as errors
-# Tensorial operations
-import tensorOperations as top
+# Matricial operations
+import tensor.matrixoperations as mop
 # Links related procedures
 import Links.LinksUtilities as LinksUtil
 #
@@ -41,12 +41,12 @@ def setLinksModelProcedures():
         # Define constitutive model state variables (names and initialization)
         state_variables_init = dict()
         state_variables_init['e_strain_mf'] = \
-                        top.setTensorMatricialForm(np.zeros((n_dim,n_dim)),n_dim,comp_order)
+                        mop.gettensormf(np.zeros((n_dim,n_dim)),n_dim,comp_order)
         state_variables_init['acc_p_strain'] = 0.0
         state_variables_init['strain_mf'] = \
-                        top.setTensorMatricialForm(np.zeros((n_dim,n_dim)),n_dim,comp_order)
+                        mop.gettensormf(np.zeros((n_dim,n_dim)),n_dim,comp_order)
         state_variables_init['stress_mf'] = \
-                        top.setTensorMatricialForm(np.zeros((n_dim,n_dim)),n_dim,comp_order)
+                        mop.gettensormf(np.zeros((n_dim,n_dim)),n_dim,comp_order)
         state_variables_init['is_plast'] = False
         state_variables_init['is_su_fail'] = False
         state_variables_init['inc_p_mult'] = 0.0
@@ -152,7 +152,7 @@ def setLinksModelProcedures():
             STRES = np.zeros(NSTRE)
             idx = len(comp_order)
             STRES[0:idx] = LinksUtil.setTensorMatricialFormLinks(
-                               top.getTensorFromMatricialForm(stress_mf,n_dim,comp_order),
+                               mop.gettensorfrommf(stress_mf,n_dim,comp_order),
                                n_dim,Links_comp_order,'stress')
             if problem_type == 1:
                 STRES[idx] = stress_33
@@ -160,7 +160,7 @@ def setLinksModelProcedures():
             RSTAVA = np.zeros(NSTRA + 1)
             idx = len(comp_order)
             RSTAVA[0:idx] = LinksUtil.setTensorMatricialFormLinks(
-                                top.getTensorFromMatricialForm(e_strain_mf,n_dim,
+                                mop.gettensorfrommf(e_strain_mf,n_dim,
                                                                comp_order),
                                 n_dim,Links_comp_order,'strain')
             if problem_type == 1:
@@ -189,7 +189,7 @@ def setLinksModelProcedures():
             # Get stress from STRES
             idx = len(comp_order)
             state_variables['stress_mf'] = \
-                top.setTensorMatricialForm(
+                mop.gettensormf(
                     LinksUtil.getTensorFromMatricialFormLinks(STRES[0:idx],n_dim,
                                                               Links_comp_order,'stress'),
                 n_dim,comp_order)
@@ -198,7 +198,7 @@ def setLinksModelProcedures():
             # Get real state variables from RSTAVA
             idx = len(comp_order)
             state_variables['e_strain_mf'] = \
-                top.setTensorMatricialForm(
+                mop.gettensormf(
                     LinksUtil.getTensorFromMatricialFormLinks(RSTAVA[0:idx],n_dim,
                                                               Links_comp_order,'strain'),
                     n_dim,comp_order)

@@ -19,7 +19,9 @@ import numpy as np
 # Generate efficient iterators
 import itertools as it
 # Tensorial operations
-import tensorOperations as top
+import tensor.tensoroperations as top
+# Matricial operations
+import tensor.matrixoperations as mop
 #
 #                                                      FFT-Based Homogenization Basic Scheme
 # ==========================================================================================
@@ -451,15 +453,15 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
                     comp = comp_order[i]
                     # Build stress tensor Discrete Fourier Transform (DFT) matricial form
                     stress_DFT_mf[i] = \
-                        top.kelvinFactor(i,comp_order)*stress_DFT_vox[comp][freq_idx]
+                        mop.kelvinfactor(i,comp_order)*stress_DFT_vox[comp][freq_idx]
                     # Store stress tensor Discrete Fourier Transform (DFT) matricial form
                     # for zero-frequency
                     if freq_idx == n_dim*(0,):
                         stress_DFT_0_mf[i] = \
-                            top.kelvinFactor(i,comp_order)*stress_DFT_vox[comp][freq_idx]
+                            mop.kelvinfactor(i,comp_order)*stress_DFT_vox[comp][freq_idx]
                 # Build stress tensor Discrete Fourier Transform (DFT)
                 stress_DFT = np.zeros((n_dim,n_dim),dtype=complex)
-                stress_DFT = top.getTensorFromMatricialForm(stress_DFT_mf,n_dim,comp_order)
+                stress_DFT = mop.gettensorfrommf(stress_DFT_mf,n_dim,comp_order)
                 # Add discrete frequency contribution to discrete error required sum
                 error_sum = error_sum + \
                     np.linalg.norm(top.dot12_1(1j*np.asarray(freq_coord),stress_DFT))**2
@@ -559,10 +561,10 @@ def FFTHomogenizationBasicScheme(problem_dict,rg_dict,mat_dict,mac_strain):
                 idx1 = [comp_order.index(compi),comp_order.index(compj)]
                 idx2 = comp_order.index(compj)
                 aux = np.add(aux,np.multiply(
-                                 top.kelvinFactor(idx1,comp_order)*Gop_DFT_vox[compi+compj],
-                                 top.kelvinFactor(idx2,comp_order)*stress_DFT_vox[compj]))
+                                 mop.kelvinfactor(idx1,comp_order)*Gop_DFT_vox[compi+compj],
+                                 mop.kelvinfactor(idx2,comp_order)*stress_DFT_vox[compj]))
             strain_DFT_vox[compi] = np.subtract(strain_DFT_vox[compi],
-                                                (1.0/top.kelvinFactor(i,comp_order))*aux)
+                                                (1.0/mop.kelvinfactor(i,comp_order))*aux)
             # Enforce macroscopic strain at the zero-frequency strain component
             freq_0_idx = n_dim*(0,)
             strain_DFT_vox[compi][freq_0_idx] = mac_strain_DFT_0[i]
@@ -697,15 +699,15 @@ def getElasticityTensor(problem_type,n_dim,comp_order,properties):
     lam = (E*v)/((1.0+v)*(1.0-2.0*v))
     miu = E/(2.0*(1.0+v))
     # Set required fourth-order tensors
-    _,_,_,FOSym,FODiagTrace,_,_ = top.setIdentityTensors(n_dim)
+    _,_,_,fosym,fodiagtrace,_,_ = top.getidoperators(n_dim)
     # 2D problem (plane strain)
     if problem_type == 1:
-        De_tensor = lam*FODiagTrace + 2.0*miu*FOSym
-        De_tensor_mf = top.setTensorMatricialForm(De_tensor,n_dim,comp_order)
+        De_tensor = lam*fodiagtrace + 2.0*miu*fosym
+        De_tensor_mf = mop.gettensormf(De_tensor,n_dim,comp_order)
     # 3D problem
     elif problem_type == 4:
-        De_tensor = lam*FODiagTrace + 2.0*miu*FOSym
-        De_tensor_mf = top.setTensorMatricialForm(De_tensor,n_dim,comp_order)
+        De_tensor = lam*fodiagtrace + 2.0*miu*fosym
+        De_tensor_mf = mop.gettensormf(De_tensor,n_dim,comp_order)
     # Return
     return De_tensor_mf
 #
@@ -770,7 +772,7 @@ if __name__ == '__main__':
     problem_type = 1
     import ioput.readinputdata as rid
     # Set problem parameters (number of dimensions and components order)
-    n_dim, comp_order_sym, comp_order_nsym = rid.setProblemTypeParameters(problem_type)
+    n_dim, comp_order_sym, comp_order_nsym = mop.getproblemtypeparam(problem_type)
     # Set problem data
     problem_dict = dict()
     problem_dict['problem_type'] = problem_type
