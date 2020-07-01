@@ -79,7 +79,7 @@ import clustering.clusteringdata as clstdata
 # Perform clustering
 import clustering.clustering as clst
 # Cluster interaction tensors computation
-import clusterInteractionTensors
+import cit.cit as cit
 # Online stage
 import onlineStage
 # VTK output
@@ -209,7 +209,7 @@ else:
     cluster_file.close()
     # Check compatibility between the loaded clusters data and the input data file
     info.displayinfo('5','Performing compatibility check on loaded data...')
-    clustering.checkclstcompat(copy.deepcopy(problem_dict),
+    clst.checkclstcompat(copy.deepcopy(problem_dict),
               copy.deepcopy(rg_dict),copy.deepcopy(clst_dict_read),copy.deepcopy(clst_dict))
     # Set phase ending time and display finishing phase information
     phase_end_time = time.time()
@@ -225,7 +225,7 @@ if not is_same_offstage:
     info.displayinfo('2','Compute cluster interaction tensors')
     phase_init_time = time.time()
     # Compute the cluster interaction tensors
-    clusterInteractionTensors.computeClusterInteractionTensors(copy.deepcopy(dirs_dict),
+    cit.clusterinteractiontensors(copy.deepcopy(dirs_dict),
                                         copy.deepcopy(problem_dict),copy.deepcopy(mat_dict),
                                                            copy.deepcopy(rg_dict),clst_dict)
     # Set phase ending time and display finishing phase information
@@ -255,7 +255,7 @@ else:
     # Check compatibility between the loaded cluster interaction tensors and the material
     # phases existent in the spatial discretization file
     info.displayinfo('5','Performing compatibility check on loaded data...')
-    clusterInteractionTensors.checkCITCompatibility(copy.deepcopy(mat_dict),
+    clusterInteractionTensors.checkcitcompat(copy.deepcopy(mat_dict),
                                                                    copy.deepcopy(clst_dict))
     # Set phase ending time and display finishing phase information
     phase_end_time = time.time()
