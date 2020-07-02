@@ -26,7 +26,7 @@ import itertools as it
 # Display errors, warnings and built-in exceptions
 import ioput.errors as errors
 # Manage files and directories
-import fileOperations
+import ioput.fileoperations as filop
 # Matricial operations
 import tensor.matrixoperations as mop
 #
@@ -167,7 +167,7 @@ def writeLinksInputDataFile(file_name,dirs_dict,problem_dict,mat_dict,rg_dict,cl
     # Set and create offline stage Links directory if it does not exist
     os_Links_dir = offline_stage_dir + 'Links' + '/'
     if not os.path.exists(os_Links_dir):
-        fileOperations.makedirectory(os_Links_dir)
+        filop.makedirectory(os_Links_dir)
     # Set Links input data file path
     Links_file_path = os_Links_dir + file_name + '.rve'
     # Abort if attempting to overwrite an existing Links input data file

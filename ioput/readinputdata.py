@@ -25,7 +25,7 @@ import ntpath
 # Display errors, warnings and built-in exceptions
 import ioput.errors as errors
 # Manage files and directories
-import fileOperations
+import ioput.fileoperations as filop
 # Packager
 import ioput.packager as packager
 # Links related procedures
@@ -260,7 +260,7 @@ def readinputdatafile(input_file,dirs_dict):
         vtk_format, vtk_inc_div, vtk_vars = \
             rproc.readvtkoptions(input_file, input_file_path, keyword, keyword_line_number)
         # Create VTK folder in post processing directory
-        fileOperations.makedirectory(postprocess_dir + 'VTK/', 'overwrite')
+        filop.makedirectory(postprocess_dir + 'VTK/', 'overwrite')
     else:
         is_VTK_output = False
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

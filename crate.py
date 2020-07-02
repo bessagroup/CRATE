@@ -71,7 +71,7 @@ import ioput.errors as errors
 # Read user input data file
 import ioput.readinputdata as rid
 # Manage files and directories
-import fileOperations
+import ioput.fileoperations as filop
 # Packager
 import ioput.packager as packager
 # Clustering quantities computation
@@ -80,8 +80,10 @@ import clustering.clusteringdata as clstdata
 import clustering.clustering as clst
 # Cluster interaction tensors computation
 import cit.cit as cit
+# Cluster interaction tensors operations
+import cit.citoperations as citop
 # Online stage
-import onlineStage
+import online.sca as sca
 # VTK output
 import ioput.vtkoutput as vtkoutput
 #
@@ -96,11 +98,11 @@ elif not os.path.isfile(str(sys.argv[1])):
     errors.displayerror('E00001',location.filename,location.lineno+1)
 # Set input data file name, path and directory
 input_file_name,input_file_path,input_file_dir = \
-                                       fileOperations.setinputdatafilepath(str(sys.argv[1]))
+                                       filop.setinputdatafilepath(str(sys.argv[1]))
 # Set problem name, directory and main subdirectories
 problem_name,problem_dir,offline_stage_dir,postprocess_dir,is_same_offstage,\
 cluster_file_path,cit_file_path,hres_file_path \
-                             = fileOperations.setproblemdirs(input_file_name,input_file_dir)
+                             = filop.setproblemdirs(input_file_name,input_file_dir)
 # Package data associated to directories and paths
 dirs_dict = packager.packdirpaths(input_file_name,input_file_path,input_file_dir,
                                  problem_name,problem_dir,offline_stage_dir,postprocess_dir,
@@ -255,8 +257,7 @@ else:
     # Check compatibility between the loaded cluster interaction tensors and the material
     # phases existent in the spatial discretization file
     info.displayinfo('5','Performing compatibility check on loaded data...')
-    clusterInteractionTensors.checkcitcompat(copy.deepcopy(mat_dict),
-                                                                   copy.deepcopy(clst_dict))
+    citop.checkcitcompat(copy.deepcopy(mat_dict),copy.deepcopy(clst_dict))
     # Set phase ending time and display finishing phase information
     phase_end_time = time.time()
     phase_names.append('Import cluster interaction tensors')
@@ -271,7 +272,7 @@ info.displayinfo('2','Solve discretized Lippmann-Schwinger equations')
 phase_init_time = time.time()
 # Solve the reduced microscale equilibrium problem through solution of the clusterwise
 # discretized Lippmann-Schwinger system of equilibrium equations
-onlineStage.onlineStage(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,
+sca.sca(dirs_dict,problem_dict,mat_dict,rg_dict,clst_dict,macload_dict,
                                                               scs_dict,algpar_dict,vtk_dict)
 # Set phase ending time and display finishing phase information
 phase_end_time = time.time()

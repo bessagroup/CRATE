@@ -33,8 +33,8 @@ def utility1():
     import ntpath
     import time
     import ioput.info as info
-    import fileOperations
-    import ioput.readinputdata as rid
+    import ioput.fileoperations as filop
+    import tensor.matrixoperations as mop
     import FFTHomogenizationBasicScheme as FFT
     import ioput.ioutilities as ioutil
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -110,7 +110,7 @@ def utility1():
         output_dir = '/media/bernardoferreira/HDD/FEUP PhD/Studies/seminar/' + \
                      'offline_stage/main/3D/FFT_NEW/'
     output_dir = output_dir + discret_file_basename + '_' + loading + '/'
-    fileOperations.makedirectory(output_dir,option='overwrite')
+    filop.makedirectory(output_dir,option='overwrite')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set absolute path of the file where the error for the diferent convergence criteria
     # is written at every iteration
