@@ -12,7 +12,7 @@
 #                                                                             Import modules
 # ==========================================================================================
 # Links related procedures
-import Links.material.LinksSUCT as LinksSUCT
+import links.material.linkssuct as linkssuct
 #
 #                                                                         Material Interface
 # ==========================================================================================
@@ -89,7 +89,7 @@ def materialinterface(procedure, problem_dict, mat_dict, clst_dict, algpar_dict,
                          material_phases_models, mat_phase, inc_strain, state_variables_old)
             # Call constitutive model function to perform the state update procedure and to
             # compute the consistent tangent modulus
-            state_variables, consistent_tangent_mf = LinksSUCT.suct(*suct_args)
+            state_variables, consistent_tangent_mf = linkssuct.suct(*suct_args)
             # Return updated state variables and consistent tangent modulus
             return [state_variables, consistent_tangent_mf]
         pass

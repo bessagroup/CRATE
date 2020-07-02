@@ -27,7 +27,7 @@ import ntpath
 # Display errors, warnings and built-in exceptions
 import ioput.errors as errors
 # Links related procedures
-import Links.material.LinksMaterialModels as LinksMat
+import links.material.linksmaterialmodels as LinksMat
 # Material interface
 import material.materialinterface
 # Isotropic hardening laws
@@ -210,7 +210,7 @@ def readmaterialproperties(file, file_path, keyword):
         if model_source == 1:
             model_module = importlib.import_module('material.models.' + str(model_name))
             # Set material constitutive model required procedures
-            req_procedures = ['setRequiredProperties', 'init', 'suct']
+            req_procedures = ['getrequiredproperties', 'init', 'suct']
             # Check if the material constitutive model required procedures are available
             for procedure in req_procedures:
                 if hasattr(model_module, procedure):
@@ -223,18 +223,18 @@ def readmaterialproperties(file, file_path, keyword):
                                         model_name,procedure)
         elif model_source == 2:
             # Get material constitutive model procedures
-            setRequiredProperties, init, writeMaterialProperties, linksXPROPS, \
-                linksXXXXVA = LinksMat.LinksMaterialProcedures(model_name)
-            material_phases_models[mat_phase]['setRequiredProperties'] = \
-                setRequiredProperties
+            getrequiredproperties, init, writematproperties, linksxprops, \
+                linksxxxxva = LinksMat.getlinksmodel(model_name)
+            material_phases_models[mat_phase]['getrequiredproperties'] = \
+                getrequiredproperties
             material_phases_models[mat_phase]['init'] = init
-            material_phases_models[mat_phase]['writeMaterialProperties'] = \
-                writeMaterialProperties
-            material_phases_models[mat_phase]['linksXPROPS'] = linksXPROPS
-            material_phases_models[mat_phase]['linksXXXXVA'] = linksXXXXVA
+            material_phases_models[mat_phase]['writematproperties'] = \
+                writematproperties
+            material_phases_models[mat_phase]['linksxprops'] = linksxprops
+            material_phases_models[mat_phase]['linksxxxxva'] = linksxxxxva
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set number of material properties
-        required_properties = material_phases_models[mat_phase]['setRequiredProperties']()
+        required_properties = material_phases_models[mat_phase]['getrequiredproperties']()
         n_required_properties = len(required_properties)
         if not ioutil.checkposint(phase_header[2]):
             location = inspect.getframeinfo(inspect.currentframe())
@@ -364,9 +364,9 @@ def readmaterialproperties(file, file_path, keyword):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set Links constitutive model required integer and real material properties arrays
         if model_source == 2:
-            IPROPS,RPROPS = linksXPROPS(material_properties[mat_phase])
-            material_properties[mat_phase]['IPROPS'] = IPROPS
-            material_properties[mat_phase]['RPROPS'] = RPROPS
+            iprops,rprops = linksxprops(material_properties[mat_phase])
+            material_properties[mat_phase]['iprops'] = iprops
+            material_properties[mat_phase]['rprops'] = rprops
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Skip to the next material phase
         line_number = line_number + n_properties + 1

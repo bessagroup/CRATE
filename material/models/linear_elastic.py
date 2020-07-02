@@ -27,7 +27,7 @@ import tensor.matrixoperations as mop
 # E - Young modulus
 # v - Poisson ratio
 #
-def setRequiredProperties():
+def getrequiredproperties():
     # Set required material properties
     req_material_properties = ['E', 'v']
     # Return

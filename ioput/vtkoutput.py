@@ -31,7 +31,7 @@ import ioput.errors as errors
 # Matricial operations
 import tensor.matrixoperations as mop
 # Links related procedures
-import Links.material.LinksMaterialModels as LinksMat
+import links.material.linksmaterialmodels as LinksMat
 #
 #                                                                           Global variables
 # ==========================================================================================
@@ -219,7 +219,7 @@ def writevtkmacincrement(vtk_dict, dirs_dict, problem_dict, mat_dict, rg_dict, c
                 init_procedure = getattr(model_module, 'init')
             elif model_source == 2:
                 # Get constitutive model initialize procedure
-                _, init_procedure, _, _, _ = LinksMat.LinksMaterialProcedures(model_name)
+                _, init_procedure, _, _, _ = LinksMat.getlinksmodel(model_name)
             # Get constitutive model state variables dictionary
             model_state_variables = init_procedure(problem_dict)
             # Skip state variable output if it is not defined for all constitutive models
@@ -264,7 +264,7 @@ def writevtkmacincrement(vtk_dict, dirs_dict, problem_dict, mat_dict, rg_dict, c
                 init_procedure = getattr(model_module, 'init')
             elif model_source == 2:
                 # Get constitutive model initialize procedure
-                _, init_procedure, _, _, _ = LinksMat.LinksMaterialProcedures(model_name)
+                _, init_procedure, _, _, _ = LinksMat.getlinksmodel(model_name)
             # Get constitutive model state variables dictionary
             model_state_variables = init_procedure(problem_dict)
             # Loop over constitutive model state variables

@@ -29,7 +29,7 @@ import ioput.fileoperations as filop
 # Packager
 import ioput.packager as packager
 # Links related procedures
-import Links.ioput.readLinksInputData as LinksRLID
+import links.ioput.readlinksinputdatafile as linksrlid
 # Reading procedures
 import ioput.readprocedures as rproc
 # I/O utilities
@@ -158,7 +158,7 @@ def readinputdatafile(input_file,dirs_dict):
     else:
         clustering_solution_method = 1
     # Read clustering solution method parameters
-    Links_dict = dict()
+    links_dict = dict()
     if clustering_solution_method == 2:
         # Check if all the material phases have the associated constitutive model source set
         # as Links
@@ -167,14 +167,13 @@ def readinputdatafile(input_file,dirs_dict):
                 location = inspect.getframeinfo(inspect.currentframe())
                 errors.displayerror('E00067', location.filename, location.lineno + 1)
         # Build Links dictionary
-        Links_dict = LinksRLID.readLinksInputData(input_file, input_file_path, problem_type,
-                                                  ioutil.checkNumber, ioutil.checkposint,
-                                                  rproc.searchkeywordline,
-                                                  rproc.searchoptkeywordline)
+        links_dict = linksrlid.readlinksinputdatafile(
+            input_file, input_file_path, problem_type, ioutil.checknumber,
+            ioutil.checkposint, rproc.searchkeywordline, rproc.searchoptkeywordline)
     # If at least one material phase has the associated constitutive model source set as
     # Links add Links python binary to Links dictionary
     if is_Links_python_bin:
-        Links_dict['Links_python_bin_path'] = Links_python_bin_path
+        links_dict['Links_python_bin_path'] = Links_python_bin_path
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read number of cluster associated to each material phase
     keyword = 'Number_of_Clusters'
@@ -283,8 +282,8 @@ def readinputdatafile(input_file,dirs_dict):
     # Package data associated to the clustering
     info.displayinfo('5', 'Packaging clustering data...')
     clst_dict = packager.packrgclustering(clustering_method, clustering_strategy,
-                                             clustering_solution_method, Links_dict,
-                                             phase_n_clusters, rg_dict)
+                                          clustering_solution_method, links_dict,
+                                          phase_n_clusters, rg_dict)
     # Package data associated to the self-consistent scheme
     info.displayinfo('5', 'Packaging self-consistent scheme data...')
     scs_dict = packager.packagescs(self_consistent_scheme, scs_max_n_iterations,

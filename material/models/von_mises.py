@@ -32,7 +32,7 @@ import tensor.matrixoperations as mop
 # v   - Poisson ratio
 # IHL - Isotropic hardening law
 #
-def setRequiredProperties():
+def getrequiredproperties():
     # Set required material properties
     req_material_properties = ['E', 'v', 'IHL']
     # Return

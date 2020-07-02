@@ -2,8 +2,8 @@
 import os
 import ctypes
 import subprocess
-from Links.interface.compiler import Ifort, Gfortran
-from Links.interface.conversion import ConversionBase, testTypes
+from links.interface.compiler import Ifort, Gfortran
+from links.interface.conversion import ConversionBase, testTypes
 
 
 COMPILING_LINKS_MSG = "Compiling Links..."

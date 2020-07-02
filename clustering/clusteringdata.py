@@ -24,9 +24,9 @@ import tensor.matrixoperations as mop
 # FFT-Based Homogenization Method (Moulinec, H. and Suquet, P., 1998)
 import clustering.solution.ffthombasicscheme as ffthom
 # Links related procedures
-import Links.ioput.genLinksInputFile as LinksGLIF
-import Links.execution.LinksExecution as LinksExec
-import Links.postprocess.LinksPostProcess as LinksPP
+import links.ioput.genlinksinputdatafile as linksglif
+import links.execution.linksexec as linksexec
+import links.postprocess.linkspostprocess as linkspp
 #
 #                                                        Compute cluster-defining quantities
 # ==========================================================================================
@@ -129,14 +129,14 @@ def compclusteringdata(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict):
                 elif clustering_solution_method == 2:
                     # Generate microscale problem Links input data file
                     Links_file_name = rg_file_name + '_SCT_' + compi
-                    Links_file_path = LinksGLIF.writeLinksInputDataFile(
+                    links_file_path = linksglif.writelinksinputdatafile(
                         Links_file_name, dirs_dict, problem_dict, mat_dict, rg_dict,
                         clst_dict, mac_strain)
                     # Run Links (FEM-based homogenization method)
-                    Links_bin_path = clst_dict['Links_dict']['Links_bin_path']
-                    LinksExec.runLinks(Links_bin_path, Links_file_path)
+                    links_bin_path = clst_dict['links_dict']['links_bin_path']
+                    linksexec.runlinks(links_bin_path, links_file_path)
                     # Get the strain concentration tensor components
-                    strain_vox = LinksPP.getLinksStrainVox(Links_file_path, n_dim,
+                    strain_vox = linkspp.getlinksstrainvox(links_file_path, n_dim,
                                                            comp_order_sym, n_voxels_dims)
                 # Assemble strain concentration tensor components associated to the imposed
                 # macroscale strain loading component

@@ -171,7 +171,7 @@ def packregulargrid(discret_file_path, rve_dims, mat_dict, problem_dict):
 # ------------------------------------------------------------------------------------------
 # Package data associated to the clustering on a regular grid of pixels/voxels
 def packrgclustering(clustering_method, clustering_strategy, clustering_solution_method,
-                     Links_dict, phase_n_clusters, rg_dict):
+                     links_dict, phase_n_clusters, rg_dict):
     # Get regular grid data
     n_voxels_dims = rg_dict['n_voxels_dims']
     # Initialize array with voxels cluster labels
@@ -186,8 +186,8 @@ def packrgclustering(clustering_method, clustering_strategy, clustering_solution
     clst_dict['clustering_method'] = clustering_method
     clst_dict['clustering_strategy'] = clustering_strategy
     clst_dict['clustering_solution_method'] = clustering_solution_method
-    if len(Links_dict.keys()) > 0:
-        clst_dict['Links_dict'] = Links_dict
+    if len(links_dict.keys()) > 0:
+        clst_dict['links_dict'] = links_dict
     clst_dict['phase_n_clusters'] = phase_n_clusters
     clst_dict['phase_clusters'] = phase_clusters
     clst_dict['voxels_clusters'] = voxels_clusters

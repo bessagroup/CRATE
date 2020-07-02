@@ -347,7 +347,7 @@ def utility3():
     # Import modules
     import numpy as np
     import ntpath
-    import Links.ioput.genLinksInputFile
+    import links.ioput.genlinksinputdatafile
     #
     #                                                                            Data import
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -384,15 +384,15 @@ def utility3():
         fe_order = 'quadratic'
         # Set Links input data file path
         if fe_order == 'linear':
-            Links_file_path = ntpath.dirname(discret_file_path) + '/' + \
+            links_file_path = ntpath.dirname(discret_file_path) + '/' + \
                               rg_file_name + '_L' + '.femsh'
         else:
-            Links_file_path = ntpath.dirname(discret_file_path) + '/' + \
+            links_file_path = ntpath.dirname(discret_file_path) + '/' + \
                               rg_file_name + '_Q' + '.femsh'
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Generate Links finite element mesh
         coords,connectivities,element_phases = \
-            Links.ioput.genLinksInputFile.generateFEMesh(n_dim,rve_dims,n_voxels_dims,
+            Links.ioput.genlinksinputdatafile.genlinksfemesh(n_dim,rve_dims,n_voxels_dims,
                                                          regular_grid,fe_order)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set element designation and number of Gauss integration points
@@ -411,7 +411,7 @@ def utility3():
                 elem_type = 'HEXA20'
                 n_gp = 8
         # Open data file to append Links finite element mesh
-        data_file = open(Links_file_path,'a')
+        data_file = open(links_file_path,'a')
         # Format file structure
         write_list = ['\n' + 'ELEMENT_TYPES 1' + '\n', '1 ' + elem_type + '\n', '  ' + \
                                                                str(n_gp) + ' GP' + '\n'] + \
