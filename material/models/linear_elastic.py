@@ -29,7 +29,7 @@ import tensor.matrixoperations as mop
 #
 def setRequiredProperties():
     # Set required material properties
-    req_material_properties = ['E','v']
+    req_material_properties = ['E', 'v']
     # Return
     return req_material_properties
 #                                                                             Initialization
@@ -51,12 +51,12 @@ def init(problem_dict):
     problem_type = problem_dict['problem_type']
     # Define constitutive model state variables (names and initialization)
     state_variables_init = dict()
-    state_variables_init['e_strain_mf'] = \
-                        mop.gettensormf(np.zeros((n_dim,n_dim)),n_dim,comp_order)
-    state_variables_init['strain_mf'] = \
-                        mop.gettensormf(np.zeros((n_dim,n_dim)),n_dim,comp_order)
-    state_variables_init['stress_mf'] = \
-                        mop.gettensormf(np.zeros((n_dim,n_dim)),n_dim,comp_order)
+    state_variables_init['e_strain_mf'] = mop.gettensormf(np.zeros((n_dim, n_dim)), n_dim,
+                                                          comp_order)
+    state_variables_init['strain_mf'] = mop.gettensormf(np.zeros((n_dim, n_dim)), n_dim,
+                                                        comp_order)
+    state_variables_init['stress_mf'] = mop.gettensormf(np.zeros((n_dim, n_dim)), n_dim,
+                                                        comp_order)
     state_variables_init['is_plast'] = False
     state_variables_init['is_su_fail'] = False
     # Set additional out-of-plane strain and stress components
@@ -70,8 +70,8 @@ def init(problem_dict):
 # ==========================================================================================
 # For a given increment of strain, perform the update of the material state variables and
 # compute the associated consistent tangent modulus
-def suct(problem_dict,algpar_dict,material_properties,mat_phase,inc_strain,
-                                                                       state_variables_old):
+def suct(problem_dict, algpar_dict, material_properties, mat_phase, inc_strain,
+         state_variables_old):
     # Get problem data
     problem_type = problem_dict['problem_type']
     n_dim = problem_dict['n_dim']
@@ -87,30 +87,30 @@ def suct(problem_dict,algpar_dict,material_properties,mat_phase,inc_strain,
     #                                                             Consistent tangent modulus
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Compute Lamé parameters
-    lam = (E*v)/((1.0+v)*(1.0-2.0*v))
-    miu = E/(2.0*(1.0+v))
+    lam = (E*v)/((1.0 + v)*(1.0 - 2.0*v))
+    miu = E/(2.0*(1.0 + v))
     # Set required fourth-order tensors
-    _,_,_,fosym,fodiagtrace,_,_ = top.getidoperators(n_dim)
+    _, _, _, fosym, fodiagtrace, _, _ = top.getidoperators(n_dim)
     # Compute consistent tangent modulus according to problem type
-    if problem_type in [1,4]:
+    if problem_type in [1, 4]:
         # 2D problem (plane strain) / 3D problem
         consistent_tangent = lam*fodiagtrace + 2.0*miu*fosym
     # Build consistent tangent modulus matricial form
-    consistent_tangent_mf = mop.gettensormf(consistent_tangent,n_dim,comp_order)
+    consistent_tangent_mf = mop.gettensormf(consistent_tangent, n_dim, comp_order)
     #
     #                                                                           State update
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Build incremental strain matricial form
-    inc_strain_mf = mop.gettensormf(inc_strain,n_dim,comp_order)
+    inc_strain_mf = mop.gettensormf(inc_strain, n_dim, comp_order)
     # Update elastic strain
     e_strain_mf = e_strain_old_mf + inc_strain_mf
     # Update stress
-    stress_mf = np.matmul(consistent_tangent_mf,e_strain_mf)
+    stress_mf = np.matmul(consistent_tangent_mf, e_strain_mf)
     # Compute out-of-plane stress component in a 2D plane strain problem (output purpose
     # only)
     if problem_type == 1:
-        stress_33 = \
-             lam*(e_strain_mf[comp_order.index('11')] + e_strain_mf[comp_order.index('22')])
+        stress_33 = lam*(e_strain_mf[comp_order.index('11')] + \
+                         e_strain_mf[comp_order.index('22')])
     # Initialize state variables dictionary
     state_variables = init(problem_dict)
     # Store updated state variables in matricial form
@@ -123,12 +123,12 @@ def suct(problem_dict,algpar_dict,material_properties,mat_phase,inc_strain,
     #
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Return updated state variables and consistent tangent modulus
-    return [state_variables,consistent_tangent_mf]
+    return [state_variables, consistent_tangent_mf]
 #
 #                                                                 Consistent tangent modulus
 # ==========================================================================================
 # Compute the consistent tangent modulus
-def ct(problem_dict,properties):
+def ct(problem_dict, properties):
     # Get problem data
     problem_type = problem_dict['problem_type']
     n_dim = problem_dict['n_dim']
@@ -137,15 +137,15 @@ def ct(problem_dict,properties):
     E = properties['E']
     v = properties['v']
     # Compute Lamé parameters
-    lam = (E*v)/((1.0+v)*(1.0-2.0*v))
-    miu = E/(2.0*(1.0+v))
+    lam = (E*v)/((1.0 + v)*(1.0 - 2.0*v))
+    miu = E/(2.0*(1.0 + v))
     # Set required fourth-order tensors
-    _,_,_,fosym,fodiagtrace,_,_ = top.getidoperators(n_dim)
+    _, _, _, fosym, fodiagtrace, _, _ = top.getidoperators(n_dim)
     # Compute consistent tangent modulus according to problem type
-    if problem_type in [1,4]:
+    if problem_type in [1, 4]:
         # 2D problem (plane strain) / 3D problem
         consistent_tangent = lam*fodiagtrace + 2.0*miu*fosym
     # Build consistent tangent modulus matricial form
-    consistent_tangent_mf = mop.gettensormf(consistent_tangent,n_dim,comp_order)
+    consistent_tangent_mf = mop.gettensormf(consistent_tangent, n_dim, comp_order)
     # Return
     return consistent_tangent_mf

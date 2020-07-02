@@ -23,8 +23,8 @@ import Links.material.LinksSUCT as LinksSUCT
 #   Define material constitutive model state variables and build an initialized state
 #   variables dictionary
 #
-#   2. State update and consistent tangent
-#   --------------------------------------
+#   2. State update and consistent tangent modulus
+#   ----------------------------------------------
 #   For a given material state subjected to a given increment of strain, perform the update
 #   of the associated material state variables and compute the associated consistent tangent
 #   modulus.
@@ -32,8 +32,8 @@ import Links.material.LinksSUCT as LinksSUCT
 # Note: The required constitutive model procedures are requested from the source specified
 #       for the associated material phase in the input data file
 #
-def materialInterface(procedure,problem_dict,mat_dict,clst_dict,algpar_dict,mat_phase,
-                                                                                     *args):
+def materialinterface(procedure, problem_dict, mat_dict, clst_dict, algpar_dict, mat_phase,
+                      *args):
     # Get material data
     material_properties = mat_dict['material_properties']
     material_phases_models = mat_dict['material_phases_models']
@@ -58,14 +58,14 @@ def materialInterface(procedure,problem_dict,mat_dict,clst_dict,algpar_dict,mat_
             # the consistent tangent modulus
             inc_strain = args[0]
             state_variables_old = args[1]
-            suct_args = (problem_dict,algpar_dict,material_properties,mat_phase,
-                                                             inc_strain,state_variables_old)
+            suct_args = (problem_dict, algpar_dict, material_properties, mat_phase,
+                         inc_strain, state_variables_old)
             # Call constitutive model function to perform the state update procedure and to
             # compute the consistent tangent modulus
-            state_variables,consistent_tangent_mf = \
-                                  material_phases_models[str(mat_phase)]['suct'](*suct_args)
+            state_variables, consistent_tangent_mf = \
+                material_phases_models[str(mat_phase)]['suct'](*suct_args)
             # Return updated state variables and consistent tangent modulus
-            return [state_variables,consistent_tangent_mf]
+            return [state_variables, consistent_tangent_mf]
     #
     #                                                              Links material procedures
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -85,13 +85,13 @@ def materialInterface(procedure,problem_dict,mat_dict,clst_dict,algpar_dict,mat_
             # the consistent tangent modulus
             inc_strain = args[0]
             state_variables_old = args[1]
-            suct_args = (problem_dict,clst_dict,material_properties,material_phases_models,
-                         mat_phase,inc_strain,state_variables_old)
+            suct_args = (problem_dict, clst_dict, material_properties,
+                         material_phases_models, mat_phase, inc_strain, state_variables_old)
             # Call constitutive model function to perform the state update procedure and to
             # compute the consistent tangent modulus
-            state_variables,consistent_tangent_mf = LinksSUCT.suct(*suct_args)
+            state_variables, consistent_tangent_mf = LinksSUCT.suct(*suct_args)
             # Return updated state variables and consistent tangent modulus
-            return [state_variables,consistent_tangent_mf]
+            return [state_variables, consistent_tangent_mf]
         pass
     #
     #                                                             Abaqus material procedures
@@ -103,13 +103,13 @@ def materialInterface(procedure,problem_dict,mat_dict,clst_dict,algpar_dict,mat_
 #                                                                    (check input data file)
 # ==========================================================================================
 # Set the available material constitutive models from a given source
-def getAvailableConstitutiveModels(model_source):
+def getavailablematmodels(model_source):
     if model_source == 1:
         # CRATE material constitutive models
-        available_mat_models = ['linear_elastic','von_mises']
+        available_mat_models = ['linear_elastic', 'von_mises']
     elif model_source == 2:
         # Links material constitutive models
-        available_mat_models = ['ELASTIC','VON_MISES']
+        available_mat_models = ['ELASTIC', 'VON_MISES']
     elif model_source == 3:
         # Abaqus material constitutive models
         pass

@@ -15,7 +15,7 @@ import copy
 # Matricial operations
 import tensor.matrixoperations as mop
 # Material interface
-import material.materialInterface
+import material.materialinterface
 # Linear elastic constitutive model
 import material.models.linear_elastic
 #
@@ -67,7 +67,7 @@ def clusterssuct(problem_dict, mat_dict, clst_dict, algpar_dict, phase_clusters,
             # Perform material cluster state update and compute associated
             # consistent tangent modulus
             state_variables,consistent_tangent_mf = \
-                material.materialInterface.materialInterface(
+                material.materialinterface.materialinterface(
                     'suct', problem_dict, mat_dict, clst_dict, algpar_dict, mat_phase,
                     inc_strain, state_variables_old)
             # Store material cluster updated state variables and consistent

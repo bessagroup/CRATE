@@ -29,9 +29,9 @@ import ioput.errors as errors
 # Links related procedures
 import Links.material.LinksMaterialModels as LinksMat
 # Material interface
-import material.materialInterface
+import material.materialinterface
 # Isotropic hardening laws
-import material.setIsotropicHardening
+import material.isotropichardlaw
 # I/O utilities
 import ioput.ioutilities as ioutil
 #
@@ -200,7 +200,7 @@ def readmaterialproperties(file, file_path, keyword):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set material phase constitutive model and associated procedures
         available_mat_models = \
-            material.materialInterface.getAvailableConstitutiveModels(model_source)
+            material.materialinterface.getavailablematmodels(model_source)
         if phase_header[1] not in available_mat_models:
             location = inspect.getframeinfo(inspect.currentframe())
             errors.displayerror('E00055', location.filename, location.lineno + 1,
@@ -273,7 +273,7 @@ def readmaterialproperties(file, file_path, keyword):
                 # Get available isotropic hardening types
                 if model_source == 1:
                     available_hardening_types = \
-                        material.setIsotropicHardening.getAvailableTypes()
+                        material.isotropichardlaw.getavailabletypes()
                 elif model_source == 2:
                     available_hardening_types = ['piecewise_linear']
                 # Check if specified isotropic hardening type is available
@@ -286,7 +286,7 @@ def readmaterialproperties(file, file_path, keyword):
                     hardening_type = str(property_line[1])
                 # Get parameters required by isotropic hardening type
                 req_hardening_parameters = \
-                    material.setIsotropicHardening.setRequiredParameters(hardening_type)
+                    material.isotropichardlaw.setrequiredparam(hardening_type)
                 # Check if the required number of hardening parameters is specified
                 if len(property_line[2:]) != len(req_hardening_parameters):
                     location = inspect.getframeinfo(inspect.currentframe())
@@ -343,7 +343,7 @@ def readmaterialproperties(file, file_path, keyword):
                             hardening_parameters[str(req_hardening_parameters[k])] = \
                                 float(property_line[2 + k])
                 # Get material phase hardening law
-                hardeningLaw = material.setIsotropicHardening.setHardeningLaw(
+                hardeningLaw = material.isotropichardlaw.gethardeninglaw(
                     hardening_type)
                 # Store material phase hardening law and parameters
                 material_properties[mat_phase]['hardeningLaw'] = hardeningLaw

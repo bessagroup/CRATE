@@ -37,7 +37,7 @@ import ioput.homresoutput as hresout
 # VTK output
 import ioput.vtkoutput as vtkoutput
 # Material interface
-import material.materialInterface
+import material.materialinterface
 # Linear elastic constitutive model
 import material.models.linear_elastic
 # Macroscale load incrementation
@@ -154,11 +154,11 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         for cluster in phase_clusters[mat_phase]:
             # Initialize state variables
             clusters_state[str(cluster)] = \
-                material.materialInterface.materialInterface('init', problem_dict, mat_dict,
+                material.materialinterface.materialinterface('init', problem_dict, mat_dict,
                                                              clst_dict, algpar_dict,
                                                              mat_phase)
             clusters_state_old[str(cluster)] = \
-                material.materialInterface.materialInterface('init', problem_dict, mat_dict,
+                material.materialinterface.materialinterface('init', problem_dict, mat_dict,
                                                              clst_dict, algpar_dict,
                                                              mat_phase)
     # Get total number of clusters
