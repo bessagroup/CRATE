@@ -66,7 +66,7 @@ def searchoptkeywordline(file, keyword):
 # ==========================================================================================
 # Read a keyword of type A specification, characterized as follows:
 #
-# < keyword > < value (int) >
+# < keyword > < int >
 #
 def readtypeAkeyword(file, file_path, keyword, max):
     keyword_line_number = searchkeywordline(file, keyword)
@@ -88,7 +88,7 @@ def readtypeAkeyword(file, file_path, keyword, max):
 # Read a keyword of type B specification, characterized as follows:
 #
 # < keyword >
-# < value (float) >
+# < float >
 #
 def readtypeBkeyword(file, file_path, keyword):
     keyword_line_number = searchkeywordline(file,keyword)
@@ -121,19 +121,6 @@ def readtypeBkeyword(file, file_path, keyword):
 # of the properties specifies the type of hardening law and the associated parameters. In
 # the particular case of a piecewise linear isotropic hardening law, a list of the
 # hardening curve points must be provided below the property main specification.
-#
-# Store the material phases properties in a dictionary as
-#
-#    dictionary['phase_id'] = {'property1_name': value,
-#                              'property2_name': value,
-#                              ['hardeningLaw:' hardeningLaw(),
-#                              'hardening_parameters': hardening_parameters]}
-#
-# and the material phases constitutive models in a dictionary as
-#
-#    dictionary['phase_id'] = {'name': model_name,
-#                              'source': model_source,
-#                              'suct_function': suct_function()}
 #
 def readmaterialproperties(file, file_path, keyword):
     keyword_line_number = searchkeywordline(file, keyword)
@@ -380,15 +367,15 @@ def readmaterialproperties(file, file_path, keyword):
 #                 2D Problem                                     3D Problem
 #   --------------------------------------         --------------------------------------
 #   Macroscale_Strain or Macroscale_Stress         Macroscale_Strain or Macroscale_Stress
-#   < component_name_11 > < value >                < component_name_11 > < value >
-#   < component_name_21 > < value >                < component_name_21 > < value >
-#   < component_name_12 > < value >                < component_name_31 > < value >
-#   < component_name_22 > < value >                < component_name_12 > < value >
-#                                                  < component_name_22 > < value >
-#                                                  < component_name_32 > < value >
-#                                                  < component_name_13 > < value >
-#                                                  < component_name_23 > < value >
-#                                                  < component_name_33 > < value >
+#   < component_name_11 > < float >                < component_name_11 > < float >
+#   < component_name_21 > < float >                < component_name_21 > < float >
+#   < component_name_12 > < float >                < component_name_31 > < float >
+#   < component_name_22 > < float >                < component_name_12 > < float >
+#                                                  < component_name_22 > < float >
+#                                                  < component_name_32 > < float >
+#                                                  < component_name_13 > < float >
+#                                                  < component_name_23 > < float >
+#                                                  < component_name_33 > < float >
 #
 #
 #   Mixed_Prescription_Index (only if prescribed macroscale strains and stresses)
@@ -565,10 +552,6 @@ def readmacroscaleloading(file, file_path, mac_load_type, strain_formulation, n_
 # < phase_id > < number_of_clusters >
 # < phase_id > < number_of_clusters >
 #
-# and store it in a dictionary as
-#
-#                    dictionary['phase_id'] = number_of_clusters
-#
 def readphaseclustering(file, file_path, keyword, n_material_phases, material_properties):
     phase_n_clusters = dict()
     line_number = searchkeywordline(file, keyword) + 1
@@ -643,10 +626,6 @@ def readdiscretizationfilepath(file, file_path, keyword, valid_exts):
 #
 # RVE_Dimensions
 # < dim1_size > < dim2_size > < dim3_size >
-#
-# and store them in a list as
-#
-#               list = [ < dim1_size > , < dim2_size > [, < dim3_size >] ]
 #
 def readrvedimensions(file, file_path, keyword, n_dim):
     keyword_line_number = searchkeywordline(file, keyword)

@@ -79,9 +79,9 @@ def setinputdatafilepath(path):
 # shinyregulargrid.rgmsh
 # example/ ------- example.screen
 #            |---- shinyregulargrid.rgmsh
-#            |---- Offline_Stage/ ------- example.info
-#            |                      |---- example.cluster
+#            |---- Offline_Stage/ ------- example.clusters
 #            |                      |---- example.cit
+#            |                      |---- example_clusters.vti
 #            |---- example.hres
 #            |---- Post_Process/  ------- example.pvd
 #                                   |---- VTK/
@@ -96,13 +96,12 @@ def setinputdatafilepath(path):
 # shinyregulargrid.rgmsh - Copy of the spatial discretization file contained in the problem
 #                          folder
 # Offline_Stage/         - Offline stage folder
-# example.info           - File which contains some parameters associated to the offline
-#                          stage (serving to check if previously computed offline stage can
-#                          be considered)
-# example.cluster        - File which contains all the required information associated to
+# example.clusters       - File which contains all the required information associated to
 #                          the clustering discretization (binary format)
 # example.cit            - File which contains the cluster interaction tensors
-# example.hres           - File where standard homogenized results are stored
+# example_clusters.vti   - VTK XML file with data related to the material phases and
+#                          material clusters
+# example.hres           - File where the homogenized results are stored
 # Post_Process/          - Post processing folder
 # example.pvd            - VTK XML file which contains the references to all the snapshots
 #                          of the problem solution
@@ -120,7 +119,7 @@ def setproblemdirs(input_file_name, input_file_dir):
     ioutil.screen_file_path = problem_dir + input_file_name + '.screen'
     if os.path.isfile(ioutil.screen_file_path):
         os.remove(ioutil.screen_file_path)
-    # Set '.cluster' path
+    # Set '.clusters' path
     cluster_file_path = offline_stage_dir + input_file_name + '.clusters'
     # Set '.cit' path
     cit_file_path = offline_stage_dir + input_file_name + '.cit'

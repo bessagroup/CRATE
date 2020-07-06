@@ -51,15 +51,21 @@ def displayinfo(code, *args, **kwargs):
                           'name.' + '\n')
             sys.exit(1)
     elif code == '0':
-        arguments = ['CRATE','v1.0.0'] + \
+        arguments = ['CRATE - Clustering-based Nonlinear Analysis of Materials',
+                     'Release 1.0.0 (July 2020)'] + \
                     ioutil.convertiterabletolist(2*[args[0],]) + \
                     ioutil.convertiterabletolist(args[1:3])
         info = tuple(arguments)
-        template = '\n' + tilde_line + '\n{:^{width}}\n' + '{:^{width}}\n\n' + \
-                   'Problem under analysis: {}' + '\n\n' + \
-                   'Input data file: {}.dat' + '\n\n' + \
-                   'Starting program execution at: {} ({})\n' + tilde_line + '\n\n' + \
-                    dashed_line
+        template = '\n' + colorama.Fore.WHITE + tilde_line + colorama.Style.RESET_ALL + \
+                   colorama.Fore.WHITE + '\n{:^{width}}\n\n' + '{:^{width}}\n\n\n' + \
+                   colorama.Fore.YELLOW + 'Problem under analysis: ' + \
+                   colorama.Style.RESET_ALL + '{}' + '\n\n' + \
+                   colorama.Fore.YELLOW + 'Input data file: ' + \
+                   colorama.Style.RESET_ALL + '{}.dat' + '\n\n' + \
+                   colorama.Fore.YELLOW + 'Starting program execution at: ' + \
+                   colorama.Style.RESET_ALL + '{} ({})\n' + colorama.Fore.WHITE + \
+                   tilde_line + colorama.Style.RESET_ALL + '\n\n' + \
+                   colorama.Fore.WHITE + dashed_line + colorama.Style.RESET_ALL
     elif code == '1':
         phase_names = args[3]
         phase_times = args[4]
@@ -73,13 +79,18 @@ def displayinfo(code, *args, **kwargs):
         arguments = ioutil.convertiterabletolist(args[0:3]) + \
                     [total_time, np.floor(total_time/3600), (total_time%3600)/60] + \
                     ['Phase','Duration (s)','%'] + phase_durations[3:] + \
-                    ['Program Completed']
+                    [colorama.Fore.GREEN + 'Program Completed' + colorama.Style.RESET_ALL]
         info = tuple(arguments)
-        template = '\n' + tilde_line + '\n' + \
-                   'Ending program execution at: {} ({})\n\n' + \
-                   'Problem analysed: {}\n\n' + \
-                   'Total execution time: {:.2e}s (~{:.0f}h{:.0f}m)\n\n' + \
-                   'Execution times: \n\n' + \
+        template = '\n' + colorama.Fore.WHITE + tilde_line + colorama.Style.RESET_ALL + \
+                   '\n' + \
+                   colorama.Fore.YELLOW + 'Ending program execution at: ' + \
+                   colorama.Style.RESET_ALL + '{} ({})\n\n' + \
+                   colorama.Fore.YELLOW + 'Problem analysed: ' + \
+                   colorama.Style.RESET_ALL + '{}\n\n' + \
+                   colorama.Fore.YELLOW + 'Total execution time: ' + \
+                   colorama.Style.RESET_ALL + '{:.2e}s (~{:.0f}h{:.0f}m)\n\n' + \
+                   colorama.Fore.YELLOW + 'Execution times: \n\n' + \
+                   colorama.Style.RESET_ALL + \
                    2*indent + '{:50}{:^20}{:^5}' + '\n' + \
                    2*indent + 75*'-' + '\n' + \
                    (2*indent + '{:50}{:^20.2e}{:>5.2f} \n')*(number_of_phases-1) + \
@@ -88,11 +99,13 @@ def displayinfo(code, *args, **kwargs):
     elif code == '2':
         arguments = ioutil.convertiterabletolist((args[0],))
         info = tuple(arguments)
-        template = 'Start phase: {} \n'
+        template = colorama.Fore.GREEN + 'Start phase: ' + colorama.Fore.WHITE + \
+            '{} \n' + colorama.Style.RESET_ALL
     elif code == '3':
         arguments = ioutil.convertiterabletolist(args[0:2])
         info = tuple(arguments)
-        template = '\n\nEnd phase: {} (phase duration time = {:.2e}s)\n' + dashed_line
+        template = colorama.Fore.GREEN + '\n\nEnd phase: ' + colorama.Fore.WHITE + \
+            '{} (phase duration time = {:.2e}s)\n' + dashed_line + colorama.Style.RESET_ALL
     elif code == '5':
         if len(args) == 2:
             n_indents = args[1]

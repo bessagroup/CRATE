@@ -28,6 +28,23 @@ import ioput.errors as errors
 def packdirpaths(input_file_name, input_file_path, input_file_dir, problem_name,
                  problem_dir, offline_stage_dir, postprocess_dir, cluster_file_path,
                  cit_file_path, hres_file_path):
+    #
+    # Object                      Meaning                                           Type
+    # -------------------------------------------------------------------------------------
+    # input_file_name             Name of the user input data file                  str
+    # input_file_path             Path of the user input data file                  str
+    # input_file_dir              Directory of the user input data file             str
+    # problem_name                Name of problem under analysis                    str
+    # problem_dir                 Directory of the problem results                  str
+    # offline_stage_dir           Directory of the offline stage associated files   str
+    # cluster_file_path           Path of the .clusters file                        str
+    # cit_file_path               Path of the .cit file                             str
+    # hres_file_path              Path of the .hres file                            str
+    # postprocess_dir             Directory of the post-processing files            str
+    #
+    # Note: The meaning of the previous directories and files is detailed in the module
+    #       fileoperations (see function setproblemdirs documentation)
+    #
     # Initialize directories and paths dictionary
     dirs_dict = dict()
     # Build directories and paths dictionary
@@ -46,6 +63,15 @@ def packdirpaths(input_file_name, input_file_path, input_file_dir, problem_name,
 # ------------------------------------------------------------------------------------------
 # Package problem general data
 def packproblem(strain_formulation, problem_type, n_dim, comp_order_sym, comp_order_nsym):
+    #
+    # Object                      Meaning                                           Type
+    # -------------------------------------------------------------------------------------
+    # strain_formulation          Strain formulation                                int
+    # problem_type                Problem type                                      int
+    # n_dim                       Number of problem dimensions                      int
+    # comp_order_sym              Symmetric strain/stress components order          list
+    # comp_order_nsym             Nonsymmetric strain/stress components order       list
+    #
     # Initialize problem dictionary
     problem_dict = dict()
     # Build problem dictionary
@@ -59,6 +85,18 @@ def packproblem(strain_formulation, problem_type, n_dim, comp_order_sym, comp_or
 # ------------------------------------------------------------------------------------------
 # Package data associated to the material phases
 def packmaterialphases(n_material_phases, material_phases_models, material_properties):
+    #
+    # Object                      Meaning                                           Type
+    # -------------------------------------------------------------------------------------
+    # n_material_phases           Number of material phases                         int
+    # material_phases_models      Material phases constitutive models               dict
+    #                             key: material phase id (str)
+    # material_properties         Material phases properties                        dict
+    #                             key: material phase id (str)
+    # material_phases             Material phases ids                               list
+    # material_phases_f           Material phases volume fractions                  dict
+    #                             key: material phase id (str)
+    #
     # Initialize list with existent material phases in the microstructure
     material_phases = list()
     # Initialize dictionary with existent material phases volume fraction
@@ -76,6 +114,16 @@ def packmaterialphases(n_material_phases, material_phases_models, material_prope
 # ------------------------------------------------------------------------------------------
 # Package data associated to the macroscale loading
 def packmacroscaleloading(mac_load_type, mac_load, mac_load_presctype, n_load_increments):
+    #
+    # Object                      Meaning                                           Type
+    # -------------------------------------------------------------------------------------
+    # mac_load_type               Macroscale loading constraint type                int
+    # mac_load                    Macroscale loading constraint values              dict
+    #                             key: 'strain' and/or 'stress'
+    # mac_load_presctype          Macroscale loading component type                 dict
+    #                             key: macroscale component (str)
+    # n_load_increments           Number of macroscale load increments              int
+    #
     # Initialize macroscale loading dictionary
     macload_dict = dict()
     # Build macroscale loading dictionary
@@ -88,12 +136,25 @@ def packmacroscaleloading(mac_load_type, mac_load, mac_load_presctype, n_load_in
 # ------------------------------------------------------------------------------------------
 # Package data associated to a regular grid of pixels/voxels
 def packregulargrid(discret_file_path, rve_dims, mat_dict, problem_dict):
+    #
+    # Object                      Meaning                                           Type
+    # -------------------------------------------------------------------------------------
+    # rve_dims                    Dimensions of the RVE                             list
+    # regular_grid                Regular grid of pixels/voxels                     ndarray
+    # n_voxels_dims               Number of voxels on each dimension                list
+    # regular_grid_flat           Flattened regular grid of pixels/voxels           ndarray
+    # voxels_idx_flat             Flattened voxels indexes                          ndarray
+    # phase_voxel_flatidx         Flattened voxels indexes associated to each
+    #                             material phase                                    dict
+    #                             key: material phase id (str)
+    # rg_file_name                Name of regular grid discretization file          str
+    #
     # Get problem data
     n_dim = problem_dict['n_dim']
     # Get material data
     material_properties = mat_dict['material_properties']
     # Read the spatial discretization file (regular grid of pixels/voxels)
-    info.displayinfo('5','Reading discretization file...')
+    info.displayinfo('5', 'Reading discretization file...')
     if ntpath.splitext(ntpath.basename(discret_file_path))[-1] == '.npy':
         regular_grid = np.load(discret_file_path)
         rg_file_name = ntpath.splitext(ntpath.splitext(
@@ -172,6 +233,22 @@ def packregulargrid(discret_file_path, rve_dims, mat_dict, problem_dict):
 # Package data associated to the clustering on a regular grid of pixels/voxels
 def packrgclustering(clustering_method, clustering_strategy, clustering_solution_method,
                      links_dict, phase_n_clusters, rg_dict):
+    #
+    # Object                      Meaning                                           Type
+    # -------------------------------------------------------------------------------------
+    # clustering_method           Clustering algorithm                              int
+    # clustering_strategy         Clustering strategy                               int
+    # clustering_solution_method  Clustering solution method                        list
+    # phase_n_clusters            Number of clusters of each material phase         dict
+    #                             key: material phase id (str)
+    # phase_clusters              Clusters associated to each material phase        dict
+    #                             key: material phase id (str)
+    # voxels_clusters             Regular grid of pixels/voxels with the            ndarray
+    #                             cluster labels
+    # clusters_f                  Clusters volume fraction                          dict
+    #                             key: material cluster label (str)
+    # links_dict                  Links related variables                           dict
+    #
     # Get regular grid data
     n_voxels_dims = rg_dict['n_voxels_dims']
     # Initialize array with voxels cluster labels
@@ -197,6 +274,15 @@ def packrgclustering(clustering_method, clustering_strategy, clustering_solution
 # ------------------------------------------------------------------------------------------
 # Package data associated to the self-consistent scheme
 def packagescs(self_consistent_scheme, scs_max_n_iterations, scs_conv_tol):
+    #
+    # Object                      Meaning                                           Type
+    # -------------------------------------------------------------------------------------
+    # self_consistent_scheme  Self-consistent scheme                                int
+    # scs_max_n_iterations    Maximum number of self-consistent
+    #                         scheme iterations to convergence                      int
+    # scs_conv_tol            Self-consistent scheme convergence
+    #                         tolerance                                             float
+    #
     # Initialize self-consistent scheme dictionary
     scs_dict = dict()
     # Build self-consistent scheme dictionary
@@ -209,6 +295,17 @@ def packagescs(self_consistent_scheme, scs_max_n_iterations, scs_conv_tol):
 # Package data associated to algorithmic parameters related to the solution procedure
 def packalgparam(max_n_iterations, conv_tol, max_subincrem_level, su_max_n_iterations,
                  su_conv_tol):
+    #
+    # Object                      Meaning                                           Type
+    # -------------------------------------------------------------------------------------
+    # max_n_iterations     Maximum number of iterations to achieve
+    #                      equilibrium convergence                                  int
+    # conv_tol             Equilibrium convergence tolerance                        float
+    # max_subincrem_level  Maximum subincrementation level                          int
+    # su_max_n_iterations  Maximum number of iterations to achieve
+    #                      the state update convergence                             int
+    # su_conv_tol          State update convergence tolerance                       float
+    #
     # Initialize algorithmic parameters dictionary
     algpar_dict = dict()
     # Build algorithmic parameters dictionary
@@ -222,6 +319,14 @@ def packalgparam(max_n_iterations, conv_tol, max_subincrem_level, su_max_n_itera
 # ------------------------------------------------------------------------------------------
 # Package data associated to the VTK output
 def packvtk(is_VTK_output, *args):
+    #
+    # Object                      Meaning                                           Type
+    # -------------------------------------------------------------------------------------
+    # vtk_format           VTK file format                                          str
+    # vtk_inc_div          VTK increment output divisor                             int
+    # vtk_vars             VTK state variables output                               str
+    # vtk_precision        VTK file precision                                       str
+    #
     # Initialize VTK dictionary
     vtk_dict = dict()
     # Build VTK dictionary

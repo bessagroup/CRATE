@@ -157,14 +157,13 @@ info.displayinfo('3', 'Read input data file',
                  phase_times[phase_times.shape[0] - 1, 1] -
                  phase_times[phase_times.shape[0] - 1, 0])
 #
-#                                      Offline stage: Compute clustering-defining quantities
+#                                            Offline stage: Compute clustering-defining data
 # ==========================================================================================
 if not is_same_offstage:
     # Display starting phase information and set phase initial time
     info.displayinfo('2', 'Compute cluster-defining quantities')
     phase_init_time = time.time()
-    # Compute the quantities required to perform the clustering according to the strategy
-    # adopted
+    # Compute the data required to perform the clustering according to the adopted strategy
     clstdata.compclusteringdata(copy.deepcopy(dirs_dict), copy.deepcopy(problem_dict),
                                 copy.deepcopy(mat_dict), copy.deepcopy(rg_dict), clst_dict)
     # Set phase ending time and display finishing phase information
@@ -275,7 +274,7 @@ else:
 #                                 Online stage: Solve reduced microscale equilibrium problem
 # ==========================================================================================
 # Display starting phase information and set phase initial time
-info.displayinfo('2', 'Solve discretized Lippmann-Schwinger equations')
+info.displayinfo('2', 'Solve reduced microscale equilibrium problem')
 phase_init_time = time.time()
 # Solve the reduced microscale equilibrium problem through solution of the clusterwise
 # discretized Lippmann-Schwinger system of equilibrium equations
@@ -283,9 +282,9 @@ sca.sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     algpar_dict, vtk_dict)
 # Set phase ending time and display finishing phase information
 phase_end_time = time.time()
-phase_names.append('Solve discretized Lippmann-Schwinger equations')
+phase_names.append('Solve reduced microscale equilibrium problem')
 phase_times = np.append(phase_times, [[phase_init_time, phase_end_time]], axis=0)
-info.displayinfo('3', 'Solve discretized Lippmann-Schwinger equations',
+info.displayinfo('3', 'Solve reduced microscale equilibrium problem',
                  phase_times[phase_times.shape[0] - 1, 1] -
                  phase_times[phase_times.shape[0] - 1, 0])
 #

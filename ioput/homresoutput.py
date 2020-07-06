@@ -27,7 +27,7 @@ def writehomresfile(hres_file_path, problem_type, inc, hom_results):
               'vm_strain', 'vm_stress',
               'strain_1', 'strain_2', 'strain_3', 'stress_1', 'stress_2', 'stress_3']
     # Set column width
-    col_width = max(16,max([len(x) for x in header]) + 2)
+    col_width = max(16, max([len(x) for x in header]) + 2)
     # Open homogenized results output file (.hres) and write file header
     if not os.path.isfile(hres_file_path):
         inithomresfile(hres_file_path, col_width, header)

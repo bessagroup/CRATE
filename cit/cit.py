@@ -36,9 +36,9 @@ import cit.citoperations as citop
 # the clusters '0', '1' and '2', and the material phase '2' the clusters '3' and '4', the
 # clustering interaction tensors of the pair '12' are stored as
 #
-#   dictionary['12'] = {'03':cit_mf , '04':cit_mf, '13':cit_mf, '14:cit_mf', ...},
+#   dictionary['12'] = {'03': cit_mf , '04': cit_mf, '13': cit_mf, '14: cit_mf', ...},
 #
-#                      where 'ij':cit_mf is the matricial form of the cluster interaction
+#                      where 'ij': cit_mf is the matricial form of the cluster interaction
 #                      tensor between the clusters i and j
 #
 def clusterinteractiontensors(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict):
