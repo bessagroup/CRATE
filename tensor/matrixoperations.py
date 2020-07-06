@@ -325,10 +325,12 @@ def kelvinfactor(idx, comp_order):
 #
 def getcondmatrix(matrix, rows, cols):
     # Check validity of rows and columns indexes to perform the condensation
-    if not np.all([isinstance(rows[i], int) for i in range(len(rows))]):
+    if not np.all([isinstance(rows[i], int) or isinstance(rows[i], np.integer)
+            for i in range(len(rows))]):
         location = inspect.getframeinfo(inspect.currentframe())
         errors.displayerror('E00032', location.filename, location.lineno + 1)
-    elif not np.all([isinstance(cols[i], int) for i in range(len(cols))]):
+    elif not np.all([isinstance(cols[i], int) or isinstance(cols[i], np.integer)
+            for i in range(len(cols))]):
         location = inspect.getframeinfo(inspect.currentframe())
         errors.displayerror('E00032', location.filename, location.lineno + 1)
     elif len(list(dict.fromkeys(rows))) != len(rows) or \

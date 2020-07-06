@@ -218,12 +218,12 @@ def displayinfo(code, *args, **kwargs):
                        'Equilibrium    Mac. strain    Mac. stress' + '\n' + \
                        indent + dashed_line[:-len(indent)]
         elif mode == 'iter':
-            if not isinstance(args[4],float):
+            if not isinstance(args[4], float):
                 arguments = list(args[1:4]) + [args[5],]
                 info = tuple(arguments)
                 template = indent + ' {:^6d}    {:^12.4e}' + space2 + \
                            '{:>11.4e}         -          {:^11.4e}'
-            elif not isinstance(args[5],float):
+            elif not isinstance(args[5], float):
                 arguments = args[1:5]
                 info = tuple(arguments)
                 template = indent + ' {:^6d}    {:^12.4e}' + space2 + \
@@ -246,7 +246,7 @@ def displayinfo(code, *args, **kwargs):
                        'Equilibrium    Mac. stress    Hom. Strain' + '\n' + \
                        indent + dashed_line[:-len(indent)]
         elif mode == 'iter':
-            if not isinstance(args[4],float):
+            if not isinstance(args[4], float):
                 arguments = list(args[1:4]) + [args[5],]
                 info = tuple(arguments)
                 template = indent + ' {:^6d}    {:^12.4e}' + space2 + \

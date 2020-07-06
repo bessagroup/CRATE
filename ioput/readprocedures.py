@@ -77,7 +77,7 @@ def readtypeAkeyword(file, file_path, keyword, max):
     elif not ioutil.checkposint(line[1]):
         location = inspect.getframeinfo(inspect.currentframe())
         errors.displayerror('E00007', location.filename, location.lineno + 1, keyword)
-    elif isinstance(max,int):
+    elif isinstance(max, int) or isinstance(max, np.integer):
         if int(line[1]) > max:
             location = inspect.getframeinfo(inspect.currentframe())
             errors.displayerror('E00007',location.filename,location.lineno + 1, keyword)

@@ -991,8 +991,8 @@ def displayexception(*args):
 # ==========================================================================================
 # Set ordinal number suffix
 def getordinalnumber(x):
-    suffix_list = ['st','nd','rd','th']
-    if (not isinstance(x,int) and not isinstance(x,np.integer)) or x < 0:
+    suffix_list = ['st', 'nd', 'rd', 'th']
+    if (not isinstance(x, int) and not isinstance(x, np.integer)) or x < 0:
         location = inspect.getframeinfo(inspect.currentframe())
         displayerror('E00037', location.filename, location.lineno + 1)
     else:
