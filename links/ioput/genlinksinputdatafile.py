@@ -89,7 +89,7 @@ def writelinksinputdatafile(file_name, dirs_dict, problem_dict, mat_dict, rg_dic
                                                                                    '\n'] + \
                  ['\n' + 'SOLVER ' + solver + '\n'] + \
                  ['\n' + 'PARALLEL_SOLVER ' + str(parallel_solver) + '\n'] + \
-                 ['\n' + 'VTK_OUTPUT' + '\n'] + \
+                 ['\n' + 'VTK_OUTPUT NONE' + '\n'] + \
                  ['\n' + 'Element_Average_Output ' + str(element_avg_output_mode) + '\n']
     # Write Links input data file
     links_file.writelines(write_list)
