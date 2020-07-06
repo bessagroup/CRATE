@@ -28,14 +28,16 @@ def displayerror(code, *args):
     display_features = ioutil.setdisplayfeatures()
     output_width, dashed_line, indent, asterisk_line = display_features[0:4]
     # Set error display header and footer
-    header = tuple(ioutil.convertiterabletolist(['!! Error !!', code]) + \
-                   ioutil.convertiterabletolist(args[0:2]))
-    template_header = '\n' + asterisk_line + '\n' + \
-                      '{:^{width}}' + '\n\n' + 'Code: {}' + '\n\n' + \
-                      'Traceback: {} (at line {})' + '\n\n'
-    footer = tuple(ioutil.convertiterabletolist(('Program Aborted',)))
-    template_footer = '\n' + asterisk_line + '\n\n' + \
-                      '{:^{width}}' + '\n'
+    error_color = colorama.Fore.RED
+    header = tuple(['!! Error !!', code] + list(args[0:2]))
+    template_header = error_color + '\n' + asterisk_line + '\n' + \
+                      '{:^{width}}' + '\n\n' + 'Code: ' + \
+                      colorama.Style.RESET_ALL + '{}' + '\n\n' + \
+                      error_color + 'Traceback: ' + \
+                      colorama.Style.RESET_ALL + '{} (at line {})' + '\n\n'
+    footer = tuple(['Program Aborted',])
+    template_footer = error_color + '\n' + asterisk_line + '\n\n' + \
+                      '{:^{width}}' + '\n' + colorama.Style.RESET_ALL
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set errors to display
     if code == 'E00001':
@@ -56,7 +58,7 @@ def displayerror(code, *args):
                    indent + 'The input data file name must only contain letters, ' + \
                    'numbers or underscores.'
     elif code == 'E00003':
-        arguments = ioutil.convertiterabletolist([args[2],])
+        arguments = [args[2],]
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been found in the input data file.'
@@ -75,8 +77,7 @@ def displayerror(code, *args):
                    indent + '< value >'
     elif code == 'E00005':
         suffix = getordinalnumber(args[3])
-        arguments = ioutil.convertiterabletolist(args[2:4]) + \
-                        ioutil.convertiterabletolist(2*(args[2],))
+        arguments = list(args[2:4]) + list(2*[args[2],])
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
@@ -98,7 +99,7 @@ def displayerror(code, *args):
                    indent + 'property1_name < value >' + '\n' + \
                    indent + 'property2_name < value >' + \
                    '\n' + \
-                   indent + '5 model1_name 3' + '\n' + \
+                   indent + '5 model1_name 3 [ < model_source > ]' + '\n' + \
                    indent + 'property1_name < value >' + \
                    '\n' + \
                    indent + 'property2_name < value >' + \
@@ -106,8 +107,7 @@ def displayerror(code, *args):
                    indent + 'property3_name < value >'
     elif code == 'E00006':
         suffix = getordinalnumber(args[3])
-        arguments = ioutil.convertiterabletolist(args[2:5]) + \
-                        ioutil.convertiterabletolist(2*(args[2],))
+        arguments = list(args[2:5]) + list(2*[args[2],])
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
@@ -130,14 +130,14 @@ def displayerror(code, *args):
                    indent + 'property1_name < value >' + '\n' + \
                    indent + 'property2_name < value >' + \
                    '\n' + \
-                   indent + '5 model1_name 3' + '\n' + \
+                   indent + '5 model1_name 3 [ < model_source > ]' + '\n' + \
                    indent + 'property1_name < value >' + \
                    '\n' + \
                    indent + 'property2_name < value >' + \
                    '\n' + \
                    indent + 'property3_name < value >'
     elif code == 'E00007':
-        arguments = ioutil.convertiterabletolist(3*(args[2],))
+        arguments = list(3*[args[2],])
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
@@ -151,8 +151,7 @@ def displayerror(code, *args):
                    indent + '{} < option or value >'
     elif code == 'E00008':
         suffix = getordinalnumber(args[3])
-        arguments = ioutil.convertiterabletolist(args[2:4]) + \
-                        ioutil.convertiterabletolist(2*(args[2],))
+        arguments = list(args[2:4]) + list(2*[args[2],])
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
@@ -174,7 +173,7 @@ def displayerror(code, *args):
                    indent + 'descriptor_name_12 < value >' + '\n' + \
                    indent + 'descriptor_name_22 < value >'
     elif code == 'E00009':
-        arguments = ioutil.convertiterabletolist(args[2:4])
+        arguments = list(args[2:4])
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'It was requested the consideration of the previously ' + \
@@ -218,7 +217,7 @@ def displayerror(code, *args):
         'macroscale stress.'
     elif code == 'E00013':
         suffix = getordinalnumber(args[3])
-        arguments = ioutil.convertiterabletolist(args[2:4] + 2*(args[2],))
+        arguments = list(args[2:4]) + list(2*[args[2],])
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
@@ -246,7 +245,7 @@ def displayerror(code, *args):
                    indent + '{}'
     elif code == 'E00015':
         n_valid_exts = len(args[3])
-        arguments = [args[2],] + ioutil.convertiterabletolist(args[3])
+        arguments = [args[2],] + list(args[3])
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
@@ -887,9 +886,9 @@ def displayerror(code, *args):
     # sys.exit(1)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display error
-    error_color = colorama.Fore.RED
-    template_header = error_color + template_header + colorama.Style.RESET_ALL
-    template_footer = error_color + template_footer + colorama.Style.RESET_ALL
+    #error_color = colorama.Fore.RED
+    #template_header = error_color + template_header + colorama.Style.RESET_ALL
+    #template_footer = error_color + template_footer + colorama.Style.RESET_ALL
     if code in ['E00001', 'E00002', 'E00010']:
         print(template_header.format(*header, width=output_width))
         print(template.format(*values, width=output_width))
@@ -909,11 +908,13 @@ def displaywarning(code, *args):
     display_features = ioutil.setdisplayfeatures()
     output_width, dashed_line, indent, asterisk_line = display_features[0:4]
     # Set error display header and footer
-    header = tuple(ioutil.convertiterabletolist(['!! Warning !!',code]) + \
-                   ioutil.convertiterabletolist(args[0:2]))
-    template_header = '\n' + asterisk_line + '\n' + \
-                      '{:^{width}}' + '\n\n' + 'Code: {}' + '\n\n' + \
-                      'Traceback: {} (at line {})' + '\n\n'
+    warning_color = colorama.Fore.YELLOW
+    header = tuple(['!! Warning !!', code] + list(args[0:2]))
+    template_header = warning_color + '\n' + asterisk_line + '\n' + \
+                      '{:^{width}}' + '\n\n' + 'Code: ' + colorama.Style.RESET_ALL + \
+                      '{}' + '\n\n' + \
+                      warning_color + 'Traceback: ' + colorama.Style.RESET_ALL + \
+                      '{} (at line {})' + '\n\n'
     footer = tuple([' '])
     template_footer = '\n' + asterisk_line + '\n'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -964,16 +965,17 @@ def displayexception(*args):
     display_features = ioutil.setdisplayfeatures()
     output_width, dashed_line, indent, asterisk_line = display_features[0:4]
     # Set built-in exception display header and footer
-    header = tuple(['!! Built-In Exception !!'] + \
-                   ioutil.convertiterabletolist(args[0:2]))
-    template_header = '\n' + asterisk_line + '\n' + \
+    exception_color = colorama.Fore.RED
+    header = tuple(['!! Built-In Exception !!',] + list(args[0:2]))
+    template_header = exception_color + '\n' + asterisk_line + '\n' + \
                       '{:^{width}}' + '\n\n' + \
-                      'Traceback: {} (at line {})' + '\n\n'
-    footer = tuple(ioutil.convertiterabletolist(('Program Aborted',)))
+                      'Traceback: ' + colorama.Style.RESET_ALL + \
+                      '{} (at line {})' + '\n\n'
+    footer = tuple([exception_color + 'Program Aborted' + colorama.Style.RESET_ALL,])
     template_footer = '\n' + asterisk_line + '\n\n' + \
                       '{:^{width}}' + '\n'
     # Set built-in exception to display
-    arguments = ioutil.convertiterabletolist([args[2],])
+    arguments = [args[2],]
     values = tuple(arguments)
     template = 'Details:' + '\n\n' + \
                indent + '{}'

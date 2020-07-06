@@ -51,11 +51,6 @@ def setdisplayfeatures():
 #
 #                                                                           Format functions
 # ==========================================================================================
-# Convert iterable to list
-def convertiterabletolist(iterable):
-    list = [element for element in iterable]
-    return list
-# ------------------------------------------------------------------------------------------
 # Remove ANSI escape sequences from string
 def escapeANSI(string):
     ansi_escape = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')

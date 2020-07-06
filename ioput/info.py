@@ -34,7 +34,7 @@ def displayinfo(code, *args, **kwargs):
     # Set informations and formats to display
     if code == '-1':
         status = args[1]
-        arguments = ioutil.convertiterabletolist([args[0],])
+        arguments = [args[0],]
         info = tuple(arguments)
         if status == 0:
             template = 4*'\n' + 'Problem directory: {}' + '\n\n' + \
@@ -52,9 +52,7 @@ def displayinfo(code, *args, **kwargs):
             sys.exit(1)
     elif code == '0':
         arguments = ['CRATE - Clustering-based Nonlinear Analysis of Materials',
-                     'Release 1.0.0 (July 2020)'] + \
-                    ioutil.convertiterabletolist(2*[args[0],]) + \
-                    ioutil.convertiterabletolist(args[1:3])
+                     'Release 1.0.0 (July 2020)'] + 2*[args[0],] + list(args[1:3])
         info = tuple(arguments)
         template = '\n' + colorama.Fore.WHITE + tilde_line + colorama.Style.RESET_ALL + \
                    colorama.Fore.WHITE + '\n{:^{width}}\n\n' + '{:^{width}}\n\n\n' + \
@@ -76,7 +74,7 @@ def displayinfo(code, *args, **kwargs):
         for i in range(0, number_of_phases):
             phase_durations.insert(3*i, phase_names[i])
             phase_durations.insert(3*i + 2, (phase_durations[3*i + 1]/total_time)*100)
-        arguments = ioutil.convertiterabletolist(args[0:3]) + \
+        arguments = list(args[0:3]) + \
                     [total_time, np.floor(total_time/3600), (total_time%3600)/60] + \
                     ['Phase','Duration (s)','%'] + phase_durations[3:] + \
                     [colorama.Fore.GREEN + 'Program Completed' + colorama.Style.RESET_ALL]
@@ -97,12 +95,12 @@ def displayinfo(code, *args, **kwargs):
                    2*indent + 75*'-' + '\n\n\n' + \
                    '{:^{width}}' + '\n'
     elif code == '2':
-        arguments = ioutil.convertiterabletolist((args[0],))
+        arguments = [args[0],]
         info = tuple(arguments)
         template = colorama.Fore.GREEN + 'Start phase: ' + colorama.Fore.WHITE + \
             '{} \n' + colorama.Style.RESET_ALL
     elif code == '3':
-        arguments = ioutil.convertiterabletolist(args[0:2])
+        arguments = args[0:2]
         info = tuple(arguments)
         template = colorama.Fore.GREEN + '\n\nEnd phase: ' + colorama.Fore.WHITE + \
             '{} (phase duration time = {:.2e}s)\n' + dashed_line + colorama.Style.RESET_ALL
@@ -111,7 +109,7 @@ def displayinfo(code, *args, **kwargs):
             n_indents = args[1]
         else:
             n_indents = 1
-        arguments = ioutil.convertiterabletolist((args[0],))
+        arguments = [args[0],]
         info = tuple(arguments)
         template = '\n' + n_indents*indent + '> {}'
     elif code == '6':
