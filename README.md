@@ -42,7 +42,12 @@ Besides its direct application in the analysis of a given material's effective r
 in a first-order hierarchical coupled multi-scale scheme<sup>[4](#f4)</sup> or in a data-driven material design framework<sup>[5](#f5)</sup>.
 
 > **Note:** The heterogeneous material representative volume element (RVE) is part of the input data that must be provided to CRATE (see here),
-i.e., CRATE does **not** perform the generation of microstructures. 
+i.e., CRATE does **not** perform the computational generation of microstructures. 
+
+#### Computational framework
+CRATE is designed and implemented in Python (Python 3 release), making it easily portable between all major computer platforms, easily integrated with
+other softwares implemented in different programming languages and benefiting from an extensive collection of prebuilt (standard library) and third-party libraries. Given the extensive numerical nature of the program, its implementation relies heavily on the well-known NumPy and SciPy scientific computing packages, being most numerical tasks dispatched to compiled C code inside the Python interpreter.
+
 
 ****
 
@@ -52,9 +57,7 @@ i.e., CRATE does **not** perform the generation of microstructures.
 curse of dimensionality. Computer Methods in Applied Mechanics and Engineering, 320:633–
 667.
 
-#### Computational framework
-CRATE is designed and implemented in Python (Python 3 release), making it easily portable between all major computer platforms, easily integrated with
-other softwares implemented in different programming languages and benefiting from an extensive collection of prebuilt (standard library) and third-party libraries. Given the extensive numerical nature of the program, its implementation relies heavily on the well-known NumPy and SciPy scientific computing packages, being most numerical tasks dispatched to compiled C code inside the Python interpreter.
+
 
 ## Main features
 
@@ -74,12 +77,30 @@ other softwares implemented in different programming languages and benefiting fr
 * Self-Consistent Clustering Analysis (SCA) clustering-based reduced order model<sup>[6](#f6)</sup> proposed by Zeliang Liu and coworkers;
 * FFT-based homogenization basic scheme<sup>[7](#f7)</sup> proposed by H. Moulinec and P. Suquet;
 * FEM-based homogenization through suitable interface with LINKS<sup>[5](#f5)</sup> (includes FE mesh generation and post-processing);
+* Clustering algorithms imported from [scikit-learn](https://scikit-learn.org/stable/index.html) python machine learning package;
+
+#### Post-processing:
+* VTK (XML format) output files allowing the visualization of data associated to the material microstructure (material phases, material clusters, ...) and response local fields (strain, stress, internal variables, ...);
 
 ***
 <sup id="f5"> 5 </sup> LINKS (Large Strain Implicit Non-linear Analysis of Solids Linking Scales) is a multi-scale finite element code developed by CM2S research group at Faculty of Engineering of University of Porto.  
 <sup id="f6"> 6 </sup> Liu, Z., Bessa, M., and Liu, W. K. (2016a). Self-consistent clustering analysis: An efficient multi-
 scale scheme for inelastic heterogeneous materials. Computer Methods in Applied Mechanics
-and Engineering, 306:319–341  
+and Engineering, 306:319–341.  
 <sup id="f7"> 7 </sup> Moulinec, H. and Suquet, P. (1994). A fast numerical method for computing the linear and
 nonlinear mechanical properties of composites. A fast numerical method for computing the
-linear and nonlinear mechanical properties of composites, 318(11):1417–1423
+linear and nonlinear mechanical properties of composites, 318(11):1417–1423.
+
+## Quick guide
+
+#### Requirements
+Some software must be installed in order to successfully run CRATE:
+* Python 3.X (see [here](https://www.python.org/downloads/)) - Required to compile (byte code) and run (Python Virtual Machine) CRATE;
+> In Linux/UNIX operative systems, python can be simply installed from apt library by executing the following command:  
+`sudo apt install python3.X`  
+* PyPi pip (see [here](https://pypi.org/project/pip/)) - Required to install Python 3 packages;
+> In Linux/UNIX operative systems, pip can be simply installed from apt library by executing the following command:  
+`sudo apt install python3-pip`
+* ParaView (see [here](https://www.paraview.org/download/)) - Required to visualize the data contained in the VTK output files;
+
+#### Run CRATE (general workflow)
