@@ -205,9 +205,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     #                                                      Material clusters elastic tangent
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Compute the elastic tangent (matricial form) associated to each material cluster
-    clusters_De_mf = clstsuct.clusterselastictanmod(copy.deepcopy(problem_dict),
-                                                    material_properties, material_phases,
-                                                    phase_clusters)
+    clusters_De_mf = clstsuct.clusterselastictanmod(problem_dict, material_properties,
+                                                    material_phases, phase_clusters)
     # --------------------------------------------------------------------------------------
     # Validation:
     if is_Validation[2]:
@@ -222,8 +221,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set the incremental macroscale load data
     inc_mac_load_mf, n_presc_mac_strain, n_presc_mac_stress, presc_strain_idxs, \
-        presc_stress_idxs = macincrem.macloadincrem(copy.deepcopy(problem_dict),
-                                                    copy.deepcopy(macload_dict))
+        presc_stress_idxs = macincrem.macloadincrem(problem_dict, macload_dict)
     # --------------------------------------------------------------------------------------
     # Validation:
     if is_Validation[3]:
@@ -255,8 +253,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     material_properties_ref['v'] = v_ref
     # Compute the reference material elastic tangent (matricial form) and compliance tensor
     # (matrix)
-    De_ref_mf, Se_ref_matrix = scs.refelastictanmod(copy.deepcopy(problem_dict),
-                                                    material_properties_ref)
+    De_ref_mf, Se_ref_matrix = scs.refelastictanmod(problem_dict, material_properties_ref)
     # --------------------------------------------------------------------------------------
     # Validation:
     if is_Validation[4]:
@@ -370,9 +367,9 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             # Update cluster interaction tensors and assemble global cluster interaction
             # matrix
             global_cit_mf = citop.updassemblecit(
-                copy.deepcopy(problem_dict), material_properties_ref, Se_ref_matrix,
-                material_phases, n_total_clusters, phase_n_clusters, phase_clusters,
-                cit_1_mf, cit_2_mf, cit_0_freq_mf)
+                problem_dict, material_properties_ref, Se_ref_matrix, material_phases,
+                n_total_clusters, phase_n_clusters, phase_clusters, cit_1_mf, cit_2_mf,
+                cit_0_freq_mf)
             #
             #                                                  Newton-Raphson iterative loop
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -572,9 +569,9 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                         clusters_D_mf)
                 else:
                     Jacobian = eqms.buildjacobian(
-                        copy.deepcopy(problem_dict), material_phases, phase_clusters,
-                        n_total_clusters, n_presc_mac_stress, presc_stress_idxs,
-                        global_cit_D_De_ref_mf, clusters_f, clusters_D_mf)
+                        problem_dict, material_phases, phase_clusters, n_total_clusters,
+                        n_presc_mac_stress, presc_stress_idxs, global_cit_D_De_ref_mf,
+                        clusters_f, clusters_D_mf)
                 # --------------------------------------------------------------------------
                 # Validation:
                 if is_Validation[15]:
@@ -694,8 +691,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Compute the reference material elastic tangent (matricial form) and compliance
             # tensor (matrix)
-            De_ref_mf, Se_ref_matrix = scs.refelastictanmod(
-                copy.deepcopy(problem_dict), material_properties_ref)
+            De_ref_mf, Se_ref_matrix = scs.refelastictanmod(problem_dict,
+                                                            material_properties_ref)
             # ------------------------------------------------------------------------------
             # Validation:
             if is_Validation[4]:

@@ -164,8 +164,7 @@ if not is_same_offstage:
     info.displayinfo('2', 'Compute cluster-defining quantities')
     phase_init_time = time.time()
     # Compute the data required to perform the clustering according to the adopted strategy
-    clstdata.compclusteringdata(copy.deepcopy(dirs_dict), copy.deepcopy(problem_dict),
-                                copy.deepcopy(mat_dict), copy.deepcopy(rg_dict), clst_dict)
+    clstdata.compclusteringdata(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict)
     # Set phase ending time and display finishing phase information
     phase_end_time = time.time()
     phase_names.append('Compute cluster-defining quantities')
@@ -181,13 +180,11 @@ if not is_same_offstage:
     info.displayinfo('2', 'Perform clustering')
     phase_init_time = time.time()
     # Perform the clustering according to the selected method and adopted strategy
-    clst.clustering(copy.deepcopy(dirs_dict), copy.deepcopy(mat_dict),
-                    copy.deepcopy(rg_dict), clst_dict)
+    clst.clustering(dirs_dict, mat_dict, rg_dict, clst_dict)
     # Write clustering VTK file
     if vtk_dict['is_VTK_output']:
         info.displayinfo('5', 'Writing cluster VTK file...')
-        vtkoutput.writevtkclusterfile(vtk_dict, copy.deepcopy(dirs_dict),
-                                      copy.deepcopy(rg_dict), copy.deepcopy(clst_dict))
+        vtkoutput.writevtkclusterfile(vtk_dict, dirs_dict, rg_dict, clst_dict)
     # Set phase ending time and display finishing phase information
     phase_end_time = time.time()
     phase_names.append('Perform clustering')
@@ -214,8 +211,7 @@ else:
     cluster_file.close()
     # Check compatibility between the loaded clusters data and the input data file
     info.displayinfo('5','Performing compatibility check on loaded data...')
-    clst.checkclstcompat(copy.deepcopy(problem_dict), copy.deepcopy(rg_dict),
-                         copy.deepcopy(clst_dict_read), copy.deepcopy(clst_dict))
+    clst.checkclstcompat(problem_dict, rg_dict, clst_dict_read, clst_dict)
     # Set phase ending time and display finishing phase information
     phase_end_time = time.time()
     phase_names.append('Import known clustering data')
@@ -231,9 +227,7 @@ if not is_same_offstage:
     info.displayinfo('2', 'Compute cluster interaction tensors')
     phase_init_time = time.time()
     # Compute the cluster interaction tensors
-    cit.clusterinteractiontensors(copy.deepcopy(dirs_dict), copy.deepcopy(problem_dict),
-                                  copy.deepcopy(mat_dict), copy.deepcopy(rg_dict),
-                                  clst_dict)
+    cit.clusterinteractiontensors(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict)
     # Set phase ending time and display finishing phase information
     phase_end_time = time.time()
     phase_names.append('Compute cluster interaction tensors')
@@ -262,7 +256,7 @@ else:
     # Check compatibility between the loaded cluster interaction tensors and the material
     # phases existent in the spatial discretization file
     info.displayinfo('5', 'Performing compatibility check on loaded data...')
-    citop.checkcitcompat(copy.deepcopy(mat_dict), copy.deepcopy(clst_dict))
+    citop.checkcitcompat(mat_dict, clst_dict)
     # Set phase ending time and display finishing phase information
     phase_end_time = time.time()
     phase_names.append('Import cluster interaction tensors')

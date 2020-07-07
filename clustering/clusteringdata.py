@@ -122,9 +122,7 @@ def compclusteringdata(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict):
                 if clustering_solution_method == 1:
                     # Run Moulinec and Suquet FFT-based homogenization method and get the
                     # strain concentration tensor components
-                    strain_vox = ffthom.ffthombasicscheme(copy.deepcopy(problem_dict),
-                                                          copy.deepcopy(rg_dict),
-                                                          copy.deepcopy(mat_dict),
+                    strain_vox = ffthom.ffthombasicscheme(problem_dict, rg_dict, mat_dict,
                                                           mac_strain)
                 elif clustering_solution_method == 2:
                     # Generate microscale problem Links input data file

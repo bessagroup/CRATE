@@ -32,7 +32,7 @@ def clusterselastictanmod(problem_dict, material_properties, material_phases,
         for cluster in phase_clusters[mat_phase]:
             # Compute elastic tangent
             consistent_tangent_mf = material.models.linear_elastic.ct(
-                copy.deepcopy(problem_dict), material_properties[mat_phase])
+                problem_dict, material_properties[mat_phase])
             # Store material cluster elastic tangent
             clusters_De_mf[str(cluster)] = consistent_tangent_mf
     # Return

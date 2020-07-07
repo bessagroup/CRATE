@@ -14,8 +14,6 @@
 import numpy as np
 # Inspect file name and line
 import inspect
-# Shallow and deep copy operations
-import copy
 # Display errors, warnings and built-in exceptions
 import ioput.errors as errors
 # Tensorial operations
@@ -34,8 +32,7 @@ def refelastictanmod(problem_dict, material_properties_ref):
     n_dim = problem_dict['n_dim']
     comp_order = problem_dict['comp_order_sym']
     # Compute reference material elastic tangent (matricial form)
-    De_ref_mf = material.models.linear_elastic.ct(copy.deepcopy(problem_dict),
-                                                  material_properties_ref)
+    De_ref_mf = material.models.linear_elastic.ct(problem_dict, material_properties_ref)
     # Get reference material Young modulus and Poisson ratio
     E_ref = material_properties_ref['E']
     v_ref = material_properties_ref['v']
