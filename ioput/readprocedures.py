@@ -582,19 +582,15 @@ def readphaseclustering(file, file_path, keyword, n_material_phases, material_pr
 #
 #                                                                   Discretization file path
 # ==========================================================================================
-# Read the spatial discretization file absolute path
+# Read the spatial discretization file path
 #
 # Discretization_File
-# < absolute_path >
+# < path >
 #
 def readdiscretizationfilepath(file, file_path, keyword, valid_exts):
     line_number = searchkeywordline(file, keyword) + 1
     discret_file_path = linecache.getline(file_path, line_number).strip()
-    if not os.path.isabs(discret_file_path):
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00014', location.filename, location.lineno + 1, keyword,
-                            discret_file_path)
-    elif not os.path.isfile(discret_file_path):
+    if not os.path.isfile(discret_file_path):
         location = inspect.getframeinfo(inspect.currentframe())
         errors.displayerror('E00014', location.filename, location.lineno + 1, keyword,
                             discret_file_path)
@@ -605,13 +601,12 @@ def readdiscretizationfilepath(file, file_path, keyword, valid_exts):
             location = inspect.getframeinfo(inspect.currentframe())
             errors.displayerror('E00015', location.filename, location.lineno + 1, keyword,
                                 valid_exts)
-        return discret_file_path
     else:
         if not ntpath.splitext(ntpath.basename(discret_file_path))[-1] in valid_exts:
             location = inspect.getframeinfo(inspect.currentframe())
             errors.displayerror('E00015', location.filename, location.lineno + 1, keyword,
                                 valid_exts)
-        return discret_file_path
+    return os.path.abspath(discret_file_path)
 #
 #                                                                             RVE dimensions
 # ==========================================================================================

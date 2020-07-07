@@ -58,7 +58,7 @@ def rmunreqdirs(target_dir, required_dirnames):
 # Set input data file name, absolute path and directory
 def setinputdatafilepath(path):
     # Set input data file path, directory, name and extension
-    input_file_path = path
+    input_file_path = os.path.abspath(path)
     input_file_dir = ntpath.dirname(input_file_path) + '/'
     input_file_name = ntpath.splitext(ntpath.basename(input_file_path))[-2]
     input_file_ext = ntpath.splitext(ntpath.basename(input_file_path))[-1]

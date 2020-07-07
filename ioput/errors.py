@@ -240,8 +240,8 @@ def displayerror(code, *args):
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
                    'input data file. ' + '\n' + \
                    indent + 'In particular, the specified path to the spatial ' + \
-                   'discretization file is not an absolute ' + '\n' + \
-                   indent + 'path (mandatory) or does not exist.' + '\n\n' + \
+                   'discretization file does not exist or' + '\n' + \
+                   indent + 'cannot be found.' + '\n\n' + \
                    indent + '{}'
     elif code == 'E00015':
         n_valid_exts = len(args[3])
