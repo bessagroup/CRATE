@@ -16,7 +16,7 @@ to perform **accurate** and **efficient** multi-scale nonlinear analyses of hete
 
 #### Authors
 This program initial version was fully coded and documented by Bernardo P. Ferreira<sup>[1](#f1)</sup> and developed
-in colaboration with Dr. Miguel A. Bessa<sup>[2](#f2)</sup> and Dr. Francisco M. Andrade Pires<sup>[3](#f3)</sup>.
+in colaboration with Miguel A. Bessa<sup>[2](#f2)</sup> and Francisco M. Andrade Pires<sup>[3](#f3)</sup>.
 
 <sup id="f1"> 1 </sup> bpferreira@fe.up.pt, CM2S and Bessa research groups, Department of Mechanical Engineering, Faculty of Engineering, University of Porto  
 <sup id="f2"> 2 </sup> m.a.bessa@tudelft.nl, Bessa research group, Faculty of Mechanical, Maritime and Materials Engineering, Delft University of Technology  
@@ -29,10 +29,10 @@ new materials with innovative and enhanced properties. This goal is achieved thr
 coupling between first-order computational homogenization and a clustering-based reduced
 order modeling approach, allowing the efficient solution of a given microscale equilibrium problem
 generally formulated as:
-1. Define the representative volume element (RVE) of the heterogeneous material under analysis;
-2. Enforce first-order macroscale strain and/or stress loading constraints;
-3. Solve the microscale equilibrium problem with suitable boundary conditions;
-4. Compute the heterogeneous material first-order homogenized response through computational homogenization.
+1. Definiton of a representative volume element (RVE) of the heterogeneous material under analysis;
+2. Enforcement of first-order macroscale strain and/or stress loading constraints;
+3. Solution of the microscale equilibrium problem with suitable boundary conditions;
+4. Computation of the heterogeneous material first-order homogenized response through computational homogenization.
 
 The clustering-based reduced order modeling approach comes into play by compressing the RVE into a **cluster-reduced
 representative volume element (CRVE)**, aiming to reduce the overall computational cost of
@@ -41,22 +41,45 @@ the analysis at the expense of an acceptable decrease of accuracy.
 Besides its direct application in the analysis of a given material's effective response, CRATE can be, for instance, properly embedded
 in a first-order hierarchical coupled multi-scale scheme<sup>[4](#f4)</sup> or in a data-driven material design framework<sup>[5](#f5)</sup>.
 
-> **Note:** The heterogeneous material representative volume element (RVE) is part of the input data that must be provided to CRATE. 
+> **Note:** The heterogeneous material representative volume element (RVE) is part of the input data that must be provided to CRATE (see here),
+i.e., CRATE does **not** perform the generation of microstructures. 
 
-***
+****
 
 <sup id="f4"> 4 </sup> Feyel, F. (1998). Application Du Calcul Parallèle Aux Modèles à Grand Nombre de Variables Internes. PhD Thesis, École Nationale Supérieure des Mines de Paris.  
-<sup id="f5"> 5 </sup> e.g. Bessa, M., Bostanabad, R., Liu, Z., Hu, A., Apley, D. W., Brinson, C., Chen, W., and Liu, W. K.
+<sup id="f5"> 5 </sup> See e.g. Bessa, M., Bostanabad, R., Liu, Z., Hu, A., Apley, D. W., Brinson, C., Chen, W., and Liu, W. K.
 (2017). A framework for data-driven analysis of materials under uncertainty: Countering the
 curse of dimensionality. Computer Methods in Applied Mechanics and Engineering, 320:633–
 667.
 
 #### Computational framework
-
-
-
-
+CRATE is designed and implemented in Python (Python 3 release), making it easily portable between all major computer platforms, easily integrated with
+other softwares implemented in different programming languages and benefiting from an extensive collection of prebuilt (standard library) and third-party libraries. Given the extensive numerical nature of the program, its implementation relies heavily on the well-known NumPy and SciPy scientific computing packages, being most numerical tasks dispatched to compiled C code inside the Python interpreter.
 
 ## Main features
 
-## Usage guide
+#### General formulation:
+* Quasi-static loading conditions;
+* Monotonic loading paths;
+* Infinitesimal strains;
+* Nonlinear material constitutive behavior (elasticity and plasticity);
+
+#### Material constitutive modeling:
+* CRATE's embedded material model database includes:  
+  * Isotropic linear elastic model;
+  * Von Mises elastoplastic model with isotropic strain hardening.
+* Interface with the constitutive model database of LINKS<sup>[5](#f5)</sup>, accounting for several infinitesimal and finite strain hyperelastic, elastoplastic and elastoviscoplastic constitutive models;
+
+#### Methods:
+* Self-Consistent Clustering Analysis (SCA) clustering-based reduced order model<sup>[6](#f6)</sup> proposed by Zeliang Liu and coworkers;
+* FFT-based homogenization basic scheme<sup>[7](#f7)</sup> proposed by H. Moulinec and P. Suquet;
+* FEM-based homogenization through suitable interface with LINKS<sup>[5](#f5)</sup> (includes FE mesh generation and post-processing);
+
+***
+<sup id="f5"> 5 </sup> LINKS (Large Strain Implicit Non-linear Analysis of Solids Linking Scales) is a multi-scale finite element code developed by CM2S research group at Faculty of Engineering of University of Porto.  
+<sup id="f6"> 6 </sup> Liu, Z., Bessa, M., and Liu, W. K. (2016a). Self-consistent clustering analysis: An efficient multi-
+scale scheme for inelastic heterogeneous materials. Computer Methods in Applied Mechanics
+and Engineering, 306:319–341  
+<sup id="f7"> 7 </sup> Moulinec, H. and Suquet, P. (1994). A fast numerical method for computing the linear and
+nonlinear mechanical properties of composites. A fast numerical method for computing the
+linear and nonlinear mechanical properties of composites, 318(11):1417–1423
