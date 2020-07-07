@@ -1,0 +1,381 @@
+#
+# CRATE (Clustering-based Nonlinear Analysis of Materials) - Input data file
+# ==========================================================================================
+# Description:
+# This file provides a complete input data file of the CRATE program, where each parameter
+# specification (either mandatory or optional) is fully documented (meaning, syntax,
+# available options). Note that it can be readily used by replacing the '[insert here]'
+# boxes with the suitable specification!
+#
+# Note: Mandatory and optional specifications are denoted by [M] and [O], respectively,
+#       being the former presented first for practical use.
+# ==========================================================================================
+# Development history:
+# Bernardo P. Ferreira | June 2020 | Initial version (along with CRATE v1.0.0).
+# ==========================================================================================
+
+
+#                                                                     Strain formulation [M]
+# ==========================================================================================
+# Meaning:   Strain formulation (infinitesimal or finite strains)
+#
+# Syntax:    Strain_Formulation x
+#
+# x:         1 - Infinitesimal strain formulation
+#            2 - Finite strain formulation
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
+#                                                                           Problem type [M]
+# ==========================================================================================
+# Meaning:   Problem type formulation
+#
+# Syntax:    Problem_Type x
+#
+# x:         1 - Plane Strain (2D)
+#            4 - Tridimensional (3D)
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
+#                                                                         RVE dimensions [M]
+# ==========================================================================================
+# Meaning:   Dimensions of the quadrilateral (2D) / hexahedral (3D) RVE
+#
+# Syntax:    RVE_Dimensions
+#            x1 x2 (2D) / x1 x2 x3
+#
+# xi:        float
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
+#                                                                        Material phases [M]
+# ==========================================================================================
+# Meaning:   Description of the microstructure in terms of material phases, including the
+#            number of material phases and the constitutive model (model, properties and
+#            source) associated to each of them
+#
+# Syntax:    Material_Phases x
+#            phase_ID model_name n_properties model_source
+#            property_1_name y
+#            property_2_name y
+#            phase_ID model_name n_properties model_source
+#            property_1_name y
+#            property_2_name y
+#
+# x:                       integer
+# phase_ID:                integer
+# model_name:              string (e.g. linear_elastic, von_mises)
+# n_properties:            integer (number of required material properties)
+# property_X_name:         string (e.g E, v)
+# y:                       integer or float
+#
+# model_source (optional): 1 - CRATE material database model (default)
+#                          2 - Links material database model
+#
+# Option 2 (Links material database model):
+#
+# Syntax:    Links_Python_bin
+#            x
+#
+# x:         string (Links python binary, '.so')
+#
+# Strain hardening law: The syntax of an isotropic strain hardening law associated to a
+#                       given elastoplastic constitutive model is slightly different and
+#                       depends on the type of strain hardening law
+#
+#                       Syntax (piecewise_linear): IHL piecewise_linear x
+#                                                  x0 y0
+#                                                  x1 y1
+#                                                  x2 y2
+#
+#                       xi, yi:                    float, float (hardening curve point)
+#
+#                       Syntax (other, e.g. linear): IHL linear s0 a [b, c, ...]
+#
+#                       s0:                          float (initial yield stress)
+#                       a:                           float (hardening modulus)
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
+#                                                                     Macroscale loading [M]
+# ==========================================================================================
+# Meaning:   Definition of the type of macroscale loading constraints (strain, stress or
+#            strain-stress) and the associated values
+#
+# Syntax:    Macroscale_Loading x
+#
+# x:         1 - Macroscale strain constraint
+#            2 - Macroscale stress constraint
+#            3 - Macroscale strain and stress constraint
+#
+#
+# Option 1 (macroscale strain constraint):
+#
+# Syntax:    Macroscale_Strain
+#            comp_name y
+#            comp_name y
+#
+# Option 2 (macroscale stress constraint):
+#
+# Syntax:    Macroscale_Stress
+#            comp_name y
+#            comp_name y
+#
+# Option 3 (macroscale strain and stress constraint):
+#
+# Syntax:    Macroscale_Strain
+#            comp_name y
+#            comp_name y
+#
+#            Macroscale_Stress
+#            comp_name y
+#            comp_name y
+#
+#            Mixed_Prescription_Index
+#            z z z z z
+#
+# comp_name: string (e.g. E11, SXX)
+# y:         float
+# z:         integer (0 - strain component, 1 - stress component)
+#
+# Note: The macroscale strain or stress tensor is always assumed to be nonsymmetric and all
+#       components (4 in 2D problem, 9 in 3D problem) must be specified in columnwise order
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
+#                                                                 Self-Consistent scheme [M]
+# ==========================================================================================
+# Meaning:   Self-consistent scheme employed to perform the update of the reference material
+#            properties
+#
+# Syntax:    Self_Consistent_Scheme x
+#
+# x:         1 - Regression-based self-consistent scheme
+#            2 - Projection-based self-consistent scheme
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
+#                                                                   Clustering algorithm [M]
+# ==========================================================================================
+# Meaning:   Unsupervised machine learning clustering algorithm employed to perform the
+#            clustering-based domain decomposition
+#
+# Syntax:    Clustering_Method x
+#
+# x:         1 - k-Means clustering
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
+#                                                                     Number of clusters [M]
+# ==========================================================================================
+# Meaning:   Number of clusters associated to each material phase
+#
+# Syntax:    Number_of_Clusters
+#            phase_ID x
+#            phase_ID x
+#
+# x:         integer
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
+#                                                                    Load incrementation [M]
+# ==========================================================================================
+# Meaning:   Number of equal-magnitude increments in which to enforce the macroscale loading
+#            constraints
+#
+# Syntax:    Number_of_Load_Increments x
+#
+# x:         integer
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
+#                                                                    Discretization file [M]
+# ==========================================================================================
+# Meaning:   Path of the discretization file where the microstructure discretization in a
+#            regular grid of pixels (2D) / voxels (3D) is specified. This file must be
+#            generated with the Python library Numpy's function save in binary format and
+#            have extension '.rgmsh(.npy)'.
+#
+# Syntax:    Discretization_File
+#            x
+#
+# x:         string (discretization file path)
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
+#                                    Self-Consistent scheme maximum number of iterations [O]
+# ==========================================================================================
+# Meaning:   Maximum number of iterations allowed for the convergence of the self-consistent
+#            iterative scheme
+#
+# Syntax:    SCS_Max_Number_of_Iterations x
+#
+# x:         integer (default to 20)
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
+#                                           Self-Consistent scheme convergence tolerance [O]
+# ==========================================================================================
+# Meaning:   Convergence tolerance adopted for the convergence of the self-consistent
+#            iterative scheme
+#
+# Syntax:    SCS_Convergence_Tolerance
+#            x
+#
+# x:         float (default to 1e-4)
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
+#                                                                    Clustering strategy [O]
+# ==========================================================================================
+# Meaning:   Clustering strategy employed to perform the clustering-based domain
+#            decomposition, namely related to the data considered for this purpose
+#
+# Syntax:    Clustering_Strategy x
+#
+# x:         1 - Clustering based on local elastic strain concentration tensors (default)
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
+#                                                    Clustering data DNS solution method [O]
+# ==========================================================================================
+# Meaning:   DNS method employed to obtain the required data to perform the clustering-based
+#            domain decomposition
+#
+# Syntax:    Clustering_Solution_Method x
+#
+# x:         1 - FFT-based homogenization basic scheme of H. Moulinec and P. Suquet (1994)
+#                (default)
+#            2 - Finite Element Method from multi-scale finite element code Links
+#
+# Option 2 (Finite Element Method from multi-scale finite element code Links):
+#
+# Syntax:    Links_bin
+#            x
+#
+#            Links_FE_Order y
+#
+#            Links_Python_bin
+#            z
+#
+# x:         string (Links binary path)
+# y:         linear - QUAD4 (2D) / HEXA8 (3D) finite element mesh
+#            quadratic - QUAD8 (2D) / HEXA20 (3D) finite element mesh
+# z:         string (Links python binary, '.so')
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
+#                                Equilibrium Newton-Raphson maximum number of iterations [O]
+# ==========================================================================================
+# Meaning:   Maximum number of iterations allowed for the convergence of the Newton-Raphson
+#            iterative scheme associated to the microscale equilibrium problem
+#
+# Syntax:    Max_Number_of_Iterations x
+#
+# x:         integer (default to 20)
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
+#                                       Equilibrium Newton-Raphson convergence tolerance [O]
+# ==========================================================================================
+# Meaning:   Convergence tolerance adopted for the convergence of the Newton-Raphson
+#            iterative scheme associated to the microscale equilibrium problem
+#
+# Syntax:    Convergence_Tolerance
+#            x
+#
+# x:         float (default to 1e-6)
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
+#                                     Material state update maximum number of iterations [O]
+# ==========================================================================================
+# Meaning:   Maximum number of iterations allowed for for the convergence of the
+#            Newton-Raphson iterative scheme associated to state update of a nonlinear
+#            material constitutive model from CRATE
+#
+# Syntax:    SU_Max_Number_of_Iterations x
+#
+# x:         float (default to 20)
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
+#                                            Material state update convergence tolerance [O]
+# ==========================================================================================
+# Meaning:   Convergence tolerance adopted for the convergence of the Newton-Raphson
+#            iterative scheme associated to state update of a nonlinear material
+#            constitutive model from CRATE
+#
+# Syntax:    SU_Convergence_Tolerance
+#            x
+#
+# x:         float (default to 1e-6)
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
+#                                                                VTK (XML format) output [O]
+# ==========================================================================================
+# Meaning:   Output of data associated to snapshots (macroscale loading increments) of the
+#            microscale equilibrium problem solution into VTK files (XML format)
+#
+# Syntax:    VTK_Output [a, b, c, ...]
+#
+# a:         all (default) or every x (where x: integer (output every x increments))
+# b:         all_variables (output all state variables, default) or common_variables (output
+#            only the state variables common to all constitutive models)
+# ------------------------------------------------------------------------------------------
+[insert here]
