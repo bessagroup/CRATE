@@ -18,9 +18,9 @@ to perform **accurate** and **efficient** multi-scale nonlinear analyses of hete
 This program initial version was fully coded and documented by Bernardo P. Ferreira<sup>[1](#f1)</sup> and developed
 in colaboration with Miguel A. Bessa<sup>[2](#f2)</sup> and Francisco M. Andrade Pires<sup>[3](#f3)</sup>.
 
-<sup id="f1"> 1 </sup> bpferreira@fe.up.pt, CM2S and Bessa research groups, Department of Mechanical Engineering, Faculty of Engineering, University of Porto  
-<sup id="f2"> 2 </sup> m.a.bessa@tudelft.nl, Bessa research group, Faculty of Mechanical, Maritime and Materials Engineering, Delft University of Technology  
-<sup id="f3"> 3 </sup> fpires@fe.up.pt, CM2S research group, Department of Mechanical Engineering, Faculty of Engineering, University of Porto
+<sup id="f1"> 1 </sup> [bpferreira@fe.up.pt](mailto:bpferreira@fe.up.pt), CM2S and Bessa research groups, Department of Mechanical Engineering, Faculty of Engineering, University of Porto  
+<sup id="f2"> 2 </sup> [m.a.bessa@tudelft.nl](mailto:m.a.bessa@tudelft.nl), Bessa research group, Faculty of Mechanical, Maritime and Materials Engineering, Delft University of Technology  
+<sup id="f3"> 3 </sup> [fpires@fe.up.pt](mailto:fpires@fe.up.pt), CM2S research group, Department of Mechanical Engineering, Faculty of Engineering, University of Porto
 
 #### Description
 CRATE has been designed with the main purpose of performing accurate and efficient
@@ -96,11 +96,18 @@ linear and nonlinear mechanical properties of composites, 318(11):1417–1423.
 #### Requirements
 Some software must be installed in order to successfully run CRATE:
 * Python 3.X (see [here](https://www.python.org/downloads/)) - Required to compile (byte code) and run (Python Virtual Machine) CRATE;
-> In Linux/UNIX operative systems, python can be simply installed from apt library by executing the following command:  
-`sudo apt install python3.X`  
-* PyPi pip (see [here](https://pypi.org/project/pip/)) - Required to install Python 3 packages;
-> In Linux/UNIX operative systems, pip can be simply installed from apt library by executing the following command:  
-`sudo apt install python3-pip`
-* ParaView (see [here](https://www.paraview.org/download/)) - Required to visualize the data contained in the VTK output files;
+
+  > In Linux/UNIX operative systems, python can be simply installed from apt library by executing the following command:  
+  `sudo apt install python3.X`  
+
+* PyPi pip (see [here](https://pypi.org/project/pip/)) - Required to install Python 3 packages (learn [here](https://docs.python.org/3/installing/));
+
+  > In Linux/UNIX operative systems, pip can be simply installed from apt library by executing the following command:  
+  `sudo apt install python3-pip`
+  
+* ParaView (see [here](https://www.paraview.org/download/)) - Required to visualize the data contained in the VTK output files (learn [here](https://www.paraview.org/resources/));  
+
+  > In Linux/UNIX operative systems, ParaView can be installed by placing the tarball in the installation directory and extracting it by executing the following command:  
+  `sudo tar -xvf ParaView-< version >.tar.gz`
 
 #### Run CRATE (general workflow)
