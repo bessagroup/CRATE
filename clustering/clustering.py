@@ -26,8 +26,6 @@ import ioput.info as info
 import ioput.errors as errors
 # Matricial operations
 import tensor.matrixoperations as mop
-# Imported for validation against Matlab only (remove)
-import scipy.io as sio
 #
 #                                                                         Perform clustering
 # ==========================================================================================
@@ -79,31 +77,6 @@ def clustering(dirs_dict, mat_dict, rg_dict, clst_dict):
                 # Store current material phase cluster labels
                 clst_process_lbls_flat[phase_voxel_flatidx[mat_phase]] = \
                     kmeans.labels_ + label_correction
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Validation
-                if False:
-                    # Set functions being validated
-                    val_functions = ['performClustering()',]
-                    # Display validation header
-                    print('\nValidation: ',
-                            (len(val_functions)*'{}, ').format(*val_functions), 3*'\b', ' ')
-                    print(92*'-')
-                    # Display validation
-                    np.set_printoptions(linewidth=np.inf)
-                    print('\nClustering process: ', iclst + 1)
-                    print('\nData indexes: ', data_indexes)
-                    print('\nMaterial phase: ', mat_phase)
-                    print('\nNumber of clusters: ', n_clusters)
-                    print('\nClustering quantities:')
-                    print(clst_quantities)
-                    print('\nMaterial phase indexes:',phase_voxel_flatidx[mat_phase])
-                    print('\nMaterial phase dataset:')
-                    print(dataset)
-                    print('\nLabels (-1 means not labeled):')
-                    print(clst_process_lbls_flat)
-                    # Display validation footer
-                    print('\n' + 92*'-' + '\n')
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Update label correction
                 label_correction = label_correction + n_clusters
             # Check if all the training dataset points have been labeled
@@ -155,26 +128,11 @@ def clustering(dirs_dict, mat_dict, rg_dict, clst_dict):
         voxels_clusters[voxel_idx] = sort_dict[voxels_clusters[voxel_idx]]
     # Store cluster labels
     clst_dict['voxels_clusters'] = voxels_clusters
-    # --------------------------------------------------------------------------------------
-    # Validation:
-    if False:
-        # Dump voxels_clusters (Matlab consistent rowise flat format) in Matlab file
-        print('\nidx_from_python:')
-        print(voxels_clusters.flatten('F'))
-        matlab_dic = {'idx_from_python':voxels_clusters.flatten('F')}
-        sio.savemat(dirs_dict['input_file_dir'] + dirs_dict['input_file_name'] +
-                                                                          '_idx',matlab_dic)
-    # --------------------------------------------------------------------------------------
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Store material clusters belonging to each material phase
     for mat_phase in material_phases:
         clst_dict['phase_clusters'][mat_phase] = \
             np.unique(voxels_clusters.flatten()[phase_voxel_flatidx[mat_phase]])
-    # --------------------------------------------------------------------------------------
-    # Validation:
-    if False:
-        print('\nCheck cluster labels sorting:\n', clst_dict['phase_clusters'])
-    # --------------------------------------------------------------------------------------
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Compute voxel volume
     voxel_vol = np.prod([float(rve_dims[i])/n_voxels_dims[i] for i in range(len(rve_dims))])
@@ -184,13 +142,6 @@ def clustering(dirs_dict, mat_dict, rg_dict, clst_dict):
     for cluster in np.unique(voxels_clusters):
         clst_dict['clusters_f'][str(cluster)] = \
             (np.sum(voxels_clusters == cluster)*voxel_vol)/rve_vol
-        # ----------------------------------------------------------------------------------
-        # Validation:
-        if False:
-            print('\nCluster volume fractions:')
-            print('\ncluster:', cluster, ' volume fraction:', \
-                                                      clst_dict['clusters_f'][str(cluster)])
-        # ----------------------------------------------------------------------------------
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Open file which contains all the required information associated to the clustering
     # discretization

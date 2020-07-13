@@ -77,7 +77,7 @@ def scsupdate(self_consistent_scheme, problem_dict, inc_strain_mf, inc_stress_mf
         #            strain/stress tensors
         #
         scs_option = 1
-        # OPTION 2 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        # OPTION 1 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         if scs_option == 1:
             # Get problem data
             problem_type = problem_dict['problem_type']
@@ -236,15 +236,5 @@ def checkscsconvergence(E_ref, v_ref, material_properties_ref, scs_conv_tol):
     # change of the reference material elastic properties converged according to the defined
     # convergence tolerance
     is_scs_converged = (norm_d_E_ref < scs_conv_tol) and (norm_d_v_ref < scs_conv_tol)
-    # ------------------------------------------------------------------------------
-    # Validation:
-    if False:
-        section = 'Self-consistent scheme convergence evaluation'
-        print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
-        print('\n' + 'd_E_ref = ' + '{:11.4e}'.format(d_E_ref))
-        print('\n' + 'd_v_ref = ' + '{:11.4e}'.format(d_v_ref))
-        print('\n' + 'norm_d_E_ref = ' + '{:11.4e}'.format(norm_d_E_ref))
-        print('\n' + 'norm_d_v_ref = ' + '{:11.4e}'.format(norm_d_v_ref))
-    # ------------------------------------------------------------------------------
     # Return
     return [is_scs_converged, norm_d_E_ref, norm_d_v_ref]

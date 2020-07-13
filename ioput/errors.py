@@ -880,15 +880,8 @@ def displayerror(code, *args):
                    'binary is not an absolute path' + '\n' + \
                    indent + '(mandatory) or does not exist.' + '\n\n' + \
                    indent + '{}'
-    # print(template_header.format(*header,width=output_width))
-    # print(template.format(*values,width=output_width))
-    # print(template_footer.format(*footer,width=output_width))
-    # sys.exit(1)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display error
-    #error_color = colorama.Fore.RED
-    #template_header = error_color + template_header + colorama.Style.RESET_ALL
-    #template_footer = error_color + template_footer + colorama.Style.RESET_ALL
     if code in ['E00001', 'E00002', 'E00010']:
         print(template_header.format(*header, width=output_width))
         print(template.format(*values, width=output_width))

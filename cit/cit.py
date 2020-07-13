@@ -71,106 +71,30 @@ def clusterinteractiontensors(dirs_dict, problem_dict, mat_dict, rg_dict, clst_d
         n_dim, rve_dims, comp_order, n_voxels_dims)
     # Loop over material phases
     for mat_phase_B in material_phases:
-        # ----------------------------------------------------------------------------------
-        # Validation:
-        if False:
-            print('\nMaterial phase B:',mat_phase_B)
-        # ----------------------------------------------------------------------------------
         # Loop over material phase B clusters
         for cluster_J in phase_clusters[mat_phase_B]:
-            # ------------------------------------------------------------------------------
-            # Validation:
-            if False:
-                print('\n  Material phase B - Cluster J:',cluster_J)
-            # ------------------------------------------------------------------------------
             # Set material phase B cluster characteristic function
             _, cluster_J_filter_dft = citop.clusterfilter(cluster_J, voxels_clusters)
-            # ------------------------------------------------------------------------------
-            # Validation:
-            if False and mat_phase_B == '1' and cluster_J == 0:
-                print('\nmat_phase_B:',mat_phase_B,'cluster_J:',cluster_J)
-                print('\nclusterJ_filter_DFT:\n')
-                print(cluster_J_filter_dft)
-            # ------------------------------------------------------------------------------
             # Perform discrete convolution between the material phase B cluster
             # characteristic function and each of Green operator material independent
             # terms
             gop_1_filt_vox, gop_2_filt_vox, gop_0_freq_filt_vox = \
                 citop.clstgopconvolution(comp_order, rve_dims, n_voxels_dims,
                     cluster_J_filter_dft, gop_1_dft_vox, gop_2_dft_vox, gop_0_freq_dft_vox)
-            # ------------------------------------------------------------------------------
-            # Validation:
-            if False and mat_phase_B == '2' and cluster_J == 2:
-                val_voxel_idx = (2,1,3)
-                print('\nmat_phase_B:',mat_phase_B,'cluster_J:',cluster_J)
-                print('\nGop_1_filt_vox[' + str(val_voxel_idx) + ']:\n')
-                for i in range(len(comp_order)):
-                    compi = comp_order[i]
-                    for j in range(len(comp_order)):
-                        compj = comp_order[j]
-                        print('  Component' + compi + compj + ':', \
-                             '{:>11.4e}'.format(gop_1_filt_vox[compi+compj][val_voxel_idx]))
-                print('\nGop_2_filt_vox[' + str(val_voxel_idx) + ']:\n')
-                for i in range(len(comp_order)):
-                    compi = comp_order[i]
-                    for j in range(len(comp_order)):
-                        compj = comp_order[j]
-                        print('  Component' + compi + compj + ':', \
-                             '{:>11.4e}'.format(gop_2_filt_vox[compi+compj][val_voxel_idx]))
-                print('\nGop_0_freq_filt_vox[' + str(val_voxel_idx) + ']:\n')
-                for i in range(len(comp_order)):
-                    compi = comp_order[i]
-                    for j in range(len(comp_order)):
-                        compj = comp_order[j]
-                        print('  Component' + compi + compj + ':', \
-                        '{:>11.4e}'.format(gop_0_freq_filt_vox[compi+compj][val_voxel_idx]))
-            # ------------------------------------------------------------------------------
             # Loop over material phases
             for mat_phase_A in material_phases:
-                # --------------------------------------------------------------------------
-                # Validation:
-                if False:
-                    print('\n    Material phase A:',mat_phase_A)
-                # --------------------------------------------------------------------------
                 # Set material phase pair dictionary
                 mat_phase_pair = mat_phase_A + '_' + mat_phase_B
                 # Loop over material phase A clusters
                 for cluster_I in phase_clusters[mat_phase_A]:
-                    # ----------------------------------------------------------------------
-                    # Validation:
-                    if False:
-                        print('\n      Material phase A - Cluster I:',cluster_I)
-                    # ----------------------------------------------------------------------
                     # Set material phase A cluster characteristic function
                     cluster_I_filter, _ = citop.clusterfilter(cluster_I, voxels_clusters)
-                    # ----------------------------------------------------------------------
-                    # Validation:
-                    if False and mat_phase_B == '2' and cluster_J == 2 and \
-                            mat_phase_A == '2' and cluster_I == 2:
-                        print('\nmat_phase_B:',mat_phase_B,'cluster_J:',cluster_J)
-                        print('mat_phase_A:',mat_phase_A,'cluster_I:',cluster_I)
-                        print('\nclusterI_filter:')
-                        print(cluster_I_filter.flatten('F'))
-                    # ----------------------------------------------------------------------
                     # Perform discrete integral over the spatial domain of material phase A
                     # cluster I
                     cit_1_integral_mf, cit_2_integral_mf, cit_0_freq_integral_mf = \
                         citop.discretecitintegral(comp_order, cluster_I_filter,
                                                    gop_1_filt_vox, gop_2_filt_vox,
                                                    gop_0_freq_filt_vox)
-                    # ----------------------------------------------------------------------
-                    # Validation:
-                    if False and mat_phase_B == '2' and cluster_J == 2 and \
-                                                      mat_phase_A == '2' and cluster_I == 2:
-                        print('\nmat_phase_B:',mat_phase_B,'cluster_J:',cluster_J)
-                        print('mat_phase_A:',mat_phase_A,'cluster_I:',cluster_I)
-                        print('\ncit_1_integral_mf\n')
-                        print(cit_1_integral_mf)
-                        print('\ncit_2_integral_mf\n')
-                        print(cit_2_integral_mf)
-                        print('\ncit_0_freq_integral_mf\n')
-                        print(cit_0_freq_integral_mf)
-                    # ----------------------------------------------------------------------
                     # Compute cluster interaction tensor between the material phase A
                     # cluster and the material phase B cluster
                     rve_vol = np.prod(rve_dims)
@@ -181,27 +105,6 @@ def clusterinteractiontensors(dirs_dict, problem_dict, mat_dict, rg_dict, clst_d
                     cit_0_freq_pair_mf = \
                         np.multiply((1.0/(clusters_f[str(cluster_I)]*rve_vol)),
                                     cit_0_freq_integral_mf)
-                    # ----------------------------------------------------------------------
-                    # Validation:
-                    if False and mat_phase_B == '2' and cluster_J == 2 and \
-                                                      mat_phase_A == '2' and cluster_I == 2:
-                        # Divide by number of clusters instead of cluster volume fraction
-                        # (only on this particular cluster interaction tensor!)
-                        cit_1_pair_mf = \
-                                (1.0/np.sum(voxels_clusters == cluster_I))*cit_1_integral_mf
-                        cit_2_pair_mf = \
-                                (1.0/np.sum(voxels_clusters == cluster_I))*cit_2_integral_mf
-                        cit_0_freq_pair_mf = \
-                           (1.0/np.sum(voxels_clusters == cluster_I))*cit_0_freq_integral_mf
-                        print('mat_phase_B:',mat_phase_B,'cluster_J:',cluster_J)
-                        print('mat_phase_A:',mat_phase_A,'cluster_I:',cluster_I)
-                        print('\ncit_1_pair_mf\n')
-                        print(cit_1_pair_mf)
-                        print('\ncit_2_pair_mf\n')
-                        print(cit_2_pair_mf)
-                        print('\ncit_0_freq_pair_mf\n')
-                        print(cit_0_freq_pair_mf)
-                    # ----------------------------------------------------------------------
                     # Store cluster interaction tensor between material phase A cluster and
                     # material phase B cluster
                     cluster_pair = str(cluster_I) + '_' + str(cluster_J)

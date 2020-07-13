@@ -134,38 +134,6 @@ def gop_matindterms(n_dim, rve_dims, comp_order, n_voxels_dims):
             np.square(np.square(var3)), where = abs(var3) > 1e-10)
         # Compute Green operator zero-frequency term
         gop_0_freq_dft_vox[comp][tuple(n_dim*(0,))] = 1.0
-    # --------------------------------------------------------------------------------------
-    # Validation:
-    if False:
-        np.set_printoptions(linewidth=np.inf)
-        np.set_printoptions(precision=4)
-        val_voxel_idx = (2,1,3)
-        val_voxel_freqs = [freqs_dims[i][val_voxel_idx[i]] for i in range(n_dim)]
-        val_voxel_freqs_norm = np.linalg.norm(val_voxel_freqs)
-        print('\nGreen operator term 1 components (freq_idx = ' + \
-                                                                str(val_voxel_idx) + '):\n')
-        print('  Frequency point = ', val_voxel_freqs)
-        print('  Norm            = ', '{:>11.4e}'.format(val_voxel_freqs_norm))
-        for i in range(len(mf_indexes)):
-            comp = ''.join([str(x+1) for x in fo_indexes[i]])
-            print('  Component ' + comp + ': ', \
-                                '{:>11.4e}'.format(gop_1_dft_vox[comp][val_voxel_idx]))
-        print('\nGreen operator term 2 components (freq_idx = ' + \
-                                                                str(val_voxel_idx) + '):\n')
-        print('  Frequency point = ', val_voxel_freqs)
-        print('  Norm            = ', '{:>11.4e}'.format(val_voxel_freqs_norm))
-        for i in range(len(mf_indexes)):
-            comp = ''.join([str(x+1) for x in fo_indexes[i]])
-            print('  Component ' + comp + ': ', \
-                                '{:>11.4e}'.format(gop_2_dft_vox[comp][val_voxel_idx]))
-        print('\nGreen operator term 3 components (freq_idx = ' + str((0,0,0)) + '):\n')
-        print('  Frequency point = ', val_voxel_freqs)
-        print('  Norm            = ', '{:>11.4e}'.format(val_voxel_freqs_norm))
-        for i in range(len(mf_indexes)):
-            comp = ''.join([str(x+1) for x in fo_indexes[i]])
-            print('  Component ' + comp + ': ', \
-                                '{:>11.4e}'.format(gop_0_freq_dft_vox[comp][(0,0,0)]))
-    # --------------------------------------------------------------------------------------
     # Return
     return [gop_1_dft_vox, gop_2_dft_vox, gop_0_freq_dft_vox]
 #
@@ -294,22 +262,6 @@ def updassemblecit(problem_dict, material_properties_ref, Se_ref_matrix, materia
     global_cit_mf = np.add(np.add(np.multiply(gop_factor_1, global_cit_1_mf),
                                   np.multiply(gop_factor_2, global_cit_2_mf)),
                            np.multiply(gop_factor_0_freq, global_cit_0_freq_mf))
-    # --------------------------------------------------------------------------------------
-    # Validation:
-    if False:
-        print('\n' + 'global_cit_1_mf:' + '\n')
-        print(global_cit_1_mf)
-        print('\n' + 'global_cit_2_mf:' + '\n')
-        print(global_cit_2_mf)
-        print('\n' + 'global_cit_0_freq_mf:' + '\n')
-        print(global_cit_0_freq_mf)
-        print('\n' + 'gop_factor_1: ' + str(gop_factor_1))
-        print('\n' + 'gop_factor_2: ' + str(gop_factor_2))
-        print('\n' + 'gop_factor_0_freq: ' + '\n')
-        print(gop_factor_0_freq)
-        print('\n' + 'global_cit_mf: ' + '\n')
-        print(global_cit_mf)
-    # --------------------------------------------------------------------------------------
     # Return
     return global_cit_mf
 # ------------------------------------------------------------------------------------------
@@ -338,18 +290,6 @@ def assemblecit(material_phases, phase_n_clusters, phase_clusters, comp_order, c
                 for cluster_I in phase_clusters[mat_phase_A]:
                     # Set cluster pair
                     cluster_pair = str(cluster_I) + '_' + str(cluster_J)
-                    # ----------------------------------------------------------------------
-                    # Validation:
-                    if False:
-                        section = 'assembleCIT'
-                        print('\n' + '>>>> ' + section + ' ' + (92-len(section)-4)*'-')
-                        print('\n' + 'mat_phase_A: ' + mat_phase_A + \
-                                                    '  (cluster_I: ' + str(cluster_I) + ')')
-                        print(       'mat_phase_B: ' + mat_phase_B + \
-                                                    '  (cluster_J: ' + str(cluster_J) + ')')
-                        print('\n' + 'cit_X_mf[mat_phase_pair][cluster_pair]:' + '\n')
-                        print(cit_X_mf[mat_phase_pair][cluster_pair])
-                    # ----------------------------------------------------------------------
                     # Set assembling ranges
                     i_init = iclst*len(comp_order)
                     i_end = i_init + len(comp_order)

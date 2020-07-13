@@ -168,16 +168,5 @@ def checkeqlbconvergence2(comp_order, n_total_clusters, inc_mac_load_mf, n_presc
     else:
         is_converged = (error_A1 < conv_tol) and (error_A2 < conv_tol) \
             and (error_A3 < conv_tol)
-    # --------------------------------------------------------------------------------------
-    # Validation:
-    if False:
-        section = 'Convergence evaluation'
-        print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
-        print('\n' + 'error_A1 = ' + str(error_A1))
-        print('\n' + 'error_A2 = ' + str(error_A2))
-        print('\n' + 'error_A3 = ' + str(error_A3))
-        print('\n' + 'is_converged = ' + str(is_converged))
-        print('\n' + 'conv_tol = ' + str(conv_tol))
-    # --------------------------------------------------------------------------------------
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return [is_converged, error_A1, error_A2, error_A3]

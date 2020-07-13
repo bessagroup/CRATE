@@ -167,16 +167,5 @@ def checkeqlbconvergence(comp_order, n_total_clusters, inc_mac_load_mf, n_presc_
     # the macroscale prescribed strain tensor) for output purposes only
     error_inc_hom_strain = abs((np.linalg.norm(inc_hom_strain_mf) -
                                 np.linalg.norm(inc_mix_strain_mf)))/ strain_norm_factor
-    # --------------------------------------------------------------------------------------
-    # Validation:
-    if False:
-        section = 'Convergence evaluation'
-        print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
-        print('\n' + 'error_A1 = ' + str(error_A1))
-        print('\n' + 'error_A2 = ' + str(error_A2))
-        print('\n' + 'error_inc_hom_strain = ' + str(error_inc_hom_strain))
-        print('\n' + 'is_converged = ' + str(is_converged))
-        print('\n' + 'conv_tol = ' + str(conv_tol))
-    # --------------------------------------------------------------------------------------
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return [is_converged, error_A1, error_A2, error_inc_hom_strain]

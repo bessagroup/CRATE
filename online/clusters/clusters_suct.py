@@ -74,26 +74,6 @@ def clusterssuct(problem_dict, mat_dict, clst_dict, algpar_dict, phase_clusters,
             # tangent modulus
             clusters_state[str(cluster)] = state_variables
             clusters_D_mf[str(cluster)] = consistent_tangent_mf
-            # ------------------------------------------------------------------------------
-            # Validation:
-            if False:
-                print('\n' + 'cluster: ' + str(cluster))
-                print('\n' + 'state_variables[\'e_strain_mf\']:' + '\n')
-                print(state_variables['e_strain_mf'])
-                print('\n' + 'state_variables[\'strain_mf\']:' + '\n')
-                print(state_variables['strain_mf'])
-                print('\n' + 'state_variables[\'stress_mf\']:' + '\n')
-                print(state_variables['stress_mf'])
-                if n_dim == 2:
-                    print('\n' + 'state_variables[\'stress_33\']: ' + \
-                                            '{:11.4e}'.format(state_variables['stress_33']))
-                print('\n' + 'state_variables[\'is_plast\']:' + \
-                                                           str(state_variables['is_plast']))
-                print('\n' + 'state_variables[\'is_su_fail\']:' + \
-                                                         str(state_variables['is_su_fail']))
-                print('\n' + 'consistent_tangent_mf:' + '\n')
-                print(consistent_tangent_mf)
-            # ------------------------------------------------------------------------------
             # Update cluster strain range indexes
             i_init = i_init + len(comp_order)
             i_end = i_init + len(comp_order)

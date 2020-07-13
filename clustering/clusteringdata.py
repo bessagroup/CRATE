@@ -13,8 +13,6 @@
 # ==========================================================================================
 # Working with arrays
 import numpy as np
-# Shallow and deep copy operations
-import copy
 # Extract information from path
 import ntpath
 # Display messages
@@ -142,85 +140,6 @@ def compclusteringdata(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict):
                     compj = comp_order_sym[j]
                     clst_quantities[:, i*len(comp_order_sym) + j] = \
                         strain_vox[compj].flatten()
-                # --------------------------------------------------------------------------
-                # Validation:
-                if __name__ == '__main__':
-                    if n_dim == 2:
-                        val_voxel_idx = (2,1)
-                        val_voxel_row = val_voxel_idx[0]*n_voxels_dims[1] + val_voxel_idx[1]
-                    else:
-                        val_voxel_idx = (2,1,3)
-                        val_voxel_row = \
-                                    val_voxel_idx[0]*(n_voxels_dims[1]*n_voxels_dims[2]) + \
-                                        val_voxel_idx[1]*n_voxels_dims[2] + val_voxel_idx[2]
-                    print('\nPerturbed strain component: ' + compi)
-                    for j in range(len(comp_order_sym)):
-                        compj = comp_order_sym[j]
-                        print('  Strain (' + compj + '): ', \
-                        '{:>11.4e}'.format(strain_vox[compj][val_voxel_idx]))
-                # --------------------------------------------------------------------------
             # Add clustering data to clustering dictionary
             clst_dict['clst_quantities'] = clst_quantities
             clst_dict['clst_dataidxs'] = clst_dataidxs
-            # ------------------------------------------------------------------------------
-            # Validation:
-            if __name__ == '__main__':
-                print('\nClustering quantities array row - Voxel ', val_voxel_idx, ':')
-                print(clst_quantities[val_voxel_row, :])
-                print('\nClustering processes list:')
-                print(clst_dataidxs)
-            # ------------------------------------------------------------------------------
-#
-#                                                                     Validation (temporary)
-# ==========================================================================================
-if __name__ == '__main__':
-    # Set functions being validated
-    val_functions = ['compclusteringdata()',]
-    # Display validation header
-    print('\nValidation: ',(len(val_functions)*'{}, ').format(*val_functions), 3*'\b', ' ')
-    print(92*'-')
-    # Set functions arguments
-    strain_formulation = 1
-    problem_type = 4
-    n_dim, comp_order_sym, comp_order_nsym = mop.getproblemtypeparam(problem_type)
-    problem_dict = dict()
-    problem_dict['strain_formulation'] = strain_formulation
-    problem_dict['problem_type'] = problem_type
-    problem_dict['n_dim'] = n_dim
-    problem_dict['comp_order_sym'] = comp_order_sym
-    problem_dict['comp_order_nsym'] = comp_order_nsym
-    material_properties = dict()
-    material_properties['1'] = dict()
-    material_properties['1']['E'] = 210e6
-    material_properties['1']['v'] = 0.3
-    material_properties['2'] = dict()
-    material_properties['2']['E'] = 70e6
-    material_properties['2']['v'] = 0.33
-    mat_dict = dict()
-    mat_dict['material_properties'] = material_properties
-    if problem_type == 1:
-        discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
-        'debug/FFT_Homogenization_Method/RVE_2D_2Phases_5x5.rgmsh.npy'
-        rve_dims = [1.0,1.0]
-    else:
-        discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
-        'debug/FFT_Homogenization_Method/RVE_3D_2Phases_5x5x5.rgmsh.npy'
-        rve_dims = [1.0,1.0,1.0]
-    if ntpath.splitext(ntpath.basename(discret_file_path))[-1] == '.npy':
-        regular_grid = np.load(discret_file_path)
-    else:
-        regular_grid = np.loadtxt(discret_file_path)
-    n_voxels_dims = [regular_grid.shape[i] for i in range(len(regular_grid.shape))]
-    rg_dict = dict()
-    rg_dict['rve_dims'] = rve_dims
-    rg_dict['regular_grid'] = regular_grid
-    rg_dict['n_voxels_dims'] = n_voxels_dims
-    clustering_strategy = 1
-    clustering_solution_method = 1
-    clst_dict = dict()
-    clst_dict['clustering_strategy'] = clustering_strategy
-    clst_dict['clustering_solution_method'] = clustering_solution_method
-    # Call function
-    compclusteringdata(problem_dict,mat_dict,rg_dict,clst_dict)
-    # Display validation footer
-    print('\n' + 92*'-' + '\n')
