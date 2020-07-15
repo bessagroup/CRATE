@@ -112,7 +112,7 @@
 #                                                                     Macroscale loading [M]
 # ==========================================================================================
 # Meaning:   Definition of the type of macroscale loading constraints (strain, stress or
-#            strain-stress) and the associated values
+#            strain-stress), the number of loading subpaths and associated values
 #
 # Syntax:    Macroscale_Loading x
 #
@@ -123,29 +123,36 @@
 #
 # Option 1 (macroscale strain constraint):
 #
-# Syntax:    Macroscale_Strain
-#            comp_name y
-#            comp_name y
+# Syntax:    Macroscale_Strain [n]
+#            comp_name y y ...
+#            comp_name y y ...
+#               ...    . . ...
 #
 # Option 2 (macroscale stress constraint):
 #
-# Syntax:    Macroscale_Stress
-#            comp_name y
-#            comp_name y
+# Syntax:    Macroscale_Stress [n]
+#            comp_name y y ...
+#            comp_name y y ...
+#               ...    . . ...
 #
 # Option 3 (macroscale strain and stress constraint):
 #
-# Syntax:    Macroscale_Strain
-#            comp_name y
-#            comp_name y
+# Syntax:    Macroscale_Strain [n]
+#            comp_name y y ...
+#            comp_name y y ...
+#               ...    . . ...
 #
-#            Macroscale_Stress
-#            comp_name y
-#            comp_name y
+#            Macroscale_Stress [m]
+#            comp_name y y ...
+#            comp_name y y ...
+#               ...    . . ...
 #
 #            Mixed_Prescription_Index
-#            z z z z z
+#            z z z ...
+#            z z z ...
+#            . . . ...
 #
+# n, m:      integer (number of loading subpaths, default to 1)
 # comp_name: string (e.g. E11, SXX)
 # y:         float
 # z:         integer (0 - strain component, 1 - stress component)
