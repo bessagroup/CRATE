@@ -113,7 +113,7 @@ def packmaterialphases(n_material_phases, material_phases_models, material_prope
     return mat_dict
 # ------------------------------------------------------------------------------------------
 # Package data associated to the macroscale loading
-def packmacroscaleloading(mac_load_type, mac_load, mac_load_presctype, n_load_increments):
+def packmacroscaleloading(mac_load_type, mac_load, mac_load_presctype, mac_load_increm):
     #
     # Object                      Meaning                                           Type
     # -------------------------------------------------------------------------------------
@@ -122,7 +122,8 @@ def packmacroscaleloading(mac_load_type, mac_load, mac_load_presctype, n_load_in
     #                             key: 'strain' and/or 'stress'
     # mac_load_presctype          Macroscale loading component type                 dict
     #                             key: macroscale component (str)
-    # n_load_increments           Number of macroscale load increments              int
+    # mac_load_increm             Macroscale loading subpaths incrementation        dict
+    #                             key: loading subpath (str)
     #
     # Initialize macroscale loading dictionary
     macload_dict = dict()
@@ -130,7 +131,7 @@ def packmacroscaleloading(mac_load_type, mac_load, mac_load_presctype, n_load_in
     macload_dict['mac_load_type'] = mac_load_type
     macload_dict['mac_load'] = mac_load
     macload_dict['mac_load_presctype'] = mac_load_presctype
-    macload_dict['n_load_increments'] = n_load_increments
+    macload_dict['mac_load_increm'] = mac_load_increm
     # Return
     return macload_dict
 # ------------------------------------------------------------------------------------------

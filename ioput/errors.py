@@ -902,6 +902,59 @@ def displayerror(code, *args):
                    'positive integer after the' + '\n' + \
                    indent + 'keyword - {} - as' + '\n\n' + \
                    indent + '{} < value >'
+    elif code == 'E00089':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'One of the keywords associated to the macroscale loading ' + \
+                   'incrementation' + '\n' + \
+                   indent + '(Number_of_Load_Increments or Increment_List) must be ' + \
+                   'specified and none has been found' + '\n' + \
+                   indent + 'in the input data file.'
+    elif code == 'E00090':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'Only one of the keywords associated to the macroscale ' + \
+                   'loading incrementation' + '\n' + \
+                   indent + '(Number_of_Load_Increments or Increment_List) can be ' + \
+                   'specified and both have been found' + '\n' + \
+                   indent + 'in the input data file.'
+    elif code == 'E00091':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'Invalid macroscale loading increment specification.' + \
+                   '\n\n' + \
+                   'Suggestion:' + '\n\n' + \
+                   indent + 'The macroscale loading increment specification within the ' + \
+                   'Increment_List option must have' + '\n' + \
+                   indent + 'the format' + '\n\n' + \
+                   indent + '[x:]y[_z]' + '\n\n' + \
+                   indent + 'where x is the number of repeated increments ' + \
+                   '(int, optional), y is the incremental load' + '\n' + \
+                   indent + 'factor (float) and z is the incremental time (float, ' + \
+                   'optional).'
+    elif code == 'E00092':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'At least one macroscale loading increment specification ' + \
+                   'must be provided for each loading' + '\n' + \
+                   indent + 'subpath.'
+    elif code == 'E00093':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'Unknown macroscale loading incrementation keyword.'
+    elif code == 'E00094':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'All the parameters associated to a macroscale loading ' + \
+                   'increment specification must be' + '\n' + \
+                   indent + 'positive (number of repetitions, incremental load factor ' + \
+                   'and incremental time).'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display error
     if code in ['E00001', 'E00002', 'E00010']:

@@ -24,6 +24,8 @@ import linecache
 import inspect
 # Extract information from path
 import ntpath
+# Regular expressions
+import re
 # Display errors, warnings and built-in exceptions
 import ioput.errors as errors
 # Links related procedures
@@ -567,6 +569,136 @@ def readmacroscaleloading(file, file_path, mac_load_type, strain_formulation, n_
             mac_load_presctype[i, :] = mac_load_presctype_copy[aux[comp_order_nsym[i]], :]
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return mac_load, mac_load_presctype
+#
+#                                                          Macroscale loading incrementation
+# ==========================================================================================
+# Read the macroscale loading incrementation, specified as
+#
+# Number_of_Load_Increments < int >
+#
+# or as
+#
+# Increment_List
+# [< int >:] < float > [_< float >] | [< int >:] < float > [_< float >] | ...
+# [< int >:] < float > [_< float >] | [< int >:] < float > [_< float >] | ...
+#                                   | [< int >:] < float > [_< float >] | ...
+#
+# and store it in a dictionary as
+#
+#                              incremental
+#                                 time
+#                         _         v  _
+#                        | float, float |
+#      dictionary[key] = | float, float | , where key is the loading subpath index.
+#                        |_float, float_|
+#                            ^
+#                       incremental
+#                       load factor
+#
+# The optional keyword associated to the loading time factor may also be specified as
+#
+# Loading_Time_Factor
+# < float >
+#
+def readmacloadincrem(file, file_path, keyword, n_load_subpaths):
+    # Initialize macroscale loading incrementation dictionary
+    mac_load_increm = dict()
+    # Set load time factor
+    keyword_time = 'Loading_Time_Factor'
+    is_found, _ = searchoptkeywordline(file, keyword_time)
+    if is_found:
+        load_time_factor = readtypeBkeyword(file, file_path, keyword_time)
+    else:
+        load_time_factor = 1.0
+    # Set macroscale loading incrementation
+    if keyword == 'Number_of_Load_Increments':
+        max = '~'
+        n_load_increments = readtypeAkeyword(file, file_path, keyword, max)
+        # Build macroscale loading incrementation dictionary
+        for i in range(n_load_subpaths):
+            # Set loading subpath default total load factor
+            total_lfact = 1.0
+            # Build macroscale loading subpath
+            load_subpath = np.zeros((n_load_increments, 2))
+            load_subpath[:, 0] = total_lfact/n_load_increments
+            load_subpath[:, 1] = load_time_factor*load_subpath[:, 0]
+            # Store macroscale loading subpath
+            mac_load_increm[str(i)] = load_subpath
+    elif keyword == 'Increment_List':
+        # Find keyword line number
+        keyword_line_number = searchkeywordline(file, keyword)
+        # Initialize macroscale loading increment array
+        increm_list = np.full((0, n_load_subpaths), '', dtype=object)
+        # Read increment specification line
+        line = linecache.getline(file_path, keyword_line_number + 1)
+        increm_line = [x.strip() for x in line.split('|')]
+        # At least one increment specification line must be provided for each macroscale
+        # loading subpath
+        is_empty_line = not bool(line.split())
+        if is_empty_line or len(increm_line) != n_load_subpaths:
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayerror('E00092', location.filename, location.lineno + 1)
+        i = 0
+        # Build macroscale loading increment array
+        while not is_empty_line:
+            increm_list = np.append(increm_list,
+                                    np.full((1, n_load_subpaths), '', dtype=object), axis=0)
+            # Assemble macroscale increment specification line
+            increm_list[i, 0:len(increm_line)] = increm_line
+            i += 1
+            # Read increment specification line
+            line = linecache.getline(file_path, keyword_line_number + 1 + i)
+            is_empty_line = not bool(line.split())
+            increm_line = [x.strip() for x in line.split('|')]
+        # Build macroscale loading incrementation dictionary
+        for j in range(n_load_subpaths):
+            # Initialize macroscale loading subpath
+            load_subpath = np.zeros((0, 2))
+            # Loop over increment specifications
+            for i in range(increm_list.shape[0]):
+                # Get increment specification
+                spec = increm_list[i, j]
+                # Decode increment specification
+                if spec == '':
+                    break
+                else:
+                    rep, inc_lfact, inc_time = decodeincremspec(spec, load_time_factor)
+                # Build macroscale loading subpath
+                load_subpath = np.append(load_subpath,
+                                         np.tile([inc_lfact, inc_time], (rep, 1)), axis=0)
+            # Store macroscale loading subpath
+            mac_load_increm[str(j)] = load_subpath
+    else:
+        # Unknown macroscale loading keyword
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayerror('E00093', location.filename, location.lineno + 1)
+    # Return
+    return mac_load_increm
+# ------------------------------------------------------------------------------------------
+# Decode macroscale loading increment specification
+def decodeincremspec(spec, load_time_factor):
+    # Split specifications based on multiple delimiters
+    code = re.split('[:_]', spec)
+    # Check if the repetition and incremental time have been specified
+    has_rep = ':' in re.findall('[:_]', spec)
+    has_time = '_' in re.findall('[:_]', spec)
+    if not code or len(code) > 3:
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayerror('E00091', location.filename, location.lineno + 1)
+    # Set macroscale loading increment parameters
+    try:
+        rep = int(code[0]) if has_rep else 1
+        inc_lfact = float(code[int(has_rep)])
+        inc_time = float(code[-1]) if has_time else load_time_factor*inc_lfact
+    except:
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayerror('E00091', location.filename, location.lineno + 1)
+    else:
+        if any([x < 0 for x in [rep, inc_lfact, inc_time]]):
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayerror('E00094', location.filename, location.lineno + 1)
+    # Return
+    return [rep, inc_lfact, inc_time]
 #
 #                                                                         Number of clusters
 # ==========================================================================================
