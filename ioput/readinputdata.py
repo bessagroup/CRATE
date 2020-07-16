@@ -102,8 +102,8 @@ def readinputdatafile(input_file,dirs_dict):
     # Read self consistent scheme (optional). If the associated keyword is not found, then
     # a default specification is assumed
     keyword = 'Self_Consistent_Scheme'
-    isFound, keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
-    if isFound:
+    is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
         max = 2
         self_consistent_scheme = rproc.readtypeAkeyword(input_file, input_file_path,
                                                         keyword, max)
@@ -113,8 +113,8 @@ def readinputdatafile(input_file,dirs_dict):
     # Read self consistent scheme maximum number of iterations (optional). If the associated
     # keyword is not found, then a default specification is assumed
     keyword = 'SCS_Max_Number_of_Iterations'
-    isFound,keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
-    if isFound:
+    is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
         max = '~'
         scs_max_n_iterations = rproc.readtypeAkeyword(input_file, input_file_path,
                                                       keyword, max)
@@ -124,8 +124,8 @@ def readinputdatafile(input_file,dirs_dict):
     # Read self consistent scheme convergence tolerance (optional). If the associated
     # keyword is not found, then a default specification is assumed
     keyword = 'SCS_Convergence_Tolerance'
-    isFound,keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
-    if isFound:
+    is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
         max = '~'
         scs_conv_tol = rproc.readtypeBkeyword(input_file, input_file_path, keyword)
     else:
@@ -139,8 +139,8 @@ def readinputdatafile(input_file,dirs_dict):
     # Read clustering strategy (optional). If the associated keyword is not found, then a
     # default specification is assumed
     keyword = 'Clustering_Strategy'
-    isFound,keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
-    if isFound:
+    is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
         max = 1
         clustering_strategy = rproc.readtypeAkeyword(input_file, input_file_path, keyword,
                                                      max)
@@ -150,8 +150,8 @@ def readinputdatafile(input_file,dirs_dict):
     # Read clustering solution method (optional). If the associated keyword is not found,
     # then a default specification is assumed
     keyword = 'Clustering_Solution_Method'
-    isFound,keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
-    if isFound:
+    is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
         max = 2
         clustering_solution_method = rproc.readtypeAkeyword(input_file, input_file_path,
                                                             keyword, max)
@@ -202,8 +202,8 @@ def readinputdatafile(input_file,dirs_dict):
     # Read maximum number of iterations to solve each load increment (optional). If the
     # associated keyword is not found, then a default specification is assumed
     keyword = 'Max_Number_of_Iterations'
-    isFound, keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
-    if isFound:
+    is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
         max = '~'
         max_n_iterations = rproc.readtypeAkeyword(input_file, input_file_path, keyword, max)
     else:
@@ -212,8 +212,8 @@ def readinputdatafile(input_file,dirs_dict):
     # Read convergence tolerance to solve each load increment (optional). If the associated
     # keyword is not found, then a default specification is assumed
     keyword = 'Convergence_Tolerance'
-    isFound, keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
-    if isFound:
+    is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
         conv_tol = rproc.readtypeBkeyword(input_file, input_file_path, keyword)
     else:
         conv_tol = 1e-6
@@ -221,8 +221,8 @@ def readinputdatafile(input_file,dirs_dict):
     # Read maximum level of subincrementation allowed (optional). If the associated
     # keyword is not found, then a default specification is assumed
     keyword = 'Max_SubIncrem_Level'
-    isFound, keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
-    if isFound:
+    is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
         max = '~'
         max_subincrem_level = rproc.readtypeAkeyword(input_file, input_file_path, keyword,
                                                      max)
@@ -232,8 +232,8 @@ def readinputdatafile(input_file,dirs_dict):
     # Read material state update maximum number of iterations (optional). If the associated
     # keyword is not found, then a default specification is assumed
     keyword = 'SU_Max_Number_of_Iterations'
-    isFound, keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
-    if isFound:
+    is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
         max = '~'
         su_max_n_iterations = rproc.readtypeAkeyword(input_file, input_file_path, keyword,
                                                      max)
@@ -243,8 +243,8 @@ def readinputdatafile(input_file,dirs_dict):
     # Read material state update convergence tolerance (optional). If the associated
     # keyword is not found, then a default specification is assumed
     keyword = 'SU_Convergence_Tolerance'
-    isFound, keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
-    if isFound:
+    is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
         su_conv_tol = rproc.readtypeBkeyword(input_file, input_file_path, keyword)
     else:
         su_conv_tol = 1e-6
@@ -267,8 +267,8 @@ def readinputdatafile(input_file,dirs_dict):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read VTK output options
     keyword = 'VTK_Output'
-    isFound, keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
-    if isFound:
+    is_found, keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
         is_VTK_output = True
         vtk_format, vtk_inc_div, vtk_vars = \
             rproc.readvtkoptions(input_file, input_file_path, keyword, keyword_line_number)
