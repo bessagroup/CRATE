@@ -110,7 +110,7 @@ In what follows, the general workflow of CRATE in the solution of a microscale e
 2. **Write input data file.** After generating the microstructure RVE discretization file, the next step consists in writing the actual CRATE's input data file. This file contains all the required information about the problem itself (problem type, material properties, loading conditions, discretization file, ...) and about the solution procedure (load incrementation, clustering domain decomposition, convergence tolerances, ...). A complete CRATE input data file where each parameter specification (either mandatory or optional) is fully documented (meaning, syntax, available options) can be found in the `doc/` directory (or [here](https://github.com/BernardoFerreira/CRATE/blob/master/doc/CRATE_input_data_file.dat)). This file can be copied to a given directory and be readily used by replacing the `[insert here]` boxes with the suitable specification.
 
 3. **Run CRATE.** In order to run CRATE, one must simply execute the main file (`crate.py`) with Python 3.X and provide the input data file (argument parsing).
-    > In Linux/UNIX operative systems, open a terminal console window and execute the following command:
+    > In Linux/UNIX operative systems, open a terminal console window and execute the following command:  
     `python3.X crate.py input_data_file.dat`
      <br/><br/>
     The program execution can be followed in the terminal console window, where the data associated to the program launch, to the progress of the main execution phases and to the program end is output. 
