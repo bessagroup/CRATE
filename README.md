@@ -14,7 +14,7 @@ This program initial version was documented and fully coded by Bernardo P. Ferre
 
 <sup id="f1"> 1 </sup> Member of CM2S and Bessa research groups, Department of Mechanical Engineering, Faculty of Engineering, University of Porto  
 <sup id="f2"> 2 </sup> Leader of Bessa research group, Faculty of Mechanical, Maritime and Materials Engineering, Delft University of Technology  
-<sup id="f3"> 3 </sup> Leader CM2S research group, Department of Mechanical Engineering, Faculty of Engineering, University of Porto
+<sup id="f3"> 3 </sup> Leader of CM2S research group, Department of Mechanical Engineering, Faculty of Engineering, University of Porto
 
 ### Description
 CRATE has been designed with the main purpose of performing accurate and efficient multi-scale analyses of nonlinear heterogeneous materials, a crucial task in the development of new materials with innovative and enhanced properties. This goal is achieved through the coupling between **first-order computational homogenization** and a **clustering-based reduced order modeling** approach, allowing the efficient solution of a given microscale equilibrium problem that essentially involves four main steps:
@@ -111,7 +111,7 @@ In what follows, the general workflow of CRATE in the solution of a microscale e
 
 3. **Run CRATE.** In order to run CRATE, one must simply execute the main file (`crate.py`) with Python 3.X and provide the input data file (argument parsing).
     > In Linux/UNIX operative systems, open a terminal console window and execute the following command:
-    `python3.X input_data_file.dat`
+    `python3.X crate.py input_data_file.dat`
      <br/><br/>
     The program execution can be followed in the terminal console window, where the data associated to the program launch, to the progress of the main execution phases and to the program end is output. 
   
