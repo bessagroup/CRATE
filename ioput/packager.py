@@ -120,8 +120,7 @@ def packmacroscaleloading(mac_load_type, mac_load, mac_load_presctype, mac_load_
     # mac_load_type               Macroscale loading constraint type                int
     # mac_load                    Macroscale loading constraint values              dict
     #                             key: 'strain' and/or 'stress'
-    # mac_load_presctype          Macroscale loading component type                 dict
-    #                             key: macroscale component (str)
+    # mac_load_presctype          Macroscale loading component type                 ndarray
     # mac_load_increm             Macroscale loading subpaths incrementation        dict
     #                             key: loading subpath (str)
     #
