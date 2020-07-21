@@ -206,7 +206,7 @@ def displayerror(code, *args):
                    'of loading subpaths;' + '\n\n' + \
                    'Suggestion:' + '\n\n' + \
                    indent + 'The keyword - {} - should be specified p.e. in a 2D ' + \
-                   'problem with 2' + '\n' + \
+                   'problem with 3' + '\n' + \
                    indent + 'loading subpaths as' + '\n\n' + \
                    indent + '{}' + '\n' + \
                    indent + '0 1 0' + '\n' + \

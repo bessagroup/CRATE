@@ -41,8 +41,9 @@ class LoadingPath:
         # Initialize increment state
         self.increm_state = {'inc': 0, 'subpath_id': -1}
         # Initialize converged macroscale load
-        self._conv_mac_load = {key: np.zeros(mac_load[key].shape[0])
-                               for key in mac_load.keys()}
+        self._conv_mac_load = {key: np.zeros(self._mac_load[key].shape[0])
+                               for key in self._mac_load.keys()
+                               if key in self._mac_load_presctype}
         # Initialize loading last increment flag
         self._is_last_inc = False
     # --------------------------------------------------------------------------------------
@@ -147,12 +148,14 @@ class LoadingPath:
             j = comp_order_nsym.index(comp_order_sym[i])
             # Assemble symmetric components
             for ltype in self._mac_load.keys():
-                self._mac_load[ltype][i, :] = mac_load_cp[ltype][j, :]
+                if ltype in self._mac_load_presctype:
+                    self._mac_load[ltype][i, :] = mac_load_cp[ltype][j, :]
             self._mac_load_presctype[i, :] = mac_load_presctype_cp[j, :]
         # Remove (non-symmetric) additional components
         n_sym = len(comp_order_sym)
         for ltype in self._mac_load.keys():
-            self._mac_load[ltype] = self._mac_load[ltype][0:n_sym, :]
+            if ltype in self._mac_load_presctype:
+                self._mac_load[ltype] = self._mac_load[ltype][0:n_sym, :]
         self._mac_load_presctype = self._mac_load_presctype[:n_sym, :]
     # --------------------------------------------------------------------------------------
     @staticmethod

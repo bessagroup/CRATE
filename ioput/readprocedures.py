@@ -412,9 +412,6 @@ def readmaterialproperties(file, file_path, keyword):
 #
 def readmacroscaleloading(file, file_path, mac_load_type, strain_formulation, n_dim,
                           comp_order_nsym):
-    # Initialize macroscale loading dictionaries
-    mac_load = dict()
-    n_load_subpaths = dict()
     # Set macroscale loading keywords according to loading type
     if mac_load_type == 1:
         loading_keywords = {'Macroscale_Strain': 'strain'}
@@ -424,8 +421,10 @@ def readmacroscaleloading(file, file_path, mac_load_type, strain_formulation, n_
         loading_keywords = {'Macroscale_Strain': 'strain', 'Macroscale_Stress': 'stress'}
         presc_keyword = 'Mixed_Prescription_Index'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Initialize macroscale loading array
+    # Initialize macroscale loading dictionary
     mac_load = {key: None for key in ['strain', 'stress']}
+    # Initialize number of macroscale loading subpaths dictionary
+    n_load_subpaths = {key: 0 for key in ['strain', 'stress']}
     # Loop over macroscale loading keywords
     for load_key in loading_keywords.keys():
         # Get load nature type
