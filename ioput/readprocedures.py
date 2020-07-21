@@ -445,7 +445,7 @@ def readmacroscaleloading(file, file_path, mac_load_type, strain_formulation, n_
         else:
             n_load_subpaths[ltype] = 1
     # Initialize macroscale loading array
-    mac_load = {key: np.full((n_dim**2, 1 + n_load_subpaths[ltype]), 0.0, dtype=object)
+    mac_load = {key: np.full((n_dim**2, 1 + n_load_subpaths[key]), 0.0, dtype=object)
         for key in ['strain', 'stress']}
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set macroscale loading

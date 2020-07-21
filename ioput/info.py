@@ -135,7 +135,12 @@ def displayinfo(code, *args, **kwargs):
             info = tuple(arguments)
             template = colorama.Fore.CYAN + '\n' + \
                        indent + 'Increment number: {:3d}' + '\n' + \
-                       indent + equal_line[:-len(indent)] + \
+                       indent + equal_line[:-len(indent)] + '\n' + \
+                       indent + 'Loading subpath: {:4d} |' + 6*' ' + \
+                       'Load factor | Total = {:8.1e}' + 7*' ' + \
+                       'Time | Total = {:8.1e}' + '\n' + \
+                       indent + 6*' ' + 'Increment: {:4d} |' + 18*' ' + \
+                       '| Incr. = {:8.1e}' + 12*' ' + '| Incr. = {:8.1e}' + \
                        colorama.Style.RESET_ALL
         elif mode == 'end':
             space1 = (output_width - 84)*' '

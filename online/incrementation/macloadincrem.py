@@ -81,6 +81,14 @@ class LoadingPath:
 
         self._conv_mac_load = copy.deepcopy(self._get_load_subpath()._applied_load)
     # --------------------------------------------------------------------------------------
+    def get_subpath_state(self):
+        '''Get current loading subpath state.'''
+
+        # Get current loading subpath
+        load_subpath = self._get_load_subpath()
+        # Return loading subpath state
+        return load_subpath.get_state()
+    # --------------------------------------------------------------------------------------
     def _new_subpath(self):
         '''Add a new macroscale loading subpath to the loading path.'''
 
@@ -88,11 +96,11 @@ class LoadingPath:
         self.increm_state['subpath_id'] += 1
         subpath_id = self.increm_state['subpath_id']
         # Get macroscale load and prescription types of the current loading subpath
-        load = {key: np.zeros(self._mac_load[key].shape[0])
-                for key in self._mac_load.keys()}
-        for ltype in self._mac_load.keys():
-            load[ltype] = self._mac_load[ltype][:, 1 + subpath_id]
         presctype = self._mac_load_presctype[:, subpath_id]
+        load = {key: np.zeros(self._mac_load[key].shape[0])
+                for key in self._mac_load.keys() if key in presctype}
+        for ltype in load.keys():
+            load[ltype] = self._mac_load[ltype][:, 1 + subpath_id]
         # Get loading subpath incremental load factors and incremental times
         inc_lfacts = self._mac_load_increm[str(subpath_id)][:, 0]
         inc_times = self._mac_load_increm[str(subpath_id)][:, 1]
@@ -184,6 +192,8 @@ class LoadingSubpath:
         self._inc = 0
         # Initialize loading subpath total load factor
         self._total_lfact = 0
+        # Initialize loading subpath total time
+        self._total_time = 0
         # Set number of prescribed macroscale loading strain and stress components and
         # associated indexes
         self._n_presc_strain = sum([x == 'strain' for x in self._presctype])
@@ -207,6 +217,8 @@ class LoadingSubpath:
         self._inc += 1
         # Update total load factor
         self._total_lfact = sum(self._inc_lfacts[0:self._inc])
+        # Update total time
+        self._total_time = sum(self._inc_times[0:self._inc])
         # Update total applied macroscale loading
         self._update_applied_load()
         # Check if last increment
@@ -220,3 +232,9 @@ class LoadingSubpath:
             for i in range(len(self._applied_load[ltype])):
                 if self._presctype[i] == ltype:
                     self._applied_load[ltype][i] = self._total_lfact*self._load[ltype][i]
+    # --------------------------------------------------------------------------------------
+    def get_state(self):
+        '''Get subpath state data.'''
+
+        return [self._id, self._inc, self._total_lfact, self._inc_lfacts[self._inc - 1],
+                self._total_time, self._inc_times[self._inc - 1]]

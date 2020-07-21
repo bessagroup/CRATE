@@ -259,7 +259,12 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         presc_stress_idxs, is_last_inc = mac_load_path.new_load_increment(n_dim, comp_order)
     # Get increment counter
     inc = mac_load_path.increm_state['inc']
-    info.displayinfo('7', 'init', inc)
+    # Get loading subpath data
+    sp_id, sp_inc, sp_total_lfact, sp_inc_lfact, sp_total_time, sp_inc_time = \
+        mac_load_path.get_subpath_state()
+    # Display increment data
+    info.displayinfo('7', 'init', inc, sp_id + 1, sp_total_lfact, sp_total_time,
+                     sp_inc, sp_inc_lfact, sp_inc_time)
     # Set increment initial time
     inc_init_time = time.time()
     # --------------------------------------------------------------------------------------
@@ -791,6 +796,11 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                     n_dim, comp_order)
             # Get increment counter
             inc = mac_load_path.increm_state['inc']
-            info.displayinfo('7', 'init', inc)
+            # Get loading subpath data
+            sp_id, sp_inc, sp_total_lfact, sp_inc_lfact, sp_total_time, sp_inc_time = \
+                mac_load_path.get_subpath_state()
+            # Display increment data
+            info.displayinfo('7', 'init', inc, sp_id + 1, sp_total_lfact, sp_total_time,
+                             sp_inc, sp_inc_lfact, sp_inc_time)
             # Set increment initial time
             inc_init_time = time.time()
