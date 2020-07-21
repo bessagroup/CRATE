@@ -232,7 +232,7 @@
 #
 # x:         integer (number of increment repetitions, optional, default to 1)
 # y:         float (incremental load factor)
-# z:         float (incremental time, optional, default to Loading_Time_Factor*x)
+# z:         float (incremental time, optional, default to Loading_Time_Factor*y)
 # ------------------------------------------------------------------------------------------
 [insert here]
 
@@ -261,7 +261,7 @@
 # Meaning:   Time associated to the macroscale loading incrementation. For a given
 #            macroscale loading increment, unless the associated incremental time is
 #            explicitly specified, the incremental time is obtained by multiplying the
-#            loading time factor by the loading factor.
+#            loading time factor by the incremental loading factor.
 #
 # Syntax:    Loading_Time_Factor
 #            x
