@@ -40,10 +40,8 @@ class LoadingPath:
         self._load_subpaths = []
         # Initialize increment state
         self.increm_state = {'inc': 0, 'subpath_id': -1}
-        # Initialize converged macroscale load
-        self._conv_mac_load = {key: np.zeros(self._mac_load[key].shape[0])
-                               for key in self._mac_load.keys()
-                               if key in self._mac_load_presctype}
+        # Initialize converged macroscale (homogenized) state
+        self._conv_hom_state = {key: None for key in ['strain', 'stress']}
         # Initialize loading last increment flag
         self._is_last_inc = False
     # --------------------------------------------------------------------------------------
@@ -77,10 +75,22 @@ class LoadingPath:
                 load_subpath._presc_strain_idxs, load_subpath._n_presc_stress,
                 load_subpath._presc_stress_idxs, self._is_last_inc]
     # --------------------------------------------------------------------------------------
-    def update_conv_load(self):
-        '''Update converged macroscale load.'''
+    def update_hom_state(self, n_dim, comp_order, hom_strain, hom_stress):
+        '''Update converged macroscale (homogenized) state.'''
 
-        self._conv_mac_load = copy.deepcopy(self._get_load_subpath()._applied_load)
+        # Initialize converged macroscale strain and stress tensors vector form
+        self._conv_hom_state['strain'] = np.zeros(len(comp_order))
+        self._conv_hom_state['stress'] = np.zeros(len(comp_order))
+        # Loop over strain/stress components
+        for k in range(len(comp_order)):
+            # Get strain/stress component
+            comp = comp_order[k]
+            # Get component indexes
+            i = int(comp[0]) - 1
+            j = int(comp[1]) - 1
+            # Build converged macroscale strain and stress tensors vector form
+            self._conv_hom_state['strain'][k] = hom_strain[i, j]
+            self._conv_hom_state['stress'][k] = hom_stress[i, j]
     # --------------------------------------------------------------------------------------
     def get_subpath_state(self):
         '''Get current loading subpath state.'''
@@ -131,7 +141,8 @@ class LoadingPath:
         inc_mac_load = {key: np.zeros(len(applied_load[key]))
                         for key in applied_load.keys()}
         for ltype in inc_mac_load.keys():
-            inc_mac_load[ltype] = applied_load[ltype] - self._conv_mac_load[ltype]
+            inc_mac_load[ltype] = applied_load[ltype] - self._conv_hom_state[ltype]
+        # Return
         return inc_mac_load
     # --------------------------------------------------------------------------------------
     def _remove_sym(self, comp_order_sym, comp_order_nsym):

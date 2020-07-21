@@ -254,6 +254,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     mac_load_path = LoadingPath(strain_formulation, problem_dict['comp_order_sym'],
                                 problem_dict['comp_order_nsym'], mac_load,
                                 mac_load_presctype, mac_load_increm)
+    # Set initial homogenized state
+    mac_load_path.update_hom_state(n_dim, comp_order, hom_strain, hom_stress)
     # Setup first macroscale loading increment
     inc_mac_load_mf, n_presc_strain, presc_strain_idxs, n_presc_stress, \
         presc_stress_idxs, is_last_inc = mac_load_path.new_load_increment(n_dim, comp_order)
@@ -771,8 +773,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         #
         #                                                Incremental macroscale loading flow
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Update converged macroscale load
-        mac_load_path.update_conv_load()
+        # Update converged macroscale (homogenized) state
+        mac_load_path.update_hom_state(n_dim, comp_order, hom_strain, hom_stress)
         # Display converged increment data
         if problem_type == 1:
             info.displayinfo('7', 'end', problem_type, hom_strain, hom_stress,
