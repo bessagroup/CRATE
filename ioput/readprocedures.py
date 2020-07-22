@@ -689,12 +689,12 @@ def decodeincremspec(spec, load_time_factor):
     try:
         rep = int(code[0]) if has_rep else 1
         inc_lfact = float(code[int(has_rep)])
-        inc_time = float(code[-1]) if has_time else load_time_factor*inc_lfact
+        inc_time = abs(float(code[-1])) if has_time else load_time_factor*abs(inc_lfact)
     except:
         location = inspect.getframeinfo(inspect.currentframe())
         errors.displayerror('E00091', location.filename, location.lineno + 1)
     else:
-        if any([x < 0 for x in [rep, inc_lfact, inc_time]]):
+        if any([x < 0 for x in [rep, inc_time]]):
             location = inspect.getframeinfo(inspect.currentframe())
             errors.displayerror('E00094', location.filename, location.lineno + 1)
     # Return

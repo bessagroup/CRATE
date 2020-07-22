@@ -951,10 +951,9 @@ def displayerror(code, *args):
         arguments = ['',]
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
-                   indent + 'All the parameters associated to a macroscale loading ' + \
-                   'increment specification must be' + '\n' + \
-                   indent + 'positive (number of repetitions, incremental load factor ' + \
-                   'and incremental time).'
+                   indent + 'The number of repetitions and incremental time optional ' + \
+                   'parameters associated to a' + '\n' + \
+                   indent + 'macroscale loading increment specification must be positive.'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display error
     if code in ['E00001', 'E00002', 'E00010']:

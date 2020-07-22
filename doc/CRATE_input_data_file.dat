@@ -232,7 +232,7 @@
 #
 # x:         integer (number of increment repetitions, optional, default to 1)
 # y:         float (incremental load factor)
-# z:         float (incremental time, optional, default to Loading_Time_Factor*y)
+# z:         float (incremental time, optional, default to Loading_Time_Factor*abs(y))
 # ------------------------------------------------------------------------------------------
 [insert here]
 
