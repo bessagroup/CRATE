@@ -216,7 +216,7 @@
 # Meaning:   Definition of the macroscale loading incrementation (choose ONE of the options
 #            below).
 #
-# Option 1 (equal-magnitude increments):
+# Option 1 (equal-magnitude increments applied to each loading subpath):
 #
 # Syntax:    Number_of_Load_Increments x
 #
