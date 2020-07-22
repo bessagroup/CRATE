@@ -24,6 +24,8 @@ import linecache
 import inspect
 # Extract information from path
 import ntpath
+# Regular expressions
+import re
 # Display errors, warnings and built-in exceptions
 import ioput.errors as errors
 # Links related procedures
@@ -364,32 +366,40 @@ def readmaterialproperties(file, file_path, keyword):
 # ==========================================================================================
 # Read the macroscale loading constraints, specified as
 #
-#                 2D Problem                                     3D Problem
-#   --------------------------------------         --------------------------------------
-#   Macroscale_Strain or Macroscale_Stress         Macroscale_Strain or Macroscale_Stress
-#   < component_name_11 > < float >                < component_name_11 > < float >
-#   < component_name_21 > < float >                < component_name_21 > < float >
-#   < component_name_12 > < float >                < component_name_31 > < float >
-#   < component_name_22 > < float >                < component_name_12 > < float >
-#                                                  < component_name_22 > < float >
-#                                                  < component_name_32 > < float >
-#                                                  < component_name_13 > < float >
-#                                                  < component_name_23 > < float >
-#                                                  < component_name_33 > < float >
+#   2D Problem
+#   -------------------------------------------------------------------------------------
+#   Macroscale_Strain or Macroscale_Stress < int >     |     Mixed_Prescription_Index (*)
+#   < component_name_11 > < float > < float >  ...     |     < 0 or 1 > < 0 or 1 >  ...
+#   < component_name_21 > < float > < float >  ...     |     < 0 or 1 > < 0 or 1 >  ...
+#   < component_name_12 > < float > < float >  ...     |     < 0 or 1 > < 0 or 1 >  ...
+#   < component_name_22 > < float > < float >  ...     |     < 0 or 1 > < 0 or 1 >  ...
 #
+#   3D Problem
+#   -------------------------------------------------------------------------------------
+#   Macroscale_Strain or Macroscale_Stress < int >     |     Mixed_Prescription_Index (*)
+#   < component_name_11 > < float > < float >  ...     |     < 0 or 1 > < 0 or 1 >  ...
+#   < component_name_21 > < float > < float >  ...     |     < 0 or 1 > < 0 or 1 >  ...
+#   < component_name_31 > < float > < float >  ...     |     < 0 or 1 > < 0 or 1 >  ...
+#   < component_name_12 > < float > < float >  ...     |     < 0 or 1 > < 0 or 1 >  ...
+#   < component_name_22 > < float > < float >  ...     |     < 0 or 1 > < 0 or 1 >  ...
+#   < component_name_32 > < float > < float >  ...     |     < 0 or 1 > < 0 or 1 >  ...
+#   < component_name_13 > < float > < float >  ...     |     < 0 or 1 > < 0 or 1 >  ...
+#   < component_name_23 > < float > < float >  ...     |     < 0 or 1 > < 0 or 1 >  ...
+#   < component_name_33 > < float > < float >  ...     |     < 0 or 1 > < 0 or 1 >  ...
 #
-#   Mixed_Prescription_Index (only if prescribed macroscale strains and stresses)
-#   < 0 or 1 > < 0 or 1 > < 0 or 1 > < 0 or 1 > ...
+#   (*) Only required if prescribed macroscale strains and stresses
 #
 # and store them in a dictionary as
-#                       _                          _
-#                      |'component_name_11' , value |
-#    dictionary[key] = |'component_name_21' , value | , where key in ['strain','stress']
-#                      |_       ...        ,   ... _|
+#                               _                                      _
+#                              |'component_name_11', float, float, ... |
+#            dictionary[key] = |'component_name_21', float, float, ... | ,
+#                              |_       ...        , float, float, ..._|
 #
-# and in an array(n_dim**2) as
-#
-#          array = [ < 0 or 1 > , < 0 or 1 > , < 0 or 1 > , < 0 or 1 > , ... ]
+# where key in ['strain','stress'], and in an array as
+#                               _                           _
+#                              | < 0 or 1 >, < 0 or 1 >, ... |
+#                      array = | < 0 or 1 >, < 0 or 1 >, ... |
+#                              |_   ...    ,    ...    , ..._|
 #
 # Note: The macroscale strain or stress tensor is always assumed to be nonsymmetric and
 #       all components must be specified in columnwise order
@@ -402,113 +412,142 @@ def readmaterialproperties(file, file_path, keyword):
 #
 def readmacroscaleloading(file, file_path, mac_load_type, strain_formulation, n_dim,
                           comp_order_nsym):
-    mac_load = dict()
+    # Set macroscale loading keywords according to loading type
     if mac_load_type == 1:
-        loading_keywords = ['Macroscale_Strain']
-        mac_load['strain'] = np.full((n_dim**2,2), 'ND', dtype=object)
-        mac_load_typeidxs = np.zeros((n_dim**2), dtype=int)
+        loading_keywords = {'Macroscale_Strain': 'strain'}
     elif mac_load_type == 2:
-        loading_keywords = ['Macroscale_Stress']
-        mac_load['stress'] = np.full((n_dim**2,2), 'ND', dtype=object)
-        mac_load_typeidxs = np.ones((n_dim**2), dtype=int)
+        loading_keywords = {'Macroscale_Stress': 'stress'}
     elif mac_load_type == 3:
-        loading_keywords = ['Macroscale_Strain', 'Macroscale_Stress']
-        mac_load['strain'] = np.full((n_dim**2,2), 'ND', dtype=object)
-        mac_load['stress'] = np.full((n_dim**2,2), 'ND', dtype=object)
+        loading_keywords = {'Macroscale_Strain': 'strain', 'Macroscale_Stress': 'stress'}
         presc_keyword = 'Mixed_Prescription_Index'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    for load_keyword in loading_keywords:
-        load_keyword_line_number = searchkeywordline(file, load_keyword)
-        for icomponent in range(n_dim**2):
+    # Initialize macroscale loading dictionary
+    mac_load = {key: None for key in ['strain', 'stress']}
+    # Initialize number of macroscale loading subpaths dictionary
+    n_load_subpaths = {key: 0 for key in ['strain', 'stress']}
+    # Loop over macroscale loading keywords
+    for load_key in loading_keywords.keys():
+        # Get load nature type
+        ltype = loading_keywords[load_key]
+        # Get macroscale loading keyword line number
+        load_keyword_line_number = searchkeywordline(file, load_key)
+        # Check number of loading subpaths
+        keyword_line = linecache.getline(file_path, load_keyword_line_number).split()
+        if len(keyword_line) > 2:
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayerror('E00088', location.filename, location.lineno + 1, load_key)
+        elif len(keyword_line) == 2:
+            if ioutil.checkposint(keyword_line[1]):
+                n_load_subpaths[ltype] = int(keyword_line[1])
+            else:
+                location = inspect.getframeinfo(inspect.currentframe())
+                errors.displayerror('E00088', location.filename, location.lineno + 1,
+                                    load_key)
+        else:
+            n_load_subpaths[ltype] = 1
+        # Initialize macroscale loading array
+        mac_load[ltype] = np.full((n_dim**2, 1 + n_load_subpaths[ltype]), 0.0, dtype=object)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set macroscale loading
+    for load_key in loading_keywords:
+        # Get load nature type
+        ltype = loading_keywords[load_key]
+        load_keyword_line_number = searchkeywordline(file, load_key)
+        # Loop over macroscale loading components
+        for i_comp in range(n_dim**2):
             component_line = linecache.getline(
-                file_path, load_keyword_line_number + icomponent + 1).split()
-            if component_line[0] == '':
+                file_path, load_keyword_line_number + i_comp + 1).split()
+            if not component_line:
                 location = inspect.getframeinfo(inspect.currentframe())
                 errors.displayerror('E00008', location.filename, location.lineno + 1,
-                                    load_keyword, icomponent + 1)
-            elif len(component_line) != 2:
+                                    load_key, i_comp + 1)
+            elif len(component_line) != 1 + n_load_subpaths[ltype]:
                 location = inspect.getframeinfo(inspect.currentframe())
                 errors.displayerror('E00008', location.filename, location.lineno + 1,
-                                    load_keyword, icomponent + 1)
+                                    load_key, i_comp + 1)
             elif not ioutil.checkvalidname(component_line[0]):
                 location = inspect.getframeinfo(inspect.currentframe())
                 errors.displayerror('E00008', location.filename, location.lineno + 1,
-                                    load_keyword, icomponent + 1)
-            elif not ioutil.checknumber(component_line[1]):
-                location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayerror('E00008', location.filename, location.lineno + 1,
-                                    load_keyword, icomponent + 1)
-            if load_keyword == 'Macroscale_Strain':
-                mac_load['strain'][icomponent, 0] = component_line[0]
-                mac_load['strain'][icomponent, 1] = float(component_line[1])
-            elif load_keyword == 'Macroscale_Stress':
-                mac_load['stress'][icomponent, 0] = component_line[0]
-                mac_load['stress'][icomponent, 1] = float(component_line[1])
+                                    load_key, i_comp + 1)
+            # Set component name
+            mac_load[ltype][i_comp, 0] = component_line[0]
+            # Set component values for each loading subpath
+            for j in range(n_load_subpaths[ltype]):
+                presc_val = component_line[1 + j]
+                if not ioutil.checknumber(presc_val):
+                    location = inspect.getframeinfo(inspect.currentframe())
+                    errors.displayerror('E00008', location.filename, location.lineno + 1,
+                                        load_key, i_comp + 1)
+                else:
+                    mac_load[ltype][i_comp, 1 + j] = float(presc_val)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    if mac_load_type == 3:
-        mac_load_typeidxs = np.zeros((n_dim**2), dtype=int)
+    # Set macroscale prescription nature indexes
+    if mac_load_type == 1:
+        ltype = loading_keywords['Macroscale_Strain']
+        mac_load_presctype = np.full((n_dim**2, n_load_subpaths[ltype]), 'strain',
+                                     dtype=object)
+    elif mac_load_type == 2:
+        ltype = loading_keywords['Macroscale_Stress']
+        mac_load_presctype = np.full((n_dim**2, n_load_subpaths[ltype]), 'stress',
+                                     dtype=object)
+    elif mac_load_type == 3:
+        mac_load_presctype = np.full((n_dim**2, max(n_load_subpaths.values())), 'ND',
+                                      dtype=object)
+        presc_keyword = 'Mixed_Prescription_Index'
         presc_keyword_line_number = searchkeywordline(file, presc_keyword)
-        presc_line = linecache.getline(file_path, presc_keyword_line_number + 1).split()
-        if presc_line[0] == '':
-            location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00011', location.filename, location.lineno + 1,
-                                presc_keyword)
-        elif len(presc_line) != n_dim**2:
-            location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00011', location.filename, location.lineno + 1,
-                                presc_keyword)
-        elif not all(presc_line[i] == '0' or presc_line[i] == '1' \
-                for i in range(len(presc_line))):
-            location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00011', location.filename, location.lineno + 1,
-                                presc_keyword)
-        else:
-            mac_load_typeidxs = np.array([int(presc_line[i]) \
-                for i in range(len(presc_line))])
+        # Loop over macroscale loading components
+        for i_comp in range(n_dim**2):
+            component_line = linecache.getline(
+                file_path, presc_keyword_line_number + i_comp + 1).split()
+            if not component_line:
+                location = inspect.getframeinfo(inspect.currentframe())
+                errors.displayerror('E00011', location.filename, location.lineno + 1,
+                                    presc_keyword, i_comp + 1)
+            # Set prescription nature indexes for each loading subpath
+            for j in range(max(n_load_subpaths.values())):
+                presc_val = int(component_line[j])
+                if presc_val not in [0, 1]:
+                    location = inspect.getframeinfo(inspect.currentframe())
+                    errors.displayerror('E00011', location.filename, location.lineno + 1,
+                                        presc_keyword, i_comp + 1)
+                else:
+                    ltype = 'strain' if presc_val == 0 else 'stress'
+                    if j >= n_load_subpaths[ltype]:
+                        location = inspect.getframeinfo(inspect.currentframe())
+                        errors.displayerror('E00011', location.filename,
+                                            location.lineno + 1, presc_keyword, i_comp + 1)
+                    else:
+                        mac_load_presctype[i_comp, j] = ltype
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Check small strain formulation symmetry
     if strain_formulation == 1:
+        # Set symmetric indexes (columnwise)
         if n_dim**2 == 4:
             symmetric_indexes = np.array([[2], [1]])
         elif n_dim**2 == 9:
             symmetric_indexes = np.array([[3, 6, 7], [1, 2, 5]])
+        # Loop over symmetric indexes
         for i in range(symmetric_indexes.shape[1]):
-            if mac_load_type == 1:
-                isEqual = np.allclose(
-                          mac_load['strain'][symmetric_indexes[0, i], 1],
-                          mac_load['strain'][symmetric_indexes[1, i], 1], atol=1e-10)
-                if not isEqual:
-                    location = inspect.getframeinfo(inspect.currentframe())
-                    errors.displaywarning('W00001', location.filename, location.lineno + 1,
-                                          mac_load_type)
-                    mac_load['strain'][symmetric_indexes[1, i], 1] = \
-                        mac_load['strain'][symmetric_indexes[0, i], 1]
-            elif mac_load_type == 2:
-                isEqual = np.allclose(
-                    mac_load['stress'][symmetric_indexes[0, i], 1],
-                    mac_load['stress'][symmetric_indexes[1, i], 1], atol=1e-10)
-                if not isEqual:
-                    location = inspect.getframeinfo(inspect.currentframe())
-                    errors.displaywarning('W00001', location.filename, location.lineno + 1,
-                                          mac_load_type)
-                    mac_load['stress'][symmetric_indexes[1, i], 1] = \
-                        mac_load['stress'][symmetric_indexes[0, i], 1]
-            elif mac_load_type == 3:
-                if mac_load_typeidxs[symmetric_indexes[0, i]] != \
-                        mac_load_typeidxs[symmetric_indexes[1, i]]:
+            # Loop over loading subpaths
+            for j in range(max(n_load_subpaths.values())):
+                # Get load nature type
+                ltype = mac_load_presctype[symmetric_indexes[0, i], j]
+                if mac_load_type == 3 and \
+                        mac_load_presctype[symmetric_indexes[0, i] , j] != \
+                        mac_load_presctype[symmetric_indexes[1, i], j]:
                     location = inspect.getframeinfo(inspect.currentframe())
                     errors.displayerror('E00012', location.filename, location.lineno + 1, i)
-                aux = mac_load_typeidxs[symmetric_indexes[0, i]]
-                key = 'strain' if aux == 0 else 'stress'
+                # Check symmetry
                 isEqual = np.allclose(
-                    mac_load[key][symmetric_indexes[0, i], 1],
-                    mac_load[key][symmetric_indexes[1, i], 1], atol=1e-10)
+                      mac_load[ltype][symmetric_indexes[0, i], j + 1],
+                      mac_load[ltype][symmetric_indexes[1, i], j + 1], atol=1e-10)
                 if not isEqual:
                     location = inspect.getframeinfo(inspect.currentframe())
-                    errors.displaywarning('W00001', location.filename, location.lineno + 1,
-                                          mac_load_type, key)
-                    mac_load[key][symmetric_indexes[1, i], 1] = \
-                        mac_load[key][symmetric_indexes[0, i], 1]
+                    errors.displaywarning('W00001', location.filename,
+                                          location.lineno + 1, ltype)
+                    # Adopt symmetric component with the lowest first index
+                    mac_load[ltype][symmetric_indexes[1, i], j + 1] = \
+                        mac_load[ltype][symmetric_indexes[0, i], j + 1]
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Sort macroscale strain and stress tensors according to the defined problem
     # nonsymmetric component order
@@ -518,7 +557,7 @@ def readmacroscaleloading(file, file_path, mac_load_type, strain_formulation, n_
         aux = {'11': 0, '21': 1, '31': 2, '12': 3, '22': 4, '32': 5, '13': 6, '23': 7,
                '33': 8}
     mac_load_copy = copy.deepcopy(mac_load)
-    mac_load_typeidxs_copy = copy.deepcopy(mac_load_typeidxs)
+    mac_load_presctype_copy = copy.deepcopy(mac_load_presctype)
     for i in range(n_dim**2):
         if mac_load_type == 1:
             mac_load['strain'][i, :] = mac_load_copy['strain'][aux[comp_order_nsym[i]], :]
@@ -527,22 +566,139 @@ def readmacroscaleloading(file, file_path, mac_load_type, strain_formulation, n_
         elif mac_load_type == 3:
             mac_load['strain'][i, :] = mac_load_copy['strain'][aux[comp_order_nsym[i]], :]
             mac_load['stress'][i, :] = mac_load_copy['stress'][aux[comp_order_nsym[i]], :]
-            mac_load_typeidxs[i] = mac_load_typeidxs_copy[aux[comp_order_nsym[i]]]
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # For convenience, store the prescribed macroscale strains and stresses components as
-    # the associated strings, i.e. 0 > 'strain' and 1 > 'stress', in a dictionary
-    if n_dim == 2:
-        aux = ['11', '21', '12', '22']
-    else:
-        aux = ['11', '21', '31', '12', '22', '32', '13', '23', '33']
-    mac_load_presctype = dict()
-    for i in range(n_dim**2):
-        if mac_load_typeidxs[i] == 0:
-            mac_load_presctype[aux[i]] = 'strain'
-        else:
-            mac_load_presctype[aux[i]] = 'stress'
+            mac_load_presctype[i, :] = mac_load_presctype_copy[aux[comp_order_nsym[i]], :]
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return mac_load, mac_load_presctype
+#
+#                                                          Macroscale loading incrementation
+# ==========================================================================================
+# Read the macroscale loading incrementation, specified as
+#
+# Number_of_Load_Increments < int >
+#
+# or as
+#
+# Increment_List
+# [< int >:] < float > [_< float >] | [< int >:] < float > [_< float >] | ...
+# [< int >:] < float > [_< float >] | [< int >:] < float > [_< float >] | ...
+#                                   | [< int >:] < float > [_< float >] | ...
+#
+# and store it in a dictionary as
+#
+#                              incremental
+#                                 time
+#                         _         v  _
+#                        | float, float |
+#      dictionary[key] = | float, float | , where key is the loading subpath index.
+#                        |_float, float_|
+#                            ^
+#                       incremental
+#                       load factor
+#
+# The optional keyword associated to the loading time factor may also be specified as
+#
+# Loading_Time_Factor
+# < float >
+#
+def readmacloadincrem(file, file_path, keyword, n_load_subpaths):
+    # Initialize macroscale loading incrementation dictionary
+    mac_load_increm = dict()
+    # Set load time factor
+    keyword_time = 'Loading_Time_Factor'
+    is_found, _ = searchoptkeywordline(file, keyword_time)
+    if is_found:
+        load_time_factor = readtypeBkeyword(file, file_path, keyword_time)
+    else:
+        load_time_factor = 1.0
+    # Set macroscale loading incrementation
+    if keyword == 'Number_of_Load_Increments':
+        max = '~'
+        n_load_increments = readtypeAkeyword(file, file_path, keyword, max)
+        # Build macroscale loading incrementation dictionary
+        for i in range(n_load_subpaths):
+            # Set loading subpath default total load factor
+            total_lfact = 1.0
+            # Build macroscale loading subpath
+            load_subpath = np.zeros((n_load_increments, 2))
+            load_subpath[:, 0] = total_lfact/n_load_increments
+            load_subpath[:, 1] = load_time_factor*load_subpath[:, 0]
+            # Store macroscale loading subpath
+            mac_load_increm[str(i)] = load_subpath
+    elif keyword == 'Increment_List':
+        # Find keyword line number
+        keyword_line_number = searchkeywordline(file, keyword)
+        # Initialize macroscale loading increment array
+        increm_list = np.full((0, n_load_subpaths), '', dtype=object)
+        # Read increment specification line
+        line = linecache.getline(file_path, keyword_line_number + 1)
+        increm_line = [x.strip() for x in line.split('|')]
+        # At least one increment specification line must be provided for each macroscale
+        # loading subpath
+        is_empty_line = not bool(line.split())
+        if is_empty_line or len(increm_line) != n_load_subpaths:
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayerror('E00092', location.filename, location.lineno + 1)
+        i = 0
+        # Build macroscale loading increment array
+        while not is_empty_line:
+            increm_list = np.append(increm_list,
+                                    np.full((1, n_load_subpaths), '', dtype=object), axis=0)
+            # Assemble macroscale increment specification line
+            increm_list[i, 0:len(increm_line)] = increm_line
+            i += 1
+            # Read increment specification line
+            line = linecache.getline(file_path, keyword_line_number + 1 + i)
+            is_empty_line = not bool(line.split())
+            increm_line = [x.strip() for x in line.split('|')]
+        # Build macroscale loading incrementation dictionary
+        for j in range(n_load_subpaths):
+            # Initialize macroscale loading subpath
+            load_subpath = np.zeros((0, 2))
+            # Loop over increment specifications
+            for i in range(increm_list.shape[0]):
+                # Get increment specification
+                spec = increm_list[i, j]
+                # Decode increment specification
+                if spec == '':
+                    break
+                else:
+                    rep, inc_lfact, inc_time = decodeincremspec(spec, load_time_factor)
+                # Build macroscale loading subpath
+                load_subpath = np.append(load_subpath,
+                                         np.tile([inc_lfact, inc_time], (rep, 1)), axis=0)
+            # Store macroscale loading subpath
+            mac_load_increm[str(j)] = load_subpath
+    else:
+        # Unknown macroscale loading keyword
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayerror('E00093', location.filename, location.lineno + 1)
+    # Return
+    return mac_load_increm
+# ------------------------------------------------------------------------------------------
+# Decode macroscale loading increment specification
+def decodeincremspec(spec, load_time_factor):
+    # Split specifications based on multiple delimiters
+    code = re.split('[:_]', spec)
+    # Check if the repetition and incremental time have been specified
+    has_rep = ':' in re.findall('[:_]', spec)
+    has_time = '_' in re.findall('[:_]', spec)
+    if not code or len(code) > 3:
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayerror('E00091', location.filename, location.lineno + 1)
+    # Set macroscale loading increment parameters
+    try:
+        rep = int(code[0]) if has_rep else 1
+        inc_lfact = float(code[int(has_rep)])
+        inc_time = abs(float(code[-1])) if has_time else load_time_factor*abs(inc_lfact)
+    except:
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayerror('E00091', location.filename, location.lineno + 1)
+    else:
+        if any([x < 0 for x in [rep, inc_time]]):
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayerror('E00094', location.filename, location.lineno + 1)
+    # Return
+    return [rep, inc_lfact, inc_time]
 #
 #                                                                         Number of clusters
 # ==========================================================================================

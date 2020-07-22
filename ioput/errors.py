@@ -162,16 +162,19 @@ def displayerror(code, *args):
                    indent + '1. Missing descriptor specification;' + '\n' + \
                    indent + '2. Component name can only contain letters, numbers or ' + \
                    'underscores;' + '\n' + \
-                   indent + '3. Invalid component value (e.g must be integers or ' + \
+                   indent + '3. Number of prescriptions does not match the specified ' + \
+                   'number of loading subpaths;' + '\n' + \
+                   indent + '4. Invalid component value (must be integer or ' + \
                    'floating-point number);' + '\n\n' + \
                    'Suggestion:' + '\n\n' + \
                    indent + 'The keyword - {} - should be specified p.e. in a 2D ' + \
-                   'problem as' + '\n\n' + \
-                   indent + '{}' + '\n' + \
-                   indent + 'descriptor_name_11 < value >' + '\n' + \
-                   indent + 'descriptor_name_21 < value >' + '\n' + \
-                   indent + 'descriptor_name_12 < value >' + '\n' + \
-                   indent + 'descriptor_name_22 < value >'
+                   'problem with 2 loading' + '\n' + \
+                   indent + 'subpaths as' + '\n\n' + \
+                   indent + '{} 2' + '\n' + \
+                   indent + 'descriptor_name_11 < value > < value >' + '\n' + \
+                   indent + 'descriptor_name_21 < value > < value >' + '\n' + \
+                   indent + 'descriptor_name_12 < value > < value >' + '\n' + \
+                   indent + 'descriptor_name_22 < value > < value >'
     elif code == 'E00009':
         arguments = list(args[2:4])
         values = tuple(arguments)
@@ -187,23 +190,29 @@ def displayerror(code, *args):
         template = 'Details:' + '\n\n' + \
                    indent + 'The input data file must have \'.dat\' extension.'
     elif code == 'E00011':
-        arguments = 3*[args[2],]
+        suffix = getordinalnumber(args[3])
+        arguments = list(args[2:4]) + list(2*[args[2],])
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
                    'input \n' + \
-                   indent + 'data file, potentially due to one of the following reasons:' +\
-                   '\n\n' + \
+                   indent + 'data file. In particular, the {}' + suffix + ' component ' + \
+                   'is not properly specified potentially' + '\n' + \
+                   indent + 'due to one of the following reasons: \n\n' + \
                    indent + '1. Missing specification;' + '\n' + \
-                   indent + '2. Number of prescribed components is either insufficient ' + \
-                   'or excessive;' + '\n' + \
-                   indent + '3. Prescription must be either 0 (strain component) or 1 ' + \
-                   '(stress component);' + '\n\n' + \
+                   indent + '2. Prescription must be either 0 (strain component) or 1 ' + \
+                   '(stress component);' + '\n' + \
+                   indent + '3. Number of prescriptions exceeded the specified number ' + \
+                   'of loading subpaths;' + '\n\n' + \
                    'Suggestion:' + '\n\n' + \
                    indent + 'The keyword - {} - should be specified p.e. in a 2D ' + \
-                   'problem as' + '\n\n' + \
+                   'problem with 3' + '\n' + \
+                   indent + 'loading subpaths as' + '\n\n' + \
                    indent + '{}' + '\n' + \
-                   indent + '0 0 1 0'
+                   indent + '0 1 0' + '\n' + \
+                   indent + '0 1 1' + '\n' + \
+                   indent + '0 1 1' + '\n' + \
+                   indent + '0 1 0'
     elif code == 'E00012':
         component = ['12', '13', '23']
         arguments = [component[args[2]], component[args[2]][::-1]]
@@ -880,6 +889,71 @@ def displayerror(code, *args):
                    'binary is not an absolute path' + '\n' + \
                    indent + '(mandatory) or does not exist.' + '\n\n' + \
                    indent + '{}'
+    elif code == 'E00088':
+        arguments = 3*[args[2],]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The keyword - {} - hasn\'t been properly defined in the ' + \
+                   'input data file.\n' + \
+                   indent + 'In particular, the number of loading subpaths ' + \
+                   'has not been properly specified.' + '\n\n' + \
+                   'Suggestion:' + '\n\n' + \
+                   indent + 'The number of loading subpaths should be specified as a ' + \
+                   'positive integer after the' + '\n' + \
+                   indent + 'keyword - {} - as' + '\n\n' + \
+                   indent + '{} < value >'
+    elif code == 'E00089':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'One of the keywords associated to the macroscale loading ' + \
+                   'incrementation' + '\n' + \
+                   indent + '(Number_of_Load_Increments or Increment_List) must be ' + \
+                   'specified and none has been found' + '\n' + \
+                   indent + 'in the input data file.'
+    elif code == 'E00090':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'Only one of the keywords associated to the macroscale ' + \
+                   'loading incrementation' + '\n' + \
+                   indent + '(Number_of_Load_Increments or Increment_List) can be ' + \
+                   'specified and both have been found' + '\n' + \
+                   indent + 'in the input data file.'
+    elif code == 'E00091':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'Invalid macroscale loading increment specification.' + \
+                   '\n\n' + \
+                   'Suggestion:' + '\n\n' + \
+                   indent + 'The macroscale loading increment specification within the ' + \
+                   'Increment_List option must have' + '\n' + \
+                   indent + 'the format' + '\n\n' + \
+                   indent + '[x:]y[_z]' + '\n\n' + \
+                   indent + 'where x is the number of repeated increments ' + \
+                   '(int, optional), y is the incremental load' + '\n' + \
+                   indent + 'factor (float) and z is the incremental time (float, ' + \
+                   'optional).'
+    elif code == 'E00092':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The first line of the increment list must contain only ' + \
+                   'one macroscale loading increment' + '\n' + \
+                   indent + 'specification for each macroscale loading subpath.'
+    elif code == 'E00093':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'Unknown macroscale loading incrementation keyword.'
+    elif code == 'E00094':
+        arguments = ['',]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The number of repetitions and incremental time optional ' + \
+                   'parameters associated to a' + '\n' + \
+                   indent + 'macroscale loading increment specification must be positive.'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display error
     if code in ['E00001', 'E00002', 'E00010']:
@@ -913,12 +987,7 @@ def displaywarning(code, *args):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set warnings to display
     if code == 'W00001':
-        if args[2] == 1:
-            arguments = ['strain',]
-        elif args[2] == 2:
-            arguments = ['stress',]
-        elif args[2] == 3:
-            arguments == [args[3],]
+        arguments = [args[2],]
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'A non-symmetric macroscale {} tensor was prescribed under ' + \

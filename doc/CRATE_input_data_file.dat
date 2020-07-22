@@ -17,7 +17,7 @@
 
 #                                                                     Strain formulation [M]
 # ==========================================================================================
-# Meaning:   Strain formulation (infinitesimal or finite strains)
+# Meaning:   Strain formulation (infinitesimal or finite strains).
 #
 # Syntax:    Strain_Formulation x
 #
@@ -31,7 +31,7 @@
 
 #                                                                           Problem type [M]
 # ==========================================================================================
-# Meaning:   Problem type formulation
+# Meaning:   Problem type formulation.
 #
 # Syntax:    Problem_Type x
 #
@@ -45,7 +45,7 @@
 
 #                                                                         RVE dimensions [M]
 # ==========================================================================================
-# Meaning:   Dimensions of the quadrilateral (2D) / hexahedral (3D) RVE
+# Meaning:   Dimensions of the quadrilateral (2D) / hexahedral (3D) RVE.
 #
 # Syntax:    RVE_Dimensions
 #            x1 x2 (2D) / x1 x2 x3
@@ -61,7 +61,7 @@
 # ==========================================================================================
 # Meaning:   Description of the microstructure in terms of material phases, including the
 #            number of material phases and the constitutive model (model, properties and
-#            source) associated to each of them
+#            source) associated to each of them.
 #
 # Syntax:    Material_Phases x
 #            phase_ID model_name n_properties model_source
@@ -112,7 +112,7 @@
 #                                                                     Macroscale loading [M]
 # ==========================================================================================
 # Meaning:   Definition of the type of macroscale loading constraints (strain, stress or
-#            strain-stress) and the associated values
+#            strain-stress), the number of loading subpaths and associated values.
 #
 # Syntax:    Macroscale_Loading x
 #
@@ -123,29 +123,38 @@
 #
 # Option 1 (macroscale strain constraint):
 #
-# Syntax:    Macroscale_Strain
-#            comp_name y
-#            comp_name y
+# Syntax:    Macroscale_Strain [n]
+#            comp_name y y ...
+#            comp_name y y ...
+#               ...    . . ...
+#
 #
 # Option 2 (macroscale stress constraint):
 #
-# Syntax:    Macroscale_Stress
-#            comp_name y
-#            comp_name y
+# Syntax:    Macroscale_Stress [n]
+#            comp_name y y ...
+#            comp_name y y ...
+#               ...    . . ...
+#
 #
 # Option 3 (macroscale strain and stress constraint):
 #
-# Syntax:    Macroscale_Strain
-#            comp_name y
-#            comp_name y
+# Syntax:    Macroscale_Strain [n]
+#            comp_name y y ...
+#            comp_name y y ...
+#               ...    . . ...
 #
-#            Macroscale_Stress
-#            comp_name y
-#            comp_name y
+#            Macroscale_Stress [m]
+#            comp_name y y ...
+#            comp_name y y ...
+#               ...    . . ...
 #
 #            Mixed_Prescription_Index
-#            z z z z z
+#            z z z ...
+#            z z z ...
+#            . . . ...
 #
+# n, m:      integer (number of loading subpaths, default to 1)
 # comp_name: string (e.g. E11, SXX)
 # y:         float
 # z:         integer (0 - strain component, 1 - stress component)
@@ -161,7 +170,7 @@
 #                                                                 Self-Consistent scheme [M]
 # ==========================================================================================
 # Meaning:   Self-consistent scheme employed to perform the update of the reference material
-#            properties
+#            properties.
 #
 # Syntax:    Self_Consistent_Scheme x
 #
@@ -176,7 +185,7 @@
 #                                                                   Clustering algorithm [M]
 # ==========================================================================================
 # Meaning:   Unsupervised machine learning clustering algorithm employed to perform the
-#            clustering-based domain decomposition
+#            clustering-based domain decomposition.
 #
 # Syntax:    Clustering_Method x
 #
@@ -189,7 +198,7 @@
 
 #                                                                     Number of clusters [M]
 # ==========================================================================================
-# Meaning:   Number of clusters associated to each material phase
+# Meaning:   Number of clusters associated to each material phase.
 #
 # Syntax:    Number_of_Clusters
 #            phase_ID x
@@ -204,12 +213,26 @@
 
 #                                                                    Load incrementation [M]
 # ==========================================================================================
-# Meaning:   Number of equal-magnitude increments in which to enforce the macroscale loading
-#            constraints
+# Meaning:   Definition of the macroscale loading incrementation (choose ONE of the options
+#            below).
+#
+# Option 1 (equal-magnitude increments applied to each loading subpath):
 #
 # Syntax:    Number_of_Load_Increments x
 #
 # x:         integer
+#
+#
+# Option 2 (general incrementation):
+#
+# Syntax:    Increment_List
+#            [x:] y[_z] | [x:] y[_z] | [x:] y[_z] |  ...
+#            [x:] y[_z] | [x:] y[_z] | [x:] y[_z] |  ...
+#            [x:] y[_z] | [x:] y[_z] | [x:] y[_z] |  ...
+#
+# x:         integer (number of increment repetitions, optional, default to 1)
+# y:         float (incremental load factor)
+# z:         float (incremental time, optional, default to Loading_Time_Factor*abs(y))
 # ------------------------------------------------------------------------------------------
 [insert here]
 
@@ -233,10 +256,27 @@
 
 
 
+#                                                                           Loading time [O]
+# ==========================================================================================
+# Meaning:   Time associated to the macroscale loading incrementation. For a given
+#            macroscale loading increment, unless the associated incremental time is
+#            explicitly specified, the incremental time is obtained by multiplying the
+#            loading time factor by the incremental loading factor.
+#
+# Syntax:    Loading_Time_Factor
+#            x
+#
+# x:         float (default to 1.0)
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
 #                                    Self-Consistent scheme maximum number of iterations [O]
 # ==========================================================================================
 # Meaning:   Maximum number of iterations allowed for the convergence of the self-consistent
-#            iterative scheme
+#            iterative scheme.
 #
 # Syntax:    SCS_Max_Number_of_Iterations x
 #
@@ -250,7 +290,7 @@
 #                                           Self-Consistent scheme convergence tolerance [O]
 # ==========================================================================================
 # Meaning:   Convergence tolerance adopted for the convergence of the self-consistent
-#            iterative scheme
+#            iterative scheme.
 #
 # Syntax:    SCS_Convergence_Tolerance
 #            x
@@ -265,7 +305,7 @@
 #                                                                    Clustering strategy [O]
 # ==========================================================================================
 # Meaning:   Clustering strategy employed to perform the clustering-based domain
-#            decomposition, namely related to the data considered for this purpose
+#            decomposition, namely related to the data considered for this purpose.
 #
 # Syntax:    Clustering_Strategy x
 #
@@ -279,7 +319,7 @@
 #                                                    Clustering data DNS solution method [O]
 # ==========================================================================================
 # Meaning:   DNS method employed to obtain the required data to perform the clustering-based
-#            domain decomposition
+#            domain decomposition.
 #
 # Syntax:    Clustering_Solution_Method x
 #
@@ -310,7 +350,7 @@
 #                                Equilibrium Newton-Raphson maximum number of iterations [O]
 # ==========================================================================================
 # Meaning:   Maximum number of iterations allowed for the convergence of the Newton-Raphson
-#            iterative scheme associated to the microscale equilibrium problem
+#            iterative scheme associated to the microscale equilibrium problem.
 #
 # Syntax:    Max_Number_of_Iterations x
 #
@@ -324,7 +364,7 @@
 #                                       Equilibrium Newton-Raphson convergence tolerance [O]
 # ==========================================================================================
 # Meaning:   Convergence tolerance adopted for the convergence of the Newton-Raphson
-#            iterative scheme associated to the microscale equilibrium problem
+#            iterative scheme associated to the microscale equilibrium problem.
 #
 # Syntax:    Convergence_Tolerance
 #            x
@@ -340,7 +380,7 @@
 # ==========================================================================================
 # Meaning:   Maximum number of iterations allowed for for the convergence of the
 #            Newton-Raphson iterative scheme associated to state update of a nonlinear
-#            material constitutive model from CRATE
+#            material constitutive model from CRATE.
 #
 # Syntax:    SU_Max_Number_of_Iterations x
 #
@@ -355,7 +395,7 @@
 # ==========================================================================================
 # Meaning:   Convergence tolerance adopted for the convergence of the Newton-Raphson
 #            iterative scheme associated to state update of a nonlinear material
-#            constitutive model from CRATE
+#            constitutive model from CRATE.
 #
 # Syntax:    SU_Convergence_Tolerance
 #            x
@@ -370,7 +410,7 @@
 #                                                                VTK (XML format) output [O]
 # ==========================================================================================
 # Meaning:   Output of data associated to snapshots (macroscale loading increments) of the
-#            microscale equilibrium problem solution into VTK files (XML format)
+#            microscale equilibrium problem solution into VTK files (XML format).
 #
 # Syntax:    VTK_Output [a, b, c, ...]
 #

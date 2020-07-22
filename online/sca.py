@@ -41,7 +41,7 @@ import material.materialinterface
 # Linear elastic constitutive model
 import material.models.linear_elastic
 # Macroscale load incrementation
-import online.incrementation.macloadincrem as macincrem
+from online.incrementation.macloadincrem import LoadingPath
 # Homogenization
 import online.homogenization.homogenization as hom
 # Clusters state
@@ -99,6 +99,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     problem_type = problem_dict['problem_type']
     n_dim = problem_dict['n_dim']
     comp_order = problem_dict['comp_order_sym']
+    strain_formulation = problem_dict['strain_formulation']
     # Get material data
     material_phases = mat_dict['material_phases']
     material_phases_f = mat_dict['material_phases_f']
@@ -111,7 +112,9 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     cit_2_mf = clst_dict['cit_2_mf']
     cit_0_freq_mf = clst_dict['cit_0_freq_mf']
     # Get macroscale loading data
-    n_load_increments = macload_dict['n_load_increments']
+    mac_load = macload_dict['mac_load']
+    mac_load_presctype = macload_dict['mac_load_presctype']
+    mac_load_increm = macload_dict['mac_load_increm']
     # Get self-consistent scheme data
     self_consistent_scheme = scs_dict['self_consistent_scheme']
     scs_max_n_iterations = scs_dict['scs_max_n_iterations']
@@ -217,28 +220,6 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             print(clusters_De_mf[str(cluster)])
     # --------------------------------------------------------------------------------------
     #
-    #                                                            Macroscale incremental loop
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Set the incremental macroscale load data
-    inc_mac_load_mf, n_presc_mac_strain, n_presc_mac_stress, presc_strain_idxs, \
-        presc_stress_idxs = macincrem.macloadincrem(problem_dict, macload_dict)
-    # --------------------------------------------------------------------------------------
-    # Validation:
-    if is_Validation[3]:
-        section = 'Macroscale load increments'
-        print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
-        if n_presc_mac_strain > 0:
-            print('\n' + 'n_presc_mac_strain = ' + str(n_presc_mac_strain))
-            print('\n' + 'presc_strain_idxs = ' + str(presc_strain_idxs))
-            print('\n' + 'inc_mac_load_mf[strain]:' + '\n')
-            print(inc_mac_load_mf['strain'])
-        if n_presc_mac_stress > 0:
-            print('\n' + 'n_presc_mac_stress = ' + str(n_presc_mac_stress))
-            print('\n' + 'presc_stress_idxs = ' + str(presc_stress_idxs))
-            print('\n' + 'inc_mac_load_mf[stress]:' + '\n')
-            print(inc_mac_load_mf['stress'])
-    # --------------------------------------------------------------------------------------
-    #
     #                                                     Reference material elastic tangent
     #                                                                        (initial guess)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -267,17 +248,43 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         print(Se_ref_matrix)
     # --------------------------------------------------------------------------------------
     #
-    #                                                               Incremental loading loop
+    #                                                                Macroscale loading path
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Initialize increment counter
-    inc = 1
-    info.displayinfo('7', 'init', inc)
+    # Initialize macroscale loading path
+    mac_load_path = LoadingPath(strain_formulation, problem_dict['comp_order_sym'],
+                                problem_dict['comp_order_nsym'], mac_load,
+                                mac_load_presctype, mac_load_increm)
+    # Set initial homogenized state
+    mac_load_path.update_hom_state(n_dim, comp_order, hom_strain, hom_stress)
+    # Setup first macroscale loading increment
+    inc_mac_load_mf, n_presc_strain, presc_strain_idxs, n_presc_stress, \
+        presc_stress_idxs, is_last_inc = mac_load_path.new_load_increment(n_dim, comp_order)
+    # Get increment counter
+    inc = mac_load_path.increm_state['inc']
+    # Get loading subpath data
+    sp_id, sp_inc, sp_total_lfact, sp_inc_lfact, sp_total_time, sp_inc_time = \
+        mac_load_path.get_subpath_state()
+    # Display increment data
+    info.displayinfo('7', 'init', inc, sp_id + 1, sp_total_lfact, sp_total_time,
+                     sp_inc, sp_inc_lfact, sp_inc_time)
     # Set increment initial time
     inc_init_time = time.time()
     # --------------------------------------------------------------------------------------
     # Validation:
     if any(is_Validation):
         print('\n' + (92 - len(' Increment ' + str(inc)))*'-' + ' Increment ' + str(inc))
+        section = 'Macroscale load increments'
+        print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
+        if n_presc_strain > 0:
+            print('\n' + 'n_presc_strain = ' + str(n_presc_strain))
+            print('\n' + 'presc_strain_idxs = ' + str(presc_strain_idxs))
+            print('\n' + 'inc_mac_load_mf[strain]:' + '\n')
+            print(inc_mac_load_mf['strain'])
+        if n_presc_stress > 0:
+            print('\n' + 'n_presc_stress = ' + str(n_presc_stress))
+            print('\n' + 'presc_stress_idxs = ' + str(presc_stress_idxs))
+            print('\n' + 'inc_mac_load_mf[stress]:' + '\n')
+            print(inc_mac_load_mf['stress'])
     # --------------------------------------------------------------------------------------
     # Start incremental loading loop
     while True:
@@ -289,7 +296,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             # (b) Incremental homogenized strain (if non-prescribed macroscale strain
             # component)
             inc_mix_strain_mf = np.zeros(len(comp_order))
-            if n_presc_mac_strain > 0:
+            if n_presc_strain > 0:
                 inc_mix_strain_mf[presc_strain_idxs] = \
                     inc_mac_load_mf['strain'][presc_strain_idxs]
             # Initialize stress tensor where each component is defined as follows:
@@ -297,7 +304,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             # (b) Incremental homogenized stress (if non-prescribed macroscale stress
             #     component)
             inc_mix_stress_mf = np.zeros(len(comp_order))
-            if n_presc_mac_stress > 0:
+            if n_presc_stress > 0:
                 inc_mix_stress_mf[presc_stress_idxs] = \
                     inc_mac_load_mf['stress'][presc_stress_idxs]
             # ------------------------------------------------------------------------------
@@ -492,7 +499,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                 else:
                     residual = eqms.buildresidual(
                         problem_dict, material_phases, phase_clusters, n_total_clusters,
-                        n_presc_mac_stress, presc_stress_idxs, global_cit_mf,
+                        n_presc_stress, presc_stress_idxs, global_cit_mf,
                         clusters_state, clusters_state_old, De_ref_mf,
                         gbl_inc_strain_mf, inc_mix_strain_mf,
                         inc_hom_stress_mf, inc_mix_stress_mf)
@@ -514,8 +521,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                 # Check Newton-Raphson iterative procedure convergence
                 if is_farfield_formulation:
                     is_converged, error_A1, error_A2, error_A3 = eqff.checkeqlbconvergence2(
-                        comp_order, n_total_clusters, inc_mac_load_mf, n_presc_mac_strain,
-                        n_presc_mac_stress, presc_strain_idxs, presc_stress_idxs,
+                        comp_order, n_total_clusters, inc_mac_load_mf, n_presc_strain,
+                        n_presc_stress, presc_strain_idxs, presc_stress_idxs,
                         inc_hom_strain_mf, inc_hom_stress_mf, residual, conv_tol)
                     info.displayinfo('9', 'iter', nr_iter, time.time() - nr_iter_init_time,
                                      error_A1, error_A2, error_A3)
@@ -523,7 +530,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                     is_converged, error_A1, error_A2, error_inc_hom_strain = \
                         eqms.checkeqlbconvergence(
                             comp_order, n_total_clusters, inc_mac_load_mf,
-                            n_presc_mac_strain, n_presc_mac_stress, presc_strain_idxs,
+                            n_presc_strain, n_presc_stress, presc_strain_idxs,
                             presc_stress_idxs, inc_hom_strain_mf, inc_hom_stress_mf,
                             inc_mix_strain_mf, inc_mix_stress_mf, residual, conv_tol)
                     info.displayinfo('10', 'iter', nr_iter, time.time() - nr_iter_init_time,
@@ -570,7 +577,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                 else:
                     Jacobian = eqms.buildjacobian(
                         problem_dict, material_phases, phase_clusters, n_total_clusters,
-                        n_presc_mac_stress, presc_stress_idxs, global_cit_D_De_ref_mf,
+                        n_presc_stress, presc_stress_idxs, global_cit_D_De_ref_mf,
                         clusters_f, clusters_D_mf)
                 # --------------------------------------------------------------------------
                 # Validation:
@@ -607,7 +614,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                         d_iter[n_total_clusters*len(comp_order):]
                 else:
                     # Update homogenized incremental strain components
-                    if n_presc_mac_stress > 0:
+                    if n_presc_stress > 0:
                         inc_mix_strain_mf[presc_stress_idxs] = \
                             inc_mix_strain_mf[presc_stress_idxs] +  \
                             d_iter[n_total_clusters*len(comp_order):]
@@ -622,7 +629,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                         print('\n' + 'inc_farfield_strain_mf:' + '\n')
                         print(inc_farfield_strain_mf)
                     else:
-                        if n_presc_mac_stress > 0:
+                        if n_presc_stress > 0:
                             print('\n' + 'inc_mix_strain_mf:' + '\n')
                             print(inc_mix_strain_mf)
                 # --------------------------------------------------------------------------
@@ -764,9 +771,11 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         if problem_type == 1:
             hom_stress_33_old = hom_stress_33
         #
+        #                                                Incremental macroscale loading flow
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Return if the last macroscale loading increment was completed successfuly,
-        # otherwise increment the increment counter
+        # Update converged macroscale (homogenized) state
+        mac_load_path.update_hom_state(n_dim, comp_order, hom_strain, hom_stress)
+        # Display converged increment data
         if problem_type == 1:
             info.displayinfo('7', 'end', problem_type, hom_strain, hom_stress,
                              time.time() - inc_init_time, time.time() - os_init_time,
@@ -774,14 +783,26 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         else:
             info.displayinfo('7', 'end', problem_type, hom_strain, hom_stress,
                              time.time() - inc_init_time, time.time() - os_init_time)
-        if inc == n_load_increments:
+        # Return if last macroscale loading increment, otherwise setup new macroscale
+        # loading increment
+        if is_last_inc:
             # Close VTK collection file
             if is_VTK_output:
                 vtkoutput.closevtkcollectionfile(input_file_name, postprocess_dir)
             # Finish online stage
             return
         else:
-            inc = inc + 1
-            info.displayinfo('7', 'init', inc)
+            # Setup new macroscale loading increment
+            inc_mac_load_mf, n_presc_strain, presc_strain_idxs, n_presc_stress, \
+                presc_stress_idxs, is_last_inc = mac_load_path.new_load_increment(
+                    n_dim, comp_order)
+            # Get increment counter
+            inc = mac_load_path.increm_state['inc']
+            # Get loading subpath data
+            sp_id, sp_inc, sp_total_lfact, sp_inc_lfact, sp_total_time, sp_inc_time = \
+                mac_load_path.get_subpath_state()
+            # Display increment data
+            info.displayinfo('7', 'init', inc, sp_id + 1, sp_total_lfact, sp_total_time,
+                             sp_inc, sp_inc_lfact, sp_inc_time)
             # Set increment initial time
             inc_init_time = time.time()

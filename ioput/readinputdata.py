@@ -102,8 +102,8 @@ def readinputdatafile(input_file,dirs_dict):
     # Read self consistent scheme (optional). If the associated keyword is not found, then
     # a default specification is assumed
     keyword = 'Self_Consistent_Scheme'
-    isFound,keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
-    if isFound:
+    is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
         max = 2
         self_consistent_scheme = rproc.readtypeAkeyword(input_file, input_file_path,
                                                         keyword, max)
@@ -113,8 +113,8 @@ def readinputdatafile(input_file,dirs_dict):
     # Read self consistent scheme maximum number of iterations (optional). If the associated
     # keyword is not found, then a default specification is assumed
     keyword = 'SCS_Max_Number_of_Iterations'
-    isFound,keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
-    if isFound:
+    is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
         max = '~'
         scs_max_n_iterations = rproc.readtypeAkeyword(input_file, input_file_path,
                                                       keyword, max)
@@ -124,8 +124,8 @@ def readinputdatafile(input_file,dirs_dict):
     # Read self consistent scheme convergence tolerance (optional). If the associated
     # keyword is not found, then a default specification is assumed
     keyword = 'SCS_Convergence_Tolerance'
-    isFound,keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
-    if isFound:
+    is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
         max = '~'
         scs_conv_tol = rproc.readtypeBkeyword(input_file, input_file_path, keyword)
     else:
@@ -139,8 +139,8 @@ def readinputdatafile(input_file,dirs_dict):
     # Read clustering strategy (optional). If the associated keyword is not found, then a
     # default specification is assumed
     keyword = 'Clustering_Strategy'
-    isFound,keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
-    if isFound:
+    is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
         max = 1
         clustering_strategy = rproc.readtypeAkeyword(input_file, input_file_path, keyword,
                                                      max)
@@ -150,8 +150,8 @@ def readinputdatafile(input_file,dirs_dict):
     # Read clustering solution method (optional). If the associated keyword is not found,
     # then a default specification is assumed
     keyword = 'Clustering_Solution_Method'
-    isFound,keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
-    if isFound:
+    is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
         max = 2
         clustering_solution_method = rproc.readtypeAkeyword(input_file, input_file_path,
                                                             keyword, max)
@@ -180,16 +180,30 @@ def readinputdatafile(input_file,dirs_dict):
     phase_n_clusters = rproc.readphaseclustering(input_file, input_file_path, keyword,
                                                  n_material_phases, material_properties)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Read number of load increments
-    keyword = 'Number_of_Load_Increments'
-    max = '~'
-    n_load_increments = rproc.readtypeAkeyword(input_file, input_file_path, keyword, max)
+    # Read macroscale loading incrementation parameters
+    keyword_1 = 'Number_of_Load_Increments'
+    is_found_1, _ = rproc.searchoptkeywordline(input_file, keyword_1)
+    keyword_2 = 'Increment_List'
+    is_found_2, _ = rproc.searchoptkeywordline(input_file, keyword_2)
+    if not (is_found_1 or is_found_2):
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayerror('E00089', location.filename, location.lineno + 1)
+    elif is_found_1 and is_found_2:
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayerror('E00090', location.filename, location.lineno + 1)
+    else:
+        # Get number of loading subpaths
+        n_load_subpaths = mac_load_presctype.shape[1]
+        # Read macroscale loading incrementation
+        keyword = keyword_1 if is_found_1 else keyword_2
+        mac_load_increm = rproc.readmacloadincrem(input_file, input_file_path, keyword,
+                                                  n_load_subpaths)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read maximum number of iterations to solve each load increment (optional). If the
     # associated keyword is not found, then a default specification is assumed
     keyword = 'Max_Number_of_Iterations'
-    isFound,keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
-    if isFound:
+    is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
         max = '~'
         max_n_iterations = rproc.readtypeAkeyword(input_file, input_file_path, keyword, max)
     else:
@@ -198,8 +212,8 @@ def readinputdatafile(input_file,dirs_dict):
     # Read convergence tolerance to solve each load increment (optional). If the associated
     # keyword is not found, then a default specification is assumed
     keyword = 'Convergence_Tolerance'
-    isFound,keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
-    if isFound:
+    is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
         conv_tol = rproc.readtypeBkeyword(input_file, input_file_path, keyword)
     else:
         conv_tol = 1e-6
@@ -207,8 +221,8 @@ def readinputdatafile(input_file,dirs_dict):
     # Read maximum level of subincrementation allowed (optional). If the associated
     # keyword is not found, then a default specification is assumed
     keyword = 'Max_SubIncrem_Level'
-    isFound,keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
-    if isFound:
+    is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
         max = '~'
         max_subincrem_level = rproc.readtypeAkeyword(input_file, input_file_path, keyword,
                                                      max)
@@ -218,8 +232,8 @@ def readinputdatafile(input_file,dirs_dict):
     # Read material state update maximum number of iterations (optional). If the associated
     # keyword is not found, then a default specification is assumed
     keyword = 'SU_Max_Number_of_Iterations'
-    isFound,keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
-    if isFound:
+    is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
         max = '~'
         su_max_n_iterations = rproc.readtypeAkeyword(input_file, input_file_path, keyword,
                                                      max)
@@ -229,8 +243,8 @@ def readinputdatafile(input_file,dirs_dict):
     # Read material state update convergence tolerance (optional). If the associated
     # keyword is not found, then a default specification is assumed
     keyword = 'SU_Convergence_Tolerance'
-    isFound,keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
-    if isFound:
+    is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
         su_conv_tol = rproc.readtypeBkeyword(input_file, input_file_path, keyword)
     else:
         su_conv_tol = 1e-6
@@ -253,8 +267,8 @@ def readinputdatafile(input_file,dirs_dict):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read VTK output options
     keyword = 'VTK_Output'
-    isFound, keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
-    if isFound:
+    is_found, keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
         is_VTK_output = True
         vtk_format, vtk_inc_div, vtk_vars = \
             rproc.readvtkoptions(input_file, input_file_path, keyword, keyword_line_number)
@@ -266,19 +280,19 @@ def readinputdatafile(input_file,dirs_dict):
     # Package problem general data
     info.displayinfo('5', 'Packaging problem general data...')
     problem_dict = packager.packproblem(strain_formulation, problem_type, n_dim,
-                                           comp_order_sym, comp_order_nsym)
+                                        comp_order_sym, comp_order_nsym)
     # Package data associated to the material phases
     info.displayinfo('5', 'Packaging material data...')
     mat_dict = packager.packmaterialphases(n_material_phases, material_phases_models,
-                                              material_properties)
+                                           material_properties)
     # Package data associated to the macroscale loading
     info.displayinfo('5', 'Packaging macroscale loading data...')
     macload_dict = packager.packmacroscaleloading(mac_load_type, mac_load,
-                                                     mac_load_presctype, n_load_increments)
+                                                  mac_load_presctype, mac_load_increm)
     # Package data associated to the spatial discretization file(s)
     info.displayinfo('5', 'Packaging regular grid data...')
     rg_dict = packager.packregulargrid(discret_file_path, rve_dims, mat_dict,
-                                          problem_dict)
+                                       problem_dict)
     # Package data associated to the clustering
     info.displayinfo('5', 'Packaging clustering data...')
     clst_dict = packager.packrgclustering(clustering_method, clustering_strategy,
