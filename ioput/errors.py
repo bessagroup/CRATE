@@ -939,9 +939,9 @@ def displayerror(code, *args):
         arguments = ['',]
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
-                   indent + 'At least one macroscale loading increment specification ' + \
-                   'must be provided for each loading' + '\n' + \
-                   indent + 'subpath.'
+                   indent + 'The first line of the increment list must contain only ' + \
+                   'one macroscale loading increment' + '\n' + \
+                   indent + 'specification for each macroscale loading subpath.'
     elif code == 'E00093':
         arguments = ['',]
         values = tuple(arguments)
