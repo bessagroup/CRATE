@@ -44,10 +44,15 @@ class LoadingPath:
         self._conv_hom_state = {key: None for key in ['strain', 'stress']}
         # Initialize loading last increment flag
         self._is_last_inc = False
+        # Initialize consecutive increment cuts counter
+        self._n_cinc_cuts = 0
     # --------------------------------------------------------------------------------------
     def new_load_increment(self, n_dim, comp_order):
         '''Setup new macroscale loading increment and get associated data.'''
 
+        # Reset consecutive macroscale loading increment cuts counter
+        self._n_cinc_cuts = 0
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Add a new loading subpath to the loading path if either first load increment or
         # current loading subpath is completed
         if self.increm_state['inc'] == 0 or self._get_load_subpath()._is_last_subpath_inc:
@@ -62,6 +67,32 @@ class LoadingPath:
         if load_subpath._id == self._n_load_subpaths - 1 and \
                 load_subpath._is_last_subpath_inc:
             self._is_last_inc = True
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Compute incremental macroscale loading
+        inc_mac_load = self._get_increm_load()
+        inc_mac_load_mf = {}
+        for ltype in inc_mac_load.keys():
+            inc_mac_load_mf[ltype] = type(self)._get_load_mf(n_dim, comp_order,
+                                                             inc_mac_load[ltype])
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return [inc_mac_load_mf, load_subpath._n_presc_strain,
+                load_subpath._presc_strain_idxs, load_subpath._n_presc_stress,
+                load_subpath._presc_stress_idxs, self._is_last_inc]
+    # --------------------------------------------------------------------------------------
+    def increment_cut(self, n_dim, comp_order):
+        '''Perform macroscale loading increment cut, setup the resulting increment and get
+        associated data.'''
+
+        # Get current loading subpath
+        load_subpath = self._get_load_subpath()
+        # Perform macroscale loading increment
+        load_subpath.increment_cut()
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set last macroscale loading increment flag
+        self._is_last_inc = False
+        # Increment (+1) consecutive macroscale loading increment cuts counter
+        self._n_cinc_cuts += 1
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute incremental macroscale loading
         inc_mac_load = self._get_increm_load()
@@ -130,7 +161,7 @@ class LoadingPath:
         # Increment (+1) global increment counter
         self.increm_state['inc'] += 1
         # Increment (+1) loading subpath increment counter
-        self._get_load_subpath()._update_inc()
+        self._get_load_subpath().update_inc()
     # --------------------------------------------------------------------------------------
     def _get_increm_load(self):
         '''Compute incremental macroscale loading.'''
@@ -223,8 +254,16 @@ class LoadingSubpath:
         self._applied_load = {key: np.zeros(load[key].shape[0]) for key in load.keys()}
         # Initialize loading subpath last increment flag
         self._is_last_subpath_inc = False
+        # Initialize subincrementation levels
+        self._sub_inc_levels = [0]*len(self._inc_lfacts)
     # --------------------------------------------------------------------------------------
-    def _update_inc(self):
+    def get_state(self):
+        '''Get subpath state data.'''
+
+        return [self._id, self._inc, self._total_lfact, self._inc_lfacts[self._inc - 1],
+                self._total_time, self._inc_times[self._inc - 1]]
+    # --------------------------------------------------------------------------------------
+    def update_inc(self):
         '''Update increment counter and total load factor accordingly.'''
 
         # Increment (+1) loading subpath increment counter
@@ -239,6 +278,30 @@ class LoadingSubpath:
         if self._inc == len(self._inc_lfacts):
             self._is_last_subpath_inc = True
     # --------------------------------------------------------------------------------------
+    def increment_cut(self):
+        '''Perform macroscale loading increment cut.'''
+
+        # Update subincrementation level
+        self._sub_inc_levels[self._inc] += 1
+        self._sub_inc_levels.insert(self._inc + 1, self._sub_inc_levels[self._inc])
+        # Get current incremental load factor and associated incremental time
+        inc_lfact = self._inc_lfacts[self._inc]
+        inc_time = self._inc_times[self._inc]
+        # Cut the macroscale load increment in half
+        self._inc_lfacts[self._inc] = inc_lfact/2.0
+        self._inc_lfacts.insert(self._inc + 1, self._inc_lfacts[self._inc])
+        self._inc_times[self._inc] = inc_time/2.0
+        self._inc_times.insert(self._inc + 1, self._inc_times[self._inc])
+        # Update total load factor and total time
+        self._total_lfact = sum(self._inc_lfacts[0:self._inc])
+        self._total_time = sum(self._inc_times[0:self._inc])
+        # Update total applied macroscale loading
+        self._update_applied_load()
+        # Set loading subpath last increment flag
+        self._is_last_subpath_inc = False
+        # Return
+        return
+    # --------------------------------------------------------------------------------------
     def _update_applied_load(self):
         '''Update total applied macroscale loading.'''
 
@@ -246,9 +309,3 @@ class LoadingSubpath:
             for i in range(len(self._applied_load[ltype])):
                 if self._presctype[i] == ltype:
                     self._applied_load[ltype][i] = self._total_lfact*self._load[ltype][i]
-    # --------------------------------------------------------------------------------------
-    def get_state(self):
-        '''Get subpath state data.'''
-
-        return [self._id, self._inc, self._total_lfact, self._inc_lfacts[self._inc - 1],
-                self._total_time, self._inc_times[self._inc - 1]]
