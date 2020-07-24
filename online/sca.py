@@ -122,6 +122,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     # Get algorithmic parameters
     max_n_iterations = algpar_dict['max_n_iterations']
     conv_tol = algpar_dict['conv_tol']
+    max_subinc_level = algpar_dict['max_subinc_level']
+    max_cinc_cuts = algpar_dict['max_cinc_cuts']
     # Get VTK output parameters
     is_VTK_output = vtk_dict['is_VTK_output']
     if is_VTK_output:
@@ -253,7 +255,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     # Initialize macroscale loading path
     mac_load_path = LoadingPath(strain_formulation, problem_dict['comp_order_sym'],
                                 problem_dict['comp_order_nsym'], mac_load,
-                                mac_load_presctype, mac_load_increm)
+                                mac_load_presctype, mac_load_increm, max_subinc_level,
+                                max_cinc_cuts)
     # Set initial homogenized state
     mac_load_path.update_hom_state(n_dim, comp_order, hom_strain, hom_stress)
     # Setup first macroscale loading increment

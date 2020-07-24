@@ -954,6 +954,20 @@ def displayerror(code, *args):
                    indent + 'The number of repetitions and incremental time optional ' + \
                    'parameters associated to a' + '\n' + \
                    indent + 'macroscale loading increment specification must be positive.'
+    elif code == 'E00095':
+        arguments = [args[2], ]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The maximum macroscale loading subincrementation level ' + \
+                   '({}) has been reached without' + '\n' + \
+                   'solution convergence.'
+    elif code == 'E00096':
+        arguments = [args[2], ]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The maximum number of macroscale loading consecutive ' + \
+                   'increment cuts ({}) has been' + '\n' + \
+                   'reached without solution convergence.'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display error
     if code in ['E00001', 'E00002', 'E00010']:

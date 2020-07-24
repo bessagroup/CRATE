@@ -14,6 +14,8 @@
 import numpy as np
 # Shallow and deep copy operations
 import copy
+# Display errors, warnings and built-in exceptions
+import ioput.errors as errors
 # Matricial operations
 import tensor.matrixoperations as mop
 #
@@ -24,13 +26,15 @@ class LoadingPath:
     control the macroscale loading incrementation flow.'''
 
     def __init__(self, strain_formulation, comp_order_sym, comp_order_nsym, mac_load,
-                 mac_load_presctype, mac_load_increm):
+                 mac_load_presctype, mac_load_increm, max_subinc_level, max_cinc_cuts):
         '''Macroscale loading path constructor.'''
 
         self._strain_formulation = strain_formulation
         self._mac_load = mac_load
         self._mac_load_presctype = mac_load_presctype
         self._mac_load_increm = mac_load_increm
+        self._max_subinc_level = max_subinc_level
+        self._max_cinc_cuts = max_cinc_cuts
         # Remove simmetric components under an infinitesimal strain formulation
         if strain_formulation == 1:
             self._remove_sym(comp_order_sym, comp_order_nsym)
@@ -93,6 +97,12 @@ class LoadingPath:
         self._is_last_inc = False
         # Increment (+1) consecutive macroscale loading increment cuts counter
         self._n_cinc_cuts += 1
+        # Check if maximum number of consecutive macroscale loading increment cuts is
+        # surpassed
+        if self._n_cinc_cuts > self._max_cinc_cuts:
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayerror('E00096', location.filename, location.lineno + 1,
+                                self._max_cinc_cuts)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute incremental macroscale loading
         inc_mac_load = self._get_increm_load()
@@ -225,7 +235,7 @@ class LoadingPath:
 class LoadingSubpath:
     '''Macroscale loading subpath.'''
 
-    def __init__(self, id, load, presctype, inc_lfacts, inc_times):
+    def __init__(self, id, load, presctype, inc_lfacts, inc_times, max_subinc_level):
         '''Macroscale loading subpath constructor.'''
 
         self._id = id
@@ -233,6 +243,7 @@ class LoadingSubpath:
         self._presctype = presctype
         self._inc_lfacts = inc_lfacts
         self._inc_times = inc_times
+        self._max_subinc_level = max_subinc_level
         # Initialize loading subpath increment counter
         self._inc = 0
         # Initialize loading subpath total load factor
@@ -284,6 +295,11 @@ class LoadingSubpath:
         # Update subincrementation level
         self._sub_inc_levels[self._inc] += 1
         self._sub_inc_levels.insert(self._inc + 1, self._sub_inc_levels[self._inc])
+        # Check if maximum subincrementation level is surpassed
+        if self._sub_inc_levels[self._inc] > self._max_subinc_level:
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayerror('E00095', location.filename, location.lineno + 1,
+                                self._max_subinc_level)
         # Get current incremental load factor and associated incremental time
         inc_lfact = self._inc_lfacts[self._inc]
         inc_time = self._inc_times[self._inc]
