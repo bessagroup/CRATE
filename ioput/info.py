@@ -131,10 +131,10 @@ def displayinfo(code, *args, **kwargs):
     elif code == '7':
         mode = args[0]
         if mode == 'init':
-            arguments = args[1:]
-            info = tuple(arguments)
-            subinc_level = args[-1]
+            subinc_level = args[2]
             if subinc_level == 0:
+                arguments = list([args[1], ]) + list(args[3:])
+                info = tuple(arguments)
                 template = colorama.Fore.CYAN + '\n' + \
                            indent + 'Increment number: {:3d}' + '\n' + \
                            indent + equal_line[:-len(indent)] + '\n' + \
@@ -145,6 +145,8 @@ def displayinfo(code, *args, **kwargs):
                            '| Incr. = {:8.1e}' + 12*' ' + '| Incr. = {:8.1e}' + \
                            colorama.Style.RESET_ALL
             else:
+                arguments = args[1:]
+                info = tuple(arguments)
                 template = colorama.Fore.CYAN + '\n' + \
                            indent + 'Increment number: {:3d}' + 3*' ' + \
                            '(Sub-inc. level: {:3d})' + '\n' + \
