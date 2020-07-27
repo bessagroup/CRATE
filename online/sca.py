@@ -741,6 +741,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             displayincdata(mac_load_path)
             # Set increment initial time
             inc_init_time = time.time()
+            # Start new macroscale loading increment solution procedures
+            continue
         #
         #                                              Homogenized strain and stress tensors
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
