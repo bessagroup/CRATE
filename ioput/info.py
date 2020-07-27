@@ -282,6 +282,11 @@ def displayinfo(code, *args, **kwargs):
         elif mode == 'su_fail':
             arguments = [args[1]['cluster'], args[1]['mat_phase']]
             cut_msg = 'State update failure in cluster {} (material phase {}).'
+        elif mode == 'max_scs_iter':
+            arguments = [args[1],]
+            cut_msg = 'Maximum number of self-consistent iterations ({}) reached ' + \
+                      'without' + '\n' + \
+                      indent + len('Increment cut: ')*' ' + 'convergence.'
         else:
             cut_msg = 'Undefined increment cut message.'
         info = tuple(arguments)

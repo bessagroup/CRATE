@@ -695,10 +695,20 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                 # Leave self-consistent scheme iterative loop (converged solution)
                 break
             elif scs_iter == scs_max_n_iterations:
+                # If the maximum number of self-consistent scheme iterations is reached
+                # without convergence, reset reference material elastic properties to the
+                # last converged increment values and leave self-consistent iterative loop
+                mat_prop_ref = copy.deepcopy(mat_prop_ref_old)
+                # Raise macroscale increment cut procedure
+                is_inc_cut = True
+                # Display increment cut
+                info.displayinfo('11', 'max_scs_iter', scs_max_n_iterations)
+                # Leave Newton-Raphson equilibrium iterative loop
+                break
                 # Maximum number of self-consistent scheme iterations reached
-                location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayerror('E00062', location.filename, location.lineno + 1,
-                                    scs_max_n_iterations, inc, norm_d_E_ref, norm_d_v_ref)
+                #location = inspect.getframeinfo(inspect.currentframe())
+                #errors.displayerror('E00062', location.filename, location.lineno + 1,
+                #                    scs_max_n_iterations, inc, norm_d_E_ref, norm_d_v_ref)
             else:
                 # Update reference material elastic properties
                 mat_prop_ref['E'] = E_ref
