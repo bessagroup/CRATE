@@ -168,6 +168,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                                                              mat_phase)
     # Get total number of clusters
     n_total_clusters = sum([phase_n_clusters[mat_phase] for mat_phase in material_phases])
+    # Initialize macroscale loading increment cut flag
+    is_inc_cut = False
     # --------------------------------------------------------------------------------------
     # Validation:
     if is_Validation[1]:
@@ -234,6 +236,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     mat_prop_ref = dict()
     mat_prop_ref['E'] = E_ref
     mat_prop_ref['v'] = v_ref
+    mat_prop_ref_old = copy.deepcopy(mat_prop_ref)
     # Compute the reference material elastic tangent (matricial form) and compliance tensor
     # (matrix)
     De_ref_mf, Se_ref_matrix = scs.refelastictanmod(problem_dict, mat_prop_ref)
@@ -542,18 +545,24 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                     # Leave Newton-Raphson iterative loop (converged solution)
                     break
                 elif nr_iter == max_n_iterations:
+                    # Raise macroscale increment cut procedure
+                    is_inc_cut = True
+                    # Display increment cut
+                    info.displayinfo('11', 'max_iter', max_n_iterations)
+                    # Leave Newton-Raphson equilibrium iterative loop
+                    break
                     # Maximum number of Newton-Raphson iterations reached
-                    location = inspect.getframeinfo(inspect.currentframe())
-                    if is_farfield_formulation:
-                        location = inspect.getframeinfo(inspect.currentframe())
-                        errors.displayerror('E00061', location.filename,
-                                            location.lineno + 1, max_n_iterations, inc,
-                                            error_A1, error_A2, error_A3)
-                    else:
-                        location = inspect.getframeinfo(inspect.currentframe())
-                        errors.displayerror('E00073', location.filename,
-                                            location.lineno + 1, max_n_iterations, inc,
-                                            error_A1, error_A2)
+                    #location = inspect.getframeinfo(inspect.currentframe())
+                    #if is_farfield_formulation:
+                    #    location = inspect.getframeinfo(inspect.currentframe())
+                    #    errors.displayerror('E00061', location.filename,
+                    #                        location.lineno + 1, max_n_iterations, inc,
+                    #                        error_A1, error_A2, error_A3)
+                    #else:
+                    #    location = inspect.getframeinfo(inspect.currentframe())
+                    #    errors.displayerror('E00073', location.filename,
+                    #                        location.lineno + 1, max_n_iterations, inc,
+                    #                        error_A1, error_A2)
                 else:
                     # Increment iteration counter
                     nr_iter = nr_iter + 1
@@ -638,6 +647,13 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             #
             #                                                         Self-consistent scheme
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # If raising a macroscale loading increment cut, reset reference material
+            # elastic properties to the last converged increment values and leave
+            # self-consistent iterative loop
+            if is_inc_cut:
+                mat_prop_ref = copy.deepcopy(mat_prop_ref_old)
+                break
+            # ------------------------------------------------------------------------------
             # Update reference material elastic properties through a given self-consistent
             # scheme
             if self_consistent_scheme == 1:
@@ -714,6 +730,26 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                 print(Se_ref_matrix)
             # ------------------------------------------------------------------------------
         #
+        #                                                   Macroscale loading increment cut
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        if is_inc_cut:
+            # Reset macroscale loading increment cut flag
+            is_inc_cut = False
+            # Perform macroscale increment cut and setup new macroscale loading increment
+            inc_mac_load_mf, n_presc_strain, presc_strain_idxs, n_presc_stress, \
+                presc_stress_idxs, is_last_inc = mac_load_path.increment_cut(
+                    n_dim, comp_order)
+            # Get increment counter
+            inc = mac_load_path.increm_state['inc']
+            # Get loading subpath data
+            sp_id, sp_inc, sp_total_lfact, sp_inc_lfact, sp_total_time, sp_inc_time = \
+                mac_load_path.get_subpath_state()
+            # Display increment data
+            info.displayinfo('7', 'init', inc, sp_id + 1, sp_total_lfact, sp_total_time,
+                             sp_inc, sp_inc_lfact, sp_inc_time)
+            # Set increment initial time
+            inc_init_time = time.time()
+        #
         #                                              Homogenized strain and stress tensors
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Build homogenized strain tensor
@@ -769,6 +805,12 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         hom_stress_old_mf = hom_stress_mf
         if problem_type == 1:
             hom_stress_33_old = hom_stress_33
+        #
+        #
+        #                                    Converged reference material elastic properties
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Update converged reference material elastic properties
+        mat_prop_ref_old = copy.deepcopy(mat_prop_ref)
         #
         #                                                Incremental macroscale loading flow
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

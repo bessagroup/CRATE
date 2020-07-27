@@ -12,6 +12,8 @@
 # ==========================================================================================
 # Working with arrays
 import numpy as np
+# Inspect file name and line
+import inspect
 # Shallow and deep copy operations
 import copy
 # Display errors, warnings and built-in exceptions
@@ -156,9 +158,11 @@ class LoadingPath:
         # Get loading subpath incremental load factors and incremental times
         inc_lfacts = self._mac_load_increm[str(subpath_id)][:, 0]
         inc_times = self._mac_load_increm[str(subpath_id)][:, 1]
+        # Get maximum macroscale loading subincrementation level
+        _max_subinc_level = self._max_subinc_level
         # Add a new macroscale loading subpath
         self._load_subpaths.append(LoadingSubpath(subpath_id, load, presctype, inc_lfacts,
-                                                  inc_times))
+                                                  inc_times, _max_subinc_level))
     # --------------------------------------------------------------------------------------
     def _get_load_subpath(self):
         '''Get current loading subpath.'''

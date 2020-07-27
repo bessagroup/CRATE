@@ -28,7 +28,7 @@ import ioput.ioutilities as ioutil
 def displayinfo(code, *args, **kwargs):
     # Get display features
     display_features = ioutil.setdisplayfeatures()
-    output_width, dashed_line, indent = display_features[0:3]
+    output_width, dashed_line, indent, asterisk_line = display_features[0:4]
     tilde_line, equal_line = display_features[4:6]
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set informations and formats to display
@@ -259,6 +259,17 @@ def displayinfo(code, *args, **kwargs):
                 info = tuple(arguments)
                 template = indent + ' {:^6d}    {:^12.4e}' + space2 + \
                            '{:>11.4e}     {:^11.4e}    {:^11.4e}'
+    elif code == '11':
+        mode = args[0]
+        if mode == 'max_iter':
+            cut_msg = 'Maximum number of iterations ({}) reached without convergence.'
+        else:
+            cut_msg = 'Undefined increment cut message.'
+        arguments = [args[1],]
+        info = tuple(arguments)
+        template = '\n\n' + colorama.Fore.YELLOW + asterisk_line + '\n' + \
+                   'Increment cut: ' + colorama.Style.RESET_ALL + cut_msg + '\n' + \
+                   colorama.Fore.YELLOW + asterisk_line + '\n'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display information
     ioutil.print2(template.format(*info, width=output_width))
