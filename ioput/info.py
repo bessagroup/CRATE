@@ -282,9 +282,11 @@ def displayinfo(code, *args, **kwargs):
             cut_msg = 'Undefined increment cut message.'
         arguments = [args[1],]
         info = tuple(arguments)
-        template = '\n\n' + colorama.Fore.YELLOW + asterisk_line + '\n' + \
-                   'Increment cut: ' + colorama.Style.RESET_ALL + cut_msg + '\n' + \
-                   colorama.Fore.YELLOW + asterisk_line + '\n'
+        template = '\n\n' + colorama.Fore.RED + indent + asterisk_line[:-len(indent)] + \
+                   '\n' + \
+                   indent + 'Increment cut: ' + colorama.Style.RESET_ALL + cut_msg + \
+                   '\n' + colorama.Fore.RED + indent + asterisk_line[:-len(indent)] + \
+                   '\n'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display information
     ioutil.print2(template.format(*info, width=output_width))

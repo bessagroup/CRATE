@@ -156,8 +156,8 @@ class LoadingPath:
         for ltype in load.keys():
             load[ltype] = self._mac_load[ltype][:, 1 + subpath_id]
         # Get loading subpath incremental load factors and incremental times
-        inc_lfacts = self._mac_load_increm[str(subpath_id)][:, 0]
-        inc_times = self._mac_load_increm[str(subpath_id)][:, 1]
+        inc_lfacts = list(self._mac_load_increm[str(subpath_id)][:, 0])
+        inc_times = list(self._mac_load_increm[str(subpath_id)][:, 1])
         # Get maximum macroscale loading subincrementation level
         _max_subinc_level = self._max_subinc_level
         # Add a new macroscale loading subpath
