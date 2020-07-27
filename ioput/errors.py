@@ -960,14 +960,23 @@ def displayerror(code, *args):
         template = 'Details:' + '\n\n' + \
                    indent + 'The maximum macroscale loading subincrementation level ' + \
                    '({}) has been reached without' + '\n' + \
-                   'solution convergence.'
+                   indent + 'solution convergence.'
     elif code == 'E00096':
         arguments = [args[2], ]
         values = tuple(arguments)
         template = 'Details:' + '\n\n' + \
                    indent + 'The maximum number of macroscale loading consecutive ' + \
                    'increment cuts ({}) has been' + '\n' + \
-                   'reached without solution convergence.'
+                   indent + 'reached without solution convergence.'
+    elif code == 'E00097':
+        arguments = [args[2], ]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'Every material\'s constitutive model state variables ' + \
+                   'dictionary must contain the state' + '\n' + \
+                   indent + 'update failure flag (\'is_su_fail\': bool). Please check ' + \
+                   'material phase {} constitutive' + '\n' + \
+                   indent + 'model.'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display error
     if code in ['E00001', 'E00002', 'E00010']:

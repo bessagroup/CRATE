@@ -277,10 +277,13 @@ def displayinfo(code, *args, **kwargs):
     elif code == '11':
         mode = args[0]
         if mode == 'max_iter':
+            arguments = [args[1],]
             cut_msg = 'Maximum number of iterations ({}) reached without convergence.'
+        elif mode == 'su_fail':
+            arguments = [args[1]['cluster'], args[1]['mat_phase']]
+            cut_msg = 'State update failure in cluster {} (material phase {}).'
         else:
             cut_msg = 'Undefined increment cut message.'
-        arguments = [args[1],]
         info = tuple(arguments)
         template = '\n\n' + colorama.Fore.RED + indent + asterisk_line[:-len(indent)] + \
                    '\n' + \

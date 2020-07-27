@@ -408,9 +408,17 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                     section = 'Cluster su and ct'
                     print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
                 # --------------------------------------------------------------------------
-                clusters_state, clusters_D_mf = clstsuct.clusterssuct(
+                clusters_state, clusters_D_mf, su_fail_state = clstsuct.clusterssuct(
                     problem_dict, mat_dict, clst_dict, algpar_dict, phase_clusters,
                     gbl_inc_strain_mf, clusters_state_old)
+                # Raise macroscale increment cut procedure if material cluster state update
+                # failed
+                if su_fail_state['is_su_fail']:
+                    is_inc_cut = True
+                    # Display increment cut
+                    info.displayinfo('11', 'su_fail', su_fail_state)
+                    # Leave Newton-Raphson equilibrium iterative loop
+                    break
                 #
                 #                                Global cluster interaction - tangent matrix
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
