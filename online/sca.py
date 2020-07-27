@@ -231,19 +231,19 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         for phase in material_phases])
     v_ref = sum([material_phases_f[phase]*material_properties[phase]['v']
         for phase in material_phases])
-    material_properties_ref = dict()
-    material_properties_ref['E'] = E_ref
-    material_properties_ref['v'] = v_ref
+    mat_prop_ref = dict()
+    mat_prop_ref['E'] = E_ref
+    mat_prop_ref['v'] = v_ref
     # Compute the reference material elastic tangent (matricial form) and compliance tensor
     # (matrix)
-    De_ref_mf, Se_ref_matrix = scs.refelastictanmod(problem_dict, material_properties_ref)
+    De_ref_mf, Se_ref_matrix = scs.refelastictanmod(problem_dict, mat_prop_ref)
     # --------------------------------------------------------------------------------------
     # Validation:
     if is_Validation[4]:
         section = 'Reference material elastic tangent'
         print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
-        print('\n' + 'material_properties_ref[\'E\'] = '+ str(material_properties_ref['E']))
-        print('\n' + 'material_properties_ref[\'v\'] = '+ str(material_properties_ref['v']))
+        print('\n' + 'mat_prop_ref[\'E\'] = '+ str(mat_prop_ref['E']))
+        print('\n' + 'mat_prop_ref[\'v\'] = '+ str(mat_prop_ref['v']))
         print('\n' + 'De_ref_mf:' + '\n')
         print(De_ref_mf)
         print('\n' + 'Se_ref_matrix:' + '\n')
@@ -353,8 +353,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize self-consistent scheme iteration counter
         scs_iter = 0
-        info.displayinfo('8', 'init', scs_iter, material_properties_ref['E'],
-                         material_properties_ref['v'])
+        info.displayinfo('8', 'init', scs_iter, mat_prop_ref['E'], mat_prop_ref['v'])
         # Set self-consistent scheme iteration initial time
         scs_iter_init_time = time.time()
         # ----------------------------------------------------------------------------------
@@ -377,7 +376,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             # Update cluster interaction tensors and assemble global cluster interaction
             # matrix
             global_cit_mf = citop.updassemblecit(
-                problem_dict, material_properties_ref, Se_ref_matrix, material_phases,
+                problem_dict, mat_prop_ref, Se_ref_matrix, material_phases,
                 n_total_clusters, phase_n_clusters, phase_clusters, cit_1_mf, cit_2_mf,
                 cit_0_freq_mf)
             #
@@ -643,17 +642,17 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             # scheme
             if self_consistent_scheme == 1:
                 scs_args = (self_consistent_scheme, problem_dict, inc_hom_strain_mf,
-                            inc_hom_stress_mf, material_properties_ref)
+                            inc_hom_stress_mf, mat_prop_ref)
                 if problem_type == 1:
                     scs_args = scs_args + (inc_hom_stress_33,)
             elif self_consistent_scheme == 2:
                 if is_farfield_formulation:
                     scs_args = (self_consistent_scheme, problem_dict,
-                                inc_farfield_strain_mf, inc_hom_stress_mf,
-                                material_properties_ref, eff_tangent_mf)
+                                inc_farfield_strain_mf, inc_hom_stress_mf, mat_prop_ref,
+                                eff_tangent_mf)
                 else:
                     scs_args = (self_consistent_scheme, problem_dict, inc_hom_strain_mf,
-                                inc_hom_stress_mf, material_properties_ref, eff_tangent_mf)
+                                inc_hom_stress_mf, mat_prop_ref, eff_tangent_mf)
             E_ref, v_ref = scs.scsupdate(*scs_args)
             # ------------------------------------------------------------------------------
             # Validation:
@@ -669,7 +668,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Check self-consistent scheme iterative procedure convergence
             is_scs_converged, norm_d_E_ref, norm_d_v_ref = \
-                scs.checkscsconvergence(E_ref, v_ref, material_properties_ref, scs_conv_tol)
+                scs.checkscsconvergence(E_ref, v_ref, mat_prop_ref, scs_conv_tol)
             info.displayinfo('8', 'end', time.time() - scs_iter_init_time)
             # Control self-consistent scheme iteration loop flow
             if is_scs_converged:
@@ -682,8 +681,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                                     scs_max_n_iterations, inc, norm_d_E_ref, norm_d_v_ref)
             else:
                 # Update reference material elastic properties
-                material_properties_ref['E'] = E_ref
-                material_properties_ref['v'] = v_ref
+                mat_prop_ref['E'] = E_ref
+                mat_prop_ref['v'] = v_ref
                 # Increment self-consistent scheme iteration counter
                 scs_iter = scs_iter + 1
                 info.displayinfo('8', 'init', scs_iter, E_ref, norm_d_E_ref, v_ref,
@@ -701,17 +700,14 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Compute the reference material elastic tangent (matricial form) and compliance
             # tensor (matrix)
-            De_ref_mf, Se_ref_matrix = scs.refelastictanmod(problem_dict,
-                                                            material_properties_ref)
+            De_ref_mf, Se_ref_matrix = scs.refelastictanmod(problem_dict, mat_prop_ref)
             # ------------------------------------------------------------------------------
             # Validation:
             if is_Validation[4]:
                 section = 'Reference material elastic tangent'
                 print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
-                print('\n' + 'material_properties_ref[\'E\'] = ' + \
-                                                          str(material_properties_ref['E']))
-                print('\n' + 'material_properties_ref[\'v\'] = ' + \
-                                                          str(material_properties_ref['v']))
+                print('\n' + 'mat_prop_ref[\'E\'] = ' + str(mat_prop_ref['E']))
+                print('\n' + 'mat_prop_ref[\'v\'] = ' + str(mat_prop_ref['v']))
                 print('\n' + 'De_ref_mf:' + '\n')
                 print(De_ref_mf)
                 print('\n' + 'Se_ref_matrix:' + '\n')

@@ -27,15 +27,15 @@ import material.models.linear_elastic
 # ==========================================================================================
 # Compute the reference material elastic tangent (matricial form) and compliance tensor
 # (matrix)
-def refelastictanmod(problem_dict, material_properties_ref):
+def refelastictanmod(problem_dict, mat_prop_ref):
     # Get problem data
     n_dim = problem_dict['n_dim']
     comp_order = problem_dict['comp_order_sym']
     # Compute reference material elastic tangent (matricial form)
-    De_ref_mf = material.models.linear_elastic.ct(problem_dict, material_properties_ref)
+    De_ref_mf = material.models.linear_elastic.ct(problem_dict, mat_prop_ref)
     # Get reference material Young modulus and Poisson ratio
-    E_ref = material_properties_ref['E']
-    v_ref = material_properties_ref['v']
+    E_ref = mat_prop_ref['E']
+    v_ref = mat_prop_ref['v']
     # Compute reference material Lamé parameters
     lam_ref = (E_ref*v_ref)/((1.0 + v_ref)*(1.0 - 2.0*v_ref))
     miu_ref = E_ref/(2.0*(1.0 + v_ref))
@@ -59,7 +59,7 @@ def refelastictanmod(problem_dict, material_properties_ref):
 # ==========================================================================================
 # Update reference material elastic properties through a given self-consistent scheme
 def scsupdate(self_consistent_scheme, problem_dict, inc_strain_mf, inc_stress_mf,
-              material_properties_ref, *args):
+              mat_prop_ref, *args):
     # Get problem data
     problem_type = problem_dict['problem_type']
     # Perform self-consistent scheme to update the reference material elastic properties
@@ -128,8 +128,8 @@ def scsupdate(self_consistent_scheme, problem_dict, inc_strain_mf, inc_stress_mf
         if (abs(np.trace(inc_strain))/np.linalg.norm(inc_strain)) < 1e-10 or \
             np.linalg.solve(scs_matrix, scs_rhs)[0] < 0:
             # Get previous converged reference material elastic properties
-            E_ref_old = material_properties_ref['E']
-            v_ref_old = material_properties_ref['v']
+            E_ref_old = mat_prop_ref['E']
+            v_ref_old = mat_prop_ref['v']
             # Compute previous converged lambda
             lam_ref = (E_ref_old*v_ref_old)/((1.0 + v_ref_old)*(1.0 - 2.0*v_ref_old))
             # Compute miu
@@ -144,8 +144,8 @@ def scsupdate(self_consistent_scheme, problem_dict, inc_strain_mf, inc_stress_mf
                 < 1e-10 for i in range(n_dim)]) and \
                 np.allclose(inc_strain, np.diag(np.diag(inc_strain)), atol=1e-10):
             # Get previous converged reference material elastic properties
-            E_ref_old = material_properties_ref['E']
-            v_ref_old = material_properties_ref['v']
+            E_ref_old = mat_prop_ref['E']
+            v_ref_old = mat_prop_ref['v']
             # Compute previous converged reference material Lamé parameters
             lam_ref_old = (E_ref_old*v_ref_old)/((1.0 + v_ref_old)*(1.0 - 2.0*v_ref_old))
             miu_ref_old = E_ref_old/(2.0*(1.0 + v_ref_old))
@@ -203,8 +203,8 @@ def scsupdate(self_consistent_scheme, problem_dict, inc_strain_mf, inc_stress_mf
                 # deviatoric strain is null. In this case, assume that the ratio between
                 # the material bulk modulus and shear modulus is the same as in the previous
                 # converged values
-                E_ref_old = material_properties_ref['E']
-                v_ref_old = material_properties_ref['v']
+                E_ref_old = mat_prop_ref['E']
+                v_ref_old = mat_prop_ref['v']
                 K_ref_old = E_ref_old/(3.0*(1.0 - 2.0*v_ref_old))
                 miu_ref_old = E_ref_old/(2.0*(1.0 + v_ref_old))
                 miu_ref = (miu_ref_old/K_ref_old)*K_ref
@@ -224,10 +224,10 @@ def scsupdate(self_consistent_scheme, problem_dict, inc_strain_mf, inc_stress_mf
 #                                              Self-consistent scheme convergence evaluation
 # ==========================================================================================
 # Check self-consistent scheme iterative procedure convergence
-def checkscsconvergence(E_ref, v_ref, material_properties_ref, scs_conv_tol):
+def checkscsconvergence(E_ref, v_ref, mat_prop_ref, scs_conv_tol):
     # Compute iterative variation of the reference material Young modulus and Poisson ratio
-    d_E_ref = E_ref - material_properties_ref['E']
-    d_v_ref = v_ref - material_properties_ref['v']
+    d_E_ref = E_ref - mat_prop_ref['E']
+    d_v_ref = v_ref - mat_prop_ref['v']
     # Compute normalized interative change of the reference material Young modulus and
     # Poisson ratio
     norm_d_E_ref = abs(d_E_ref/E_ref)

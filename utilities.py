@@ -462,9 +462,9 @@ def utility4():
     n = [10,12,13]
     n_voxels_dims = [i for i in n[0:n_dim]]
     # Set material properties
-    material_properties_ref = dict()
-    material_properties_ref['E'] = 100
-    material_properties_ref['v'] = 0.3
+    mat_prop_ref = dict()
+    mat_prop_ref['E'] = 100
+    mat_prop_ref['v'] = 0.3
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set discrete frequencies (rad/m) for each dimension
     freqs_dims = list()
@@ -506,8 +506,8 @@ def utility4():
     #                              |     form ('1111', '2211', '3311', '1211', ...)
     #
     # Get reference material Young modulus and Poisson coeficient
-    E_ref = material_properties_ref['E']
-    v_ref = material_properties_ref['v']
+    E_ref = mat_prop_ref['E']
+    v_ref = mat_prop_ref['v']
     # Compute reference material Lamé parameters
     lam_ref = (E_ref*v_ref)/((1.0 + v_ref)*(1.0 - 2.0*v_ref))
     miu_ref = E_ref/(2.0*(1.0 + v_ref))
@@ -589,8 +589,8 @@ def utility4():
     #                              |     form ('1111', '2211', '3311', '1211', ...)
     #
     # Get reference material Young modulus and Poisson coeficient
-    E_ref = material_properties_ref['E']
-    v_ref = material_properties_ref['v']
+    E_ref = mat_prop_ref['E']
+    v_ref = mat_prop_ref['v']
     # Compute reference material Lamé parameters
     lam_ref = (E_ref*v_ref)/((1.0 + v_ref)*(1.0 - 2.0*v_ref))
     miu_ref = E_ref/(2.0*(1.0 + v_ref))
