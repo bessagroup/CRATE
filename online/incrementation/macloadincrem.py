@@ -275,8 +275,11 @@ class LoadingSubpath:
     def get_state(self):
         '''Get subpath state data.'''
 
-        return [self._id, self._inc, self._total_lfact, self._inc_lfacts[self._inc - 1],
-                self._total_time, self._inc_times[self._inc - 1]]
+        # Get loading subpath current increment index
+        inc_idx = self._inc - 1
+        # Return
+        return [self._id, self._inc, self._total_lfact, self._inc_lfacts[inc_idx],
+                self._total_time, self._inc_times[inc_idx], self._sub_inc_levels[inc_idx]]
     # --------------------------------------------------------------------------------------
     def update_inc(self):
         '''Update increment counter and total load factor accordingly.'''
@@ -296,22 +299,24 @@ class LoadingSubpath:
     def increment_cut(self):
         '''Perform macroscale loading increment cut.'''
 
+        # Get loading subpath current increment index
+        inc_idx = self._inc - 1
         # Update subincrementation level
-        self._sub_inc_levels[self._inc] += 1
-        self._sub_inc_levels.insert(self._inc + 1, self._sub_inc_levels[self._inc])
+        self._sub_inc_levels[inc_idx] += 1
+        self._sub_inc_levels.insert(inc_idx + 1, self._sub_inc_levels[inc_idx])
         # Check if maximum subincrementation level is surpassed
-        if self._sub_inc_levels[self._inc] > self._max_subinc_level:
+        if self._sub_inc_levels[inc_idx] > self._max_subinc_level:
             location = inspect.getframeinfo(inspect.currentframe())
             errors.displayerror('E00095', location.filename, location.lineno + 1,
                                 self._max_subinc_level)
         # Get current incremental load factor and associated incremental time
-        inc_lfact = self._inc_lfacts[self._inc]
-        inc_time = self._inc_times[self._inc]
+        inc_lfact = self._inc_lfacts[inc_idx]
+        inc_time = self._inc_times[inc_idx]
         # Cut the macroscale load increment in half
-        self._inc_lfacts[self._inc] = inc_lfact/2.0
-        self._inc_lfacts.insert(self._inc + 1, self._inc_lfacts[self._inc])
-        self._inc_times[self._inc] = inc_time/2.0
-        self._inc_times.insert(self._inc + 1, self._inc_times[self._inc])
+        self._inc_lfacts[inc_idx] = inc_lfact/2.0
+        self._inc_lfacts.insert(inc_idx + 1, self._inc_lfacts[inc_idx])
+        self._inc_times[inc_idx] = inc_time/2.0
+        self._inc_times.insert(inc_idx + 1, self._inc_times[inc_idx])
         # Update total load factor and total time
         self._total_lfact = sum(self._inc_lfacts[0:self._inc])
         self._total_time = sum(self._inc_times[0:self._inc])
