@@ -11,7 +11,8 @@
 #       being the former presented first for practical use.
 # ==========================================================================================
 # Development history:
-# Bernardo P. Ferreira | June 2020 | Initial version (along with CRATE v1.0.0).
+# Bernardo P. Ferreira | June 2020 | Initial version (along with CRATE v0.1.0).
+# Bernardo P. Ferreira | July 2020 | Updated version (along with CRATE v0.3.0).
 # ==========================================================================================
 
 
@@ -267,6 +268,35 @@
 #            x
 #
 # x:         float (default to 1.0)
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
+#                                                Maximum loading subincrementation level [O]
+# ==========================================================================================
+# Meaning:   Maximum macroscale loading subincrementation level. The level 0 is associated
+#            with the actual prescribed increment magnitude. For instance, if the maximum
+#            loading subincrementation level is set to 1, then the prescribed increment's
+#            magnitude can only be cut in half once.
+#
+# Syntax:    Max_SubInc_Level x
+#
+# x:         integer (default to 5)
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
+#                                             Maximum loading consecutive increment cuts [O]
+# ==========================================================================================
+# Meaning:   Maximum number of consecutive macroscale loading increment cuts.
+#
+# Syntax:    Max_Consecutive_Inc_Cuts x
+#
+# x:         integer (default to 5)
 # ------------------------------------------------------------------------------------------
 [insert here]
 
