@@ -73,8 +73,6 @@ class LoadingPath:
         if load_subpath._id == self._n_load_subpaths - 1 and \
                 load_subpath._is_last_subpath_inc:
             self._is_last_inc = True
-
-        print('New load increment: \n', load_subpath._sub_inc_levels)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute incremental macroscale loading
         inc_mac_load = self._get_increm_load()
@@ -96,8 +94,6 @@ class LoadingPath:
         load_subpath = self._get_load_subpath()
         # Perform macroscale loading increment
         load_subpath.increment_cut()
-
-        print('Increment cut: \n', load_subpath._sub_inc_levels)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set last macroscale loading increment flag
         self._is_last_inc = False
@@ -290,15 +286,18 @@ class LoadingSubpath:
 
         # Increment (+1) loading subpath increment counter
         self._inc += 1
-
         # Get loading subpath current increment index
         inc_idx = self._inc - 1
-
-        while self._sub_inc_levels[inc_idx - 1] - self._sub_inc_levels[inc_idx] >= 2:
-            self.increment_cut()
-
-
-
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Procedure related with the macroscale loading subincrementation: upon convergence
+        # of a given increment, guarantee that the following increment magnitude is at most
+        # one (subincrementation) level above. The increment cut procedure is performed the
+        # required number of times in order to ensure this progressive recovery towards the
+        # prescribed incrementation
+        if self._inc > 1:
+            while self._sub_inc_levels[inc_idx - 1] - self._sub_inc_levels[inc_idx] >= 2:
+                self.increment_cut()
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Update total load factor
         self._total_lfact = sum(self._inc_lfacts[0:self._inc])
         # Update total time
@@ -308,8 +307,6 @@ class LoadingSubpath:
         # Check if last increment
         if self._inc == len(self._inc_lfacts):
             self._is_last_subpath_inc = True
-
-
     # --------------------------------------------------------------------------------------
     def increment_cut(self):
         '''Perform macroscale loading increment cut.'''
