@@ -555,18 +555,6 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                     info.displayinfo('11', 'max_iter', max_n_iterations)
                     # Leave Newton-Raphson equilibrium iterative loop
                     break
-                    # Maximum number of Newton-Raphson iterations reached
-                    #location = inspect.getframeinfo(inspect.currentframe())
-                    #if is_farfield_formulation:
-                    #    location = inspect.getframeinfo(inspect.currentframe())
-                    #    errors.displayerror('E00061', location.filename,
-                    #                        location.lineno + 1, max_n_iterations, inc,
-                    #                        error_A1, error_A2, error_A3)
-                    #else:
-                    #    location = inspect.getframeinfo(inspect.currentframe())
-                    #    errors.displayerror('E00073', location.filename,
-                    #                        location.lineno + 1, max_n_iterations, inc,
-                    #                        error_A1, error_A2)
                 else:
                     # Increment iteration counter
                     nr_iter = nr_iter + 1
@@ -705,10 +693,6 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                 info.displayinfo('11', 'max_scs_iter', scs_max_n_iterations)
                 # Leave Newton-Raphson equilibrium iterative loop
                 break
-                # Maximum number of self-consistent scheme iterations reached
-                #location = inspect.getframeinfo(inspect.currentframe())
-                #errors.displayerror('E00062', location.filename, location.lineno + 1,
-                #                    scs_max_n_iterations, inc, norm_d_E_ref, norm_d_v_ref)
             else:
                 # Update reference material elastic properties
                 mat_prop_ref['E'] = E_ref
