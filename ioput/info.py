@@ -294,7 +294,7 @@ def displayinfo(code, *args, **kwargs):
                    '\n' + \
                    indent + 'Increment cut: ' + colorama.Style.RESET_ALL + cut_msg + \
                    '\n' + colorama.Fore.RED + indent + asterisk_line[:-len(indent)] + \
-                   '\n'
+                   colorama.Style.RESET_ALL + '\n'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display information
     ioutil.print2(template.format(*info, width=output_width))
