@@ -39,7 +39,7 @@ other softwares implemented in different programming languages and benefiting fr
 
 ### General formulation:
 * Quasi-static loading conditions;
-* Monotonic loading paths;
+* General monotonic and non-monotonic loading paths;
 * Infinitesimal strains;
 * Nonlinear material constitutive behavior (elasticity and plasticity).
 
@@ -54,6 +54,9 @@ other softwares implemented in different programming languages and benefiting fr
 * FFT-based homogenization basic scheme<sup>[7](#f7)</sup> proposed by H. Moulinec and P. Suquet;
 * FEM-based homogenization through suitable interface with LINKS<sup>[5](#f5)</sup> (includes FE mesh generation and post-processing);
 * Clustering algorithms imported from [scikit-learn](https://scikit-learn.org/stable/index.html) python machine learning package.
+
+### Algorithmic features:
+* Dynamic macroscale loading subincrementation.
 
 ### Post-processing:
 * VTK (XML format) output files allowing the visualization of data associated to the material microstructure (material phases, material clusters, ...) and response local fields (strain, stress, internal variables, ...);
