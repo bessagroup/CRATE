@@ -384,7 +384,7 @@
 #
 # Syntax:    Max_Number_of_Iterations x
 #
-# x:         integer (default to 20)
+# x:         integer (default to 12)
 # ------------------------------------------------------------------------------------------
 [insert here]
 

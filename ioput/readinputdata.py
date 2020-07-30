@@ -207,7 +207,7 @@ def readinputdatafile(input_file,dirs_dict):
         max = '~'
         max_n_iterations = rproc.readtypeAkeyword(input_file, input_file_path, keyword, max)
     else:
-        max_n_iterations = 20
+        max_n_iterations = 12
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read convergence tolerance to solve each load increment (optional). If the associated
     # keyword is not found, then a default specification is assumed
