@@ -235,14 +235,14 @@ def discretecitintegral(comp_order, cluster_filter, gop_1_filt_vox, gop_2_filt_v
 #                                            Update and assemble cluster interaction tensors
 # ==========================================================================================
 # Update cluster interaction tensors and assemble global cluster interaction matrix
-def updassemblecit(problem_dict, material_properties_ref, Se_ref_matrix, material_phases,
+def updassemblecit(problem_dict, mat_prop_ref, Se_ref_matrix, material_phases,
                    n_total_clusters, phase_n_clusters, phase_clusters, cit_1_mf, cit_2_mf,
                    cit_0_freq_mf):
     # Get problem data
     comp_order = problem_dict['comp_order_sym']
     # Get reference material Young modulus and Poisson ratio
-    E_ref = material_properties_ref['E']
-    v_ref = material_properties_ref['v']
+    E_ref = mat_prop_ref['E']
+    v_ref = mat_prop_ref['v']
     # Compute reference material Lamé parameters
     lam_ref = (E_ref*v_ref)/((1.0 + v_ref)*(1.0 - 2.0*v_ref))
     miu_ref = E_ref/(2.0*(1.0 + v_ref))

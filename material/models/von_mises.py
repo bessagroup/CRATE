@@ -190,10 +190,12 @@ def suct(problem_dict, algpar_dict, material_properties, mat_phase, inc_strain,
                 # Leave Newton-Raphson iterative loop (converged solution)
                 break
             elif nr_iter == su_max_n_iterations:
-                # Maximum number of Newton-Raphson iterations reached
-                location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayerror('E00082', location.filename, location.lineno + 1,
-                                    su_max_n_iterations, mat_phase, error)
+                # If the maximum number of Newton-Raphson iterations is reached without
+                # achieving convergence, set state update failure flag and return
+                # Initialize state variables dictionary
+                state_variables = init(problem_dict)
+                state_variables['is_su_fail'] = True
+                return [state_variables, None]
             else:
                 # Increment iteration counter
                 nr_iter = nr_iter + 1

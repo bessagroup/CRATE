@@ -620,36 +620,9 @@ def displayerror(code, *args):
                    indent + 'constitutive model \'{}\' was not specified for all ' + \
                    'pixels (2D) / voxels (3D).'
     elif code == 'E00061':
-        arguments = args[2:7]
-        values = tuple(arguments)
-        template = 'Details:' + '\n\n' + \
-                   indent + 'The maximum number of iterations ({}) has been reached ' + \
-                   'when solving the' + '\n' + \
-                   indent + 'Lippmann-Schwinger nonlinear system of equilibrium ' + \
-                   'equations associated to the' + '\n' + \
-                   indent + 'macroscale load increment {}.' + '\n\n' + \
-                   indent + 'The normalized errors associated to the ' + \
-                   'residuals finished the iterative process with' + '\n' + \
-                   indent + 'the following values:' + '\n\n' + \
-                   2*indent + 'Clusters equilibrium residuals error: {:16.8e}'
-        if args[5] != None:
-            template = template + '\n\n' + \
-                   2*indent + 'Macroscale strain residuals error   : {:16.8e}'
-        if args[6] != None:
-            template = template + '\n\n' + \
-                   2*indent + 'Macroscale stress residuals error   : {:16.8e}'
+        pass
     elif code == 'E00062':
-        arguments = args[2:7]
-        values = tuple(arguments)
-        template = 'Details:' + '\n\n' + \
-                   indent + 'The self-consistent scheme maximum number of iterations ' + \
-                   '({}) has been reached when' + '\n' + \
-                   indent + 'solving the macroscale load increment {}.' + '\n\n' + \
-                   indent + 'The normalized iterative changes of the reference ' + \
-                   'material elastic properties finished' + '\n' + \
-                   indent + 'the iterative process with the following values:' + '\n\n' + \
-                   2*indent + 'Normalized iterative change - E : {:16.8e}' + '\n\n' + \
-                   2*indent + 'Normalized iterative change - v : {:16.8e}'
+        pass
     elif code == 'E00063':
         arguments = 3*[args[2],]
         values = tuple(arguments)
@@ -757,21 +730,7 @@ def displayerror(code, *args):
                    indent + '{}' + '\n\n' + \
                    indent + 'Check the associated \'.screen\' file for more details.'
     elif code == 'E00073':
-        arguments = args[2:6]
-        values = tuple(arguments)
-        template = 'Details:' + '\n\n' + \
-                   indent + 'The maximum number of iterations ({}) has been reached ' + \
-                   'when solving the' + '\n' + \
-                   indent + 'Lippmann-Schwinger nonlinear system of equilibrium ' + \
-                   'equations associated to the' + '\n' + \
-                   indent + 'macroscale load increment {}.' + '\n\n' + \
-                   indent + 'The normalized errors associated to the ' + \
-                   'residuals finished the iterative process with' + '\n' + \
-                   indent + 'the following values:' + '\n\n' + \
-                   2*indent + 'Clusters equilibrium residuals error: {:16.8e}'
-        if args[5] != None:
-            template = template + '\n\n' + \
-                   2*indent + 'Macroscale stress residuals error   : {:16.8e}'
+        pass
     elif code == 'E00074':
         arguments = [args[2], args[3]] + args[4]
         values = tuple(arguments)
@@ -842,17 +801,7 @@ def displayerror(code, *args):
                    indent + 'with an invalid accumulated plastic strain (must be ' + \
                    'non-negative).'
     elif code == 'E00082':
-        arguments = args[2:5]
-        values = tuple(arguments)
-        template = 'Details:' + '\n\n' + \
-                   indent + 'The maximum number of iterations ({}) has been achieved ' + \
-                   'without reaching convergence' + '\n' + \
-                   indent + 'while performing the state update of the material phase {}.' +\
-                   '\n\n' + \
-                   indent + 'The normalized error associated to the return-mapping ' + \
-                   'residuals finished the iterative' + '\n' + \
-                   indent + 'process with the following value:' + '\n\n' + \
-                   2*indent + 'Return-mapping residual error: {:16.8e}'
+        pass
     elif code == 'E00083':
         arguments = ['',]
         values = tuple(arguments)
@@ -954,6 +903,29 @@ def displayerror(code, *args):
                    indent + 'The number of repetitions and incremental time optional ' + \
                    'parameters associated to a' + '\n' + \
                    indent + 'macroscale loading increment specification must be positive.'
+    elif code == 'E00095':
+        arguments = [args[2], ]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The maximum macroscale loading subincrementation level ' + \
+                   '({}) has been reached without' + '\n' + \
+                   indent + 'solution convergence.'
+    elif code == 'E00096':
+        arguments = [args[2], ]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'The maximum number of macroscale loading consecutive ' + \
+                   'increment cuts ({}) has been' + '\n' + \
+                   indent + 'reached without solution convergence.'
+    elif code == 'E00097':
+        arguments = [args[2], ]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'Every material\'s constitutive model state variables ' + \
+                   'dictionary must contain the state' + '\n' + \
+                   indent + 'update failure flag (\'is_su_fail\': bool). Please check ' + \
+                   'material phase {} constitutive' + '\n' + \
+                   indent + 'model.'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display error
     if code in ['E00001', 'E00002', 'E00010']:

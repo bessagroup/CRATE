@@ -293,15 +293,17 @@ def packagescs(self_consistent_scheme, scs_max_n_iterations, scs_conv_tol):
     return scs_dict
 # ------------------------------------------------------------------------------------------
 # Package data associated to algorithmic parameters related to the solution procedure
-def packalgparam(max_n_iterations, conv_tol, max_subincrem_level, su_max_n_iterations,
-                 su_conv_tol):
+def packalgparam(max_n_iterations, conv_tol, max_subinc_level, max_cinc_cuts,
+                 su_max_n_iterations, su_conv_tol):
     #
     # Object                      Meaning                                           Type
     # -------------------------------------------------------------------------------------
     # max_n_iterations     Maximum number of iterations to achieve
     #                      equilibrium convergence                                  int
     # conv_tol             Equilibrium convergence tolerance                        float
-    # max_subincrem_level  Maximum subincrementation level                          int
+    # max_subinc_level     Maximum macroscale loading subincrementation level       int
+    # max_cinc_cuts        Maximum number of consecutive macroscale load
+    #                      increment cuts                                           int
     # su_max_n_iterations  Maximum number of iterations to achieve
     #                      the state update convergence                             int
     # su_conv_tol          State update convergence tolerance                       float
@@ -311,7 +313,8 @@ def packalgparam(max_n_iterations, conv_tol, max_subincrem_level, su_max_n_itera
     # Build algorithmic parameters dictionary
     algpar_dict['max_n_iterations'] = max_n_iterations
     algpar_dict['conv_tol'] = conv_tol
-    algpar_dict['max_subincrem_level'] = max_subincrem_level
+    algpar_dict['max_subinc_level'] = max_subinc_level
+    algpar_dict['max_cinc_cuts'] = max_cinc_cuts
     algpar_dict['su_max_n_iterations'] = su_max_n_iterations
     algpar_dict['su_conv_tol'] = su_conv_tol
     # Return

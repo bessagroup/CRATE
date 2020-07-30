@@ -169,11 +169,11 @@ def ffthombasicscheme(problem_dict, rg_dict, mat_dict, mac_strain):
     # values existent in the microstructure material phases (this is reported in
     # Moulinec, H. and Suquet, P., 1998 as the choice that leads to the best rate of
     # convergence)
-    material_properties_ref = dict()
-    material_properties_ref['E'] = \
+    mat_prop_ref = dict()
+    mat_prop_ref['E'] = \
         0.5*(min([material_properties[phase]['E'] for phase in material_phases]) + \
              max([material_properties[phase]['E'] for phase in material_phases]))
-    material_properties_ref['v'] = \
+    mat_prop_ref['v'] = \
         0.5*(min([material_properties[phase]['v'] for phase in material_phases]) + \
              max([material_properties[phase]['v'] for phase in material_phases]))
     # --------------------------------------------------------------------------------------
@@ -233,8 +233,8 @@ def ffthombasicscheme(problem_dict, rg_dict, mat_dict, mac_strain):
     #                              |     form ('1111', '2211', '3311', '1211', ...)
     #
     # Get reference material Young modulus and Poisson coeficient
-    E_ref = material_properties_ref['E']
-    v_ref = material_properties_ref['v']
+    E_ref = mat_prop_ref['E']
+    v_ref = mat_prop_ref['v']
     # Compute reference material Lamé parameters
     lam_ref = (E_ref*v_ref)/((1.0 + v_ref)*(1.0 - 2.0*v_ref))
     miu_ref = E_ref/(2.0*(1.0 + v_ref))

@@ -17,8 +17,6 @@ import inspect
 import itertools as it
 # Display errors, warnings and built-in exceptions
 import ioput.errors as errors
-# Tensorial operations
-import tensor.tensoroperations as top
 #
 #                                                                    Problem type parameters
 # ==========================================================================================

@@ -12,6 +12,10 @@
 # ==========================================================================================
 # Shallow and deep copy operations
 import copy
+# Inspect file name and line
+import inspect
+# Display errors, warnings and built-in exceptions
+import ioput.errors as errors
 # Matricial operations
 import tensor.matrixoperations as mop
 # Material interface
@@ -51,6 +55,8 @@ def clusterssuct(problem_dict, mat_dict, clst_dict, algpar_dict, phase_clusters,
     # Initialize clusters state variables and consistent tangent
     clusters_state = dict()
     clusters_D_mf = dict()
+    # Initialize material state update failure state
+    su_fail_state = {'is_su_fail': False, 'mat_phase': None, 'cluster': None}
     # Initialize material cluster strain range indexes
     i_init = 0
     i_end = i_init + len(comp_order)
@@ -66,10 +72,22 @@ def clusterssuct(problem_dict, mat_dict, clst_dict, algpar_dict, phase_clusters,
             state_variables_old = copy.deepcopy(clusters_state_old[str(cluster)])
             # Perform material cluster state update and compute associated
             # consistent tangent modulus
-            state_variables,consistent_tangent_mf = \
+            state_variables, consistent_tangent_mf = \
                 material.materialinterface.materialinterface(
                     'suct', problem_dict, mat_dict, clst_dict, algpar_dict, mat_phase,
                     inc_strain, state_variables_old)
+            # If material cluster state update failed, update state update failure state
+            # and return
+            try:
+                if state_variables['is_su_fail']:
+                    su_fail_state['is_su_fail'] = True
+                    su_fail_state['mat_phase'] = mat_phase
+                    su_fail_state['cluster'] = cluster
+                    return [clusters_state, clusters_D_mf, su_fail_state]
+            except KeyError:
+                location = inspect.getframeinfo(inspect.currentframe())
+                errors.displayerror('E00097', location.filename, location.lineno + 1,
+                                    mat_phase)
             # Store material cluster updated state variables and consistent
             # tangent modulus
             clusters_state[str(cluster)] = state_variables
@@ -78,4 +96,4 @@ def clusterssuct(problem_dict, mat_dict, clst_dict, algpar_dict, phase_clusters,
             i_init = i_init + len(comp_order)
             i_end = i_init + len(comp_order)
     # Return
-    return [clusters_state, clusters_D_mf]
+    return [clusters_state, clusters_D_mf, su_fail_state]

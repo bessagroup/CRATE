@@ -207,7 +207,7 @@ def readinputdatafile(input_file,dirs_dict):
         max = '~'
         max_n_iterations = rproc.readtypeAkeyword(input_file, input_file_path, keyword, max)
     else:
-        max_n_iterations = 20
+        max_n_iterations = 12
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read convergence tolerance to solve each load increment (optional). If the associated
     # keyword is not found, then a default specification is assumed
@@ -218,16 +218,25 @@ def readinputdatafile(input_file,dirs_dict):
     else:
         conv_tol = 1e-6
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Read maximum level of subincrementation allowed (optional). If the associated
-    # keyword is not found, then a default specification is assumed
-    keyword = 'Max_SubIncrem_Level'
+    # Read maximum level of macroscale loading subincrementation allowed (optional). If the
+    # associated keyword is not found, then a default specification is assumed
+    keyword = 'Max_SubInc_Level'
     is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
     if is_found:
         max = '~'
-        max_subincrem_level = rproc.readtypeAkeyword(input_file, input_file_path, keyword,
-                                                     max)
+        max_subinc_level = rproc.readtypeAkeyword(input_file, input_file_path, keyword, max)
     else:
-        max_subincrem_level = 5
+        max_subinc_level = 5
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Read maximum number of consecutive macroscale load increment cuts (optional). If the
+    # associated keyword is not found, then a default specification is assumed
+    keyword = 'Max_Consecutive_Inc_Cuts'
+    is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
+        max = '~'
+        max_cinc_cuts = rproc.readtypeAkeyword(input_file, input_file_path, keyword, max)
+    else:
+        max_cinc_cuts = 5
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read material state update maximum number of iterations (optional). If the associated
     # keyword is not found, then a default specification is assumed
@@ -305,7 +314,8 @@ def readinputdatafile(input_file,dirs_dict):
     # Package data associated to the self-consistent scheme
     info.displayinfo('5', 'Packaging algorithmic data...')
     algpar_dict = packager.packalgparam(
-        max_n_iterations, conv_tol, max_subincrem_level, su_max_n_iterations, su_conv_tol)
+        max_n_iterations, conv_tol, max_subinc_level, max_cinc_cuts, su_max_n_iterations,
+        su_conv_tol)
     # Package data associated to the VTK output
     info.displayinfo('5', 'Packaging VTK output data...')
     if is_VTK_output:

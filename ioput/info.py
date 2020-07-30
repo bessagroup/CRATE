@@ -28,7 +28,7 @@ import ioput.ioutilities as ioutil
 def displayinfo(code, *args, **kwargs):
     # Get display features
     display_features = ioutil.setdisplayfeatures()
-    output_width, dashed_line, indent = display_features[0:3]
+    output_width, dashed_line, indent, asterisk_line = display_features[0:4]
     tilde_line, equal_line = display_features[4:6]
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set informations and formats to display
@@ -52,7 +52,7 @@ def displayinfo(code, *args, **kwargs):
             sys.exit(1)
     elif code == '0':
         arguments = ['CRATE - Clustering-based Nonlinear Analysis of Materials',
-                     'Release 0.2.0 (July 2020)'] + 2*[args[0],] + list(args[1:3])
+                     'Release 0.3.0 (July 2020)'] + 2*[args[0],] + list(args[1:3])
         info = tuple(arguments)
         template = '\n' + colorama.Fore.WHITE + tilde_line + colorama.Style.RESET_ALL + \
                    colorama.Fore.WHITE + '\n{:^{width}}\n\n' + '{:^{width}}\n\n\n' + \
@@ -131,17 +131,32 @@ def displayinfo(code, *args, **kwargs):
     elif code == '7':
         mode = args[0]
         if mode == 'init':
-            arguments = args[1:]
-            info = tuple(arguments)
-            template = colorama.Fore.CYAN + '\n' + \
-                       indent + 'Increment number: {:3d}' + '\n' + \
-                       indent + equal_line[:-len(indent)] + '\n' + \
-                       indent + 'Loading subpath: {:4d} |' + 6*' ' + \
-                       'Load factor | Total = {:8.1e}' + 7*' ' + \
-                       'Time | Total = {:8.1e}' + '\n' + \
-                       indent + 6*' ' + 'Increment: {:4d} |' + 18*' ' + \
-                       '| Incr. = {:8.1e}' + 12*' ' + '| Incr. = {:8.1e}' + \
-                       colorama.Style.RESET_ALL
+            subinc_level = args[2]
+            if subinc_level == 0:
+                arguments = list([args[1], ]) + list(args[3:])
+                info = tuple(arguments)
+                template = colorama.Fore.CYAN + '\n' + \
+                           indent + 'Increment number: {:3d}' + '\n' + \
+                           indent + equal_line[:-len(indent)] + '\n' + \
+                           indent + 'Loading subpath: {:4d} |' + 6*' ' + \
+                           'Load factor | Total = {:8.1e}' + 7*' ' + \
+                           'Time | Total = {:8.1e}' + '\n' + \
+                           indent + 6*' ' + 'Increment: {:4d} |' + 18*' ' + \
+                           '| Incr. = {:8.1e}' + 12*' ' + '| Incr. = {:8.1e}' + \
+                           colorama.Style.RESET_ALL
+            else:
+                arguments = args[1:]
+                info = tuple(arguments)
+                template = colorama.Fore.CYAN + '\n' + \
+                           indent + 'Increment number: {:3d}' + 3*' ' + \
+                           '(Sub-inc. level: {:3d})' + '\n' + \
+                           indent + equal_line[:-len(indent)] + '\n' + \
+                           indent + 'Loading subpath: {:4d} |' + 6*' ' + \
+                           'Load factor | Total = {:8.1e}' + 7*' ' + \
+                           'Time | Total = {:8.1e}' + '\n' + \
+                           indent + 6*' ' + 'Increment: {:4d} |' + 18*' ' + \
+                           '| Incr. = {:8.1e}' + 12*' ' + '| Incr. = {:8.1e}' + \
+                           colorama.Style.RESET_ALL
         elif mode == 'end':
             space1 = (output_width - 84)*' '
             space2 = (output_width - (len('Homogenized strain tensor') + 48))*' '
@@ -259,6 +274,27 @@ def displayinfo(code, *args, **kwargs):
                 info = tuple(arguments)
                 template = indent + ' {:^6d}    {:^12.4e}' + space2 + \
                            '{:>11.4e}     {:^11.4e}    {:^11.4e}'
+    elif code == '11':
+        mode = args[0]
+        if mode == 'max_iter':
+            arguments = [args[1],]
+            cut_msg = 'Maximum number of iterations ({}) reached without convergence.'
+        elif mode == 'su_fail':
+            arguments = [args[1]['cluster'], args[1]['mat_phase']]
+            cut_msg = 'State update failure in cluster {} (material phase {}).'
+        elif mode == 'max_scs_iter':
+            arguments = [args[1],]
+            cut_msg = 'Maximum number of self-consistent iterations ({}) reached ' + \
+                      'without' + '\n' + \
+                      indent + len('Increment cut: ')*' ' + 'convergence.'
+        else:
+            cut_msg = 'Undefined increment cut message.'
+        info = tuple(arguments)
+        template = '\n\n' + colorama.Fore.RED + indent + asterisk_line[:-len(indent)] + \
+                   '\n' + \
+                   indent + 'Increment cut: ' + colorama.Style.RESET_ALL + cut_msg + \
+                   '\n' + colorama.Fore.RED + indent + asterisk_line[:-len(indent)] + \
+                   colorama.Style.RESET_ALL + '\n'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display information
     ioutil.print2(template.format(*info, width=output_width))

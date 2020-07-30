@@ -122,6 +122,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     # Get algorithmic parameters
     max_n_iterations = algpar_dict['max_n_iterations']
     conv_tol = algpar_dict['conv_tol']
+    max_subinc_level = algpar_dict['max_subinc_level']
+    max_cinc_cuts = algpar_dict['max_cinc_cuts']
     # Get VTK output parameters
     is_VTK_output = vtk_dict['is_VTK_output']
     if is_VTK_output:
@@ -166,6 +168,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                                                              mat_phase)
     # Get total number of clusters
     n_total_clusters = sum([phase_n_clusters[mat_phase] for mat_phase in material_phases])
+    # Initialize macroscale loading increment cut flag
+    is_inc_cut = False
     # --------------------------------------------------------------------------------------
     # Validation:
     if is_Validation[1]:
@@ -229,19 +233,20 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         for phase in material_phases])
     v_ref = sum([material_phases_f[phase]*material_properties[phase]['v']
         for phase in material_phases])
-    material_properties_ref = dict()
-    material_properties_ref['E'] = E_ref
-    material_properties_ref['v'] = v_ref
+    mat_prop_ref = dict()
+    mat_prop_ref['E'] = E_ref
+    mat_prop_ref['v'] = v_ref
+    mat_prop_ref_old = copy.deepcopy(mat_prop_ref)
     # Compute the reference material elastic tangent (matricial form) and compliance tensor
     # (matrix)
-    De_ref_mf, Se_ref_matrix = scs.refelastictanmod(problem_dict, material_properties_ref)
+    De_ref_mf, Se_ref_matrix = scs.refelastictanmod(problem_dict, mat_prop_ref)
     # --------------------------------------------------------------------------------------
     # Validation:
     if is_Validation[4]:
         section = 'Reference material elastic tangent'
         print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
-        print('\n' + 'material_properties_ref[\'E\'] = '+ str(material_properties_ref['E']))
-        print('\n' + 'material_properties_ref[\'v\'] = '+ str(material_properties_ref['v']))
+        print('\n' + 'mat_prop_ref[\'E\'] = '+ str(mat_prop_ref['E']))
+        print('\n' + 'mat_prop_ref[\'v\'] = '+ str(mat_prop_ref['v']))
         print('\n' + 'De_ref_mf:' + '\n')
         print(De_ref_mf)
         print('\n' + 'Se_ref_matrix:' + '\n')
@@ -253,7 +258,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     # Initialize macroscale loading path
     mac_load_path = LoadingPath(strain_formulation, problem_dict['comp_order_sym'],
                                 problem_dict['comp_order_nsym'], mac_load,
-                                mac_load_presctype, mac_load_increm)
+                                mac_load_presctype, mac_load_increm, max_subinc_level,
+                                max_cinc_cuts)
     # Set initial homogenized state
     mac_load_path.update_hom_state(n_dim, comp_order, hom_strain, hom_stress)
     # Setup first macroscale loading increment
@@ -261,18 +267,14 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         presc_stress_idxs, is_last_inc = mac_load_path.new_load_increment(n_dim, comp_order)
     # Get increment counter
     inc = mac_load_path.increm_state['inc']
-    # Get loading subpath data
-    sp_id, sp_inc, sp_total_lfact, sp_inc_lfact, sp_total_time, sp_inc_time = \
-        mac_load_path.get_subpath_state()
     # Display increment data
-    info.displayinfo('7', 'init', inc, sp_id + 1, sp_total_lfact, sp_total_time,
-                     sp_inc, sp_inc_lfact, sp_inc_time)
+    displayincdata(mac_load_path)
     # Set increment initial time
     inc_init_time = time.time()
     # --------------------------------------------------------------------------------------
     # Validation:
     if any(is_Validation):
-        print('\n' + (92 - len(' Increment ' + str(inc)))*'-' + ' Increment ' + str(inc))
+        #print('\n' + (92 - len(' Increment ' + str(inc)))*'-' + ' Increment ' + str(inc))
         section = 'Macroscale load increments'
         print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
         if n_presc_strain > 0:
@@ -350,8 +352,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize self-consistent scheme iteration counter
         scs_iter = 0
-        info.displayinfo('8', 'init', scs_iter, material_properties_ref['E'],
-                         material_properties_ref['v'])
+        info.displayinfo('8', 'init', scs_iter, mat_prop_ref['E'], mat_prop_ref['v'])
         # Set self-consistent scheme iteration initial time
         scs_iter_init_time = time.time()
         # ----------------------------------------------------------------------------------
@@ -374,7 +375,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             # Update cluster interaction tensors and assemble global cluster interaction
             # matrix
             global_cit_mf = citop.updassemblecit(
-                problem_dict, material_properties_ref, Se_ref_matrix, material_phases,
+                problem_dict, mat_prop_ref, Se_ref_matrix, material_phases,
                 n_total_clusters, phase_n_clusters, phase_clusters, cit_1_mf, cit_2_mf,
                 cit_0_freq_mf)
             #
@@ -407,9 +408,17 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                     section = 'Cluster su and ct'
                     print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
                 # --------------------------------------------------------------------------
-                clusters_state, clusters_D_mf = clstsuct.clusterssuct(
+                clusters_state, clusters_D_mf, su_fail_state = clstsuct.clusterssuct(
                     problem_dict, mat_dict, clst_dict, algpar_dict, phase_clusters,
                     gbl_inc_strain_mf, clusters_state_old)
+                # Raise macroscale increment cut procedure if material cluster state update
+                # failed
+                if su_fail_state['is_su_fail']:
+                    is_inc_cut = True
+                    # Display increment cut
+                    info.displayinfo('11', 'su_fail', su_fail_state)
+                    # Leave Newton-Raphson equilibrium iterative loop
+                    break
                 #
                 #                                Global cluster interaction - tangent matrix
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -540,18 +549,12 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                     # Leave Newton-Raphson iterative loop (converged solution)
                     break
                 elif nr_iter == max_n_iterations:
-                    # Maximum number of Newton-Raphson iterations reached
-                    location = inspect.getframeinfo(inspect.currentframe())
-                    if is_farfield_formulation:
-                        location = inspect.getframeinfo(inspect.currentframe())
-                        errors.displayerror('E00061', location.filename,
-                                            location.lineno + 1, max_n_iterations, inc,
-                                            error_A1, error_A2, error_A3)
-                    else:
-                        location = inspect.getframeinfo(inspect.currentframe())
-                        errors.displayerror('E00073', location.filename,
-                                            location.lineno + 1, max_n_iterations, inc,
-                                            error_A1, error_A2)
+                    # Raise macroscale increment cut procedure
+                    is_inc_cut = True
+                    # Display increment cut
+                    info.displayinfo('11', 'max_iter', max_n_iterations)
+                    # Leave Newton-Raphson equilibrium iterative loop
+                    break
                 else:
                     # Increment iteration counter
                     nr_iter = nr_iter + 1
@@ -636,21 +639,28 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             #
             #                                                         Self-consistent scheme
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # If raising a macroscale loading increment cut, reset reference material
+            # elastic properties to the last converged increment values and leave
+            # self-consistent iterative loop
+            if is_inc_cut:
+                mat_prop_ref = copy.deepcopy(mat_prop_ref_old)
+                break
+            # ------------------------------------------------------------------------------
             # Update reference material elastic properties through a given self-consistent
             # scheme
             if self_consistent_scheme == 1:
                 scs_args = (self_consistent_scheme, problem_dict, inc_hom_strain_mf,
-                            inc_hom_stress_mf, material_properties_ref)
+                            inc_hom_stress_mf, mat_prop_ref)
                 if problem_type == 1:
                     scs_args = scs_args + (inc_hom_stress_33,)
             elif self_consistent_scheme == 2:
                 if is_farfield_formulation:
                     scs_args = (self_consistent_scheme, problem_dict,
-                                inc_farfield_strain_mf, inc_hom_stress_mf,
-                                material_properties_ref, eff_tangent_mf)
+                                inc_farfield_strain_mf, inc_hom_stress_mf, mat_prop_ref,
+                                eff_tangent_mf)
                 else:
                     scs_args = (self_consistent_scheme, problem_dict, inc_hom_strain_mf,
-                                inc_hom_stress_mf, material_properties_ref, eff_tangent_mf)
+                                inc_hom_stress_mf, mat_prop_ref, eff_tangent_mf)
             E_ref, v_ref = scs.scsupdate(*scs_args)
             # ------------------------------------------------------------------------------
             # Validation:
@@ -666,21 +676,27 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Check self-consistent scheme iterative procedure convergence
             is_scs_converged, norm_d_E_ref, norm_d_v_ref = \
-                scs.checkscsconvergence(E_ref, v_ref, material_properties_ref, scs_conv_tol)
+                scs.checkscsconvergence(E_ref, v_ref, mat_prop_ref, scs_conv_tol)
             info.displayinfo('8', 'end', time.time() - scs_iter_init_time)
             # Control self-consistent scheme iteration loop flow
             if is_scs_converged:
                 # Leave self-consistent scheme iterative loop (converged solution)
                 break
             elif scs_iter == scs_max_n_iterations:
-                # Maximum number of self-consistent scheme iterations reached
-                location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayerror('E00062', location.filename, location.lineno + 1,
-                                    scs_max_n_iterations, inc, norm_d_E_ref, norm_d_v_ref)
+                # If the maximum number of self-consistent scheme iterations is reached
+                # without convergence, reset reference material elastic properties to the
+                # last converged increment values and leave self-consistent iterative loop
+                mat_prop_ref = copy.deepcopy(mat_prop_ref_old)
+                # Raise macroscale increment cut procedure
+                is_inc_cut = True
+                # Display increment cut
+                info.displayinfo('11', 'max_scs_iter', scs_max_n_iterations)
+                # Leave Newton-Raphson equilibrium iterative loop
+                break
             else:
                 # Update reference material elastic properties
-                material_properties_ref['E'] = E_ref
-                material_properties_ref['v'] = v_ref
+                mat_prop_ref['E'] = E_ref
+                mat_prop_ref['v'] = v_ref
                 # Increment self-consistent scheme iteration counter
                 scs_iter = scs_iter + 1
                 info.displayinfo('8', 'init', scs_iter, E_ref, norm_d_E_ref, v_ref,
@@ -698,22 +714,37 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Compute the reference material elastic tangent (matricial form) and compliance
             # tensor (matrix)
-            De_ref_mf, Se_ref_matrix = scs.refelastictanmod(problem_dict,
-                                                            material_properties_ref)
+            De_ref_mf, Se_ref_matrix = scs.refelastictanmod(problem_dict, mat_prop_ref)
             # ------------------------------------------------------------------------------
             # Validation:
             if is_Validation[4]:
                 section = 'Reference material elastic tangent'
                 print('\n' + '>> ' + section + ' ' + (92-len(section)-4)*'-')
-                print('\n' + 'material_properties_ref[\'E\'] = ' + \
-                                                          str(material_properties_ref['E']))
-                print('\n' + 'material_properties_ref[\'v\'] = ' + \
-                                                          str(material_properties_ref['v']))
+                print('\n' + 'mat_prop_ref[\'E\'] = ' + str(mat_prop_ref['E']))
+                print('\n' + 'mat_prop_ref[\'v\'] = ' + str(mat_prop_ref['v']))
                 print('\n' + 'De_ref_mf:' + '\n')
                 print(De_ref_mf)
                 print('\n' + 'Se_ref_matrix:' + '\n')
                 print(Se_ref_matrix)
             # ------------------------------------------------------------------------------
+        #
+        #                                                   Macroscale loading increment cut
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        if is_inc_cut:
+            # Reset macroscale loading increment cut flag
+            is_inc_cut = False
+            # Perform macroscale increment cut and setup new macroscale loading increment
+            inc_mac_load_mf, n_presc_strain, presc_strain_idxs, n_presc_stress, \
+                presc_stress_idxs, is_last_inc = mac_load_path.increment_cut(
+                    n_dim, comp_order)
+            # Get increment counter
+            inc = mac_load_path.increm_state['inc']
+            # Display increment data
+            displayincdata(mac_load_path)
+            # Set increment initial time
+            inc_init_time = time.time()
+            # Start new macroscale loading increment solution procedures
+            continue
         #
         #                                              Homogenized strain and stress tensors
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -771,6 +802,12 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         if problem_type == 1:
             hom_stress_33_old = hom_stress_33
         #
+        #
+        #                                    Converged reference material elastic properties
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Update converged reference material elastic properties
+        mat_prop_ref_old = copy.deepcopy(mat_prop_ref)
+        #
         #                                                Incremental macroscale loading flow
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Update converged macroscale (homogenized) state
@@ -798,11 +835,20 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                     n_dim, comp_order)
             # Get increment counter
             inc = mac_load_path.increm_state['inc']
-            # Get loading subpath data
-            sp_id, sp_inc, sp_total_lfact, sp_inc_lfact, sp_total_time, sp_inc_time = \
-                mac_load_path.get_subpath_state()
             # Display increment data
-            info.displayinfo('7', 'init', inc, sp_id + 1, sp_total_lfact, sp_total_time,
-                             sp_inc, sp_inc_lfact, sp_inc_time)
+            displayincdata(mac_load_path)
             # Set increment initial time
             inc_init_time = time.time()
+#
+#                                                       Macroscale loading increment display
+# ==========================================================================================
+# Display macroscale loading increment data
+def displayincdata(mac_load_path):
+    # Get increment counter
+    inc = mac_load_path.increm_state['inc']
+    # Get loading subpath data
+    sp_id, sp_inc, sp_total_lfact, sp_inc_lfact, sp_total_time, sp_inc_time, \
+        subinc_level = mac_load_path.get_subpath_state()
+    # Display increment data
+    info.displayinfo('7', 'init', inc, subinc_level, sp_id + 1, sp_total_lfact,
+                     sp_total_time, sp_inc, sp_inc_lfact, sp_inc_time)
