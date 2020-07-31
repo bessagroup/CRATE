@@ -620,7 +620,11 @@ def displayerror(code, *args):
                    indent + 'constitutive model \'{}\' was not specified for all ' + \
                    'pixels (2D) / voxels (3D).'
     elif code == 'E00061':
-        pass
+        arguments = args['', ]
+        values = tuple(arguments)
+        template = 'Details:' + '\n\n' + \
+                   indent + 'Input argument must be a string and can only contain one ' + \
+                   'underscore.'
     elif code == 'E00062':
         pass
     elif code == 'E00063':

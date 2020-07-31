@@ -87,30 +87,56 @@ def clusterinteractiontensors(dirs_dict, problem_dict, mat_dict, rg_dict, clst_d
                 mat_phase_pair = mat_phase_A + '_' + mat_phase_B
                 # Loop over material phase A clusters
                 for cluster_I in phase_clusters[mat_phase_A]:
-                    # Set material phase A cluster characteristic function
-                    cluster_I_filter, _ = citop.clusterfilter(cluster_I, voxels_clusters)
-                    # Perform discrete integral over the spatial domain of material phase A
-                    # cluster I
-                    cit_1_integral_mf, cit_2_integral_mf, cit_0_freq_integral_mf = \
-                        citop.discretecitintegral(comp_order, cluster_I_filter,
-                                                   gop_1_filt_vox, gop_2_filt_vox,
-                                                   gop_0_freq_filt_vox)
-                    # Compute cluster interaction tensor between the material phase A
-                    # cluster and the material phase B cluster
-                    rve_vol = np.prod(rve_dims)
-                    cit_1_pair_mf = np.multiply((1.0/(clusters_f[str(cluster_I)]*rve_vol)),
-                                                cit_1_integral_mf)
-                    cit_2_pair_mf = np.multiply((1.0/(clusters_f[str(cluster_I)]*rve_vol)),
-                                                cit_2_integral_mf)
-                    cit_0_freq_pair_mf = \
-                        np.multiply((1.0/(clusters_f[str(cluster_I)]*rve_vol)),
-                                    cit_0_freq_integral_mf)
-                    # Store cluster interaction tensor between material phase A cluster and
-                    # material phase B cluster
+                    # Set material cluster pair
                     cluster_pair = str(cluster_I) + '_' + str(cluster_J)
-                    cit_1_mf[mat_phase_pair][cluster_pair] = cit_1_pair_mf
-                    cit_2_mf[mat_phase_pair][cluster_pair] = cit_2_pair_mf
-                    cit_0_freq_mf[mat_phase_pair][cluster_pair] = cit_0_freq_pair_mf
+                    # Check if cluster-symmetric cluster interaction tensor
+                    sym_cluster_pair = switch_pair(cluster_pair)
+                    sym_mat_phase_pair = switch_pair(mat_phase_pair)
+                    is_clst_sym = sym_cluster_pair in cit_1_mf[sym_mat_phase_pair].keys()
+                    # Compute cluster interaction tensor between material phase A cluster
+                    # and material phase B cluster (complete computation or
+                    # cluster-symmetric computation)
+                    if is_clst_sym:
+                        # Set cluster volume fractions ratio
+                        clst_f_ratio = clusters_f[str(cluster_J)]/clusters_f[str(cluster_I)]
+                        # Compute clustering interaction tensor between material phase A
+                        # cluster and material phase B cluster through cluster-symmetry
+                        cit_1_mf[mat_phase_pair][cluster_pair] = \
+                            np.multiply(clst_f_ratio,
+                                        cit_1_mf[sym_mat_phase_pair][sym_cluster_pair])
+                        cit_2_mf[mat_phase_pair][cluster_pair] = \
+                            np.multiply(clst_f_ratio,
+                                        cit_2_mf[sym_mat_phase_pair][sym_cluster_pair])
+                        cit_0_freq_mf[mat_phase_pair][cluster_pair] = \
+                            np.multiply(clst_f_ratio,
+                                        cit_0_freq_mf[sym_mat_phase_pair][sym_cluster_pair])
+                    else:
+                        # Set material phase A cluster characteristic function
+                        cluster_I_filter, _ = citop.clusterfilter(cluster_I,
+                                                                  voxels_clusters)
+                        # Perform discrete integral over the spatial domain of material
+                        # phase A cluster I
+                        cit_1_integral_mf, cit_2_integral_mf, cit_0_freq_integral_mf = \
+                            citop.discretecitintegral(comp_order, cluster_I_filter,
+                                                      gop_1_filt_vox, gop_2_filt_vox,
+                                                      gop_0_freq_filt_vox)
+                        # Compute cluster interaction tensor between the material phase A
+                        # cluster and the material phase B cluster
+                        rve_vol = np.prod(rve_dims)
+                        cit_1_pair_mf = \
+                            np.multiply((1.0/(clusters_f[str(cluster_I)]*rve_vol)),
+                                        cit_1_integral_mf)
+                        cit_2_pair_mf = \
+                            np.multiply((1.0/(clusters_f[str(cluster_I)]*rve_vol)),
+                                        cit_2_integral_mf)
+                        cit_0_freq_pair_mf = \
+                            np.multiply((1.0/(clusters_f[str(cluster_I)]*rve_vol)),
+                                        cit_0_freq_integral_mf)
+                        # Store cluster interaction tensor between material phase A cluster
+                        # and material phase B cluster
+                        cit_1_mf[mat_phase_pair][cluster_pair] = cit_1_pair_mf
+                        cit_2_mf[mat_phase_pair][cluster_pair] = cit_2_pair_mf
+                        cit_0_freq_mf[mat_phase_pair][cluster_pair] = cit_0_freq_pair_mf
     # Store clustering interaction tensors
     clst_dict['cit_1_mf'] = cit_1_mf
     clst_dict['cit_2_mf'] = cit_2_mf
@@ -128,3 +154,11 @@ def clusterinteractiontensors(dirs_dict, problem_dict, mat_dict, rg_dict, clst_d
     pickle.dump([cit_1_mf, cit_2_mf, cit_0_freq_mf], cit_file)
     # Close file
     cit_file.close()
+# ------------------------------------------------------------------------------------------
+# Given a string in the format 'X[X]_[Y]Y', switch the left and right sides and return
+# the string 'Y[Y]_[X]X'
+def switch_pair(x):
+    if not isinstance(x, str) or x.count('_') != 1:
+        location = inspect.getframeinfo(inspect.currentframe())
+        errors.displayerror('E00061', location.filename, location.lineno + 1)
+    return '_'.join(x.split('_')[::-1])
