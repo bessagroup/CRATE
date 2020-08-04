@@ -133,7 +133,7 @@ def readinputdatafile(input_file,dirs_dict):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read clustering method
     keyword = 'Clustering_Method'
-    max = 1
+    max = 2
     clustering_method = rproc.readtypeAkeyword(input_file, input_file_path, keyword, max)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read clustering strategy (optional). If the associated keyword is not found, then a

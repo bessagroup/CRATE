@@ -190,7 +190,8 @@
 #
 # Syntax:    Clustering_Method x
 #
-# x:         1 - k-Means clustering
+# x:         1 - K-Means
+#            2 - Mini-Batch K-Means
 # ------------------------------------------------------------------------------------------
 [insert here]
 

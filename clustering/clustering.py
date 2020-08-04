@@ -13,7 +13,7 @@
 # Working with arrays
 import numpy as np
 # Unsupervised clustering algorithms
-import sklearn.cluster
+import sklearn.cluster as skclst
 # Python object serialization
 import pickle
 # Inspect file name and line
@@ -76,9 +76,16 @@ def clustering(dirs_dict, mat_dict, rg_dict, clst_dict):
             # Perform clustering process according to the selected clustering method
             if clustering_method == 1:
                 # Set K-Means instance
-                clusters = sklearn.cluster.KMeans(n_clusters, init = 'k-means++',
-                                                  n_init = 10, max_iter = 300, tol = 1e-4,
-                                                  algorithm = 'auto')
+                clusters = skclst.KMeans(n_clusters, init='k-means++', n_init=10,
+                                         max_iter=300, tol=1e-4, algorithm='auto')
+            elif clustering_method == 2:
+                # Set mini batches size
+                batch_size = 100
+                # Set Mini-Batch K-Means instance
+                clusters = skclst.MiniBatchKMeans(n_clusters, init='k-means++', n_init=3,
+                                                  max_iter=100, tol=0.0,
+                                                  batch_size=batch_size,
+                                                  max_no_improvement=10)
             # Perform clustering
             clusters = clusters.fit(dataset)
             # Store current material phase cluster labels
