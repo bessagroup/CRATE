@@ -14,6 +14,7 @@
 import numpy as np
 # Unsupervised clustering algorithms
 import sklearn.cluster as skclst
+import sklearn.mixture as skmixt
 # Python object serialization
 import pickle
 # Inspect file name and line
@@ -49,7 +50,8 @@ def clustering(dirs_dict, mat_dict, rg_dict, clst_dict):
     clst_quantities = clst_dict['clst_quantities']
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display clustering method
-    clst_methods = {'1': 'K-Means', '2': 'Mini-Batch K-Means'}
+    clst_methods = {'1': 'K-Means', '2': 'Mini-Batch K-Means', '3': 'Birch',
+                    '4': 'Gaussian Mixture'}
     info.displayinfo('5', 'Clustering algorithm: ' + clst_methods[str(clustering_method)])
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Initialize clustering processes labels list
@@ -76,21 +78,32 @@ def clustering(dirs_dict, mat_dict, rg_dict, clst_dict):
             # Perform clustering process according to the selected clustering method
             if clustering_method == 1:
                 # Set K-Means instance
-                clusters = skclst.KMeans(n_clusters, init='k-means++', n_init=10,
+                clusters = skclst.KMeans(n_clusters=n_clusters, init='k-means++', n_init=10,
                                          max_iter=300, tol=1e-4, algorithm='auto')
             elif clustering_method == 2:
                 # Set mini batches size
                 batch_size = 100
                 # Set Mini-Batch K-Means instance
-                clusters = skclst.MiniBatchKMeans(n_clusters, init='k-means++', n_init=3,
-                                                  max_iter=100, tol=0.0,
+                clusters = skclst.MiniBatchKMeans(n_clusters=n_clusters, init='k-means++',
+                                                  n_init=3, max_iter=100, tol=0.0,
                                                   batch_size=batch_size,
                                                   max_no_improvement=10)
-            # Perform clustering
+            elif clustering_method == 3:
+                # Set Birch instance
+                clusters = skclst.Birch(n_clusters=n_clusters, threshold=0.1,
+                                        branching_factor=50)
+            elif clustering_method == 4:
+                # Set Gaussian Mixture instance
+                clusters = skmixt.GaussianMixture(n_components=n_clusters)
+            # Perform clustering and get cluster labels
             clusters = clusters.fit(dataset)
+            if hasattr(clusters, 'labels_'):
+                cluster_labels = clusters.labels_
+            else:
+                cluster_labels = clusters.predict(dataset)
             # Store current material phase cluster labels
             clst_process_lbls_flat[phase_voxel_flatidx[mat_phase]] = \
-                clusters.labels_ + label_correction
+                cluster_labels + label_correction
             # Update label correction
             label_correction = label_correction + n_clusters
             # ------------------------------------------------------------------------------
