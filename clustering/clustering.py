@@ -48,45 +48,54 @@ def clustering(dirs_dict, mat_dict, rg_dict, clst_dict):
     clst_dataidxs = clst_dict['clst_dataidxs']
     clst_quantities = clst_dict['clst_quantities']
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Display clustering method
+    clst_methods = {'1': 'K-Means', '2': 'Mini-Batch K-Means'}
+    info.displayinfo('5', 'Clustering algorithm: ' + clst_methods[str(clustering_method)])
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Initialize clustering processes labels list
     clst_processes = list()
     # Initialize label correction (avoid that different material phases as well as different
     # clustering processes share the same labels)
     label_correction = 0
-    # Perform clustering processes according to the selected clustering method
-    if clustering_method == 1:
-        info.displayinfo('5', 'Performing K-Means clustering...')
-        # Loop over clustering processes (each with associated data indexes)
-        for iclst in range(len(clst_dataidxs)):
-            info.displayinfo('6', 'progress', iclst + 1, len(clst_dataidxs))
-            # Initialize current clustering process labels
-            clst_process_lbls_flat = np.full(n_voxels, -1, dtype=int)
-            # Get current clustering process data indexes
-            data_indexes = clst_dataidxs[iclst]
-            # Loop over material phases
-            for mat_phase in material_phases:
-                # Set number of clusters
-                n_clusters = phase_n_clusters[mat_phase]
-                # Set clustering training dataset
-                dataset = mop.getcondmatrix(clst_quantities,
-                                            phase_voxel_flatidx[mat_phase], data_indexes)
-                # Perform kmeans clustering (Lloyd's algorithm)
-                kmeans = sklearn.cluster.KMeans(n_clusters, init = 'k-means++', n_init = 10,
-                                                max_iter = 300, tol = 1e-4,
-                                                algorithm = 'auto').fit(dataset)
-                # Store current material phase cluster labels
-                clst_process_lbls_flat[phase_voxel_flatidx[mat_phase]] = \
-                    kmeans.labels_ + label_correction
-                # Update label correction
-                label_correction = label_correction + n_clusters
-            # Check if all the training dataset points have been labeled
-            if np.any(clst_process_lbls_flat == -1):
-                location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayerror('E00036', location.filename, location.lineno + 1,
-                                    iclst + 1)
-            # Store current clustering process labels list
-            clst_processes.append(list(clst_process_lbls_flat))
-        info.displayinfo('6', 'completed')
+    # Loop over clustering processes (each with respective data indexes)
+    for i_clproc in range(len(clst_dataidxs)):
+        # Update current clustering process display
+        info.displayinfo('6', 'progress', i_clproc + 1, len(clst_dataidxs))
+        # Initialize current clustering process labels
+        clst_process_lbls_flat = np.full(n_voxels, -1, dtype=int)
+        # Get current clustering process data indexes
+        data_indexes = clst_dataidxs[i_clproc]
+        # Loop over material phases
+        for mat_phase in material_phases:
+            # Set number of clusters
+            n_clusters = phase_n_clusters[mat_phase]
+            # Set clustering training dataset
+            dataset = mop.getcondmatrix(clst_quantities,
+                                        phase_voxel_flatidx[mat_phase], data_indexes)
+            # ------------------------------------------------------------------------------
+            # Perform clustering process according to the selected clustering method
+            if clustering_method == 1:
+                # Set K-Means instance
+                clusters = sklearn.cluster.KMeans(n_clusters, init = 'k-means++',
+                                                  n_init = 10, max_iter = 300, tol = 1e-4,
+                                                  algorithm = 'auto')
+            # Perform clustering
+            clusters = clusters.fit(dataset)
+            # Store current material phase cluster labels
+            clst_process_lbls_flat[phase_voxel_flatidx[mat_phase]] = \
+                clusters.labels_ + label_correction
+            # Update label correction
+            label_correction = label_correction + n_clusters
+            # ------------------------------------------------------------------------------
+        # Check if all the training dataset points have been labeled
+        if np.any(clst_process_lbls_flat == -1):
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayerror('E00036', location.filename, location.lineno + 1,
+                                i_clproc + 1)
+        # Store current clustering process labels list
+        clst_processes.append(list(clst_process_lbls_flat))
+    # Display completed clustering processes
+    info.displayinfo('6', 'completed')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Perform RVE clustering discretization according to the selected clustering strategy
     if clustering_strategy == 1:
@@ -156,6 +165,7 @@ def clustering(dirs_dict, mat_dict, rg_dict, clst_dict):
     # Close file
     cluster_file.close()
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    raise Exception
 #
 #                                                                Perform compatibility check
 #                                                (loading previously computed offline stage)

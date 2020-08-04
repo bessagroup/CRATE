@@ -119,7 +119,7 @@ def displayinfo(code, *args, **kwargs):
             if args[1] == 1:
                 print(' '.format(width=output_width))
             info = tuple(arguments)
-            template = 2*indent + '> Performing clustering process {} of {}...'
+            template = indent + '> Performing clustering process {} of {}...'
             print(template.format(*info, width=output_width), end='\r')
             if args[1] == args[2]:
                 print(' '.format(width=output_width))
@@ -127,7 +127,7 @@ def displayinfo(code, *args, **kwargs):
         elif mode == 'completed':
             arguments = ['',]
             info = tuple(arguments)
-            template = '\n' + 2*indent + '> Completed all clustering processes!'
+            template = '\n' + indent + '> Completed all clustering processes!'
     elif code == '7':
         mode = args[0]
         if mode == 'init':
