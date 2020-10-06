@@ -18,14 +18,34 @@ import itertools as it
 import sklearn.cluster as skclst
 # Defining abstract base classes
 from abc import ABC, abstractmethod
+# Display messages
+import ioput.info as info
 # Matricial operations
 import tensor.matrixoperations as mop
 # I/O utilities
 import ioput.ioutilities as ioutil
 #
+#                                                            Available clustering algorithms
+# ==========================================================================================
+def get_available_clustering_algorithms():
+    '''Get available clustering algorithms in CRATE.
+
+    Clustering algorithms identifiers:
+    1- K-Means (source: scikit-learn)
+
+    Returns
+    -------
+    available_clustering_alg: dict
+        Available clustering algorithms (item, str) and associated identifiers (key, str).
+    '''
+
+    available_clustering_alg = {'1': 'K-Means (scikit-learn)'}
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    return available_clustering_alg
+#
 #                                                                                 CRVE class
 # ==========================================================================================
-class CRVE():
+class CRVE:
     '''Cluster-reduced Representative Volume Element.
 
     This class provides all the required attributes and methods associated with the
@@ -52,8 +72,8 @@ class CRVE():
         Clusters volume fraction (item, float) associated to each material phase (key, str).
     '''
 
-    def __init__(self, clustering_scheme, phase_n_clusters, rve_dims, regular_grid,
-                 material_phases):
+    def __init__(self, clustering_scheme, clustering_ensemble_strategy, phase_n_clusters,
+                 rve_dims, regular_grid, material_phases):
         '''Cluster-reduced Representative Volume Element constructor.
 
         Parameters
@@ -73,23 +93,24 @@ class CRVE():
         material_phases: list
             RVE material phases labels (str).
         '''
-
         self._clustering_scheme = clustering_scheme
+        self._clustering_ensemble_strategy = clustering_ensemble_strategy
         self._material_phases = material_phases
         self._phase_n_clusters = phase_n_clusters
-        self.clustering_solutions = []
         self._rve_dims = rve_dims
+        self.clustering_solutions = None
         self.voxels_clusters = None
-        self.phase_clusters = {}
-        self.clusters_f = {}
+        self.phase_clusters = None
+        self.clusters_f = None
         # Get number of voxels on each dimension and total number of voxels
         self._n_voxels_dims = \
             [regular_grid.shape[i] for i in range(len(regular_grid.shape))]
         self._n_voxels = np.prod(self._n_voxels_dims)
         # Get material phases' voxels' 1D flat indexes
-        self._phase_voxel_flatidx = type(self).get_phase_idxs(regular_grid, material_phases)
+        self._phase_voxel_flatidx = \
+            type(self)._get_phase_idxs(regular_grid, material_phases)
     # --------------------------------------------------------------------------------------
-    def generate_crve(self, global_data_matrix):
+    def get_crve(self, global_data_matrix):
         '''Generate CRVE from one or more RVE clustering solutions.
 
         Main method commanding the generation of the Cluster-Reduced Representative Volume
@@ -101,13 +122,13 @@ class CRVE():
         Parameters
         ----------
         global_data_matrix: ndarray of shape (n_voxels, n_features)
-            Data matrix containing the required data to perform all the RVE clusterings.
+            Data matrix containing the required data to perform all the RVE clusterings
+            prescribed in the clustering scheme.
         '''
-
         # Loop over prescribed RVE clustering solutions
         for i_clst in range(self._clustering_scheme.shape[0]):
             # Get clustering algorithm
-            clustering_algorithm = self._clustering_scheme[i_clst, 0]
+            clustering_method = self._clustering_scheme[i_clst, 0]
             # Get clustering features' columns
             feature_cols = self._clustering_scheme[i_clst, 2]
             # Get RVE clustering data matrix
@@ -115,27 +136,32 @@ class CRVE():
                                                 list(range(global_data_matrix.shape[0])),
                                                 feature_cols)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            info.displayinfo('5', 'RVE clustering (' + str(i_clst + 1) + ' of ' +
+                             str(self._clustering_scheme.shape[0]) + ')...', 2)
             # Instantiate RVE clustering
-            rve_clustering = RVEClustering(clustering_algorithm, self._phase_n_clusters,
+            rve_clustering = RVEClustering(clustering_method, self._phase_n_clusters,
                                            self._n_voxels, self._material_phases,
                                            self._phase_voxel_flatidx)
             # Perform RVE clustering
             rve_clustering.perform_rve_clustering(rve_data_matrix)
             # Assemble RVE clustering
-            self.add_new_clustering(rve_clustering.labels)
+            self._add_new_clustering(rve_clustering.labels)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get RVE consensus clustering solution
-        self.get_consensus_clustering()
-        # Sort RVE clustering labels
-        self.sort_cluster_labels()
+        info.displayinfo('5', 'Building CRVE (RVE consensus clustering)...', 2)
+        self._set_consensus_clustering()
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        info.displayinfo('5', 'Computing CRVE descriptors...', 2)
+        # Reassign and sort RVE clustering labels
+        self._sort_cluster_labels()
         # Store cluster labels belonging to each material phase
-        self.get_phase_clusters()
+        self._set_phase_clusters()
         # Compute material clusters' volume fraction
-        self.get_clusters_vf()
+        self._set_clusters_vf()
     # --------------------------------------------------------------------------------------
     @staticmethod
-    def get_phase_idxs(regular_grid, material_phases):
-        '''Get flat (1D) indexes of each material phase's voxels.
+    def _get_phase_idxs(regular_grid, material_phases):
+        '''Get flat indexes of each material phase's voxels.
 
         Parameters
         ----------
@@ -147,46 +173,45 @@ class CRVE():
 
         Returns
         -------
-        phase_voxel_flatidx: dict
-            Flat (1D) voxels' indexes (item, list of int) associated to each material phase
+        phase_voxel_flat_idx: dict
+            Flat voxels' indexes (item, list of int) associated to each material phase
             (key, str).
         '''
-
-        phase_voxel_flatidx = dict()
+        phase_voxel_flat_idx = dict()
         # Loop over material phases
         for mat_phase in material_phases:
             # Build boolean 'belongs to material phase' list
             is_phase_list = regular_grid.flatten() == int(mat_phase)
             # Get material phase's voxels' indexes
-            phase_voxel_flatidx[mat_phase] = list(it.compress(range(len(is_phase_list)),
+            phase_voxel_flat_idx[mat_phase] = list(it.compress(range(len(is_phase_list)),
                                                               is_phase_list))
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        return phase_voxel_flatidx
+        return phase_voxel_flat_idx
     # --------------------------------------------------------------------------------------
-    def get_phase_clusters(self):
-        '''Get CRVE cluster labels associated to each material phase.'''
-
+    def _set_phase_clusters(self):
+        '''Set CRVE cluster labels associated to each material phase.'''
+        self.phase_clusters = {}
         # Loop over material phases
-        for mat_phase in self.material_phases:
+        for mat_phase in self._material_phases:
             # Get cluster labels
             self.phase_clusters[mat_phase] = \
                 np.unique(self.voxels_clusters.flatten()[
-                          self.phase_voxel_flatidx[mat_phase]])
+                          self._phase_voxel_flatidx[mat_phase]])
     # --------------------------------------------------------------------------------------
-    def get_clusters_vf(self):
-        '''Get CRVE clusters volume fractions.'''
-
+    def _set_clusters_vf(self):
+        '''Set CRVE clusters' volume fractions.'''
         # Compute voxel volume
         voxel_vol = np.prod([float(self._rve_dims[i])/self._n_voxels_dims[i]
                              for i in range(len(self._rve_dims))])
         # Compute RVE volume
         rve_vol = np.prod(self._rve_dims)
         # Compute volume fraction associated to each material cluster
+        self.clusters_f = {}
         for cluster in np.unique(self.voxels_clusters):
             n_voxels_cluster = np.sum(self.voxels_clusters == cluster)
             self.clusters_f[str(cluster)] = (n_voxels_cluster*voxel_vol)/rve_vol
     # --------------------------------------------------------------------------------------
-    def add_new_clustering(self, rve_clustering):
+    def _add_new_clustering(self, rve_clustering):
         '''Add new RVE clustering to collection of clustering solutions.
 
         Parameters
@@ -194,36 +219,38 @@ class CRVE():
         rve_clustering: ndarray of shape (n_clusters,)
             Cluster label (int) assigned to each RVE voxel.
         '''
-
+        self.clustering_solutions = []
         self.clustering_solutions.append(rve_clustering)
     # --------------------------------------------------------------------------------------
-    def get_consensus_clustering(self):
-        '''Compute a unique RVE clustering solution (consensus solution).
+    def _set_consensus_clustering(self):
+        '''Set a unique RVE clustering solution (consensus solution).
 
         Notes
         -----
         Even if the clustering scheme only accounts for a single RVE clustering solution,
-        this method must be called in order to the CRVE clustering solution.
+        this method must be called in order to the set unique CRVE clustering solution.
         '''
-        # Get RVE consensus clustering solution according to the prescribed ensemble
-        # strategy
-        if self._clustering_strategy == 1:
+        # Get RVE consensus clustering solution according to the prescribed clustering
+        # ensemble strategy
+        if self._clustering_ensemble_strategy == 0:
             # Build CRVE from the single RVE clustering solution
-            self.voxels_clusters = np.array(self.clustering_solutions[0],
-                                            dtype=int).reshape(self._n_voxels_dims)
+            self.voxels_clusters = np.reshape(np.array(self.clustering_solutions[0],
+                                              dtype=int),self._n_voxels_dims)
     # --------------------------------------------------------------------------------------
-    def sort_cluster_labels(self):
-        '''Sort CRVE cluster labels material phasewise.
+    def _sort_cluster_labels(self):
+        '''Reassign and sort CRVE cluster labels material phasewise.
 
-        Reassign CRVE cluster labels in ascending order of material phase labels.
+        Reassign CRVE cluster labels in the range (0, n_clusters) and sorte them in
+        ascending order of material phase's labels.
 
         Notes
         -----
         Why is this required?
         '''
-
         # Initialize material phase initial cluster label
         lbl_init = 0
+        # Initialize old cluster labels
+        old_clusters = []
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize mapping dictionary to sort the cluster labels in asceding order of
         # material phase
@@ -232,39 +259,37 @@ class CRVE():
         sorted_mat_phases = list(np.sort(list(self._material_phases)))
         for mat_phase in sorted_mat_phases:
             # Get material phase old cluster labels
-            old_clusters = np.unique(
-                self.voxels_clusters.flatten()[self.phase_voxel_flatidx[mat_phase]])
+            phase_old_clusters = np.unique(
+                self.voxels_clusters.flatten()[self._phase_voxel_flatidx[mat_phase]])
             # Set material phase new cluster labels
-            new_clusters = list(range(lbl_init, lbl_init + self.phase_n_clusters[mat_phase]))
+            phase_new_clusters = list(range(lbl_init,
+                                      lbl_init + self._phase_n_clusters[mat_phase]))
             # Build mapping dictionary to sort the cluster labels
-            for i in range(self.phase_n_clusters[mat_phase]):
-                if old_clusters[i] in sort_dict.keys():
-                    #location = inspect.getframeinfo(inspect.currentframe())
-                    #errors.displayerror('E00038', location.filename, location.lineno + 1)
+            for i in range(self._phase_n_clusters[mat_phase]):
+                if phase_old_clusters[i] in sort_dict.keys():
                     raise RuntimeError('Cluster label (key) already exists in cluster' +
                                        'labels mapping dictionary.')
                 else:
-                    sort_dict[old_clusters[i]] = new_clusters[i]
+                    sort_dict[phase_old_clusters[i]] = phase_new_clusters[i]
             # Set next material phase initial cluster label
-            lbl_init = lbl_init + self.phase_n_clusters[mat_phase]
+            lbl_init = lbl_init + self._phase_n_clusters[mat_phase]
+            # Append old cluster labels
+            old_clusters += list(phase_old_clusters)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Check cluster labels mapping dictionary
-        #if np.any(np.sort(list(sort_dict.keys())) != range(sum(phase_n_clusters.values()))):
-        #    location = inspect.getframeinfo(inspect.currentframe())
-        #    errors.displayerror('E00039', location.filename, location.lineno + 1)
-        #elif np.any(np.sort([sort_dict[key] for key in sort_dict.keys()]) != \
-        #        range(sum(phase_n_clusters.values()))):
-        #    location = inspect.getframeinfo(inspect.currentframe())
-        #    errors.displayerror('E00039', location.filename, location.lineno + 1)
+        new_clusters = [sort_dict[key] for key in sort_dict.keys()]
+        if set(sort_dict.keys()) != set(old_clusters) or \
+                set(new_clusters) != set(old_clusters):
+            raise RuntimeError('Invalid cluster labels mapping dictionary.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Sort cluster labels in ascending order of material phase
         for voxel_idx in it.product(*[list(range(self._n_voxels_dims[i])) \
                 for i in range(len(self._n_voxels_dims))]):
             self.voxels_clusters[voxel_idx] = sort_dict[self.voxels_clusters[voxel_idx]]
 #
-#                                                                       RVE clustering class
+#                                                                             RVE clustering
 # ==========================================================================================
-class RVEClustering():
+class RVEClustering:
     '''RVE clustering class.
 
     RVE clustering-based domain decomposition based on a given clustering algorithm.
@@ -275,7 +300,7 @@ class RVEClustering():
         Cluster label (int) assigned to each RVE voxel.
     '''
     def __init__(self, clustering_method, phase_n_clusters, n_voxels, material_phases,
-                 phase_voxel_flatidx):
+                 phase_voxel_flat_idx):
         '''RVE clustering constructor.
 
         Parameters
@@ -296,7 +321,7 @@ class RVEClustering():
         self._phase_n_clusters = phase_n_clusters
         self._n_voxels = n_voxels
         self._material_phases = material_phases
-        self._phase_voxel_flatidx = phase_voxel_flatidx
+        self._phase_voxel_flatidx = phase_voxel_flat_idx
         self.labels = None
     # --------------------------------------------------------------------------------------
     def perform_rve_clustering(self, data_matrix):
@@ -335,8 +360,11 @@ class RVEClustering():
             if hasattr(clst_alg, 'n_clusters'):
                 clst_alg.n_clusters = self._phase_n_clusters[mat_phase]
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Get material phase data matrix
+            phase_data_matrix = mop.getcondmatrix(data_matrix, voxels_idxs,
+                                                  list(range(data_matrix.shape[1])))
             # Perform material phase clustering
-            cluster_labels = clst_alg.perform_clustering(data_matrix)
+            cluster_labels = clst_alg.perform_clustering(phase_data_matrix)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Assemble material phase cluster labels
             self.labels[voxels_idxs] = label_offset + cluster_labels
@@ -352,8 +380,7 @@ class RVEClustering():
             raise RuntimeError('At least one RVE domain point has not been labeled' +
                                'during the cluster analysis.')
 #
-#                                                              Clustering algorithms classes
-#                                                                         (strategy pattern)
+#                                                                      Clustering algorithms
 # ==========================================================================================
 class ClusteringAlgorithm(ABC):
     '''Clustering algorithm interface.'''
@@ -435,9 +462,9 @@ class KMeans(ClusteringAlgorithm):
         cluster_labels: ndarray of shape (n_items,)
             Cluster label (int) assigned to each dataset item.
         '''
-        # Instantiate Scikit-learn KMeans clustering algorithm
+        # Instantiate scikit-learn K-Means clustering algorithm
         self._clst_alg = skclst.KMeans(n_clusters=self.n_clusters, init=self._init,
-                                       n_init=self._init, max_iter=self._max_iter,
+                                       n_init=self._n_init, max_iter=self._max_iter,
                                        tol=self._tol, algorithm=self._algorithm)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute cluster centers (fitted estimator) and predict cluster label (prediction)

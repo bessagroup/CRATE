@@ -183,17 +183,41 @@
 
 
 
-#                                                                   Clustering algorithm [M]
+#                                                                      Clustering scheme [M]
 # ==========================================================================================
-# Meaning:   Unsupervised machine learning clustering algorithm employed to perform the
-#            clustering-based domain decomposition.
+# Meaning:   Clustering scheme employed to generate the Cluster-Reduced Representative
+#            Volume Element, specifying one or more RVE clustering solutions and the
+#            corresponding clustering algorithm and attributes.
 #
-# Syntax:    Clustering_Method x
+# Syntax:    Clustering_Scheme
+#            x y [y]
+#            x y [y]
 #
 # x:         1 - K-Means
 #            2 - Mini-Batch K-Means
 #            3 - Birch
 #            4 - Gaussian Mixture
+#
+# y:         1 - Fourth-order local elastic strain concentration tensor
+#
+# Note: If more than one RVE clustering solution is prescribed, it is mandatory to specify
+#       the parameter Clustering_Ensemble_Method.
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
+#                                                           Clustering ensemble method [M,O]
+# ==========================================================================================
+# Meaning:   Clustering ensemble strategy or method employed to get a unique RVE clustering
+#            solution (consensus clustering) from several RVE clustering solutions. This
+#            parameter specification is only mandatory and read if there is more than one
+#            prescribed RVE clustering solution, otherwise is ignored.
+#
+# Syntax:    Clustering_Ensemble_Method x
+#
+# x:         None available.
 # ------------------------------------------------------------------------------------------
 [insert here]
 
@@ -329,20 +353,6 @@
 #            x
 #
 # x:         float (default to 1e-4)
-# ------------------------------------------------------------------------------------------
-[insert here]
-
-
-
-
-#                                                                    Clustering strategy [O]
-# ==========================================================================================
-# Meaning:   Clustering strategy employed to perform the clustering-based domain
-#            decomposition, namely related to the data considered for this purpose.
-#
-# Syntax:    Clustering_Strategy x
-#
-# x:         1 - Clustering based on local elastic strain concentration tensors (default)
 # ------------------------------------------------------------------------------------------
 [insert here]
 

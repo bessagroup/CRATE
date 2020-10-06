@@ -231,23 +231,23 @@ def packregulargrid(discret_file_path, rve_dims, mat_dict, problem_dict):
     return rg_dict
 # ------------------------------------------------------------------------------------------
 # Package data associated to the clustering on a regular grid of pixels/voxels
-def packrgclustering(clustering_method, clustering_strategy, clustering_solution_method,
-                     links_dict, phase_n_clusters, rg_dict):
+def packrgclustering(clustering_scheme, clustering_ensemble_strategy,
+                     clustering_solution_method, links_dict, phase_n_clusters, rg_dict):
     #
-    # Object                      Meaning                                           Type
-    # -------------------------------------------------------------------------------------
-    # clustering_method           Clustering algorithm                              int
-    # clustering_strategy         Clustering strategy                               int
-    # clustering_solution_method  Clustering solution method                        list
-    # phase_n_clusters            Number of clusters of each material phase         dict
-    #                             key: material phase id (str)
-    # phase_clusters              Clusters associated to each material phase        dict
-    #                             key: material phase id (str)
-    # voxels_clusters             Regular grid of pixels/voxels with the            ndarray
-    #                             cluster labels
-    # clusters_f                  Clusters volume fraction                          dict
-    #                             key: material cluster label (str)
-    # links_dict                  Links related variables                           dict
+    # Object                       Meaning                                         Type
+    # ------------------------------------------------------------------------------------
+    # clustering_scheme            Clustering scheme                               ndarray
+    # clustering_ensemble_strategy Clustering ensemble strategy                    int
+    # clustering_solution_method   Clustering solution method                      list
+    # phase_n_clusters             Number of clusters of each material phase       dict
+    #                              key: material phase id (str)
+    # phase_clusters               Clusters associated to each material phase      dict
+    #                              key: material phase id (str)
+    # voxels_clusters              Regular grid of pixels/voxels with the          ndarray
+    #                              cluster labels
+    # clusters_f                   Clusters volume fraction                        dict
+    #                              key: material cluster label (str)
+    # links_dict                   Links related variables                         dict
     #
     # Get regular grid data
     n_voxels_dims = rg_dict['n_voxels_dims']
@@ -260,8 +260,8 @@ def packrgclustering(clustering_method, clustering_strategy, clustering_solution
     # Initialize clustering dictionary
     clst_dict = dict()
     # Build clustering dictionary
-    clst_dict['clustering_method'] = clustering_method
-    clst_dict['clustering_strategy'] = clustering_strategy
+    clst_dict['clustering_scheme'] = clustering_scheme
+    clst_dict['clustering_ensemble_strategy'] = clustering_ensemble_strategy
     clst_dict['clustering_solution_method'] = clustering_solution_method
     if len(links_dict.keys()) > 0:
         clst_dict['links_dict'] = links_dict
