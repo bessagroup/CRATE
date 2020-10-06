@@ -36,6 +36,10 @@ import ioput.readprocedures as rproc
 import ioput.ioutilities as ioutil
 # Matricial operations
 import tensor.matrixoperations as mop
+# CRVE generation
+import clustering.crve
+# Clustering data
+import clustering.clusteringdata as clstdat
 #
 #                                                                       Read input data file
 # ==========================================================================================
@@ -131,21 +135,24 @@ def readinputdatafile(input_file,dirs_dict):
     else:
         scs_conv_tol = 1e-4
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Read clustering method
-    keyword = 'Clustering_Method'
-    max = 1
-    clustering_method = rproc.readtypeAkeyword(input_file, input_file_path, keyword, max)
+    # Get available clustering algorithms and features
+    valid_algorithms = list(clustering.crve.get_available_clustering_algorithms().keys())
+    valid_features = list(clstdat.get_available_clustering_features(
+        strain_formulation, n_dim, comp_order_sym, comp_order_nsym).keys())
+    # Read clustering scheme
+    keyword = 'Clustering_Scheme'
+    clustering_scheme = rproc.readclusterscheme(input_file, input_file_path, keyword,
+                                                valid_algorithms, valid_features)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Read clustering strategy (optional). If the associated keyword is not found, then a
-    # default specification is assumed
-    keyword = 'Clustering_Strategy'
-    is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
-    if is_found:
-        max = 1
-        clustering_strategy = rproc.readtypeAkeyword(input_file, input_file_path, keyword,
-                                                     max)
+    # Read clustering ensemble method (optional).
+    keyword = 'Clustering_Ensemble_Method'
+    if clustering_scheme.shape[0] > 1:
+        raise RuntimeError('No clustering ensemble method has been implemented yet.')
+        #max = '~'
+        #clustering_ensemble_strategy = rproc.readtypeAkeyword(input_file, input_file_path,
+        #                                                      keyword, max)
     else:
-        clustering_strategy = 1
+        clustering_ensemble_strategy = 0
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read clustering solution method (optional). If the associated keyword is not found,
     # then a default specification is assumed
@@ -304,7 +311,7 @@ def readinputdatafile(input_file,dirs_dict):
                                        problem_dict)
     # Package data associated to the clustering
     info.displayinfo('5', 'Packaging clustering data...')
-    clst_dict = packager.packrgclustering(clustering_method, clustering_strategy,
+    clst_dict = packager.packrgclustering(clustering_scheme, clustering_ensemble_strategy,
                                           clustering_solution_method, links_dict,
                                           phase_n_clusters, rg_dict)
     # Package data associated to the self-consistent scheme

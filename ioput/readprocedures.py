@@ -736,6 +736,94 @@ def readphaseclustering(file, file_path, keyword, n_material_phases, material_pr
         phase_n_clusters[str(int(line[0]))] = int(line[1])
     return phase_n_clusters
 #
+#                                                                          Clustering scheme
+# ==========================================================================================
+# Read the clustering scheme employed to generate the Cluster-Reduced Representative
+# Volume Element specified as
+#
+# Clustering_Scheme
+# < clustering_algorithm_id > < feature_id > [< feature_id >]
+# < clustering_algorithm_id > < feature_id > [< feature_id >]
+#
+def readclusterscheme(file, file_path, keyword, valid_algorithms, valid_features):
+    '''Clustering scheme reader.
+
+    Parameters
+    ----------
+    file: file
+        Input data file where the data is searched and read from.
+    file_path: str
+        Input data file absolute path.
+    keyword: str
+        Keyword to be searched in the input data file.
+    valid_algorithms: list
+        Available clustering algorithms identifiers (str).
+    valid_features: list
+        Available clustering features identifiers (str).
+
+    Returns
+    -------
+    clustering_scheme: ndarray of shape (n_clusterings, 3)
+        Prescribed global clustering scheme to generate the CRVE. Each row is associated
+        with a unique RVE clustering, characterized by a clustering algorithm
+        (col 1, int), a list of features (col 2, list of int) and a list of the features
+        data matrix' indexes (col 3, list of int).
+    '''
+    # Find keyword line number
+    keyword_line_number = searchkeywordline(file, keyword)
+    # Initialize macroscale loading increment array
+    clustering_scheme = np.full((0, 3), '', dtype=object)
+    # Read clustering solution specification line
+    line = linecache.getline(file_path, keyword_line_number + 1)
+    is_empty_line = not bool(line)
+    # Check clustering solution specification
+    cluster_solution = line.split()
+    if is_empty_line or len(cluster_solution) < 2:
+        raise RuntimeError('At least one RVE clustering solution must be specified.')
+    elif not is_cluster_solution(cluster_solution):
+        raise TypeError('Both clustering algorithm and clustering feature identifiers ' +
+                        'must be specified as integers.')
+    # Build clustering scheme array
+    i = 0
+    while not is_empty_line:
+        clustering_scheme = np.append(clustering_scheme,
+                                      np.full((1, 3), '', dtype=object), axis=0)
+        # Assemble clustering solution
+        clustering_scheme[i, 0] = int(cluster_solution[0])
+        clustering_scheme[i, 1] = list(set([int(x) for x in cluster_solution[1:]]))
+        # Increment clustering solution counter
+        i += 1
+        # Read clustering solution specification line
+        line = linecache.getline(file_path, keyword_line_number + 1 + i)
+        is_empty_line = not bool(line.split())
+        # Check clustering solution specification
+        if not is_empty_line:
+            cluster_solution = line.split()
+            if not is_cluster_solution(cluster_solution):
+                raise TypeError('Both clustering algorithm and clustering feature ' +
+                                'identifiers must be specified as integers.')
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Check availability of prescribed clustering algorithms
+    if any([str(x) not in valid_algorithms for x in clustering_scheme[:, 0]]):
+        raise RuntimeError('An unknown clustering algorithm has been prescribed.')
+    # Check availability of prescribed clustering features
+    for i in range(clustering_scheme.shape[0]):
+        if any([str(x) not in valid_features for x in clustering_scheme[i, 1]]):
+            raise RuntimeError('An unknown clustering feature has been prescribed.')
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    return clustering_scheme
+# ------------------------------------------------------------------------------------------
+def is_cluster_solution(solution):
+    '''Check if prescribed clustering solution is list of positive integers.
+
+    Returns
+    -------
+    bool
+        True if prescribed clustering solution is list of positive integers, False
+        otherwise.
+    '''
+    return not any([not ioutil.checkposint(x) for x in solution])
+#
 #                                                                   Discretization file path
 # ==========================================================================================
 # Read the spatial discretization file path

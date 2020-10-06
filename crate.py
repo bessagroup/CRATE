@@ -34,7 +34,7 @@
 # ------------------------------------------------------------------------------------------
 # Development history:
 #
-# Release v1.0.0 - Bernardo P. Ferreira (June 2020)
+# Release v0.1.0 - Bernardo P. Ferreira (June 2020)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #   > Initial coding.
 #   > Implementation of the FFT-based homogenization basic scheme proposed by H. Moulinec
@@ -157,19 +157,19 @@ info.displayinfo('3', 'Read input data file',
                  phase_times[phase_times.shape[0] - 1, 1] -
                  phase_times[phase_times.shape[0] - 1, 0])
 #
-#                                            Offline stage: Compute clustering-defining data
+#                                     Offline stage: Compute cluster analysis feature's data
 # ==========================================================================================
 if not is_same_offstage:
     # Display starting phase information and set phase initial time
-    info.displayinfo('2', 'Compute cluster-defining quantities')
+    info.displayinfo('2', 'Compute cluster analysis feature\'s data')
     phase_init_time = time.time()
     # Compute the data required to perform the clustering according to the adopted strategy
-    clstdata.compclusteringdata(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict)
+    clstdata.set_clustering_data(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict)
     # Set phase ending time and display finishing phase information
     phase_end_time = time.time()
-    phase_names.append('Compute cluster-defining quantities')
+    phase_names.append('Compute cluster analysis feature\'s data')
     phase_times = np.append(phase_times, [[phase_init_time, phase_end_time]], axis=0)
-    info.displayinfo('3', 'Compute cluster-defining quantities',
+    info.displayinfo('3', 'Compute cluster analysis feature\'s data',
                      phase_times[phase_times.shape[0]-1, 1] -
                      phase_times[phase_times.shape[0]-1, 0])
 #
@@ -177,19 +177,19 @@ if not is_same_offstage:
 # ==========================================================================================
 if not is_same_offstage:
     # Display starting phase information and set phase initial time
-    info.displayinfo('2', 'Perform clustering')
+    info.displayinfo('2', 'Perform RVE cluster analysis')
     phase_init_time = time.time()
     # Perform the clustering according to the selected method and adopted strategy
-    clst.clustering(dirs_dict, mat_dict, rg_dict, clst_dict)
+    clst.set_crve_data(dirs_dict, mat_dict, rg_dict, clst_dict)
     # Write clustering VTK file
     if vtk_dict['is_VTK_output']:
         info.displayinfo('5', 'Writing cluster VTK file...')
         vtkoutput.writevtkclusterfile(vtk_dict, dirs_dict, rg_dict, clst_dict)
     # Set phase ending time and display finishing phase information
     phase_end_time = time.time()
-    phase_names.append('Perform clustering')
+    phase_names.append('Perform RVE cluster analysis')
     phase_times = np.append(phase_times, [[phase_init_time, phase_end_time]], axis=0)
-    info.displayinfo('3', 'Perform clustering',
+    info.displayinfo('3', 'Perform RVE cluster analysis',
                      phase_times[phase_times.shape[0] - 1, 1] -
                      phase_times[phase_times.shape[0] - 1, 0])
 else:
