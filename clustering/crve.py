@@ -16,6 +16,7 @@ import numpy as np
 import itertools as it
 # Unsupervised clustering algorithms
 import sklearn.cluster as skclst
+import scipy.cluster.hierarchy as sciclst
 # Defining abstract base classes
 from abc import ABC, abstractmethod
 # Display messages
@@ -35,6 +36,7 @@ def get_available_clustering_algorithms():
     2- Mini-Batch K-Means (source: scikit-learn)
     3- Birch (source: scikit-learn)
     4- Agglomerative (source: scikit-learn)
+    5- Agglomerative (source: scipy)
 
     Returns
     -------
@@ -45,7 +47,8 @@ def get_available_clustering_algorithms():
     available_clustering_alg = {'1': 'K-Means (scikit-learn)',
                                 '2': 'Mini-Batch K-Means (scikit-learn)',
                                 '3': 'Birch (scikit-learn)',
-                                '4': 'Agglomerative (scikit-learn)'}
+                                '4': 'Agglomerative (scikit-learn)',
+                                '5': 'Agglomerative (scipy)'}
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return available_clustering_alg
 #
@@ -77,7 +80,6 @@ class CRVE:
     clusters_f : dict
         Clusters volume fraction (item, float) associated to each material phase (key, str).
     '''
-
     def __init__(self, clustering_scheme, clustering_ensemble_strategy, phase_n_clusters,
                  rve_dims, regular_grid, material_phases):
         '''Cluster-reduced Representative Volume Element constructor.
@@ -355,30 +357,34 @@ class RVEClustering:
             # Set number of full batch K-Means clusterings (with different initializations)
             n_init = 10
             # Instantiate K-Means
-            clst_alg = KMeans(init='k-means++', n_init=n_init, max_iter=300, tol=1e-4,
-                              random_state=None, algorithm='auto')
+            clst_alg = KMeansSK(init='k-means++', n_init=n_init, max_iter=300, tol=1e-4,
+                                random_state=None, algorithm='auto')
         elif self._clustering_method == 2:
             # Set size of the mini-batches
             batch_size = 100
             # Set number of random initializations
             n_init = 3
             # Intantiate Mini-Batch K-Means
-            clst_alg = MiniBatchKMeans(init='k-means++', max_iter=100, tol=0.0,
-                                       random_state=None, batch_size=batch_size,
-                                       max_no_improvement=10, init_size=None,
-                                       n_init=n_init, reassignment_ratio=0.01)
+            clst_alg = MiniBatchKMeansSK(init='k-means++', max_iter=100, tol=0.0,
+                                         random_state=None, batch_size=batch_size,
+                                         max_no_improvement=10, init_size=None,
+                                         n_init=n_init, reassignment_ratio=0.01)
         elif self._clustering_method == 3:
             # Set merging radius threshold
             threshold = 0.1
             # Set maximum number of CF subclusters in each node
             branching_factor = 50
             # Instantiate Birch
-            clst_alg = Birch(threshold=threshold, branching_factor=branching_factor)
+            clst_alg = BirchSK(threshold=threshold, branching_factor=branching_factor)
         elif self._clustering_method == 4:
             # Instantiate Agglomerative clustering
-            clst_alg = Agglomerative(n_clusters=None, affinity='euclidean', memory=None,
-                                     connectivity=None, compute_full_tree='auto',
-                                     linkage='ward', distance_threshold=None)
+            clst_alg = AgglomerativeSK(n_clusters=None, affinity='euclidean', memory=None,
+                                       connectivity=None, compute_full_tree='auto',
+                                       linkage='ward', distance_threshold=None)
+        elif self._clustering_method == 5:
+            # Instatiate Agglomerative clustering
+            clst_alg = AgglomerativeSP(0, n_clusters=None, method='ward',
+                                       metric='euclidean', criterion='maxclust')
         else:
             raise RuntimeError('Unknown clustering algorithm.')
         # Initialize label offset (avoid that different material phases share the same
@@ -445,13 +451,13 @@ class ClusteringAlgorithm(ABC):
         '''
         pass
 # ------------------------------------------------------------------------------------------
-class KMeans(ClusteringAlgorithm):
+class KMeansSK(ClusteringAlgorithm):
     '''K-Means clustering algorithm.
 
     Notes
     -----
     The K-Means clustering algorithm is taken from scikit-learn (https://scikit-learn.org).
-    Additional parameters and further information can be found in there.
+    Further information can be found in there.
     '''
     def __init__(self, n_clusters=None, init='k-means++', n_init=10, max_iter=300, tol=1e-4,
                  random_state=None, algorithm='auto'):
@@ -516,14 +522,13 @@ class KMeans(ClusteringAlgorithm):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return cluster_labels
 # ------------------------------------------------------------------------------------------
-class MiniBatchKMeans(ClusteringAlgorithm):
+class MiniBatchKMeansSK(ClusteringAlgorithm):
     '''Mini-Batch K-Means clustering algorithm.
 
     Notes
     -----
     The Mini-Batch K-Means clustering algorithm is taken from scikit-learn
-    (https://scikit-learn.org). Additional parameters and further information can be found
-    in there.
+    (https://scikit-learn.org). Further information can be found in there.
     '''
     def __init__(self, n_clusters=None, init='k-means++', max_iter=100, tol=0.0,
                  random_state=None, batch_size=100, max_no_improvement=10, init_size=None,
@@ -596,13 +601,13 @@ class MiniBatchKMeans(ClusteringAlgorithm):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return cluster_labels
 # ------------------------------------------------------------------------------------------
-class Birch(ClusteringAlgorithm):
+class BirchSK(ClusteringAlgorithm):
     '''Birch clustering algorithm.
 
     Notes
     -----
     The Birch clustering algorithm is taken from scikit-learn (https://scikit-learn.org).
-    Additional parameters and further information can be found in there.
+    Further information can be found in there.
     '''
     def __init__(self, threshold=0.5, branching_factor=50, n_clusters=None):
         '''Birch clustering algorithm constructor.
@@ -662,14 +667,13 @@ class Birch(ClusteringAlgorithm):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return cluster_labels
 # ------------------------------------------------------------------------------------------
-class Agglomerative(ClusteringAlgorithm):
+class AgglomerativeSK(ClusteringAlgorithm):
     '''Agglomerative clustering algorithm.
 
     Notes
     -----
     The Agglomerative clustering algorithm is taken from scikit-learn
-    (https://scikit-learn.org). Additional parameters and further information can be found
-    in there.
+    (https://scikit-learn.org). Further information can be found in there.
     '''
     def __init__(self, n_clusters=None, affinity='euclidean', memory=None,
                  connectivity=None, compute_full_tree='auto', linkage='ward',
@@ -755,5 +759,75 @@ class Agglomerative(ClusteringAlgorithm):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Fit the hierarchical clustering and return cluster labels
         cluster_labels = self._clst_alg.fit_predict(data_matrix)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        return cluster_labels
+# ------------------------------------------------------------------------------------------
+class AgglomerativeSP(ClusteringAlgorithm):
+    '''Agglomerative clustering algorithm.
+
+    Attributes
+    ----------
+    Z : ndarray of shape (n-1, 4)
+        Linkage matrix associated with the hierarchical clustering. At the i-th iteration
+        the clusterings with indices Z[i, 0] and Z[i, 1], with distance Z[i, 2], are merged,
+        forming a new cluster that contains Z[i, 3] original dataset items. All cluster
+        indices j >= n refer to the cluster formed in Z[j-n, :].
+
+    Notes
+    -----
+    The Agglomerative clustering algorithm is taken from scipy (https://docs.scipy.org/)
+    Further information can be found in there.
+    '''
+    def __init__(self, t, n_clusters=None, method='ward', metric='euclidean',
+                 criterion='maxclust'):
+        '''Agglomerative clustering algorithm constructor.
+
+        Parameters
+        ----------
+        n_clusters : int
+            The number of clusters to find.
+        method : str, {'single', 'complete', 'average', 'weighted', 'centroid', 'median',
+                'ward'}, default='ward'
+            Linkage criterion.
+        metric : str or function, default='euclidean'
+            Distance metric to use when the input data matrix is a ndarray of observation
+            vectors, otherwise ignored. Options: {'cityblock', 'euclidean', 'cosine', ...}.
+        criterion : str, {'inconsistent', 'distance', 'maxclust', 'monocrit',
+            'maxclust_monocrit'}, default='maxclust'
+            Criterion used to form a flat clustering (i.e., perform a horizontal cut in the
+            hierarchical tree)
+        t : int or float
+            Scalar parameter associated to the criterion used to form a flat clustering.
+            Threshold (float) with criterion in {'inconsistent', 'distance', 'monocrit'} or
+            maximum number of clusters with criterion in {'maxclust', 'maxclust_monocrit'}.
+        '''
+        self._t = t
+        self.n_clusters = n_clusters
+        self._method = method
+        self._metric = metric
+        self._criterion = criterion
+        self._Z = None
+    # --------------------------------------------------------------------------------------
+    def perform_clustering(self, data_matrix):
+        '''Fit the hierarchical clustering from features or distance matrix, and return
+        cluster label for each dataset item.
+
+        Parameters
+        ----------
+        data_matrix: ndarray of shape (n_items, n_features)
+            Data matrix containing the required data to perform cluster analysis.
+
+        Returns
+        -------
+        cluster_labels: ndarray of shape (n_items,)
+            Cluster label (int) assigned to each dataset item.
+        '''
+        # Perform hierarchical clustering and encode it in a linkage matrix
+        self.Z = sciclst.linkage(data_matrix, method=self._method, metric=self._metric)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Perform horizontal cut in hierarchical tree and return cluster labels (form a flat
+        # clustering)
+        cluster_labels = sciclst.fcluster(self.Z, self.n_clusters,
+                                          criterion=self._criterion)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return cluster_labels
