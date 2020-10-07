@@ -32,14 +32,18 @@ def get_available_clustering_algorithms():
 
     Clustering algorithms identifiers:
     1- K-Means (source: scikit-learn)
+    2- Mini-Batch K-Means (source: scikit-learn)
+    3- Birch (source: scikit-learn)
 
     Returns
     -------
-    available_clustering_alg: dict
+    available_clustering_alg : dict
         Available clustering algorithms (item, str) and associated identifiers (key, str).
     '''
 
-    available_clustering_alg = {'1': 'K-Means (scikit-learn)'}
+    available_clustering_alg = {'1': 'K-Means (scikit-learn)',
+                                '2': 'Mini-Batch K-Means (scikit-learn)',
+                                '3': 'Birch (scikit-learn)'}
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return available_clustering_alg
 #
@@ -53,22 +57,22 @@ class CRVE:
 
     Attributes
     ----------
-    _clustering_solutions: list
+    _clustering_solutions : list
         List containing one or more RVE clustering solutions (ndarray of shape
         (n_clusters,)).
-    _n_voxels_dims: list
+    _n_voxels_dims : list
         Number of voxels in each dimension of the regular grid (spatial discretization of
         the RVE).
-    _n_voxels: int
+    _n_voxels : int
         Total number of voxels of the regular grid (spatial discretization of the RVE).
-    _phase_voxel_flatidx: dict
+    _phase_voxel_flatidx : dict
         Flat (1D) voxels' indexes (item, list) associated to each material phase (key, str).
-    voxels_clusters: ndarray
+    voxels_clusters : ndarray
         Regular grid of voxels (spatial discretization of the RVE), where each entry
         contains the cluster label (int) assigned to the corresponding pixel/voxel.
-    phase_clusters: dict
+    phase_clusters : dict
         Clusters labels (item, list of int) associated to each material phase (key, str).
-    clusters_f: dict
+    clusters_f : dict
         Clusters volume fraction (item, float) associated to each material phase (key, str).
     '''
 
@@ -78,19 +82,19 @@ class CRVE:
 
         Parameters
         ----------
-        clustering_scheme: ndarray of shape (n_clusterings, 3)
+        clustering_scheme : ndarray of shape (n_clusterings, 3)
             Prescribed global clustering scheme to generate the CRVE. Each row is associated
             with a unique RVE clustering, characterized by a clustering algorithm
             (col 1, int), a list of features (col 2, list of int) and a list of the feature
             data matrix' indexes (col 3, list of int).
-        phase_n_clusters: dict
+        phase_n_clusters : dict
             Number of clusters (item, int) prescribed for each material phase (key, str).
-        rve_dims: list
+        rve_dims : list
             RVE size in each dimension.
-        regular_grid: ndarray
+        regular_grid : ndarray
             Regular grid of voxels (spatial discretization of the RVE), where each entry
             contains the material phase label (int) assigned to the corresponding voxel.
-        material_phases: list
+        material_phases : list
             RVE material phases labels (str).
         '''
         self._clustering_scheme = clustering_scheme
@@ -121,7 +125,7 @@ class CRVE:
 
         Parameters
         ----------
-        global_data_matrix: ndarray of shape (n_voxels, n_features)
+        global_data_matrix : ndarray of shape (n_voxels, n_features)
             Data matrix containing the required data to perform all the RVE clusterings
             prescribed in the clustering scheme.
         '''
@@ -165,15 +169,15 @@ class CRVE:
 
         Parameters
         ----------
-        regular_grid: ndarray
+        regular_grid : ndarray
             Regular grid of voxels (spatial discretization of the RVE), where each entry
             contains the material phase label (int) assigned to the corresponding voxel.
-        material_phases: list
+        material_phases : list
             RVE material phases labels (str).
 
         Returns
         -------
-        phase_voxel_flat_idx: dict
+        phase_voxel_flat_idx : dict
             Flat voxels' indexes (item, list of int) associated to each material phase
             (key, str).
         '''
@@ -216,7 +220,7 @@ class CRVE:
 
         Parameters
         ----------
-        rve_clustering: ndarray of shape (n_clusters,)
+        rve_clustering : ndarray of shape (n_clusters,)
             Cluster label (int) assigned to each RVE voxel.
         '''
         self.clustering_solutions = []
@@ -240,7 +244,7 @@ class CRVE:
     def _sort_cluster_labels(self):
         '''Reassign and sort CRVE cluster labels material phasewise.
 
-        Reassign CRVE cluster labels in the range (0, n_clusters) and sorte them in
+        Reassign CRVE cluster labels in the range (0, n_clusters) and sort them in
         ascending order of material phase's labels.
 
         Notes
@@ -296,7 +300,7 @@ class RVEClustering:
 
     Atributes
     ---------
-    labels: ndarray of shape (n_clusters,)
+    labels : ndarray of shape (n_clusters,)
         Cluster label (int) assigned to each RVE voxel.
     '''
     def __init__(self, clustering_method, phase_n_clusters, n_voxels, material_phases,
@@ -305,15 +309,15 @@ class RVEClustering:
 
         Parameters
         ----------
-        _clustering_method: int
+        _clustering_method : int
             Clustering algorithm identifier.
-        _phase_n_clusters: dict
+        _phase_n_clusters : dict
             Number of clusters (item, int) prescribed for each material phase (key, str).
-        _n_voxels: int
+        _n_voxels : int
             Total number of voxels of the RVE spatial discretization.
-        _material_phases: list
+        _material_phases : list
             RVE material phases labels (str).
-        _phase_voxel_flatidx: dict
+        _phase_voxel_flatidx : dict
             Flat (1D) voxels' indexes (item, list) associated to each material phase
             (key, str).
         '''
@@ -332,7 +336,7 @@ class RVEClustering:
 
         Parameters
         ----------
-        data_matrix: ndarray of shape (n_voxels, n_features)
+        data_matrix : ndarray of shape (n_voxels, n_features)
             Data matrix containing the required data to perform the RVE clustering.
 
         Notes
@@ -346,8 +350,30 @@ class RVEClustering:
         self.labels = np.full(self._n_voxels, -1, dtype=int)
         # Instantiate clustering algorithm
         if self._clustering_method == 1:
-            clst_alg = KMeans(init='k-means++', n_init=10, max_iter=300, tol=1e-4,
-                              algorithm='auto')
+            # Set number of full batch K-Means clusterings (with different initializations)
+            n_init = 10
+            # Instantiate K-Means
+            clst_alg = KMeans(init='k-means++', n_init=n_init, max_iter=300, tol=1e-4,
+                              random_state=None, algorithm='auto')
+        elif self._clustering_method == 2:
+            # Set size of the mini-batches
+            batch_size = 100
+            # Set number of random initializations
+            n_init = 3
+            # Intantiate Mini-Batch K-Means
+            clst_alg = MiniBatchKMeans(init='k-means++', max_iter=100, tol=0.0,
+                                       random_state=None, batch_size=batch_size,
+                                       max_no_improvement=10, init_size=None,
+                                       n_init=n_init, reassignment_ratio=0.01)
+        elif self._clustering_method == 3:
+            # Set merging radius threshold
+            threshold = 0.1
+            # Set maximum number of CF subclusters in each node
+            branching_factor = 50
+            # Instantiate Birch
+            clst_alg = Birch(threshold=threshold, branching_factor=branching_factor)
+        else:
+            raise RuntimeError('Unknown clustering algorithm.')
         # Initialize label offset (avoid that different material phases share the same
         # labels)
         label_offset = 0
@@ -365,6 +391,13 @@ class RVEClustering:
                                                   list(range(data_matrix.shape[1])))
             # Perform material phase clustering
             cluster_labels = clst_alg.perform_clustering(phase_data_matrix)
+            # Check number of clusters formed
+            if len(set(cluster_labels)) != self._phase_n_clusters[mat_phase]:
+                raise RuntimeError('The number of clusters (' +
+                                   str(len(set(cluster_labels))) +
+                                   ') obtained for material phase ' + mat_phase + ' is ' +
+                                   'different from the prescribed number of clusters (' +
+                                   str(self._phase_n_clusters[mat_phase]) + ').')
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Assemble material phase cluster labels
             self.labels[voxels_idxs] = label_offset + cluster_labels
@@ -384,7 +417,6 @@ class RVEClustering:
 # ==========================================================================================
 class ClusteringAlgorithm(ABC):
     '''Clustering algorithm interface.'''
-
     @abstractmethod
     def __init__(self):
         '''Clustering algorithm constructor.'''
@@ -396,12 +428,12 @@ class ClusteringAlgorithm(ABC):
 
         Parameters
         ----------
-        data_matrix: ndarray of shape (n_items, n_features)
+        data_matrix : ndarray of shape (n_items, n_features)
             Data matrix containing the required data to perform cluster analysis.
 
         Returns
         -------
-        cluster_labels: ndarray of shape (n_items,)
+        cluster_labels : ndarray of shape (n_items,)
             Cluster label (int) assigned to each dataset item.
         '''
         pass
@@ -414,25 +446,27 @@ class KMeans(ClusteringAlgorithm):
     The K-Means clustering algorithm is taken from scikit-learn (https://scikit-learn.org).
     Additional parameters and further information can be found in there.
     '''
-
     def __init__(self, n_clusters=None, init='k-means++', n_init=10, max_iter=300, tol=1e-4,
-                 algorithm='auto'):
+                 random_state=None, algorithm='auto'):
         '''K-Means clustering algorithm constructor.
 
         Parameters
         ----------
-        n_clusters: int
+        n_clusters : int
             Number of clusters to form.
-        init: {‘k-means++’, ‘random’, ndarray, callable}, default=’k-means++’
+        init : {‘k-means++’, ‘random’, ndarray, callable}, default=’k-means++’
             Method for centroid initialization.
-        n_init: int, default=10
+        n_init : int, default=10
             Number of times K-Means is run with different centroid seeds.
-        max_iter: int, default=300
+        max_iter : int, default=300
             Maximum number of iterations.
-        tol: float, default=1e-4
+        tol : float, default=1e-4
             Convergence tolerance (based on Frobenius norm of the different in the cluster
             centers of two consecutive iterations).
-        algorithm: {'auto', 'full', 'elkan'}, default='auto'
+        random_state : int, RandomState instance, default=None
+            Determines random number generation for centroid initialization.
+            Use an int to make the randomness deterministic.
+        algorithm : {'auto', 'full', 'elkan'}, default='auto'
             K-Means algorithm to use. 'full' is the classical EM-style algorithm, 'elkan'
             uses the triangle inequality to speed up convergence. 'auto' currently chooses
             'elkan' (scikit-learn 0.23.2).
@@ -447,10 +481,159 @@ class KMeans(ClusteringAlgorithm):
         self._n_init = n_init
         self._max_iter = max_iter
         self._tol = tol
+        self._random_state = random_state
         self._algorithm = algorithm
     # --------------------------------------------------------------------------------------
     def perform_clustering(self, data_matrix):
         '''Compute cluster centers and predict cluster label for each dataset item.
+
+        Parameters
+        ----------
+        data_matrix : ndarray of shape (n_items, n_features)
+            Data matrix containing the required data to perform cluster analysis.
+
+        Returns
+        -------
+        cluster_labels : ndarray of shape (n_items,)
+            Cluster label (int) assigned to each dataset item.
+        '''
+        # Instantiate scikit-learn K-Means clustering algorithm
+        self._clst_alg = skclst.KMeans(n_clusters=self.n_clusters, init=self._init,
+                                       n_init=self._n_init, max_iter=self._max_iter,
+                                       tol=self._tol, random_state=self._random_state,
+                                       algorithm=self._algorithm)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Compute cluster centers (fitted estimator) and predict cluster label (prediction)
+        # for each dataset item
+        cluster_labels = self._clst_alg.fit_predict(data_matrix, sample_weight=None)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        return cluster_labels
+# ------------------------------------------------------------------------------------------
+class MiniBatchKMeans(ClusteringAlgorithm):
+    '''Mini-Batch K-Means clustering algorithm.
+
+    Notes
+    -----
+    The Mini-Batch K-Means clustering algorithm is taken from scikit-learn
+    (https://scikit-learn.org). Additional parameters and further information can be found
+    in there.
+    '''
+    def __init__(self, n_clusters=None, init='k-means++', max_iter=100, tol=0.0,
+                 random_state=None, batch_size=100, max_no_improvement=10, init_size=None,
+                 n_init=3, reassignment_ratio=0.01):
+        '''Mini-Batch K-Means clustering algorithm constructor.
+
+        Parameters
+        ----------
+        n_clusters : int
+            Number of clusters to form.
+        init: {‘k-means++’, ‘random’, ndarray, callable}, default=’k-means++’
+            Method for centroid initialization.
+        n_init : int, default=10
+            Number of times K-Means is run with different centroid seeds.
+        max_iter : int, default=300
+            Maximum number of iterations.
+        tol : float, default=1e-4
+            Convergence tolerance (based on Frobenius norm of the different in the cluster
+            centers of two consecutive iterations).
+        random_state : int, RandomState instance, default=None
+            Determines random number generation for centroid initialization.
+            Use an int to make the randomness deterministic.
+        init_size : int, default=None
+            Number of samples to randomly sample for speeding up the initialization
+            (sometimes at the expense of accuracy): the only algorithm is initialized by
+            running a batch KMeans on a random subset of the data.
+        n_init : int, default=3
+            Number of random initializations that are tried (best of initializations is
+            used to run the algorithm).
+        reassignment_ratio : float, default=0.01
+            Control the fraction of the maximum number of counts for a center to be
+            reassigned.
+
+        Notes
+        -----
+        Validation of parameters is performed upon instantiation of scikit-learn Mini-Batch
+        K-Means clustering algorithm.
+        '''
+        self.n_clusters = n_clusters
+        self._init = init
+        self._n_init = n_init
+        self._max_iter = max_iter
+        self._tol = tol
+        self._random_state = random_state
+        self._init_size = init_size
+        self._reassignment_ratio = reassignment_ratio
+    # --------------------------------------------------------------------------------------
+    def perform_clustering(self, data_matrix):
+        '''Compute cluster centers and predict cluster label for each dataset item.
+
+        Parameters
+        ----------
+        data_matrix : ndarray of shape (n_items, n_features)
+            Data matrix containing the required data to perform cluster analysis.
+
+        Returns
+        -------
+        cluster_labels : ndarray of shape (n_items,)
+            Cluster label (int) assigned to each dataset item.
+        '''
+        # Instantiate scikit-learn Mini-Batch K-Means clustering algorithm
+        self._clst_alg = skclst.MiniBatchKMeans(n_clusters=self.n_clusters, init=self._init,
+            n_init=self._n_init, max_iter=self._max_iter, tol=self._tol,
+            random_state=self._random_state, init_size=self._init_size,
+            reassignment_ratio=self._reassignment_ratio)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Compute cluster centers (fitted estimator) and predict cluster label (prediction)
+        # for each dataset item
+        cluster_labels = self._clst_alg.fit_predict(data_matrix, sample_weight=None)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        return cluster_labels
+# ------------------------------------------------------------------------------------------
+class Birch(ClusteringAlgorithm):
+    '''Birch clustering algorithm.
+
+    Notes
+    -----
+    The Birch clustering algorithm is taken from scikit-learn (https://scikit-learn.org).
+    Additional parameters and further information can be found in there.
+    '''
+    def __init__(self, threshold=0.5, branching_factor=50, n_clusters=None):
+        '''Birch clustering algorithm constructor.
+
+        Parameters
+        ----------
+        threshold : float, default=0.5
+            The radius of the subcluster obtained by merging a new sample and the closest
+            subcluster should be lesser than the threshold. Otherwise a new subcluster is
+            started. Setting this value to be very low promotes splitting and vice-versa.
+        branching_factor : int, default=50
+            Maximum number of CF subclusters in each node. If a new samples enters such that
+            the number of subclusters exceed the branching_factor then that node is split
+            into two nodes with the subclusters redistributed in each. The parent subcluster
+            of that node is removed and two new subclusters are added as parents of the 2
+            split nodes.
+        n_clusters : int, instance of sklearn.cluster model, default=3
+            Number of clusters after the final clustering step, which treats the subclusters
+            from the leaves as new samples.
+            - `None` : the final clustering step is not performed and the subclusters are
+               returned as they are.
+            - `sklearn.cluster` Estimator : If a model is provided, the model is fit
+               treating the subclusters as new samples and the initial data is mapped to the
+               label of the closest subcluster.
+            - `int` : the model fit is `AgglomerativeClustering` with `n_clusters` set to be
+               equal to the int.
+
+        Notes
+        -----
+        Validation of parameters is performed upon instantiation of scikit-learn Birch
+        clustering algorithm.
+        '''
+        self.n_clusters = n_clusters
+        self._threshold = threshold
+        self._branching_factor = branching_factor
+    # --------------------------------------------------------------------------------------
+    def perform_clustering(self, data_matrix):
+        '''Perform clustering and return cluster label for each dataset item.
 
         Parameters
         ----------
@@ -462,13 +645,12 @@ class KMeans(ClusteringAlgorithm):
         cluster_labels: ndarray of shape (n_items,)
             Cluster label (int) assigned to each dataset item.
         '''
-        # Instantiate scikit-learn K-Means clustering algorithm
-        self._clst_alg = skclst.KMeans(n_clusters=self.n_clusters, init=self._init,
-                                       n_init=self._n_init, max_iter=self._max_iter,
-                                       tol=self._tol, algorithm=self._algorithm)
+        # Instantiate scikit-learn Birch clustering algorithm
+        self._clst_alg = skclst.Birch(threshold=self._threshold,
+                                      branching_factor=self._branching_factor,
+                                      n_clusters=self.n_clusters)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Compute cluster centers (fitted estimator) and predict cluster label (prediction)
-        # for each dataset item
-        cluster_labels = self._clst_alg.fit_predict(data_matrix, sample_weight=None)
+        # Perform clustering and return cluster labels
+        cluster_labels = self._clst_alg.fit_predict(data_matrix)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return cluster_labels
