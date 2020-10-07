@@ -34,6 +34,7 @@ def get_available_clustering_algorithms():
     1- K-Means (source: scikit-learn)
     2- Mini-Batch K-Means (source: scikit-learn)
     3- Birch (source: scikit-learn)
+    4- Agglomerative (source: scikit-learn)
 
     Returns
     -------
@@ -43,7 +44,8 @@ def get_available_clustering_algorithms():
 
     available_clustering_alg = {'1': 'K-Means (scikit-learn)',
                                 '2': 'Mini-Batch K-Means (scikit-learn)',
-                                '3': 'Birch (scikit-learn)'}
+                                '3': 'Birch (scikit-learn)',
+                                '4': 'Agglomerative (scikit-learn)'}
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return available_clustering_alg
 #
@@ -372,6 +374,11 @@ class RVEClustering:
             branching_factor = 50
             # Instantiate Birch
             clst_alg = Birch(threshold=threshold, branching_factor=branching_factor)
+        elif self._clustering_method == 4:
+            # Instantiate Agglomerative clustering
+            clst_alg = Agglomerative(n_clusters=None, affinity='euclidean', memory=None,
+                                     connectivity=None, compute_full_tree='auto',
+                                     linkage='ward', distance_threshold=None)
         else:
             raise RuntimeError('Unknown clustering algorithm.')
         # Initialize label offset (avoid that different material phases share the same
@@ -651,6 +658,102 @@ class Birch(ClusteringAlgorithm):
                                       n_clusters=self.n_clusters)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Perform clustering and return cluster labels
+        cluster_labels = self._clst_alg.fit_predict(data_matrix)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        return cluster_labels
+# ------------------------------------------------------------------------------------------
+class Agglomerative(ClusteringAlgorithm):
+    '''Agglomerative clustering algorithm.
+
+    Notes
+    -----
+    The Agglomerative clustering algorithm is taken from scikit-learn
+    (https://scikit-learn.org). Additional parameters and further information can be found
+    in there.
+    '''
+    def __init__(self, n_clusters=None, affinity='euclidean', memory=None,
+                 connectivity=None, compute_full_tree='auto', linkage='ward',
+                 distance_threshold=None):
+        '''Agglomerative clustering algorithm constructor.
+
+        Parameters
+        ----------
+        n_clusters : int or None, default=2
+            The number of clusters to find. It must be ``None`` if ``distance_threshold`` is
+            not ``None``.
+        affinity : str or callable, default='euclidean'
+            Metric used to compute the linkage. Can be "euclidean", "l1", "l2", "manhattan",
+            "cosine", or "precomputed". If linkage is "ward", only "euclidean" is accepted.
+            If "precomputed", a distance matrix (instead of a similarity matrix) is needed
+            as input for the fit method.
+        memory : str or object with the joblib.Memory interface, default=None
+            Used to cache the output of the computation of the tree. By default, no caching
+            is done. If a string is given, it is the path to the caching directory.
+        connectivity : array-like or callable, default=None
+            Connectivity matrix. Defines for each sample the neighboring samples following a
+            given structure of the data. This can be a connectivity matrix itself or a
+            callable that transforms the data into a connectivity matrix, such as derived
+            from kneighbors_graph. Default is None, i.e, the hierarchical clustering
+            algorithm is unstructured.
+        compute_full_tree : 'auto' or bool, default='auto'
+            Stop early the construction of the tree at n_clusters. This is useful to
+            decrease computation time if the number of clusters is not small compared to the
+            number of samples. This option is useful only when specifying a connectivity
+            matrix. Note also that when varying the number of clusters and using caching, it
+            may be advantageous to compute the full tree. It must be ``True`` if
+            ``distance_threshold`` is not ``None``. By default `compute_full_tree` is
+            "auto", which is equivalent to `True` when `distance_threshold` is not `None` or
+            that `n_clusters` is inferior to the maximum between 100 or `0.02 * n_samples`.
+            Otherwise, "auto" is equivalent to `False`.
+        linkage : {"ward", "complete", "average", "single"}, default="ward"
+            Which linkage criterion to use. The linkage criterion determines which distance
+            to use between sets of observation. The algorithm will merge the pairs of
+            cluster that minimize this criterion.
+            - ward minimizes the variance of the clusters being merged.
+            - average uses the average of the distances of each observation of the two sets.
+            - complete or maximum linkage uses the maximum distances between all
+              observations of the two sets.
+            - single uses the minimum of the distances between all observations of the two
+              sets.
+        distance_threshold : float, default=None
+            The linkage distance threshold above which, clusters will not be merged. If not
+            ``None``, ``n_clusters`` must be ``None`` and ``compute_full_tree`` must be
+            ``True``.
+
+        Notes
+        -----
+        Validation of parameters is performed upon instantiation of scikit-learn
+        Agglomerative clustering algorithm.
+        '''
+        self.n_clusters = n_clusters
+        self._affinity = affinity
+        self._memory = memory
+        self._connectivity = connectivity
+        self._compute_full_tree = compute_full_tree
+        self._linkage = linkage
+        self._distance_threshold = distance_threshold
+    # --------------------------------------------------------------------------------------
+    def perform_clustering(self, data_matrix):
+        '''Fit the hierarchical clustering from features or distance matrix, and return
+        cluster label for each dataset item.
+
+        Parameters
+        ----------
+        data_matrix: ndarray of shape (n_items, n_features)
+            Data matrix containing the required data to perform cluster analysis.
+
+        Returns
+        -------
+        cluster_labels: ndarray of shape (n_items,)
+            Cluster label (int) assigned to each dataset item.
+        '''
+        # Instantiate scikit-learn Birch clustering algorithm
+        self._clst_alg = skclst.AgglomerativeClustering(n_clusters=self.n_clusters,
+            affinity=self._affinity, memory=self._memory, connectivity=self._connectivity,
+            compute_full_tree=self._compute_full_tree, linkage=self._linkage,
+            distance_threshold=self._distance_threshold)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Fit the hierarchical clustering and return cluster labels
         cluster_labels = self._clst_alg.fit_predict(data_matrix)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return cluster_labels
