@@ -285,7 +285,7 @@ class CRVE:
         # Check cluster labels mapping dictionary
         new_clusters = [sort_dict[key] for key in sort_dict.keys()]
         if set(sort_dict.keys()) != set(old_clusters) or \
-                set(new_clusters) != set(old_clusters):
+                len(set(new_clusters)) != len(set(old_clusters)):
             raise RuntimeError('Invalid cluster labels mapping dictionary.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Sort cluster labels in ascending order of material phase
