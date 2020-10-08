@@ -20,6 +20,7 @@ import scipy.cluster.hierarchy as sciclst
 import pyclustering.cluster.kmeans as pykmeans
 import pyclustering.cluster.birch as pybirch
 import pyclustering.cluster.cure as pycure
+import pyclustering.cluster.xmeans as pyxmeans
 import pyclustering.container.cftree as pycftree
 import pyclustering.cluster.encoder as pyencoder
 import pyclustering.utils.metric as pymetric
@@ -47,6 +48,7 @@ def get_available_clustering_algorithms():
     6- Birch (source: scikit-learn)
     7- Birch (source: pyclustering)
     8- Cure (source: pyclustering)
+    9- X-Means (source: pyclustering)
 
     Returns
     -------
@@ -60,7 +62,8 @@ def get_available_clustering_algorithms():
                                 '5': 'Agglomerative (scipy)',
                                 '7': 'Birch (scikit-learn)',
                                 '6': 'Birch (pyclustering)',
-                                '8': 'Cure (pyclustering)'}
+                                '8': 'Cure (pyclustering)',
+                                '9': 'X-Means (pyclustering)'}
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return available_clustering_alg
 #
@@ -418,6 +421,10 @@ class RVEClustering:
         elif self._clustering_method == 8:
             # Instantiate Cure
             clst_alg = CurePC(number_represent_points=5, compression=0.5)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        elif self._clustering_method == 9:
+            # Instantiate X-Means
+            clst_alg = XMeansPC(tolerance=2.5e-2, repeat=1)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         else:
             raise RuntimeError('Unknown clustering algorithm.')
@@ -1031,6 +1038,75 @@ class KMeansPC(ClusteringAlgorithm):
         self._clst_alg = pykmeans.kmeans(data_matrix.tolist(), initial_centers,
                                          tolerance=self._tolerance, itermax=self._itermax,
                                          metric=self._metric)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Perform clustering
+        self._clst_alg.process()
+        clusters = self._clst_alg.get_clusters()
+        # Get type of cluster encoding (index list separation by default)
+        type_clusters = self._clst_alg.get_cluster_encoding()
+        # Instantiate cluster encoder (clustering result representor)
+        encoder = pyencoder.cluster_encoder(type_clusters, clusters, data_matrix)
+        # Change cluster encoding to index labeling
+        encoder.set_encoding(pyencoder.type_encoding.CLUSTER_INDEX_LABELING)
+        # Return cluster labels
+        cluster_labels = np.array(encoder.get_clusters())
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        return cluster_labels
+# ------------------------------------------------------------------------------------------
+class XMeansPC(ClusteringAlgorithm):
+    '''X-Means clustering algorithm.
+
+    Notes
+    -----
+    The X-Means clustering algorithm is taken from pyclustering (https://pypi.org/).
+    Further information can be found in there.
+    '''
+    def __init__(self, tolerance=2.5e-2,
+                 criterion=pyxmeans.splitting_type.BAYESIAN_INFORMATION_CRITERION, repeat=1,
+                 n_clusters=None):
+        '''X-Means clustering algorithm constructor.
+
+        Parameters
+        ----------
+        n_clusters : int, default=None
+            Maximum number of clusters than can be found.
+        tolerance : float, default=2.5e-2
+            Convergence tolerance (based on the maximum value of change of cluster centers
+            of two consecutive iterations).
+        criterion : splitting_type, BAYESIAN_INFORMATION_CRITERION
+            Criterion to perform cluster splitting.
+        repeat : int, default=1
+            How many times K-Means should be run to improve parameters. Larger values
+            increase the probability of finding global optimum.
+        '''
+        self.n_clusters = n_clusters
+        self._tolerance = tolerance
+        self._criterion = criterion
+        self._repeat = repeat
+    # --------------------------------------------------------------------------------------
+    def perform_clustering(self, data_matrix):
+        '''Perform cluster analysis and return cluster label for each dataset item.
+
+        Parameters
+        ----------
+        data_matrix: ndarray of shape (n_items, n_features)
+            Data matrix containing the required data to perform cluster analysis.
+
+        Returns
+        -------
+        cluster_labels: ndarray of shape (n_items,)
+            Cluster label (int) assigned to each dataset item.
+        '''
+        # Set initial numbers of clusters
+        amount_initial_centers = max(1, int(0.1*self.n_clusters))
+        # Instatiante cluster centers seeds using K-Means++
+        initial_centers = pycenterinit.kmeans_plusplus_initializer(data_matrix.tolist(),
+            amount_initial_centers).initialize()
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Instantiate pyclustering X-Means clustering algorithm
+        self._clst_alg = pyxmeans.xmeans(data_matrix.tolist(), initial_centers,
+                                         kmax=self.n_clusters, tolerance=self._tolerance,
+                                         criterion=self._criterion, repeat=self._repeat)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Perform clustering
         self._clst_alg.process()
