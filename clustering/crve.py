@@ -17,6 +17,9 @@ import itertools as it
 # Unsupervised clustering algorithms
 import sklearn.cluster as skclst
 import scipy.cluster.hierarchy as sciclst
+import pyclustering.cluster.birch as pybirch
+import pyclustering.container.cftree as pycftree
+import pyclustering.cluster.encoder as pyencoder
 # Defining abstract base classes
 from abc import ABC, abstractmethod
 # Display messages
@@ -37,6 +40,7 @@ def get_available_clustering_algorithms():
     3- Birch (source: scikit-learn)
     4- Agglomerative (source: scikit-learn)
     5- Agglomerative (source: scipy)
+    6- Birch (source: pyclustering)
 
     Returns
     -------
@@ -48,7 +52,8 @@ def get_available_clustering_algorithms():
                                 '2': 'Mini-Batch K-Means (scikit-learn)',
                                 '3': 'Birch (scikit-learn)',
                                 '4': 'Agglomerative (scikit-learn)',
-                                '5': 'Agglomerative (scipy)'}
+                                '5': 'Agglomerative (scipy)',
+                                '6': 'Birch (pyclustering)'}
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return available_clustering_alg
 #
@@ -385,12 +390,19 @@ class RVEClustering:
             # Instatiate Agglomerative clustering
             clst_alg = AgglomerativeSP(0, n_clusters=None, method='ward',
                                        metric='euclidean', criterion='maxclust')
+        elif self._clustering_method == 6:
+            # Set merging radius threshold
+            threshold = 0.1
+            # Set maximum number of CF subclusters in each node
+            branching_factor = 50
+            # Instantiate Birch
+            clst_alg = BirchPC(threshold=threshold, branching_factor=branching_factor)
         else:
             raise RuntimeError('Unknown clustering algorithm.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize label offset (avoid that different material phases share the same
         # labels)
         label_offset = 0
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over material phases
         for mat_phase in self._material_phases:
             # Get material phase's voxels indexes
@@ -483,11 +495,6 @@ class KMeansSK(ClusteringAlgorithm):
             K-Means algorithm to use. 'full' is the classical EM-style algorithm, 'elkan'
             uses the triangle inequality to speed up convergence. 'auto' currently chooses
             'elkan' (scikit-learn 0.23.2).
-
-        Notes
-        -----
-        Validation of parameters is performed upon instantiation of scikit-learn K-Means
-        clustering algorithm.
         '''
         self.n_clusters = n_clusters
         self._init = init
@@ -561,11 +568,6 @@ class MiniBatchKMeansSK(ClusteringAlgorithm):
         reassignment_ratio : float, default=0.01
             Control the fraction of the maximum number of counts for a center to be
             reassigned.
-
-        Notes
-        -----
-        Validation of parameters is performed upon instantiation of scikit-learn Mini-Batch
-        K-Means clustering algorithm.
         '''
         self.n_clusters = n_clusters
         self._init = init
@@ -634,11 +636,6 @@ class BirchSK(ClusteringAlgorithm):
                label of the closest subcluster.
             - `int` : the model fit is `AgglomerativeClustering` with `n_clusters` set to be
                equal to the int.
-
-        Notes
-        -----
-        Validation of parameters is performed upon instantiation of scikit-learn Birch
-        clustering algorithm.
         '''
         self.n_clusters = n_clusters
         self._threshold = threshold
@@ -723,11 +720,6 @@ class AgglomerativeSK(ClusteringAlgorithm):
             The linkage distance threshold above which, clusters will not be merged. If not
             ``None``, ``n_clusters`` must be ``None`` and ``compute_full_tree`` must be
             ``True``.
-
-        Notes
-        -----
-        Validation of parameters is performed upon instantiation of scikit-learn
-        Agglomerative clustering algorithm.
         '''
         self.n_clusters = n_clusters
         self._affinity = affinity
@@ -829,5 +821,81 @@ class AgglomerativeSP(ClusteringAlgorithm):
         # clustering)
         cluster_labels = sciclst.fcluster(self.Z, self.n_clusters,
                                           criterion=self._criterion)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        return cluster_labels
+# ------------------------------------------------------------------------------------------
+class BirchPC(ClusteringAlgorithm):
+    '''Birch clustering algorithm.
+
+    Notes
+    -----
+    The Birch clustering algorithm is taken from scikit-learn (https://pypi.org/).
+    Further information can be found in there.
+    '''
+    def __init__(self, threshold=0.5, branching_factor=50, max_node_entries=200,
+                 type_measurement=pycftree.measurement_type.CENTROID_EUCLIDEAN_DISTANCE,
+                 entry_size_limit=500, threshold_multiplier=1.5, n_clusters=None):
+        '''Birch clustering algorithm constructor.
+
+        Parameters
+        ----------
+        threshold : float, default=0.5
+            CF-entry diameter that is used for CF-Tree construction (might increase if
+            `entry_size_limit` is exceeded).
+        branching_factor : int, default=50
+            Maximum number of successor that might be contained by each non-leaf node in
+            CF-Tree.
+        max_node_entries : int, default=200
+            Maximum number of entries that might be contained by each leaf node in CF-Tree.
+        type_measurement : measurement type, default=CENTROID_EUCLIDEAN_DISTANCE
+            Type of measurement used for calculation of distance metrics.
+        entry_size_limit : int, default=500
+            Maximum number of entries that can be stored in CF-Tree (if exceeded during
+            creation of CF-Tree, then threshold is increased and CF-Tree is rebuilt).
+        threshold_multiplier : float, default=1.5
+            Multiplier used to increase the threshold when `entry_size_limit` is exceeded.
+        n_clusters : int, instance of sklearn.cluster model, default=3
+            Number of clusters that should be formed.
+        '''
+        self.n_clusters = n_clusters
+        self._threshold = threshold
+        self._branching_factor = branching_factor
+        self._max_node_entries = max_node_entries
+        self._type_measurement = type_measurement
+        self._entry_size_limit = entry_size_limit
+        self._threshold_multiplier = threshold_multiplier
+    # --------------------------------------------------------------------------------------
+    def perform_clustering(self, data_matrix):
+        '''Perform clustering and return cluster label for each dataset item.
+
+        Parameters
+        ----------
+        data_matrix: ndarray of shape (n_items, n_features)
+            Data matrix containing the required data to perform cluster analysis.
+
+        Returns
+        -------
+        cluster_labels: ndarray of shape (n_items,)
+            Cluster label (int) assigned to each dataset item.
+        '''
+        # Instantiate pyclustering Birch clustering algorithm
+        self._clst_alg = pybirch.birch(data_matrix.tolist(), self.n_clusters,
+                                       diameter=self._threshold,
+                                       branching_factor=self._branching_factor,
+                                       max_node_entries=self._max_node_entries,
+                                       entry_size_limit=self._entry_size_limit,
+                                       diameter_multiplier=self._threshold_multiplier)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Perform clustering
+        self._clst_alg.process()
+        clusters = self._clst_alg.get_clusters()
+        # Get type of cluster encoding (index list separation by default)
+        type_clusters = self._clst_alg.get_cluster_encoding()
+        # Instantiate cluster encoder (clustering result representor)
+        encoder = pyencoder.cluster_encoder(type_clusters, clusters, data_matrix)
+        # Change cluster encoding to index labeling
+        encoder.set_encoding(pyencoder.type_encoding.CLUSTER_INDEX_LABELING)
+        # Return cluster labels
+        cluster_labels = np.array(encoder.get_clusters())
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return cluster_labels
