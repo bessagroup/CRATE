@@ -18,6 +18,7 @@ import itertools as it
 import sklearn.cluster as skclst
 import scipy.cluster.hierarchy as sciclst
 import pyclustering.cluster.birch as pybirch
+import pyclustering.cluster.cure as pycure
 import pyclustering.container.cftree as pycftree
 import pyclustering.cluster.encoder as pyencoder
 # Defining abstract base classes
@@ -41,6 +42,7 @@ def get_available_clustering_algorithms():
     4- Agglomerative (source: scikit-learn)
     5- Agglomerative (source: scipy)
     6- Birch (source: pyclustering)
+    7- Cure (source: pyclustering)
 
     Returns
     -------
@@ -53,7 +55,8 @@ def get_available_clustering_algorithms():
                                 '3': 'Birch (scikit-learn)',
                                 '4': 'Agglomerative (scikit-learn)',
                                 '5': 'Agglomerative (scipy)',
-                                '6': 'Birch (pyclustering)'}
+                                '6': 'Birch (pyclustering)',
+                                '7': 'Cure (pyclustering)'}
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return available_clustering_alg
 #
@@ -397,6 +400,9 @@ class RVEClustering:
             branching_factor = 50
             # Instantiate Birch
             clst_alg = BirchPC(threshold=threshold, branching_factor=branching_factor)
+        elif self._clustering_method == 7:
+            # Instantiate Cure
+            clst_alg = CurePC(number_represent_points=5, compression=0.5)
         else:
             raise RuntimeError('Unknown clustering algorithm.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -854,7 +860,7 @@ class BirchPC(ClusteringAlgorithm):
             creation of CF-Tree, then threshold is increased and CF-Tree is rebuilt).
         threshold_multiplier : float, default=1.5
             Multiplier used to increase the threshold when `entry_size_limit` is exceeded.
-        n_clusters : int, instance of sklearn.cluster model, default=3
+        n_clusters : int, default=None
             Number of clusters that should be formed.
         '''
         self.n_clusters = n_clusters
@@ -885,6 +891,64 @@ class BirchPC(ClusteringAlgorithm):
                                        max_node_entries=self._max_node_entries,
                                        entry_size_limit=self._entry_size_limit,
                                        diameter_multiplier=self._threshold_multiplier)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Perform clustering
+        self._clst_alg.process()
+        clusters = self._clst_alg.get_clusters()
+        # Get type of cluster encoding (index list separation by default)
+        type_clusters = self._clst_alg.get_cluster_encoding()
+        # Instantiate cluster encoder (clustering result representor)
+        encoder = pyencoder.cluster_encoder(type_clusters, clusters, data_matrix)
+        # Change cluster encoding to index labeling
+        encoder.set_encoding(pyencoder.type_encoding.CLUSTER_INDEX_LABELING)
+        # Return cluster labels
+        cluster_labels = np.array(encoder.get_clusters())
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        return cluster_labels
+# ------------------------------------------------------------------------------------------
+class CurePC(ClusteringAlgorithm):
+    '''Cure clustering algorithm.
+
+    Notes
+    -----
+    The Cure clustering algorithm is taken from scikit-learn (https://pypi.org/).
+    Further information can be found in there.
+    '''
+    def __init__(self, n_clusters=None, number_represent_points=5, compression=0.5):
+        '''Cure clustering algorithm constructor.
+
+        Parameters
+        ----------
+        n_clusters : int, default=None
+            Number of clusters that should be formed.
+        number_represent_points : int, default=5
+            Number of representative points for each cluster.
+        compression : float, default=0.5
+            Coefficient that defines the level of shrinking of representation points toward
+            the mean of the new created cluster after merging on each step (usually set
+            between 0 and 1).
+        '''
+        self.n_clusters = n_clusters
+        self._number_represent_points = number_represent_points
+        self._compression = compression
+    # --------------------------------------------------------------------------------------
+    def perform_clustering(self, data_matrix):
+        '''Perform clustering and return cluster label for each dataset item.
+
+        Parameters
+        ----------
+        data_matrix: ndarray of shape (n_items, n_features)
+            Data matrix containing the required data to perform cluster analysis.
+
+        Returns
+        -------
+        cluster_labels: ndarray of shape (n_items,)
+            Cluster label (int) assigned to each dataset item.
+        '''
+        # Instantiate pyclustering Cure clustering algorithm
+        self._clst_alg = pycure.cure(data_matrix.tolist(), self.n_clusters,
+                                     number_represent_points=self._number_represent_points,
+                                     compression=self._compression)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Perform clustering
         self._clst_alg.process()
