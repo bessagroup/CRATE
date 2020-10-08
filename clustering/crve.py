@@ -17,10 +17,13 @@ import itertools as it
 # Unsupervised clustering algorithms
 import sklearn.cluster as skclst
 import scipy.cluster.hierarchy as sciclst
+import pyclustering.cluster.kmeans as pykmeans
 import pyclustering.cluster.birch as pybirch
 import pyclustering.cluster.cure as pycure
 import pyclustering.container.cftree as pycftree
 import pyclustering.cluster.encoder as pyencoder
+import pyclustering.utils.metric as pymetric
+import pyclustering.cluster.center_initializer as pycenterinit
 # Defining abstract base classes
 from abc import ABC, abstractmethod
 # Display messages
@@ -43,6 +46,7 @@ def get_available_clustering_algorithms():
     5- Agglomerative (source: scipy)
     6- Birch (source: pyclustering)
     7- Cure (source: pyclustering)
+    8- K-Means (source: pyclustering)
 
     Returns
     -------
@@ -56,7 +60,8 @@ def get_available_clustering_algorithms():
                                 '4': 'Agglomerative (scikit-learn)',
                                 '5': 'Agglomerative (scipy)',
                                 '6': 'Birch (pyclustering)',
-                                '7': 'Cure (pyclustering)'}
+                                '7': 'Cure (pyclustering)',
+                                '8': 'K-Means (pyclustering)'}
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return available_clustering_alg
 #
@@ -403,6 +408,9 @@ class RVEClustering:
         elif self._clustering_method == 7:
             # Instantiate Cure
             clst_alg = CurePC(number_represent_points=5, compression=0.5)
+        elif self._clustering_method == 8:
+            # Instatiante K-Means
+            clst_alg = KMeansPC(tolerance=1e-03, itermax=200)
         else:
             raise RuntimeError('Unknown clustering algorithm.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -835,7 +843,7 @@ class BirchPC(ClusteringAlgorithm):
 
     Notes
     -----
-    The Birch clustering algorithm is taken from scikit-learn (https://pypi.org/).
+    The Birch clustering algorithm is taken from pyclustering (https://pypi.org/).
     Further information can be found in there.
     '''
     def __init__(self, threshold=0.5, branching_factor=50, max_node_entries=200,
@@ -911,7 +919,7 @@ class CurePC(ClusteringAlgorithm):
 
     Notes
     -----
-    The Cure clustering algorithm is taken from scikit-learn (https://pypi.org/).
+    The Cure clustering algorithm is taken from pyclustering (https://pypi.org/).
     Further information can be found in there.
     '''
     def __init__(self, n_clusters=None, number_represent_points=5, compression=0.5):
@@ -949,6 +957,73 @@ class CurePC(ClusteringAlgorithm):
         self._clst_alg = pycure.cure(data_matrix.tolist(), self.n_clusters,
                                      number_represent_points=self._number_represent_points,
                                      compression=self._compression)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Perform clustering
+        self._clst_alg.process()
+        clusters = self._clst_alg.get_clusters()
+        # Get type of cluster encoding (index list separation by default)
+        type_clusters = self._clst_alg.get_cluster_encoding()
+        # Instantiate cluster encoder (clustering result representor)
+        encoder = pyencoder.cluster_encoder(type_clusters, clusters, data_matrix)
+        # Change cluster encoding to index labeling
+        encoder.set_encoding(pyencoder.type_encoding.CLUSTER_INDEX_LABELING)
+        # Return cluster labels
+        cluster_labels = np.array(encoder.get_clusters())
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        return cluster_labels
+# ------------------------------------------------------------------------------------------
+class KMeansPC(ClusteringAlgorithm):
+    '''K-Means clustering algorithm.
+
+    Notes
+    -----
+    The K-Means clustering algorithm is taken from scikit-learn (https://pypi.org/).
+    Further information can be found in there.
+    '''
+    def __init__(self, n_clusters=None, tolerance=1e-03, itermax=200,
+                 metric=pymetric.distance_metric(pymetric.type_metric.EUCLIDEAN_SQUARE)):
+        '''K-Means clustering algorithm constructor.
+
+        Parameters
+        ----------
+        n_clusters : int, default=None
+            Number of clusters that should be formed.
+        tolerance : float, default=1e-03
+            Convergence tolerance (based on the maximum value of change of cluster centers
+            of two consecutive iterations).
+        itermax : int, default=200
+            Maximum number of iterations.
+        metric : distance_metric, default=EUCLIDEAN_SQUARE
+            Metric used for distance calculation between samples.
+        '''
+        self.n_clusters = n_clusters
+        self._tolerance = tolerance
+        self._itermax = itermax
+        self._metric = metric
+    # --------------------------------------------------------------------------------------
+    def perform_clustering(self, data_matrix):
+        '''Perform clustering and return cluster label for each dataset item.
+
+        Parameters
+        ----------
+        data_matrix: ndarray of shape (n_items, n_features)
+            Data matrix containing the required data to perform cluster analysis.
+
+        Returns
+        -------
+        cluster_labels: ndarray of shape (n_items,)
+            Cluster label (int) assigned to each dataset item.
+        '''
+
+        # Instatiante cluster centers seeds using K-Means++
+        amount_candidates = \
+            pycenterinit.kmeans_plusplus_initializer.FARTHEST_CENTER_CANDIDATE
+        initial_centers = pycenterinit.kmeans_plusplus_initializer(data_matrix.tolist(),
+            self.n_clusters, amount_candidates=amount_candidates).initialize()
+        # Instantiate pyclustering Cure clustering algorithm
+        self._clst_alg = pykmeans.kmeans(data_matrix.tolist(), initial_centers,
+                                         tolerance=self._tolerance, itermax=self._itermax,
+                                         metric=self._metric)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Perform clustering
         self._clst_alg.process()
