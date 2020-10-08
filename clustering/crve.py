@@ -40,28 +40,27 @@ def get_available_clustering_algorithms():
 
     Clustering algorithms identifiers:
     1- K-Means (source: scikit-learn)
-    2- Mini-Batch K-Means (source: scikit-learn)
-    3- Birch (source: scikit-learn)
+    2- K-Means (source: pyclustering)
+    3- Mini-Batch K-Means (source: scikit-learn)
     4- Agglomerative (source: scikit-learn)
     5- Agglomerative (source: scipy)
-    6- Birch (source: pyclustering)
-    7- Cure (source: pyclustering)
-    8- K-Means (source: pyclustering)
+    6- Birch (source: scikit-learn)
+    7- Birch (source: pyclustering)
+    8- Cure (source: pyclustering)
 
     Returns
     -------
     available_clustering_alg : dict
         Available clustering algorithms (item, str) and associated identifiers (key, str).
     '''
-
     available_clustering_alg = {'1': 'K-Means (scikit-learn)',
-                                '2': 'Mini-Batch K-Means (scikit-learn)',
-                                '3': 'Birch (scikit-learn)',
+                                '2': 'K-Means (pyclustering)',
+                                '3': 'Mini-Batch K-Means (scikit-learn)',
                                 '4': 'Agglomerative (scikit-learn)',
                                 '5': 'Agglomerative (scipy)',
+                                '7': 'Birch (scikit-learn)',
                                 '6': 'Birch (pyclustering)',
-                                '7': 'Cure (pyclustering)',
-                                '8': 'K-Means (pyclustering)'}
+                                '8': 'Cure (pyclustering)'}
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return available_clustering_alg
 #
@@ -365,6 +364,7 @@ class RVEClustering:
         '''
         # Initialize RVE clustering
         self.labels = np.full(self._n_voxels, -1, dtype=int)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Instantiate clustering algorithm
         if self._clustering_method == 1:
             # Set number of full batch K-Means clusterings (with different initializations)
@@ -372,7 +372,12 @@ class RVEClustering:
             # Instantiate K-Means
             clst_alg = KMeansSK(init='k-means++', n_init=n_init, max_iter=300, tol=1e-4,
                                 random_state=None, algorithm='auto')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         elif self._clustering_method == 2:
+            # Instatiante K-Means
+            clst_alg = KMeansPC(tolerance=1e-03, itermax=200)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        elif self._clustering_method == 3:
             # Set size of the mini-batches
             batch_size = 100
             # Set number of random initializations
@@ -382,35 +387,38 @@ class RVEClustering:
                                          random_state=None, batch_size=batch_size,
                                          max_no_improvement=10, init_size=None,
                                          n_init=n_init, reassignment_ratio=0.01)
-        elif self._clustering_method == 3:
-            # Set merging radius threshold
-            threshold = 0.1
-            # Set maximum number of CF subclusters in each node
-            branching_factor = 50
-            # Instantiate Birch
-            clst_alg = BirchSK(threshold=threshold, branching_factor=branching_factor)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         elif self._clustering_method == 4:
             # Instantiate Agglomerative clustering
             clst_alg = AgglomerativeSK(n_clusters=None, affinity='euclidean', memory=None,
                                        connectivity=None, compute_full_tree='auto',
                                        linkage='ward', distance_threshold=None)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         elif self._clustering_method == 5:
             # Instatiate Agglomerative clustering
             clst_alg = AgglomerativeSP(0, n_clusters=None, method='ward',
                                        metric='euclidean', criterion='maxclust')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         elif self._clustering_method == 6:
             # Set merging radius threshold
             threshold = 0.1
             # Set maximum number of CF subclusters in each node
             branching_factor = 50
             # Instantiate Birch
-            clst_alg = BirchPC(threshold=threshold, branching_factor=branching_factor)
+            clst_alg = BirchSK(threshold=threshold, branching_factor=branching_factor)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         elif self._clustering_method == 7:
+            # Set merging radius threshold
+            threshold = 0.1
+            # Set maximum number of CF subclusters in each node
+            branching_factor = 50
+            # Instantiate Birch
+            clst_alg = BirchPC(threshold=threshold, branching_factor=branching_factor)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        elif self._clustering_method == 8:
             # Instantiate Cure
             clst_alg = CurePC(number_represent_points=5, compression=0.5)
-        elif self._clustering_method == 8:
-            # Instatiante K-Means
-            clst_alg = KMeansPC(tolerance=1e-03, itermax=200)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         else:
             raise RuntimeError('Unknown clustering algorithm.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -463,7 +471,7 @@ class ClusteringAlgorithm(ABC):
     # --------------------------------------------------------------------------------------
     @abstractmethod
     def perform_clustering(self, data_matrix):
-        '''Perform cluster analysis on a given data matrix.
+        '''Perform cluster analysis and return cluster label for each dataset item.
 
         Parameters
         ----------
@@ -485,14 +493,14 @@ class KMeansSK(ClusteringAlgorithm):
     The K-Means clustering algorithm is taken from scikit-learn (https://scikit-learn.org).
     Further information can be found in there.
     '''
-    def __init__(self, n_clusters=None, init='k-means++', n_init=10, max_iter=300, tol=1e-4,
-                 random_state=None, algorithm='auto'):
+    def __init__(self, init='k-means++', n_init=10, max_iter=300, tol=1e-4,
+                 random_state=None, algorithm='auto', n_clusters=None):
         '''K-Means clustering algorithm constructor.
 
         Parameters
         ----------
-        n_clusters : int
-            Number of clusters to form.
+        n_clusters : int, default=None
+            Number of clusters to find.
         init : {‘k-means++’, ‘random’, ndarray, callable}, default=’k-means++’
             Method for centroid initialization.
         n_init : int, default=10
@@ -519,7 +527,7 @@ class KMeansSK(ClusteringAlgorithm):
         self._algorithm = algorithm
     # --------------------------------------------------------------------------------------
     def perform_clustering(self, data_matrix):
-        '''Compute cluster centers and predict cluster label for each dataset item.
+        '''Perform cluster analysis and return cluster label for each dataset item.
 
         Parameters
         ----------
@@ -551,15 +559,15 @@ class MiniBatchKMeansSK(ClusteringAlgorithm):
     The Mini-Batch K-Means clustering algorithm is taken from scikit-learn
     (https://scikit-learn.org). Further information can be found in there.
     '''
-    def __init__(self, n_clusters=None, init='k-means++', max_iter=100, tol=0.0,
-                 random_state=None, batch_size=100, max_no_improvement=10, init_size=None,
-                 n_init=3, reassignment_ratio=0.01):
+    def __init__(self, init='k-means++', max_iter=100, tol=0.0, random_state=None,
+                 batch_size=100, max_no_improvement=10, init_size=None, n_init=3,
+                 reassignment_ratio=0.01, n_clusters=None):
         '''Mini-Batch K-Means clustering algorithm constructor.
 
         Parameters
         ----------
-        n_clusters : int
-            Number of clusters to form.
+        n_clusters : int, default=None
+            Number of clusters to find.
         init: {‘k-means++’, ‘random’, ndarray, callable}, default=’k-means++’
             Method for centroid initialization.
         n_init : int, default=10
@@ -593,7 +601,7 @@ class MiniBatchKMeansSK(ClusteringAlgorithm):
         self._reassignment_ratio = reassignment_ratio
     # --------------------------------------------------------------------------------------
     def perform_clustering(self, data_matrix):
-        '''Compute cluster centers and predict cluster label for each dataset item.
+        '''Perform cluster analysis and return cluster label for each dataset item.
 
         Parameters
         ----------
@@ -640,9 +648,9 @@ class BirchSK(ClusteringAlgorithm):
             into two nodes with the subclusters redistributed in each. The parent subcluster
             of that node is removed and two new subclusters are added as parents of the 2
             split nodes.
-        n_clusters : int, instance of sklearn.cluster model, default=3
-            Number of clusters after the final clustering step, which treats the subclusters
-            from the leaves as new samples.
+        n_clusters : int, instance of sklearn.cluster model, default=None
+            Number of clusters to find after the final clustering step, which treats the
+            subclusters from the leaves as new samples.
             - `None` : the final clustering step is not performed and the subclusters are
                returned as they are.
             - `sklearn.cluster` Estimator : If a model is provided, the model is fit
@@ -656,7 +664,7 @@ class BirchSK(ClusteringAlgorithm):
         self._branching_factor = branching_factor
     # --------------------------------------------------------------------------------------
     def perform_clustering(self, data_matrix):
-        '''Perform clustering and return cluster label for each dataset item.
+        '''Perform cluster analysis and return cluster label for each dataset item.
 
         Parameters
         ----------
@@ -686,14 +694,14 @@ class AgglomerativeSK(ClusteringAlgorithm):
     The Agglomerative clustering algorithm is taken from scikit-learn
     (https://scikit-learn.org). Further information can be found in there.
     '''
-    def __init__(self, n_clusters=None, affinity='euclidean', memory=None,
-                 connectivity=None, compute_full_tree='auto', linkage='ward',
-                 distance_threshold=None):
+    def __init__(self, affinity='euclidean', memory=None, connectivity=None,
+                 compute_full_tree='auto', linkage='ward', distance_threshold=None,
+                 n_clusters=None):
         '''Agglomerative clustering algorithm constructor.
 
         Parameters
         ----------
-        n_clusters : int or None, default=2
+        n_clusters : int, default=None
             The number of clusters to find. It must be ``None`` if ``distance_threshold`` is
             not ``None``.
         affinity : str or callable, default='euclidean'
@@ -744,8 +752,7 @@ class AgglomerativeSK(ClusteringAlgorithm):
         self._distance_threshold = distance_threshold
     # --------------------------------------------------------------------------------------
     def perform_clustering(self, data_matrix):
-        '''Fit the hierarchical clustering from features or distance matrix, and return
-        cluster label for each dataset item.
+        '''Perform cluster analysis and return cluster label for each dataset item.
 
         Parameters
         ----------
@@ -784,13 +791,13 @@ class AgglomerativeSP(ClusteringAlgorithm):
     The Agglomerative clustering algorithm is taken from scipy (https://docs.scipy.org/)
     Further information can be found in there.
     '''
-    def __init__(self, t, n_clusters=None, method='ward', metric='euclidean',
-                 criterion='maxclust'):
+    def __init__(self, t, method='ward', metric='euclidean', criterion='maxclust',
+                 n_clusters=None):
         '''Agglomerative clustering algorithm constructor.
 
         Parameters
         ----------
-        n_clusters : int
+        n_clusters : int, default=None
             The number of clusters to find.
         method : str, {'single', 'complete', 'average', 'weighted', 'centroid', 'median',
                 'ward'}, default='ward'
@@ -815,8 +822,7 @@ class AgglomerativeSP(ClusteringAlgorithm):
         self._Z = None
     # --------------------------------------------------------------------------------------
     def perform_clustering(self, data_matrix):
-        '''Fit the hierarchical clustering from features or distance matrix, and return
-        cluster label for each dataset item.
+        '''Perform cluster analysis and return cluster label for each dataset item.
 
         Parameters
         ----------
@@ -869,7 +875,7 @@ class BirchPC(ClusteringAlgorithm):
         threshold_multiplier : float, default=1.5
             Multiplier used to increase the threshold when `entry_size_limit` is exceeded.
         n_clusters : int, default=None
-            Number of clusters that should be formed.
+            Number of clusters to find.
         '''
         self.n_clusters = n_clusters
         self._threshold = threshold
@@ -880,7 +886,7 @@ class BirchPC(ClusteringAlgorithm):
         self._threshold_multiplier = threshold_multiplier
     # --------------------------------------------------------------------------------------
     def perform_clustering(self, data_matrix):
-        '''Perform clustering and return cluster label for each dataset item.
+        '''Perform cluster analysis and return cluster label for each dataset item.
 
         Parameters
         ----------
@@ -922,13 +928,13 @@ class CurePC(ClusteringAlgorithm):
     The Cure clustering algorithm is taken from pyclustering (https://pypi.org/).
     Further information can be found in there.
     '''
-    def __init__(self, n_clusters=None, number_represent_points=5, compression=0.5):
+    def __init__(self, number_represent_points=5, compression=0.5, n_clusters=None):
         '''Cure clustering algorithm constructor.
 
         Parameters
         ----------
         n_clusters : int, default=None
-            Number of clusters that should be formed.
+            Number of clusters to find.
         number_represent_points : int, default=5
             Number of representative points for each cluster.
         compression : float, default=0.5
@@ -941,7 +947,7 @@ class CurePC(ClusteringAlgorithm):
         self._compression = compression
     # --------------------------------------------------------------------------------------
     def perform_clustering(self, data_matrix):
-        '''Perform clustering and return cluster label for each dataset item.
+        '''Perform cluster analysis and return cluster label for each dataset item.
 
         Parameters
         ----------
@@ -977,17 +983,18 @@ class KMeansPC(ClusteringAlgorithm):
 
     Notes
     -----
-    The K-Means clustering algorithm is taken from scikit-learn (https://pypi.org/).
+    The K-Means clustering algorithm is taken from pyclustering (https://pypi.org/).
     Further information can be found in there.
     '''
-    def __init__(self, n_clusters=None, tolerance=1e-03, itermax=200,
-                 metric=pymetric.distance_metric(pymetric.type_metric.EUCLIDEAN_SQUARE)):
+    def __init__(self, tolerance=1e-03, itermax=200,
+                 metric=pymetric.distance_metric(pymetric.type_metric.EUCLIDEAN_SQUARE),
+                 n_clusters=None):
         '''K-Means clustering algorithm constructor.
 
         Parameters
         ----------
         n_clusters : int, default=None
-            Number of clusters that should be formed.
+            Number of clusters to find.
         tolerance : float, default=1e-03
             Convergence tolerance (based on the maximum value of change of cluster centers
             of two consecutive iterations).
@@ -1002,7 +1009,7 @@ class KMeansPC(ClusteringAlgorithm):
         self._metric = metric
     # --------------------------------------------------------------------------------------
     def perform_clustering(self, data_matrix):
-        '''Perform clustering and return cluster label for each dataset item.
+        '''Perform cluster analysis and return cluster label for each dataset item.
 
         Parameters
         ----------
@@ -1014,13 +1021,13 @@ class KMeansPC(ClusteringAlgorithm):
         cluster_labels: ndarray of shape (n_items,)
             Cluster label (int) assigned to each dataset item.
         '''
-
         # Instatiante cluster centers seeds using K-Means++
         amount_candidates = \
             pycenterinit.kmeans_plusplus_initializer.FARTHEST_CENTER_CANDIDATE
         initial_centers = pycenterinit.kmeans_plusplus_initializer(data_matrix.tolist(),
             self.n_clusters, amount_candidates=amount_candidates).initialize()
-        # Instantiate pyclustering Cure clustering algorithm
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Instantiate pyclustering K-Means clustering algorithm
         self._clst_alg = pykmeans.kmeans(data_matrix.tolist(), initial_centers,
                                          tolerance=self._tolerance, itermax=self._itermax,
                                          metric=self._metric)
