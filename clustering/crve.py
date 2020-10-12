@@ -25,6 +25,7 @@ import pyclustering.container.cftree as pycftree
 import pyclustering.cluster.encoder as pyencoder
 import pyclustering.utils.metric as pymetric
 import pyclustering.cluster.center_initializer as pycenterinit
+import fastcluster as fastclst
 # Defining abstract base classes
 from abc import ABC, abstractmethod
 # Display messages
@@ -45,10 +46,11 @@ def get_available_clustering_algorithms():
     3- Mini-Batch K-Means (source: scikit-learn)
     4- Agglomerative (source: scikit-learn)
     5- Agglomerative (source: scipy)
-    6- Birch (source: scikit-learn)
-    7- Birch (source: pyclustering)
-    8- Cure (source: pyclustering)
-    9- X-Means (source: pyclustering)
+    6- Agglomerative (source: fastcluster)
+    7- Birch (source: scikit-learn)
+    8- Birch (source: pyclustering)
+    9- Cure (source: pyclustering)
+    10- X-Means (source: pyclustering)
 
     Returns
     -------
@@ -60,10 +62,11 @@ def get_available_clustering_algorithms():
                                 '3': 'Mini-Batch K-Means (scikit-learn)',
                                 '4': 'Agglomerative (scikit-learn)',
                                 '5': 'Agglomerative (scipy)',
+                                '6': 'Agglomerative (fastcluster)',
                                 '7': 'Birch (scikit-learn)',
-                                '6': 'Birch (pyclustering)',
-                                '8': 'Cure (pyclustering)',
-                                '9': 'X-Means (pyclustering)'}
+                                '8': 'Birch (pyclustering)',
+                                '9': 'Cure (pyclustering)',
+                                '10': 'X-Means (pyclustering)'}
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return available_clustering_alg
 #
@@ -403,12 +406,9 @@ class RVEClustering:
                                        metric='euclidean', criterion='maxclust')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         elif self._clustering_method == 6:
-            # Set merging radius threshold
-            threshold = 0.1
-            # Set maximum number of CF subclusters in each node
-            branching_factor = 50
-            # Instantiate Birch
-            clst_alg = BirchSK(threshold=threshold, branching_factor=branching_factor)
+            # Instatiate Agglomerative clustering
+            clst_alg = AgglomerativeFC(0, n_clusters=None, method='ward',
+                                       metric='euclidean', criterion='maxclust')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         elif self._clustering_method == 7:
             # Set merging radius threshold
@@ -416,13 +416,21 @@ class RVEClustering:
             # Set maximum number of CF subclusters in each node
             branching_factor = 50
             # Instantiate Birch
-            clst_alg = BirchPC(threshold=threshold, branching_factor=branching_factor)
+            clst_alg = BirchSK(threshold=threshold, branching_factor=branching_factor)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         elif self._clustering_method == 8:
+            # Set merging radius threshold
+            threshold = 0.1
+            # Set maximum number of CF subclusters in each node
+            branching_factor = 50
+            # Instantiate Birch
+            clst_alg = BirchPC(threshold=threshold, branching_factor=branching_factor)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        elif self._clustering_method == 9:
             # Instantiate Cure
             clst_alg = CurePC(number_represent_points=5, compression=0.5)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        elif self._clustering_method == 9:
+        elif self._clustering_method == 10:
             # Instantiate X-Means
             clst_alg = XMeansPC(tolerance=2.5e-2, repeat=1)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -806,6 +814,10 @@ class AgglomerativeSP(ClusteringAlgorithm):
         ----------
         n_clusters : int, default=None
             The number of clusters to find.
+        t : int or float
+            Scalar parameter associated to the criterion used to form a flat clustering.
+            Threshold (float) with criterion in {'inconsistent', 'distance', 'monocrit'} or
+            maximum number of clusters with criterion in {'maxclust', 'maxclust_monocrit'}.
         method : str, {'single', 'complete', 'average', 'weighted', 'centroid', 'median',
                 'ward'}, default='ward'
             Linkage criterion.
@@ -815,11 +827,7 @@ class AgglomerativeSP(ClusteringAlgorithm):
         criterion : str, {'inconsistent', 'distance', 'maxclust', 'monocrit',
             'maxclust_monocrit'}, default='maxclust'
             Criterion used to form a flat clustering (i.e., perform a horizontal cut in the
-            hierarchical tree)
-        t : int or float
-            Scalar parameter associated to the criterion used to form a flat clustering.
-            Threshold (float) with criterion in {'inconsistent', 'distance', 'monocrit'} or
-            maximum number of clusters with criterion in {'maxclust', 'maxclust_monocrit'}.
+            hierarchical tree).
         '''
         self._t = t
         self.n_clusters = n_clusters
@@ -1119,5 +1127,78 @@ class XMeansPC(ClusteringAlgorithm):
         encoder.set_encoding(pyencoder.type_encoding.CLUSTER_INDEX_LABELING)
         # Return cluster labels
         cluster_labels = np.array(encoder.get_clusters())
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        return cluster_labels
+# ------------------------------------------------------------------------------------------
+class AgglomerativeFC(ClusteringAlgorithm):
+    '''Agglomerative clustering algorithm.
+
+    Attributes
+    ----------
+    Z : ndarray of shape (n-1, 4)
+        Linkage matrix associated with the hierarchical clustering. At the i-th iteration
+        the clusterings with indices Z[i, 0] and Z[i, 1], with distance Z[i, 2], are merged,
+        forming a new cluster that contains Z[i, 3] original dataset items. All cluster
+        indices j >= n refer to the cluster formed in Z[j-n, :].
+
+    Notes
+    -----
+    The Agglomerative clustering algorithm is taken from Daniel Mullner fastcluster package
+    (http://danifold.net/fastcluster). Apart from one optional argument (`preserve_input`),
+    fastcluster implements the scipy Agglomerative clustering algorithm in a more efficient
+    way, being the associated classes and methods the same (https://docs.scipy.org/).
+    Further information can be found in both domains.
+    '''
+    def __init__(self, t, method='ward', metric='euclidean', criterion='maxclust',
+                 n_clusters=None):
+        '''Agglomerative clustering algorithm constructor.
+
+        Parameters
+        ----------
+        n_clusters : int, default=None
+            The number of clusters to find.
+        t : int or float
+            Scalar parameter associated to the criterion used to form a flat clustering.
+            Threshold (float) with criterion in {'inconsistent', 'distance', 'monocrit'} or
+            maximum number of clusters with criterion in {'maxclust', 'maxclust_monocrit'}.
+        method : str, {'single', 'complete', 'average', 'weighted', 'centroid', 'median',
+                'ward'}, default='ward'
+            Linkage criterion.
+        metric : str or function, default='euclidean'
+            Distance metric to use when the input data matrix is a ndarray of observation
+            vectors, otherwise ignored. Options: {'cityblock', 'euclidean', 'cosine', ...}.
+        criterion : str, {'inconsistent', 'distance', 'maxclust', 'monocrit',
+            'maxclust_monocrit'}, default='maxclust'
+            Criterion used to form a flat clustering (i.e., perform a horizontal cut in the
+            hierarchical tree).
+        '''
+        self._t = t
+        self.n_clusters = n_clusters
+        self._method = method
+        self._metric = metric
+        self._criterion = criterion
+        self._Z = None
+    # --------------------------------------------------------------------------------------
+    def perform_clustering(self, data_matrix):
+        '''Perform cluster analysis and return cluster label for each dataset item.
+
+        Parameters
+        ----------
+        data_matrix: ndarray of shape (n_items, n_features)
+            Data matrix containing the required data to perform cluster analysis.
+
+        Returns
+        -------
+        cluster_labels: ndarray of shape (n_items,)
+            Cluster label (int) assigned to each dataset item.
+        '''
+        # Perform hierarchical clustering and encode it in a linkage matrix
+        self.Z = fastclst.linkage(data_matrix, method=self._method, metric=self._metric,
+                                  preserve_input=False)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Perform horizontal cut in hierarchical tree and return cluster labels (form a flat
+        # clustering)
+        cluster_labels = sciclst.fcluster(self.Z, self.n_clusters,
+                                          criterion=self._criterion)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return cluster_labels
