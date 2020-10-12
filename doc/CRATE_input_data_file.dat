@@ -168,21 +168,6 @@
 
 
 
-#                                                                 Self-Consistent scheme [M]
-# ==========================================================================================
-# Meaning:   Self-consistent scheme employed to perform the update of the reference material
-#            properties.
-#
-# Syntax:    Self_Consistent_Scheme x
-#
-# x:         1 - Regression-based self-consistent scheme
-#            2 - Projection-based self-consistent scheme
-# ------------------------------------------------------------------------------------------
-[insert here]
-
-
-
-
 #                                                                      Clustering scheme [M]
 # ==========================================================================================
 # Meaning:   Clustering scheme employed to generate the Cluster-Reduced Representative
@@ -193,10 +178,16 @@
 #            x y [y]
 #            x y [y]
 #
-# x:         1 - K-Means
-#            2 - Mini-Batch K-Means
-#            3 - Birch
-#            4 - Gaussian Mixture
+# x:          1 - K-Means (source: scikit-learn)
+#             2 - K-Means (source: pyclustering)
+#             3 - Mini-Batch K-Means (source: scikit-learn)
+#             4 - Agglomerative (source: scikit-learn)
+#             5 - Agglomerative (source: scipy)
+#             6 - Agglomerative (source: fastcluster)
+#             7 - Birch (source: scikit-learn)
+#             8 - Birch (source: pyclustering)
+#             9 - Cure (source: pyclustering)
+#            10 - X-Means (source: pyclustering)
 #
 # y:         1 - Fourth-order local elastic strain concentration tensor
 #
@@ -330,6 +321,21 @@
 
 
 
+#                                                                 Self-Consistent scheme [O]
+# ==========================================================================================
+# Meaning:   Self-consistent scheme employed to perform the update of the reference material
+#            properties.
+#
+# Syntax:    Self_Consistent_Scheme x
+#
+# x:         1 - Regression-based self-consistent scheme (default)
+#            2 - Projection-based self-consistent scheme
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
 #                                    Self-Consistent scheme maximum number of iterations [O]
 # ==========================================================================================
 # Meaning:   Maximum number of iterations allowed for the convergence of the self-consistent
@@ -444,6 +450,20 @@
 #            x
 #
 # x:         float (default to 1e-6)
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
+#                                                        Clustering data standardization [O]
+# ==========================================================================================
+# Meaning:   Method employed to standardize the global clustering data matrix.
+#
+# Syntax:    Standardization_Method x
+#
+# x:         1 - Min-Max Scaler (default)
+#            2 - Standard Normal Distribution Scaler
 # ------------------------------------------------------------------------------------------
 [insert here]
 
