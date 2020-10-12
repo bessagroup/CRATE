@@ -37,6 +37,7 @@ def set_clustering_data(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict):
     n_voxels_dims = rg_dict['n_voxels_dims']
     # Get clustering data
     clustering_solution_method = clst_dict['clustering_solution_method']
+    standardization_method = clst_dict['standardization_method']
     clustering_scheme = clst_dict['clustering_scheme']
     # Compute total number of voxels
     n_voxels = np.prod(n_voxels_dims)
@@ -69,8 +70,6 @@ def set_clustering_data(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict):
     clustering_data.set_global_data_matrix(rve_elastic_database.rve_global_response)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     info.displayinfo('5', 'Standardizing cluster analysis global data matrix...')
-    # Set standardization algorithm
-    standardization_method = 1
     # Instantiate standardization algorithm
     if standardization_method == 1:
         standardizer = MinMaxScaler()

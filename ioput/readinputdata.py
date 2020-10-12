@@ -281,6 +281,17 @@ def readinputdatafile(input_file,dirs_dict):
     # Store spatial discretization file absolute path
     dirs_dict['discret_file_path'] = discret_file_path
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Read clustering global matrix data standardization method (optional). If the
+    # associated keyword is not found, then a default specification is assumed
+    keyword = 'Standardization_Method'
+    is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
+        max = 2
+        standardization_method = rproc.readtypeAkeyword(input_file, input_file_path,
+                                                        keyword, max)
+    else:
+        standardization_method = 1
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read VTK output options
     keyword = 'VTK_Output'
     is_found, keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
@@ -312,8 +323,8 @@ def readinputdatafile(input_file,dirs_dict):
     # Package data associated to the clustering
     info.displayinfo('5', 'Packaging clustering data...')
     clst_dict = packager.packrgclustering(clustering_scheme, clustering_ensemble_strategy,
-                                          clustering_solution_method, links_dict,
-                                          phase_n_clusters, rg_dict)
+                                          clustering_solution_method,standardization_method,
+                                          links_dict, phase_n_clusters, rg_dict)
     # Package data associated to the self-consistent scheme
     info.displayinfo('5', 'Packaging self-consistent scheme data...')
     scs_dict = packager.packagescs(self_consistent_scheme, scs_max_n_iterations,

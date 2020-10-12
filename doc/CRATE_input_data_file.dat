@@ -450,6 +450,20 @@
 
 
 
+#                                                        Clustering data standardization [O]
+# ==========================================================================================
+# Meaning:   Method employed to standardize the global clustering data matrix.
+#
+# Syntax:    Standardization_Method x
+#
+# x:         1 - Min-Max Scaler (default)
+#            2 - Standard Normal Distribution Scaler
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
 #                                                                VTK (XML format) output [O]
 # ==========================================================================================
 # Meaning:   Output of data associated to snapshots (macroscale loading increments) of the
