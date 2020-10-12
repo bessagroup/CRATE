@@ -17,6 +17,8 @@ import numpy as np
 import copy
 # Defining abstract base classes
 from abc import ABC, abstractmethod
+# Data preprocessing tools
+import sklearn.preprocessing as skpp
 # Display messages
 import ioput.info as info
 # RVE response database
@@ -65,6 +67,21 @@ def set_clustering_data(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict):
     info.displayinfo('5', 'Computing cluster analysis global data matrix...')
     # Compute clustering global data matrix containing all clustering features
     clustering_data.set_global_data_matrix(rve_elastic_database.rve_global_response)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    info.displayinfo('5', 'Standardizing cluster analysis global data matrix...')
+    # Set standardization algorithm
+    standardization_method = 1
+    # Instantiate standardization algorithm
+    if standardization_method == 1:
+        standardizer = MinMaxScaler()
+    elif standardization_method == 2:
+        standardizer = StandardScaler()
+    else:
+        raise RuntimeError('Unknown standardization method.')
+    # Standardize clustering global data matrix
+    clustering_data.global_data_matrix = \
+        standardizer.get_standardized_data_matrix(clustering_data.global_data_matrix)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Store clustering global data matrix
     clst_dict['clst_quantities'] = clustering_data.global_data_matrix
 #
@@ -328,4 +345,77 @@ class StrainConcentrationTensor(FeatureAlgorithm):
     '''Fourth-order elastic strain concentration tensor.'''
     def get_feature_data_matrix(self, rve_response):
         data_matrix = copy.deepcopy(rve_response)
+        return data_matrix
+#
+#                                                            Data standardization algorithms
+# ==========================================================================================
+class Standardizer(ABC):
+    '''Data standardization algorithm interface.'''
+    @abstractmethod
+    def __init__(self):
+        '''Standardization algorithm constructor.'''
+        pass
+    # --------------------------------------------------------------------------------------
+    @abstractmethod
+    def get_standardized_data_matrix(self, data_matrix):
+        '''Standardize provided data matrix.
+
+        Parameters
+        ----------
+        data_matrix: ndarray of shape (n_items, n_features)
+            Data matrix to be standardized.
+
+        Returns
+        -------
+        data_matrix: ndarray of shape (n_items, n_features)
+            Transformed data matrix.
+        '''
+        pass
+# ------------------------------------------------------------------------------------------
+class MinMaxScaler(Standardizer):
+    '''Transform features by scaling each feature to a given min-max range.
+
+    Attributes
+    ----------
+    _feature_range : tuple(min, max), default=(0, 1)
+        Desired range of transformed data.
+
+    Notes
+    -----
+    The Min-Max scaling algorithm is taken from scikit-learn (https://scikit-learn.org).
+    Further information can be found in there.
+    '''
+    def __init__(self, feature_range=(0, 1)):
+        '''Standardization algorithm constructor.'''
+        self._feature_range = feature_range
+    # --------------------------------------------------------------------------------------
+    def get_standardized_data_matrix(self, data_matrix):
+        '''Standardize provided data matrix.'''
+        # Instatiante standardizer
+        standardizer = skpp.MinMaxScaler(feature_range=self._feature_range, copy=False)
+        # Fit scaling parameters and transform data
+        data_matrix = standardizer.fit_transform(data_matrix)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        return data_matrix
+# ------------------------------------------------------------------------------------------
+class StandardScaler(Standardizer):
+    '''Transform features by removing the mean and scaling to unit variance (standard
+    normal distribution).
+
+    Notes
+    -----
+    The Standard scaling algorithm is taken from scikit-learn (https://scikit-learn.org).
+    Further information can be found in there.
+    '''
+    def __init__(self, feature_range=(0, 1)):
+        '''Standardization algorithm constructor.'''
+        self._feature_range = feature_range
+    # --------------------------------------------------------------------------------------
+    def get_standardized_data_matrix(self, data_matrix):
+        '''Standardize provided data matrix.'''
+        # Instatiante standardizer
+        standardizer = skpp.StandardScaler(with_mean=True, with_std=True, copy=False)
+        # Fit scaling parameters and transform data
+        data_matrix = standardizer.fit_transform(data_matrix)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return data_matrix
