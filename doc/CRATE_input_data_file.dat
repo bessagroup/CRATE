@@ -168,21 +168,6 @@
 
 
 
-#                                                                 Self-Consistent scheme [M]
-# ==========================================================================================
-# Meaning:   Self-consistent scheme employed to perform the update of the reference material
-#            properties.
-#
-# Syntax:    Self_Consistent_Scheme x
-#
-# x:         1 - Regression-based self-consistent scheme
-#            2 - Projection-based self-consistent scheme
-# ------------------------------------------------------------------------------------------
-[insert here]
-
-
-
-
 #                                                                      Clustering scheme [M]
 # ==========================================================================================
 # Meaning:   Clustering scheme employed to generate the Cluster-Reduced Representative
@@ -324,6 +309,21 @@
 # Syntax:    Max_Consecutive_Inc_Cuts x
 #
 # x:         integer (default to 5)
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
+#                                                                 Self-Consistent scheme [O]
+# ==========================================================================================
+# Meaning:   Self-consistent scheme employed to perform the update of the reference material
+#            properties.
+#
+# Syntax:    Self_Consistent_Scheme x
+#
+# x:         1 - Regression-based self-consistent scheme (default)
+#            2 - Projection-based self-consistent scheme
 # ------------------------------------------------------------------------------------------
 [insert here]
 

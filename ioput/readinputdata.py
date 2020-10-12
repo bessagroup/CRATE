@@ -112,7 +112,7 @@ def readinputdatafile(input_file,dirs_dict):
         self_consistent_scheme = rproc.readtypeAkeyword(input_file, input_file_path,
                                                         keyword, max)
     else:
-        self_consistent_scheme = 2
+        self_consistent_scheme = 1
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read self consistent scheme maximum number of iterations (optional). If the associated
     # keyword is not found, then a default specification is assumed
