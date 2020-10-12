@@ -178,10 +178,16 @@
 #            x y [y]
 #            x y [y]
 #
-# x:         1 - K-Means
-#            2 - Mini-Batch K-Means
-#            3 - Birch
-#            4 - Gaussian Mixture
+# x:          1 - K-Means (source: scikit-learn)
+#             2 - K-Means (source: pyclustering)
+#             3 - Mini-Batch K-Means (source: scikit-learn)
+#             4 - Agglomerative (source: scikit-learn)
+#             5 - Agglomerative (source: scipy)
+#             6 - Agglomerative (source: fastcluster)
+#             7 - Birch (source: scikit-learn)
+#             8 - Birch (source: pyclustering)
+#             9 - Cure (source: pyclustering)
+#            10 - X-Means (source: pyclustering)
 #
 # y:         1 - Fourth-order local elastic strain concentration tensor
 #
