@@ -19,7 +19,7 @@ import ioput.info as info
 # Display errors, warnings and built-in exceptions
 import ioput.errors as errors
 # CRVE generation
-from clustering.crve import CRVE
+from clustering.crve import SCRVE
 #
 #                                   Set Cluster-reduced Representative Volume Element (CRVE)
 # ==========================================================================================
@@ -39,13 +39,13 @@ def set_crve_data(dirs_dict, mat_dict, rg_dict, clst_dict):
     phase_n_clusters = clst_dict['phase_n_clusters']
     clst_quantities = clst_dict['clst_quantities']
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    info.displayinfo('5', 'Computing Cluster-reduced Representative Volume Element ' +
-                          '(CRVE)...')
-    # Instatiate Cluster-reduced Representative Volume Element (CRVE)
-    crve = CRVE(clustering_scheme, clustering_ensemble_strategy, phase_n_clusters, rve_dims,
-                regular_grid, material_phases)
+    info.displayinfo('5', 'Computing Static Cluster-reduced Representative Volume ' +
+                          'Element (S-CRVE)...')
+    # Instatiate Static Cluster-reduced Representative Volume Element (S-CRVE)
+    crve = SCRVE(phase_n_clusters, rve_dims, regular_grid, material_phases,
+                 clustering_scheme, clustering_ensemble_strategy)
     # Perform prescribed clustering scheme to generate the CRVE
-    crve.get_crve(clst_quantities)
+    crve.get_scrve(clst_quantities)
     # Store CRVE descriptors
     clst_dict['voxels_clusters'] = crve.voxels_clusters
     clst_dict['phase_clusters'] = crve.phase_clusters

@@ -69,20 +69,19 @@ def get_available_clustering_algorithms():
                                 '10': 'X-Means (pyclustering)'}
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return available_clustering_alg
+
+
 #
 #                                                                                 CRVE class
 # ==========================================================================================
 class CRVE:
     '''Cluster-reduced Representative Volume Element.
 
-    This class provides all the required attributes and methods associated with the
-    generation of a Cluster-reduced Representative Volume Element (CRVE).
+    Base class of a Cluster-reduced Representative Volume Element (CRVE) from which
+    Static CRVE (S-CRVE) and Adaptive CRVE (XA-CRVE) are to be derived from.
 
     Attributes
     ----------
-    _clustering_solutions : list
-        List containing one or more RVE clustering solutions (ndarray of shape
-        (n_clusters,)).
     _n_voxels_dims : list
         Number of voxels in each dimension of the regular grid (spatial discretization of
         the RVE).
@@ -98,17 +97,16 @@ class CRVE:
     clusters_f : dict
         Clusters volume fraction (item, float) associated to each material phase (key, str).
     '''
-    def __init__(self, clustering_scheme, clustering_ensemble_strategy, phase_n_clusters,
-                 rve_dims, regular_grid, material_phases):
+    def __new__(cls, *args, **kwargs):
+        if cls is CRVE:
+            raise TypeError("CRVE base class may not be instantiated")
+        return super().__new__(cls)
+    # --------------------------------------------------------------------------------------
+    def __init__(self, phase_n_clusters, rve_dims, regular_grid, material_phases):
         '''Cluster-reduced Representative Volume Element constructor.
 
         Parameters
         ----------
-        clustering_scheme : ndarray of shape (n_clusterings, 3)
-            Prescribed global clustering scheme to generate the CRVE. Each row is associated
-            with a unique RVE clustering, characterized by a clustering algorithm
-            (col 1, int), a list of features (col 2, list of int) and a list of the feature
-            data matrix' indexes (col 3, list of int).
         phase_n_clusters : dict
             Number of clusters (item, int) prescribed for each material phase (key, str).
         rve_dims : list
@@ -119,12 +117,9 @@ class CRVE:
         material_phases : list
             RVE material phases labels (str).
         '''
-        self._clustering_scheme = clustering_scheme
-        self._clustering_ensemble_strategy = clustering_ensemble_strategy
         self._material_phases = material_phases
         self._phase_n_clusters = phase_n_clusters
         self._rve_dims = rve_dims
-        self.clustering_solutions = None
         self.voxels_clusters = None
         self.phase_clusters = None
         self.clusters_f = None
@@ -135,55 +130,6 @@ class CRVE:
         # Get material phases' voxels' 1D flat indexes
         self._phase_voxel_flatidx = \
             type(self)._get_phase_idxs(regular_grid, material_phases)
-    # --------------------------------------------------------------------------------------
-    def get_crve(self, global_data_matrix):
-        '''Generate CRVE from one or more RVE clustering solutions.
-
-        Main method commanding the generation of the Cluster-Reduced Representative Volume
-        Element (CRVE): (1) performs the prescribed clustering scheme on the provided global
-        data matrix, acquiring one or more RVE clustering solutions; (2) obtains a unique
-        clustering solution (consensus solution) that materializes the CRVE; (3) computes
-        several descriptors of the CRVE.
-
-        Parameters
-        ----------
-        global_data_matrix : ndarray of shape (n_voxels, n_features)
-            Data matrix containing the required data to perform all the RVE clusterings
-            prescribed in the clustering scheme.
-        '''
-        # Loop over prescribed RVE clustering solutions
-        for i_clst in range(self._clustering_scheme.shape[0]):
-            # Get clustering algorithm
-            clustering_method = self._clustering_scheme[i_clst, 0]
-            # Get clustering features' columns
-            feature_cols = self._clustering_scheme[i_clst, 2]
-            # Get RVE clustering data matrix
-            rve_data_matrix = mop.getcondmatrix(global_data_matrix,
-                                                list(range(global_data_matrix.shape[0])),
-                                                feature_cols)
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            info.displayinfo('5', 'RVE clustering (' + str(i_clst + 1) + ' of ' +
-                             str(self._clustering_scheme.shape[0]) + ')...', 2)
-            # Instantiate RVE clustering
-            rve_clustering = RVEClustering(clustering_method, self._phase_n_clusters,
-                                           self._n_voxels, self._material_phases,
-                                           self._phase_voxel_flatidx)
-            # Perform RVE clustering
-            rve_clustering.perform_rve_clustering(rve_data_matrix)
-            # Assemble RVE clustering
-            self._add_new_clustering(rve_clustering.labels)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Get RVE consensus clustering solution
-        info.displayinfo('5', 'Building CRVE (RVE consensus clustering)...', 2)
-        self._set_consensus_clustering()
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        info.displayinfo('5', 'Computing CRVE descriptors...', 2)
-        # Reassign and sort RVE clustering labels
-        self._sort_cluster_labels()
-        # Store cluster labels belonging to each material phase
-        self._set_phase_clusters()
-        # Compute material clusters' volume fraction
-        self._set_clusters_vf()
     # --------------------------------------------------------------------------------------
     @staticmethod
     def _get_phase_idxs(regular_grid, material_phases):
@@ -237,32 +183,6 @@ class CRVE:
             n_voxels_cluster = np.sum(self.voxels_clusters == cluster)
             self.clusters_f[str(cluster)] = (n_voxels_cluster*voxel_vol)/rve_vol
     # --------------------------------------------------------------------------------------
-    def _add_new_clustering(self, rve_clustering):
-        '''Add new RVE clustering to collection of clustering solutions.
-
-        Parameters
-        ----------
-        rve_clustering : ndarray of shape (n_clusters,)
-            Cluster label (int) assigned to each RVE voxel.
-        '''
-        self.clustering_solutions = []
-        self.clustering_solutions.append(rve_clustering)
-    # --------------------------------------------------------------------------------------
-    def _set_consensus_clustering(self):
-        '''Set a unique RVE clustering solution (consensus solution).
-
-        Notes
-        -----
-        Even if the clustering scheme only accounts for a single RVE clustering solution,
-        this method must be called in order to the set unique CRVE clustering solution.
-        '''
-        # Get RVE consensus clustering solution according to the prescribed clustering
-        # ensemble strategy
-        if self._clustering_ensemble_strategy == 0:
-            # Build CRVE from the single RVE clustering solution
-            self.voxels_clusters = np.reshape(np.array(self.clustering_solutions[0],
-                                              dtype=int),self._n_voxels_dims)
-    # --------------------------------------------------------------------------------------
     def _sort_cluster_labels(self):
         '''Reassign and sort CRVE cluster labels material phasewise.
 
@@ -312,6 +232,134 @@ class CRVE:
         for voxel_idx in it.product(*[list(range(self._n_voxels_dims[i])) \
                 for i in range(len(self._n_voxels_dims))]):
             self.voxels_clusters[voxel_idx] = sort_dict[self.voxels_clusters[voxel_idx]]
+#
+#                                                                               S-CRVE class
+# ==========================================================================================
+class SCRVE(CRVE):
+    '''Static Cluster-reduced Representative Volume Element.
+
+    This class provides all the required attributes and methods associated with the
+    generation of a Static Cluster-reduced Representative Volume Element (S-CRVE).
+
+    Attributes
+    ----------
+    _n_voxels_dims : list
+        Number of voxels in each dimension of the regular grid (spatial discretization of
+        the RVE).
+    _n_voxels : int
+        Total number of voxels of the regular grid (spatial discretization of the RVE).
+    _phase_voxel_flatidx : dict
+        Flat (1D) voxels' indexes (item, list) associated to each material phase (key, str).
+    _clustering_solutions : list
+        List containing one or more RVE clustering solutions (ndarray of shape
+        (n_clusters,)).
+    voxels_clusters : ndarray
+        Regular grid of voxels (spatial discretization of the RVE), where each entry
+        contains the cluster label (int) assigned to the corresponding pixel/voxel.
+    phase_clusters : dict
+        Clusters labels (item, list of int) associated to each material phase (key, str).
+    clusters_f : dict
+        Clusters volume fraction (item, float) associated to each material phase (key, str).
+    '''
+    def __init__(self, phase_n_clusters, rve_dims, regular_grid, material_phases,
+                 clustering_scheme, clustering_ensemble_strategy):
+        '''Static Cluster-reduced Representative Volume Element constructor.
+
+        Parameters
+        ----------
+        clustering_scheme : ndarray of shape (n_clusterings, 3)
+            Prescribed global clustering scheme to generate the CRVE. Each row is associated
+            with a unique RVE clustering, characterized by a clustering algorithm
+            (col 1, int), a list of features (col 2, list of int) and a list of the feature
+            data matrix' indexes (col 3, list of int).
+        phase_n_clusters : dict
+            Number of clusters (item, int) prescribed for each material phase (key, str).
+        rve_dims : list
+            RVE size in each dimension.
+        regular_grid : ndarray
+            Regular grid of voxels (spatial discretization of the RVE), where each entry
+            contains the material phase label (int) assigned to the corresponding voxel.
+        material_phases : list
+            RVE material phases labels (str).
+        '''
+        super().__init__(phase_n_clusters, rve_dims, regular_grid, material_phases)
+        self._clustering_scheme = clustering_scheme
+        self._clustering_ensemble_strategy = clustering_ensemble_strategy
+    # --------------------------------------------------------------------------------------
+    def get_scrve(self, global_data_matrix):
+        '''Generate S-CRVE from one or more RVE clustering solutions.
+
+        Main method commanding the generation of the Static Cluster-Reduced Representative
+        Volume Element (S-CRVE): (1) performs the prescribed clustering scheme on the
+        provided global data matrix, acquiring one or more RVE clustering solutions;
+        (2) obtains a unique clustering solution (consensus solution) that materializes the
+        S-CRVE; (3) computes several descriptors of the S-CRVE.
+
+        Parameters
+        ----------
+        global_data_matrix : ndarray of shape (n_voxels, n_features)
+            Data matrix containing the required data to perform all the RVE clusterings
+            prescribed in the clustering scheme.
+        '''
+        # Loop over prescribed RVE clustering solutions
+        for i_clst in range(self._clustering_scheme.shape[0]):
+            # Get clustering algorithm
+            clustering_method = self._clustering_scheme[i_clst, 0]
+            # Get clustering features' columns
+            feature_cols = self._clustering_scheme[i_clst, 2]
+            # Get RVE clustering data matrix
+            rve_data_matrix = mop.getcondmatrix(global_data_matrix,
+                                                list(range(global_data_matrix.shape[0])),
+                                                feature_cols)
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            info.displayinfo('5', 'RVE clustering (' + str(i_clst + 1) + ' of ' +
+                             str(self._clustering_scheme.shape[0]) + ')...', 2)
+            # Instantiate RVE clustering
+            rve_clustering = RVEClustering(clustering_method, self._phase_n_clusters,
+                                           self._n_voxels, self._material_phases,
+                                           self._phase_voxel_flatidx)
+            # Perform RVE clustering
+            rve_clustering.perform_rve_clustering(rve_data_matrix)
+            # Assemble RVE clustering
+            self._add_new_clustering(rve_clustering.labels)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Get RVE consensus clustering solution
+        info.displayinfo('5', 'Building S-CRVE (RVE consensus clustering)...', 2)
+        self._set_consensus_clustering()
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        info.displayinfo('5', 'Computing S-CRVE descriptors...', 2)
+        # Reassign and sort RVE clustering labels
+        self._sort_cluster_labels()
+        # Store cluster labels belonging to each material phase
+        self._set_phase_clusters()
+        # Compute material clusters' volume fraction
+        self._set_clusters_vf()
+    # --------------------------------------------------------------------------------------
+    def _add_new_clustering(self, rve_clustering):
+        '''Add new RVE clustering to collection of clustering solutions.
+
+        Parameters
+        ----------
+        rve_clustering : ndarray of shape (n_clusters,)
+            Cluster label (int) assigned to each RVE voxel.
+        '''
+        self.clustering_solutions = []
+        self.clustering_solutions.append(rve_clustering)
+    # --------------------------------------------------------------------------------------
+    def _set_consensus_clustering(self):
+        '''Set a unique RVE clustering solution (consensus solution).
+
+        Notes
+        -----
+        Even if the clustering scheme only accounts for a single RVE clustering solution,
+        this method must be called in order to the set unique S-CRVE clustering solution.
+        '''
+        # Get RVE consensus clustering solution according to the prescribed clustering
+        # ensemble strategy
+        if self._clustering_ensemble_strategy == 0:
+            # Build S-CRVE from the single RVE clustering solution
+            self.voxels_clusters = np.reshape(np.array(self.clustering_solutions[0],
+                                              dtype=int),self._n_voxels_dims)
 #
 #                                                                             RVE clustering
 # ==========================================================================================
