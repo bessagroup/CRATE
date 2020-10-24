@@ -548,6 +548,28 @@ class ClusteringAlgorithm(ABC):
         '''
         pass
 # ------------------------------------------------------------------------------------------
+class AgglomerativeAlgorithm(ClusteringAlgorithm):
+    '''Hierarchical agglomerative interface.'''
+    @abstractmethod
+    def get_linkage_matrix(self):
+        '''Get hierarchical agglomerative clustering linkage matrix.
+
+        Returns
+        -------
+        linkage_matrix : ndarray of shape (n-1, 4)
+                         Linkage matrix associated with the hierarchical agglomerative
+                         clustering. At the i-th iteration the clusterings with indices
+                         Z[i, 0] and Z[i, 1], with distance Z[i, 2], are merged, forming a
+                         new cluster that contains Z[i, 3] original dataset items. All
+                         cluster indices j >= n refer to the cluster formed in Z[j-n, :].
+
+        Notes
+        -----
+        The hierarchical agglomerative clustering linkage matrix follows the definition of
+        scipy (https://docs.scipy.org/) agglomerative clustering algorithm.
+        '''
+        pass
+# ------------------------------------------------------------------------------------------
 class KMeansSK(ClusteringAlgorithm):
     '''K-Means clustering algorithm.
 
@@ -838,16 +860,17 @@ class AgglomerativeSK(ClusteringAlgorithm):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return cluster_labels
 # ------------------------------------------------------------------------------------------
-class AgglomerativeSP(ClusteringAlgorithm):
+class AgglomerativeSP(AgglomerativeAlgorithm):
     '''Agglomerative clustering algorithm.
 
     Attributes
     ----------
-    Z : ndarray of shape (n-1, 4)
-        Linkage matrix associated with the hierarchical clustering. At the i-th iteration
-        the clusterings with indices Z[i, 0] and Z[i, 1], with distance Z[i, 2], are merged,
-        forming a new cluster that contains Z[i, 3] original dataset items. All cluster
-        indices j >= n refer to the cluster formed in Z[j-n, :].
+    _linkage_matrix : ndarray of shape (n-1, 4)
+                      Linkage matrix associated with the hierarchical clustering. At the
+                      i-th iteration the clusterings with indices Z[i, 0] and Z[i, 1], with
+                      distance Z[i, 2], are merged, forming a new cluster that contains
+                      Z[i, 3] original dataset items. All cluster indices j >= n refer to
+                      the cluster formed in Z[j-n, :].
 
     Notes
     -----
@@ -882,7 +905,7 @@ class AgglomerativeSP(ClusteringAlgorithm):
         self._method = method
         self._metric = metric
         self._criterion = criterion
-        self._Z = None
+        self._linkage_matrix = None
     # --------------------------------------------------------------------------------------
     def perform_clustering(self, data_matrix):
         '''Perform cluster analysis and return cluster label for each dataset item.
@@ -898,14 +921,37 @@ class AgglomerativeSP(ClusteringAlgorithm):
             Cluster label (int) assigned to each dataset item.
         '''
         # Perform hierarchical clustering and encode it in a linkage matrix
-        self.Z = sciclst.linkage(data_matrix, method=self._method, metric=self._metric)
+        self._linkage_matrix = sciclst.linkage(data_matrix, method=self._method,
+                                               metric=self._metric)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Perform horizontal cut in hierarchical tree and return cluster labels (form a flat
         # clustering)
-        cluster_labels = sciclst.fcluster(self.Z, self.n_clusters,
+        cluster_labels = sciclst.fcluster(self._linkage_matrix, self.n_clusters,
                                           criterion=self._criterion)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return cluster_labels
+    # --------------------------------------------------------------------------------------
+    def get_linkage_matrix(self):
+        '''Get hierarchical agglomerative clustering linkage matrix.
+
+        Returns
+        -------
+        linkage_matrix : ndarray of shape (n-1, 4)
+                         Linkage matrix associated with the hierarchical agglomerative
+                         clustering. At the i-th iteration the clusterings with indices
+                         Z[i, 0] and Z[i, 1], with distance Z[i, 2], are merged, forming a
+                         new cluster that contains Z[i, 3] original dataset items. All
+                         cluster indices j >= n refer to the cluster formed in Z[j-n, :].
+
+        Notes
+        -----
+        The hierarchical agglomerative clustering linkage matrix follows the definition of
+        scipy (https://docs.scipy.org/) agglomerative clustering algorithm.
+        '''
+        if self._linkage_matrix is None:
+            raise ValueError('Hierarchical agglomerative clustering linkage matrix has' +
+                             'not been computed yet.')
+        return self._linkage_matrix
 # ------------------------------------------------------------------------------------------
 class BirchPC(ClusteringAlgorithm):
     '''Birch clustering algorithm.
@@ -1250,3 +1296,357 @@ class AgglomerativeFC(ClusteringAlgorithm):
                                           criterion=self._criterion)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return cluster_labels
+#
+#                                                                              HA-CRVE class
+# ==========================================================================================
+class HACRVE(CRVE):
+    '''Hierarchical Adaptive Cluster-reduced Representative Volume Element.
+
+    This class provides all the required attributes and methods associated with the
+    generation and update of a Hierarchical Adaptive Cluster-reduced Representative Volume
+    Element (HA-CRVE).
+
+    Attributes
+    ----------
+    _n_voxels_dims : list
+        Number of voxels in each dimension of the regular grid (spatial discretization of
+        the RVE).
+    _n_voxels : int
+        Total number of voxels of the regular grid (spatial discretization of the RVE).
+    _phase_voxel_flatidx : dict
+        Flat (1D) voxels' indexes (item, list) associated to each material phase (key, str).
+    _phase_linkage_matrix : dict
+        Linkage matrix (item, ndarray of shape (n_voxels-1, 4)) associated with the
+        hierarchical agglomerative clustering of each material phase (key, str).
+    _phase_map_cluster_node : dict
+        Cluster-node mapping (item, dict with tree node id (item, int) associated to each
+        cluster label (item, str)) for each material phase (key, str).
+    _adaptive_step : int
+        Counter of hierarchical adaptive clustering steps, with 0 associated with the
+        hierarchical agglomerative base clustering.
+    voxels_clusters : ndarray
+        Regular grid of voxels (spatial discretization of the RVE), where each entry
+        contains the cluster label (int) assigned to the corresponding pixel/voxel.
+    phase_clusters : dict
+        Clusters labels (item, list of int) associated to each material phase (key, str).
+    clusters_f : dict
+        Clusters volume fraction (item, float) associated to each material phase (key, str).
+    '''
+    def __init__(self, phase_n_clusters, rve_dims, regular_grid, material_phases,
+                 split_greed=0.5):
+        '''Hierarchical Adaptive Cluster-reduced Representative Volume Element constructor.
+
+        Parameters
+        ----------
+        phase_n_clusters : dict
+            Number of clusters (item, int) prescribed for each material phase (key, str).
+        rve_dims : list
+            RVE size in each dimension.
+        regular_grid : ndarray
+            Regular grid of voxels (spatial discretization of the RVE), where each entry
+            contains the material phase label (int) assigned to the corresponding voxel.
+        material_phases : list
+            RVE material phases labels (str).
+        split_greed : float, default=0.5
+            Cluster splitting greediness parameter contained between 0 and 1 (included).
+            The lower bound (0) prevents any cluster to be splitted, while the upper bound
+            (1) performs the maximum number splits of each cluster (single-voxel clusters).
+        '''
+        super().__init__(phase_n_clusters, rve_dims, regular_grid, material_phases)
+        self._split_greed = split_greed
+        self._phase_linkage_matrix = None
+        self._phase_map_cluster_node = {}
+        self._adaptive_step = 0
+    # --------------------------------------------------------------------------------------
+    def get_base_clustering(self, data_matrix):
+        '''Perform the RVE hierarchical agglomerative base clustering-based domain
+        decomposition.
+
+        Instantiates a given hierarchical agglomerative clustering algorithm and performs
+        the RVE hierarchical agglomerative base clustering-based domain decomposition
+        (hierarchical tree building and horizontal cut) based on the provided data matrix.
+
+        Parameters
+        ----------
+        data_matrix : ndarray of shape (n_voxels, n_features)
+            Data matrix containing the required data to perform the RVE clustering.
+
+        Notes
+        -----
+        The clustering is performed independently for each RVE's material phase. With the
+        exception of the number of clusters, which is in general different for each material
+        phase, the clustering algorithm and associated parameters remain the same for all
+        material phases.
+        '''
+        # Instatiate Agglomerative clustering
+        clst_alg = AgglomerativeSP(0, n_clusters=None, method='ward',
+                                   metric='euclidean', criterion='maxclust')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Initialize linkage matrices dictionary
+        self._phase_linkage_matrix = {}
+        # Initialize RVE hierarchical agglomerative base clustering
+        labels = np.full(self._n_voxels, -1, dtype=int)
+        # Initialize label offset (avoid that different material phases share the same
+        # labels)
+        label_offset = 0
+        # Loop over material phases
+        for mat_phase in self._material_phases:
+            # Get material phase's voxels indexes
+            voxels_idxs = self._phase_voxel_flatidx[mat_phase]
+            # Set material phase base number of clusters
+            clst_alg.n_clusters = self._phase_n_clusters[mat_phase]
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Get material phase data matrix
+            phase_data_matrix = mop.getcondmatrix(data_matrix, voxels_idxs,
+                                                  list(range(data_matrix.shape[1])))
+            # Perform material phase hierarchical agglomerative base clustering
+            # (hierarchical tree horizontal cut)
+            cluster_labels = clst_alg.perform_clustering(phase_data_matrix)
+            # Check number of clusters formed
+            if len(set(cluster_labels)) != self._phase_n_clusters[mat_phase]:
+                raise RuntimeError('The number of clusters (' +
+                                   str(len(set(cluster_labels))) +
+                                   ') obtained for material phase ' + mat_phase + ' is ' +
+                                   'different from the prescribed number of clusters (' +
+                                   str(self._phase_n_clusters[mat_phase]) + ').')
+            # Store material phase hierarchical agglomerative base clustering linkage matrix
+            self._phase_linkage_matrix[mat_phase] = clst_alg.get_linkage_matrix()
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Assemble material phase cluster labels
+            labels[voxels_idxs] = label_offset + cluster_labels
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Update label offset
+            if not ioutil.checkposint(clst_alg.n_clusters):
+                raise RuntimeError('Invalid number of clusters.')
+            else:
+                label_offset = label_offset + clst_alg.n_clusters
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Check if all the voxels have been labeled
+        if np.any(labels == -1):
+            raise RuntimeError('At least one RVE domain point has not been labeled' +
+                               'during the cluster analysis.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Build base CRVE from the hierarchical agglomerative base clustering
+        info.displayinfo('5', 'Building HA-CRVE base clustering...', 2)
+        self.voxels_clusters = np.reshape(np.array(labels, dtype=int), self._n_voxels_dims)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        info.displayinfo('5', 'Computing HA-CRVE descriptors...', 2)
+        # Store cluster labels belonging to each material phase
+        self._set_phase_clusters()
+        # Compute material clusters' volume fraction
+        self._set_clusters_vf()
+    # --------------------------------------------------------------------------------------
+    def perform_adaptive_clustering(self, target_clusters):
+        '''Perform a hierarchical adaptive clustering refinement step.
+
+        Refine the provided target clusters by splitting them according to the hierarchical
+        agglomerative tree, prioritizing child nodes by descending order of linkage
+        distance.
+
+        Parameters
+        ----------
+        target_clusters : list
+            List with the labels (int) of clusters to be refined.
+
+        Returns
+        -------
+        adaptive_clustering_map : dict
+            List of new cluster labels (item, list of int) resulting from the refinement of
+            each target cluster (key, str).
+        adaptive_tree_node_map : dict
+            List of new cluster tree node ids (item, list of int) resulting from the split
+            of each target cluster tree node id (key, str).
+
+        Notes
+        -----
+        Given that the hierarchical agglomerative base clustering is performed independently
+        for each RVE's material phase, so is the adaptive clustering refinement, i.e., each
+        material phase has an associated hierarchical agglomerative tree.
+        '''
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Check for duplicated target clusters
+        if len(target_clusters) != len(np.unique(target_clusters)):
+            raise RuntimeError('List of target clusters contains duplicated labels.')
+        # Check for unexistent target clusters
+        for target_cluster in target_clusters:
+            is_exist = False
+            for mat_phase in self._material_phases:
+                if target_cluster in self.phase_clusters[mat_phase]:
+                    is_exist = True
+                    break
+            if not is_exist:
+                raise RuntimeError('Target cluster ' + str(target_cluster) + ' does not ' +
+                                   'exist in the current CRVE clustering.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Increment adaptive clustering refinement step counter
+        self._adaptive_step += 1
+        # Initialize adaptive clustering mapping dictionary
+        adaptive_clustering_map = {str(old_cluster): [] for old_cluster in target_clusters}
+        # Initialize adaptive tree node mapping dictionary (only validation purposes)
+        adaptive_tree_node_map = {}
+        # Get RVE hierarchical agglomerative base clustering
+        labels = self.voxels_clusters.flatten()
+        # Get maximum cluster label in RVE hierarchical agglomerative base clustering (avoid
+        # that new cluster labels override existing ones)
+        new_cluster_label = max(labels)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Loop over material phases
+        for mat_phase in self._material_phases:
+            # Get material phase cluster labels (conversion to int32 is required to avoid
+            # raising a TypeError in scipy hierarchy leaders function)
+            cluster_labels = labels[self._phase_voxel_flatidx[mat_phase]].astype('int32')
+            # Convert hierarchical original clustering linkage matrix into tree object
+            rootnode, nodelist = sciclst.to_tree(self._phase_linkage_matrix[mat_phase],
+                                                 rd=True)
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Build initial cluster-node mapping between cluster labels and tree nodes
+            # associated with the hierarchical agglomerative base clustering
+            if not mat_phase in self._phase_map_cluster_node.keys():
+                # Get root nodes of hierarchical clustering corresponding to an horizontal
+                # cut defined by a flat clustering assignment vector. L contains the tree
+                # nodes ids while M contains the corresponding cluster labels
+                L, M = sciclst.leaders(self._phase_linkage_matrix[mat_phase],
+                                       cluster_labels)
+                # Build initial cluster-node mapping
+                self._phase_map_cluster_node[mat_phase] = dict(zip([str(x) for x in M], L))
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Loop over target clusters
+            for i in range(len(target_clusters)):
+                # Get target cluster label
+                target_cluster = target_clusters[i]
+                # If target cluster label belongs to the current material phase, then get
+                # target cluster tree node instance. Otherwise skip to the next target
+                # cluster
+                if str(target_cluster) in self._phase_map_cluster_node[mat_phase].keys():
+                    target_node = nodelist[
+                        self._phase_map_cluster_node[mat_phase][str(target_cluster)]]
+                else:
+                    continue
+                # Get total number of leaf nodes associated to target node
+                n_leaves = target_node.get_count()
+                # Compute total number of tree node splits
+                n_splits = int(np.round(self._split_greed*(n_leaves - 1)))
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Initialize child nodes list
+                child_nodes = []
+                # Initialize child target nodes list
+                child_target_nodes = []
+                # Split loop
+                for i_split in range(n_splits):
+                    # Set node to be splitted
+                    if i_split == 0:
+                        # In the first split operation, the node to be splitted is the
+                        # target cluster tree node
+                        node_to_split = target_node
+                    else:
+                        # Get maximum linkage distance child target node and remove it from
+                        # the child target nodes list
+                        node_to_split = child_target_nodes[0]
+                        child_target_nodes.pop(0)
+                    # Loop over child target node's left and right child nodes
+                    for node in [node_to_split.get_left(), node_to_split.get_right()]:
+                        if node.is_leaf():
+                            # Append to child nodes list if leaf node
+                            child_nodes.append(node)
+                        else:
+                            # Append to child target nodes list if non-leaf node
+                            child_target_nodes = \
+                                self.add_to_tree_node_list(child_target_nodes, node)
+                # Add remaining child target nodes to child nodes list
+                child_nodes += child_target_nodes
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Initialize target cluster mapping
+                adaptive_clustering_map[str(target_cluster)] = []
+                # Remove target cluster from cluster node mapping
+                self._phase_map_cluster_node[mat_phase].pop(str(target_cluster))
+                # Update target cluster mapping and flat clustering labels
+                for node in child_nodes:
+                    # Increment new cluster label
+                    new_cluster_label += 1
+                    # Add new cluster to target cluster mapping
+                    adaptive_clustering_map[str(target_cluster)].append(new_cluster_label)
+                    # Update flat clustering labels
+                    cluster_labels[node.pre_order()] = new_cluster_label
+                    # Update cluster-node mapping
+                    self._phase_map_cluster_node[mat_phase][str(new_cluster_label)] = \
+                        node.id
+                # Update adaptive tree node mapping dictionary (only validation purposes)
+                adaptive_tree_node_map[str(target_node.id)] = [x.id for x in child_nodes]
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Update RVE hierarchical agglomerative clustering
+            labels[self._phase_voxel_flatidx[mat_phase]] = cluster_labels
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Build hiearchical adaptive CRVE from the hierarchical agglomerative adaptive
+        # clustering
+        info.displayinfo('5', 'Building HA-CRVE clustering (adaptive step ' +
+                              str(self._adaptive_step) + ')...', 2)
+        self.voxels_clusters = np.reshape(np.array(labels, dtype=int), self._n_voxels_dims)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        info.displayinfo('5', 'Computing HA-CRVE descriptors...', 2)
+        # Store cluster labels belonging to each material phase
+        self._set_phase_clusters()
+        # Compute material clusters' volume fraction
+        self._set_clusters_vf()
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return [adaptive_clustering_map, adaptive_tree_node_map]
+    # --------------------------------------------------------------------------------------
+    @staticmethod
+    def add_to_tree_node_list(node_list, node):
+        '''Add node to tree node list and sort it by descending order of linkage distance.
+
+        Parameters
+        ----------
+        node_list : list of ClusterNode
+            List of ClusterNode instances.
+        node : ClusterNode
+            ClusterNode to be added to list of ClusterNode.
+        '''
+        # Check parameters
+        if not isinstance(node, sciclst.ClusterNode):
+            raise TypeError('Node must be of type ClusterNode, not ' + str(type(node)) +
+                            '.')
+        if any([not isinstance(node, sciclst.ClusterNode) for node in node_list]):
+            raise TypeError('Node list can only contain elements of the type ClusterNode.')
+        # Append tree node to node list
+        node_list.append(node)
+        # Sort tree node list by descending order of linkage distance
+        node_list = sorted(node_list, reverse=True, key=lambda x: x.dist)
+        # Return sorted tree node list
+        return node_list
+    # --------------------------------------------------------------------------------------
+    def print_adaptive_clustering(self, adaptive_clustering_map, adaptive_tree_node_map):
+        '''Print hierarchical adaptive clustering refinement descriptors (validation).'''
+        # Print report header
+        print(3*'\n' + 'Hierarchical adaptive clustering report\n' + 80*'-')
+        # Print adaptive clustering refinement step
+        print('\nAdaptive refinement step: ', self._adaptive_step)
+        # Print hiearchical adaptive CRVE
+        print('\n\n' + 'Adaptive clustering: ' + '(' +
+              str(len(np.unique(self.voxels_clusters))) + ' clusters)' + '\n\n',
+              self.voxels_clusters)
+        # Print adaptive clustering mapping
+        print('\n\n' + 'Adaptive cluster mapping: ')
+        for mat_phase in self._material_phases:
+            print('\n  Material phase ' + mat_phase + ':\n')
+            for old_cluster in adaptive_clustering_map.keys():
+                if adaptive_clustering_map[str(old_cluster)][0] in \
+                    self.phase_clusters[mat_phase]:
+                    print('    Old cluster: ' + '{:>4s}'.format(old_cluster) +
+                          '  ->  ' +
+                          'New clusters: ', adaptive_clustering_map[str(old_cluster)])
+        # Print adaptive tree node mapping
+        print('\n\n' + 'Adaptive tree node mapping (validation): ' + '\n')
+        for old_node in adaptive_tree_node_map.keys():
+            print('  Old node: ' + '{:>4s}'.format(old_node) +
+                  '  ->  ' +
+                  'New nodes: ', adaptive_tree_node_map[str(old_node)])
+        # Print cluster-node mapping
+        print('\n\n' + 'Cluster-Node mapping: ')
+        for mat_phase in self._material_phases:
+            print('\n  Material phase ' + mat_phase + ':\n')
+            for new_cluster in self._phase_map_cluster_node[mat_phase].keys():
+                print('    Cluster: ' + '{:>4s}'.format(new_cluster) +
+                      '  ->  ' +
+                      'Tree node: ',
+                      self._phase_map_cluster_node[mat_phase][str(new_cluster)])
