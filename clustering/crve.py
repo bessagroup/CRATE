@@ -285,6 +285,7 @@ class SCRVE(CRVE):
         super().__init__(phase_n_clusters, rve_dims, regular_grid, material_phases)
         self._clustering_scheme = clustering_scheme
         self._clustering_ensemble_strategy = clustering_ensemble_strategy
+        self._clustering_solutions = []
     # --------------------------------------------------------------------------------------
     def get_scrve(self, global_data_matrix):
         '''Generate S-CRVE from one or more RVE clustering solutions.
@@ -343,8 +344,7 @@ class SCRVE(CRVE):
         rve_clustering : ndarray of shape (n_clusters,)
             Cluster label (int) assigned to each RVE voxel.
         '''
-        self.clustering_solutions = []
-        self.clustering_solutions.append(rve_clustering)
+        self._clustering_solutions.append(rve_clustering)
     # --------------------------------------------------------------------------------------
     def _set_consensus_clustering(self):
         '''Set a unique RVE clustering solution (consensus solution).
@@ -358,7 +358,7 @@ class SCRVE(CRVE):
         # ensemble strategy
         if self._clustering_ensemble_strategy == 0:
             # Build S-CRVE from the single RVE clustering solution
-            self.voxels_clusters = np.reshape(np.array(self.clustering_solutions[0],
+            self.voxels_clusters = np.reshape(np.array(self._clustering_solutions[0],
                                               dtype=int),self._n_voxels_dims)
 #
 #                                                                             RVE clustering
