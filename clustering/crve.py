@@ -1451,11 +1451,13 @@ class HACRVE(CRVE):
         Returns
         -------
         adaptive_clustering_map : dict
-            List of new cluster labels (item, list of int) resulting from the refinement of
-            each target cluster (key, str).
+            Adaptive clustering map (item, dict with list of new cluster labels (item,
+            list of int) resulting from the refinement of each target cluster (key, str))
+            for each material phase (key, str).
         adaptive_tree_node_map : dict
-            List of new cluster tree node ids (item, list of int) resulting from the split
-            of each target cluster tree node id (key, str).
+            Adaptive tree node map (item, dict with list of new cluster tree node ids
+            (item, list of int) resulting from the split of each target cluster tree node id
+            (key, str).) for each material phase' (key, str) hierarchical tree.
 
         Notes
         -----
@@ -1480,10 +1482,13 @@ class HACRVE(CRVE):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Increment adaptive clustering refinement step counter
         self._adaptive_step += 1
-        # Initialize adaptive clustering mapping dictionary
-        adaptive_clustering_map = {str(old_cluster): [] for old_cluster in target_clusters}
+        # Initialize adaptive clustering mapping dictionary and associated phase
+        # dictionaries
+        adaptive_clustering_map = {str(mat_phase): {}
+                                   for mat_phase in self._material_phases}
         # Initialize adaptive tree node mapping dictionary (only validation purposes)
-        adaptive_tree_node_map = {}
+        adaptive_tree_node_map = {str(mat_phase): {}
+                                   for mat_phase in self._material_phases}
         # Get RVE hierarchical agglomerative base clustering
         labels = self.voxels_clusters.flatten()
         # Get maximum cluster label in RVE hierarchical agglomerative base clustering (avoid
@@ -1556,7 +1561,7 @@ class HACRVE(CRVE):
                 child_nodes += child_target_nodes
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Initialize target cluster mapping
-                adaptive_clustering_map[str(target_cluster)] = []
+                adaptive_clustering_map[mat_phase][str(target_cluster)] = []
                 # Remove target cluster from cluster node mapping
                 self._phase_map_cluster_node[mat_phase].pop(str(target_cluster))
                 # Update target cluster mapping and flat clustering labels
@@ -1564,14 +1569,16 @@ class HACRVE(CRVE):
                     # Increment new cluster label
                     new_cluster_label += 1
                     # Add new cluster to target cluster mapping
-                    adaptive_clustering_map[str(target_cluster)].append(new_cluster_label)
+                    adaptive_clustering_map[mat_phase][str(target_cluster)].append(
+                        new_cluster_label)
                     # Update flat clustering labels
                     cluster_labels[node.pre_order()] = new_cluster_label
                     # Update cluster-node mapping
                     self._phase_map_cluster_node[mat_phase][str(new_cluster_label)] = \
                         node.id
                 # Update adaptive tree node mapping dictionary (only validation purposes)
-                adaptive_tree_node_map[str(target_node.id)] = [x.id for x in child_nodes]
+                adaptive_tree_node_map[mat_phase][str(target_node.id)] = \
+                    [x.id for x in child_nodes]
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Update RVE hierarchical agglomerative clustering
             labels[self._phase_voxel_flatidx[mat_phase]] = cluster_labels
@@ -1629,18 +1636,19 @@ class HACRVE(CRVE):
         print('\n\n' + 'Adaptive cluster mapping: ')
         for mat_phase in self._material_phases:
             print('\n  Material phase ' + mat_phase + ':\n')
-            for old_cluster in adaptive_clustering_map.keys():
-                if adaptive_clustering_map[str(old_cluster)][0] in \
-                    self.phase_clusters[mat_phase]:
-                    print('    Old cluster: ' + '{:>4s}'.format(old_cluster) +
-                          '  ->  ' +
-                          'New clusters: ', adaptive_clustering_map[str(old_cluster)])
+            for old_cluster in adaptive_clustering_map[mat_phase].keys():
+                print('    Old cluster: ' + '{:>4s}'.format(old_cluster) +
+                      '  ->  ' +
+                      'New clusters: ',
+                      adaptive_clustering_map[mat_phase][str(old_cluster)])
         # Print adaptive tree node mapping
-        print('\n\n' + 'Adaptive tree node mapping (validation): ' + '\n')
-        for old_node in adaptive_tree_node_map.keys():
-            print('  Old node: ' + '{:>4s}'.format(old_node) +
-                  '  ->  ' +
-                  'New nodes: ', adaptive_tree_node_map[str(old_node)])
+        print('\n\n' + 'Adaptive tree node mapping (validation): ')
+        for mat_phase in self._material_phases:
+            print('\n  Material phase ' + mat_phase + ':\n')
+            for old_node in adaptive_tree_node_map[mat_phase].keys():
+                print('  Old node: ' + '{:>4s}'.format(old_node) +
+                      '  ->  ' +
+                      'New nodes: ', adaptive_tree_node_map[mat_phase][str(old_node)])
         # Print cluster-node mapping
         print('\n\n' + 'Cluster-Node mapping: ')
         for mat_phase in self._material_phases:
