@@ -12,12 +12,8 @@
 # ==========================================================================================
 # Python object serialization
 import pickle
-# Inspect file name and line
-import inspect
 # Display messages
 import ioput.info as info
-# Display errors, warnings and built-in exceptions
-import ioput.errors as errors
 # CRVE generation
 from clustering.crve import SCRVE, HACRVE
 #
@@ -31,7 +27,8 @@ class Clustering:
     domain decomposition and the computation of the cluster interaction tensors.
     '''
     def __init__(self, rve_dims, material_phases, regular_grid, comp_order,
-                 phase_n_clusters, crve_type, clustering_options, cluster_data_matrix):
+                 phase_n_clusters, clustering_scheme, crve_type, crve_type_options,
+                 cluster_data_matrix):
         '''Clustering class constructor.
 
         Parameters
@@ -47,10 +44,15 @@ class Clustering:
             Strain/Stress components (str) order.
         phase_n_clusters : dict
             Number of clusters (item, int) prescribed for each material phase (key, str).
+        clustering_scheme : ndarray of shape (n_clusterings, 3)
+            Prescribed global clustering scheme to generate the CRVE. Each row is associated
+            with a unique RVE clustering, characterized by a clustering algorithm
+            (col 1, int), a list of features (col 2, list of int) and a list of the feature
+            data matrix' indexes (col 3, list of int).
         cluster_type : str, {'static', 'hierarchical-adaptive'}
             Type of Cluster-reduced Representative Volume Element (CRVE).
-        clustering_options : dict
-            To be defined...
+        crve_type_options : dict
+            CRVE type specific options.
         cluster_data_matrix : ndarray of shape (n_voxels, n_features)
             Data matrix containing all the required data to perform the RVE clustering-based
             domain decomposition.
@@ -60,8 +62,9 @@ class Clustering:
         self._regular_grid = regular_grid
         self._comp_order = comp_order
         self._phase_n_clusters = phase_n_clusters
+        self._clustering_scheme = clustering_scheme
         self._crve_type = crve_type
-        self._clustering_options = clustering_options
+        self._crve_type_options = crve_type_options
         self._cluster_data_matrix = cluster_data_matrix
     # --------------------------------------------------------------------------------------
     def compute_crve(self):
@@ -77,15 +80,14 @@ class Clustering:
                                   'Volume Element (S-CRVE)...')
             # Get S-CRVE required clustering parameters
             try:
-                clustering_scheme = self._clustering_options['clustering_scheme']
                 clustering_ensemble_strategy = \
-                    self._clustering_options['clustering_ensemble_strategy']
+                    self._crve_type_options['clustering_ensemble_strategy']
             except KeyError:
                 print('Missing S-CRVE required clustering parameter.')
                 raise
             # Instatiate Static Cluster-reduced Representative Volume Element (S-CRVE)
             crve = SCRVE(self._phase_n_clusters, self._rve_dims, self._regular_grid,
-                self._material_phases, self._comp_order, clustering_scheme,
+                self._material_phases, self._comp_order, self._clustering_scheme,
                 clustering_ensemble_strategy)
             # Perform prescribed clustering scheme to generate the CRVE
             crve.get_scrve(self._cluster_data_matrix)
@@ -94,11 +96,11 @@ class Clustering:
             info.displayinfo('5', 'Computing Hierarchical Adaptive Cluster-reduced ' +
                                   'Representative Volume Element (HA-CRVE)...')
             # Get HA-CRVE required clustering parameters
-            pass
+            adaptive_split_factor = self._crve_type_options['adaptive_split_factor']
             # Instatiate Hierarchical Adaptive Cluster-reduced Representative Volume Element
             # (HA-CRVE)
             crve = HACRVE(self._phase_n_clusters, self._rve_dims, self._regular_grid,
-                          self._material_phases, self._comp_order, split_greed=0.5)
+                          self._material_phases, self._comp_order, adaptive_split_factor)
             # Perform HA-CRVE base clustering
             crve.get_base_clustering(self._cluster_data_matrix)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -154,32 +156,24 @@ class Clustering:
             Path of file where the CRVE's instance is dumped.
         '''
         # Dump CRVE instance into file
-        info.displayinfo('5', 'Dumping CRVE into file (.crve)...')
         with open(crve_file_path, 'wb') as crve_file:
             pickle.dump(crve, crve_file)
 #
-#                                                                Perform compatibility check
-#                                                (loading previously computed offline stage)
+#                                                                       Available CRVE types
 # ==========================================================================================
-# Perform a compatibility check between the clustering parameters read from the input data
-# file and the previously computed offline stage loaded data
-def checkclstcompat(problem_dict, rg_dict, clst_dict_read, clst_dict):
-    # Check clustering method, clustering strategy and clustering solution method
-    keys = ['clustering_method', 'clustering_strategy', 'clustering_solution_method']
-    for key in keys:
-        if clst_dict[key] != clst_dict_read[key]:
-            location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00044', location.filename, location.lineno + 1, key,
-                                clst_dict_read[key],clst_dict[key])
-    # Check number of clusters associated to each material phase
-    if clst_dict['phase_n_clusters'] != clst_dict_read['phase_n_clusters']:
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00045', location.filename, location.lineno + 1,
-                            clst_dict_read['phase_n_clusters'],
-                            clst_dict['phase_n_clusters'])
-    # Check spatial discretization
-    elif list(clst_dict['voxels_clusters'].shape) != rg_dict['n_voxels_dims']:
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00046', location.filename, location.lineno + 1,
-                            rg_dict['n_voxels_dims'],
-                            list(clst_dict['voxels_clusters'].shape))
+def get_available_crve_types():
+    '''Get available CRVE types in CRATE.
+
+    Available CRVE types:
+    1- Static ('static')
+    2- Hierarchical Adaptive ('hierarchical-adaptive')
+
+    Returns
+    -------
+    available_crve_types : dict
+        Available CRVE types (item, str) and associated identifiers (key, str).
+    '''
+    available_crve_types = {'1': 'static',
+                            '2': 'hierarchical-adaptive'}
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    return available_crve_types
