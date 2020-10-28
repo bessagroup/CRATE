@@ -52,7 +52,7 @@ def displayinfo(code, *args, **kwargs):
             sys.exit(1)
     elif code == '0':
         arguments = ['CRATE - Clustering-based Nonlinear Analysis of Materials',
-                     'Release 0.4.0 (July 2020)'] + 2*[args[0],] + list(args[1:3])
+                     'Release 0.7.0 (October 2020)'] + 2*[args[0],] + list(args[1:3])
         info = tuple(arguments)
         template = '\n' + colorama.Fore.WHITE + tilde_line + colorama.Style.RESET_ALL + \
                    colorama.Fore.WHITE + '\n{:^{width}}\n\n' + '{:^{width}}\n\n\n' + \

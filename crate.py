@@ -34,7 +34,7 @@
 # ------------------------------------------------------------------------------------------
 # Development history:
 #
-# Release v0.1.0 - Bernardo P. Ferreira (June 2020)
+# Release v0.0.1 - Bernardo P. Ferreira (June 2020)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #   > Initial coding.
 #   > Implementation of the FFT-based homogenization basic scheme proposed by H. Moulinec
@@ -151,34 +151,80 @@ info.displayinfo('3', 'Read input data file',
                  phase_times[phase_times.shape[0] - 1, 1] -
                  phase_times[phase_times.shape[0] - 1, 0])
 #
-#                                     Offline stage: Compute cluster analysis feature's data
+#                                        Offline stage: Compute cluster analysis data matrix
 # ==========================================================================================
 if not is_same_offstage:
     # Display starting phase information and set phase initial time
-    info.displayinfo('2', 'Compute cluster analysis feature\'s data')
+    info.displayinfo('2', 'Compute cluster analysis data matrix')
     phase_init_time = time.time()
     # Compute the data required to perform the clustering according to the adopted strategy
     clstdata.set_clustering_data(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict)
     # Set phase ending time and display finishing phase information
     phase_end_time = time.time()
-    phase_names.append('Compute cluster analysis feature\'s data')
+    phase_names.append('Compute cluster analysis data matrix')
     phase_times = np.append(phase_times, [[phase_init_time, phase_end_time]], axis=0)
-    info.displayinfo('3', 'Compute cluster analysis feature\'s data',
+    info.displayinfo('3', 'Compute cluster analysis data matrix',
                      phase_times[phase_times.shape[0]-1, 1] -
                      phase_times[phase_times.shape[0]-1, 0])
 #
-#                                                          Offline stage: Perform clustering
+#               Offline stage: Generate Cluster-Reduced Representative Volume Element (CRVE)
 # ==========================================================================================
-if not is_same_offstage:
+if is_same_offstage:
+    # Display starting phase information and set phase initial time
+    info.displayinfo('2', 'Import offline state CRVE instance')
+    phase_init_time = time.time()
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Get CRVE file path
+    crve_file_path = dirs_dict['crve_file_path']
+    # Load CRVE instance from file
+    info.displayinfo('5', 'Importing Cluster-reduced Representative Volume Element ' +
+                          '(.crve file)...')
+    with open(crve_file_path, 'rb') as crve_file:
+        crve = pickle.load(crve_file)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Update clustering dictionary
+    clst_dict['voxels_clusters'] = crve.voxels_clusters
+    clst_dict['phase_clusters'] = crve.phase_clusters
+    clst_dict['clusters_f'] = crve.clusters_f
+    # Store clustering interaction tensors
+    clst_dict['cit_1_mf'] = crve.cit_X_mf[0]
+    clst_dict['cit_2_mf'] = crve.cit_X_mf[1]
+    clst_dict['cit_0_freq_mf'] = crve.cit_X_mf[2]
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set phase ending time and display finishing phase information
+    phase_end_time = time.time()
+    phase_names.append('Import offline state CRVE instance')
+    phase_times = np.append(phase_times, [[phase_init_time, phase_end_time]], axis=0)
+    info.displayinfo('3', 'Import offline state CRVE instance',
+                     phase_times[phase_times.shape[0] - 1, 1] -
+                     phase_times[phase_times.shape[0] - 1, 0])
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+else:
     # Display starting phase information and set phase initial time
     info.displayinfo('2', 'Perform RVE cluster analysis')
     phase_init_time = time.time()
-    # Perform the clustering according to the selected method and adopted strategy
-    clst.set_crve_data(dirs_dict, mat_dict, rg_dict, clst_dict)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Instantiate cluster analysis
+    clustering = clst.Clustering(rg_dict['rve_dims'], mat_dict['material_phases'],
+                                 rg_dict['regular_grid'], problem_dict['comp_order_sym'],
+                                 clst_dict['phase_n_clusters'],
+                                 clst_dict['clustering_scheme'], clst_dict['crve_type'],
+                                 clst_dict['crve_type_options'],
+                                 clst_dict['clst_quantities'])
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Compute Cluster-reduced Representative Volume Element (CRVE)
+    crve = clustering.compute_crve()
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Update clustering dictionary
+    clst_dict['voxels_clusters'] = crve.voxels_clusters
+    clst_dict['phase_clusters'] = crve.phase_clusters
+    clst_dict['clusters_f'] = crve.clusters_f
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Write clustering VTK file
     if vtk_dict['is_VTK_output']:
         info.displayinfo('5', 'Writing cluster VTK file...')
         vtkoutput.writevtkclusterfile(vtk_dict, dirs_dict, rg_dict, clst_dict)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set phase ending time and display finishing phase information
     phase_end_time = time.time()
     phase_names.append('Perform RVE cluster analysis')
@@ -186,42 +232,20 @@ if not is_same_offstage:
     info.displayinfo('3', 'Perform RVE cluster analysis',
                      phase_times[phase_times.shape[0] - 1, 1] -
                      phase_times[phase_times.shape[0] - 1, 0])
-else:
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display starting phase information and set phase initial time
-    info.displayinfo('2', 'Import known clustering data')
+    info.displayinfo('2', 'Compute CRVE cluster interaction tensors')
     phase_init_time = time.time()
-    # Get clusters data file path
-    info.displayinfo('5', 'Loading data from clusters data file (.clusters)...')
-    cluster_file_path = dirs_dict['cluster_file_path']
-    # Open clusters data file
-    try:
-        cluster_file = open(cluster_file_path, 'rb')
-    except Exception as message:
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayexception(location.filename, location.lineno + 1, message)
-    # Load cluster data from file
-    clst_dict = pickle.load(cluster_file)
-    # Close clusters data file
-    cluster_file.close()
-    # Check compatibility between the loaded clusters data and the input data file
-    info.displayinfo('5','Performing compatibility check on loaded data...')
-    clst.checkclstcompat(problem_dict, rg_dict, clst_dict_read, clst_dict)
-    # Set phase ending time and display finishing phase information
-    phase_end_time = time.time()
-    phase_names.append('Import known clustering data')
-    phase_times = np.append(phase_times, [[phase_init_time, phase_end_time]], axis=0)
-    info.displayinfo('3', 'Import known clustering data',
-                     phase_times[phase_times.shape[0] - 1, 1] -
-                     phase_times[phase_times.shape[0] - 1, 0])
-#
-#                                         Offline stage: Compute cluster interaction tensors
-# ==========================================================================================
-if not is_same_offstage:
-    # Display starting phase information and set phase initial time
-    info.displayinfo('2', 'Compute cluster interaction tensors')
-    phase_init_time = time.time()
-    # Compute the cluster interaction tensors
-    cit.clusterinteractiontensors(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Compute CRVE's cluster interaction tensors
+    info.displayinfo('5', 'Computing CRVE cluster interaction tensors...')
+    crve.compute_cit()
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Store clustering interaction tensors
+    clst_dict['cit_1_mf'] = crve.cit_X_mf[0]
+    clst_dict['cit_2_mf'] = crve.cit_X_mf[1]
+    clst_dict['cit_0_freq_mf'] = crve.cit_X_mf[2]
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set phase ending time and display finishing phase information
     phase_end_time = time.time()
     phase_names.append('Compute cluster interaction tensors')
@@ -229,35 +253,10 @@ if not is_same_offstage:
     info.displayinfo('3', 'Compute cluster interaction tensors',
                      phase_times[phase_times.shape[0] - 1, 1] -
                      phase_times[phase_times.shape[0] - 1, 0])
-else:
-    # Display starting phase information and set phase initial time
-    info.displayinfo('2', 'Import cluster interaction tensors')
-    phase_init_time = time.time()
-    # Get cluster interaction tensors file path
-    info.displayinfo('5', 'Loading clustering interaction tensors (.cit)...')
-    cit_file_path = dirs_dict['cit_file_path']
-    # Open clustering interaction tensors file
-    try:
-        cit_file = open(cit_file_path, 'rb')
-    except Exception as message:
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayexception(location.filename, location.lineno + 1, message)
-    # Load clustering interaction tensors
-    [clst_dict['cit_1_mf'], clst_dict['cit_2_mf'], clst_dict['cit_0_freq_mf']] = \
-        pickle.load(cit_file)
-    # Close clustering interaction tensors file
-    cit_file.close()
-    # Check compatibility between the loaded cluster interaction tensors and the material
-    # phases existent in the spatial discretization file
-    info.displayinfo('5', 'Performing compatibility check on loaded data...')
-    citop.checkcitcompat(mat_dict, clst_dict)
-    # Set phase ending time and display finishing phase information
-    phase_end_time = time.time()
-    phase_names.append('Import cluster interaction tensors')
-    phase_times = np.append(phase_times, [[phase_init_time, phase_end_time]], axis=0)
-    info.displayinfo('3', 'Import cluster interaction tensors',
-                     phase_times[phase_times.shape[0] - 1, 1] -
-                     phase_times[phase_times.shape[0] - 1, 0])
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Dump CRVE into file
+    crve_file_path = dirs_dict['crve_file_path']
+    clustering.save_crve_file(crve, crve_file_path)
 #
 #                                 Online stage: Solve reduced microscale equilibrium problem
 # ==========================================================================================
