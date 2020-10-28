@@ -3,11 +3,12 @@
 # ==========================================================================================
 # Summary:
 # Procedures related to operations on files, directories and associated paths. Among these
-# operations is the definition of the results folder associated to a
-# given problem input data file, directory where all the related output is stored.
+# operations is the definition of the results folder associated to a given problem input
+# data file, directory where all the related output is stored.
 # ------------------------------------------------------------------------------------------
 # Development history:
-# Bernardo P. Ferreira | January 2020 | Initial coding.
+# Bernardo P. Ferreira | Jan 2020 | Initial coding.
+# Bernardo P. Ferreira | Oct 2020 | Replaced '.clusters' and '.cit' files by '.crve' file.
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
@@ -79,8 +80,7 @@ def setinputdatafilepath(path):
 # shinyregulargrid.rgmsh
 # example/ ------- example.screen
 #            |---- shinyregulargrid.rgmsh
-#            |---- Offline_Stage/ ------- example.clusters
-#            |                      |---- example.cit
+#            |---- Offline_Stage/ ------- example.crve
 #            |                      |---- example_clusters.vti
 #            |---- example.hres
 #            |---- Post_Process/  ------- example.pvd
@@ -96,9 +96,8 @@ def setinputdatafilepath(path):
 # shinyregulargrid.rgmsh - Copy of the spatial discretization file contained in the problem
 #                          folder
 # Offline_Stage/         - Offline stage folder
-# example.clusters       - File which contains all the required information associated to
-#                          the clustering discretization (binary format)
-# example.cit            - File which contains the cluster interaction tensors
+# example.crve           - File which contains an offline state CRVE instance (binary
+#                          format)
 # example_clusters.vti   - VTK XML file with data related to the material phases and
 #                          material clusters
 # example.hres           - File where the homogenized results are stored
@@ -119,10 +118,8 @@ def setproblemdirs(input_file_name, input_file_dir):
     ioutil.screen_file_path = problem_dir + input_file_name + '.screen'
     if os.path.isfile(ioutil.screen_file_path):
         os.remove(ioutil.screen_file_path)
-    # Set '.clusters' path
-    cluster_file_path = offline_stage_dir + input_file_name + '.clusters'
-    # Set '.cit' path
-    cit_file_path = offline_stage_dir + input_file_name + '.cit'
+    # Set '.crve' path
+    crve_file_path = offline_stage_dir + input_file_name + '.crve'
     # Set '.hres' path
     hres_file_path = problem_dir + input_file_name + '.hres'
     # Check if the problem directory already exists or not
@@ -137,10 +134,11 @@ def setproblemdirs(input_file_name, input_file_dir):
     else:
         ioutil.print2('\nWarning: The problem directory for the specified input data ' + \
                       'file already exists.')
-        # Ask user if the purpose is to consider the previously computed offline stage data
-        # files
+        # Ask user if the purpose is to consider a previously computed offline state
+        # CRVE data file
         is_same_offstage = ioutil.query_yn('\nDo you wish to consider the already ' + \
-                                           'existent offline stage datafiles?','no')
+                                           'existent offline state \'.crve\' datafile?',
+                                           'no')
         if is_same_offstage:
             status = 1
             # If the offline stage subdirectory does not exist raise error
@@ -155,14 +153,14 @@ def setproblemdirs(input_file_name, input_file_dir):
             # Create post processing subdirectory
             makedirectory(postprocess_dir, 'overwrite')
             # Warn user to potential compatibility issues between the problem input data
-            # file and the already existent offline stage data files
+            # file and the already existent offline state '.crve' data file
             ioutil.useraction('\n\nWarning: Please make sure that the problem input ' + \
                               'data file is consistent with the already ' + '\n' + \
-                              len('Warning: ')*' ' + 'existent offline stage data ' + \
-                              'files (stored in Offline_Stage/) to avoid unexpected ' + \
+                              len('Warning: ')*' ' + 'existent offline state \'.crve\' ' + \
+                              'data file (stored in Offline_Stage/) to avoid ' + \
                               '\n' + \
-                              len('Warning: ')*' ' + 'errors or misleading conclusions.' + \
-                              '\n\n' + \
+                              len('Warning: ')*' ' + 'unexpected errors or ' + \
+                              'misleading conclusions.' + '\n\n' + \
                               'Press any key to continue or type \'exit\' to leave: ')
         else:
             # Ask user if the existent problem directory is to be overwritten
@@ -182,4 +180,4 @@ def setproblemdirs(input_file_name, input_file_dir):
         info.displayinfo('-1', problem_dir, status)
     # Return
     return [problem_name, problem_dir, offline_stage_dir, postprocess_dir, is_same_offstage,
-            cluster_file_path, cit_file_path, hres_file_path]
+            crve_file_path, hres_file_path]

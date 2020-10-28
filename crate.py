@@ -78,10 +78,6 @@ import ioput.packager as packager
 import clustering.clusteringdata as clstdata
 # Perform clustering
 import clustering.clustering as clst
-# Cluster interaction tensors computation
-import cit.cit as cit
-# Cluster interaction tensors operations
-import cit.citoperations as citop
 # Online stage
 import online.sca as sca
 # VTK output
@@ -101,13 +97,11 @@ input_file_name, input_file_path, input_file_dir = \
     filop.setinputdatafilepath(str(sys.argv[1]))
 # Set problem name, directory and main subdirectories
 problem_name, problem_dir, offline_stage_dir, postprocess_dir, is_same_offstage, \
-    cluster_file_path, cit_file_path, hres_file_path = filop.setproblemdirs(input_file_name,
-                                                                            input_file_dir)
+    crve_file_path, hres_file_path = filop.setproblemdirs(input_file_name, input_file_dir)
 # Package data associated to directories and paths
 dirs_dict = packager.packdirpaths(input_file_name, input_file_path, input_file_dir,
                                   problem_name, problem_dir, offline_stage_dir,
-                                  postprocess_dir, cluster_file_path, cit_file_path,
-                                  hres_file_path)
+                                  postprocess_dir, crve_file_path, hres_file_path)
 # Open user input data file
 try:
     input_file = open(input_file_path, 'r')
