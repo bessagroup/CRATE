@@ -8,11 +8,14 @@
 # boxes with the suitable specification!
 #
 # Note: Mandatory and optional specifications are denoted by [M] and [O], respectively,
-#       being the former presented first for practical use.
+#       being the former presented first for practical use. A [M,O] specification indicates
+#       that the parameter is mandatory under certain circumstances (e.g., depending on
+#       other parameters).
 # ==========================================================================================
 # Development history:
 # Bernardo P. Ferreira | June 2020 | Initial version (along with CRATE v0.1.0).
 # Bernardo P. Ferreira | July 2020 | Updated version (along with CRATE v0.3.0).
+# Bernardo P. Ferreira | July 2020 | Updated version (along with CRATE v0.7.0).
 # ==========================================================================================
 
 
@@ -168,6 +171,27 @@
 
 
 
+#                                                                              CRVE type [O]
+# ==========================================================================================
+# Meaning:   Type of Cluster-Reduced Representative Volume Element.
+#
+# Syntax:    CRVE_Type x
+#
+# x:         1 - Static
+#            2 - Hierarchical Adaptive
+#
+# Note: Depending on the selected type of CRVE, it is necessary to provide CRVE type
+#       specific parameters. Check the following sections for each CRVE type:
+#
+#       Static                : Clustering ensemble method [M,O]
+#
+#       Hierarchical Adaptive : Clustering adaptive split factor [O]
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
 #                                                                      Clustering scheme [M]
 # ==========================================================================================
 # Meaning:   Clustering scheme employed to generate the Cluster-Reduced Representative
@@ -209,6 +233,33 @@
 # Syntax:    Clustering_Ensemble_Method x
 #
 # x:         None available.
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
+#                                                       Clustering adaptive split factor [O]
+# ==========================================================================================
+# Meaning:   Clustering adaptive split factor controlling the split magnitude of the target
+#            clusters in an adaptive CRVE adaptive clustering step, specified for each
+#            material phase. The clustering adaptive split factor must be contained between
+#            0 and 1 (included). The lower bound (0) prevents any cluster to be split,
+#            while the upper bound (1) performs the maximum number splits of each cluster
+#            (single-voxel clusters).
+#
+# Syntax:    Clustering_Adaptive_Split_Factor
+#            phase_ID x
+#            phase_ID x
+#
+# x:         float
+#
+# Note: If the adaptive split factor is not prescribed for a given material phase, then
+#       the value of 0 is assumed, preventing the clusters from that material phase to
+#       be split.
+#
+# Note: If this parameter is not specified at all (absent keyword), then a non-null
+#       default value is assumed for every material phases.
 # ------------------------------------------------------------------------------------------
 [insert here]
 
