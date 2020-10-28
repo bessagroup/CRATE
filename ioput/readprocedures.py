@@ -70,7 +70,7 @@ def searchoptkeywordline(file, keyword):
 #
 # < keyword > < int >
 #
-def readtypeAkeyword(file, file_path, keyword, max):
+def readtypeAkeyword(file, file_path, keyword, max_val):
     keyword_line_number = searchkeywordline(file, keyword)
     line = linecache.getline(file_path, keyword_line_number).split()
     if len(line) == 1:
@@ -79,8 +79,8 @@ def readtypeAkeyword(file, file_path, keyword, max):
     elif not ioutil.checkposint(line[1]):
         location = inspect.getframeinfo(inspect.currentframe())
         errors.displayerror('E00007', location.filename, location.lineno + 1, keyword)
-    elif isinstance(max, int) or isinstance(max, np.integer):
-        if int(line[1]) > max:
+    elif isinstance(max_val, int) or isinstance(max_val, np.integer):
+        if int(line[1]) > max_val:
             location = inspect.getframeinfo(inspect.currentframe())
             errors.displayerror('E00007',location.filename,location.lineno + 1, keyword)
     return int(line[1])
@@ -612,8 +612,8 @@ def readmacloadincrem(file, file_path, keyword, n_load_subpaths):
         load_time_factor = 1.0
     # Set macroscale loading incrementation
     if keyword == 'Number_of_Load_Increments':
-        max = '~'
-        n_load_increments = readtypeAkeyword(file, file_path, keyword, max)
+        max_val = '~'
+        n_load_increments = readtypeAkeyword(file, file_path, keyword, max_val)
         # Build macroscale loading incrementation dictionary
         for i in range(n_load_subpaths):
             # Set loading subpath default total load factor
@@ -775,7 +775,7 @@ def readclusterscheme(file, file_path, keyword, valid_algorithms, valid_features
     clustering_scheme = np.full((0, 3), '', dtype=object)
     # Read clustering solution specification line
     line = linecache.getline(file_path, keyword_line_number + 1)
-    is_empty_line = not bool(line)
+    is_empty_line = not bool(line.split())
     # Check clustering solution specification
     cluster_solution = line.split()
     if is_empty_line or len(cluster_solution) < 2:
@@ -823,6 +823,70 @@ def is_cluster_solution(solution):
         otherwise.
     '''
     return not any([not ioutil.checkposint(x) for x in solution])
+#
+#                                                           Clustering adaptive split factor
+# ==========================================================================================
+# Read the clustering adaptive split factor for each material phase specified as
+#
+# Clustering_Adaptive_Split_Factor
+# < phase_id > < split_factor >
+# < phase_id > < split_factor >
+#
+def read_adaptive_split_factor(file, file_path, keyword, material_phases):
+    '''Clustering adaptive split factor reader.
+
+    Parameters
+    ----------
+    file : file
+        Input data file where the data is searched and read from.
+    file_path : str
+        Input data file absolute path.
+    keyword : str
+        Keyword to be searched in the input data file.
+    material_phases : list
+        Available material phases (str).
+
+    Returns
+    -------
+    adaptive_split_factor : dict
+        Clustering adaptive split factor (item, float) for each material phase (key, str).
+        The clustering adaptive split factor must be contained between 0 and 1 (included).
+        The lower bound (0) prevents any cluster to be split, while the upper bound
+        (1) performs the maximum number splits of each cluster (single-voxel clusters).
+
+    Notes
+    -----
+    If the adaptive split factor is not prescribed for a given material phase, then the
+    value of 0 is assumed, preventing the clusters from that material phase to be split.
+    '''
+    # Initialize adaptive split factor dictionary
+    adaptive_split_factor = {mat_phase: 0 for mat_phase in material_phases}
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Find keyword line number
+    keyword_line_number = searchkeywordline(file, keyword)
+    # Read adaptive split factor specification line
+    line = linecache.getline(file_path, keyword_line_number + 1)
+    is_empty_line = not bool(line.split())
+    i = 0
+    while not is_empty_line:
+        # Set adaptive split factor specification
+        split_factor = line.split()
+        if split_factor[0] not in material_phases:
+            break
+        elif not ioutil.checknumber(split_factor[1]):
+            raise RuntimeError('Adaptive split factor must be a floating-point number.')
+        elif not ioutil.is_between(split_factor[1], lower_bound=0, upper_bound=1):
+            raise RuntimeError('Adaptive split factor must be a floating-point number ' +
+                               'between 0 and 1 (included).')
+        else:
+            adaptive_split_factor[split_factor[0]] = float(split_factor[1])
+        # Increment split factor specification counter
+        i += 1
+        # Read clustering solution specification line
+        line = linecache.getline(file_path, keyword_line_number + 1 + i)
+        is_empty_line = not bool(line.split())
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    return adaptive_split_factor
 #
 #                                                                   Discretization file path
 # ==========================================================================================
