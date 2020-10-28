@@ -84,7 +84,35 @@ def checkvalidname(x):
     if not re.match('^[A-Za-z0-9_]+$', str(x)):
         is_valid = False
     return is_valid
-#
+# ------------------------------------------------------------------------------------------
+# Check if a given instance is between a lower a upper value (included)
+def is_between(x, lower_bound=0, upper_bound=1):
+    '''Check if instance is between a lower and upper value (included).
+
+    Parameters
+    ----------
+    x : numeric type (int, float)
+        Instance to be evaluated.
+    lower_bound : numeric type (int, float), default=0
+        Lower boundary value (included).
+    upper_bound : numeric type (int, float), default=1
+        Upper boundary value (included).
+    '''
+    try:
+        x = float(x)
+        lower_bound = float(lower_bound)
+        upper_bound = float(upper_bound)
+    except ValueError:
+        print('Instance and bounds must be of numeric type.')
+        raise
+    if lower_bound > upper_bound:
+        raise RuntimeError('Lower boundary value (' + str(lower_bound) + ') must be ' +
+                           'greater or equal than the upper boundary value (' +
+                           str(upper_bound) + ').')
+    if x >= lower_bound and x <= upper_bound:
+        return True
+    else:
+        return False
 #                                                                      Prompt user functions
 # ==========================================================================================
 # Prompt the user to answer a 'yes' or 'no' question
