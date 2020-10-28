@@ -26,8 +26,8 @@ import ioput.errors as errors
 # ==========================================================================================
 # Package directories and paths
 def packdirpaths(input_file_name, input_file_path, input_file_dir, problem_name,
-                 problem_dir, offline_stage_dir, postprocess_dir, cluster_file_path,
-                 cit_file_path, hres_file_path):
+                 problem_dir, offline_stage_dir, postprocess_dir, crve_file_path,
+                 hres_file_path):
     #
     # Object                      Meaning                                           Type
     # -------------------------------------------------------------------------------------
@@ -37,8 +37,7 @@ def packdirpaths(input_file_name, input_file_path, input_file_dir, problem_name,
     # problem_name                Name of problem under analysis                    str
     # problem_dir                 Directory of the problem results                  str
     # offline_stage_dir           Directory of the offline stage associated files   str
-    # cluster_file_path           Path of the .clusters file                        str
-    # cit_file_path               Path of the .cit file                             str
+    # crve_file_path              Path of the .crve file                            str
     # hres_file_path              Path of the .hres file                            str
     # postprocess_dir             Directory of the post-processing files            str
     #
@@ -54,8 +53,7 @@ def packdirpaths(input_file_name, input_file_path, input_file_dir, problem_name,
     dirs_dict['problem_name'] = problem_name
     dirs_dict['problem_dir'] = problem_dir
     dirs_dict['offline_stage_dir'] = offline_stage_dir
-    dirs_dict['cluster_file_path'] = cluster_file_path
-    dirs_dict['cit_file_path'] = cit_file_path
+    dirs_dict['crve_file_path'] = crve_file_path
     dirs_dict['hres_file_path'] = hres_file_path
     dirs_dict['postprocess_dir'] = postprocess_dir
     # Return
@@ -231,15 +229,15 @@ def packregulargrid(discret_file_path, rve_dims, mat_dict, problem_dict):
     return rg_dict
 # ------------------------------------------------------------------------------------------
 # Package data associated to the clustering on a regular grid of pixels/voxels
-def packrgclustering(clustering_scheme, clustering_ensemble_strategy,
-                     clustering_solution_method, standardization_method,
-                     links_dict, phase_n_clusters, rg_dict):
+def packrgclustering(clustering_scheme, crve_type, crve_type_options,
+                     clustering_solution_method, standardization_method, links_dict,
+                     phase_n_clusters, rg_dict):
     #
     # Object                       Meaning                                         Type
     # ------------------------------------------------------------------------------------
     # clustering_scheme            Clustering scheme                               ndarray
-    # clustering_ensemble_strategy Clustering ensemble strategy                    int
-    # clustering_solution_method   Clustering solution method                      list
+    # crve_type                    CRVE type                                       str
+    # crve_type_options            CRVE type specific options                      dict
     # phase_n_clusters             Number of clusters of each material phase       dict
     #                              key: material phase id (str)
     # phase_clusters               Clusters associated to each material phase      dict
@@ -262,7 +260,8 @@ def packrgclustering(clustering_scheme, clustering_ensemble_strategy,
     clst_dict = dict()
     # Build clustering dictionary
     clst_dict['clustering_scheme'] = clustering_scheme
-    clst_dict['clustering_ensemble_strategy'] = clustering_ensemble_strategy
+    clst_dict['crve_type'] = crve_type
+    clst_dict['crve_type_options'] = crve_type_options
     clst_dict['clustering_solution_method'] = clustering_solution_method
     clst_dict['standardization_method'] = standardization_method
     if len(links_dict.keys()) > 0:
