@@ -15,62 +15,16 @@ import numpy as np
 # Generate efficient iterators
 import itertools as it
 # Unsupervised clustering algorithms
-import sklearn.cluster as skclst
+import clustering.clusteringalgs as clstalgs
 import scipy.cluster.hierarchy as sciclst
-import pyclustering.cluster.kmeans as pykmeans
-import pyclustering.cluster.birch as pybirch
-import pyclustering.cluster.cure as pycure
-import pyclustering.cluster.xmeans as pyxmeans
-import pyclustering.container.cftree as pycftree
-import pyclustering.cluster.encoder as pyencoder
-import pyclustering.utils.metric as pymetric
-import pyclustering.cluster.center_initializer as pycenterinit
-import fastcluster as fastclst
-# Defining abstract base classes
-from abc import ABC, abstractmethod
 # Display messages
 import ioput.info as info
 # Matricial operations
 import tensor.matrixoperations as mop
 # I/O utilities
 import ioput.ioutilities as ioutil
-#
-#                                                            Available clustering algorithms
-# ==========================================================================================
-def get_available_clustering_algorithms():
-    '''Get available clustering algorithms in CRATE.
-
-    Clustering algorithms identifiers:
-    1- K-Means (source: scikit-learn)
-    2- K-Means (source: pyclustering)
-    3- Mini-Batch K-Means (source: scikit-learn)
-    4- Agglomerative (source: scikit-learn)
-    5- Agglomerative (source: scipy)
-    6- Agglomerative (source: fastcluster)
-    7- Birch (source: scikit-learn)
-    8- Birch (source: pyclustering)
-    9- Cure (source: pyclustering)
-    10- X-Means (source: pyclustering)
-
-    Returns
-    -------
-    available_clustering_alg : dict
-        Available clustering algorithms (item, str) and associated identifiers (key, str).
-    '''
-    available_clustering_alg = {'1': 'K-Means (scikit-learn)',
-                                '2': 'K-Means (pyclustering)',
-                                '3': 'Mini-Batch K-Means (scikit-learn)',
-                                '4': 'Agglomerative (scikit-learn)',
-                                '5': 'Agglomerative (scipy)',
-                                '6': 'Agglomerative (fastcluster)',
-                                '7': 'Birch (scikit-learn)',
-                                '8': 'Birch (pyclustering)',
-                                '9': 'Cure (pyclustering)',
-                                '10': 'X-Means (pyclustering)'}
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    return available_clustering_alg
-
-
+# Cluster interaction tensors operations
+import cit.citoperations as citop
 #
 #                                                                                 CRVE class
 # ==========================================================================================
@@ -82,6 +36,8 @@ class CRVE:
 
     Attributes
     ----------
+    _n_dim : int
+        Problem dimension.
     _n_voxels_dims : list
         Number of voxels in each dimension of the regular grid (spatial discretization of
         the RVE).
@@ -89,6 +45,11 @@ class CRVE:
         Total number of voxels of the regular grid (spatial discretization of the RVE).
     _phase_voxel_flatidx : dict
         Flat (1D) voxels' indexes (item, list) associated to each material phase (key, str).
+    _gop_X_dft_vox : list
+        Green operator material independent terms. Each term is stored in a dictionary,
+        where each pair of strain/stress components (key, str) is associated with the Green
+        operator material independent term evaluated in all spatial discrete points
+        (item, ndarray).
     voxels_clusters : ndarray
         Regular grid of voxels (spatial discretization of the RVE), where each entry
         contains the cluster label (int) assigned to the corresponding pixel/voxel.
@@ -96,13 +57,19 @@ class CRVE:
         Clusters labels (item, list of int) associated to each material phase (key, str).
     clusters_f : dict
         Clusters volume fraction (item, float) associated to each material phase (key, str).
+    cit_X_mf : list
+        Cluster interaction tensors material independent terms. Each term is stored in a
+        dictionary (item, dict) for each pair of material phases (key, str), which in turn
+        contains the corresponding matricial form (item, ndarray) associated to each
+        pair of clusters (key, str).
     '''
     def __new__(cls, *args, **kwargs):
         if cls is CRVE:
             raise TypeError("CRVE base class may not be instantiated")
         return super().__new__(cls)
     # --------------------------------------------------------------------------------------
-    def __init__(self, phase_n_clusters, rve_dims, regular_grid, material_phases):
+    def __init__(self, phase_n_clusters, rve_dims, regular_grid, material_phases,
+                 comp_order):
         '''Cluster-reduced Representative Volume Element constructor.
 
         Parameters
@@ -116,13 +83,19 @@ class CRVE:
             contains the material phase label (int) assigned to the corresponding voxel.
         material_phases : list
             RVE material phases labels (str).
+        comp_order : list
+            Strain/Stress components (str) order.
         '''
         self._material_phases = material_phases
         self._phase_n_clusters = phase_n_clusters
         self._rve_dims = rve_dims
+        self._comp_order = comp_order
+        self._n_dim = len(rve_dims)
+        self._gop_X_dft_vox = None
         self.voxels_clusters = None
         self.phase_clusters = None
         self.clusters_f = None
+        self.cit_X_mf = None
         # Get number of voxels on each dimension and total number of voxels
         self._n_voxels_dims = \
             [regular_grid.shape[i] for i in range(len(regular_grid.shape))]
@@ -232,6 +205,208 @@ class CRVE:
         for voxel_idx in it.product(*[list(range(self._n_voxels_dims[i])) \
                 for i in range(len(self._n_voxels_dims))]):
             self.voxels_clusters[voxel_idx] = sort_dict[self.voxels_clusters[voxel_idx]]
+    # --------------------------------------------------------------------------------------
+    def compute_cit(self, mode='full', adaptive_clustering_map=None):
+        '''Compute CRVE cluster interaction tensors.
+
+        Parameters
+        ----------
+        mode : str, {'full', 'adaptive'}, default='full'
+            The default `full` mode performs the complete computation of all cluster
+            interaction tensors. The 'adaptive' mode speeds up the computation of the new
+            cluster interaction tensors resulting from an adaptive clustering characterized
+            by `adaptive_clustering_map`.
+        adaptive_clustering_map : dict
+            Adaptive clustering map (item, dict with list of new cluster labels (item,
+            list of int) resulting from the refinement of each target cluster (key, str))
+            for each material phase (key, str). Required if `mode='adaptive'`, otherwise
+            ignored.
+
+        Notes
+        -----
+        The cluster interaction tensors \'adaptive\' computation mode can only be performed
+        after at least one \'full\' computation has been performed.
+        '''
+        # Check parameters
+        if mode not in ['full', 'adaptive']:
+            raise RuntimeError('Unknown mode to compute cluster interaction tensors.')
+        elif mode == 'adaptive' and adaptive_clustering_map is None:
+            raise RuntimeError('Adaptive clustering map must be provided in \'adaptive\' ' +
+                               'mode.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Perform mode-specific initialization procedures
+        if mode == 'full':
+            # Initialize cluster interaction tensors dictionary
+            self.cit_X_mf = [{} for i in range(3)]
+            for mat_phase_B in self._material_phases:
+                for mat_phase_A in self._material_phases:
+                    for i in range(len(self.cit_X_mf)):
+                        self.cit_X_mf[i][mat_phase_A + '_' + mat_phase_B] = {}
+            # Compute Green operator material independent terms
+            self._gop_X_dft_vox = citop.gop_matindterms(self._n_dim, self._rve_dims,
+                                                        self._comp_order,
+                                                        self._n_voxels_dims)
+        elif mode == 'adaptive':
+            # Build list with old clusters and new clusters (adaptive) for each material
+            # phase
+            phase_old_clusters = {}
+            phase_new_clusters = {}
+            for mat_phase in self._material_phases:
+                phase_new_clusters[mat_phase] = \
+                    sum(adaptive_clustering_map[mat_phase].values(), [])
+                phase_old_clusters[mat_phase] = list(set(self.phase_clusters[mat_phase]) -
+                                                     set(phase_new_clusters[mat_phase]))
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Loop over material phases
+        for mat_phase_B in self._material_phases:
+            # Set material phase B clusters to be looped over
+            if mode == 'full':
+                clusters_J = self.phase_clusters[mat_phase_B]
+            elif mode == 'adaptive':
+                clusters_J = phase_new_clusters[mat_phase_B]
+            # Loop over material phase B clusters
+            for cluster_J in clusters_J:
+                # Set material phase B cluster characteristic function
+                _, cluster_J_filter_dft = citop.clusterfilter(cluster_J,
+                                                              self.voxels_clusters)
+                # Perform discrete convolution between the material phase B cluster
+                # characteristic function and each of Green operator material independent
+                # terms
+                gop_1_filt_vox, gop_2_filt_vox, gop_0_freq_filt_vox = \
+                    citop.clstgopconvolution(self._comp_order, self._rve_dims,
+                                             self._n_voxels_dims, cluster_J_filter_dft,
+                                             *self._gop_X_dft_vox)
+                # Loop over material phases
+                for mat_phase_A in self._material_phases:
+                    # Set material phase pair dictionary
+                    mat_phase_pair = mat_phase_A + '_' + mat_phase_B
+                    # Loop over material phase A clusters
+                    for cluster_I in self.phase_clusters[mat_phase_A]:
+                        # Set material cluster pair
+                        cluster_pair = str(cluster_I) + '_' + str(cluster_J)
+                        # Check if cluster-symmetric cluster interaction tensor
+                        sym_cluster_pair = self.switch_pair(cluster_pair)
+                        sym_mat_phase_pair = self.switch_pair(mat_phase_pair)
+                        is_clst_sym = sym_cluster_pair in \
+                            self.cit_X_mf[0][sym_mat_phase_pair].keys()
+                        # Compute cluster interaction tensor between material phase A
+                        # cluster and material phase B cluster (complete computation or
+                        # cluster-symmetric computation)
+                        if is_clst_sym:
+                            # Set cluster volume fractions ratio
+                            clst_f_ratio = self.clusters_f[str(cluster_J)]/ \
+                                self.clusters_f[str(cluster_I)]
+                            # Compute clustering interaction tensor between material phase A
+                            # cluster and material phase B cluster through cluster-symmetry
+                            for cit_mf in self.cit_X_mf:
+                                cit_mf[mat_phase_pair][cluster_pair] = \
+                                    np.multiply(clst_f_ratio,
+                                        cit_mf[sym_mat_phase_pair][sym_cluster_pair])
+                        else:
+                            # Set material phase A cluster characteristic function
+                            cluster_I_filter, _ = citop.clusterfilter(cluster_I,
+                                                                      self.voxels_clusters)
+                            # Perform discrete integral over the spatial domain of material
+                            # phase A cluster I
+                            cit_1_integral_mf, cit_2_integral_mf, cit_0_freq_integral_mf = \
+                                citop.discretecitintegral(self._comp_order,
+                                                          cluster_I_filter, gop_1_filt_vox,
+                                                          gop_2_filt_vox,
+                                                          gop_0_freq_filt_vox)
+                            # Compute cluster interaction tensor between the material phase
+                            # A cluster and the material phase B cluster
+                            rve_vol = np.prod(self._rve_dims)
+                            cit_1_pair_mf = \
+                                np.multiply((1.0/(self.clusters_f[str(cluster_I)]*rve_vol)),
+                                            cit_1_integral_mf)
+                            cit_2_pair_mf = \
+                                np.multiply((1.0/(self.clusters_f[str(cluster_I)]*rve_vol)),
+                                            cit_2_integral_mf)
+                            cit_0_freq_pair_mf = \
+                                np.multiply((1.0/(self.clusters_f[str(cluster_I)]*rve_vol)),
+                                            cit_0_freq_integral_mf)
+                            # Store cluster interaction tensor between material phase A
+                            # cluster and material phase B cluster
+                            self.cit_X_mf[0][mat_phase_pair][cluster_pair] = cit_1_pair_mf
+                            self.cit_X_mf[1][mat_phase_pair][cluster_pair] = cit_2_pair_mf
+                            self.cit_X_mf[2][mat_phase_pair][cluster_pair] = \
+                                cit_0_freq_pair_mf
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Compute remaining adaptive cluster interaction tensors through cluster-symmetry
+        # and remove vanished clustering interaction tensors
+        if mode == 'adaptive':
+            # Loop over material phases
+            for mat_phase_B in self._material_phases:
+                # Loop over material phase B old clusters
+                for cluster_J in phase_old_clusters[mat_phase_B]:
+                    # Loop over material phases
+                    for mat_phase_A in self._material_phases:
+                        # Set material phase pair dictionary
+                        mat_phase_pair = mat_phase_A + '_' + mat_phase_B
+                        # Loop over material phase A new clusters
+                        for cluster_I in phase_new_clusters[mat_phase_A]:
+                            # Set material cluster pair
+                            cluster_pair = str(cluster_I) + '_' + str(cluster_J)
+                            # Check if cluster-symmetric cluster interaction tensor
+                            sym_cluster_pair = self.switch_pair(cluster_pair)
+                            sym_mat_phase_pair = self.switch_pair(mat_phase_pair)
+                            is_clst_sym = sym_cluster_pair in \
+                                self.cit_X_mf[0][sym_mat_phase_pair].keys()
+                            # Compute cluster interaction tensor between material phase A
+                            # cluster and material phase B cluster through cluster-symmetry
+                            if not is_clst_sym:
+                                raise RuntimeError('All the remaining adaptive ' +
+                                                   'clustering interaction tensors ' +
+                                                   'should be cluster-symmetric.')
+                            # Set cluster volume fractions ratio
+                            clst_f_ratio = self.clusters_f[str(cluster_J)]/ \
+                                self.clusters_f[str(cluster_I)]
+                            # Compute clustering interaction tensor
+                            for cit_mf in self.cit_X_mf:
+                                cit_mf[mat_phase_pair][cluster_pair] = \
+                                    np.multiply(clst_f_ratio,
+                                        cit_mf[sym_mat_phase_pair][sym_cluster_pair])
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Loop over material phases
+            for mat_phase_B in self._material_phases:
+                # Loop over material phases
+                for mat_phase_A in self._material_phases:
+                    # Set material phase pair dictionary
+                    mat_phase_pair = mat_phase_A + '_' + mat_phase_B
+                    # Set existent cluster interactions
+                    cluster_pairs = [x for x in self.cit_X_mf[0][mat_phase_pair].keys()]
+                    # Loop over cluster pairs
+                    for cluster_pair in cluster_pairs:
+                        cluster_I = cluster_pair.split('_')[0]
+                        cluster_J = cluster_pair.split('_')[1]
+                        # If any of the interacting clusters no longer exists, then remove
+                        # the associated cluster interaction tensor
+                        if cluster_I in adaptive_clustering_map[mat_phase_A].keys() or \
+                            cluster_J in adaptive_clustering_map[mat_phase_B].keys():
+                            # Remove cluster interaction tensor
+                            for i in range(len(self.cit_X_mf)):
+                                self.cit_X_mf[i][mat_phase_pair].pop(cluster_pair)
+    # --------------------------------------------------------------------------------------
+    @staticmethod
+    def switch_pair(x, delimiter='_'):
+        '''Switch left and right sides of string with separating delimiter.
+
+        Parameters
+        ----------
+        x : str
+            Target string.
+        delimiter : str, default='_'
+            Separating delimiter between target's string left and right sides.
+
+        Returns
+        -------
+        y : str
+            Switched string.
+        '''
+        if not isinstance(x, str) or x.count(delimiter) != 1:
+            raise RuntimeError('Input parameter must be a string and can only contain ' + \
+                               'one delimiter.')
+        return delimiter.join(x.split(delimiter)[::-1])
 #
 #                                                                               S-CRVE class
 # ==========================================================================================
@@ -250,6 +425,11 @@ class SCRVE(CRVE):
         Total number of voxels of the regular grid (spatial discretization of the RVE).
     _phase_voxel_flatidx : dict
         Flat (1D) voxels' indexes (item, list) associated to each material phase (key, str).
+    _gop_X_dft_vox : list
+        Green operator material independent terms. Each term is stored in a dictionary,
+        where each pair of strain/stress components (key, str) is associated with the Green
+        operator material independent term evaluated in all spatial discrete points
+        (item, ndarray).
     _clustering_solutions : list
         List containing one or more RVE clustering solutions (ndarray of shape
         (n_clusters,)).
@@ -260,18 +440,18 @@ class SCRVE(CRVE):
         Clusters labels (item, list of int) associated to each material phase (key, str).
     clusters_f : dict
         Clusters volume fraction (item, float) associated to each material phase (key, str).
+    cit_X_mf : list
+        Cluster interaction tensors material independent terms. Each term is stored in a
+        dictionary (item, dict) for each pair of material phases (key, str), which in turn
+        contains the corresponding matricial form (item, ndarray) associated to each
+        pair of clusters (key, str).
     '''
     def __init__(self, phase_n_clusters, rve_dims, regular_grid, material_phases,
-                 clustering_scheme, clustering_ensemble_strategy):
+                 comp_order, clustering_scheme, clustering_ensemble_strategy):
         '''Static Cluster-reduced Representative Volume Element constructor.
 
         Parameters
         ----------
-        clustering_scheme : ndarray of shape (n_clusterings, 3)
-            Prescribed global clustering scheme to generate the CRVE. Each row is associated
-            with a unique RVE clustering, characterized by a clustering algorithm
-            (col 1, int), a list of features (col 2, list of int) and a list of the feature
-            data matrix' indexes (col 3, list of int).
         phase_n_clusters : dict
             Number of clusters (item, int) prescribed for each material phase (key, str).
         rve_dims : list
@@ -281,8 +461,16 @@ class SCRVE(CRVE):
             contains the material phase label (int) assigned to the corresponding voxel.
         material_phases : list
             RVE material phases labels (str).
+        comp_order : list
+            Strain/Stress components (str) order.
+        clustering_scheme : ndarray of shape (n_clusterings, 3)
+            Prescribed global clustering scheme to generate the CRVE. Each row is associated
+            with a unique RVE clustering, characterized by a clustering algorithm
+            (col 1, int), a list of features (col 2, list of int) and a list of the feature
+            data matrix' indexes (col 3, list of int).
         '''
-        super().__init__(phase_n_clusters, rve_dims, regular_grid, material_phases)
+        super().__init__(phase_n_clusters, rve_dims, regular_grid, material_phases,
+                         comp_order)
         self._clustering_scheme = clustering_scheme
         self._clustering_ensemble_strategy = clustering_ensemble_strategy
         self._clustering_solutions = []
@@ -424,12 +612,12 @@ class RVEClustering:
             # Set number of full batch K-Means clusterings (with different initializations)
             n_init = 10
             # Instantiate K-Means
-            clst_alg = KMeansSK(init='k-means++', n_init=n_init, max_iter=300, tol=1e-4,
-                                random_state=None, algorithm='auto')
+            clst_alg = clstalgs.KMeansSK(init='k-means++', n_init=n_init, max_iter=300,
+                                        tol=1e-4, random_state=None, algorithm='auto')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         elif self._clustering_method == 2:
             # Instatiante K-Means
-            clst_alg = KMeansPC(tolerance=1e-03, itermax=200)
+            clst_alg = clstalgs.KMeansPC(tolerance=1e-03, itermax=200)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         elif self._clustering_method == 3:
             # Set size of the mini-batches
@@ -437,26 +625,27 @@ class RVEClustering:
             # Set number of random initializations
             n_init = 3
             # Intantiate Mini-Batch K-Means
-            clst_alg = MiniBatchKMeansSK(init='k-means++', max_iter=100, tol=0.0,
-                                         random_state=None, batch_size=batch_size,
-                                         max_no_improvement=10, init_size=None,
-                                         n_init=n_init, reassignment_ratio=0.01)
+            clst_alg = clstalgs.MiniBatchKMeansSK(init='k-means++', max_iter=100, tol=0.0,
+                                                 random_state=None, batch_size=batch_size,
+                                                 max_no_improvement=10, init_size=None,
+                                                 n_init=n_init, reassignment_ratio=0.01)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         elif self._clustering_method == 4:
             # Instantiate Agglomerative clustering
-            clst_alg = AgglomerativeSK(n_clusters=None, affinity='euclidean', memory=None,
-                                       connectivity=None, compute_full_tree='auto',
-                                       linkage='ward', distance_threshold=None)
+            clst_alg = clstalgs.AgglomerativeSK(n_clusters=None, affinity='euclidean',
+                                               memory=None, connectivity=None,
+                                               compute_full_tree='auto',
+                                               linkage='ward', distance_threshold=None)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         elif self._clustering_method == 5:
             # Instatiate Agglomerative clustering
-            clst_alg = AgglomerativeSP(0, n_clusters=None, method='ward',
-                                       metric='euclidean', criterion='maxclust')
+            clst_alg = clstalgs.AgglomerativeSP(0, n_clusters=None, method='ward',
+                                               metric='euclidean', criterion='maxclust')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         elif self._clustering_method == 6:
             # Instatiate Agglomerative clustering
-            clst_alg = AgglomerativeFC(0, n_clusters=None, method='ward',
-                                       metric='euclidean', criterion='maxclust')
+            clst_alg = clstalgs.AgglomerativeFC(0, n_clusters=None, method='ward',
+                                               metric='euclidean', criterion='maxclust')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         elif self._clustering_method == 7:
             # Set merging radius threshold
@@ -464,7 +653,8 @@ class RVEClustering:
             # Set maximum number of CF subclusters in each node
             branching_factor = 50
             # Instantiate Birch
-            clst_alg = BirchSK(threshold=threshold, branching_factor=branching_factor)
+            clst_alg = clstalgs.BirchSK(threshold=threshold,
+                                       branching_factor=branching_factor)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         elif self._clustering_method == 8:
             # Set merging radius threshold
@@ -472,15 +662,16 @@ class RVEClustering:
             # Set maximum number of CF subclusters in each node
             branching_factor = 50
             # Instantiate Birch
-            clst_alg = BirchPC(threshold=threshold, branching_factor=branching_factor)
+            clst_alg = clstalgs.BirchPC(threshold=threshold,
+                                       branching_factor=branching_factor)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         elif self._clustering_method == 9:
             # Instantiate Cure
-            clst_alg = CurePC(number_represent_points=5, compression=0.5)
+            clst_alg = clstalgs.CurePC(number_represent_points=5, compression=0.5)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         elif self._clustering_method == 10:
             # Instantiate X-Means
-            clst_alg = XMeansPC(tolerance=2.5e-2, repeat=1)
+            clst_alg = clstalgs.XMeansPC(tolerance=2.5e-2, repeat=1)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         else:
             raise RuntimeError('Unknown clustering algorithm.')
@@ -523,780 +714,6 @@ class RVEClustering:
             raise RuntimeError('At least one RVE domain point has not been labeled' +
                                'during the cluster analysis.')
 #
-#                                                                      Clustering algorithms
-# ==========================================================================================
-class ClusteringAlgorithm(ABC):
-    '''Clustering algorithm interface.'''
-    @abstractmethod
-    def __init__(self):
-        '''Clustering algorithm constructor.'''
-        pass
-    # --------------------------------------------------------------------------------------
-    @abstractmethod
-    def perform_clustering(self, data_matrix):
-        '''Perform cluster analysis and return cluster label for each dataset item.
-
-        Parameters
-        ----------
-        data_matrix : ndarray of shape (n_items, n_features)
-            Data matrix containing the required data to perform cluster analysis.
-
-        Returns
-        -------
-        cluster_labels : ndarray of shape (n_items,)
-            Cluster label (int) assigned to each dataset item.
-        '''
-        pass
-# ------------------------------------------------------------------------------------------
-class AgglomerativeAlgorithm(ClusteringAlgorithm):
-    '''Hierarchical agglomerative interface.'''
-    @abstractmethod
-    def get_linkage_matrix(self):
-        '''Get hierarchical agglomerative clustering linkage matrix.
-
-        Returns
-        -------
-        linkage_matrix : ndarray of shape (n-1, 4)
-                         Linkage matrix associated with the hierarchical agglomerative
-                         clustering. At the i-th iteration the clusterings with indices
-                         Z[i, 0] and Z[i, 1], with distance Z[i, 2], are merged, forming a
-                         new cluster that contains Z[i, 3] original dataset items. All
-                         cluster indices j >= n refer to the cluster formed in Z[j-n, :].
-
-        Notes
-        -----
-        The hierarchical agglomerative clustering linkage matrix follows the definition of
-        scipy (https://docs.scipy.org/) agglomerative clustering algorithm.
-        '''
-        pass
-# ------------------------------------------------------------------------------------------
-class KMeansSK(ClusteringAlgorithm):
-    '''K-Means clustering algorithm.
-
-    Notes
-    -----
-    The K-Means clustering algorithm is taken from scikit-learn (https://scikit-learn.org).
-    Further information can be found in there.
-    '''
-    def __init__(self, init='k-means++', n_init=10, max_iter=300, tol=1e-4,
-                 random_state=None, algorithm='auto', n_clusters=None):
-        '''K-Means clustering algorithm constructor.
-
-        Parameters
-        ----------
-        n_clusters : int, default=None
-            Number of clusters to find.
-        init : {‘k-means++’, ‘random’, ndarray, callable}, default=’k-means++’
-            Method for centroid initialization.
-        n_init : int, default=10
-            Number of times K-Means is run with different centroid seeds.
-        max_iter : int, default=300
-            Maximum number of iterations.
-        tol : float, default=1e-4
-            Convergence tolerance (based on Frobenius norm of the different in the cluster
-            centers of two consecutive iterations).
-        random_state : int, RandomState instance, default=None
-            Determines random number generation for centroid initialization.
-            Use an int to make the randomness deterministic.
-        algorithm : {'auto', 'full', 'elkan'}, default='auto'
-            K-Means algorithm to use. 'full' is the classical EM-style algorithm, 'elkan'
-            uses the triangle inequality to speed up convergence. 'auto' currently chooses
-            'elkan' (scikit-learn 0.23.2).
-        '''
-        self.n_clusters = n_clusters
-        self._init = init
-        self._n_init = n_init
-        self._max_iter = max_iter
-        self._tol = tol
-        self._random_state = random_state
-        self._algorithm = algorithm
-    # --------------------------------------------------------------------------------------
-    def perform_clustering(self, data_matrix):
-        '''Perform cluster analysis and return cluster label for each dataset item.
-
-        Parameters
-        ----------
-        data_matrix : ndarray of shape (n_items, n_features)
-            Data matrix containing the required data to perform cluster analysis.
-
-        Returns
-        -------
-        cluster_labels : ndarray of shape (n_items,)
-            Cluster label (int) assigned to each dataset item.
-        '''
-        # Instantiate scikit-learn K-Means clustering algorithm
-        self._clst_alg = skclst.KMeans(n_clusters=self.n_clusters, init=self._init,
-                                       n_init=self._n_init, max_iter=self._max_iter,
-                                       tol=self._tol, random_state=self._random_state,
-                                       algorithm=self._algorithm)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Compute cluster centers (fitted estimator) and predict cluster label (prediction)
-        # for each dataset item
-        cluster_labels = self._clst_alg.fit_predict(data_matrix, sample_weight=None)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        return cluster_labels
-# ------------------------------------------------------------------------------------------
-class MiniBatchKMeansSK(ClusteringAlgorithm):
-    '''Mini-Batch K-Means clustering algorithm.
-
-    Notes
-    -----
-    The Mini-Batch K-Means clustering algorithm is taken from scikit-learn
-    (https://scikit-learn.org). Further information can be found in there.
-    '''
-    def __init__(self, init='k-means++', max_iter=100, tol=0.0, random_state=None,
-                 batch_size=100, max_no_improvement=10, init_size=None, n_init=3,
-                 reassignment_ratio=0.01, n_clusters=None):
-        '''Mini-Batch K-Means clustering algorithm constructor.
-
-        Parameters
-        ----------
-        n_clusters : int, default=None
-            Number of clusters to find.
-        init: {‘k-means++’, ‘random’, ndarray, callable}, default=’k-means++’
-            Method for centroid initialization.
-        n_init : int, default=10
-            Number of times K-Means is run with different centroid seeds.
-        max_iter : int, default=300
-            Maximum number of iterations.
-        tol : float, default=1e-4
-            Convergence tolerance (based on Frobenius norm of the different in the cluster
-            centers of two consecutive iterations).
-        random_state : int, RandomState instance, default=None
-            Determines random number generation for centroid initialization.
-            Use an int to make the randomness deterministic.
-        init_size : int, default=None
-            Number of samples to randomly sample for speeding up the initialization
-            (sometimes at the expense of accuracy): the only algorithm is initialized by
-            running a batch KMeans on a random subset of the data.
-        n_init : int, default=3
-            Number of random initializations that are tried (best of initializations is
-            used to run the algorithm).
-        reassignment_ratio : float, default=0.01
-            Control the fraction of the maximum number of counts for a center to be
-            reassigned.
-        '''
-        self.n_clusters = n_clusters
-        self._init = init
-        self._n_init = n_init
-        self._max_iter = max_iter
-        self._tol = tol
-        self._random_state = random_state
-        self._init_size = init_size
-        self._reassignment_ratio = reassignment_ratio
-    # --------------------------------------------------------------------------------------
-    def perform_clustering(self, data_matrix):
-        '''Perform cluster analysis and return cluster label for each dataset item.
-
-        Parameters
-        ----------
-        data_matrix : ndarray of shape (n_items, n_features)
-            Data matrix containing the required data to perform cluster analysis.
-
-        Returns
-        -------
-        cluster_labels : ndarray of shape (n_items,)
-            Cluster label (int) assigned to each dataset item.
-        '''
-        # Instantiate scikit-learn Mini-Batch K-Means clustering algorithm
-        self._clst_alg = skclst.MiniBatchKMeans(n_clusters=self.n_clusters, init=self._init,
-            n_init=self._n_init, max_iter=self._max_iter, tol=self._tol,
-            random_state=self._random_state, init_size=self._init_size,
-            reassignment_ratio=self._reassignment_ratio)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Compute cluster centers (fitted estimator) and predict cluster label (prediction)
-        # for each dataset item
-        cluster_labels = self._clst_alg.fit_predict(data_matrix, sample_weight=None)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        return cluster_labels
-# ------------------------------------------------------------------------------------------
-class BirchSK(ClusteringAlgorithm):
-    '''Birch clustering algorithm.
-
-    Notes
-    -----
-    The Birch clustering algorithm is taken from scikit-learn (https://scikit-learn.org).
-    Further information can be found in there.
-    '''
-    def __init__(self, threshold=0.5, branching_factor=50, n_clusters=None):
-        '''Birch clustering algorithm constructor.
-
-        Parameters
-        ----------
-        threshold : float, default=0.5
-            The radius of the subcluster obtained by merging a new sample and the closest
-            subcluster should be lesser than the threshold. Otherwise a new subcluster is
-            started. Setting this value to be very low promotes splitting and vice-versa.
-        branching_factor : int, default=50
-            Maximum number of CF subclusters in each node. If a new samples enters such that
-            the number of subclusters exceed the branching_factor then that node is split
-            into two nodes with the subclusters redistributed in each. The parent subcluster
-            of that node is removed and two new subclusters are added as parents of the 2
-            split nodes.
-        n_clusters : int, instance of sklearn.cluster model, default=None
-            Number of clusters to find after the final clustering step, which treats the
-            subclusters from the leaves as new samples.
-            - `None` : the final clustering step is not performed and the subclusters are
-               returned as they are.
-            - `sklearn.cluster` Estimator : If a model is provided, the model is fit
-               treating the subclusters as new samples and the initial data is mapped to the
-               label of the closest subcluster.
-            - `int` : the model fit is `AgglomerativeClustering` with `n_clusters` set to be
-               equal to the int.
-        '''
-        self.n_clusters = n_clusters
-        self._threshold = threshold
-        self._branching_factor = branching_factor
-    # --------------------------------------------------------------------------------------
-    def perform_clustering(self, data_matrix):
-        '''Perform cluster analysis and return cluster label for each dataset item.
-
-        Parameters
-        ----------
-        data_matrix: ndarray of shape (n_items, n_features)
-            Data matrix containing the required data to perform cluster analysis.
-
-        Returns
-        -------
-        cluster_labels: ndarray of shape (n_items,)
-            Cluster label (int) assigned to each dataset item.
-        '''
-        # Instantiate scikit-learn Birch clustering algorithm
-        self._clst_alg = skclst.Birch(threshold=self._threshold,
-                                      branching_factor=self._branching_factor,
-                                      n_clusters=self.n_clusters)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Perform clustering and return cluster labels
-        cluster_labels = self._clst_alg.fit_predict(data_matrix)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        return cluster_labels
-# ------------------------------------------------------------------------------------------
-class AgglomerativeSK(ClusteringAlgorithm):
-    '''Agglomerative clustering algorithm.
-
-    Notes
-    -----
-    The Agglomerative clustering algorithm is taken from scikit-learn
-    (https://scikit-learn.org). Further information can be found in there.
-    '''
-    def __init__(self, affinity='euclidean', memory=None, connectivity=None,
-                 compute_full_tree='auto', linkage='ward', distance_threshold=None,
-                 n_clusters=None):
-        '''Agglomerative clustering algorithm constructor.
-
-        Parameters
-        ----------
-        n_clusters : int, default=None
-            The number of clusters to find. It must be ``None`` if ``distance_threshold`` is
-            not ``None``.
-        affinity : str or callable, default='euclidean'
-            Metric used to compute the linkage. Can be "euclidean", "l1", "l2", "manhattan",
-            "cosine", or "precomputed". If linkage is "ward", only "euclidean" is accepted.
-            If "precomputed", a distance matrix (instead of a similarity matrix) is needed
-            as input for the fit method.
-        memory : str or object with the joblib.Memory interface, default=None
-            Used to cache the output of the computation of the tree. By default, no caching
-            is done. If a string is given, it is the path to the caching directory.
-        connectivity : array-like or callable, default=None
-            Connectivity matrix. Defines for each sample the neighboring samples following a
-            given structure of the data. This can be a connectivity matrix itself or a
-            callable that transforms the data into a connectivity matrix, such as derived
-            from kneighbors_graph. Default is None, i.e, the hierarchical clustering
-            algorithm is unstructured.
-        compute_full_tree : 'auto' or bool, default='auto'
-            Stop early the construction of the tree at n_clusters. This is useful to
-            decrease computation time if the number of clusters is not small compared to the
-            number of samples. This option is useful only when specifying a connectivity
-            matrix. Note also that when varying the number of clusters and using caching, it
-            may be advantageous to compute the full tree. It must be ``True`` if
-            ``distance_threshold`` is not ``None``. By default `compute_full_tree` is
-            "auto", which is equivalent to `True` when `distance_threshold` is not `None` or
-            that `n_clusters` is inferior to the maximum between 100 or `0.02 * n_samples`.
-            Otherwise, "auto" is equivalent to `False`.
-        linkage : {"ward", "complete", "average", "single"}, default="ward"
-            Which linkage criterion to use. The linkage criterion determines which distance
-            to use between sets of observation. The algorithm will merge the pairs of
-            cluster that minimize this criterion.
-            - ward minimizes the variance of the clusters being merged.
-            - average uses the average of the distances of each observation of the two sets.
-            - complete or maximum linkage uses the maximum distances between all
-              observations of the two sets.
-            - single uses the minimum of the distances between all observations of the two
-              sets.
-        distance_threshold : float, default=None
-            The linkage distance threshold above which, clusters will not be merged. If not
-            ``None``, ``n_clusters`` must be ``None`` and ``compute_full_tree`` must be
-            ``True``.
-        '''
-        self.n_clusters = n_clusters
-        self._affinity = affinity
-        self._memory = memory
-        self._connectivity = connectivity
-        self._compute_full_tree = compute_full_tree
-        self._linkage = linkage
-        self._distance_threshold = distance_threshold
-    # --------------------------------------------------------------------------------------
-    def perform_clustering(self, data_matrix):
-        '''Perform cluster analysis and return cluster label for each dataset item.
-
-        Parameters
-        ----------
-        data_matrix: ndarray of shape (n_items, n_features)
-            Data matrix containing the required data to perform cluster analysis.
-
-        Returns
-        -------
-        cluster_labels: ndarray of shape (n_items,)
-            Cluster label (int) assigned to each dataset item.
-        '''
-        # Instantiate scikit-learn Birch clustering algorithm
-        self._clst_alg = skclst.AgglomerativeClustering(n_clusters=self.n_clusters,
-            affinity=self._affinity, memory=self._memory, connectivity=self._connectivity,
-            compute_full_tree=self._compute_full_tree, linkage=self._linkage,
-            distance_threshold=self._distance_threshold)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Fit the hierarchical clustering and return cluster labels
-        cluster_labels = self._clst_alg.fit_predict(data_matrix)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        return cluster_labels
-# ------------------------------------------------------------------------------------------
-class AgglomerativeSP(AgglomerativeAlgorithm):
-    '''Agglomerative clustering algorithm.
-
-    Attributes
-    ----------
-    _linkage_matrix : ndarray of shape (n-1, 4)
-                      Linkage matrix associated with the hierarchical clustering. At the
-                      i-th iteration the clusterings with indices Z[i, 0] and Z[i, 1], with
-                      distance Z[i, 2], are merged, forming a new cluster that contains
-                      Z[i, 3] original dataset items. All cluster indices j >= n refer to
-                      the cluster formed in Z[j-n, :].
-
-    Notes
-    -----
-    The Agglomerative clustering algorithm is taken from scipy (https://docs.scipy.org/)
-    Further information can be found in there.
-    '''
-    def __init__(self, t, method='ward', metric='euclidean', criterion='maxclust',
-                 n_clusters=None):
-        '''Agglomerative clustering algorithm constructor.
-
-        Parameters
-        ----------
-        n_clusters : int, default=None
-            The number of clusters to find.
-        t : int or float
-            Scalar parameter associated to the criterion used to form a flat clustering.
-            Threshold (float) with criterion in {'inconsistent', 'distance', 'monocrit'} or
-            maximum number of clusters with criterion in {'maxclust', 'maxclust_monocrit'}.
-        method : str, {'single', 'complete', 'average', 'weighted', 'centroid', 'median',
-                'ward'}, default='ward'
-            Linkage criterion.
-        metric : str or function, default='euclidean'
-            Distance metric to use when the input data matrix is a ndarray of observation
-            vectors, otherwise ignored. Options: {'cityblock', 'euclidean', 'cosine', ...}.
-        criterion : str, {'inconsistent', 'distance', 'maxclust', 'monocrit',
-            'maxclust_monocrit'}, default='maxclust'
-            Criterion used to form a flat clustering (i.e., perform a horizontal cut in the
-            hierarchical tree).
-        '''
-        self._t = t
-        self.n_clusters = n_clusters
-        self._method = method
-        self._metric = metric
-        self._criterion = criterion
-        self._linkage_matrix = None
-    # --------------------------------------------------------------------------------------
-    def perform_clustering(self, data_matrix):
-        '''Perform cluster analysis and return cluster label for each dataset item.
-
-        Parameters
-        ----------
-        data_matrix: ndarray of shape (n_items, n_features)
-            Data matrix containing the required data to perform cluster analysis.
-
-        Returns
-        -------
-        cluster_labels: ndarray of shape (n_items,)
-            Cluster label (int) assigned to each dataset item.
-        '''
-        # Perform hierarchical clustering and encode it in a linkage matrix
-        self._linkage_matrix = sciclst.linkage(data_matrix, method=self._method,
-                                               metric=self._metric)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Perform horizontal cut in hierarchical tree and return cluster labels (form a flat
-        # clustering)
-        cluster_labels = sciclst.fcluster(self._linkage_matrix, self.n_clusters,
-                                          criterion=self._criterion)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        return cluster_labels
-    # --------------------------------------------------------------------------------------
-    def get_linkage_matrix(self):
-        '''Get hierarchical agglomerative clustering linkage matrix.
-
-        Returns
-        -------
-        linkage_matrix : ndarray of shape (n-1, 4)
-                         Linkage matrix associated with the hierarchical agglomerative
-                         clustering. At the i-th iteration the clusterings with indices
-                         Z[i, 0] and Z[i, 1], with distance Z[i, 2], are merged, forming a
-                         new cluster that contains Z[i, 3] original dataset items. All
-                         cluster indices j >= n refer to the cluster formed in Z[j-n, :].
-
-        Notes
-        -----
-        The hierarchical agglomerative clustering linkage matrix follows the definition of
-        scipy (https://docs.scipy.org/) agglomerative clustering algorithm.
-        '''
-        if self._linkage_matrix is None:
-            raise ValueError('Hierarchical agglomerative clustering linkage matrix has' +
-                             'not been computed yet.')
-        return self._linkage_matrix
-# ------------------------------------------------------------------------------------------
-class BirchPC(ClusteringAlgorithm):
-    '''Birch clustering algorithm.
-
-    Notes
-    -----
-    The Birch clustering algorithm is taken from pyclustering (https://pypi.org/).
-    Further information can be found in there.
-    '''
-    def __init__(self, threshold=0.5, branching_factor=50, max_node_entries=200,
-                 type_measurement=pycftree.measurement_type.CENTROID_EUCLIDEAN_DISTANCE,
-                 entry_size_limit=500, threshold_multiplier=1.5, n_clusters=None):
-        '''Birch clustering algorithm constructor.
-
-        Parameters
-        ----------
-        threshold : float, default=0.5
-            CF-entry diameter that is used for CF-Tree construction (might increase if
-            `entry_size_limit` is exceeded).
-        branching_factor : int, default=50
-            Maximum number of successor that might be contained by each non-leaf node in
-            CF-Tree.
-        max_node_entries : int, default=200
-            Maximum number of entries that might be contained by each leaf node in CF-Tree.
-        type_measurement : measurement type, default=CENTROID_EUCLIDEAN_DISTANCE
-            Type of measurement used for calculation of distance metrics.
-        entry_size_limit : int, default=500
-            Maximum number of entries that can be stored in CF-Tree (if exceeded during
-            creation of CF-Tree, then threshold is increased and CF-Tree is rebuilt).
-        threshold_multiplier : float, default=1.5
-            Multiplier used to increase the threshold when `entry_size_limit` is exceeded.
-        n_clusters : int, default=None
-            Number of clusters to find.
-        '''
-        self.n_clusters = n_clusters
-        self._threshold = threshold
-        self._branching_factor = branching_factor
-        self._max_node_entries = max_node_entries
-        self._type_measurement = type_measurement
-        self._entry_size_limit = entry_size_limit
-        self._threshold_multiplier = threshold_multiplier
-    # --------------------------------------------------------------------------------------
-    def perform_clustering(self, data_matrix):
-        '''Perform cluster analysis and return cluster label for each dataset item.
-
-        Parameters
-        ----------
-        data_matrix: ndarray of shape (n_items, n_features)
-            Data matrix containing the required data to perform cluster analysis.
-
-        Returns
-        -------
-        cluster_labels: ndarray of shape (n_items,)
-            Cluster label (int) assigned to each dataset item.
-        '''
-        # Instantiate pyclustering Birch clustering algorithm
-        self._clst_alg = pybirch.birch(data_matrix.tolist(), self.n_clusters,
-                                       diameter=self._threshold,
-                                       branching_factor=self._branching_factor,
-                                       max_node_entries=self._max_node_entries,
-                                       entry_size_limit=self._entry_size_limit,
-                                       diameter_multiplier=self._threshold_multiplier)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Perform clustering
-        self._clst_alg.process()
-        clusters = self._clst_alg.get_clusters()
-        # Get type of cluster encoding (index list separation by default)
-        type_clusters = self._clst_alg.get_cluster_encoding()
-        # Instantiate cluster encoder (clustering result representor)
-        encoder = pyencoder.cluster_encoder(type_clusters, clusters, data_matrix)
-        # Change cluster encoding to index labeling
-        encoder.set_encoding(pyencoder.type_encoding.CLUSTER_INDEX_LABELING)
-        # Return cluster labels
-        cluster_labels = np.array(encoder.get_clusters())
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        return cluster_labels
-# ------------------------------------------------------------------------------------------
-class CurePC(ClusteringAlgorithm):
-    '''Cure clustering algorithm.
-
-    Notes
-    -----
-    The Cure clustering algorithm is taken from pyclustering (https://pypi.org/).
-    Further information can be found in there.
-    '''
-    def __init__(self, number_represent_points=5, compression=0.5, n_clusters=None):
-        '''Cure clustering algorithm constructor.
-
-        Parameters
-        ----------
-        n_clusters : int, default=None
-            Number of clusters to find.
-        number_represent_points : int, default=5
-            Number of representative points for each cluster.
-        compression : float, default=0.5
-            Coefficient that defines the level of shrinking of representation points toward
-            the mean of the new created cluster after merging on each step (usually set
-            between 0 and 1).
-        '''
-        self.n_clusters = n_clusters
-        self._number_represent_points = number_represent_points
-        self._compression = compression
-    # --------------------------------------------------------------------------------------
-    def perform_clustering(self, data_matrix):
-        '''Perform cluster analysis and return cluster label for each dataset item.
-
-        Parameters
-        ----------
-        data_matrix: ndarray of shape (n_items, n_features)
-            Data matrix containing the required data to perform cluster analysis.
-
-        Returns
-        -------
-        cluster_labels: ndarray of shape (n_items,)
-            Cluster label (int) assigned to each dataset item.
-        '''
-        # Instantiate pyclustering Cure clustering algorithm
-        self._clst_alg = pycure.cure(data_matrix.tolist(), self.n_clusters,
-                                     number_represent_points=self._number_represent_points,
-                                     compression=self._compression)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Perform clustering
-        self._clst_alg.process()
-        clusters = self._clst_alg.get_clusters()
-        # Get type of cluster encoding (index list separation by default)
-        type_clusters = self._clst_alg.get_cluster_encoding()
-        # Instantiate cluster encoder (clustering result representor)
-        encoder = pyencoder.cluster_encoder(type_clusters, clusters, data_matrix)
-        # Change cluster encoding to index labeling
-        encoder.set_encoding(pyencoder.type_encoding.CLUSTER_INDEX_LABELING)
-        # Return cluster labels
-        cluster_labels = np.array(encoder.get_clusters())
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        return cluster_labels
-# ------------------------------------------------------------------------------------------
-class KMeansPC(ClusteringAlgorithm):
-    '''K-Means clustering algorithm.
-
-    Notes
-    -----
-    The K-Means clustering algorithm is taken from pyclustering (https://pypi.org/).
-    Further information can be found in there.
-    '''
-    def __init__(self, tolerance=1e-03, itermax=200,
-                 metric=pymetric.distance_metric(pymetric.type_metric.EUCLIDEAN_SQUARE),
-                 n_clusters=None):
-        '''K-Means clustering algorithm constructor.
-
-        Parameters
-        ----------
-        n_clusters : int, default=None
-            Number of clusters to find.
-        tolerance : float, default=1e-03
-            Convergence tolerance (based on the maximum value of change of cluster centers
-            of two consecutive iterations).
-        itermax : int, default=200
-            Maximum number of iterations.
-        metric : distance_metric, default=EUCLIDEAN_SQUARE
-            Metric used for distance calculation between samples.
-        '''
-        self.n_clusters = n_clusters
-        self._tolerance = tolerance
-        self._itermax = itermax
-        self._metric = metric
-    # --------------------------------------------------------------------------------------
-    def perform_clustering(self, data_matrix):
-        '''Perform cluster analysis and return cluster label for each dataset item.
-
-        Parameters
-        ----------
-        data_matrix: ndarray of shape (n_items, n_features)
-            Data matrix containing the required data to perform cluster analysis.
-
-        Returns
-        -------
-        cluster_labels: ndarray of shape (n_items,)
-            Cluster label (int) assigned to each dataset item.
-        '''
-        # Instatiante cluster centers seeds using K-Means++
-        amount_candidates = \
-            pycenterinit.kmeans_plusplus_initializer.FARTHEST_CENTER_CANDIDATE
-        initial_centers = pycenterinit.kmeans_plusplus_initializer(data_matrix.tolist(),
-            self.n_clusters, amount_candidates=amount_candidates).initialize()
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Instantiate pyclustering K-Means clustering algorithm
-        self._clst_alg = pykmeans.kmeans(data_matrix.tolist(), initial_centers,
-                                         tolerance=self._tolerance, itermax=self._itermax,
-                                         metric=self._metric)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Perform clustering
-        self._clst_alg.process()
-        clusters = self._clst_alg.get_clusters()
-        # Get type of cluster encoding (index list separation by default)
-        type_clusters = self._clst_alg.get_cluster_encoding()
-        # Instantiate cluster encoder (clustering result representor)
-        encoder = pyencoder.cluster_encoder(type_clusters, clusters, data_matrix)
-        # Change cluster encoding to index labeling
-        encoder.set_encoding(pyencoder.type_encoding.CLUSTER_INDEX_LABELING)
-        # Return cluster labels
-        cluster_labels = np.array(encoder.get_clusters())
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        return cluster_labels
-# ------------------------------------------------------------------------------------------
-class XMeansPC(ClusteringAlgorithm):
-    '''X-Means clustering algorithm.
-
-    Notes
-    -----
-    The X-Means clustering algorithm is taken from pyclustering (https://pypi.org/).
-    Further information can be found in there.
-    '''
-    def __init__(self, tolerance=2.5e-2,
-                 criterion=pyxmeans.splitting_type.BAYESIAN_INFORMATION_CRITERION, repeat=1,
-                 n_clusters=None):
-        '''X-Means clustering algorithm constructor.
-
-        Parameters
-        ----------
-        n_clusters : int, default=None
-            Maximum number of clusters than can be found.
-        tolerance : float, default=2.5e-2
-            Convergence tolerance (based on the maximum value of change of cluster centers
-            of two consecutive iterations).
-        criterion : splitting_type, BAYESIAN_INFORMATION_CRITERION
-            Criterion to perform cluster splitting.
-        repeat : int, default=1
-            How many times K-Means should be run to improve parameters. Larger values
-            increase the probability of finding global optimum.
-        '''
-        self.n_clusters = n_clusters
-        self._tolerance = tolerance
-        self._criterion = criterion
-        self._repeat = repeat
-    # --------------------------------------------------------------------------------------
-    def perform_clustering(self, data_matrix):
-        '''Perform cluster analysis and return cluster label for each dataset item.
-
-        Parameters
-        ----------
-        data_matrix: ndarray of shape (n_items, n_features)
-            Data matrix containing the required data to perform cluster analysis.
-
-        Returns
-        -------
-        cluster_labels: ndarray of shape (n_items,)
-            Cluster label (int) assigned to each dataset item.
-        '''
-        # Set initial numbers of clusters
-        amount_initial_centers = max(1, int(0.1*self.n_clusters))
-        # Instatiante cluster centers seeds using K-Means++
-        initial_centers = pycenterinit.kmeans_plusplus_initializer(data_matrix.tolist(),
-            amount_initial_centers).initialize()
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Instantiate pyclustering X-Means clustering algorithm
-        self._clst_alg = pyxmeans.xmeans(data_matrix.tolist(), initial_centers,
-                                         kmax=self.n_clusters, tolerance=self._tolerance,
-                                         criterion=self._criterion, repeat=self._repeat)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Perform clustering
-        self._clst_alg.process()
-        clusters = self._clst_alg.get_clusters()
-        # Get type of cluster encoding (index list separation by default)
-        type_clusters = self._clst_alg.get_cluster_encoding()
-        # Instantiate cluster encoder (clustering result representor)
-        encoder = pyencoder.cluster_encoder(type_clusters, clusters, data_matrix)
-        # Change cluster encoding to index labeling
-        encoder.set_encoding(pyencoder.type_encoding.CLUSTER_INDEX_LABELING)
-        # Return cluster labels
-        cluster_labels = np.array(encoder.get_clusters())
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        return cluster_labels
-# ------------------------------------------------------------------------------------------
-class AgglomerativeFC(ClusteringAlgorithm):
-    '''Agglomerative clustering algorithm.
-
-    Attributes
-    ----------
-    Z : ndarray of shape (n-1, 4)
-        Linkage matrix associated with the hierarchical clustering. At the i-th iteration
-        the clusterings with indices Z[i, 0] and Z[i, 1], with distance Z[i, 2], are merged,
-        forming a new cluster that contains Z[i, 3] original dataset items. All cluster
-        indices j >= n refer to the cluster formed in Z[j-n, :].
-
-    Notes
-    -----
-    The Agglomerative clustering algorithm is taken from Daniel Mullner fastcluster package
-    (http://danifold.net/fastcluster). Apart from one optional argument (`preserve_input`),
-    fastcluster implements the scipy Agglomerative clustering algorithm in a more efficient
-    way, being the associated classes and methods the same (https://docs.scipy.org/).
-    Further information can be found in both domains.
-    '''
-    def __init__(self, t, method='ward', metric='euclidean', criterion='maxclust',
-                 n_clusters=None):
-        '''Agglomerative clustering algorithm constructor.
-
-        Parameters
-        ----------
-        n_clusters : int, default=None
-            The number of clusters to find.
-        t : int or float
-            Scalar parameter associated to the criterion used to form a flat clustering.
-            Threshold (float) with criterion in {'inconsistent', 'distance', 'monocrit'} or
-            maximum number of clusters with criterion in {'maxclust', 'maxclust_monocrit'}.
-        method : str, {'single', 'complete', 'average', 'weighted', 'centroid', 'median',
-                'ward'}, default='ward'
-            Linkage criterion.
-        metric : str or function, default='euclidean'
-            Distance metric to use when the input data matrix is a ndarray of observation
-            vectors, otherwise ignored. Options: {'cityblock', 'euclidean', 'cosine', ...}.
-        criterion : str, {'inconsistent', 'distance', 'maxclust', 'monocrit',
-            'maxclust_monocrit'}, default='maxclust'
-            Criterion used to form a flat clustering (i.e., perform a horizontal cut in the
-            hierarchical tree).
-        '''
-        self._t = t
-        self.n_clusters = n_clusters
-        self._method = method
-        self._metric = metric
-        self._criterion = criterion
-        self._Z = None
-    # --------------------------------------------------------------------------------------
-    def perform_clustering(self, data_matrix):
-        '''Perform cluster analysis and return cluster label for each dataset item.
-
-        Parameters
-        ----------
-        data_matrix: ndarray of shape (n_items, n_features)
-            Data matrix containing the required data to perform cluster analysis.
-
-        Returns
-        -------
-        cluster_labels: ndarray of shape (n_items,)
-            Cluster label (int) assigned to each dataset item.
-        '''
-        # Perform hierarchical clustering and encode it in a linkage matrix
-        self.Z = fastclst.linkage(data_matrix, method=self._method, metric=self._metric,
-                                  preserve_input=False)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Perform horizontal cut in hierarchical tree and return cluster labels (form a flat
-        # clustering)
-        cluster_labels = sciclst.fcluster(self.Z, self.n_clusters,
-                                          criterion=self._criterion)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        return cluster_labels
-#
 #                                                                              HA-CRVE class
 # ==========================================================================================
 class HACRVE(CRVE):
@@ -1315,6 +732,11 @@ class HACRVE(CRVE):
         Total number of voxels of the regular grid (spatial discretization of the RVE).
     _phase_voxel_flatidx : dict
         Flat (1D) voxels' indexes (item, list) associated to each material phase (key, str).
+    _gop_X_dft_vox : list
+        Green operator material independent terms. Each term is stored in a dictionary,
+        where each pair of strain/stress components (key, str) is associated with the Green
+        operator material independent term evaluated in all spatial discrete points
+        (item, ndarray).
     _phase_linkage_matrix : dict
         Linkage matrix (item, ndarray of shape (n_voxels-1, 4)) associated with the
         hierarchical agglomerative clustering of each material phase (key, str).
@@ -1331,9 +753,14 @@ class HACRVE(CRVE):
         Clusters labels (item, list of int) associated to each material phase (key, str).
     clusters_f : dict
         Clusters volume fraction (item, float) associated to each material phase (key, str).
+    cit_X_mf : list
+        Cluster interaction tensors material independent terms. Each term is stored in a
+        dictionary (item, dict) for each pair of material phases (key, str), which in turn
+        contains the corresponding matricial form (item, ndarray) associated to each
+        pair of clusters (key, str).
     '''
     def __init__(self, phase_n_clusters, rve_dims, regular_grid, material_phases,
-                 split_greed=0.5):
+                 comp_order, adaptive_split_factor):
         '''Hierarchical Adaptive Cluster-reduced Representative Volume Element constructor.
 
         Parameters
@@ -1347,13 +774,18 @@ class HACRVE(CRVE):
             contains the material phase label (int) assigned to the corresponding voxel.
         material_phases : list
             RVE material phases labels (str).
-        split_greed : float, default=0.5
-            Cluster splitting greediness parameter contained between 0 and 1 (included).
-            The lower bound (0) prevents any cluster to be splitted, while the upper bound
-            (1) performs the maximum number splits of each cluster (single-voxel clusters).
+        comp_order : list
+            Strain/Stress components (str) order.
+        adaptive_split_factor : dict
+            Clustering adaptive split factor (item, float) for each material phase
+            (key, str). The clustering adaptive split factor must be contained between
+            0 and 1 (included). The lower bound (0) prevents any cluster to be split,
+            while the upper bound (1) performs the maximum number splits of each cluster
+            (single-voxel clusters).
         '''
-        super().__init__(phase_n_clusters, rve_dims, regular_grid, material_phases)
-        self._split_greed = split_greed
+        super().__init__(phase_n_clusters, rve_dims, regular_grid, material_phases,
+                         comp_order)
+        self._adaptive_split_factor = adaptive_split_factor
         self._phase_linkage_matrix = None
         self._phase_map_cluster_node = {}
         self._adaptive_step = 0
@@ -1379,8 +811,8 @@ class HACRVE(CRVE):
         material phases.
         '''
         # Instatiate Agglomerative clustering
-        clst_alg = AgglomerativeSP(0, n_clusters=None, method='ward',
-                                   metric='euclidean', criterion='maxclust')
+        clst_alg = clstalgs.AgglomerativeSP(0, n_clusters=None, method='ward',
+                                           metric='euclidean', criterion='maxclust')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize linkage matrices dictionary
         self._phase_linkage_matrix = {}
@@ -1530,7 +962,8 @@ class HACRVE(CRVE):
                 # Get total number of leaf nodes associated to target node
                 n_leaves = target_node.get_count()
                 # Compute total number of tree node splits
-                n_splits = int(np.round(self._split_greed*(n_leaves - 1)))
+                n_splits = \
+                    int(np.round(self._adaptive_split_factor[mat_phase]*(n_leaves - 1)))
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Initialize child nodes list
                 child_nodes = []

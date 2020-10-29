@@ -34,7 +34,7 @@
 # ------------------------------------------------------------------------------------------
 # Development history:
 #
-# Release v0.0.1 - Bernardo P. Ferreira (June 2020)
+# Release v0.1.0 - Bernardo P. Ferreira (June 2020)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #   > Initial coding.
 #   > Implementation of the FFT-based homogenization basic scheme proposed by H. Moulinec
