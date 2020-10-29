@@ -272,10 +272,8 @@ class CRVE:
                 # Perform discrete convolution between the material phase B cluster
                 # characteristic function and each of Green operator material independent
                 # terms
-                gop_1_filt_vox, gop_2_filt_vox, gop_0_freq_filt_vox = \
-                    citop.clstgopconvolution(self._comp_order, self._rve_dims,
-                                             self._n_voxels_dims, cluster_J_filter_dft,
-                                             *self._gop_X_dft_vox)
+                gop_X_filt_vox = citop.clstgopconvolution(self._comp_order, self._rve_dims,
+                    self._n_voxels_dims, cluster_J_filter_dft, *self._gop_X_dft_vox)
                 # Loop over material phases
                 for mat_phase_A in self._material_phases:
                     # Set material phase pair dictionary
@@ -308,29 +306,15 @@ class CRVE:
                                                                       self.voxels_clusters)
                             # Perform discrete integral over the spatial domain of material
                             # phase A cluster I
-                            cit_1_integral_mf, cit_2_integral_mf, cit_0_freq_integral_mf = \
-                                citop.discretecitintegral(self._comp_order,
-                                                          cluster_I_filter, gop_1_filt_vox,
-                                                          gop_2_filt_vox,
-                                                          gop_0_freq_filt_vox)
+                            cit_X_integral_mf = citop.discretecitintegral(self._comp_order,
+                                cluster_I_filter, *gop_X_filt_vox)
                             # Compute cluster interaction tensor between the material phase
                             # A cluster and the material phase B cluster
                             rve_vol = np.prod(self._rve_dims)
-                            cit_1_pair_mf = \
-                                np.multiply((1.0/(self.clusters_f[str(cluster_I)]*rve_vol)),
-                                            cit_1_integral_mf)
-                            cit_2_pair_mf = \
-                                np.multiply((1.0/(self.clusters_f[str(cluster_I)]*rve_vol)),
-                                            cit_2_integral_mf)
-                            cit_0_freq_pair_mf = \
-                                np.multiply((1.0/(self.clusters_f[str(cluster_I)]*rve_vol)),
-                                            cit_0_freq_integral_mf)
-                            # Store cluster interaction tensor between material phase A
-                            # cluster and material phase B cluster
-                            self.cit_X_mf[0][mat_phase_pair][cluster_pair] = cit_1_pair_mf
-                            self.cit_X_mf[1][mat_phase_pair][cluster_pair] = cit_2_pair_mf
-                            self.cit_X_mf[2][mat_phase_pair][cluster_pair] = \
-                                cit_0_freq_pair_mf
+                            factor = 1.0/(self.clusters_f[str(cluster_I)]*rve_vol)
+                            for i in range(len(self.cit_X_mf)):
+                                self.cit_X_mf[i][mat_phase_pair][cluster_pair] = \
+                                    np.multiply(factor, cit_X_integral_mf[i])
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute remaining adaptive cluster interaction tensors through cluster-symmetry
         # and remove vanished clustering interaction tensors
