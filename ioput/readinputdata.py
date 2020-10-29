@@ -40,6 +40,8 @@ import tensor.matrixoperations as mop
 import clustering.crve
 # Clustering data
 import clustering.clusteringdata as clstdat
+# Unsupervised clustering algorithms
+import clustering.clusteringalgs as clstalgs
 #
 #                                                                       Read input data file
 # ==========================================================================================
@@ -150,8 +152,7 @@ def readinputdatafile(input_file,dirs_dict):
         crve_type = valid_crve_types['1']
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Get available clustering algorithms and features
-    valid_algorithms = \
-        list(clustering.crve.get_available_clustering_algorithms().keys())
+    valid_algorithms = list(clstalgs.get_available_clustering_algorithms().keys())
     valid_features = list(clstdat.get_available_clustering_features(
         strain_formulation, n_dim, comp_order_sym, comp_order_nsym).keys())
     # Read clustering scheme
