@@ -2,7 +2,8 @@
 # Cluster Interaction Tensors Computation Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# Procedures related to the cluster interaction tensors (e.g. computation, assembly).
+# Methods associated with the computation of the CRVE cluster interaction tensors and their
+# assembly into the global cluster interaction matrix.
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | February 2020 | Initial coding.
@@ -25,9 +26,28 @@ import tensor.matrixoperations as mop
 #
 #                                                                       Discrete frequencies
 # ==========================================================================================
-# Perform the frequency discretization by setting the spatial discrete frequencies (rad/m)
-# for each dimension
 def setdiscretefreq(n_dim, rve_dims, n_voxels_dims):
+    '''Perform frequency discretization of the spatial domain.
+
+    Perform frequency discretization by setting the spatial discrete frequencies (rad/m)
+    for each dimension.
+
+    Parameters
+    ----------
+    n_dim : int
+        Problem dimension.
+    rve_dims : list
+        RVE size in each dimension.
+    n_voxels_dims : list
+        Number of voxels in each dimension of the regular grid (spatial discretization of
+        the RVE).
+
+    Returns
+    -------
+    freq_dims : list
+        List containing the sample frequencies (ndarray of shape (n_voxels_dim,)) for each
+        dimension.
+    '''
     freqs_dims = list()
     for i in range(n_dim):
         # Set sampling spatial period
@@ -304,29 +324,3 @@ def assemblecit(material_phases, phase_n_clusters, phase_clusters, comp_order, c
             jclst = jclst + 1
     # Return
     return global_cit_X_mf
-#
-#                                                                Perform compatibility check
-#                                                (loading previously computed offline stage)
-# ==========================================================================================
-# Perform a compatibility check between the material phases existent in the spatial
-# discretization file and the previously computed loaded cluster interaction tensors
-def checkcitcompat(mat_dict, clst_dict):
-    # Get material phases
-    material_phases = mat_dict['material_phases']
-    # Check number of cluster interaction tensors
-    if len(clst_dict['cit_1_mf'].keys()) != len(material_phases)**2 or \
-        len(clst_dict['cit_2_mf'].keys()) != len(material_phases)**2 or  \
-            len(clst_dict['cit_0_freq_mf'].keys()) != len(material_phases)**2:
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00047', location.filename, location.lineno + 1,
-                            len(clst_dict['cit_1_mf'].keys()), len(material_phases))
-    # Check cluster interaction tensors material phase pairs
-    for mat_phase_B in material_phases:
-        for mat_phase_A in material_phases:
-            mat_phase_pair = mat_phase_A + '_' + mat_phase_B
-            if mat_phase_pair not in clst_dict['cit_1_mf'].keys() or \
-                    mat_phase_pair not in clst_dict['cit_2_mf'].keys() or  \
-                        mat_phase_pair not in clst_dict['cit_0_freq_mf'].keys():
-                location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayerror('E00048', location.filename, location.lineno + 1,
-                                    mat_phase_pair, material_phases)
