@@ -31,7 +31,7 @@ import ioput.errors as errors
 # Matricial operations
 import tensor.matrixoperations as mop
 # Cluster interaction tensors operations
-import cit.citoperations as citop
+import clustering.citoperations as citop
 # Homogenized results output
 import ioput.homresoutput as hresout
 # VTK output

@@ -24,7 +24,7 @@ import tensor.matrixoperations as mop
 # I/O utilities
 import ioput.ioutilities as ioutil
 # Cluster interaction tensors operations
-import cit.citoperations as citop
+import clustering.citoperations as citop
 #
 #                                                                                 CRVE class
 # ==========================================================================================
