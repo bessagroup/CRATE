@@ -943,11 +943,15 @@ class HACRVE(CRVE):
                         self._phase_map_cluster_node[mat_phase][str(target_cluster)]]
                 else:
                     continue
-                # Get total number of leaf nodes associated to target node
-                n_leaves = target_node.get_count()
-                # Compute total number of tree node splits
-                n_splits = \
-                    int(np.round(self._adaptive_split_factor[mat_phase]*(n_leaves - 1)))
+                # Get total number of leaf nodes associated to target node. If target node
+                # is a leaf itself (not splitable), skip to the next target cluster
+                if target_node.is_leaf():
+                    continue
+                else:
+                    n_leaves = target_node.get_count()
+                # Compute total number of tree node splits, enforcing at least one split
+                n_splits = max(1,
+                    int(np.round(self._adaptive_split_factor[mat_phase]*(n_leaves - 1))))
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Initialize child nodes list
                 child_nodes = []
