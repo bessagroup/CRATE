@@ -58,7 +58,8 @@ class CRVE:
     phase_clusters : dict
         Clusters labels (item, list of int) associated to each material phase (key, str).
     clusters_f : dict
-        Clusters volume fraction (item, float) associated to each material phase (key, str).
+        Clusters volume fraction (item, float) associated to each material cluster
+        (key, str).
     cit_X_mf : list
         Cluster interaction tensors material independent terms. Each term is stored in a
         dictionary (item, dict) for each pair of material phases (key, str), which in turn
@@ -429,7 +430,8 @@ class SCRVE(CRVE):
     phase_clusters : dict
         Clusters labels (item, list of int) associated to each material phase (key, str).
     clusters_f : dict
-        Clusters volume fraction (item, float) associated to each material phase (key, str).
+        Clusters volume fraction (item, float) associated to each material cluster
+        (key, str).
     cit_X_mf : list
         Cluster interaction tensors material independent terms. Each term is stored in a
         dictionary (item, dict) for each pair of material phases (key, str), which in turn
@@ -744,7 +746,8 @@ class HACRVE(CRVE):
     phase_clusters : dict
         Clusters labels (item, list of int) associated to each material phase (key, str).
     clusters_f : dict
-        Clusters volume fraction (item, float) associated to each material phase (key, str).
+        Clusters volume fraction (item, float) associated to each material cluster
+        (key, str).
     cit_X_mf : list
         Cluster interaction tensors material independent terms. Each term is stored in a
         dictionary (item, dict) for each pair of material phases (key, str), which in turn
