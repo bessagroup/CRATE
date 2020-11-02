@@ -2,11 +2,13 @@
 # Macroscale Loading Incrementation Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# Procedures related to the enforcement of the macroscale loading constraints.
+# Procedures related to the enforcement of the macroscale loading constraints and the
+# overall macroscalse loading incrementation flow..
 # ------------------------------------------------------------------------------------------
 # Development history:
-# Bernardo P. Ferreira | February 2020 | Initial coding.
-# Bernardo P. Ferreira |     July 2020 | Implemented LoadingPath and LoadingSubpath classes.
+# Bernardo P. Ferreira | Feb 2020 | Initial coding.
+# Bernardo P. Ferreira | Jul 2020 | Implemented LoadingPath and LoadingSubpath classes.
+# Bernardo P. Ferreira | Nov 2020 | Updated documentation.
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
@@ -24,20 +26,68 @@ import tensor.matrixoperations as mop
 #                                                           Loading path and subpath classes
 # ==========================================================================================
 class LoadingPath:
-    '''Collection of macroscale loading subpaths, macroscale loading state and tools to
-    control the macroscale loading incrementation flow.'''
+    '''Class that controls the macroscale loading incrementation flow.
 
+    This class contains a collection of macroscale loading subpaths, the current macroscale
+    loading state and a set of methods to control the macroscale loading incrementation
+    flow.
+
+    Attributes
+    ----------
+    _n_load_subpaths : int
+        Number of loading subpaths.
+    _load_subpaths : list
+        List of LoadingSubpath.
+    _conv_hom_state : dict
+        Converged macroscale homogenized state (item, ndarray of shape (n_comps,)) for
+        key in {'strain', 'stress'}.
+    _is_last_inc : bool
+        Loading last increment flag.
+    _n_cinc_cuts : int
+        Consecutive macroscale loading increment cuts counter
+    increm_state : dict
+        Increment state: key 'inc' contains the current increment number, key 'subpath_id'
+        contains the current loading subpath index.
+    '''
     def __init__(self, strain_formulation, comp_order_sym, comp_order_nsym, mac_load,
-                 mac_load_presctype, mac_load_increm, max_subinc_level, max_cinc_cuts):
-        '''Macroscale loading path constructor.'''
+                 mac_load_presctype, mac_load_increm, max_subinc_level=5, max_cinc_cuts=5):
+        '''Macroscale loading path constructor.
 
+        Parameters
+        ----------
+        strain_formulation: int
+            Strain formulation: (1) infinitesimal strains, (2) finite strains.
+        comp_order_sym: list
+            Symmetric strain/stress components (str) order.
+        comp_order_nsym: list
+            Nonsymmetric strain/stress components (str) order.
+        mac_load : dict
+            For each loading nature type (key, {'strain', 'stress'}), stores the macroscale
+            loading constraints for each loading subpath in a ndarray, where the i-th row
+            is associated with the component mac_load[i, 0] (str) and the j-th column is
+            associated with the j-th loading subpath.
+        mac_load_presctype : ndarray of shape (n_comps, n_load_subpaths)
+            Loading nature type (str, {'strain', 'stress'}) associated with each macroscale
+            loading constraint, where the i-th row is associated with the component
+            mac_load[i, 0] (str) and the j-th column is associated with the (j+1)-th loading
+            subpath.
+        mac_load_increm : dict
+            For each loading subpath id (key, str), stores a ndarray of shape
+            (n_load_increments, 2) where each row is associated with a prescribed loading
+            increment, and the columns 0 and 1 contain the corresponding incremental load
+            factor and incremental time, respectively.
+        max_subinc_level : int, default=5
+            Maximum level of macroscale loading subincrementation.
+        max_cinc_cuts : int, default=5
+            Maximum number of consecutive macroscale load increment cuts.
+        '''
         self._strain_formulation = strain_formulation
         self._mac_load = mac_load
         self._mac_load_presctype = mac_load_presctype
         self._mac_load_increm = mac_load_increm
         self._max_subinc_level = max_subinc_level
         self._max_cinc_cuts = max_cinc_cuts
-        # Remove simmetric components under an infinitesimal strain formulation
+        # Remove symmetric components under an infinitesimal strain formulation
         if strain_formulation == 1:
             self._remove_sym(comp_order_sym, comp_order_nsym)
         # Set total number of loading subpaths
@@ -54,8 +104,31 @@ class LoadingPath:
         self._n_cinc_cuts = 0
     # --------------------------------------------------------------------------------------
     def new_load_increment(self, n_dim, comp_order):
-        '''Setup new macroscale loading increment and get associated data.'''
+        '''Setup new macroscale loading increment and get associated data.
 
+        Parameters
+        ----------
+        n_dim : int
+            Problem dimension.
+        comp_order : list
+            Strain/Stress components (str) order.
+
+        Returns
+        -------
+        inc_mac_load_mf : dict
+            For each loading nature type (key, {'strain', 'stress'}), stores the incremental
+            macroscale loading constraint matricial form in a ndarray of shape (n_comps,).
+        n_presc_strain : int
+            Number of prescribed macroscale loading strain components.
+        presc_strain_idxs : list
+            Prescribed macroscale loading strain components indexes.
+        n_presc_stress : int
+            Number of prescribed macroscale loading stress components.
+        presc_stress_idxs : list
+            Prescribed macroscale loading stress components indexes.
+        is_last_inc : bool
+            Loading last increment flag.
+        '''
         # Reset consecutive macroscale loading increment cuts counter
         self._n_cinc_cuts = 0
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -88,8 +161,31 @@ class LoadingPath:
     # --------------------------------------------------------------------------------------
     def increment_cut(self, n_dim, comp_order):
         '''Perform macroscale loading increment cut, setup the resulting increment and get
-        associated data.'''
+        associated data.
 
+        Parameters
+        ----------
+        n_dim : int
+            Problem dimension.
+        comp_order : list
+            Strain/Stress components (str) order.
+
+        Returns
+        -------
+        inc_mac_load_mf : dict
+            For each loading nature type (key, {'strain', 'stress'}), stores the incremental
+            macroscale loading constraint matricial form in a ndarray of shape (n_comps,).
+        n_presc_strain : int
+            Number of prescribed macroscale loading strain components.
+        presc_strain_idxs : list
+            Prescribed macroscale loading strain components indexes.
+        n_presc_stress : int
+            Number of prescribed macroscale loading stress components.
+        presc_stress_idxs : list
+            Prescribed macroscale loading stress components indexes.
+        is_last_inc : bool
+            Loading last increment flag.
+        '''
         # Get current loading subpath
         load_subpath = self._get_load_subpath()
         # Perform macroscale loading increment
@@ -113,14 +209,24 @@ class LoadingPath:
             inc_mac_load_mf[ltype] = type(self)._get_load_mf(n_dim, comp_order,
                                                              inc_mac_load[ltype])
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Return
         return [inc_mac_load_mf, load_subpath._n_presc_strain,
                 load_subpath._presc_strain_idxs, load_subpath._n_presc_stress,
                 load_subpath._presc_stress_idxs, self._is_last_inc]
     # --------------------------------------------------------------------------------------
     def update_hom_state(self, n_dim, comp_order, hom_strain, hom_stress):
-        '''Update converged macroscale (homogenized) state.'''
+        '''Update converged macroscale (homogenized) state.
 
+        Parameters
+        ----------
+        n_dim : int
+            Problem dimension.
+        comp_order : list
+            Strain/Stress components (str) order.
+        hom_strain : ndarray
+            Macroscale homogenized strain tensor.
+        hom_stress : ndarray
+            Macroscale homogenized stress tensor.
+        '''
         # Initialize converged macroscale strain and stress tensors vector form
         self._conv_hom_state['strain'] = np.zeros(len(comp_order))
         self._conv_hom_state['stress'] = np.zeros(len(comp_order))
@@ -136,8 +242,25 @@ class LoadingPath:
             self._conv_hom_state['stress'][k] = hom_stress[i, j]
     # --------------------------------------------------------------------------------------
     def get_subpath_state(self):
-        '''Get current loading subpath state.'''
+        '''Get current loading subpath state.
 
+        Returns
+        -------
+        id : int
+            Macroscale loading subpath id.
+        inc : int
+            Current loading subpath increment counter.
+        total_lfact : float
+            Current loading subpath current total load factor.
+        inc_lfact : float
+            Current loading subpath current incremental load factor.
+        total_time : float
+            Current loading subpath current total time.
+        inc_time : float
+            Current loading subpath current incremental time.
+        sub_inc_level : int
+            Current loading subpath current subincrementation level.
+        '''
         # Get current loading subpath
         load_subpath = self._get_load_subpath()
         # Return loading subpath state
@@ -145,7 +268,6 @@ class LoadingPath:
     # --------------------------------------------------------------------------------------
     def _new_subpath(self):
         '''Add a new macroscale loading subpath to the loading path.'''
-
         # Increment (+1) loading subpath id
         self.increm_state['subpath_id'] += 1
         subpath_id = self.increm_state['subpath_id']
@@ -165,21 +287,31 @@ class LoadingPath:
                                                   inc_times, _max_subinc_level))
     # --------------------------------------------------------------------------------------
     def _get_load_subpath(self):
-        '''Get current loading subpath.'''
+        '''Get current macroscale loading subpath.
 
+        Returns
+        -------
+        load_subpath : LoadingSubpath
+            Current macroscale loading subpath.
+        '''
         return self._load_subpaths[self.increm_state['subpath_id']]
     # --------------------------------------------------------------------------------------
     def _update_inc(self):
         '''Update macroscale loading increment counters.'''
-
         # Increment (+1) global increment counter
         self.increm_state['inc'] += 1
         # Increment (+1) loading subpath increment counter
         self._get_load_subpath().update_inc()
     # --------------------------------------------------------------------------------------
     def _get_increm_load(self):
-        '''Compute incremental macroscale loading.'''
+        '''Compute incremental macroscale loading.
 
+        Returns
+        -------
+        inc_mac_load : dict
+            For each loading nature type (key, {'strain', 'stress'}), stores the incremental
+            macroscale loading constraint in a ndarray of shape (n_comps,).
+        '''
         # Get total macroscale loading applied in the current increment
         applied_load = self._get_load_subpath()._applied_load
         # Compute incremental macroscale loading
@@ -187,14 +319,24 @@ class LoadingPath:
                         for key in applied_load.keys()}
         for ltype in inc_mac_load.keys():
             inc_mac_load[ltype] = applied_load[ltype] - self._conv_hom_state[ltype]
-        # Return
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return inc_mac_load
     # --------------------------------------------------------------------------------------
     def _remove_sym(self, comp_order_sym, comp_order_nsym):
-        '''Remove the symmetric components of the macroscale loading related objects in a
-        infinitesimal strain formulation. The symmetric components are sorted according
-        to the problem strain/stress symmetric component order.'''
+        '''Remove the symmetric components of macroscale loading related objects.
 
+        Under an infinitesimal strain formulation, remove the symmetric strain/stress
+        components of macroscale loading related objects. In addition, the remaining
+        independent components are sorted according to the problem strain/stress symmetric
+        component order.
+
+        Parameters
+        ----------
+        comp_order_sym: list
+            Symmetric strain/stress components (str) order.
+        comp_order_nsym: list
+            Nonsymmetric strain/stress components (str) order.
+        '''
         # Copy macroscale loading objects
         mac_load_cp = copy.deepcopy(self._mac_load)
         mac_load_presctype_cp = copy.deepcopy(self._mac_load_presctype)
@@ -216,9 +358,25 @@ class LoadingPath:
     # --------------------------------------------------------------------------------------
     @staticmethod
     def _get_load_mf(n_dim, comp_order, load_vector):
-        '''Get matricial form of macroscale load tensor given in vector form. The matricial
-        form storage is perform according to the provided component order.'''
+        '''Get matricial form of macroscale load tensor given in vector form.
 
+        Parameters
+        ----------
+        comp_order : list
+            Strain/Stress components (str) order.
+        load_vector : ndarray of shape (n_comps,)
+            Macroscale load tensor in vector form.
+
+        Returns
+        -------
+        load_mf : ndarray  of shape (n_comps,)
+            Macroscale load tensor matricial form.
+
+        Notes
+        -----
+        The matricial form storage is perform according to the provided strain/stress
+        components order.
+        '''
         # Initialize incremental macroscale load tensor
         load_matrix = np.zeros((n_dim, n_dim))
         # Build incremental macroscale load tensor
@@ -233,15 +391,56 @@ class LoadingPath:
                         load_matrix[j, i] = load_matrix[i, j]
         # Set incremental macroscopic load matricial form
         load_mf = mop.gettensormf(load_matrix, n_dim, comp_order)
-        # Return
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return load_mf
 # ------------------------------------------------------------------------------------------
 class LoadingSubpath:
-    '''Macroscale loading subpath.'''
+    '''Macroscale loading subpath.
 
+    Attributes
+    ----------
+    _inc : int
+        Loading subpath increment counter.
+    _total_lfact : float
+        Loading subpath total load factor.
+    _total_time : float
+        Loading subpath total time.
+    _n_presc_strain : int
+        Number of prescribed macroscale loading strain components.
+    _n_presc_stress : int
+        Number of prescribed macroscale loading stress components.
+    _presc_strain_idxs : list
+        Prescribed macroscale loading strain components indexes.
+    _presc_stress_idxs : list
+        Prescribed macroscale loading stress components indexes.
+    _applied_load : dict
+        For each prescribed loading nature type (key, {'strain', 'stress'}), stores the
+        total applied macroscale loading constraints in a ndarray of shape (n_comps,).
+    _is_last_subpath_inc : bool
+        Loading subpath last increment flag.
+    _sub_inc_levels : list
+        History of subincrementation levels.
+    '''
     def __init__(self, id, load, presctype, inc_lfacts, inc_times, max_subinc_level):
-        '''Macroscale loading subpath constructor.'''
+        '''Macroscale loading subpath constructor.
 
+        Parameters
+        ----------
+        id : int
+            Macroscale loading subpath id.
+        load : dict
+            For each prescribed loading nature type (key, {'strain', 'stress'}), stores the
+            macroscale loading constraints in a ndarray of shape (n_comps,).
+        presctype : ndarray of shape (n_comps,)
+            Loading nature type (str, {'strain', 'stress'}) associated with each
+            macroscale loading constraint.
+        inc_lfacts : ndarray of shape (n_increments,)
+            Loading subpath incremental load factors.
+        inc_times : ndarray of shape (n_increments,)
+            Loading subpath incremental times.
+        max_subinc_level : int
+            Maximum level of macroscale loading subincrementation.
+        '''
         self._id = id
         self._load = load
         self._presctype = presctype
@@ -273,8 +472,25 @@ class LoadingSubpath:
         self._sub_inc_levels = [0]*len(self._inc_lfacts)
     # --------------------------------------------------------------------------------------
     def get_state(self):
-        '''Get subpath state data.'''
+        '''Get loading subpath state data.
 
+        Returns
+        -------
+        id : int
+            Macroscale loading subpath id.
+        inc : int
+            Loading subpath increment counter.
+        total_lfact : float
+            Loading subpath current total load factor.
+        inc_lfact : float
+            Loading subpath current incremental load factor.
+        total_time : float
+            Loading subpath current total time.
+        inc_time : float
+            Loading subpath current incremental time.
+        sub_inc_level : int
+            Loading subpath current subincrementation level.
+        '''
         # Get loading subpath current increment index
         inc_idx = self._inc - 1
         # Return
@@ -282,8 +498,7 @@ class LoadingSubpath:
                 self._total_time, self._inc_times[inc_idx], self._sub_inc_levels[inc_idx]]
     # --------------------------------------------------------------------------------------
     def update_inc(self):
-        '''Update increment counter and total load factor accordingly.'''
-
+        '''Update increment counter, total load factor and applied macroscale loading.'''
         # Increment (+1) loading subpath increment counter
         self._inc += 1
         # Get loading subpath current increment index
@@ -310,7 +525,6 @@ class LoadingSubpath:
     # --------------------------------------------------------------------------------------
     def increment_cut(self):
         '''Perform macroscale loading increment cut.'''
-
         # Get loading subpath current increment index
         inc_idx = self._inc - 1
         # Update subincrementation level
@@ -336,12 +550,9 @@ class LoadingSubpath:
         self._update_applied_load()
         # Set loading subpath last increment flag
         self._is_last_subpath_inc = False
-        # Return
-        return
     # --------------------------------------------------------------------------------------
     def _update_applied_load(self):
         '''Update total applied macroscale loading.'''
-
         for ltype in self._applied_load.keys():
             for i in range(len(self._applied_load[ltype])):
                 if self._presctype[i] == ltype:
