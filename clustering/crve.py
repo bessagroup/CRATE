@@ -17,6 +17,8 @@ import itertools as it
 # Unsupervised clustering algorithms
 import clustering.clusteringalgs as clstalgs
 import scipy.cluster.hierarchy as sciclst
+# Date and time
+import time
 # Display messages
 import ioput.info as info
 # Matricial operations
@@ -247,6 +249,7 @@ class CRVE:
                                                         self._comp_order,
                                                         self._n_voxels_dims)
         elif mode == 'adaptive':
+            init_time = time.time()
             # Build list with old clusters and new clusters (adaptive) for each material
             # phase
             phase_old_clusters = {}
@@ -370,6 +373,9 @@ class CRVE:
                             # Remove cluster interaction tensor
                             for i in range(len(self.cit_X_mf)):
                                 self.cit_X_mf[i][mat_phase_pair].pop(cluster_pair)
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Update total amount of time spent in the A-CRVE adaptive procedures
+            self.adaptive_time += time.time() - init_time
     # --------------------------------------------------------------------------------------
     @staticmethod
     def switch_pair(x, delimiter='_'):
@@ -730,6 +736,8 @@ class HACRVE(CRVE):
     _adaptive_step : int
         Counter of hierarchical adaptive clustering steps, with 0 associated with the
         hierarchical agglomerative base clustering.
+    adaptive_time : float
+        Total amount of time (s) spent in the A-CRVE adaptive procedures.
     voxels_clusters : ndarray
         Regular grid of voxels (spatial discretization of the RVE), where each entry
         contains the cluster label (int) assigned to the corresponding pixel/voxel.
@@ -773,6 +781,7 @@ class HACRVE(CRVE):
         self._phase_linkage_matrix = None
         self._phase_map_cluster_node = {}
         self._adaptive_step = 0
+        self.adaptive_time = 0
     # --------------------------------------------------------------------------------------
     def get_base_clustering(self, data_matrix):
         '''Perform the RVE hierarchical agglomerative base clustering-based domain
@@ -896,6 +905,7 @@ class HACRVE(CRVE):
                 raise RuntimeError('Target cluster ' + str(target_cluster) + ' does not ' +
                                    'exist in the current CRVE clustering.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        init_time = time.time()
         # Increment adaptive clustering refinement step counter
         self._adaptive_step += 1
         # Initialize adaptive clustering mapping dictionary and associated phase
@@ -1006,15 +1016,15 @@ class HACRVE(CRVE):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Build hiearchical adaptive CRVE from the hierarchical agglomerative adaptive
         # clustering
-        info.displayinfo('5', 'Building HA-CRVE clustering (adaptive step ' +
-                              str(self._adaptive_step) + ')...', 2)
         self.voxels_clusters = np.reshape(np.array(labels, dtype=int), self._n_voxels_dims)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        info.displayinfo('5', 'Computing HA-CRVE descriptors...', 2)
         # Store cluster labels belonging to each material phase
         self._set_phase_clusters()
         # Compute material clusters' volume fraction
         self._set_clusters_vf()
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Update total amount of time spent in the A-CRVE adaptive procedures
+        self.adaptive_time += time.time() - init_time
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return [adaptive_clustering_map, adaptive_tree_node_map]
