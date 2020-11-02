@@ -55,11 +55,11 @@ class LoadingPath:
 
         Parameters
         ----------
-        strain_formulation: int
+        strain_formulation : int
             Strain formulation: (1) infinitesimal strains, (2) finite strains.
-        comp_order_sym: list
+        comp_order_sym : list
             Symmetric strain/stress components (str) order.
-        comp_order_nsym: list
+        comp_order_nsym : list
             Nonsymmetric strain/stress components (str) order.
         mac_load : dict
             For each loading nature type (key, {'strain', 'stress'}), stores the macroscale
@@ -332,9 +332,9 @@ class LoadingPath:
 
         Parameters
         ----------
-        comp_order_sym: list
+        comp_order_sym : list
             Symmetric strain/stress components (str) order.
-        comp_order_nsym: list
+        comp_order_nsym : list
             Nonsymmetric strain/stress components (str) order.
         '''
         # Copy macroscale loading objects
