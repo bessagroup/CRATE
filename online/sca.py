@@ -188,8 +188,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     # strain component in a 2D plane stress problem (output purpose only)
     if problem_type == 1:
         hom_stress_33 = hom.homoutofplanecomp(problem_type, material_phases, phase_clusters,
-                                              clusters_f, clusters_state,
-                                              clusters_state_old)
+                                              clusters_f, clusters_state)
     # Initialize homogenized results dictionary
     hom_results = dict()
     # Build homogenized results dictionary
@@ -450,22 +449,22 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                 #                                                  Effective tangent modulus
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Compute the material effective tangent modulus
-                eff_tangent_mf = hom.efftanmod(
-                    problem_dict, material_phases, n_total_clusters, phase_clusters,
-                    clusters_f, clusters_D_mf, global_cit_D_De_ref_mf)
+                eff_tangent_mf = hom.efftanmod(n_dim, comp_order, material_phases,
+                                               phase_clusters, clusters_f, clusters_D_mf,
+                                               global_cit_D_De_ref_mf)
                 #
                 #                          Incremental homogenized strain and stress tensors
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Compute homogenized strain and stress tensors (matricial form)
                 hom_strain_mf, hom_stress_mf = \
-                    hom.homstatetensors(problem_dict, material_phases, phase_clusters,
+                    hom.homstatetensors(comp_order, material_phases, phase_clusters,
                                         clusters_f, clusters_state)
                 # Compute homogenized out-of-plane stress component in a 2D plane strain
                 # problem / strain component in a 2D plane stress problem
                 if problem_type == 1:
                     hom_stress_33 = hom.homoutofplanecomp(
                         problem_type, material_phases, phase_clusters, clusters_f,
-                        clusters_state, clusters_state_old)
+                        clusters_state)
                 # Compute incremental homogenized strain and stress tensors (matricial form)
                 inc_hom_strain_mf = hom_strain_mf - hom_strain_old_mf
                 inc_hom_stress_mf = hom_stress_mf - hom_stress_old_mf
@@ -756,7 +755,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         if problem_type == 1:
             hom_stress_33 = hom.homoutofplanecomp(problem_type, material_phases,
                                                   phase_clusters, clusters_f,
-                                                  clusters_state, clusters_state_old)
+                                                  clusters_state)
         # ----------------------------------------------------------------------------------
         # Validation:
         if is_Validation[21]:
