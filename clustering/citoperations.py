@@ -8,6 +8,7 @@
 # Development history:
 # Bernardo P. Ferreira | Feb 2020 | Initial coding.
 # Bernardo P. Ferreira | Nov 2020 | Updated documentation.
+# Bernardo P. Ferreira | Nov 2020 | Merged update and assemble methods.
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
@@ -431,31 +432,12 @@ def updassemblecit(problem_dict, mat_prop_ref, Se_ref_matrix, material_phases,
     gop_factor_0_freq = numpy.matlib.repmat(Se_ref_matrix, n_total_clusters,
                                             n_total_clusters)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Assemble global material independent cluster interaction matrices
-    global_cit_1_mf = assemblecit(material_phases, phase_n_clusters, phase_clusters,
-                                  comp_order, cit_1_mf)
-    global_cit_2_mf = assemblecit(material_phases, phase_n_clusters, phase_clusters,
-                                  comp_order, cit_2_mf)
-    global_cit_0_freq_mf = assemblecit(material_phases, phase_n_clusters, phase_clusters,
-                                       comp_order, cit_0_freq_mf)
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Assemble global cluster interaction matrix
-    global_cit_mf = np.add(np.add(np.multiply(gop_factor_1, global_cit_1_mf),
-                                  np.multiply(gop_factor_2, global_cit_2_mf)),
-                           np.multiply(gop_factor_0_freq, global_cit_0_freq_mf))
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    return global_cit_mf
-# ------------------------------------------------------------------------------------------
-# Assemble the clustering interaction tensors into a single square matrix, sorted by
-# ascending order of material phase and by asceding order of cluster labels within each
-# material phase
-def assemblecit(material_phases, phase_n_clusters, phase_clusters, comp_order, cit_X_mf):
-    # Get total number of clusters
-    n_total_clusters = sum([phase_n_clusters[mat_phase] for mat_phase in material_phases])
-    # Initialize global clustering interaction matrix
-    global_cit_X_mf = np.zeros((n_total_clusters*len(comp_order),
-                                n_total_clusters*len(comp_order)))
-    # Initialize row and column cluster indexes
+    # Initialize global clustering interaction matrices
+    dims = (n_total_clusters*len(comp_order), n_total_clusters*len(comp_order))
+    global_cit_1_mf = np.zeros(dims)
+    global_cit_2_mf = np.zeros(dims)
+    global_cit_0_freq_mf = np.zeros(dims)
+    # Initialize column cluster index
     jclst = 0
     # Loop over material phases
     for mat_phase_B in material_phases:
@@ -476,12 +458,21 @@ def assemblecit(material_phases, phase_n_clusters, phase_clusters, comp_order, c
                     i_end = i_init + len(comp_order)
                     j_init = jclst*len(comp_order)
                     j_end = j_init + len(comp_order)
-                    # Assemble cluster interaction tensor
-                    global_cit_X_mf[i_init:i_end, j_init:j_end] = \
-                        cit_X_mf[mat_phase_pair][cluster_pair]
+                    # Assemble cluster interaction tensors
+                    global_cit_1_mf[i_init:i_end, j_init:j_end] = \
+                        cit_1_mf[mat_phase_pair][cluster_pair]
+                    global_cit_2_mf[i_init:i_end, j_init:j_end] = \
+                        cit_2_mf[mat_phase_pair][cluster_pair]
+                    global_cit_0_freq_mf[i_init:i_end, j_init:j_end] = \
+                        cit_0_freq_mf[mat_phase_pair][cluster_pair]
                     # Increment row cluster index
                     iclst = iclst + 1
             # Increment column cluster index
             jclst = jclst + 1
-    # Return
-    return global_cit_X_mf
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Assemble global cluster interaction matrix
+    global_cit_mf = np.add(np.add(np.multiply(gop_factor_1, global_cit_1_mf),
+                                  np.multiply(gop_factor_2, global_cit_2_mf)),
+                           np.multiply(gop_factor_0_freq, global_cit_0_freq_mf))
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    return global_cit_mf
