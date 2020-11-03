@@ -61,10 +61,10 @@ class CRVE:
         Clusters volume fraction (item, float) associated to each material cluster
         (key, str).
     cit_X_mf : list
-        Cluster interaction tensors material independent terms. Each term is stored in a
-        dictionary (item, dict) for each pair of material phases (key, str), which in turn
-        contains the corresponding matricial form (item, ndarray) associated to each
-        pair of clusters (key, str).
+        Cluster interaction tensors associated to the Green operator material independent
+        terms. Each term is stored in a dictionary (item, dict) for each pair of material
+        phases (key, str), which in turn contains the corresponding matricial form
+        (item, ndarray) associated to each pair of clusters (key, str).
     '''
     def __new__(cls, *args, **kwargs):
         if cls is CRVE:
