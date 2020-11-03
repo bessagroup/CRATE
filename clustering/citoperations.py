@@ -1,14 +1,15 @@
 #
-# Cluster Interaction Tensors Computation Module (CRATE Program)
+# Cluster Interaction Tensors Operations Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# Methods associated with the computation of the CRVE cluster interaction tensors and their
-# assembly into the global cluster interaction matrix.
+# Operations required to compute or manipulate the cluster interaction tensors.
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | Feb 2020 | Initial coding.
 # Bernardo P. Ferreira | Nov 2020 | Updated documentation.
 # Bernardo P. Ferreira | Nov 2020 | Merged update and assemble methods.
+# Bernardo P. Ferreira | Nov 2020 | Migrated cluster interaction tensors direct computation
+#                                 | methods to CRVE class.
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
@@ -19,8 +20,6 @@ import numpy.matlib
 import copy
 # Generate efficient iterators
 import itertools as it
-# Matricial operations
-import tensor.matrixoperations as mop
 #
 #                                                                       Discrete frequencies
 # ==========================================================================================
@@ -167,202 +166,6 @@ def gop_matindterms(n_dim, rve_dims, comp_order, n_voxels_dims):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return [gop_1_dft_vox, gop_2_dft_vox, gop_0_freq_dft_vox]
 #
-#                                                            Cluster characteristic function
-# ==========================================================================================
-def clusterfilter(cluster, voxels_clusters):
-    '''Compute cluster discrete characteristic function in spatial and frequency domains.
-
-    Parameters
-    ----------
-    cluster : int
-        Cluster label.
-    voxels_clusters : ndarray
-        Regular grid of voxels (spatial discretization of the RVE), where each entry
-        contains the cluster label (int) assigned to the corresponding pixel/voxel.
-
-    Returns
-    -------
-    cluster_filter : ndarray
-        Cluster discrete characteristic function in spatial domain.
-    cluster_filter_dft : ndarray
-        Cluster discrete characteristic function in frequency domain (discrete Fourier
-        transform).
-    '''
-    # Check if valid cluster
-    if not isinstance(cluster, int) and not isinstance(cluster, np.integer):
-        raise RuntimeError('Cluster label must be an integer.')
-    elif cluster not in voxels_clusters:
-        raise RuntimeError('Cluster label does not exist in the CRVE.')
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Build cluster filter (spatial domain)
-    cluster_filter = voxels_clusters == cluster
-    # Perform Discrete Fourier Transform (DFT) by means of Fast Fourier Transform (FFT)
-    cluster_filter_dft = np.fft.fftn(cluster_filter)
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    return [cluster_filter, cluster_filter_dft]
-#
-#                                              Cluster - Green operator discrete convolution
-# ==========================================================================================
-def clstgopconvolution(comp_order, rve_dims, n_voxels_dims, cluster_filter_dft,
-                       gop_1_dft_vox, gop_2_dft_vox, gop_0_freq_dft_vox):
-    '''Compute convolution between cluster characteristic function and Green operator.
-
-    Compute the discrete convolution required to compute the cluster interaction tensor
-    between a material cluster I and a material cluster J. The convolution is performed in
-    the frequency domain between the material J characteristic function and each of the
-    Green operator material independent terms.
-
-    Parameters
-    ----------
-    comp_order : list
-        Strain/Stress components (str) order.
-    rve_dims : list
-        RVE size in each dimension.
-    n_voxels_dims : list
-        Number of voxels in each dimension of the regular grid (spatial discretization of
-        the RVE).
-    cluster_filter_dft : ndarray
-        Cluster discrete characteristic function in frequency domain (discrete Fourier
-        transform).
-    gop_1_dft_vox : dict
-        Regular grid shaped matrix (item, ndarray) containing each fourth-order matricial
-        form component (key, str) of the first Green operator material independent term
-        in the frequency domain (discrete Fourier transform).
-    gop_2_dft_vox : dict
-        Regular grid shaped matrix (item, ndarray) containing each fourth-order matricial
-        form component (key, str) of the second Green operator material independent term
-        in the frequency domain (discrete Fourier transform).
-    gop_0_freq_dft_vox : dict
-        Regular grid shaped matrix (item, ndarray) containing each fourth-order matricial
-        form component (key, str) of the Green operator zero-frequency (material
-        independent) term in the frequency domain (discrete Fourier transform).
-
-    Returns
-    -------
-    gop_1_filt_vox : dict
-        Regular grid shaped matrix (item, ndarray) containing each fourth-order matricial
-        form component (key, str) of the convolution between the material cluster
-        characteristic function and the first Green operator material independent term
-        in the spatial domain (inverse discrete Fourier transform).
-    gop_2_filt_vox : dict
-        Regular grid shaped matrix (item, ndarray) containing each fourth-order matricial
-        form component (key, str) of the convolution between the material cluster
-        characteristic function and the second Green operator material independent term
-        in the spatial domain (inverse discrete Fourier transform).
-    gop_0_freq_filt_vox : dict
-        Regular grid shaped matrix (item, ndarray) containing each fourth-order matricial
-        form component (key, str) of the convolution between the material cluster
-        characteristic function and the zero-frequency Green operator (material independent)
-        term in the spatial domain (inverse discrete Fourier transform).
-    '''
-    # Initialize discrete convolution (spatial and frequency domain)
-    gop_1_filt_dft_vox = copy.deepcopy(gop_1_dft_vox)
-    gop_2_filt_dft_vox = copy.deepcopy(gop_2_dft_vox)
-    gop_0_freq_filt_dft_vox = copy.deepcopy(gop_0_freq_dft_vox)
-    gop_1_filt_vox = copy.deepcopy(gop_1_dft_vox)
-    gop_2_filt_vox = copy.deepcopy(gop_1_dft_vox)
-    gop_0_freq_filt_vox = copy.deepcopy(gop_1_dft_vox)
-    # Compute RVE volume and total number of voxels
-    rve_vol = np.prod(rve_dims)
-    n_voxels = np.prod(n_voxels_dims)
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Loop over Green operator components
-    for i in range(len(comp_order)):
-        compi = comp_order[i]
-        for j in range(len(comp_order)):
-            compj = comp_order[j]
-            # Perform discrete convolution in the frequency domain
-            gop_1_filt_dft_vox[compi + compj] = \
-                np.multiply((rve_vol/n_voxels), np.multiply(cluster_filter_dft,
-                    gop_1_filt_dft_vox[compi + compj]))
-            gop_2_filt_dft_vox[compi + compj] = \
-                np.multiply((rve_vol/n_voxels), np.multiply(cluster_filter_dft,
-                    gop_2_filt_dft_vox[compi + compj]))
-            gop_0_freq_filt_dft_vox[compi + compj] = \
-                np.multiply((rve_vol/n_voxels),np.multiply(cluster_filter_dft,
-                    gop_0_freq_filt_dft_vox[compi + compj]))
-            # Perform an Inverse Discrete Fourier Transform (IDFT) by means of Fast Fourier
-            # Transform (FFT)
-            gop_1_filt_vox[compi + compj] = \
-                np.real(np.fft.ifftn(gop_1_filt_dft_vox[compi + compj]))
-            gop_2_filt_vox[compi + compj] = \
-                np.real(np.fft.ifftn(gop_2_filt_dft_vox[compi + compj]))
-            gop_0_freq_filt_vox[compi + compj] = \
-                np.real(np.fft.ifftn(gop_0_freq_filt_dft_vox[compi + compj]))
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    return [gop_1_filt_vox, gop_2_filt_vox, gop_0_freq_filt_vox]
-#
-#                                               Cluster interaction tensor discrete integral
-# ==========================================================================================
-def discretecitintegral(comp_order, cluster_filter, gop_1_filt_vox, gop_2_filt_vox,
-                        gop_0_freq_filt_vox):
-    '''Compute discrete integral over the spatial domain of material cluster.
-
-    In order to compute the cluster interaction tensor between material cluster I and
-    material cluster J, compute the discrete integral over the spatial domain of material
-    cluster I of the discrete convolution (characteristic function - Green operator)
-    associated to material cluster J.
-
-    Parameters
-    ----------
-    comp_order : list
-        Strain/Stress components (str) order.
-    cluster_filter : ndarray
-        Cluster discrete characteristic function in spatial domain.
-    gop_1_filt_vox : dict
-        Regular grid shaped matrix (item, ndarray) containing each fourth-order matricial
-        form component (key, str) of the convolution between the material cluster
-        characteristic function and the first Green operator material independent term
-        in the spatial domain (inverse discrete Fourier transform).
-    gop_2_filt_vox : dict
-        Regular grid shaped matrix (item, ndarray) containing each fourth-order matricial
-        form component (key, str) of the convolution between the material cluster
-        characteristic function and the second Green operator material independent term
-        in the spatial domain (inverse discrete Fourier transform).
-    gop_0_freq_filt_vox : dict
-        Regular grid shaped matrix (item, ndarray) containing each fourth-order matricial
-        form component (key, str) of the convolution between the material cluster
-        characteristic function and the zero-frequency Green operator (material independent)
-        term in the spatial domain (inverse discrete Fourier transform).
-
-    Returns
-    -------
-    cit_1_integral_mf : ndarray of shape (n_comps, n_comps)
-        Discrete integral over the spatial domain of material cluster I of the discrete
-        convolution between the material cluster J characteristic function and the first
-        Green operator material independent term in the spatial domain.
-    cit_2_integral_mf : ndarray of shape (n_comps, n_comps)
-        Discrete integral over the spatial domain of material cluster I of the discrete
-        convolution between the material cluster J characteristic function and the second
-        Green operator material independent term in the spatial domain.
-    cit_0_freq_integral_mf : ndarray of shape (n_comps, n_comps)
-        Discrete integral over the spatial domain of material cluster I of the discrete
-        convolution between the material cluster J characteristic function and the
-        zero-frequency Green operator (material independent) term in the spatial domain.
-    '''
-    # Initialize discrete integral
-    cit_1_integral_mf = np.zeros((len(comp_order), len(comp_order)))
-    cit_2_integral_mf = np.zeros((len(comp_order), len(comp_order)))
-    cit_0_freq_integral_mf = np.zeros((len(comp_order), len(comp_order)))
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Loop over matricial form components
-    for i in range(len(comp_order)):
-        compi = comp_order[i]
-        for j in range(len(comp_order)):
-            compj = comp_order[j]
-            # Perform discrete integral over the spatial domain of material cluster I
-            cit_1_integral_mf[i, j] = \
-                mop.kelvinfactor(i, comp_order)*mop.kelvinfactor(j, comp_order)*\
-                    np.sum(np.multiply(cluster_filter, gop_1_filt_vox[compi + compj]))
-            cit_2_integral_mf[i, j] = \
-                mop.kelvinfactor(i, comp_order)*mop.kelvinfactor(j, comp_order)*\
-                    np.sum(np.multiply(cluster_filter, gop_2_filt_vox[compi + compj]))
-            cit_0_freq_integral_mf[i, j] = \
-                mop.kelvinfactor(i, comp_order)*mop.kelvinfactor(j, comp_order)*\
-                    np.sum(np.multiply(cluster_filter, gop_0_freq_filt_vox[compi + compj]))
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    return [cit_1_integral_mf, cit_2_integral_mf, cit_0_freq_integral_mf]
-#
 #                                            Update and assemble cluster interaction tensors
 # ==========================================================================================
 def updassemblecit(problem_dict, mat_prop_ref, Se_ref_matrix, material_phases,
@@ -398,7 +201,7 @@ def updassemblecit(problem_dict, mat_prop_ref, Se_ref_matrix, material_phases,
         independent term. Each tensor is stored in a dictionary (item, dict) for each pair
         of material phases (key, str), which in turn contains the corresponding matricial
         form (item, ndarray) associated to each pair of clusters (key, str).
-    cit_1_mf : dict
+    cit_0_freq_mf : dict
         Cluster interaction tensors associated with the zero-frequency Green operator
         (material independent) term. Each tensor is stored in a dictionary (item, dict) for
         each pair of material phases (key, str), which in turn contains the corresponding
