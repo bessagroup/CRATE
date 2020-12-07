@@ -231,7 +231,8 @@ def packregulargrid(discret_file_path, rve_dims, mat_dict, problem_dict):
 # Package data associated to the clustering on a regular grid of pixels/voxels
 def packrgclustering(clustering_scheme, crve_type, crve_type_options,
                      clustering_solution_method, standardization_method, links_dict,
-                     phase_n_clusters, rg_dict):
+                     phase_n_clusters, rg_dict, clustering_type, base_clustering_scheme,
+                     adaptive_clustering_scheme, adaptivity_criterion, adaptivity_type):
     #
     # Object                       Meaning                                         Type
     # ------------------------------------------------------------------------------------
@@ -247,6 +248,16 @@ def packrgclustering(clustering_scheme, crve_type, crve_type_options,
     # clusters_f                   Clusters volume fraction                        dict
     #                              key: material cluster label (str)
     # links_dict                   Links related variables                         dict
+    # clustering_type              Clustering type, {'static', 'adaptive'}         dict
+    #                              key: material phase id (str)
+    # base_clustering_scheme       Base clustering scheme                          dict
+    #                              key: material phase id (str)
+    # adaptive_clustering_scheme   Adaptive clustering scheme                      dict
+    #                              key: material phase id (str)
+    # adaptivity_criterion         Adaptivity criterion parameters                 dict
+    #                              key: material phase id (str)
+    # adaptivity_type              Adaptivity type parameters                      dict
+    #                              key: material phase id (str)
     #
     # Get regular grid data
     n_voxels_dims = rg_dict['n_voxels_dims']
@@ -270,6 +281,11 @@ def packrgclustering(clustering_scheme, crve_type, crve_type_options,
     clst_dict['phase_clusters'] = phase_clusters
     clst_dict['voxels_clusters'] = voxels_clusters
     clst_dict['clusters_f'] = clusters_f
+    clst_dict['clustering_type'] = clustering_type
+    clst_dict['base_clustering_scheme'] = base_clustering_scheme
+    clst_dict['adaptive_clustering_scheme'] = adaptive_clustering_scheme
+    clst_dict['adaptivity_criterion'] = adaptivity_criterion
+    clst_dict['adaptivity_type'] = adaptivity_type
     # Return
     return clst_dict
 # ------------------------------------------------------------------------------------------

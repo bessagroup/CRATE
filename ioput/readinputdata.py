@@ -176,16 +176,20 @@ def readinputdatafile(input_file,dirs_dict):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Get Hierarchical Adaptive Cluster-Reduced Representative Volume Element (HA-CRVE)
     # parameters
-    elif crve_type == 'hierarchical-adaptive':
-        # Check prescribed clustering scheme
-        if clustering_scheme.shape[0] != 1:
-            raise RuntimeError('When selecting an hierarchical-adaptive CRVE type, only ' +
-                               'one unique RVE clustering can be prescribed with a given ' +
-                               'hirarchical agglomerative clustering algorithm.')
-        elif str(clustering_scheme[0, 0]) not in ['5',]:
-            raise RuntimeError('Only the hierarchical agglomerative clustering algorithm ' +
-                               'from scipy (option 5) is available to generate the ' +
-                               'hierarchical-adaptive CRVE type.')
+    elif crve_type in ['hierarchical-adaptive', 'partitional-adaptive']:
+        if crve_type == 'hierarchical-adaptive':
+            # Check prescribed clustering scheme
+            if clustering_scheme.shape[0] != 1:
+                raise RuntimeError('When selecting an hierarchical-adaptive CRVE type, ' +
+                                   'only one unique RVE clustering can be prescribed ' +
+                                   'with a given hierarchical agglomerative clustering ' +
+                                   'algorithm.')
+            elif str(clustering_scheme[0, 0]) not in ['5',]:
+                raise RuntimeError('Only the hierarchical agglomerative clustering ' +
+                                   'algorithm from scipy (option 5) is available to ' +
+                                   'generate the hierarchical-adaptive CRVE type.')
+        # elif crve_type == 'partitional-adaptive':
+        #   pass
         # Read clustering adaptive split factor (optional)
         keyword = 'Clustering_Adaptive_Split_Factor'
         is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
@@ -225,6 +229,17 @@ def readinputdatafile(input_file,dirs_dict):
     # Links add Links python binary to Links dictionary
     if is_Links_python_bin:
         links_dict['Links_python_bin_path'] = Links_python_bin_path
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Get available clustering features
+    clustering_features = list(clstdat.get_available_clustering_features(
+        strain_formulation, n_dim, comp_order_sym, comp_order_nsym).keys())
+    # Read cluster analysis scheme
+    keyword = 'Cluster_Analysis_Scheme'
+    clustering_type, base_clustering_scheme, adaptive_clustering_scheme, \
+        adaptivity_criterion, adaptivity_type = \
+            rproc.read_cluster_analysis_scheme(input_file, input_file_path, keyword,
+                                               material_properties.keys(),
+                                               clustering_features)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read number of cluster associated to each material phase
     keyword = 'Number_of_Clusters'
@@ -372,7 +387,10 @@ def readinputdatafile(input_file,dirs_dict):
     clst_dict = packager.packrgclustering(clustering_scheme, crve_type, crve_type_options,
                                           clustering_solution_method,
                                           standardization_method, links_dict,
-                                          phase_n_clusters, rg_dict)
+                                          phase_n_clusters, rg_dict, clustering_type,
+                                          base_clustering_scheme,
+                                          adaptive_clustering_scheme, adaptivity_criterion,
+                                          adaptivity_type)
     # Package data associated to the self-consistent scheme
     info.displayinfo('5', 'Packaging self-consistent scheme data...')
     scs_dict = packager.packagescs(self_consistent_scheme, scs_max_n_iterations,
