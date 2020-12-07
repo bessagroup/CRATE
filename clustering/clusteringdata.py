@@ -38,7 +38,8 @@ def set_clustering_data(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict):
     # Get clustering data
     clustering_solution_method = clst_dict['clustering_solution_method']
     standardization_method = clst_dict['standardization_method']
-    clustering_scheme = clst_dict['clustering_scheme']
+    base_clustering_scheme = clst_dict['base_clustering_scheme']
+    adaptive_clustering_scheme = clst_dict['adaptive_clustering_scheme']
     # Compute total number of voxels
     n_voxels = np.prod(n_voxels_dims)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -47,7 +48,8 @@ def set_clustering_data(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict):
     feature_descriptors = get_available_clustering_features(strain_formulation, n_dim,
                                                             comp_order_sym, comp_order_nsym)
     # Instatiante cluster analysis data
-    clustering_data = ClusterAnalysisData(clustering_scheme, feature_descriptors,
+    clustering_data = ClusterAnalysisData(base_clustering_scheme,
+                                          adaptive_clustering_scheme, feature_descriptors,
                                           strain_formulation, comp_order_sym,
                                           comp_order_nsym, n_voxels)
     # Set prescribed clustering features
@@ -146,43 +148,52 @@ class ClusterAnalysisData:
 
     Attributes
     ----------
-    _features: set
+    _features : set
         Set of prescribed features identifiers (int).
-    _features_idxs: dict
+    _features_idxs : dict
         Global data matrix's indexes (item, list) associated to each feature (key, str).
-    _feature_loads_ids:  dict
+    _feature_loads_ids :  dict
         List of macroscale loadings identifiers (item, list of int) associated to each
         feature (key, str).
-    global_data_matrix: ndarray of shape (n_voxels, n_features_dims)
+    global_data_matrix : ndarray of shape (n_voxels, n_features_dims)
         Data matrix containing the required clustering features' data to perform all the
         prescribed RVE clusterings.
     '''
-    def __init__(self, clustering_scheme, feature_descriptors, strain_formulation,
-                 comp_order_sym, comp_order_nsym, n_voxels):
+    def __init__(self, base_clustering_scheme, adaptive_clustering_scheme,
+                 feature_descriptors, strain_formulation, comp_order_sym, comp_order_nsym,
+                 n_voxels):
         '''Clustering data constructor.
 
-            Parameters
-            ----------
-            clustering_scheme: ndarray of shape (n_clusterings, 3)
-                Prescribed global clustering scheme to generate the CRVE. Each row is
-                associated with a unique RVE clustering, characterized by a clustering
-                algorithm (col 1, int), a list of features (col 2, list of int) and a list
-                of the feature data matrix' indexes (col 3, list of int).
-            features_descriptors: dict
-                Available clustering features identifiers (key, int) and descriptors (tuple
-                structured as (number of feature dimensions (int), list of macroscale strain
-                loadings (list of ndarrays), feature computation algorithm (function)).
-            strain_formulation: int
-                Strain formulation: (1) infinitesimal strains, (2) finite strains.
-            comp_order_sym: list
-                Symmetric strain/stress components (str) order.
-            comp_order_nsym: list
-                Nonsymmetric strain/stress components (str) order.
-            n_voxels: int
-                Total number of voxels of the regular grid (spatial discretization of the
-                RVE).
+        Parameters
+        ----------
+        base_clustering_scheme : dict
+            Prescribed base clustering scheme (item, ndarray of shape (n_clusterings, 3)) for
+            each material phase (key, str). Each row is associated with a unique clustering
+            characterized by a clustering algorithm (col 1, int), a list of features
+            (col 2, list of int) and a list of the features data matrix' indexes
+            (col 3, list of int).
+        adaptive_clustering_scheme : dict
+            Prescribed adaptive clustering scheme (item, ndarray of shape (n_clusterings, 3))
+            for each material phase (key, str). Each row is associated with a unique
+            clustering characterized by a clustering algorithm (col 1, int), a list of
+            features (col 2, list of int) and a list of the features data matrix' indexes
+            (col 3, list of int).
+        features_descriptors : dict
+            Available clustering features identifiers (key, int) and descriptors (tuple
+            structured as (number of feature dimensions (int), list of macroscale strain
+            loadings (list of ndarrays), feature computation algorithm (function)).
+        strain_formulation : int
+            Strain formulation: (1) infinitesimal strains, (2) finite strains.
+        comp_order_sym : list
+            Symmetric strain/stress components (str) order.
+        comp_order_nsym : list
+            Nonsymmetric strain/stress components (str) order.
+        n_voxels : int
+            Total number of voxels of the regular grid (spatial discretization of the
+            RVE).
         '''
-        self._clustering_scheme = clustering_scheme
+        self._base_clustering_scheme = base_clustering_scheme
+        self._adaptive_clustering_scheme = adaptive_clustering_scheme
         self._feature_descriptors = feature_descriptors
         if strain_formulation == 1:
             self._comp_order = comp_order_sym
@@ -197,10 +208,20 @@ class ClusterAnalysisData:
     # --------------------------------------------------------------------------------------
     def set_prescribed_features(self):
         '''Set prescribed clustering features.'''
-        # Loop over prescribed RVE clusterings and append associated clustering features
+        # Get material phases
+        material_phases = self._base_clustering_scheme.keys()
+        # Initialize clustering features
         self._features = []
-        for i in range(self._clustering_scheme.shape[0]):
-            self._features += self._clustering_scheme[i, 1]
+        # Loop over material phases' prescribed clustering schemes and append associated
+        # clustering features
+        for mat_phase in material_phases:
+            # Get material phase base clustering features
+            for i in range(self._base_clustering_scheme[mat_phase].shape[0]):
+                self._features += self._base_clustering_scheme[mat_phase][i, 1]
+            # Get material phase adaptive clustering features
+            if mat_phase in self._adaptive_clustering_scheme.keys():
+                for i in range(self._adaptive_clustering_scheme[mat_phase].shape[0]):
+                    self._features += self._adaptive_clustering_scheme[mat_phase][i, 1]
         # Get set of unique prescribed clustering features
         self._features = set(self._features)
     # --------------------------------------------------------------------------------------
@@ -231,15 +252,35 @@ class ClusterAnalysisData:
             self._features_idxs[str(feature)] = list(range(init, init + feature_dim))
             init += feature_dim
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Loop over prescribed RVE clusterings and set associated clustering features data
-        # matrix' indexes
-        for i in range(self._clustering_scheme.shape[0]):
-            indexes = []
-            # Loop over prescribed RVE clustering associated features
-            for feature in self._clustering_scheme[i, 1]:
-                indexes += self._features_idxs[str(feature)]
-            # Set RVE clustering associated features data matrix' indexes
-            self._clustering_scheme[i, 2] = copy.deepcopy(indexes)
+        # Get material phases
+        material_phases = self._base_clustering_scheme.keys()
+        # Loop over material phases' prescribed clustering schemes and set associated
+        # clustering features data matrix' indexes
+        for mat_phase in material_phases:
+            # Loop over material phase base clustering scheme
+            for i in range(self._base_clustering_scheme[mat_phase].shape[0]):
+                indexes = []
+                # Loop over prescribed clustering features
+                for feature in self._base_clustering_scheme[mat_phase][i, 1]:
+                    indexes += self._features_idxs[str(feature)]
+                # Set clustering features data matrix' indexes
+                self._base_clustering_scheme[mat_phase][i, 2] = copy.deepcopy(indexes)
+            # Loop over material phase adaptive clustering scheme
+            if mat_phase in self._adaptive_clustering_scheme.keys():
+                for i in range(self._adaptive_clustering_scheme[mat_phase].shape[0]):
+                    indexes = []
+                    # Loop over prescribed clustering features
+                    for feature in self._adaptive_clustering_scheme[mat_phase][i, 1]:
+                        indexes += self._features_idxs[str(feature)]
+                    # Set clustering features data matrix' indexes
+                    self._adaptive_clustering_scheme[mat_phase][i, 2] = \
+                        copy.deepcopy(indexes)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Validation output:
+        # print('\nbase_clustering_scheme: ')
+        # print(self._base_clustering_scheme)
+        # print('\nadaptive_clustering_scheme: ')
+        # print(self._adaptive_clustering_scheme)
     # --------------------------------------------------------------------------------------
     def get_clustering_mac_strains(self):
         '''Get required macroscale strain loadings to compute clustering features.
@@ -251,7 +292,7 @@ class ClusterAnalysisData:
 
         Returns
         -------
-        mac_strains: list
+        mac_strains : list
             List of macroscale strain loadings (ndarray, second-order strain tensor)
             required to compute all the prescribed clustering features.
         '''
@@ -290,7 +331,7 @@ class ClusterAnalysisData:
 
         Parameters
         ----------
-        rve_global_response: ndarray of shape (n_voxels, n_mac_strains*n_strain_comps)
+        rve_global_response : ndarray of shape (n_voxels, n_mac_strains*n_strain_comps)
             RVE elastic response for the required set of macroscale loadings, where each
             macroscale loading is associated with a set of independent strain components.
         '''
@@ -329,13 +370,13 @@ class FeatureAlgorithm(ABC):
 
         Parameters
         ----------
-        rve_response: ndarray of shape (n_voxels, n_strain_comps)
+        rve_response : ndarray of shape (n_voxels, n_strain_comps)
             RVE elastic response for one or more macroscale loadings, where each macroscale
             loading is associated with a set of independent strain components.
 
         Returns
         -------
-        data_matrix: ndarray of shape (n_voxels, n_feature_dim)
+        data_matrix : ndarray of shape (n_voxels, n_feature_dim)
             Clustering feature's data matrix.
         '''
         pass
@@ -361,12 +402,12 @@ class Standardizer(ABC):
 
         Parameters
         ----------
-        data_matrix: ndarray of shape (n_items, n_features)
+        data_matrix : ndarray of shape (n_items, n_features)
             Data matrix to be standardized.
 
         Returns
         -------
-        data_matrix: ndarray of shape (n_items, n_features)
+        data_matrix : ndarray of shape (n_items, n_features)
             Transformed data matrix.
         '''
         pass
@@ -406,9 +447,8 @@ class StandardScaler(Standardizer):
     The Standard scaling algorithm is taken from scikit-learn (https://scikit-learn.org).
     Further information can be found in there.
     '''
-    def __init__(self, feature_range=(0, 1)):
+    def __init__(self):
         '''Standardization algorithm constructor.'''
-        self._feature_range = feature_range
     # --------------------------------------------------------------------------------------
     def get_standardized_data_matrix(self, data_matrix):
         '''Standardize provided data matrix.'''
