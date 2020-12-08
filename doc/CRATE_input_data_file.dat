@@ -69,11 +69,11 @@
 #
 # Syntax:    Material_Phases x
 #            phase_ID model_name n_properties model_source
-#            property_1_name y
-#            property_2_name y
+#                property_1_name y
+#                property_2_name y
 #            phase_ID model_name n_properties model_source
-#            property_1_name y
-#            property_2_name y
+#                property_1_name y
+#                property_2_name y
 #
 # x:                       integer
 # phase_ID:                integer
@@ -171,95 +171,69 @@
 
 
 
-#                                                                              CRVE type [O]
+#                                                                Cluster analysis scheme [M]
 # ==========================================================================================
-# Meaning:   Type of Cluster-Reduced Representative Volume Element.
+# Meaning:   Cluster analysis scheme prescribed to generate all cluster-reduced material
+#            phases that ultimately compose the Cluster-Reduced Representative Volume
+#            Element (CRVE).
 #
-# Syntax:    CRVE_Type x
+# Syntax:    Clustering_Analysis_Scheme
+#            phase_ID [clustering_type]
+#                base_clustering [n_clusterings, ensemble_method_id]
+#                clustering_algorithm_ID feature_ID [feature_ID]
+#                clustering_algorithm_ID feature_ID [feature_ID]
+#                adaptive_clustering [n_clusterings ensemble_method_id]
+#                clustering_algorithm_ID feature_ID [feature_ID]
+#                clustering_algorithm_ID feature_ID [feature_ID]
+#                adaptivity_parameters adaptivity_criterion_ID adaptivity_type_ID
+#                parameter x
+#                parameter x
+#                ...
+#            phase_ID [clustering_type]
+#                ...
 #
-# x:         1 - Static
-#            2 - Hierarchical Adaptive
+# phase_ID:                  integer
+# clustering_type:           string (static or adaptive, optional, defaults to static)
+# n_clusterings:             integer (optional, defaults to 1)
+# ensemble_method_id:        Not available
 #
-# Note: Depending on the selected type of CRVE, it is necessary to provide CRVE type
-#       specific parameters. Check the following sections for each CRVE type:
+# clustering_algorithm_id:   1 - K-Means (source: scikit-learn)
+#                            2 - K-Means (source: pyclustering)
+#                            3 - Mini-Batch K-Means (source: scikit-learn)
+#                            4 - Agglomerative (source: scikit-learn)
+#                            5 - Agglomerative (source: scipy)
+#                            6 - Agglomerative (source: fastcluster)
+#                            7 - Birch (source: scikit-learn)
+#                            8 - Birch (source: pyclustering)
+#                            9 - Cure (source: pyclustering)
+#                           10 - X-Means (source: pyclustering)
 #
-#       Static                : Clustering ensemble method [M,O]
+# feature_ID:                1 - Fourth-order local elastic strain concentration tensor
 #
-#       Hierarchical Adaptive : Clustering adaptive split factor [O]
-# ------------------------------------------------------------------------------------------
-[insert here]
-
-
-
-
-#                                                                      Clustering scheme [M]
-# ==========================================================================================
-# Meaning:   Clustering scheme employed to generate the Cluster-Reduced Representative
-#            Volume Element, specifying one or more RVE clustering solutions and the
-#            corresponding clustering algorithm and attributes.
+# adaptivity_criterion_ID:   1 - Non-spatial
 #
-# Syntax:    Clustering_Scheme
-#            x y [y]
-#            x y [y]
+# adaptivity_type_ID:        1 - Hierarchical Agglomerative Adaptive (HAACRMP)
 #
-# x:          1 - K-Means (source: scikit-learn)
-#             2 - K-Means (source: pyclustering)
-#             3 - Mini-Batch K-Means (source: scikit-learn)
-#             4 - Agglomerative (source: scikit-learn)
-#             5 - Agglomerative (source: scipy)
-#             6 - Agglomerative (source: fastcluster)
-#             7 - Birch (source: scikit-learn)
-#             8 - Birch (source: pyclustering)
-#             9 - Cure (source: pyclustering)
-#            10 - X-Means (source: pyclustering)
+# parameter:                 string (adaptivity criterion or type parameter)
+# x:                         integer, float, string, on/off (depends on parameter)
 #
-# y:         1 - Fourth-order local elastic strain concentration tensor
 #
-# Note: If more than one RVE clustering solution is prescribed, it is mandatory to specify
-#       the parameter Clustering_Ensemble_Method.
-# ------------------------------------------------------------------------------------------
-[insert here]
-
-
-
-
-#                                                           Clustering ensemble method [M,O]
-# ==========================================================================================
-# Meaning:   Clustering ensemble strategy or method employed to get a unique RVE clustering
-#            solution (consensus clustering) from several RVE clustering solutions. This
-#            parameter specification is only mandatory and read if there is more than one
-#            prescribed RVE clustering solution, otherwise is ignored.
+#  Adaptivity criterion parameters
+#  -----------------------------------------------------------------------------------
+#   Criterion        Parameter                         Parameter type
+#  -----------------------------------------------------------------------------------
+#   Non-spatial      adapt_trigger_ratio [O]           float (defaults to 0.1)
+#                    adapt_split_threshold [O]         float (defaults to 0.1)
+#                    adapt_max_level [O]               integer (defaults to 15)
+#  -----------------------------------------------------------------------------------
 #
-# Syntax:    Clustering_Ensemble_Method x
+#  Adaptivity type parameters
+#  -----------------------------------------------------------------------------------
+#   Type             Parameter                         Parameter type
+#  -----------------------------------------------------------------------------------
+#   HAACRMP          adapt_split_factor [O]            float (defaults to 0.2)
+#  -----------------------------------------------------------------------------------
 #
-# x:         None available.
-# ------------------------------------------------------------------------------------------
-[insert here]
-
-
-
-
-#                                                       Clustering adaptive split factor [O]
-# ==========================================================================================
-# Meaning:   Clustering adaptive split factor controlling the split magnitude of the target
-#            clusters in an adaptive CRVE adaptive clustering step, specified for each
-#            material phase. The clustering adaptive split factor must be contained between
-#            0 and 1 (included). The lower bound (0) prevents any cluster to be split,
-#            while the upper bound (1) performs the maximum number splits of each cluster
-#            (single-voxel clusters).
-#
-# Syntax:    Clustering_Adaptive_Split_Factor
-#            phase_ID x
-#            phase_ID x
-#
-# x:         float
-#
-# Note: If the adaptive split factor is not prescribed for a given material phase, then
-#       the value of 0 is assumed, preventing the clusters from that material phase to
-#       be split.
-#
-# Note: If this parameter is not specified at all (absent keyword), then a non-null
-#       default value is assumed for every material phases.
 # ------------------------------------------------------------------------------------------
 [insert here]
 
@@ -268,13 +242,18 @@
 
 #                                                                     Number of clusters [M]
 # ==========================================================================================
-# Meaning:   Number of clusters associated to each material phase.
+# Meaning:   Number of clusters associated to each cluster-reduced material phase.
 #
 # Syntax:    Number_of_Clusters
 #            phase_ID x
 #            phase_ID x
+#            ...
 #
+# phase_ID:  integer
 # x:         integer
+#
+# Note: If phase_ID is an adaptive cluster-reduced material phase, then x is the initial
+#       (base clustering) number of clusters.
 # ------------------------------------------------------------------------------------------
 [insert here]
 
@@ -515,6 +494,26 @@
 #
 # x:         1 - Min-Max Scaler (default)
 #            2 - Standard Normal Distribution Scaler
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
+#                                                        Clustering adaptivity frequency [O]
+# ==========================================================================================
+# Meaning:   Frequency of clustering adaptivity analysis (relative to the macroscale loading
+#            increments) for each adaptive cluster-reduced material phase.
+#
+# Syntax:    Adaptivity_Frequency
+#            phase_ID x
+#            phase_ID x
+#            ...
+#
+# phase_ID:  integer (must be an adaptive material phase)
+# x:         all     - All macroscale loading increments (default)
+#            every x - Every x (x: integer) macroscale loading increments
+#            none    - Clustering adaptivity analysis is switched off
 # ------------------------------------------------------------------------------------------
 [insert here]
 
