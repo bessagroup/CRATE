@@ -1324,6 +1324,89 @@ def get_adaptivity_parameter(parameter, x, etype=None):
     # Return
     return y
 #
+#                                                            Clustering adaptivity frequency
+# ==========================================================================================
+# Read frequency of clustering adaptivity analysis (relative to the macroscale loading
+# increments) for each adaptive cluster-reduced material phase, specified as
+#
+# Adaptivity_Frequency
+# phase_id x
+# phase_id x
+#
+def read_adaptivity_frequency(file, file_path, keyword, adapt_material_phases):
+    '''Read clustering adaptivity frequency.
+
+    Parameters
+    ----------
+    file: file
+        Input data file where the data is searched and read from.
+    file_path: str
+        Input data file absolute path.
+    keyword: str
+        Keyword to be searched in the input data file.
+    adapt_material_phases : list
+        RVE adaptive material phases labels (str).
+
+    Returns
+    -------
+    clust_adapt_freq : dict
+        Clustering adaptivity frequency (relative to the macroscale loading)
+        (item, int, default=1) associated with each adaptive cluster-reduced
+        material phase (key, str).
+    '''
+    # Find keyword line number
+    keyword_line_number = searchkeywordline(file, keyword)
+    # Initialize line number
+    line_number = keyword_line_number
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Initialize clustering adaptivity frequency
+    clust_adapt_freq = {mat_phase: 1 for mat_phase in adapt_material_phases}
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Read following line
+    line = linecache.getline(file_path, line_number + 1)
+    is_empty_line = not bool(line.split())
+    # Check for adaptivity frequency specifications. If there are no adaptivity frequency
+    # specifications, return
+    if is_empty_line:
+        return clust_adapt_freq
+    else:
+        line = line.split()
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    while True:
+        # Increment line number and read line
+        line_number += 1
+        line = linecache.getline(file_path, line_number).split()
+        # Check adaptivity frequency specification
+        if len(line) < 2:
+            raise RuntimeError('Invalid adaptivity frequency specification.')
+        elif line[0] not in adapt_material_phases:
+            raise RuntimeError('Unknown adaptive material phase while reading adaptivity ' +
+                               'frequency specification.')
+        elif line[1] not in ['all', 'none', 'every']:
+            raise RuntimeError('Unknown adaptivity frequency specification option.')
+        # Get material phase and adaptivity frequency option
+        mat_phase = line[0]
+        option = line[1]
+        # Set adaptivity frequency
+        if option == 'none':
+            clust_adapt_freq[mat_phase] = 0
+        elif option == 'every':
+            # Check option specification
+            if len(line) < 3 or not ioutil.checkposint(line[2]):
+                raise RuntimeError('Invalid adaptivity frequency specification option.')
+            else:
+                clust_adapt_freq[mat_phase] = int(line[2])
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Read following line
+        line = linecache.getline(file_path, line_number + 1)
+        is_empty_line = not bool(line.split())
+        # Check for adaptivity frequency specifications. If there are no adaptivity
+        # frequency specifications, return
+        if is_empty_line:
+            break
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    return clust_adapt_freq
+#
 #                                                                   Discretization file path
 # ==========================================================================================
 # Read the spatial discretization file path

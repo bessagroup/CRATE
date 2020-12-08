@@ -138,69 +138,34 @@ def readinputdatafile(input_file,dirs_dict):
     else:
         scs_conv_tol = 1e-4
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Get available CRVE types
-    valid_crve_types = clustering.clustering.get_available_crve_types()
-    # Read CRVE type
-    keyword = 'CRVE_Type'
+    # Get available clustering features
+    clustering_features = list(clstdat.get_available_clustering_features(
+        strain_formulation, n_dim, comp_order_sym, comp_order_nsym).keys())
+    # Read cluster analysis scheme
+    keyword = 'Cluster_Analysis_Scheme'
+    clustering_type, base_clustering_scheme, adaptive_clustering_scheme, \
+        adaptivity_criterion, adaptivity_type = \
+            rproc.read_cluster_analysis_scheme(input_file, input_file_path, keyword,
+                                               material_properties.keys(),
+                                               clustering_features)
+    # Get adaptive material phases
+    adapt_material_phases = [x for x in clustering_type.keys()
+                             if clustering_type[x] == 'adaptive']
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Read number of cluster associated to each material phase
+    keyword = 'Number_of_Clusters'
+    phase_n_clusters = rproc.readphaseclustering(input_file, input_file_path, keyword,
+                                                 n_material_phases, material_properties)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Read clustering adaptivity frequency (optional). If the associated keyword is not
+    # found, then a default specification is assumed
+    keyword = 'Clustering_Adaptivity_Frequency'
     is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
     if is_found:
-        max_val = max([int(x) for x in valid_crve_types.keys()])
-        crve_type_id = rproc.readtypeAkeyword(input_file, input_file_path, keyword,
-                                              max_val)
-        crve_type = valid_crve_types[str(crve_type_id)]
+        clust_adapt_freq = rproc.read_adaptivity_frequency(input_file, input_file_path,
+                                                           keyword, adapt_material_phases)
     else:
-        crve_type = valid_crve_types['1']
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Get available clustering algorithms and features
-    valid_algorithms = list(clstalgs.get_available_clustering_algorithms().keys())
-    valid_features = list(clstdat.get_available_clustering_features(
-        strain_formulation, n_dim, comp_order_sym, comp_order_nsym).keys())
-    # Read clustering scheme
-    keyword = 'Clustering_Scheme'
-    clustering_scheme = rproc.readclusterscheme(input_file, input_file_path, keyword,
-                                                valid_algorithms, valid_features)
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Initialize CRVE type specific clustering options dictionary
-    crve_type_options = {}
-    # Get Static Cluster-Reduced Representative Volume Element (S-CRVE) parameters
-    if crve_type == 'static':
-        # Read clustering ensemble method (optional)
-        keyword = 'Clustering_Ensemble_Method'
-        if clustering_scheme.shape[0] > 1:
-            raise RuntimeError('No clustering ensemble method has been implemented yet.')
-            #max_val = '~'
-            #crve_type_options['clustering_ensemble_strategy'] = \
-            #    rproc.readtypeAkeyword(input_file, input_file_path, keyword, max_val)
-        else:
-            crve_type_options['clustering_ensemble_strategy'] = 0
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Get Hierarchical Adaptive Cluster-Reduced Representative Volume Element (HA-CRVE)
-    # parameters
-    elif crve_type in ['hierarchical-adaptive', 'partitional-adaptive']:
-        if crve_type == 'hierarchical-adaptive':
-            # Check prescribed clustering scheme
-            if clustering_scheme.shape[0] != 1:
-                raise RuntimeError('When selecting an hierarchical-adaptive CRVE type, ' +
-                                   'only one unique RVE clustering can be prescribed ' +
-                                   'with a given hierarchical agglomerative clustering ' +
-                                   'algorithm.')
-            elif str(clustering_scheme[0, 0]) not in ['5',]:
-                raise RuntimeError('Only the hierarchical agglomerative clustering ' +
-                                   'algorithm from scipy (option 5) is available to ' +
-                                   'generate the hierarchical-adaptive CRVE type.')
-        # elif crve_type == 'partitional-adaptive':
-        #   pass
-        # Read clustering adaptive split factor (optional)
-        keyword = 'Clustering_Adaptive_Split_Factor'
-        is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
-        if is_found:
-            crve_type_options['adaptive_split_factor'] = \
-                rproc.read_adaptive_split_factor(input_file, input_file_path, keyword,
-                                                 material_properties.keys())
-        else:
-            split_factor = 0.3
-            crve_type_options['adaptive_split_factor'] = \
-                {mat_phase: split_factor for mat_phase in material_properties.keys()}
+        clust_adapt_freq = {mat_phase: 1 for mat_phase in adapt_material_phases}
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read clustering solution method (optional). If the associated keyword is not found,
     # then a default specification is assumed
@@ -229,22 +194,6 @@ def readinputdatafile(input_file,dirs_dict):
     # Links add Links python binary to Links dictionary
     if is_Links_python_bin:
         links_dict['Links_python_bin_path'] = Links_python_bin_path
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Get available clustering features
-    clustering_features = list(clstdat.get_available_clustering_features(
-        strain_formulation, n_dim, comp_order_sym, comp_order_nsym).keys())
-    # Read cluster analysis scheme
-    keyword = 'Cluster_Analysis_Scheme'
-    clustering_type, base_clustering_scheme, adaptive_clustering_scheme, \
-        adaptivity_criterion, adaptivity_type = \
-            rproc.read_cluster_analysis_scheme(input_file, input_file_path, keyword,
-                                               material_properties.keys(),
-                                               clustering_features)
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Read number of cluster associated to each material phase
-    keyword = 'Number_of_Clusters'
-    phase_n_clusters = rproc.readphaseclustering(input_file, input_file_path, keyword,
-                                                 n_material_phases, material_properties)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read macroscale loading incrementation parameters
     keyword_1 = 'Number_of_Load_Increments'
@@ -384,13 +333,12 @@ def readinputdatafile(input_file,dirs_dict):
                                        problem_dict)
     # Package data associated to the clustering
     info.displayinfo('5', 'Packaging clustering data...')
-    clst_dict = packager.packrgclustering(clustering_scheme, crve_type, crve_type_options,
-                                          clustering_solution_method,
+    clst_dict = packager.packrgclustering(clustering_solution_method,
                                           standardization_method, links_dict,
                                           phase_n_clusters, rg_dict, clustering_type,
                                           base_clustering_scheme,
                                           adaptive_clustering_scheme, adaptivity_criterion,
-                                          adaptivity_type)
+                                          adaptivity_type, clust_adapt_freq)
     # Package data associated to the self-consistent scheme
     info.displayinfo('5', 'Packaging self-consistent scheme data...')
     scs_dict = packager.packagescs(self_consistent_scheme, scs_max_n_iterations,
