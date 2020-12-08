@@ -988,12 +988,16 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
             raise RuntimeError('Unexistent material phase or adaptivity parameter has ' +
                                'been found while reading the cluster analysis scheme ' +
                                '(' + line[0] + ').')
-        elif line[1] not in ['static', 'adaptive']:
-            raise RuntimeError('Unknown clustering type while reading cluster analysis ' +
-                               'scheme.')
         else:
-            mat_phase = line[0]
-            ctype = line[1]
+            if len(line) == 1:
+                mat_phase = line[0]
+                ctype = 'static'
+            elif line[1] not in ['static', 'adaptive']:
+                raise RuntimeError('Unknown clustering type while reading cluster ' +
+                                   'analysis scheme.')
+            else:
+                mat_phase = line[0]
+                ctype = line[1]
         # Initialize material phase base clustering
         base_clustering_scheme[mat_phase] = np.full((0, 3), '', dtype=object)
         # Store material phase clustering type
