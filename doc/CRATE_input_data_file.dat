@@ -13,9 +13,9 @@
 #       other parameters).
 # ==========================================================================================
 # Development history:
-# Bernardo P. Ferreira | June 2020 | Initial version (along with CRATE v0.1.0).
-# Bernardo P. Ferreira | July 2020 | Updated version (along with CRATE v0.3.0).
-# Bernardo P. Ferreira | July 2020 | Updated version (along with CRATE v0.7.0).
+# Bernardo P. Ferreira | Jun 2020 | Initial version (along with CRATE v0.1.0).
+# Bernardo P. Ferreira | Jul 2020 | Updated version (along with CRATE v0.3.0).
+# Bernardo P. Ferreira | Dec 2020 | Updated version (along with CRATE v0.7.0).
 # ==========================================================================================
 
 
@@ -214,26 +214,37 @@
 #
 # adaptivity_type_ID:        1 - Hierarchical Agglomerative Adaptive (HAACRMP)
 #
-# parameter:                 string (adaptivity criterion or type parameter)
+# parameter:                 string (adaptivity criterion parameter, adaptivity type
+#                                    parameter or adaptivity control feature)
 # x:                         integer, float, string, on/off (depends on parameter)
 #
 #
 #  Adaptivity criterion parameters
 #  -----------------------------------------------------------------------------------
-#   Criterion        Parameter                         Parameter type
+#   Criterion        Parameter [M/O]                   Parameter type
 #  -----------------------------------------------------------------------------------
 #   Non-spatial      adapt_trigger_ratio [O]           float (defaults to 0.1)
 #                    adapt_split_threshold [O]         float (defaults to 0.1)
 #                    adapt_max_level [O]               integer (defaults to 15)
 #  -----------------------------------------------------------------------------------
 #
+#
 #  Adaptivity type parameters
 #  -----------------------------------------------------------------------------------
-#   Type             Parameter                         Parameter type
+#   Type             Parameter [M/O]                   Parameter type
 #  -----------------------------------------------------------------------------------
 #   HAACRMP          adapt_split_factor [O]            float (defaults to 0.2)
 #  -----------------------------------------------------------------------------------
 #
+#
+#  Adaptivity control features
+#  -----------------------------------------------------------------------------------
+#   Feature (mandatory one for each adaptive material phase)
+#  -----------------------------------------------------------------------------------
+#   scalar state variable (e.g. acc_p_strain)
+#   component of strain/stress related second order state variable (e.g. strain_mf_11)
+#  -----------------------------------------------------------------------------------
+
 # ------------------------------------------------------------------------------------------
 [insert here]
 
@@ -505,7 +516,7 @@
 # Meaning:   Frequency of clustering adaptivity analysis (relative to the macroscale loading
 #            increments) for each adaptive cluster-reduced material phase.
 #
-# Syntax:    Adaptivity_Frequency
+# Syntax:    Clustering_Adaptivity_Frequency
 #            phase_ID x
 #            phase_ID x
 #            ...
@@ -514,6 +525,8 @@
 # x:         all     - All macroscale loading increments (default)
 #            every x - Every x (x: integer) macroscale loading increments
 #            none    - Clustering adaptivity analysis is switched off
+#
+# Note: Currently disabled!
 # ------------------------------------------------------------------------------------------
 [insert here]
 
