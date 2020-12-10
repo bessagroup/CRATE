@@ -41,7 +41,7 @@ import clustering.clusteringdata as clstdat
 # Cluster-reduced material phases
 from clustering.clusteringphase import SCRMP, HAACRMP
 # CRVE generation
-from clustering.crve import NEWCRVE
+from clustering.crve import CRVE
 # CRVE adaptivity
 from online.crve_adaptivity import AdaptivityManager
 #
@@ -949,14 +949,17 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
         clustering characterized by a clustering algorithm (col 1, int), a list of
         features (col 2, list of int) and a list of the features data matrix' indexes
         (col 3, list of int).
-    adaptivity_criterion : dict, default=None
+    adaptivity_criterion : dict
         Clustering adaptivity criterion (item, dict) associated to each material phase
         (key, str). This dictionary contains the adaptivity criterion to be used and the
         required parameters.
-    adaptivity_type : dict, default=None
+    adaptivity_type : dict
         Clustering adaptivity type (item, dict) associated to each material phase
         (key, str). This dictionary contains the adaptivity type to be used and the
         required parameters.
+    adaptivity_control_feature : dict
+        Clustering adaptivity control feature (item, str) associated to each material phase
+        (key, str). This feature is closely related to the clustering adaptivity criterion.
     '''
     # Find keyword line number
     keyword_line_number = searchkeywordline(file, keyword)
@@ -971,6 +974,7 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
     adaptive_clustering_scheme = {}
     adaptivity_criterion = {}
     adaptivity_type = {}
+    adaptivity_control_feature = {}
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Loop over material phases
     for i in range(len(material_phases)):
@@ -1064,14 +1068,14 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
                 raise RuntimeError('Unexistent adaptivity criterion while reading ' +
                                    'adaptivity parameters of material phase ' + mat_phase +
                                    '.')
-            elif line[2] not in NEWCRVE.get_crmp_types().keys():
+            elif line[2] not in CRVE.get_crmp_types().keys():
                 raise RuntimeError('Unexistent adaptivity type while reading ' +
                                    'adaptivity parameters of material phase ' + mat_phase +
                                    '.')
             else:
                 adapt_criterion_id = line[1]
                 adapt_type_id = line[2]
-                AdaptType = NEWCRVE.get_crmp_types()[adapt_type_id]
+                AdaptType = CRVE.get_crmp_types()[adapt_type_id]
                 adaptivity_type[mat_phase]['adapt_type'] = AdaptType
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get mandatory and optional adaptivity criterion parameters
@@ -1097,12 +1101,12 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
         # Read following line
         line = linecache.getline(file_path, line_number + 1)
         is_empty_line = not bool(line.split())
-        # Check for adaptivity parameters specifications. If there are no adaptivity
-        # parameters specifications, skip to the next material phase
+        # Check for adaptivity parameters specifications
         is_adapt_parameter = False
         if is_empty_line:
-            continue
-        elif line.split()[0] in [*madapt_parameters.keys(), *oadapt_parameters.keys()]:
+            pass
+        elif line.split()[0] in [*madapt_parameters.keys(), *oadapt_parameters.keys(),
+                                 'adaptivity_control_feature']:
             is_adapt_parameter = True
             parameter = line.split()[0]
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1115,7 +1119,7 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
             if len(line) < 2:
                 raise RuntimeError('Missing adaptivity parameter \'' + parameter +
                                    '\' specification in material phase ' + mat_phase + '.')
-            # Check kind of adaptivity parameter
+            # Get adaptivity parameter
             if parameter in macp.keys():
                 # Store adaptivity criterion parameter
                 adaptivity_criterion[mat_phase][parameter] = \
@@ -1125,7 +1129,7 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
                 adaptivity_criterion[mat_phase][parameter] = \
                     get_adaptivity_parameter(parameter, line[1], etype=matp[parameter])
             elif parameter in oacp.keys():
-                # Check
+                # Get parameter value
                 value = get_adaptivity_parameter(parameter, line[1])
                 # Store adaptivity criterion parameter
                 if type(value) == type(oacp[parameter]):
@@ -1135,7 +1139,7 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
                     raise TypeError('The adaptivity parameter \'' + str(parameter) +
                                     '\' hasn\'t been properly specified.')
             elif parameter in oatp.keys():
-                # Check
+                # Get parameter value
                 value = get_adaptivity_parameter(parameter, line[1])
                 # Store adaptivity criterion parameter
                 if type(value) == type(oatp[parameter]):
@@ -1144,6 +1148,13 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
                 else:
                     raise TypeError('The adaptivity parameter \'' + str(parameter) +
                                     '\' hasn\'t been properly specified.')
+            elif parameter == 'adaptivity_control_feature':
+                # Store adaptivity control feature
+                if mat_phase in adaptivity_control_feature.keys():
+                    raise RuntimeError('Only one adaptivity control feature can be ' +
+                                       'prescribed for each material phase.')
+                else:
+                    adaptivity_control_feature[mat_phase] = line[1]
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Read following line
             line = linecache.getline(file_path, line_number + 1)
@@ -1151,11 +1162,14 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
             # Check for adaptivity parameters specifications. If there are no adaptivity
             # parameters specifications, skip to the next material phase
             is_adapt_parameter = False
+            print('i: ', i)
+            print('mat_phase: ', mat_phase)
             if is_empty_line:
-                if i != range(len(mat_phase))[-1]:
+                if i != range(len(material_phases))[-1]:
                     raise RuntimeError('The cluster analysis scheme must be specified ' +
                                        'for all material phases.')
-            elif line.split()[0] in [*madapt_parameters.keys(), *oadapt_parameters.keys()]:
+            elif line.split()[0] in [*madapt_parameters.keys(), *oadapt_parameters.keys(),
+                                     'adaptivity_control_feature']:
                 is_adapt_parameter = True
                 parameter = line.split()[0]
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1171,6 +1185,20 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
                 raise RuntimeError('The mandatory adaptivity type parameter \'' +
                                    str(parameter) + '\' has not been prescribed for ' +
                                    'material phase ' + mat_phase + '.')
+        # Check if adaptivity control feature has been prescribed
+        if mat_phase not in adaptivity_control_feature.keys():
+            raise RuntimeError('The adaptivity control feature has not been prescribed ' +
+                               'for material phase ' + mat_phase + '.')
+        # Set default values for all the optional adaptivity criterion parameters that have
+        # not been prescribed
+        for parameter in oacp.keys():
+            if parameter not in adaptivity_criterion[mat_phase].keys():
+                adaptivity_criterion[mat_phase][parameter] = oacp[parameter]
+        # Set default values for all the optional adaptivity type parameters that have not
+        # been prescribed
+        for parameter in oatp.keys():
+            if parameter not in adaptivity_type[mat_phase].keys():
+                adaptivity_type[mat_phase][parameter] = oatp[parameter]
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Check if the cluster analysis scheme has been prescribed for all material phases
     if set(base_clustering_scheme.keys()) != set(material_phases):
@@ -1190,9 +1218,11 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
     # print(adaptivity_criterion)
     # print('\nadaptivity_type: ')
     # print(adaptivity_type)
+    # print('\nadaptivity_control_feature: ')
+    # print(adaptivity_control_feature)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return [clustering_type, base_clustering_scheme, adaptive_clustering_scheme,
-            adaptivity_criterion, adaptivity_type]
+            adaptivity_criterion, adaptivity_type, adaptivity_control_feature]
 # ------------------------------------------------------------------------------------------
 def read_clustering_scheme(file, file_path, line_number):
     '''Read prescribed clustering scheme.

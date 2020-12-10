@@ -36,12 +36,8 @@ import ioput.readprocedures as rproc
 import ioput.ioutilities as ioutil
 # Matricial operations
 import tensor.matrixoperations as mop
-# CRVE generation
-import clustering.crve
 # Clustering data
 import clustering.clusteringdata as clstdat
-# Unsupervised clustering algorithms
-import clustering.clusteringalgs as clstalgs
 #
 #                                                                       Read input data file
 # ==========================================================================================
@@ -144,7 +140,7 @@ def readinputdatafile(input_file,dirs_dict):
     # Read cluster analysis scheme
     keyword = 'Cluster_Analysis_Scheme'
     clustering_type, base_clustering_scheme, adaptive_clustering_scheme, \
-        adaptivity_criterion, adaptivity_type = \
+        adaptivity_criterion, adaptivity_type, adaptivity_control_feature = \
             rproc.read_cluster_analysis_scheme(input_file, input_file_path, keyword,
                                                material_properties.keys(),
                                                clustering_features)
@@ -338,7 +334,8 @@ def readinputdatafile(input_file,dirs_dict):
                                           phase_n_clusters, rg_dict, clustering_type,
                                           base_clustering_scheme,
                                           adaptive_clustering_scheme, adaptivity_criterion,
-                                          adaptivity_type, clust_adapt_freq)
+                                          adaptivity_type, adaptivity_control_feature,
+                                          clust_adapt_freq)
     # Package data associated to the self-consistent scheme
     info.displayinfo('5', 'Packaging self-consistent scheme data...')
     scs_dict = packager.packagescs(self_consistent_scheme, scs_max_n_iterations,
