@@ -207,10 +207,15 @@ else:
     # Instantiate cluster analysis
     clustering = clst.Clustering(rg_dict['rve_dims'], mat_dict['material_phases'],
                                  rg_dict['regular_grid'], problem_dict['comp_order_sym'],
+                                 clst_dict['global_data_matrix'],
+                                 clst_dict['clustering_type'],
                                  clst_dict['phase_n_clusters'],
-                                 clst_dict['clustering_scheme'], clst_dict['crve_type'],
-                                 clst_dict['crve_type_options'],
-                                 clst_dict['clst_quantities'])
+                                 clst_dict['base_clustering_scheme'],
+                                 clst_dict['adaptive_clustering_scheme'],
+                                 clst_dict['adaptivity_criterion'],
+                                 clst_dict['adaptivity_type'],
+                                 clst_dict['adaptivity_control_feature'],
+                                 clst_dict['clust_adapt_freq'])
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Compute Cluster-reduced Representative Volume Element (CRVE)
     crve = clustering.compute_crve()
@@ -266,7 +271,7 @@ phase_init_time = time.time()
 # Solve the reduced microscale equilibrium problem through solution of the clusterwise
 # discretized Lippmann-Schwinger system of equilibrium equations
 sca.sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs_dict,
-    algpar_dict, vtk_dict)
+    algpar_dict, vtk_dict, crve)
 # Set phase ending time and display finishing phase information
 phase_end_time = time.time()
 phase_names.append('Solve reduced microscale equilibrium problem')
