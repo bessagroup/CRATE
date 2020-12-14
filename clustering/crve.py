@@ -20,6 +20,8 @@ import copy
 import itertools as it
 # Date and time
 import time
+# Python object serialization
+import pickle
 # Display messages
 import ioput.info as info
 # Matricial operations
@@ -156,8 +158,9 @@ class CRVE:
         self.adapt_material_phases = [x for x in self._clustering_type.keys()
                                       if self._clustering_type[x] == 'adaptive']
     # --------------------------------------------------------------------------------------
-    def compute_base_crve(self):
+    def perform_crve_base_clustering(self):
         '''Compute CRVE base clustering.'''
+        info.displayinfo('5', 'Computing CRVE base clustering...')
         # Initialize base clustering labels
         labels = np.full(self._n_voxels, -1, dtype=int)
         # Initialize cluster-reduced material phases dictionary
@@ -167,6 +170,8 @@ class CRVE:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over material phases
         for mat_phase in self._material_phases:
+            info.displayinfo('5', 'Computing material phase ' + mat_phase +
+                             ' base clustering...', 2)
             # Get material phase clustering type
             ctype = self._clustering_type[mat_phase]
             # Get material phase initial number of clusters
@@ -227,9 +232,7 @@ class CRVE:
         # Build base CRVE
         self.voxels_clusters = np.reshape(np.array(labels, dtype=int), self._n_voxels_dims)
         # Compute base CRVE descriptors
-        info.displayinfo('5', 'Computing base CRVE descriptors...', 2)
-        # Reassign and sort RVE clustering labels
-        # self._sort_cluster_labels()
+        info.displayinfo('5', 'Computing CRVE base clustering descriptors...', 2)
         # Store cluster labels belonging to each material phase
         self._set_phase_clusters()
         # Compute material clusters' volume fraction
@@ -443,7 +446,7 @@ class CRVE:
 
         Notes
         -----
-        Why is this required?
+        This method is not being currently used.
         '''
         # Initialize material phase initial cluster label
         lbl_init = 0
@@ -515,6 +518,8 @@ class CRVE:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Perform mode-specific initialization procedures
         if mode == 'full':
+            info.displayinfo('5', 'Computing CRVE cluster interaction tensors ' +
+                             '(full computation)...')
             # Initialize cluster interaction tensors dictionary
             self.cit_X_mf = [{} for i in range(3)]
             for mat_phase_B in self._material_phases:
@@ -526,6 +531,8 @@ class CRVE:
                                                         self._comp_order,
                                                         self._n_voxels_dims)
         elif mode == 'adaptive':
+            info.displayinfo('5', 'Computing CRVE cluster interaction tensors ' +
+                             '(adaptive computation)...')
             init_time = time.time()
             # Build lists with old (preexistent) clusters and new (adapted) clusters for
             # each material phase. Also get list of clusters that no longer exist due to
@@ -553,12 +560,12 @@ class CRVE:
             # Loop over material phase B clusters
             for cluster_J in clusters_J:
                 # Set material phase B cluster characteristic function
-                _, cluster_J_filter_dft = self.clusterfilter(cluster_J)
+                _, cluster_J_filter_dft = self._cluster_filter(cluster_J)
                 # Perform discrete convolution between the material phase B cluster
                 # characteristic function and each of Green operator material independent
                 # terms
-                gop_X_filt_vox = self.clstgopconvolution(cluster_J_filter_dft,
-                                                         *self._gop_X_dft_vox)
+                gop_X_filt_vox = self._gop_convolution(cluster_J_filter_dft,
+                                                       *self._gop_X_dft_vox)
                 # Loop over material phases
                 for mat_phase_A in self._material_phases:
                     # Set material phase pair dictionary
@@ -568,8 +575,8 @@ class CRVE:
                         # Set material cluster pair
                         cluster_pair = str(cluster_I) + '_' + str(cluster_J)
                         # Check if cluster-symmetric cluster interaction tensor
-                        sym_cluster_pair = self.switch_pair(cluster_pair)
-                        sym_mat_phase_pair = self.switch_pair(mat_phase_pair)
+                        sym_cluster_pair = self._switch_pair(cluster_pair)
+                        sym_mat_phase_pair = self._switch_pair(mat_phase_pair)
                         is_clst_sym = sym_cluster_pair in \
                             self.cit_X_mf[0][sym_mat_phase_pair].keys()
                         # Compute cluster interaction tensor between material phase A
@@ -587,11 +594,12 @@ class CRVE:
                                         cit_mf[sym_mat_phase_pair][sym_cluster_pair])
                         else:
                             # Set material phase A cluster characteristic function
-                            cluster_I_filter, _ = self.clusterfilter(cluster_I)
+                            cluster_I_filter, _ = self._cluster_filter(cluster_I)
                             # Perform discrete integral over the spatial domain of material
                             # phase A cluster I
-                            cit_X_integral_mf = self.discretecitintegral(cluster_I_filter,
-                                                                         *gop_X_filt_vox)
+                            cit_X_integral_mf = \
+                                self._discrete_cit_integral(cluster_I_filter,
+                                                            *gop_X_filt_vox)
                             # Compute cluster interaction tensor between the material phase
                             # A cluster and the material phase B cluster
                             rve_vol = np.prod(self._rve_dims)
@@ -616,8 +624,8 @@ class CRVE:
                             # Set material cluster pair
                             cluster_pair = str(cluster_I) + '_' + str(cluster_J)
                             # Check if cluster-symmetric cluster interaction tensor
-                            sym_cluster_pair = self.switch_pair(cluster_pair)
-                            sym_mat_phase_pair = self.switch_pair(mat_phase_pair)
+                            sym_cluster_pair = self._switch_pair(cluster_pair)
+                            sym_mat_phase_pair = self._switch_pair(mat_phase_pair)
                             is_clst_sym = sym_cluster_pair in \
                                 self.cit_X_mf[0][sym_mat_phase_pair].keys()
                             # Compute cluster interaction tensor between material phase A
@@ -656,7 +664,7 @@ class CRVE:
             # Update total amount of time spent in clustering adaptivity procedures
             self.adaptive_time += time.time() - init_time
     # --------------------------------------------------------------------------------------
-    def clusterfilter(self, cluster):
+    def _cluster_filter(self, cluster):
         '''Compute cluster discrete characteristic function (spatial and frequency domains).
 
         Parameters
@@ -685,7 +693,7 @@ class CRVE:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return [cluster_filter, cluster_filter_dft]
     # --------------------------------------------------------------------------------------
-    def clstgopconvolution(self, cluster_filter_dft, gop_1_dft_vox, gop_2_dft_vox,
+    def _gop_convolution(self, cluster_filter_dft, gop_1_dft_vox, gop_2_dft_vox,
                            gop_0_freq_dft_vox):
         '''Compute convolution between cluster characteristic function and Green operator.
 
@@ -768,8 +776,8 @@ class CRVE:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return [gop_1_filt_vox, gop_2_filt_vox, gop_0_freq_filt_vox]
     # --------------------------------------------------------------------------------------
-    def discretecitintegral(self, cluster_filter, gop_1_filt_vox, gop_2_filt_vox,
-                            gop_0_freq_filt_vox):
+    def _discrete_cit_integral(self, cluster_filter, gop_1_filt_vox, gop_2_filt_vox,
+                               gop_0_freq_filt_vox):
         '''Compute discrete integral over the spatial domain of material cluster.
 
         In order to compute the cluster interaction tensor between material cluster I and
@@ -837,7 +845,7 @@ class CRVE:
         return [cit_1_integral_mf, cit_2_integral_mf, cit_0_freq_integral_mf]
     # --------------------------------------------------------------------------------------
     @staticmethod
-    def switch_pair(x, delimiter='_'):
+    def _switch_pair(x, delimiter='_'):
         '''Switch left and right sides of string with separating delimiter.
 
         Parameters
@@ -856,3 +864,18 @@ class CRVE:
             raise RuntimeError('Input parameter must be a string and can only contain ' + \
                                'one delimiter.')
         return delimiter.join(x.split(delimiter)[::-1])
+    # --------------------------------------------------------------------------------------
+    @staticmethod
+    def save_crve_file(crve, crve_file_path):
+        '''Dump CRVE into file.
+
+        Parameters
+        ----------
+        crve : CRVE
+            Cluster-Reduced Representative Volume Element.
+        crve_file_path : str
+            Path of file where the CRVE's instance is dumped.
+        '''
+        # Dump CRVE instance into file
+        with open(crve_file_path, 'wb') as crve_file:
+            pickle.dump(crve, crve_file)
