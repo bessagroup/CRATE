@@ -229,17 +229,13 @@ def packregulargrid(discret_file_path, rve_dims, mat_dict, problem_dict):
     return rg_dict
 # ------------------------------------------------------------------------------------------
 # Package data associated to the clustering on a regular grid of pixels/voxels
-def packrgclustering(clustering_scheme, crve_type, crve_type_options,
-                     clustering_solution_method, standardization_method, links_dict,
+def packrgclustering(clustering_solution_method, standardization_method, links_dict,
                      phase_n_clusters, rg_dict, clustering_type, base_clustering_scheme,
                      adaptive_clustering_scheme, adaptivity_criterion, adaptivity_type,
-                     clust_adapt_freq):
+                     adaptivity_control_feature, clust_adapt_freq):
     #
     # Object                       Meaning                                         Type
     # ------------------------------------------------------------------------------------
-    # clustering_scheme            Clustering scheme                               ndarray
-    # crve_type                    CRVE type                                       str
-    # crve_type_options            CRVE type specific options                      dict
     # phase_n_clusters             Number of clusters of each material phase       dict
     #                              key: material phase id (str)
     # phase_clusters               Clusters associated to each material phase      dict
@@ -259,6 +255,8 @@ def packrgclustering(clustering_scheme, crve_type, crve_type_options,
     #                              key: material phase id (str)
     # adaptivity_type              Adaptivity type parameters                      dict
     #                              key: material phase id (str)
+    # adaptivity_control_feature   Adaptivity control feature                      dict
+    #                              key: material phase id (str)
     # clust_adapt_freq             Clustering adaptivity frequency                 dict
     #                              key: material phase id (str)
     #
@@ -273,9 +271,6 @@ def packrgclustering(clustering_scheme, crve_type, crve_type_options,
     # Initialize clustering dictionary
     clst_dict = dict()
     # Build clustering dictionary
-    clst_dict['clustering_scheme'] = clustering_scheme
-    clst_dict['crve_type'] = crve_type
-    clst_dict['crve_type_options'] = crve_type_options
     clst_dict['clustering_solution_method'] = clustering_solution_method
     clst_dict['standardization_method'] = standardization_method
     if len(links_dict.keys()) > 0:
@@ -289,6 +284,7 @@ def packrgclustering(clustering_scheme, crve_type, crve_type_options,
     clst_dict['adaptive_clustering_scheme'] = adaptive_clustering_scheme
     clst_dict['adaptivity_criterion'] = adaptivity_criterion
     clst_dict['adaptivity_type'] = adaptivity_type
+    clst_dict['adaptivity_control_feature'] = adaptivity_control_feature
     clst_dict['clust_adapt_freq'] = clust_adapt_freq
     # Return
     return clst_dict

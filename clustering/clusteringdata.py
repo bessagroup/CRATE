@@ -84,7 +84,7 @@ def set_clustering_data(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict):
         standardizer.get_standardized_data_matrix(clustering_data.global_data_matrix)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Store clustering global data matrix
-    clst_dict['clst_quantities'] = clustering_data.global_data_matrix
+    clst_dict['global_data_matrix'] = clustering_data.global_data_matrix
 #
 #                                                              Available clustering features
 # ==========================================================================================
