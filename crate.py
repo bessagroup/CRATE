@@ -214,8 +214,7 @@ else:
                                  clst_dict['adaptive_clustering_scheme'],
                                  clst_dict['adaptivity_criterion'],
                                  clst_dict['adaptivity_type'],
-                                 clst_dict['adaptivity_control_feature'],
-                                 clst_dict['clust_adapt_freq'])
+                                 clst_dict['adaptivity_control_feature'])
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Compute Cluster-Reduced Representative Volume Element (CRVE)
     crve = clustering.compute_crve()

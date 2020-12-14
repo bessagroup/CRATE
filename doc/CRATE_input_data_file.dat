@@ -525,8 +525,6 @@
 # x:         all     - All macroscale loading increments (default)
 #            every x - Every x (x: integer) macroscale loading increments
 #            none    - Clustering adaptivity analysis is switched off
-#
-# Note: Currently disabled!
 # ------------------------------------------------------------------------------------------
 [insert here]
 

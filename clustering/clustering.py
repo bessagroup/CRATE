@@ -29,7 +29,7 @@ class Clustering:
                  cluster_data_matrix, clustering_type, phase_n_clusters,
                  base_clustering_scheme, adaptive_clustering_scheme=None,
                  adaptivity_criterion=None, adaptivity_type=None,
-                 adaptivity_control_feature=None, clust_adapt_freq=None):
+                 adaptivity_control_feature=None):
         '''Clustering class constructor.
 
         Parameters
@@ -74,10 +74,6 @@ class Clustering:
         adaptivity_control_feature : dict, default=None
             Clustering adaptivity control feature (item, str) associated to each material
             phase (key, str).
-        clust_adapt_freq : dict, default=None
-            Clustering adaptivity frequency (relative to the macroscale loading)
-            (item, int, default=1) associated with each adaptive cluster-reduced
-            material phase (key, str).
         '''
         self._rve_dims = rve_dims
         self._material_phases = material_phases
@@ -91,7 +87,6 @@ class Clustering:
         self._adaptivity_criterion = adaptivity_criterion
         self._adaptivity_type = adaptivity_type
         self._adaptivity_control_feature = adaptivity_control_feature
-        self._clust_adapt_freq = clust_adapt_freq
     # --------------------------------------------------------------------------------------
     def compute_crve(self):
         '''Compute Cluster-Reduced Representative Volume Element (CRVE).

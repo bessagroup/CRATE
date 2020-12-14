@@ -175,10 +175,13 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     if len(crve.adapt_material_phases) > 0:
         # Switch on clustering adaptivity flag
         is_crve_adaptivity = True
+        # Get clustering adaptivity frequency
+        clust_adapt_freq = clst_dict['clust_adapt_freq']
         # Initialize online CRVE clustering adaptivity manager
         adaptivity_manager = AdaptivityManager(comp_order, crve.adapt_material_phases,
                                                crve.adaptivity_control_feature,
-                                               crve.adaptivity_criterion)
+                                               crve.adaptivity_criterion,
+                                               clust_adapt_freq)
     # --------------------------------------------------------------------------------------
     # Validation:
     if is_Validation[1]:
@@ -852,7 +855,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         if is_crve_adaptivity:
             # Get clustering adaptivity trigger condition and target clusters
             is_trigger, target_clusters = \
-                adaptivity_manager.get_target_clusters(phase_clusters, clusters_state)
+                adaptivity_manager.get_target_clusters(phase_clusters, clusters_state, inc)
             print('\n\n SCA MODULE:')
             print('\nis_trigger: ', is_trigger)
             print('\ntarget_clusters: ', target_clusters)

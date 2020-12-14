@@ -78,7 +78,7 @@ class CRVE:
                  global_data_matrix, clustering_type, phase_n_clusters,
                  base_clustering_scheme, adaptive_clustering_scheme=None,
                  adaptivity_criterion=None, adaptivity_type=None,
-                 adaptivity_control_feature=None, clust_adapt_freq=None):
+                 adaptivity_control_feature=None):
         '''Cluster-Reduced Representative Volume Element constructor.
 
         Parameters
@@ -123,10 +123,6 @@ class CRVE:
         adaptivity_control_feature : dict, default=None
             Clustering adaptivity control feature (item, str) associated to each material
             phase (key, str).
-        clust_adapt_freq : dict, default=None
-            Clustering adaptivity frequency (relative to the macroscale loading)
-            (item, int, default=1) associated with each adaptive cluster-reduced
-            material phase (key, str).
         '''
         self._rve_dims = rve_dims
         self._material_phases = material_phases
@@ -146,7 +142,6 @@ class CRVE:
         self.cit_X_mf = None
         self.adaptivity_control_feature = adaptivity_control_feature
         self.adaptivity_criterion = adaptivity_criterion
-        self.clust_adapt_freq = clust_adapt_freq
         self.adaptive_time = 0
         # Get number of dimensions
         self._n_dim = len(rve_dims)
