@@ -26,26 +26,14 @@ import fastcluster as fastclst
 # Defining abstract base classes
 from abc import ABC, abstractmethod
 #
-#                                                            Available clustering algorithms
+#                                                                           Cluster Analysis
 # ==========================================================================================
-def get_available_clustering_algorithms():
-    '''Get available clustering algorithms.
+class ClusterAnalysis:
+    '''This class provides a simple interface to perform a cluster analysis.
 
-    Clustering algorithms identifiers:
-    1- K-Means (source: scikit-learn)
-    2- K-Means (source: pyclustering)
-    3- Mini-Batch K-Means (source: scikit-learn)
-    4- Agglomerative (source: scikit-learn)
-    5- Agglomerative (source: scipy)
-    6- Agglomerative (source: fastcluster)
-    7- Birch (source: scikit-learn)
-    8- Birch (source: pyclustering)
-    9- Cure (source: pyclustering)
-    10- X-Means (source: pyclustering)
-
-    Returns
-    -------
-    available_clustering_alg : dict
+    Attributes
+    ----------
+    available_clust_alg : dict
         Available clustering algorithms (item, str) and associated identifiers (key, str).
     '''
     available_clustering_alg = {'1': 'K-Means (scikit-learn)',
@@ -58,8 +46,118 @@ def get_available_clustering_algorithms():
                                 '8': 'Birch (pyclustering)',
                                 '9': 'Cure (pyclustering)',
                                 '10': 'X-Means (pyclustering)'}
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    return available_clustering_alg
+    # --------------------------------------------------------------------------------------
+    def __init__(self):
+        '''Cluster analysis constructor.'''
+        pass
+    # --------------------------------------------------------------------------------------
+    def get_fitted_estimator(self, data_matrix, clust_alg_id, n_clusters):
+        '''Get cluster labels and clustering fitted estimator.
+
+        Parameters
+        ----------
+        data_matrix : ndarray of shape (n_items, n_features)
+            Data matrix containing the required data to perform the cluster analysis.
+        clust_alg_id : str
+            Clustering algorithm identifier.
+
+        Returns
+        -------
+        cluster_labels : ndarray of shape (n_items,)
+            Cluster label (int) assigned to each dataset item.
+        clust_alg : clustering algorithm
+            Clustering fitted estimator.
+        '''
+        # Get number of dataset items
+        n_items = data_matrix.shape[0]
+        # Initialize clustering
+        cluster_labels = np.full(n_items, -1, dtype=int)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Instantiate clustering algorithm
+        if clust_alg_id == '1':
+            # Set number of full batch K-Means clusterings (with different initializations)
+            n_init = 10
+            # Instantiate K-Means
+            clust_alg = KMeansSK(init='k-means++', n_init=n_init, max_iter=300, tol=1e-4,
+                                 random_state=None, algorithm='auto', n_clusters=n_clusters)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        elif clust_alg_id == '2':
+            # Instatiante K-Means
+            clust_alg = KMeansPC(tolerance=1e-03, itermax=200, n_clusters=n_clusters)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        elif clust_alg_id == '3':
+            # Set size of the mini-batches
+            batch_size = 100
+            # Set number of random initializations
+            n_init = 3
+            # Intantiate Mini-Batch K-Means
+            clust_alg = MiniBatchKMeansSK(init='k-means++', max_iter=100, tol=0.0,
+                                          random_state=None, batch_size=batch_size,
+                                          max_no_improvement=10, init_size=None,
+                                          n_init=n_init, reassignment_ratio=0.01,
+                                          n_clusters=n_clusters)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        elif clust_alg_id == '4':
+            # Instantiate Agglomerative clustering
+            clust_alg = AgglomerativeSK(affinity='euclidean', memory=None,
+                                        connectivity=None, compute_full_tree='auto',
+                                        linkage='ward', distance_threshold=None,
+                                        n_clusters=n_clusters)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        elif clust_alg_id == '5':
+            # Instatiate Agglomerative clustering
+            clust_alg = AgglomerativeSP(0, method='ward', metric='euclidean',
+                                        criterion='maxclust', n_clusters=n_clusters)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        elif clust_alg_id == '6':
+            # Instatiate Agglomerative clustering
+            clust_alg = AgglomerativeFC(0, method='ward', metric='euclidean',
+                                        criterion='maxclust', n_clusters=n_clusters)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        elif clust_alg_id == '7':
+            # Set merging radius threshold
+            threshold = 0.1
+            # Set maximum number of CF subclusters in each node
+            branching_factor = 50
+            # Instantiate Birch
+            clust_alg = BirchSK(threshold=threshold, branching_factor=branching_factor,
+                                n_clusters=n_clusters)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        elif clust_alg_id == '8':
+            # Set merging radius threshold
+            threshold = 0.1
+            # Set maximum number of CF subclusters in each node
+            branching_factor = 50
+            # Instantiate Birch
+            clust_alg = BirchPC(threshold=threshold, branching_factor=branching_factor,
+                                n_clusters=n_clusters)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        elif clust_alg_id == '9':
+            # Instantiate Cure
+            clust_alg = CurePC(number_represent_points=5, compression=0.5,
+                               n_clusters=n_clusters)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        elif clust_alg_id == '10':
+            # Instantiate X-Means
+            clust_alg = XMeansPC(tolerance=2.5e-2, repeat=1, n_clusters=n_clusters)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        else:
+            raise RuntimeError('Unknown clustering algorithm.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Perform cluster analysis
+        cluster_labels = clust_alg.perform_clustering(data_matrix)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Check if all the dataset items have been labeled
+        if np.any(cluster_labels == -1):
+            raise RuntimeError('At least one dataset item has not been labeled during ' +
+                               'the cluster analysis.')
+        # Check number of clusters formed
+        if len(set(cluster_labels)) != n_clusters:
+            raise RuntimeError('The number of clusters (' + str(len(set(cluster_labels))) +
+                               ') obtained is different from the prescribed number of ' +
+                               'clusters (' + str(n_clusters) + ').')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        return [cluster_labels, clust_alg]
 #
 #                                                           Clustering algorithms interfaces
 # ==========================================================================================
