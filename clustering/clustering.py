@@ -13,6 +13,8 @@
 # ==========================================================================================
 # Python object serialization
 import pickle
+# Display messages
+import ioput.info as info
 # CRVE generation
 from clustering.crve import CRVE
 #
@@ -103,6 +105,7 @@ class Clustering:
                     self._adaptive_clustering_scheme, self._adaptivity_criterion,
                     self._adaptivity_type, self._adaptivity_control_feature)
         # Perform CRVE base clustering
+        info.displayinfo('5', 'Computing CRVE base clustering...')
         crve.compute_base_crve()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return crve
@@ -131,6 +134,8 @@ class Clustering:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute CRVE cluster interaction tensors
         if mode == 'full':
+            info.displayinfo('5', 'Computing CRVE cluster interaction tensors ' +
+                             '(full computation)...')
             crve.compute_cit(mode)
         elif mode == 'adaptive':
             if crve._adaptive_clustering_map is None:

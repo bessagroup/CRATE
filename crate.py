@@ -188,10 +188,6 @@ if is_same_offstage:
     clst_dict['voxels_clusters'] = crve.voxels_clusters
     clst_dict['phase_clusters'] = crve.phase_clusters
     clst_dict['clusters_f'] = crve.clusters_f
-    # Store clustering interaction tensors
-    clst_dict['cit_1_mf'] = crve.cit_X_mf[0]
-    clst_dict['cit_2_mf'] = crve.cit_X_mf[1]
-    clst_dict['cit_0_freq_mf'] = crve.cit_X_mf[2]
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set phase ending time and display finishing phase information
     phase_end_time = time.time()
@@ -247,11 +243,6 @@ else:
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Compute CRVE's cluster interaction tensors
     crve.compute_cit()
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Store clustering interaction tensors
-    clst_dict['cit_1_mf'] = crve.cit_X_mf[0]
-    clst_dict['cit_2_mf'] = crve.cit_X_mf[1]
-    clst_dict['cit_0_freq_mf'] = crve.cit_X_mf[2]
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set phase ending time and display finishing phase information
     phase_end_time = time.time()

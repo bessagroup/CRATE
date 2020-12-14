@@ -108,9 +108,6 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     phase_n_clusters = clst_dict['phase_n_clusters']
     phase_clusters = clst_dict['phase_clusters']
     clusters_f = clst_dict['clusters_f']
-    cit_1_mf = clst_dict['cit_1_mf']
-    cit_2_mf = clst_dict['cit_2_mf']
-    cit_0_freq_mf = clst_dict['cit_0_freq_mf']
     # Get macroscale loading data
     mac_load = macload_dict['mac_load']
     mac_load_presctype = macload_dict['mac_load_presctype']
@@ -387,7 +384,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             # matrix
             global_cit_mf = citop.updassemblecit(
                 problem_dict, mat_prop_ref, Se_ref_matrix, material_phases,
-                phase_n_clusters, phase_clusters, cit_1_mf, cit_2_mf, cit_0_freq_mf)
+                phase_n_clusters, phase_clusters, crve.cit_X_mf[0], crve.cit_X_mf[1],
+                crve.cit_X_mf[2])
             #
             #                                                  Newton-Raphson iterative loop
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -872,16 +870,10 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             clst_dict['voxels_clusters'] = crve.voxels_clusters
             clst_dict['phase_clusters'] = crve.phase_clusters
             clst_dict['clusters_f'] = crve.clusters_f
-            clst_dict['cit_1_mf'] = crve.cit_X_mf[0]
-            clst_dict['cit_2_mf'] = crve.cit_X_mf[1]
-            clst_dict['cit_0_freq_mf'] = crve.cit_X_mf[2]
             # Get clusters data
             phase_n_clusters = clst_dict['phase_n_clusters']
             phase_clusters = clst_dict['phase_clusters']
             clusters_f = clst_dict['clusters_f']
-            cit_1_mf = clst_dict['cit_1_mf']
-            cit_2_mf = clst_dict['cit_2_mf']
-            cit_0_freq_mf = clst_dict['cit_0_freq_mf']
             # Get total number of clusters
             n_total_clusters = sum([phase_n_clusters[mat_phase]
                                     for mat_phase in material_phases])
