@@ -2,7 +2,7 @@
 # Cluster Analysis Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# Interface to the computation of the Cluster-reduced Representative Volume Element (CRVE).
+# Interface to the computation of the Cluster-Reduced Representative Volume Element (CRVE).
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | Feb 2020 | Initial coding.
@@ -22,7 +22,7 @@ class Clustering:
     '''The Clustering class provides a simple interface to generate a CRVE.
 
     The Clustering class provides a simple interface to perform the computation of the
-    Cluster-reduced Representative Volume Element (CRVE), including the clustering-based
+    Cluster-Reduced Representative Volume Element (CRVE), including the clustering-based
     domain decomposition and the computation of the cluster interaction tensors.
     '''
     def __init__(self, rve_dims, material_phases, regular_grid, comp_order,
@@ -94,14 +94,14 @@ class Clustering:
         self._clust_adapt_freq = clust_adapt_freq
     # --------------------------------------------------------------------------------------
     def compute_crve(self):
-        '''Compute Cluster-reduced Representative Volume Element (CRVE).
+        '''Compute Cluster-Reduced Representative Volume Element (CRVE).
 
         Returns
         -------
         crve : CRVE
-            Cluster-reduced Representative Volume Element.
+            Cluster-Reduced Representative Volume Element.
         '''
-        # Instatiate Cluster-reduced Representative Volume Element (CRVE)
+        # Instatiate Cluster-Reduced Representative Volume Element (CRVE)
         crve = CRVE(self._rve_dims, self._regular_grid, self._material_phases,
                     self._comp_order, self._cluster_data_matrix, self._clustering_type,
                     self._phase_n_clusters, self._base_clustering_scheme,
@@ -118,7 +118,7 @@ class Clustering:
         Parameters
         ----------
         crve : CRVE
-            Cluster-reduced Representative Volume Element.
+            Cluster-Reduced Representative Volume Element.
         mode : str, {'full', 'adaptive'}, default='full'
             The default 'full' mode performs the complete computation of all cluster
             interaction tensors, irrespective of the type of CRVE. The 'adaptive' mode
@@ -152,7 +152,7 @@ class Clustering:
         Parameters
         ----------
         crve : CRVE
-            Cluster-reduced Representative Volume Element.
+            Cluster-Reduced Representative Volume Element.
         crve_file_path : str
             Path of file where the CRVE's instance is dumped.
         '''

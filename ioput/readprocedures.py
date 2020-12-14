@@ -38,7 +38,7 @@ import material.isotropichardlaw
 import ioput.ioutilities as ioutil
 # Clustering data
 import clustering.clusteringdata as clstdat
-# Cluster-reduced material phases
+# Cluster-Reduced material phases
 from clustering.clusteringphase import SCRMP, HAACRMP
 # CRVE generation
 from clustering.crve import CRVE

@@ -410,7 +410,7 @@ class AdaptivityManager:
         Parameters
         ----------
         crve : CRVE
-            Cluster-reduced Representative Volume Element.
+            Cluster-Reduced Representative Volume Element.
         target_clusters : list
             List containing the labels (int) of clusters to be refined.
         cluster_dicts : list

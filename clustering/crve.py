@@ -1,8 +1,8 @@
 #
-# Cluster-reduced Representative Volume Element Module (CRATE Program)
+# Cluster-Reduced Representative Volume Element Module (CRATE Program)
 # ==========================================================================================
 # Summary:
-# Procedures related to the generation of the Cluster-reduced Representative Volume Element
+# Procedures related to the generation of the Cluster-Reduced Representative Volume Element
 # (CRVE), a key step in the so called clustering-based reduced order models.
 # ------------------------------------------------------------------------------------------
 # Development history:
@@ -26,13 +26,13 @@ import ioput.info as info
 import tensor.matrixoperations as mop
 # Cluster interaction tensors operations
 import clustering.citoperations as citop
-# Cluster-reduced material phases
+# Cluster-Reduced material phases
 from clustering.clusteringphase import SCRMP, HAACRMP
 #
 #                                                                                 CRVE class
 # ==========================================================================================
 class CRVE:
-    '''Cluster-reduced Representative Volume Element.
+    '''Cluster-Reduced Representative Volume Element.
 
     Attributes
     ----------
@@ -51,7 +51,7 @@ class CRVE:
         operator material independent term evaluated in all spatial discrete points
         (item, ndarray).
     _cluster_phases : dict
-        Cluster-reduced material phase instance (item, CRMP) associated to each material
+        Cluster-Reduced material phase instance (item, CRMP) associated to each material
         phase (key, str).
     _adaptive_step : int
         Counter of adaptive clustering steps, with 0 associated with the base clustering.
@@ -79,7 +79,7 @@ class CRVE:
                  base_clustering_scheme, adaptive_clustering_scheme=None,
                  adaptivity_criterion=None, adaptivity_type=None,
                  adaptivity_control_feature=None, clust_adapt_freq=None):
-        '''Cluster-reduced Representative Volume Element constructor.
+        '''Cluster-Reduced Representative Volume Element constructor.
 
         Parameters
         ----------

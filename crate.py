@@ -177,7 +177,7 @@ if is_same_offstage:
     # Get CRVE file path
     crve_file_path = dirs_dict['crve_file_path']
     # Load CRVE instance from file
-    info.displayinfo('5', 'Importing Cluster-reduced Representative Volume Element ' +
+    info.displayinfo('5', 'Importing Cluster-Reduced Representative Volume Element ' +
                           '(.crve file)...')
     with open(crve_file_path, 'rb') as crve_file:
         crve = pickle.load(crve_file)
@@ -217,7 +217,7 @@ else:
                                  clst_dict['adaptivity_control_feature'],
                                  clst_dict['clust_adapt_freq'])
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Compute Cluster-reduced Representative Volume Element (CRVE)
+    # Compute Cluster-Reduced Representative Volume Element (CRVE)
     crve = clustering.compute_crve()
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Update clustering dictionary
