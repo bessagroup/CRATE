@@ -6,7 +6,8 @@
 # solution of the microscale equilibrium problem (online stage).
 # ------------------------------------------------------------------------------------------
 # Development history:
-# Bernardo P. Ferreira | October 2020 | Initial coding.
+# Bernardo P. Ferreira | Oct 2020 | Initial coding.
+# Bernardo P. Ferreira | Dec 2020 | Reformulation with cluster-reduced material phases.
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
@@ -16,6 +17,8 @@ import numpy as np
 import copy
 # Date and time
 import time
+# Regular expressions
+import re
 # Display messages
 import ioput.info as info
 # I/O utilities
@@ -38,16 +41,26 @@ class AdaptivityManager:
         Target adaptive cluster groups (item, list of int), whose clusters are to adapted,
         for each adaptive material phase (key, str).
     '''
-    def __init__(self, adaptive_material_phases, adaptivity_features):
+    def __init__(self, comp_order, adapt_material_phases, adaptivity_control_feature,
+                 adaptivity_criterion):
         '''Online CRVE clustering adaptivity manager constructor.
 
         Parameters
         ----------
-        adaptive_material_phases : list
+        comp_order : list
+            Strain/Stress components (str) order.
+        adapt_material_phases : list
             RVE adaptive material phases labels (str).
-        adaptive_features : dict
-            Adaptive feature (item, str) to be considered for each adaptive material phase
-            (key, str).
+        adaptivity_control_feature : dict
+            Clustering adaptivity control feature (item, str) associated to each material
+            phase (key, str).
+        adaptivity_criterion : dict
+            Clustering adaptivity criterion (item, dict) associated to each material phase
+            (key, str). This dictionary contains the adaptivity criterion to be used and the
+            required parameters.
+
+        Notes
+        -----
         adapt_trigger_ratio : float
             Threshold associated to the adaptivity trigger condition, defining the value of
             the relative ratio (max - avg)/avg above which the adaptive cluster group is set
@@ -63,25 +76,56 @@ class AdaptivityManager:
             groups.
         adapt_max_level : int
             Maximum adaptive cluster group adaptive level.
-
-        Notes
-        -----
-        These hyperparameters are to be defined for each adaptive material phase and to be
-        read in the user input data file!
         '''
-        adapt_trigger_ratio = 0.1
-        adapt_split_threshold = 0.1
-        adapt_max_level = 15
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        self._adaptive_material_phases = adaptive_material_phases
-        self._adaptivity_features = adaptivity_features
-        self._adapt_trigger_ratio = adapt_trigger_ratio
-        self._adapt_split_threshold = adapt_split_threshold
-        self._adapt_max_level = adapt_max_level
-        self._adapt_groups = {mat_phase: {} for mat_phase in adaptive_material_phases}
-        self._groups_adapt_level = {mat_phase: {} for mat_phase in adaptive_material_phases}
+        self._comp_order = comp_order
+        self._adapt_material_phases = adapt_material_phases
+        self._adaptivity_control_feature = adaptivity_control_feature
+        self._adaptivity_criterion = adaptivity_criterion
+        self._adapt_groups = {mat_phase: {} for mat_phase in adapt_material_phases}
+        self._groups_adapt_level = {mat_phase: {} for mat_phase in adapt_material_phases}
         self._target_groups_ids = {mat_phase: None for mat_phase in
-                                   adaptive_material_phases}
+                                   adapt_material_phases}
+    # --------------------------------------------------------------------------------------
+    @staticmethod
+    def get_adaptivity_criterions():
+        '''Get available clustering adaptivity criterions.
+
+        Returns
+        -------
+        available_adapt_criterions : dict
+            Available clustering adaptivity criterions (item, str) and associated
+            identifiers (key, str).
+        '''
+        # Set available clustering adaptivity criterions
+        available_adapt_criterions = {'1': 'Non-spatial'}
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return available_adapt_criterions
+    # --------------------------------------------------------------------------------------
+    @staticmethod
+    def get_adaptivity_criterion_parameters():
+        '''Get mandatory and optional adaptivity criterion parameters.
+
+        Besides returning the mandatory and optional adaptivity criterion parameters, this
+        method establishes the default values for the optional parameters.
+
+        Returns
+        ----------
+        mandatory_parameters : dict
+            Mandatory adaptivity type parameters (str) and associated type (item, type).
+        optional_parameters : dict
+            Optional adaptivity type parameters (key, str) and associated default value
+            (item).
+        '''
+        # Set mandatory adaptivity criterion parameters
+        mandatory_parameters = {}
+        # Set optional adaptivity criterion parameters and associated default values
+        optional_parameters = {'adapt_trigger_ratio': 0.1,
+                               'adapt_split_threshold': 0.1,
+                               'adapt_max_level': 15}
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return [mandatory_parameters, optional_parameters]
     # --------------------------------------------------------------------------------------
     def get_target_clusters(self, phase_clusters, clusters_state):
         '''Get online adaptive clustering target clusters.
@@ -97,19 +141,30 @@ class AdaptivityManager:
 
         Returns
         -------
+        is_trigger : bool
+            True if clustering adaptivity is triggered, False otherwise.
         target_clusters : list
             List containing the labels (int) of clusters to be adapted.
         '''
         # Initialize target clusters list
         target_clusters = []
         # Loop over adaptive material phases
-        for adapt_phase in self._adaptive_material_phases:
+        for adapt_phase in self._adapt_material_phases:
+            # Get adaptivity trigger ratio
+            adapt_trigger_ratio = \
+                self._adaptivity_criterion[adapt_phase]['adapt_trigger_ratio']
+            # Get adaptivity split threhsold
+            adapt_split_threshold = \
+                self._adaptivity_criterion[adapt_phase]['adapt_split_threshold']
+            # Get maximum adaptive cluster group adaptive level
+            adapt_max_level = self._adaptivity_criterion[adapt_phase]['adapt_max_level']
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Get adaptivity feature
-            adapt_feature = self._adaptivity_features[adapt_phase]
+            adapt_control_feature = self._adaptivity_control_feature[adapt_phase]
             # Build adaptivity feature data matrix
-            adapt_data_matrix = self._get_adaptivity_data_matrix(adapt_phase, adapt_feature,
-                                                                 phase_clusters,
-                                                                 clusters_state)
+            adapt_data_matrix = \
+                self._get_adaptivity_data_matrix(adapt_phase, adapt_control_feature,
+                                                 phase_clusters, clusters_state)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Set initial adaptive clusters group (labeled as group '0') and initialize
             # associated adaptive level
@@ -131,7 +186,7 @@ class AdaptivityManager:
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Check if adaptive cluster group can be further adapted and, if not, skip
                 # to the next one
-                if self._groups_adapt_level[adapt_phase][group_id] >= self._adapt_max_level:
+                if self._groups_adapt_level[adapt_phase][group_id] >= adapt_max_level:
                     continue
                 # Get adaptive cluster group clusters and current adaptive level
                 adapt_group = self._adapt_groups[adapt_phase][group_id]
@@ -144,7 +199,7 @@ class AdaptivityManager:
                 # Check adaptive cluster group adaptivity trigger condition
                 is_trigger = self._adaptivity_trigger_condition(
                     adapt_data_matrix[adapt_group_idxs, :],
-                        trigger_ratio=self._adapt_trigger_ratio)
+                        trigger_ratio=adapt_trigger_ratio)
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 print('\n  > is_trigger? ', is_trigger)
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -154,7 +209,7 @@ class AdaptivityManager:
                     # Get target clusters according to adaptivity selection criterion
                     group_target_clusters = self._adaptivity_selection_criterion(
                         adapt_data_matrix[adapt_group_idxs, :],
-                            threshold=self._adapt_split_threshold)
+                            threshold=adapt_split_threshold)
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     # Get maximum adaptive cluster group id
                     max_group_id = np.max([int(x) for x in
@@ -193,12 +248,10 @@ class AdaptivityManager:
         else:
             is_trigger = False
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        print('\n\nAdaptive clustering refinement:\n')
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return is_trigger, target_clusters
     # --------------------------------------------------------------------------------------
-    def _get_adaptivity_data_matrix(self, target_phase, adapt_feature, phase_clusters,
-                                    clusters_state):
+    def _get_adaptivity_data_matrix(self, target_phase, adapt_control_feature,
+                                    phase_clusters, clusters_state):
         '''Build adaptivity feature data matrix for a given target adaptive material phase.
 
         Parameters
@@ -206,8 +259,8 @@ class AdaptivityManager:
         target_phase : str
             Target adaptive material phase whose clusters adaptive feature data is
             collected or computed.
-        adapt_feature : str, {'acc_p_strain',}
-            Adaptivity feature available directly or indirectly from clusters state
+        adapt_control_feature : str
+            Scalar adaptivity feature available directly or indirectly from clusters state
             variables.
         phase_clusters : dict
             Clusters labels (item, list of int) associated to each material phase
@@ -229,14 +282,41 @@ class AdaptivityManager:
         # Initialize adaptivity feature data matrix
         adapt_data_matrix = np.zeros((n_clusters, 2))
         adapt_data_matrix[:, 0] = phase_clusters[target_phase]
+        # Get target material phase state variables
+        state_variables = clusters_state[str(int(adapt_data_matrix[0, 0]))].keys()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Build adaptivity feature data matrix
-        if adapt_feature == 'acc_p_strain':
+        # Clustering adaptivity feature is scalar state variable
+        if adapt_control_feature in state_variables:
+            # Check if adaptivity feature is scalar
+            if not ioutil.checknumber(clusters_state[str(int(adapt_data_matrix[0, 0]))]
+                                      [adapt_control_feature]):
+                raise RuntimeError('The clustering adaptivity feature (' +
+                                   adapt_control_feature + ') prescribed for material ' +
+                                   'material phase ' + target_phase + ' must be a scalar.')
+            else:
+                # Build adaptivity feature data matrix
+                for i in range(n_clusters):
+                    # Get cluster label
+                    cluster = int(adapt_data_matrix[i, 0])
+                    # Collect adaptivity feature data
+                    adapt_data_matrix[i, 1] = \
+                        clusters_state[str(cluster)][adapt_control_feature]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Clustering adaptivity feature is component of strain/stress related second order
+        # tensor (stored in matricial form) state variable
+        elif re.search('_[1-3][1-3]$', adapt_control_feature) and \
+                adapt_control_feature[:-3] in state_variables:
+            # Get 2nd order tensorial feature (stored in matricial form)
+            adapt_feature_tensor = adapt_control_feature[:-3]
+            index = self._comp_order.index(adapt_control_feature[-2:])
+            # Build adaptivity feature data matrix
             for i in range(n_clusters):
                 # Get cluster label
                 cluster = int(adapt_data_matrix[i, 0])
                 # Collect adaptivity feature data
-                adapt_data_matrix[i, 1] = clusters_state[str(cluster)][adapt_feature]
+                adapt_data_matrix[i, 1] = \
+                    clusters_state[str(cluster)][adapt_feature_tensor][index]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         else:
             raise RuntimeError('Unknown clustering adaptivity feature.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -262,6 +342,7 @@ class AdaptivityManager:
         bool
             True if online adaptive clustering procedure is triggered, False otherwise.
         '''
+        trigger_ratio = 0.02
         # Compute average and maximum values of adaptivity feature
         a = np.average(adapt_data_matrix[:, 1])
         b = np.max(adapt_data_matrix[:, 1])
@@ -342,20 +423,19 @@ class AdaptivityManager:
         init_time = time.time()
         # Output execution data
         if verbose:
-            info.displayinfo('5', 'A-CRVE clustering (adaptive step ' +
-                                   str(crve._adaptive_step + 1) + '):')
-            info.displayinfo('5', 'A - Building A-CRVE clustering...', 2)
+            info.displayinfo('5', 'Adaptive clustering:')
+            info.displayinfo('5', 'A - Performing clustering adaptivity...', 2)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Perform CRVE online adaptive clustering refinement
         if not target_clusters:
             return
         else:
-            adaptive_clustering_map, _ = crve.perform_adaptive_clustering(target_clusters)
+            adaptive_clustering_map = crve.perform_crve_adaptivity(target_clusters)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Output execution data
         if verbose:
             a_time = time.time() - init_time
-            info.displayinfo('5', 'B - Computing A-CRVE cluster interaction tensors...', 2)
+            info.displayinfo('5', 'B - Computing cluster interaction tensors...', 2)
             ref_time = time.time()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute CRVE cluster interaction tensors
@@ -364,11 +444,11 @@ class AdaptivityManager:
         # Output execution data
         if verbose:
             b_time = time.time() - ref_time
-            info.displayinfo('5', 'C - Updating A-CRVE cluster-related quantities...', 2)
+            info.displayinfo('5', 'C - Updating cluster-related quantities...', 2)
             ref_time = time.time()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over adaptive material phases
-        for adapt_phase in self._adaptive_material_phases:
+        for adapt_phase in self._adapt_material_phases:
             # Loop over material phase target clusters
             for target_cluster in adaptive_clustering_map[adapt_phase].keys():
                 # Get list of target's child clusters
@@ -385,7 +465,7 @@ class AdaptivityManager:
         # Output execution data
         if verbose:
             c_time = time.time() - ref_time
-            info.displayinfo('5', 'D - Updating A-CRVE cluster groups...', 2)
+            info.displayinfo('5', 'D - Updating adaptive cluster groups...', 2)
             ref_time = time.time()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Update adaptive cluster groups
@@ -397,7 +477,6 @@ class AdaptivityManager:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Update total amount of time spent in the A-CRVE adaptive procedures
         dtime = time.time() - init_time
-        crve.adaptive_time += dtime
         #
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Output execution data
@@ -420,7 +499,7 @@ class AdaptivityManager:
                              2)
             # Print adaptive clustering mapping
             print('\n\n' + 4*' ' + 'Adaptive cluster mapping: ')
-            for mat_phase in crve._material_phases:
+            for mat_phase in self._adapt_material_phases:
                 print('\n' + 6*' ' +'Material phase ' + mat_phase + ':\n')
                 for old_cluster in adaptive_clustering_map[mat_phase].keys():
                     print(8*' ' + 'Old cluster: ' + '{:>4s}'.format(old_cluster) +
@@ -439,7 +518,7 @@ class AdaptivityManager:
             for each material phase (key, str).
         '''
         # Loop over adaptive material phases
-        for adapt_phase in self._adaptive_material_phases:
+        for adapt_phase in self._adapt_material_phases:
             # Loop over adaptive cluster groups
             for group_id in self._target_groups_ids[adapt_phase]:
                 # Get parent adaptive cluster group clusters
