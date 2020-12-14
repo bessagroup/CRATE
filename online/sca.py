@@ -7,7 +7,8 @@
 # Self-Consistent Clustering Analysis (SCA) online stage.
 # ------------------------------------------------------------------------------------------
 # Development history:
-# Bernardo P. Ferreira | February 2020 | Initial coding.
+# Bernardo P. Ferreira | Feb 2020 | Initial coding.
+# Bernardo P. Ferreira | Dec 2020 | Implemented clustering adaptivity.
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
@@ -16,8 +17,6 @@ import sys
 # Working with arrays
 import numpy as np
 import numpy.matlib
-# Inspect file name and line
-import inspect
 # Date and time
 import time
 # Shallow and deep copy operations
@@ -26,8 +25,6 @@ import copy
 import ioput.info as info
 # Scientific computation
 import scipy.linalg
-# Display errors, warnings and built-in exceptions
-import ioput.errors as errors
 # Matricial operations
 import tensor.matrixoperations as mop
 # Cluster interaction tensors operations
@@ -51,6 +48,9 @@ import online.scs.scs_schemes as scs
 # Lippmann-Schwinger nonlinear system of equilibrium equations
 import online.equilibrium.sne_farfield as eqff
 import online.equilibrium.sne_macstrain as eqms
+# CRVE adaptivity
+from online.crve_adaptivity import AdaptivityManager
+
 
 
 #                                                                          Validation output
@@ -88,7 +88,7 @@ for i in output_idx:
 #                                                  system of nonlinear equilibrium equations
 # ==========================================================================================
 def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs_dict,
-        algpar_dict, vtk_dict):
+        algpar_dict, vtk_dict, crve):
     #                                                                           General data
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Get input data file name and post processing directory
@@ -170,6 +170,15 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     n_total_clusters = sum([phase_n_clusters[mat_phase] for mat_phase in material_phases])
     # Initialize macroscale loading increment cut flag
     is_inc_cut = False
+    # Check clustering adaptivity and perform required initializations
+    is_crve_adaptivity = False
+    if len(crve.adapt_material_phases) > 0:
+        # Switch on clustering adaptivity flag
+        is_crve_adaptivity = True
+        # Initialize online CRVE clustering adaptivity manager
+        adaptivity_manager = AdaptivityManager(comp_order, crve.adapt_material_phases,
+                                               crve.adaptivity_control_feature,
+                                               crve.adaptivity_criterion)
     # --------------------------------------------------------------------------------------
     # Validation:
     if is_Validation[1]:
@@ -837,6 +846,42 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             displayincdata(mac_load_path)
             # Set increment initial time
             inc_init_time = time.time()
+        #
+        #                                                              Clustering adaptivity
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        if is_crve_adaptivity:
+            # Get clustering adaptivity trigger condition and target clusters
+            is_trigger, target_clusters = \
+                adaptivity_manager.get_target_clusters(phase_clusters, clusters_state)
+            print('\n\n SCA MODULE:')
+            print('\nis_trigger: ', is_trigger)
+            print('\ntarget_clusters: ', target_clusters)
+            # Perform clustering adaptivity
+            if is_trigger:
+                adaptivity_manager.adaptive_refinement(crve, target_clusters,
+                                                       [clusters_state, clusters_state_old,
+                                                       clusters_D_mf, clusters_De_mf],
+                                                       verbose=True)
+            # Update clustering dictionary
+            for mat_phase in material_phases:
+                phase_n_clusters[mat_phase] = len(crve.phase_clusters[mat_phase])
+            clst_dict['phase_n_clusters'] = phase_n_clusters
+            clst_dict['voxels_clusters'] = crve.voxels_clusters
+            clst_dict['phase_clusters'] = crve.phase_clusters
+            clst_dict['clusters_f'] = crve.clusters_f
+            clst_dict['cit_1_mf'] = crve.cit_X_mf[0]
+            clst_dict['cit_2_mf'] = crve.cit_X_mf[1]
+            clst_dict['cit_0_freq_mf'] = crve.cit_X_mf[2]
+            # Get clusters data
+            phase_n_clusters = clst_dict['phase_n_clusters']
+            phase_clusters = clst_dict['phase_clusters']
+            clusters_f = clst_dict['clusters_f']
+            cit_1_mf = clst_dict['cit_1_mf']
+            cit_2_mf = clst_dict['cit_2_mf']
+            cit_0_freq_mf = clst_dict['cit_0_freq_mf']
+            # Get total number of clusters
+            n_total_clusters = sum([phase_n_clusters[mat_phase]
+                                    for mat_phase in material_phases])
 #
 #                                                       Macroscale loading increment display
 # ==========================================================================================
