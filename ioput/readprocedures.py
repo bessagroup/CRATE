@@ -36,8 +36,6 @@ import material.materialinterface
 import material.isotropichardlaw
 # I/O utilities
 import ioput.ioutilities as ioutil
-# Clustering data
-import clustering.clusteringdata as clstdat
 # Cluster-Reduced material phases
 from clustering.clusteringphase import SCRMP, HAACRMP
 # CRVE generation
@@ -1162,8 +1160,6 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
             # Check for adaptivity parameters specifications. If there are no adaptivity
             # parameters specifications, skip to the next material phase
             is_adapt_parameter = False
-            print('i: ', i)
-            print('mat_phase: ', mat_phase)
             if is_empty_line:
                 if i != range(len(material_phases))[-1]:
                     raise RuntimeError('The cluster analysis scheme must be specified ' +
