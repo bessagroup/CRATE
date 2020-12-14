@@ -82,6 +82,8 @@ import clustering.clustering as clst
 import online.sca as sca
 # VTK output
 import ioput.vtkoutput as vtkoutput
+# CRVE generation
+from clustering.crve import CRVE
 #
 #                             Check user input data file and create problem main directories
 # ==========================================================================================
@@ -204,20 +206,22 @@ else:
     info.displayinfo('2', 'Perform RVE cluster analysis')
     phase_init_time = time.time()
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Instantiate cluster analysis
-    clustering = clst.Clustering(rg_dict['rve_dims'], mat_dict['material_phases'],
-                                 rg_dict['regular_grid'], problem_dict['comp_order_sym'],
-                                 clst_dict['global_data_matrix'],
-                                 clst_dict['clustering_type'],
-                                 clst_dict['phase_n_clusters'],
-                                 clst_dict['base_clustering_scheme'],
-                                 clst_dict['adaptive_clustering_scheme'],
-                                 clst_dict['adaptivity_criterion'],
-                                 clst_dict['adaptivity_type'],
-                                 clst_dict['adaptivity_control_feature'])
+    # Instatiate Cluster-Reduced Representative Volume Element (CRVE)
+    crve = CRVE(rg_dict['rve_dims'],
+                rg_dict['regular_grid'],
+                mat_dict['material_phases'],
+                problem_dict['comp_order_sym'],
+                clst_dict['global_data_matrix'],
+                clst_dict['clustering_type'],
+                clst_dict['phase_n_clusters'],
+                clst_dict['base_clustering_scheme'],
+                clst_dict['adaptive_clustering_scheme'],
+                clst_dict['adaptivity_criterion'],
+                clst_dict['adaptivity_type'],
+                clst_dict['adaptivity_control_feature'])
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Compute Cluster-Reduced Representative Volume Element (CRVE)
-    crve = clustering.compute_crve()
+    crve.perform_crve_base_clustering()
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Update clustering dictionary
     clst_dict['voxels_clusters'] = crve.voxels_clusters
@@ -242,7 +246,6 @@ else:
     phase_init_time = time.time()
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Compute CRVE's cluster interaction tensors
-    info.displayinfo('5', 'Computing CRVE cluster interaction tensors...')
     crve.compute_cit()
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Store clustering interaction tensors
@@ -260,7 +263,7 @@ else:
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Dump CRVE into file
     crve_file_path = dirs_dict['crve_file_path']
-    clustering.save_crve_file(crve, crve_file_path)
+    crve.save_crve_file(crve, crve_file_path)
 #
 #                                 Online stage: Solve reduced microscale equilibrium problem
 # ==========================================================================================
