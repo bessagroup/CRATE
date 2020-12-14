@@ -5,17 +5,16 @@
 # Interface to the computation of the Cluster-reduced Representative Volume Element (CRVE).
 # ------------------------------------------------------------------------------------------
 # Development history:
-# Bernardo P. Ferreira | February 2020 | Initial coding.
-# Bernardo P. Ferreira |  October 2020 | Refactored as Clustering class.
+# Bernardo P. Ferreira | Feb 2020 | Initial coding.
+# Bernardo P. Ferreira | Oct 2020 | Refactored as Clustering class.
+# Bernardo P. Ferreira | Dec 2020 | Removed CRVE types.
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
 # Python object serialization
 import pickle
-# Display messages
-import ioput.info as info
 # CRVE generation
-from clustering.crve import SCRVE, HACRVE
+from clustering.crve import CRVE
 #
 #                                                                           Cluster Analysis
 # ==========================================================================================
@@ -27,8 +26,10 @@ class Clustering:
     domain decomposition and the computation of the cluster interaction tensors.
     '''
     def __init__(self, rve_dims, material_phases, regular_grid, comp_order,
-                 phase_n_clusters, clustering_scheme, crve_type, crve_type_options,
-                 cluster_data_matrix):
+                 cluster_data_matrix, clustering_type, phase_n_clusters,
+                 base_clustering_scheme, adaptive_clustering_scheme=None,
+                 adaptivity_criterion=None, adaptivity_type=None,
+                 adaptivity_control_feature=None, clust_adapt_freq=None):
         '''Clustering class constructor.
 
         Parameters
@@ -42,30 +43,55 @@ class Clustering:
             contains the material phase label (int) assigned to the corresponding voxel.
         comp_order : list
             Strain/Stress components (str) order.
-        phase_n_clusters : dict
-            Number of clusters (item, int) prescribed for each material phase (key, str).
-        clustering_scheme : ndarray of shape (n_clusterings, 3)
-            Prescribed global clustering scheme to generate the CRVE. Each row is associated
-            with a unique RVE clustering, characterized by a clustering algorithm
-            (col 1, int), a list of features (col 2, list of int) and a list of the feature
-            data matrix' indexes (col 3, list of int).
-        cluster_type : str, {'static', 'hierarchical-adaptive'}
-            Type of Cluster-reduced Representative Volume Element (CRVE).
-        crve_type_options : dict
-            CRVE type specific options.
         cluster_data_matrix : ndarray of shape (n_voxels, n_features)
             Data matrix containing all the required data to perform the RVE clustering-based
             domain decomposition.
+        clustering_type : dict
+            Clustering type (item, {'static', 'adaptive'}) of each material phase
+            (key, str).
+        phase_n_clusters : dict
+            Number of clusters (item, int) prescribed for each material phase (key, str).
+        base_clustering_scheme : dict
+            Prescribed base clustering scheme (item, ndarry of shape (n_clusterings, 3)) for
+            each material phase (key, str). Each row is associated with a unique clustering
+            characterized by a clustering algorithm (col 1, int), a list of features
+            (col 2, list of int) and a list of the features data matrix' indexes
+            (col 3, list of int).
+        adaptive_clustering_scheme : dict, default=None
+            Prescribed adaptive clustering scheme (item, ndarry of shape (n_clusterings, 3))
+            for each material phase (key, str). Each row is associated with a unique
+            clustering characterized by a clustering algorithm (col 1, int), a list of
+            features (col 2, list of int) and a list of the features data matrix' indexes
+            (col 3, list of int).
+        adaptivity_criterion : dict, default=None
+            Clustering adaptivity criterion (item, dict) associated to each material phase
+            (key, str). This dictionary contains the adaptivity criterion to be used and the
+            required parameters.
+        adaptivity_type : dict, default=None
+            Clustering adaptivity type (item, dict) associated to each material phase
+            (key, str). This dictionary contains the adaptivity type to be used and the
+            required parameters.
+        adaptivity_control_feature : dict, default=None
+            Clustering adaptivity control feature (item, str) associated to each material
+            phase (key, str).
+        clust_adapt_freq : dict, default=None
+            Clustering adaptivity frequency (relative to the macroscale loading)
+            (item, int, default=1) associated with each adaptive cluster-reduced
+            material phase (key, str).
         '''
         self._rve_dims = rve_dims
         self._material_phases = material_phases
         self._regular_grid = regular_grid
         self._comp_order = comp_order
-        self._phase_n_clusters = phase_n_clusters
-        self._clustering_scheme = clustering_scheme
-        self._crve_type = crve_type
-        self._crve_type_options = crve_type_options
         self._cluster_data_matrix = cluster_data_matrix
+        self._clustering_type = clustering_type
+        self._phase_n_clusters = phase_n_clusters
+        self._base_clustering_scheme = base_clustering_scheme
+        self._adaptive_clustering_scheme = adaptive_clustering_scheme
+        self._adaptivity_criterion = adaptivity_criterion
+        self._adaptivity_type = adaptivity_type
+        self._adaptivity_control_feature = adaptivity_control_feature
+        self._clust_adapt_freq = clust_adapt_freq
     # --------------------------------------------------------------------------------------
     def compute_crve(self):
         '''Compute Cluster-reduced Representative Volume Element (CRVE).
@@ -75,40 +101,15 @@ class Clustering:
         crve : CRVE
             Cluster-reduced Representative Volume Element.
         '''
-        if self._crve_type == 'static':
-            info.displayinfo('5', 'Computing Static Cluster-reduced Representative ' +
-                                  'Volume Element (S-CRVE)...')
-            # Get S-CRVE required clustering parameters
-            try:
-                clustering_ensemble_strategy = \
-                    self._crve_type_options['clustering_ensemble_strategy']
-            except KeyError:
-                print('Missing S-CRVE required clustering parameter.')
-                raise
-            # Instatiate Static Cluster-reduced Representative Volume Element (S-CRVE)
-            crve = SCRVE(self._phase_n_clusters, self._rve_dims, self._regular_grid,
-                self._material_phases, self._comp_order, self._clustering_scheme,
-                clustering_ensemble_strategy)
-            # Perform prescribed clustering scheme to generate the CRVE
-            crve.get_scrve(self._cluster_data_matrix)
+        # Instatiate Cluster-reduced Representative Volume Element (CRVE)
+        crve = CRVE(self._rve_dims, self._regular_grid, self._material_phases,
+                    self._comp_order, self._cluster_data_matrix, self._clustering_type,
+                    self._phase_n_clusters, self._base_clustering_scheme,
+                    self._adaptive_clustering_scheme, self._adaptivity_criterion,
+                    self._adaptivity_type, self._adaptivity_control_feature)
+        # Perform CRVE base clustering
+        crve.compute_base_crve()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        elif self._crve_type == 'hierarchical-adaptive':
-            info.displayinfo('5', 'Computing Hierarchical Adaptive Cluster-reduced ' +
-                                  'Representative Volume Element (HA-CRVE)...')
-            # Get HA-CRVE required clustering parameters
-            adaptive_split_factor = self._crve_type_options['adaptive_split_factor']
-            # Instatiate Hierarchical Adaptive Cluster-reduced Representative Volume Element
-            # (HA-CRVE)
-            crve = HACRVE(self._phase_n_clusters, self._rve_dims, self._regular_grid,
-                          self._material_phases, self._comp_order, adaptive_split_factor)
-            # Perform HA-CRVE base clustering
-            crve.get_base_clustering(self._cluster_data_matrix)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        else:
-            raise RuntimeError('Unknown type of cluster-reduced representative volume ' +
-                               'element.')
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Return CRVE instance
         return crve
     # --------------------------------------------------------------------------------------
     def compute_cit(self, crve, mode='full'):
@@ -158,22 +159,3 @@ class Clustering:
         # Dump CRVE instance into file
         with open(crve_file_path, 'wb') as crve_file:
             pickle.dump(crve, crve_file)
-#
-#                                                                       Available CRVE types
-# ==========================================================================================
-def get_available_crve_types():
-    '''Get available CRVE types in CRATE.
-
-    Available CRVE types:
-    1- Static ('static')
-    2- Hierarchical Adaptive ('hierarchical-adaptive')
-
-    Returns
-    -------
-    available_crve_types : dict
-        Available CRVE types (item, str) and associated identifiers (key, str).
-    '''
-    available_crve_types = {'1': 'static',
-                            '2': 'hierarchical-adaptive'}
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    return available_crve_types
