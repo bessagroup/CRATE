@@ -280,13 +280,13 @@ class AdaptivityManager:
             # Output adaptive phases target clusters summary table
             indent = 10*' '
             info.displayinfo('5', 'Summary:' + '\n\n' +
-                             indent + 'Phase     Nº Target Clusters' + '\n' +
-                             indent + 28*'-' + '\n' +
-                             ((indent + '{:^5s}{:>15d}\n')*
+                             indent + 'Phase   Target Clusters' + '\n' +
+                             indent + 23*'-' + '\n' +
+                             ((indent + '{:^5s}{:>11d}\n')*
                              (len(self._adapt_material_phases))).format(*output_list) +
-                             indent + 28*'-' + '\n' +
+                             indent + 23*'-' + '\n' +
                              indent + '{:^5s}'.format('Total') +
-                             '{:>15d}'.format(output_total) + '\n',
+                             '{:>11d}'.format(output_total) + '\n',
                              2)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return is_trigger, target_clusters
@@ -524,7 +524,7 @@ class AdaptivityManager:
         if verbose:
             # Build adaptive material phase's target clusters list
             output_list = []
-            output_total = 0
+            output_total = [0, 0]
             # Loop over adaptive material phases
             for mat_phase in self._adapt_material_phases:
                 # Loop over material phase target clusters
@@ -532,23 +532,25 @@ class AdaptivityManager:
                 for target_cluster in adaptive_clustering_map[mat_phase].keys():
                     n_new_clusters += \
                         len(adaptive_clustering_map[mat_phase][target_cluster])
-                output_list += [mat_phase, n_new_clusters]
-                output_total += n_new_clusters
+                n_total_clusters = len(crve.phase_clusters[mat_phase])
+                output_list += [mat_phase, n_new_clusters, n_total_clusters]
+                output_total[0] += n_new_clusters
+                output_total[1] += n_total_clusters
             # Output adaptive phases new clusters summary table
             indent = 10*' '
             info.displayinfo('5', 'Summary:' + '\n\n' +
-                             indent + 'Phase        New Clusters' + '\n' +
-                             indent + 28*'-' + '\n' +
-                             ((indent + '{:^5s}{:>15d}\n')*
+                             indent + 'Phase   New Clusters   Total Clusters' + '\n' +
+                             indent + 37*'-' + '\n' +
+                             ((indent + '{:^5s}{:>11d}{:>15d}\n')*
                              (len(self._adapt_material_phases))).format(*output_list) +
-                             indent + 28*'-' + '\n' +
+                             indent + 37*'-' + '\n' +
                              indent + '{:^5s}'.format('Total') +
-                             '{:>15d}'.format(output_total),
+                             '{:>11d}{:>15d}'.format(*output_total),
                              2)
             # Output adaptive phases execution time table
             indent = 10*' '
             info.displayinfo('5', 'Execution times (s):' + '\n\n' +
-                             indent + '          Time(s)       %' + '\n' +
+                             indent + '           Time(s)        %' + '\n' +
                              indent + 28*'-' + '\n' +
                              indent + '{:^5s}'.format('A') + '{:^18.4e}'.format(a_time) +
                              '{:>5.2f}'.format(a_time/dtime) + '\n' +
