@@ -369,12 +369,14 @@ class AdaptivityManager:
         bool
             True if online adaptive clustering procedure is triggered, False otherwise.
         '''
-        trigger_ratio = 0.02
         # Compute average and maximum values of adaptivity feature
         a = np.average(adapt_data_matrix[:, 1])
         b = np.max(adapt_data_matrix[:, 1])
         # Compute adaptivity ratio
-        adapt_ratio = abs(b - a)/abs(a)
+        if abs(a) < 1e-10:
+            adapt_ratio = abs(b - a)
+        else:
+            adapt_ratio = abs(b - a)/abs(a)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Check adaptivity trigger condition
         if adapt_ratio > trigger_ratio:
