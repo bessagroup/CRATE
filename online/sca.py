@@ -174,6 +174,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         is_crve_adaptivity = True
         # Get clustering adaptivity frequency
         clust_adapt_freq = clst_dict['clust_adapt_freq']
+        # Get clustering adaptivity output
+        is_clust_adapt_output = clst_dict['is_clust_adapt_output']
         # Initialize online CRVE clustering adaptivity manager
         adaptivity_manager = AdaptivityManager(comp_order, crve.adapt_material_phases,
                                                crve.adaptivity_control_feature,
@@ -852,11 +854,12 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         if is_crve_adaptivity:
             # Display increment data
-            info.displayinfo('12', crve._adaptive_step + 1)
+            if is_clust_adapt_output:
+                info.displayinfo('12', crve._adaptive_step + 1)
             # Get clustering adaptivity trigger condition and target clusters
             is_trigger, target_clusters = \
                 adaptivity_manager.get_target_clusters(phase_clusters, clusters_state, inc,
-                                                       verbose=True)
+                                                       verbose=is_clust_adapt_output)
             print('\n\n SCA MODULE:')
             print('\nis_trigger: ', is_trigger)
             print('\ntarget_clusters: ', target_clusters)
@@ -865,7 +868,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                 adaptivity_manager.adaptive_refinement(crve, target_clusters,
                                                        [clusters_state, clusters_state_old,
                                                        clusters_D_mf, clusters_De_mf],
-                                                       verbose=True)
+                                                       verbose=is_clust_adapt_output)
             # Update clustering dictionary
             for mat_phase in material_phases:
                 phase_n_clusters[mat_phase] = len(crve.phase_clusters[mat_phase])

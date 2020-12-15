@@ -156,7 +156,10 @@ class AdaptivityManager:
         target_clusters : list
             List containing the labels (int) of clusters to be adapted.
         '''
-        info.displayinfo('5', 'Clustering adaptivity criterion:')
+        # Output execution data
+        if verbose:
+            info.displayinfo('5', 'Clustering adaptivity criterion:')
+            info.displayinfo('5', 'Selecting target clusters...', 2)
         # Get activated adaptive material phases
         if inc != None:
             activated_adapt_phases = self._get_activated_adaptive_phases(inc)
@@ -165,7 +168,6 @@ class AdaptivityManager:
         # Initialize target clusters list
         target_clusters = []
         # Loop over activated adaptive material phases
-        info.displayinfo('5', 'Selecting target clusters...', 2)
         for mat_phase in activated_adapt_phases:
             # Get adaptivity trigger ratio
             adapt_trigger_ratio = \

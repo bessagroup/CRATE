@@ -232,7 +232,7 @@ def packregulargrid(discret_file_path, rve_dims, mat_dict, problem_dict):
 def packrgclustering(clustering_solution_method, standardization_method, links_dict,
                      phase_n_clusters, rg_dict, clustering_type, base_clustering_scheme,
                      adaptive_clustering_scheme, adaptivity_criterion, adaptivity_type,
-                     adaptivity_control_feature, clust_adapt_freq):
+                     adaptivity_control_feature, clust_adapt_freq, is_clust_adapt_output):
     #
     # Object                       Meaning                                         Type
     # ------------------------------------------------------------------------------------
@@ -259,6 +259,7 @@ def packrgclustering(clustering_solution_method, standardization_method, links_d
     #                              key: material phase id (str)
     # clust_adapt_freq             Clustering adaptivity frequency                 dict
     #                              key: material phase id (str)
+    # is_clust_adapt_output        Adaptivity output                               bool
     #
     # Get regular grid data
     n_voxels_dims = rg_dict['n_voxels_dims']
@@ -286,6 +287,7 @@ def packrgclustering(clustering_solution_method, standardization_method, links_d
     clst_dict['adaptivity_type'] = adaptivity_type
     clst_dict['adaptivity_control_feature'] = adaptivity_control_feature
     clst_dict['clust_adapt_freq'] = clust_adapt_freq
+    clst_dict['is_clust_adapt_output'] = is_clust_adapt_output
     # Return
     return clst_dict
 # ------------------------------------------------------------------------------------------

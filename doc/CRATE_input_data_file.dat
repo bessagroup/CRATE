@@ -531,6 +531,19 @@
 
 
 
+#                                                           Clustering adaptivity output [O]
+# ==========================================================================================
+# Meaning:   Output of data to the '.screen' file associated to the clustering adaptivity
+#            (adaptivity procedures execution summary and time table).
+#
+# Syntax:    Clustering_Adaptivity_Output
+#
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
 #                                                                VTK (XML format) output [O]
 # ==========================================================================================
 # Meaning:   Output of data associated to snapshots (macroscale loading increments) of the

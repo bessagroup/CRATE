@@ -311,6 +311,14 @@ def readinputdatafile(input_file,dirs_dict):
     else:
         is_VTK_output = False
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Read clustering adaptivity output
+    keyword = 'Clustering_Adaptivity_Output'
+    is_found, keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
+        is_clust_adapt_output = True
+    else:
+        is_clust_adapt_output = False
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Package problem general data
     info.displayinfo('5', 'Packaging problem general data...')
     problem_dict = packager.packproblem(strain_formulation, problem_type, n_dim,
@@ -335,7 +343,7 @@ def readinputdatafile(input_file,dirs_dict):
                                           base_clustering_scheme,
                                           adaptive_clustering_scheme, adaptivity_criterion,
                                           adaptivity_type, adaptivity_control_feature,
-                                          clust_adapt_freq)
+                                          clust_adapt_freq, is_clust_adapt_output)
     # Package data associated to the self-consistent scheme
     info.displayinfo('5', 'Packaging self-consistent scheme data...')
     scs_dict = packager.packagescs(self_consistent_scheme, scs_max_n_iterations,
