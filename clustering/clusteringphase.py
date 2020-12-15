@@ -572,7 +572,7 @@ class HAACRMP(CRMP):
         # Set mandatory adaptivity type parameters
         mandatory_parameters = {}
         # Set optional adaptivity type parameters and associated default values
-        optional_parameters = {'adapt_split_factor': 0.2}
+        optional_parameters = {'adapt_split_factor': 0.001}
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return [mandatory_parameters, optional_parameters]
