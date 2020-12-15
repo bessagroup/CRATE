@@ -471,7 +471,6 @@ class HAACRMP(CRMP):
         self.adaptive_time += time.time() - init_time
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
-        self.print_adaptive_clustering(adaptive_clustering_map, adaptive_tree_node_map)
         return adaptive_clustering_map
     # --------------------------------------------------------------------------------------
     def _set_adaptivity_type_parameters(self, adaptivity_type):

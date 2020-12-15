@@ -287,11 +287,6 @@ class CRVE:
             {mat_phase: {} for mat_phase in self.adapt_material_phases}
         # Loop over adaptive material phases
         for mat_phase in self.adapt_material_phases:
-
-
-            print('\n\ncrve_adaptivity: ')
-            print('\nmat_phase: ', mat_phase)
-            print('\nphase_target_clusters[mat_phase]: ', phase_target_clusters[mat_phase])
             # If there are no target clusters, skip to next adaptive material phase
             if not bool(phase_target_clusters[mat_phase]):
                 continue

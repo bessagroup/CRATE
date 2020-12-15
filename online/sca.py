@@ -860,9 +860,6 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             is_trigger, target_clusters = \
                 adaptivity_manager.get_target_clusters(phase_clusters, clusters_state, inc,
                                                        verbose=is_clust_adapt_output)
-            print('\n\n SCA MODULE:')
-            print('\nis_trigger: ', is_trigger)
-            print('\ntarget_clusters: ', target_clusters)
             # Perform clustering adaptivity
             if is_trigger:
                 adaptivity_manager.adaptive_refinement(crve, target_clusters,

@@ -195,14 +195,8 @@ class AdaptivityManager:
             # Initialize adaptive material phase target cluster groups
             self._target_groups_ids[mat_phase] = []
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            print('\n\nAdaptive material phase: ', mat_phase, '\n' + 80*'-')
-            print('\nCurrent cluster groups ids:\n\n', adapt_groups_ids)
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Loop over adaptive cluster groups
             for group_id in adapt_groups_ids:
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                print('\n\nEvaluating adaptive cluster group: ', group_id, '\n' + 40*'-')
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Check if adaptive cluster group can be further adapted and, if not, skip
                 # to the next one
                 if self._groups_adapt_level[mat_phase][group_id] >= adapt_max_level:
@@ -219,8 +213,6 @@ class AdaptivityManager:
                 is_trigger = self._adaptivity_trigger_condition(
                     adapt_data_matrix[adapt_group_idxs, :],
                         trigger_ratio=adapt_trigger_ratio)
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                print('\n  > is_trigger? ', is_trigger)
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Get adaptive cluster group target clusters and assemble them to the global
                 # target clusters list
@@ -254,12 +246,6 @@ class AdaptivityManager:
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     # Assemble target clusters
                     target_clusters += group_target_clusters
-                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                    print('\n\nGroup ' + group_id + ' was split in groups:')
-                    print('\n  Group ' + child_group_1_id + ': ',
-                          self._adapt_groups[mat_phase][child_group_1_id])
-                    print('\n  Group ' + child_group_2_id + ': ',
-                          self._adapt_groups[mat_phase][child_group_2_id])
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set adaptivity trigger flag according to the list of target clusters
         if target_clusters:
@@ -390,13 +376,6 @@ class AdaptivityManager:
         # Compute adaptivity ratio
         adapt_ratio = abs(b - a)/abs(a)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        print('\n\nEvaluating trigger condition:')
-        print('\n  > adaptive group adapt_data_matrix:\n')
-        print(adapt_data_matrix)
-        print('\n  > average = ', a)
-        print('\n  > max     = ', b)
-        print('\n  > adapt_ratio = ', adapt_ratio)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Check adaptivity trigger condition
         if adapt_ratio > trigger_ratio:
             return True
@@ -438,10 +417,6 @@ class AdaptivityManager:
         idxs = adapt_data_matrix[:, 1] >= adapt_boundary
         # Get target clusters
         target_clusters = [int(x) for x in adapt_data_matrix[idxs, 0]]
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        print('\n\nAdaptivity selection:')
-        print('\n  > Number of target clusters: ', len(target_clusters))
-        print('\n  > Target clusters: ', target_clusters)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return target_clusters
     # --------------------------------------------------------------------------------------
@@ -563,15 +538,6 @@ class AdaptivityManager:
                              indent + 28*'-' + '\n' +
                              indent + '{:^5s}'.format('Total') + '{:>14.4e}'.format(dtime),
                              2)
-            # Print adaptive clustering mapping
-            print('\n\n' + 4*' ' + 'Adaptive cluster mapping: ')
-            for mat_phase in self._adapt_material_phases:
-                print('\n' + 6*' ' +'Material phase ' + mat_phase + ':\n')
-                for old_cluster in adaptive_clustering_map[mat_phase].keys():
-                    print(8*' ' + 'Old cluster: ' + '{:>4s}'.format(old_cluster) +
-                          '  ->  ' +
-                          'New clusters: ',
-                          adaptive_clustering_map[mat_phase][str(old_cluster)])
     # --------------------------------------------------------------------------------------
     def _update_group_clusters(self, adaptive_clustering_map):
         '''Update adaptive cluster groups.
@@ -599,11 +565,6 @@ class AdaptivityManager:
                         new_clusters = \
                             adaptive_clustering_map[mat_phase][str(old_cluster)]
                         self._adapt_groups[mat_phase][group_id] += new_clusters
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                print('\n\n    > Updated group ' + group_id + ' from\n')
-                print('    ', old_clusters)
-                print('\n    to\n')
-                print('    ', self._adapt_groups[mat_phase][group_id], '\n')
     # --------------------------------------------------------------------------------------
     def _get_activated_adaptive_phases(self, inc):
         '''Get activated adaptive material phases for a given incremental counter.
