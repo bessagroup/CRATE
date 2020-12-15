@@ -76,8 +76,6 @@ import ioput.fileoperations as filop
 import ioput.packager as packager
 # Clustering quantities computation
 import clustering.clusteringdata as clstdata
-# Perform clustering
-import clustering.clustering as clst
 # Online stage
 import online.sca as sca
 # VTK output
