@@ -52,10 +52,12 @@ def displayinfo(code, *args, **kwargs):
             sys.exit(1)
     elif code == '0':
         arguments = ['CRATE - Clustering-based Nonlinear Analysis of Materials',
-                     'Release 0.4.0 (July 2020)'] + 2*[args[0],] + list(args[1:3])
+                     'Created by Bernardo P. Ferreira', 'Release 0.7.0 (Dec 2020)'] + \
+                     2*[args[0],] + list(args[1:3])
         info = tuple(arguments)
         template = '\n' + colorama.Fore.WHITE + tilde_line + colorama.Style.RESET_ALL + \
-                   colorama.Fore.WHITE + '\n{:^{width}}\n\n' + '{:^{width}}\n\n\n' + \
+                   colorama.Fore.WHITE + '\n{:^{width}}\n\n' + '{:^{width}}\n' + \
+                   '\n{:^{width}}\n\n' + \
                    colorama.Fore.YELLOW + 'Problem under analysis: ' + \
                    colorama.Style.RESET_ALL + '{}' + '\n\n' + \
                    colorama.Fore.YELLOW + 'Input data file: ' + \
@@ -295,6 +297,12 @@ def displayinfo(code, *args, **kwargs):
                    indent + 'Increment cut: ' + colorama.Style.RESET_ALL + cut_msg + \
                    '\n' + colorama.Fore.RED + indent + asterisk_line[:-len(indent)] + \
                    colorama.Style.RESET_ALL + '\n'
+    elif code == '12':
+        arguments = [args[0],]
+        info = tuple(arguments)
+        template = '\n\n' + \
+                   indent + 'Adaptive clustering step: {:3d}' + '\n' + \
+                   indent + tilde_line[:-len(indent)]
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display information
     ioutil.print2(template.format(*info, width=output_width))

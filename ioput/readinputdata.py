@@ -36,8 +36,6 @@ import ioput.readprocedures as rproc
 import ioput.ioutilities as ioutil
 # Matricial operations
 import tensor.matrixoperations as mop
-# CRVE generation
-import clustering.crve
 # Clustering data
 import clustering.clusteringdata as clstdat
 #
@@ -52,8 +50,9 @@ def readinputdatafile(input_file,dirs_dict):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read strain formulation
     keyword = 'Strain_Formulation'
-    max = 2
-    strain_formulation = rproc.readtypeAkeyword(input_file, input_file_path, keyword, max)
+    max_val = 2
+    strain_formulation = rproc.readtypeAkeyword(input_file, input_file_path, keyword,
+                                                max_val)
     # Large strain formulation has not been implemented yet
     if strain_formulation == 2:
         location = inspect.getframeinfo(inspect.currentframe())
@@ -61,8 +60,8 @@ def readinputdatafile(input_file,dirs_dict):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read problem type and set problem dimensions
     keyword = 'Problem_Type'
-    max = 4
-    problem_type = rproc.readtypeAkeyword(input_file, input_file_path, keyword, max)
+    max_val = 4
+    problem_type = rproc.readtypeAkeyword(input_file, input_file_path, keyword, max_val)
     n_dim, comp_order_sym, comp_order_nsym = mop.getproblemtypeparam(problem_type)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read RVE dimensions
@@ -97,8 +96,8 @@ def readinputdatafile(input_file,dirs_dict):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read macroscale loading
     keyword = 'Macroscale_Loading'
-    max = 3
-    mac_load_type = rproc.readtypeAkeyword(input_file, input_file_path, keyword, max)
+    max_val = 3
+    mac_load_type = rproc.readtypeAkeyword(input_file, input_file_path, keyword, max_val)
     mac_load, mac_load_presctype = rproc.readmacroscaleloading(
         input_file, input_file_path, mac_load_type, strain_formulation, n_dim,
         comp_order_nsym)
@@ -108,9 +107,9 @@ def readinputdatafile(input_file,dirs_dict):
     keyword = 'Self_Consistent_Scheme'
     is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
     if is_found:
-        max = 2
+        max_val = 2
         self_consistent_scheme = rproc.readtypeAkeyword(input_file, input_file_path,
-                                                        keyword, max)
+                                                        keyword, max_val)
     else:
         self_consistent_scheme = 1
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -119,9 +118,9 @@ def readinputdatafile(input_file,dirs_dict):
     keyword = 'SCS_Max_Number_of_Iterations'
     is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
     if is_found:
-        max = '~'
+        max_val = '~'
         scs_max_n_iterations = rproc.readtypeAkeyword(input_file, input_file_path,
-                                                      keyword, max)
+                                                      keyword, max_val)
     else:
         scs_max_n_iterations = 20
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -130,38 +129,48 @@ def readinputdatafile(input_file,dirs_dict):
     keyword = 'SCS_Convergence_Tolerance'
     is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
     if is_found:
-        max = '~'
+        max_val = '~'
         scs_conv_tol = rproc.readtypeBkeyword(input_file, input_file_path, keyword)
     else:
         scs_conv_tol = 1e-4
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Get available clustering algorithms and features
-    valid_algorithms = list(clustering.crve.get_available_clustering_algorithms().keys())
-    valid_features = list(clstdat.get_available_clustering_features(
+    # Get available clustering features
+    clustering_features = list(clstdat.get_available_clustering_features(
         strain_formulation, n_dim, comp_order_sym, comp_order_nsym).keys())
-    # Read clustering scheme
-    keyword = 'Clustering_Scheme'
-    clustering_scheme = rproc.readclusterscheme(input_file, input_file_path, keyword,
-                                                valid_algorithms, valid_features)
+    # Read cluster analysis scheme
+    keyword = 'Cluster_Analysis_Scheme'
+    clustering_type, base_clustering_scheme, adaptive_clustering_scheme, \
+        adaptivity_criterion, adaptivity_type, adaptivity_control_feature = \
+            rproc.read_cluster_analysis_scheme(input_file, input_file_path, keyword,
+                                               material_properties.keys(),
+                                               clustering_features)
+    # Get adaptive material phases
+    adapt_material_phases = [x for x in clustering_type.keys()
+                             if clustering_type[x] == 'adaptive']
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Read clustering ensemble method (optional).
-    keyword = 'Clustering_Ensemble_Method'
-    if clustering_scheme.shape[0] > 1:
-        raise RuntimeError('No clustering ensemble method has been implemented yet.')
-        #max = '~'
-        #clustering_ensemble_strategy = rproc.readtypeAkeyword(input_file, input_file_path,
-        #                                                      keyword, max)
+    # Read number of cluster associated to each material phase
+    keyword = 'Number_of_Clusters'
+    phase_n_clusters = rproc.readphaseclustering(input_file, input_file_path, keyword,
+                                                 n_material_phases, material_properties)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Read clustering adaptivity frequency (optional). If the associated keyword is not
+    # found, then a default specification is assumed
+    keyword = 'Clustering_Adaptivity_Frequency'
+    is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
+        clust_adapt_freq = rproc.read_adaptivity_frequency(input_file, input_file_path,
+                                                           keyword, adapt_material_phases)
     else:
-        clustering_ensemble_strategy = 0
+        clust_adapt_freq = {mat_phase: 1 for mat_phase in adapt_material_phases}
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read clustering solution method (optional). If the associated keyword is not found,
     # then a default specification is assumed
     keyword = 'Clustering_Solution_Method'
     is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
     if is_found:
-        max = 2
+        max_val = 2
         clustering_solution_method = rproc.readtypeAkeyword(input_file, input_file_path,
-                                                            keyword, max)
+                                                            keyword, max_val)
     else:
         clustering_solution_method = 1
     # Read clustering solution method parameters
@@ -181,11 +190,6 @@ def readinputdatafile(input_file,dirs_dict):
     # Links add Links python binary to Links dictionary
     if is_Links_python_bin:
         links_dict['Links_python_bin_path'] = Links_python_bin_path
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Read number of cluster associated to each material phase
-    keyword = 'Number_of_Clusters'
-    phase_n_clusters = rproc.readphaseclustering(input_file, input_file_path, keyword,
-                                                 n_material_phases, material_properties)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read macroscale loading incrementation parameters
     keyword_1 = 'Number_of_Load_Increments'
@@ -211,8 +215,9 @@ def readinputdatafile(input_file,dirs_dict):
     keyword = 'Max_Number_of_Iterations'
     is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
     if is_found:
-        max = '~'
-        max_n_iterations = rproc.readtypeAkeyword(input_file, input_file_path, keyword, max)
+        max_val = '~'
+        max_n_iterations = rproc.readtypeAkeyword(input_file, input_file_path, keyword,
+                                                  max_val)
     else:
         max_n_iterations = 12
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -230,8 +235,9 @@ def readinputdatafile(input_file,dirs_dict):
     keyword = 'Max_SubInc_Level'
     is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
     if is_found:
-        max = '~'
-        max_subinc_level = rproc.readtypeAkeyword(input_file, input_file_path, keyword, max)
+        max_val = '~'
+        max_subinc_level = rproc.readtypeAkeyword(input_file, input_file_path, keyword,
+                                                  max_val)
     else:
         max_subinc_level = 5
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -240,8 +246,9 @@ def readinputdatafile(input_file,dirs_dict):
     keyword = 'Max_Consecutive_Inc_Cuts'
     is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
     if is_found:
-        max = '~'
-        max_cinc_cuts = rproc.readtypeAkeyword(input_file, input_file_path, keyword, max)
+        max_val = '~'
+        max_cinc_cuts = rproc.readtypeAkeyword(input_file, input_file_path, keyword,
+                                               max_val)
     else:
         max_cinc_cuts = 5
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -250,9 +257,9 @@ def readinputdatafile(input_file,dirs_dict):
     keyword = 'SU_Max_Number_of_Iterations'
     is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
     if is_found:
-        max = '~'
+        max_val = '~'
         su_max_n_iterations = rproc.readtypeAkeyword(input_file, input_file_path, keyword,
-                                                     max)
+                                                     max_val)
     else:
         su_max_n_iterations = 20
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -286,9 +293,9 @@ def readinputdatafile(input_file,dirs_dict):
     keyword = 'Standardization_Method'
     is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
     if is_found:
-        max = 2
+        max_val = 2
         standardization_method = rproc.readtypeAkeyword(input_file, input_file_path,
-                                                        keyword, max)
+                                                        keyword, max_val)
     else:
         standardization_method = 1
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -303,6 +310,14 @@ def readinputdatafile(input_file,dirs_dict):
         filop.makedirectory(postprocess_dir + 'VTK/', 'overwrite')
     else:
         is_VTK_output = False
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Read clustering adaptivity output
+    keyword = 'Clustering_Adaptivity_Output'
+    is_found, keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
+        is_clust_adapt_output = True
+    else:
+        is_clust_adapt_output = False
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Package problem general data
     info.displayinfo('5', 'Packaging problem general data...')
@@ -322,9 +337,13 @@ def readinputdatafile(input_file,dirs_dict):
                                        problem_dict)
     # Package data associated to the clustering
     info.displayinfo('5', 'Packaging clustering data...')
-    clst_dict = packager.packrgclustering(clustering_scheme, clustering_ensemble_strategy,
-                                          clustering_solution_method,standardization_method,
-                                          links_dict, phase_n_clusters, rg_dict)
+    clst_dict = packager.packrgclustering(clustering_solution_method,
+                                          standardization_method, links_dict,
+                                          phase_n_clusters, rg_dict, clustering_type,
+                                          base_clustering_scheme,
+                                          adaptive_clustering_scheme, adaptivity_criterion,
+                                          adaptivity_type, adaptivity_control_feature,
+                                          clust_adapt_freq, is_clust_adapt_output)
     # Package data associated to the self-consistent scheme
     info.displayinfo('5', 'Packaging self-consistent scheme data...')
     scs_dict = packager.packagescs(self_consistent_scheme, scs_max_n_iterations,

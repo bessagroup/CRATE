@@ -7,7 +7,8 @@
 # Self-Consistent Clustering Analysis (SCA) online stage.
 # ------------------------------------------------------------------------------------------
 # Development history:
-# Bernardo P. Ferreira | February 2020 | Initial coding.
+# Bernardo P. Ferreira | Feb 2020 | Initial coding.
+# Bernardo P. Ferreira | Dec 2020 | Implemented clustering adaptivity.
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
@@ -16,8 +17,6 @@ import sys
 # Working with arrays
 import numpy as np
 import numpy.matlib
-# Inspect file name and line
-import inspect
 # Date and time
 import time
 # Shallow and deep copy operations
@@ -26,12 +25,10 @@ import copy
 import ioput.info as info
 # Scientific computation
 import scipy.linalg
-# Display errors, warnings and built-in exceptions
-import ioput.errors as errors
 # Matricial operations
 import tensor.matrixoperations as mop
 # Cluster interaction tensors operations
-import cit.citoperations as citop
+import clustering.citoperations as citop
 # Homogenized results output
 import ioput.homresoutput as hresout
 # VTK output
@@ -51,6 +48,9 @@ import online.scs.scs_schemes as scs
 # Lippmann-Schwinger nonlinear system of equilibrium equations
 import online.equilibrium.sne_farfield as eqff
 import online.equilibrium.sne_macstrain as eqms
+# CRVE adaptivity
+from online.crve_adaptivity import AdaptivityManager
+
 
 
 #                                                                          Validation output
@@ -88,7 +88,7 @@ for i in output_idx:
 #                                                  system of nonlinear equilibrium equations
 # ==========================================================================================
 def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs_dict,
-        algpar_dict, vtk_dict):
+        algpar_dict, vtk_dict, crve):
     #                                                                           General data
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Get input data file name and post processing directory
@@ -108,9 +108,6 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     phase_n_clusters = clst_dict['phase_n_clusters']
     phase_clusters = clst_dict['phase_clusters']
     clusters_f = clst_dict['clusters_f']
-    cit_1_mf = clst_dict['cit_1_mf']
-    cit_2_mf = clst_dict['cit_2_mf']
-    cit_0_freq_mf = clst_dict['cit_0_freq_mf']
     # Get macroscale loading data
     mac_load = macload_dict['mac_load']
     mac_load_presctype = macload_dict['mac_load_presctype']
@@ -170,6 +167,20 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     n_total_clusters = sum([phase_n_clusters[mat_phase] for mat_phase in material_phases])
     # Initialize macroscale loading increment cut flag
     is_inc_cut = False
+    # Check clustering adaptivity and perform required initializations
+    is_crve_adaptivity = False
+    if len(crve.adapt_material_phases) > 0:
+        # Switch on clustering adaptivity flag
+        is_crve_adaptivity = True
+        # Get clustering adaptivity frequency
+        clust_adapt_freq = clst_dict['clust_adapt_freq']
+        # Get clustering adaptivity output
+        is_clust_adapt_output = clst_dict['is_clust_adapt_output']
+        # Initialize online CRVE clustering adaptivity manager
+        adaptivity_manager = AdaptivityManager(comp_order, crve.adapt_material_phases,
+                                               crve.adaptivity_control_feature,
+                                               crve.adaptivity_criterion,
+                                               clust_adapt_freq)
     # --------------------------------------------------------------------------------------
     # Validation:
     if is_Validation[1]:
@@ -188,8 +199,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     # strain component in a 2D plane stress problem (output purpose only)
     if problem_type == 1:
         hom_stress_33 = hom.homoutofplanecomp(problem_type, material_phases, phase_clusters,
-                                              clusters_f, clusters_state,
-                                              clusters_state_old)
+                                              clusters_f, clusters_state)
     # Initialize homogenized results dictionary
     hom_results = dict()
     # Build homogenized results dictionary
@@ -376,8 +386,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             # matrix
             global_cit_mf = citop.updassemblecit(
                 problem_dict, mat_prop_ref, Se_ref_matrix, material_phases,
-                n_total_clusters, phase_n_clusters, phase_clusters, cit_1_mf, cit_2_mf,
-                cit_0_freq_mf)
+                phase_n_clusters, phase_clusters, crve.cit_X_mf[0], crve.cit_X_mf[1],
+                crve.cit_X_mf[2])
             #
             #                                                  Newton-Raphson iterative loop
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -451,22 +461,22 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                 #                                                  Effective tangent modulus
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Compute the material effective tangent modulus
-                eff_tangent_mf = hom.efftanmod(
-                    problem_dict, material_phases, n_total_clusters, phase_clusters,
-                    clusters_f, clusters_D_mf, global_cit_D_De_ref_mf)
+                eff_tangent_mf = hom.efftanmod(n_dim, comp_order, material_phases,
+                                               phase_clusters, clusters_f, clusters_D_mf,
+                                               global_cit_D_De_ref_mf)
                 #
                 #                          Incremental homogenized strain and stress tensors
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Compute homogenized strain and stress tensors (matricial form)
                 hom_strain_mf, hom_stress_mf = \
-                    hom.homstatetensors(problem_dict, material_phases, phase_clusters,
+                    hom.homstatetensors(comp_order, material_phases, phase_clusters,
                                         clusters_f, clusters_state)
                 # Compute homogenized out-of-plane stress component in a 2D plane strain
                 # problem / strain component in a 2D plane stress problem
                 if problem_type == 1:
                     hom_stress_33 = hom.homoutofplanecomp(
                         problem_type, material_phases, phase_clusters, clusters_f,
-                        clusters_state, clusters_state_old)
+                        clusters_state)
                 # Compute incremental homogenized strain and stress tensors (matricial form)
                 inc_hom_strain_mf = hom_strain_mf - hom_strain_old_mf
                 inc_hom_stress_mf = hom_stress_mf - hom_stress_old_mf
@@ -757,7 +767,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         if problem_type == 1:
             hom_stress_33 = hom.homoutofplanecomp(problem_type, material_phases,
                                                   phase_clusters, clusters_f,
-                                                  clusters_state, clusters_state_old)
+                                                  clusters_state)
         # ----------------------------------------------------------------------------------
         # Validation:
         if is_Validation[21]:
@@ -839,6 +849,37 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             displayincdata(mac_load_path)
             # Set increment initial time
             inc_init_time = time.time()
+        #
+        #                                                              Clustering adaptivity
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        if is_crve_adaptivity:
+            # Display increment data
+            if is_clust_adapt_output:
+                info.displayinfo('12', crve._adaptive_step + 1)
+            # Get clustering adaptivity trigger condition and target clusters
+            is_trigger, target_clusters = \
+                adaptivity_manager.get_target_clusters(phase_clusters, clusters_state, inc,
+                                                       verbose=is_clust_adapt_output)
+            # Perform clustering adaptivity
+            if is_trigger:
+                adaptivity_manager.adaptive_refinement(crve, target_clusters,
+                                                       [clusters_state, clusters_state_old,
+                                                       clusters_D_mf, clusters_De_mf],
+                                                       verbose=is_clust_adapt_output)
+            # Update clustering dictionary
+            for mat_phase in material_phases:
+                phase_n_clusters[mat_phase] = len(crve.phase_clusters[mat_phase])
+            clst_dict['phase_n_clusters'] = phase_n_clusters
+            clst_dict['voxels_clusters'] = crve.voxels_clusters
+            clst_dict['phase_clusters'] = crve.phase_clusters
+            clst_dict['clusters_f'] = crve.clusters_f
+            # Get clusters data
+            phase_n_clusters = clst_dict['phase_n_clusters']
+            phase_clusters = clst_dict['phase_clusters']
+            clusters_f = clst_dict['clusters_f']
+            # Get total number of clusters
+            n_total_clusters = sum([phase_n_clusters[mat_phase]
+                                    for mat_phase in material_phases])
 #
 #                                                       Macroscale loading increment display
 # ==========================================================================================
