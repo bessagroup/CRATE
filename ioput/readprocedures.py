@@ -37,7 +37,7 @@ import material.isotropichardlaw
 # I/O utilities
 import ioput.ioutilities as ioutil
 # Cluster-Reduced material phases
-from clustering.clusteringphase import SCRMP, HAACRMP
+from clustering.clusteringphase import SCRMP
 # CRVE generation
 from clustering.crve import CRVE
 # CRVE adaptivity
@@ -1075,6 +1075,12 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
                 adapt_type_id = line[2]
                 AdaptType = CRVE.get_crmp_types()[adapt_type_id]
                 adaptivity_type[mat_phase]['adapt_type'] = AdaptType
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Get adaptive cluster-reduced material phase valid clustering algorithms
+        valid_algorithms = AdaptType.get_valid_clust_algs()
+        # Check validity of prescribed base clustering scheme
+        check_clustering_scheme(mat_phase, adaptive_clustering_scheme[mat_phase],
+                                valid_algorithms, clustering_features)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get mandatory and optional adaptivity criterion parameters
         macp, oacp = AdaptivityManager.get_adaptivity_criterion_parameters()
