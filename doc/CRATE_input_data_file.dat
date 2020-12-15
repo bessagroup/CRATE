@@ -177,7 +177,7 @@
 #            phases that ultimately compose the Cluster-Reduced Representative Volume
 #            Element (CRVE).
 #
-# Syntax:    Clustering_Analysis_Scheme
+# Syntax:    Cluster_Analysis_Scheme
 #            phase_ID [clustering_type]
 #                base_clustering [n_clusterings, ensemble_method_id]
 #                clustering_algorithm_ID feature_ID [feature_ID]
