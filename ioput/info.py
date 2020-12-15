@@ -295,6 +295,12 @@ def displayinfo(code, *args, **kwargs):
                    indent + 'Increment cut: ' + colorama.Style.RESET_ALL + cut_msg + \
                    '\n' + colorama.Fore.RED + indent + asterisk_line[:-len(indent)] + \
                    colorama.Style.RESET_ALL + '\n'
+    elif code == '12':
+        arguments = [args[0],]
+        info = tuple(arguments)
+        template = '\n\n' + \
+                   indent + 'Adaptive clustering step: {:3d}' + '\n' + \
+                   indent + tilde_line[:-len(indent)]
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display information
     ioutil.print2(template.format(*info, width=output_width))

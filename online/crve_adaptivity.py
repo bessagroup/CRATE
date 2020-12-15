@@ -132,7 +132,7 @@ class AdaptivityManager:
         # Return
         return [mandatory_parameters, optional_parameters]
     # --------------------------------------------------------------------------------------
-    def get_target_clusters(self, phase_clusters, clusters_state, inc=None):
+    def get_target_clusters(self, phase_clusters, clusters_state, inc=None, verbose=False):
         '''Get online adaptive clustering target clusters.
 
         Parameters
@@ -146,6 +146,8 @@ class AdaptivityManager:
         inc : int, default=None
             Incremental counter serving as a reference basis for the clustering adaptivity
             frequency control.
+        verbose : bool, default=False
+            Enable verbose output.
 
         Returns
         -------
@@ -154,6 +156,7 @@ class AdaptivityManager:
         target_clusters : list
             List containing the labels (int) of clusters to be adapted.
         '''
+        info.displayinfo('5', 'Clustering adaptivity criterion:')
         # Get activated adaptive material phases
         if inc != None:
             activated_adapt_phases = self._get_activated_adaptive_phases(inc)
@@ -162,6 +165,7 @@ class AdaptivityManager:
         # Initialize target clusters list
         target_clusters = []
         # Loop over activated adaptive material phases
+        info.displayinfo('5', 'Selecting target clusters...', 2)
         for mat_phase in activated_adapt_phases:
             # Get adaptivity trigger ratio
             adapt_trigger_ratio = \
@@ -260,6 +264,28 @@ class AdaptivityManager:
             is_trigger = True
         else:
             is_trigger = False
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Output execution data
+        if verbose:
+            # Build output data
+            output_list = []
+            output_total = 0
+            for mat_phase in self._adapt_material_phases:
+                phase_target_clusters = \
+                    list(set(target_clusters).intersection(phase_clusters[mat_phase]))
+                output_list += [mat_phase, len(phase_target_clusters)]
+                output_total += len(phase_target_clusters)
+            # Output adaptive phases target clusters summary table
+            indent = 10*' '
+            info.displayinfo('5', 'Summary:' + '\n\n' +
+                             indent + 'Phase     Nº Target Clusters' + '\n' +
+                             indent + 28*'-' + '\n' +
+                             ((indent + '{:^5s}{:>15d}\n')*
+                             (len(self._adapt_material_phases))).format(*output_list) +
+                             indent + 28*'-' + '\n' +
+                             indent + '{:^5s}'.format('Total') +
+                             '{:>15d}'.format(output_total) + '\n',
+                             2)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return is_trigger, target_clusters
     # --------------------------------------------------------------------------------------
@@ -436,7 +462,7 @@ class AdaptivityManager:
         init_time = time.time()
         # Output execution data
         if verbose:
-            info.displayinfo('5', 'Adaptive clustering:')
+            info.displayinfo('5', 'Clustering adaptivity refinement:')
             info.displayinfo('5', 'A - Performing clustering adaptivity...', 2)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Perform CRVE online adaptive clustering refinement
@@ -494,21 +520,44 @@ class AdaptivityManager:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Output execution data
         if verbose:
+            # Build adaptive material phase's target clusters list
+            output_list = []
+            output_total = 0
+            # Loop over adaptive material phases
+            for mat_phase in self._adapt_material_phases:
+                # Loop over material phase target clusters
+                n_new_clusters = 0
+                for target_cluster in adaptive_clustering_map[mat_phase].keys():
+                    n_new_clusters += \
+                        len(adaptive_clustering_map[mat_phase][target_cluster])
+                output_list += [mat_phase, n_new_clusters]
+                output_total += n_new_clusters
+            # Output adaptive phases new clusters summary table
+            indent = 10*' '
+            info.displayinfo('5', 'Summary:' + '\n\n' +
+                             indent + 'Phase        New Clusters' + '\n' +
+                             indent + 28*'-' + '\n' +
+                             ((indent + '{:^5s}{:>15d}\n')*
+                             (len(self._adapt_material_phases))).format(*output_list) +
+                             indent + 28*'-' + '\n' +
+                             indent + '{:^5s}'.format('Total') +
+                             '{:>15d}'.format(output_total),
+                             2)
             # Output adaptive phases execution time table
             indent = 10*' '
             info.displayinfo('5', 'Execution times (s):' + '\n\n' +
-                             indent + 'Phase      Time(s)       %' + '\n' +
+                             indent + '          Time(s)       %' + '\n' +
                              indent + 28*'-' + '\n' +
-                             indent + '{:<5s}'.format('A') + '{:^18.4e}'.format(a_time) +
+                             indent + '{:^5s}'.format('A') + '{:^18.4e}'.format(a_time) +
                              '{:>5.2f}'.format(a_time/dtime) + '\n' +
-                             indent + '{:<5s}'.format('B') + '{:^18.4e}'.format(b_time) +
+                             indent + '{:^5s}'.format('B') + '{:^18.4e}'.format(b_time) +
                              '{:>5.2f}'.format(b_time/dtime) + '\n' +
-                             indent + '{:<5s}'.format('C') + '{:^18.4e}'.format(c_time) +
+                             indent + '{:^5s}'.format('C') + '{:^18.4e}'.format(c_time) +
                              '{:>5.2f}'.format(c_time/dtime) + '\n' +
-                             indent + '{:<5s}'.format('D') + '{:^18.4e}'.format(c_time) +
+                             indent + '{:^5s}'.format('D') + '{:^18.4e}'.format(c_time) +
                              '{:>5.2f}'.format(d_time/dtime) + '\n' +
                              indent + 28*'-' + '\n' +
-                             indent + '{:^5s}'.format('Total') + '{:^18.4e}'.format(dtime),
+                             indent + '{:^5s}'.format('Total') + '{:>14.4e}'.format(dtime),
                              2)
             # Print adaptive clustering mapping
             print('\n\n' + 4*' ' + 'Adaptive cluster mapping: ')

@@ -518,8 +518,7 @@ class CRVE:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Perform mode-specific initialization procedures
         if mode == 'full':
-            info.displayinfo('5', 'Computing CRVE cluster interaction tensors ' +
-                             '(full computation)...')
+            info.displayinfo('5', 'Computing CRVE cluster interaction tensors...')
             # Initialize cluster interaction tensors dictionary
             self.cit_X_mf = [{} for i in range(3)]
             for mat_phase_B in self._material_phases:
@@ -531,8 +530,6 @@ class CRVE:
                                                         self._comp_order,
                                                         self._n_voxels_dims)
         elif mode == 'adaptive':
-            info.displayinfo('5', 'Computing CRVE cluster interaction tensors ' +
-                             '(adaptive computation)...')
             init_time = time.time()
             # Build lists with old (preexistent) clusters and new (adapted) clusters for
             # each material phase. Also get list of clusters that no longer exist due to

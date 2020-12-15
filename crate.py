@@ -226,7 +226,7 @@ else:
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Write clustering VTK file
     if vtk_dict['is_VTK_output']:
-        info.displayinfo('5', 'Writing cluster VTK file...')
+        info.displayinfo('5', 'Writing clustering VTK file...')
         vtkoutput.writevtkclusterfile(vtk_dict, dirs_dict, rg_dict, clst_dict)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set phase ending time and display finishing phase information
