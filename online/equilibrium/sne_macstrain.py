@@ -142,9 +142,11 @@ def checkeqlbconvergence(comp_order, n_total_clusters, inc_mac_load_mf, n_presc_
     else:
         strain_norm_factor = 1
     if n_presc_mac_stress > 0 and not np.allclose(
-            inc_mac_load_mf['stress'][[presc_stress_idxs]],
-            np.zeros(inc_mac_load_mf['stress'][[presc_stress_idxs]].shape), atol=1e-10):
-        stress_norm_factor = np.linalg.norm(inc_mac_load_mf['stress'][[presc_stress_idxs]])
+            inc_mac_load_mf['stress'][tuple([presc_stress_idxs])],
+            np.zeros(inc_mac_load_mf['stress'][tuple([presc_stress_idxs])].shape),
+            atol=1e-10):
+        stress_norm_factor = \
+            np.linalg.norm(inc_mac_load_mf['stress'][tuple([presc_stress_idxs])])
     elif not np.allclose(inc_hom_stress_mf, np.zeros(inc_hom_stress_mf.shape), atol=1e-10):
         stress_norm_factor = np.linalg.norm(inc_hom_stress_mf)
     else:

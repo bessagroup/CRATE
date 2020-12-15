@@ -140,9 +140,11 @@ def checkeqlbconvergence2(comp_order, n_total_clusters, inc_mac_load_mf, n_presc
     else:
         strain_norm_factor = 1
     if n_presc_mac_stress > 0 and \
-            not np.allclose(inc_mac_load_mf['stress'][[presc_stress_idxs]],
-            np.zeros(inc_mac_load_mf['stress'][[presc_stress_idxs]].shape), atol=1e-10):
-        stress_norm_factor = np.linalg.norm(inc_mac_load_mf['stress'][[presc_stress_idxs]])
+            not np.allclose(inc_mac_load_mf['stress'][tuple([presc_stress_idxs])],
+            np.zeros(inc_mac_load_mf['stress'][tuple([presc_stress_idxs])].shape),
+            atol=1e-10):
+        stress_norm_factor = \
+            np.linalg.norm(inc_mac_load_mf['stress'][tuple([presc_stress_idxs])])
     elif not np.allclose(inc_hom_stress_mf, np.zeros(inc_hom_stress_mf.shape), atol=1e-10):
         stress_norm_factor = np.linalg.norm(inc_hom_stress_mf)
     else:
@@ -156,7 +158,6 @@ def checkeqlbconvergence2(comp_order, n_total_clusters, inc_mac_load_mf, n_presc
         error_A2 = np.linalg.norm(aux[presc_strain_idxs])/strain_norm_factor
     if n_presc_mac_stress > 0:
         error_A3 = np.linalg.norm(aux[presc_stress_idxs])/stress_norm_factor
-
     # Criterion convergence flag is True if all residual errors converged according to the
     # defined convergence tolerance
     if n_presc_mac_strain == 0:
