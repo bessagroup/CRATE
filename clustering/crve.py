@@ -29,7 +29,7 @@ import tensor.matrixoperations as mop
 # Cluster interaction tensors operations
 import clustering.citoperations as citop
 # Cluster-Reduced material phases
-from clustering.clusteringphase import SCRMP, HAACRMP
+from clustering.clusteringphase import SCRMP, GACRMP, HAACRMP
 #
 #                                                                                 CRVE class
 # ==========================================================================================
@@ -204,8 +204,13 @@ class CRVE:
                 # Get material phase adaptivity type
                 atype = self._adaptivity_type[mat_phase]['adapt_type']
                 # Instantiate adaptive cluster-reduced material phase
-                if atype == HAACRMP:
-                    # Instantiate hierarchical-agglomerative cluster-reduced material phase
+                if atype == GACRMP:
+                    # Instantiate generalized adaptive cluster-reduced material phase
+                    crmp = GACRMP(mat_phase, cluster_data_matrix, n_phase_clusters,
+                                  self._adaptivity_type[mat_phase])
+                elif atype == HAACRMP:
+                    # Instantiate hierarchical-agglomerative adaptive cluster-reduced
+                    # material phase
                     crmp = HAACRMP(mat_phase, cluster_data_matrix, n_phase_clusters,
                                    self._adaptivity_type[mat_phase])
                 else:
@@ -292,10 +297,12 @@ class CRVE:
                 continue
             # Get cluster-reduced material phase
             crmp = self._cluster_phases[mat_phase]
+            # Get adaptive clustering scheme
+            adaptive_clustering_scheme = self._adaptive_clustering_scheme[mat_phase]
             # Perform adaptive clustering
             adaptive_clustering_map[mat_phase] = \
                 crmp.perform_adaptive_clustering(phase_target_clusters[mat_phase],
-                                                 min_label)
+                                                 adaptive_clustering_scheme, min_label)
             # Update minimum cluster label
             min_label = crmp.max_label + 1
             # Update CRVE clustering
@@ -326,7 +333,8 @@ class CRVE:
         '''
         # Set available cluster-reduced material phase types
         available_crmp_types = {'0': SCRMP,
-                                '1': HAACRMP}
+                                '1': GACRMP,
+                                '2': HAACRMP}
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return available_crmp_types
