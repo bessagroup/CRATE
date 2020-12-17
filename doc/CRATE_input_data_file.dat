@@ -233,8 +233,8 @@
 #  -----------------------------------------------------------------------------------
 #   Type             Parameter [M/O]                   Parameter type
 #  -----------------------------------------------------------------------------------
-#   GACRMP           adapt_split_factor [O]            float (defaults to 0.05)
-#   HAACRMP          adapt_split_factor [O]            float (defaults to 0.05)
+#   GACRMP           adapt_split_factor [O]            float (defaults to 0.01)
+#   HAACRMP          adapt_split_factor [O]            float (defaults to 0.01)
 #  -----------------------------------------------------------------------------------
 #
 #
