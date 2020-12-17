@@ -15,6 +15,8 @@ import numpy as np
 from abc import ABC, abstractmethod
 # Date and time
 import time
+# Shallow and deep copy operations
+import copy
 # Unsupervised clustering algorithms
 import clustering.clusteringalgs as clstalgs
 from clustering.clusteringalgs import ClusterAnalysis
@@ -143,7 +145,7 @@ class SCRMP(CRMP):
     '''Static Cluster-Reduced Material Phase.
 
     This class provides all the required attributes and methods associated with the
-    generation of a Static Cluster-Reduced Material Phase (S-CRMP).
+    generation of a Static Cluster-Reduced Material Phase (SCRMP).
 
     Attributes
     ----------
@@ -235,6 +237,282 @@ class SCRMP(CRMP):
         '''
         return list(ClusterAnalysis.available_clustering_alg.keys())
 #
+#                                        Generalized Adaptive Cluster-Reduced Material Phase
+# ==========================================================================================
+class GACRMP(CRMP):
+    '''Generalized Adaptive Cluster-Reduced Material Phase.
+
+    This class provides all the required attributes and methods associated with the
+    generation and update of a Generalized Adaptive Cluster-Reduced Material Phase
+    (GACRMP).
+
+    Attributes
+    ----------
+    _clustering_type : str
+        Type of cluster-reduced material phase.
+    _adaptive_step : int
+        Counter of adaptive clustering steps, with 0 associated with the base clustering.
+    _adapt_split_factor : float
+        Adaptive clustering split factor. The adaptive clustering split factor must be
+        contained between 0 and 1 (included). The lower bound (0) enforces a single
+        split, while the upper bound (1) performs the maximum number splits of
+        each cluster (leading to single-voxel clusters).
+    max_label : int
+        Clustering maximum label.
+    cluster_labels : ndarray of shape (n_phase_voxels,)
+        Material phase cluster labels.
+    adaptive_time : float
+        Total amount of time (s) spent in the adaptive procedures.
+    '''
+    def __init__(self, mat_phase, cluster_data_matrix, n_clusters, adaptivity_type):
+        '''Generalized Adaptive Cluster-Reduced Representative Volume Element constructor.
+
+        Parameters
+        ----------
+        mat_phase : str
+            Material phase label.
+        cluster_data_matrix: ndarray of shape (n_phase_voxels, n_features_dims)
+            Data matrix containing the required clustering features' data to perform the
+            material phase cluster analyses.
+        n_clusters : int
+            Number of material phase clusters.
+        adaptivity_type : dict
+            Clustering adaptivity parameters.
+        '''
+        self._mat_phase = mat_phase
+        self._cluster_data_matrix = cluster_data_matrix
+        self._clustering_type = 'adaptive'
+        self._n_clusters = n_clusters
+        self._adaptivity_type = adaptivity_type
+        self._adaptive_step = 0
+        self.max_label = 0
+        self.cluster_labels = None
+        self.adaptive_time = 0
+        # Set clustering adaptivity parameters
+        self._set_adaptivity_type_parameters(self._adaptivity_type)
+    # --------------------------------------------------------------------------------------
+    def perform_base_clustering(self, base_clustering_scheme, min_label=0):
+        '''Perform GACRMP base clustering.
+
+        Parameters
+        ----------
+        base_clustering_scheme : ndarray of shape (n_clusterings, 3)
+            Prescribed clustering scheme to perform the material phase base cluster
+            analysis. Each row is associated with a unique clustering, characterized by a
+            clustering algorithm (col 1, int), a list of features (col 2, list of int) and a
+            list of the cluster data matrix' indexes (col 3, list of int).
+        min_label : int, default=0
+            Minimum cluster label.
+        '''
+        # Get number of material phase voxels
+        n_phase_voxels = self._cluster_data_matrix.shape[0]
+        # Get number of prescribed clusterings
+        n_clusterings = base_clustering_scheme.shape[0]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Initialize collection of clustering solutions
+        clustering_solutions = []
+        # Loop over prescribed clustering solutions
+        for i in range(n_clusterings):
+            # Get base clustering algorithm and check validity
+            clust_alg_id = str(base_clustering_scheme[i, 0])
+            if clust_alg_id not in self.get_valid_clust_algs():
+                raise RuntimeError('Invalid base clustering algorithm.')
+            # Get clustering features' column indexes
+            indexes = base_clustering_scheme[i, 2]
+            # Get base clustering data matrix
+            data_matrix = mop.getcondmatrix(self._cluster_data_matrix,
+                                            list(range(n_phase_voxels)), indexes)
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Perform cluster analysis
+            cluster_labels, _ = ClusterAnalysis().get_fitted_estimator(data_matrix,
+                                                                       clust_alg_id,
+                                                                       self._n_clusters)
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Add clustering to collection of clustering solutions
+            clustering_solutions.append(cluster_labels)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Get consensus clustering
+        if n_clusterings > 1:
+            raise RuntimeError('No clustering ensemble method has been implemented yet.')
+        else:
+            self.cluster_labels = cluster_labels
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Update cluster labels
+        self.cluster_labels, self.max_label = \
+            self._update_cluster_labels(self.cluster_labels, min_label)
+    # --------------------------------------------------------------------------------------
+    @staticmethod
+    def get_valid_clust_algs():
+        '''Get valid clustering algorithms to compute the CRMP.
+
+        Returns
+        ----------
+        clust_algs : list
+            Clustering algorithms identifiers (str).
+        '''
+        return list(ClusterAnalysis.available_clustering_alg.keys())
+    # --------------------------------------------------------------------------------------
+    def perform_adaptive_clustering(self, target_clusters, adaptive_clustering_scheme=None,
+                                    min_label=0):
+        '''Perform GACRMP adaptive clustering step.
+
+        Refine the provided target clusters by splitting them according to the prescribed
+        adaptive clustering scheme.
+
+        Parameters
+        ----------
+        target_clusters : list
+            List with the labels (int) of clusters to be adapted.
+        adaptive_clustering_scheme : ndarray of shape (n_clusterings, 3), default=None
+            Prescribed adaptive clustering scheme to perform the material phase adaptive
+            cluster analysis. Each row is associated with a unique clustering, characterized
+            by a clustering algorithm (col 1, int), a list of features (col 2, list of int)
+            and a list of the cluster data matrix' indexes (col 3, list of int).
+        min_label : int, default=0
+            Minimum cluster label.
+
+        Returns
+        -------
+        adaptive_clustering_map : dict
+            List of new cluster labels (item, list of int) resulting from the adaptivity of
+            each target cluster (key, str).
+        '''
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Check for duplicated target clusters
+        if len(target_clusters) != len(np.unique(target_clusters)):
+            raise RuntimeError('List of target clusters contains duplicated labels.')
+        # Check for unexistent target clusters
+        for target_cluster in target_clusters:
+            if target_cluster not in self.cluster_labels:
+                raise RuntimeError('Target cluster ' + str(target_cluster) + ' does not ' +
+                                   'exist in material phase ' + str(self._mat_phase))
+        # Check adaptive clustering scheme
+        if adaptive_clustering_scheme is None:
+            raise RuntimeError('An adaptive clustering scheme must be prescribed to ' +
+                               'perform the GACRMP clustering adaptivity.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        init_time = time.time()
+        # Increment adaptive clustering step counter
+        self._adaptive_step += 1
+        # Initialize adaptive clustering mapping dictionary
+        adaptive_clustering_map = {}
+        # Get material phase original clustering
+        original_cluster_labels = copy.deepcopy(self.cluster_labels)
+        # Initialize new cluster label
+        new_cluster_label = min_label
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Loop over target clusters
+        for i in range(len(target_clusters)):
+            # Get target cluster label
+            target_cluster = target_clusters[i]
+            # Get total number of voxels associated to target cluster. If target cluster is
+            # already single-voxeled, skip to the next target cluster. Otherwise compute the
+            # number of child clusters. If the target cluster number of voxels is lower or
+            # equal than the number of child clusters, skip to the next target cluster.
+            n_cluster_voxels = np.count_nonzero(original_cluster_labels == target_cluster)
+            if n_cluster_voxels == 1:
+                continue
+            else:
+                # Compute number of child clusters, enforcing at least two clusters
+                n_new_clusters = \
+                    max(2, int(np.round(self._adapt_split_factor*n_cluster_voxels)))
+                # Compare number of child clusters and number of target cluster number of
+                # voxels
+                if n_cluster_voxels <= n_new_clusters:
+                    continue
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Initialize target cluster mapping
+            adaptive_clustering_map[str(target_cluster)] = []
+            # Get target cluster indexes
+            target_cluster_idxs = \
+                list(*np.nonzero(original_cluster_labels == target_cluster))
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Get number of prescribed clusterings
+            n_clusterings = adaptive_clustering_scheme.shape[0]
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Initialize collection of clustering solutions
+            clustering_solutions = []
+            # Loop over prescribed clustering solutions
+            for i in range(n_clusterings):
+                # Get adaptive clustering algorithm and check validity
+                clust_alg_id = str(adaptive_clustering_scheme[i, 0])
+                if clust_alg_id not in self.get_valid_clust_algs():
+                    raise RuntimeError('Invalid adaptive clustering algorithm.')
+                # Get clustering features' column indexes
+                indexes = adaptive_clustering_scheme[i, 2]
+                # Get adaptive clustering data matrix
+                data_matrix = mop.getcondmatrix(self._cluster_data_matrix,
+                                                target_cluster_idxs, indexes)
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Perform cluster analysis
+                cluster_labels, _ = \
+                    ClusterAnalysis().get_fitted_estimator(data_matrix, clust_alg_id,
+                                                           n_new_clusters)
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Add clustering to collection of clustering solutions
+                clustering_solutions.append(cluster_labels)
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Get consensus clustering
+            if n_clusterings > 1:
+                raise RuntimeError('No clustering ensemble method has been implemented yet.')
+            else:
+                child_cluster_labels = cluster_labels
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Update cluster labels
+            child_cluster_labels, max_label = \
+                self._update_cluster_labels(child_cluster_labels, new_cluster_label)
+            # Update new cluster label
+            new_cluster_label = max_label + 1
+            # Add new clusters to target cluster mapping
+            adaptive_clustering_map[str(target_cluster)] += list(set(child_cluster_labels))
+            # Update material phase clustering
+            self.cluster_labels[target_cluster_idxs] = child_cluster_labels
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Update material phase maximum cluster label
+        self.max_label = max(self.cluster_labels)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Update total amount of time spent in the adaptive procedures
+        self.adaptive_time += time.time() - init_time
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return adaptive_clustering_map
+    # --------------------------------------------------------------------------------------
+    @staticmethod
+    def get_adaptivity_type_parameters():
+        '''Get ACRMP mandatory and optional adaptivity type parameters.
+
+        Besides returning the ACRMP mandatory and optional adaptivity type parameters, this
+        method establishes the default values for the optional parameters.
+
+        Returns
+        ----------
+        mandatory_parameters : dict
+            Mandatory adaptivity type parameters (str) and associated type (item, type).
+        optional_parameters : dict
+            Optional adaptivity type parameters (key, str) and associated default value
+            (item).
+        '''
+        # Set mandatory adaptivity type parameters
+        mandatory_parameters = {}
+        # Set optional adaptivity type parameters and associated default values
+        optional_parameters = {'adapt_split_factor': 0.01}
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return [mandatory_parameters, optional_parameters]
+    # --------------------------------------------------------------------------------------
+    def _set_adaptivity_type_parameters(self, adaptivity_type):
+        '''Set clustering adaptivity parameters.
+
+        Parameters
+        ----------
+        adaptivity_type : dict
+            Clustering adaptivity parameters.
+        '''
+        # Set mandatory adaptivity type parameters
+        pass
+        # Set optional adaptivity type parameters
+        self._adapt_split_factor = adaptivity_type['adapt_split_factor']
+#
 #                         Hierarchical Agglomerative Adaptive Cluster-Reduced Material Phase
 # ==========================================================================================
 class HAACRMP(CRMP):
@@ -242,7 +520,7 @@ class HAACRMP(CRMP):
 
     This class provides all the required attributes and methods associated with the
     generation and update of a Hierarchical Agglomerative Adaptive Cluster-Reduced Material
-    Phase (HAA-CRMP).
+    Phase (HAACRMP).
 
     Attributes
     ----------
@@ -340,7 +618,8 @@ class HAACRMP(CRMP):
         self.cluster_labels, self.max_label = \
             self._update_cluster_labels(self.cluster_labels, min_label)
     # --------------------------------------------------------------------------------------
-    def perform_adaptive_clustering(self, target_clusters, min_label=0):
+    def perform_adaptive_clustering(self, target_clusters, adaptive_clustering_scheme=None,
+                                    min_label=0):
         '''Perform HAACRMP adaptive clustering step.
 
         Refine the provided target clusters by splitting them according to the hierarchical
@@ -351,6 +630,11 @@ class HAACRMP(CRMP):
         ----------
         target_clusters : list
             List with the labels (int) of clusters to be adapted.
+        adaptive_clustering_scheme : ndarray of shape (n_clusterings, 3), default=None
+            Prescribed adaptive clustering scheme to perform the material phase adaptive
+            cluster analysis. Each row is associated with a unique clustering, characterized
+            by a clustering algorithm (col 1, int), a list of features (col 2, list of int)
+            and a list of the cluster data matrix' indexes (col 3, list of int).
         min_label : int, default=0
             Minimum cluster label.
 
@@ -382,7 +666,7 @@ class HAACRMP(CRMP):
         # Initialize adaptive tree node mapping dictionary (validation purposes only)
         adaptive_tree_node_map = {}
         # Get current hierarchical agglomerative clustering
-        cluster_labels = self.cluster_labels.flatten()
+        cluster_labels = copy.deepcopy(self.cluster_labels)
         # Initialize new cluster label
         new_cluster_label = min_label
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -473,19 +757,6 @@ class HAACRMP(CRMP):
         # Return
         return adaptive_clustering_map
     # --------------------------------------------------------------------------------------
-    def _set_adaptivity_type_parameters(self, adaptivity_type):
-        '''Set clustering adaptivity parameters.
-
-        Parameters
-        ----------
-        adaptivity_type : dict
-            Clustering adaptivity parameters.
-        '''
-        # Set mandatory adaptivity type parameters
-        pass
-        # Set optional adaptivity type parameters
-        self._adapt_split_factor = adaptivity_type['adapt_split_factor']
-    # --------------------------------------------------------------------------------------
     @staticmethod
     def add_to_tree_node_list(node_list, node):
         '''Add node to tree node list and sort it by descending order of linkage distance.
@@ -571,7 +842,20 @@ class HAACRMP(CRMP):
         # Set mandatory adaptivity type parameters
         mandatory_parameters = {}
         # Set optional adaptivity type parameters and associated default values
-        optional_parameters = {'adapt_split_factor': 0.001}
+        optional_parameters = {'adapt_split_factor': 0.01}
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return [mandatory_parameters, optional_parameters]
+    # --------------------------------------------------------------------------------------
+    def _set_adaptivity_type_parameters(self, adaptivity_type):
+        '''Set clustering adaptivity parameters.
+
+        Parameters
+        ----------
+        adaptivity_type : dict
+            Clustering adaptivity parameters.
+        '''
+        # Set mandatory adaptivity type parameters
+        pass
+        # Set optional adaptivity type parameters
+        self._adapt_split_factor = adaptivity_type['adapt_split_factor']
