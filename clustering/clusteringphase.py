@@ -145,7 +145,7 @@ class SCRMP(CRMP):
     '''Static Cluster-Reduced Material Phase.
 
     This class provides all the required attributes and methods associated with the
-    generation of a Static Cluster-Reduced Material Phase (S-CRMP).
+    generation of a Static Cluster-Reduced Material Phase (SCRMP).
 
     Attributes
     ----------
@@ -520,7 +520,7 @@ class HAACRMP(CRMP):
 
     This class provides all the required attributes and methods associated with the
     generation and update of a Hierarchical Agglomerative Adaptive Cluster-Reduced Material
-    Phase (HAA-CRMP).
+    Phase (HAACRMP).
 
     Attributes
     ----------
@@ -618,7 +618,8 @@ class HAACRMP(CRMP):
         self.cluster_labels, self.max_label = \
             self._update_cluster_labels(self.cluster_labels, min_label)
     # --------------------------------------------------------------------------------------
-    def perform_adaptive_clustering(self, target_clusters, min_label=0):
+    def perform_adaptive_clustering(self, target_clusters, adaptive_clustering_scheme=None,
+                                    min_label=0):
         '''Perform HAACRMP adaptive clustering step.
 
         Refine the provided target clusters by splitting them according to the hierarchical
@@ -629,6 +630,11 @@ class HAACRMP(CRMP):
         ----------
         target_clusters : list
             List with the labels (int) of clusters to be adapted.
+        adaptive_clustering_scheme : ndarray of shape (n_clusterings, 3), default=None
+            Prescribed adaptive clustering scheme to perform the material phase adaptive
+            cluster analysis. Each row is associated with a unique clustering, characterized
+            by a clustering algorithm (col 1, int), a list of features (col 2, list of int)
+            and a list of the cluster data matrix' indexes (col 3, list of int).
         min_label : int, default=0
             Minimum cluster label.
 
@@ -660,7 +666,7 @@ class HAACRMP(CRMP):
         # Initialize adaptive tree node mapping dictionary (validation purposes only)
         adaptive_tree_node_map = {}
         # Get current hierarchical agglomerative clustering
-        cluster_labels = self.cluster_labels.flatten()
+        cluster_labels = copy.deepcopy(self.cluster_labels)
         # Initialize new cluster label
         new_cluster_label = min_label
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -751,19 +757,6 @@ class HAACRMP(CRMP):
         # Return
         return adaptive_clustering_map
     # --------------------------------------------------------------------------------------
-    def _set_adaptivity_type_parameters(self, adaptivity_type):
-        '''Set clustering adaptivity parameters.
-
-        Parameters
-        ----------
-        adaptivity_type : dict
-            Clustering adaptivity parameters.
-        '''
-        # Set mandatory adaptivity type parameters
-        pass
-        # Set optional adaptivity type parameters
-        self._adapt_split_factor = adaptivity_type['adapt_split_factor']
-    # --------------------------------------------------------------------------------------
     @staticmethod
     def add_to_tree_node_list(node_list, node):
         '''Add node to tree node list and sort it by descending order of linkage distance.
@@ -853,3 +846,16 @@ class HAACRMP(CRMP):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return [mandatory_parameters, optional_parameters]
+    # --------------------------------------------------------------------------------------
+    def _set_adaptivity_type_parameters(self, adaptivity_type):
+        '''Set clustering adaptivity parameters.
+
+        Parameters
+        ----------
+        adaptivity_type : dict
+            Clustering adaptivity parameters.
+        '''
+        # Set mandatory adaptivity type parameters
+        pass
+        # Set optional adaptivity type parameters
+        self._adapt_split_factor = adaptivity_type['adapt_split_factor']
