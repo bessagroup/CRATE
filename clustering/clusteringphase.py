@@ -406,21 +406,26 @@ class GACRMP(CRMP):
             # Get target cluster label
             target_cluster = target_clusters[i]
             # Get total number of voxels associated to target cluster. If target cluster is
-            # already single-voxeled, skip to the next target cluster. Otherwise initialize
-            # target cluster mapping and get target cluster indexes
+            # already single-voxeled, skip to the next target cluster. Otherwise compute the
+            # number of child clusters. If the target cluster number of voxels is lower or
+            # equal than the number of child clusters, skip to the next target cluster.
             n_cluster_voxels = np.count_nonzero(original_cluster_labels == target_cluster)
             if n_cluster_voxels == 1:
                 continue
             else:
-                # Initialize target cluster mapping
-                adaptive_clustering_map[str(target_cluster)] = []
-                # Get target cluster indexes
-                target_cluster_idxs = \
-                    list(*np.nonzero(original_cluster_labels == target_cluster))
+                # Compute number of child clusters, enforcing at least two clusters
+                n_new_clusters = \
+                    max(2, int(np.round(self._adapt_split_factor*n_cluster_voxels)))
+                # Compare number of child clusters and number of target cluster number of
+                # voxels
+                if n_cluster_voxels <= n_new_clusters:
+                    continue
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Compute number of child clusters, enforcing at least two clusters
-            n_new_clusters = \
-                max(2, int(np.round(self._adapt_split_factor*n_cluster_voxels)))
+            # Initialize target cluster mapping
+            adaptive_clustering_map[str(target_cluster)] = []
+            # Get target cluster indexes
+            target_cluster_idxs = \
+                list(*np.nonzero(original_cluster_labels == target_cluster))
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Get number of prescribed clusterings
             n_clusterings = adaptive_clustering_scheme.shape[0]
