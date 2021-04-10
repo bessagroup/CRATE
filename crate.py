@@ -74,6 +74,8 @@ import ioput.readinputdata as rid
 import ioput.fileoperations as filop
 # Packager
 import ioput.packager as packager
+# Material interface
+import material.materialinterface as matint
 # Clustering quantities computation
 import clustering.clusteringdata as clstdata
 # Online stage
@@ -166,6 +168,18 @@ if not is_same_offstage:
     info.displayinfo('3', 'Compute cluster analysis data matrix',
                      phase_times[phase_times.shape[0]-1, 1] -
                      phase_times[phase_times.shape[0]-1, 0])
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Perform offline stage with Links (FEM first-order homogenization) but then consider the
+# material phases constitutive models implemented in CRATE (source conversion)
+if clst_dict['clustering_solution_method'] == 2:
+    # Convert material-related objects from Links source to CRATE source
+    new_material_phase_models, new_material_properties = \
+        matint.material_source_conversion(mat_dict['n_material_phases'],
+                                          mat_dict['material_phases_models'],
+                                          mat_dict['material_properties'])
+    # Update material phases dictionary
+    mat_dict['material_phases_models'] = new_material_phase_models
+    mat_dict['material_properties'] = new_material_properties
 #
 #               Offline stage: Generate Cluster-Reduced Representative Volume Element (CRVE)
 # ==========================================================================================
