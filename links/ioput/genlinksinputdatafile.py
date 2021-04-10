@@ -23,6 +23,8 @@ import ntpath
 import ioput.errors as errors
 # Manage files and directories
 import ioput.fileoperations as filop
+# Links related procedures
+import links.material.linksmaterialmodels as LinksMat
 #
 #                                                           Links input data file generation
 # ==========================================================================================
@@ -312,10 +314,11 @@ def writelinksfemesh(file_path, n_dim, n_material_phases, material_phases,
     # Close data file
     data_file.close()
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Append material phases Links constitutive models and associated properties
+    # Get procedure to write the elastic material properties of all material phases
+    _, _, writematproperties, _, _ = LinksMat.getlinksmodel('ELASTIC')
+    # Append material phases Links constitutive models and associated elastic properties
     for mat_phase in material_phases:
-        material_phases_models[mat_phase]['writematproperties'](
-            file_path, mat_phase, material_properties[mat_phase])
+        writematproperties(file_path, mat_phase, material_properties[mat_phase])
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Open data file to append Links finite element mesh
     data_file = open(file_path, 'a')
