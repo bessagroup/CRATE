@@ -303,6 +303,55 @@ def displayinfo(code, *args, **kwargs):
         template = '\n\n' + \
                    indent + 'Adaptive clustering step: {:3d}' + '\n' + \
                    indent + tilde_line[:-len(indent)]
+    elif code == '13':
+        mode = args[0]
+        if mode == 'init':
+            if args[1] == 0:
+                format_1 = '{:.4e}'
+                format_2 = '-'
+            else:
+                format_1 = '{:.4e}'
+                format_2 = '{:.4e}'
+            arguments = args[1:]
+            info = tuple(arguments)
+            template = colorama.Fore.YELLOW + \
+                       '\n\n' + indent + 'Self-consistent scheme iteration: {:3d}' + \
+                       '\n' + \
+                       indent + tilde_line[:-len(indent)] + '\n' + \
+                       indent + 'Young modulus (E): ' + format_1 + \
+                       '  (norm. change: ' + format_2 + ')' + ' \U0001F512' + \
+                       '\n' + \
+                       indent + 'Poisson ratio (\u03BD): ' + format_1 + \
+                       '  (norm. change: ' + format_2 + ')' + ' \U0001F512' + \
+                       '\n' + \
+                       indent + tilde_line[:-len(indent)] + '\n' + \
+                       colorama.Style.RESET_ALL
+        elif mode == 'end':
+            arguments = args[1:]
+            info = tuple(arguments)
+            template = indent + dashed_line[:-len(indent)] + \
+                       '\n\n' + indent + tilde_line[:-len(indent)] + '\n' + \
+                       indent + 'Iteration run time (s): {:>11.4e}'
+    elif code == '14':
+        mode = args[0]
+        if mode == 'max_scs_iter':
+            arguments = [args[1],]
+            lock_msg = 'Maximum number of self-consistent iterations ({}) reached' + '\n' +\
+                       indent + len('Locking reference properties: ')*' ' + \
+                       'without convergence. Performing one last self-consistent ' + '\n' +\
+                       indent + len('Locking reference properties: ')*' ' + \
+                       'scheme iteration with the last converged increment ' + \
+                       '\n' + indent + len('Locking reference properties: ')*' ' + \
+                       'reference material elastic properties.'
+        else:
+            lock_msg = 'Undefined increment cut message.'
+        info = tuple(arguments)
+        template = '\n\n' + colorama.Fore.RED + indent + asterisk_line[:-len(indent)] + \
+                   '\n' + \
+                   indent + 'Locking reference properties: ' + colorama.Style.RESET_ALL + \
+                   lock_msg + \
+                   '\n' + colorama.Fore.RED + indent + asterisk_line[:-len(indent)] + \
+                   colorama.Style.RESET_ALL + '\n'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display information
     ioutil.print2(template.format(*info, width=output_width))

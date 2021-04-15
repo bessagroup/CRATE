@@ -167,6 +167,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     n_total_clusters = sum([phase_n_clusters[mat_phase] for mat_phase in material_phases])
     # Initialize macroscale loading increment cut flag
     is_inc_cut = False
+    # Initialize flag that locks reference material elastic properties
+    is_lock_prop_ref = False
     # Check clustering adaptivity and perform required initializations
     is_crve_adaptivity = False
     if len(crve.adapt_material_phases) > 0:
@@ -362,7 +364,10 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize self-consistent scheme iteration counter
         scs_iter = 0
-        info.displayinfo('8', 'init', scs_iter, mat_prop_ref['E'], mat_prop_ref['v'])
+        if is_lock_prop_ref:
+            info.displayinfo('13', 'init', scs_iter, mat_prop_ref['E'], mat_prop_ref['v'])
+        else:
+            info.displayinfo('8', 'init', scs_iter, mat_prop_ref['E'], mat_prop_ref['v'])
         # Set self-consistent scheme iteration initial time
         scs_iter_init_time = time.time()
         # ----------------------------------------------------------------------------------
@@ -656,20 +661,27 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             # ------------------------------------------------------------------------------
             # Update reference material elastic properties through a given self-consistent
             # scheme
-            if self_consistent_scheme == 1:
-                scs_args = (self_consistent_scheme, problem_dict, inc_hom_strain_mf,
-                            inc_hom_stress_mf, mat_prop_ref)
-                if problem_type == 1:
-                    scs_args = scs_args + (inc_hom_stress_33,)
-            elif self_consistent_scheme == 2:
-                if is_farfield_formulation:
-                    scs_args = (self_consistent_scheme, problem_dict,
-                                inc_farfield_strain_mf, inc_hom_stress_mf, mat_prop_ref,
-                                eff_tangent_mf)
-                else:
+            if is_lock_prop_ref:
+                # Skip update of reference material elastic properties
+                E_ref = mat_prop_ref['E']
+                v_ref = mat_prop_ref['v']
+            else:
+                # Set self-consistent scheme arguments
+                if self_consistent_scheme == 1:
                     scs_args = (self_consistent_scheme, problem_dict, inc_hom_strain_mf,
-                                inc_hom_stress_mf, mat_prop_ref, eff_tangent_mf)
-            E_ref, v_ref = scs.scsupdate(*scs_args)
+                                inc_hom_stress_mf, mat_prop_ref)
+                    if problem_type == 1:
+                        scs_args = scs_args + (inc_hom_stress_33,)
+                elif self_consistent_scheme == 2:
+                    if is_farfield_formulation:
+                        scs_args = (self_consistent_scheme, problem_dict,
+                                    inc_farfield_strain_mf, inc_hom_stress_mf, mat_prop_ref,
+                                    eff_tangent_mf)
+                    else:
+                        scs_args = (self_consistent_scheme, problem_dict, inc_hom_strain_mf,
+                                    inc_hom_stress_mf, mat_prop_ref, eff_tangent_mf)
+                # Update reference material elastic properties
+                E_ref, v_ref = scs.scsupdate(*scs_args)
             # ------------------------------------------------------------------------------
             # Validation:
             if is_Validation[19]:
@@ -691,24 +703,29 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                 # Leave self-consistent scheme iterative loop (converged solution)
                 break
             elif scs_iter == scs_max_n_iterations:
+                # Display locking of reference material elastic properties
+                info.displayinfo('14', 'max_scs_iter', scs_max_n_iterations)
                 # If the maximum number of self-consistent scheme iterations is reached
                 # without convergence, reset reference material elastic properties to the
-                # last converged increment values and leave self-consistent iterative loop
+                # last converged increment values
                 mat_prop_ref = copy.deepcopy(mat_prop_ref_old)
-                # Raise macroscale increment cut procedure
-                is_inc_cut = True
-                # Display increment cut
-                info.displayinfo('11', 'max_scs_iter', scs_max_n_iterations)
-                # Leave Newton-Raphson equilibrium iterative loop
-                break
+                # Lock reference material elastic properties
+                is_lock_prop_ref = True
+                # Perform one last self-consistent scheme iteration with the last converged
+                # increment reference material elastic properties
+                info.displayinfo('13', 'init', 0, mat_prop_ref['E'], mat_prop_ref['v'])
             else:
                 # Update reference material elastic properties
                 mat_prop_ref['E'] = E_ref
                 mat_prop_ref['v'] = v_ref
                 # Increment self-consistent scheme iteration counter
                 scs_iter = scs_iter + 1
-                info.displayinfo('8', 'init', scs_iter, E_ref, norm_d_E_ref, v_ref,
-                                 norm_d_v_ref)
+                if is_lock_prop_ref:
+                    info.displayinfo('13', 'init', scs_iter, E_ref, norm_d_E_ref, v_ref,
+                                     norm_d_v_ref)
+                else:
+                    info.displayinfo('8', 'init', scs_iter, E_ref, norm_d_E_ref, v_ref,
+                                     norm_d_v_ref)
                 # Set self-consistent scheme iteration initial time
                 scs_iter_init_time = time.time()
                 # --------------------------------------------------------------------------
