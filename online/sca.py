@@ -649,11 +649,9 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             #
             #                                                         Self-consistent scheme
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # If raising a macroscale loading increment cut, reset reference material
-            # elastic properties to the last converged increment values and leave
-            # self-consistent iterative loop
+            # If raising a macroscale loading increment cut, leave self-consistent iterative
+            # loop
             if is_inc_cut:
-                mat_prop_ref = copy.deepcopy(mat_prop_ref_old)
                 break
             # ------------------------------------------------------------------------------
             # Update reference material elastic properties through a given self-consistent
@@ -743,6 +741,14 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         if is_inc_cut:
             # Reset macroscale loading increment cut flag
             is_inc_cut = False
+            # ------------------------------------------------------------------------------
+            # Reset reference material elastic properties to the last converged increment
+            # values and leave self-consistent iterative loop
+            mat_prop_ref = copy.deepcopy(mat_prop_ref_old)
+            # Compute the reference material elastic tangent (matricial form) and compliance
+            # tensor (matrix)
+            De_ref_mf, Se_ref_matrix = scs.refelastictanmod(problem_dict, mat_prop_ref)
+            # ------------------------------------------------------------------------------
             # Perform macroscale increment cut and setup new macroscale loading increment
             inc_mac_load_mf, n_presc_strain, presc_strain_idxs, n_presc_stress, \
                 presc_stress_idxs, is_last_inc = mac_load_path.increment_cut(
