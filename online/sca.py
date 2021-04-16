@@ -252,6 +252,9 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     # Compute the reference material elastic tangent (matricial form) and compliance tensor
     # (matrix)
     De_ref_mf, Se_ref_matrix = scs.refelastictanmod(problem_dict, mat_prop_ref)
+    # Initialize reference material elastic properties from first macroscale loading
+    # increment
+    mat_prop_ref_first = dict.fromkeys(mat_prop_ref.keys())
     # --------------------------------------------------------------------------------------
     # Validation:
     if is_Validation[4]:
@@ -682,6 +685,42 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                                     inc_hom_stress_mf, mat_prop_ref, eff_tangent_mf)
                 # Update reference material elastic properties
                 E_ref, v_ref = scs.scsupdate(*scs_args)
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Evaluate admissibility of self-consistent scheme iterative solution
+                if inc == 1:
+                    is_scs_admissible = True
+                else:
+                    is_scs_admissible = scs.check_scs_solution(E_ref, v_ref,
+                                                               mat_prop_ref_first)
+                # If self-consistent scheme iterative solution is not admissible, either
+                # accept the current solution (first self-consistent scheme iteration) or
+                # perform one last self-consistent scheme iteration with the last converged
+                # increment reference material elastic properties
+                if not is_scs_admissible:
+                    info.displayinfo('8', 'end', time.time() - scs_iter_init_time)
+                    if scs_iter == 0:
+                        # Display locking of reference material elastic properties
+                        info.displayinfo('14', 'locked_scs_solution')
+                        # Leave self-consistent scheme iterative loop (accepted solution)
+                        break
+                    else:
+                        # Display locking of reference material elastic properties
+                        info.displayinfo('14', 'inadmissible_scs_solution')
+                        # If inadmissible self-consistent scheme solution, reset reference
+                        # material elastic properties to the last converged increment values
+                        mat_prop_ref = copy.deepcopy(mat_prop_ref_old)
+                        # Lock reference material elastic properties
+                        is_lock_prop_ref = True
+                        # Perform one last self-consistent scheme iteration with the last
+                        # converged increment reference material elastic properties
+                        info.displayinfo('13', 'init', 0, mat_prop_ref['E'],
+                                         mat_prop_ref['v'])
+                        # Compute the reference material elastic tangent (matricial form)
+                        # and compliance tensor (matrix)
+                        De_ref_mf, Se_ref_matrix = scs.refelastictanmod(problem_dict,
+                                                                        mat_prop_ref)
+                        # Proceed to last self-consistent scheme iteration
+                        continue
             # ------------------------------------------------------------------------------
             # Validation:
             if is_Validation[19]:
@@ -700,6 +739,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             info.displayinfo('8', 'end', time.time() - scs_iter_init_time)
             # Control self-consistent scheme iteration loop flow
             if is_scs_converged:
+                # Reset flag that locks reference material elastic properties
+                is_lock_prop_ref = False
                 # Leave self-consistent scheme iterative loop (converged solution)
                 break
             elif scs_iter == scs_max_n_iterations:
@@ -720,12 +761,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                 mat_prop_ref['v'] = v_ref
                 # Increment self-consistent scheme iteration counter
                 scs_iter = scs_iter + 1
-                if is_lock_prop_ref:
-                    info.displayinfo('13', 'init', scs_iter, E_ref, norm_d_E_ref, v_ref,
-                                     norm_d_v_ref)
-                else:
-                    info.displayinfo('8', 'init', scs_iter, E_ref, norm_d_E_ref, v_ref,
-                                     norm_d_v_ref)
+                info.displayinfo('8', 'init', scs_iter, E_ref, norm_d_E_ref, v_ref,
+                                 norm_d_v_ref)
                 # Set self-consistent scheme iteration initial time
                 scs_iter_init_time = time.time()
                 # --------------------------------------------------------------------------
@@ -758,14 +795,14 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         if is_inc_cut:
             # Reset macroscale loading increment cut flag
             is_inc_cut = False
-            # ------------------------------------------------------------------------------
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Reset reference material elastic properties to the last converged increment
             # values and leave self-consistent iterative loop
             mat_prop_ref = copy.deepcopy(mat_prop_ref_old)
             # Compute the reference material elastic tangent (matricial form) and compliance
             # tensor (matrix)
             De_ref_mf, Se_ref_matrix = scs.refelastictanmod(problem_dict, mat_prop_ref)
-            # ------------------------------------------------------------------------------
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Perform macroscale increment cut and setup new macroscale loading increment
             inc_mac_load_mf, n_presc_strain, presc_strain_idxs, n_presc_stress, \
                 presc_stress_idxs, is_last_inc = mac_load_path.increment_cut(
@@ -838,6 +875,15 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         #
         #                                    Converged reference material elastic properties
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Save converged reference material elastic properties from first macroscale
+        # loading increment
+        if inc == 1:
+            mat_prop_ref_first = copy.deepcopy(mat_prop_ref)
+        # Compute the reference material elastic tangent (matricial form)
+        # and compliance tensor (matrix)
+        # Note: This operation is not strictly necessary but is left here as a safeguard for
+        #       potential future changes of the self-consistent scheme
+        De_ref_mf, Se_ref_matrix = scs.refelastictanmod(problem_dict, mat_prop_ref)
         # Update converged reference material elastic properties
         mat_prop_ref_old = copy.deepcopy(mat_prop_ref)
         #

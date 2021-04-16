@@ -331,26 +331,44 @@ def displayinfo(code, *args, **kwargs):
             info = tuple(arguments)
             template = indent + dashed_line[:-len(indent)] + \
                        '\n\n' + indent + tilde_line[:-len(indent)] + '\n' + \
-                       indent + 'Iteration run time (s): {:>11.4e}'
+                       indent + 'Iteration run time (s): {:>11.4e}' + ' \U0001F512'
     elif code == '14':
         mode = args[0]
         if mode == 'max_scs_iter':
             arguments = [args[1],]
             lock_msg = 'Maximum number of self-consistent iterations ({}) reached' + '\n' +\
                        indent + len('Locking reference properties: ')*' ' + \
-                       'without convergence. Performing one last self-consistent ' + '\n' +\
+                       'without convergence.' + '\n' + \
                        indent + len('Locking reference properties: ')*' ' + \
-                       'scheme iteration with the last converged increment ' + \
+                       'Performing one last self-consistent scheme iteration with ' + \
+                       '\n' + indent + len('Locking reference properties: ')*' ' + \
+                       'the last converged increment reference material elastic' + \
+                       '\n' + indent + len('Locking reference properties: ')*' ' + \
+                       'properties.'
+        elif mode == 'inadmissible_scs_solution':
+            arguments = []
+            lock_msg = 'Inadmissible self-consistent scheme iterative solution.' + '\n' +\
+                       indent + len('Locking reference properties: ')*' ' + \
+                       'Performing one last self-consistent scheme iteration with ' + \
+                       '\n' + indent + len('Locking reference properties: ')*' ' + \
+                       'the last converged increment reference material elastic ' + \
+                       '\n' + indent + len('Locking reference properties: ')*' ' + \
+                       'properties.'
+        elif mode == 'locked_scs_solution':
+            arguments = []
+            lock_msg = 'Inadmissible self-consistent scheme iterative solution.' + '\n' +\
+                       indent + len('Locking reference properties: ')*' ' + \
+                       'Accepting solution with the last converged increment ' + \
                        '\n' + indent + len('Locking reference properties: ')*' ' + \
                        'reference material elastic properties.'
         else:
-            lock_msg = 'Undefined increment cut message.'
+            lock_msg = 'Undefined locking message.'
         info = tuple(arguments)
-        template = '\n\n' + colorama.Fore.RED + indent + asterisk_line[:-len(indent)] + \
+        template = '\n\n' + colorama.Fore.YELLOW + indent + asterisk_line[:-len(indent)] + \
                    '\n' + \
                    indent + 'Locking reference properties: ' + colorama.Style.RESET_ALL + \
                    lock_msg + \
-                   '\n' + colorama.Fore.RED + indent + asterisk_line[:-len(indent)] + \
+                   '\n' + colorama.Fore.YELLOW + indent + asterisk_line[:-len(indent)] + \
                    colorama.Style.RESET_ALL + '\n'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display information

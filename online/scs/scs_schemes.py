@@ -238,3 +238,39 @@ def checkscsconvergence(E_ref, v_ref, mat_prop_ref, scs_conv_tol):
     is_scs_converged = (norm_d_E_ref < scs_conv_tol) and (norm_d_v_ref < scs_conv_tol)
     # Return
     return [is_scs_converged, norm_d_E_ref, norm_d_v_ref]
+
+#
+#                                                 Self-consistent scheme solution evaluation
+# ==========================================================================================
+# Check admissibility of self-consistent scheme iterative solution
+def check_scs_solution(E_ref, v_ref, mat_prop_ref_first):
+    '''Check admissibility of self-consistent scheme iterative solution.
+
+    Parameters
+    ----------
+    E_ref : float
+        Young modulus of isotropic elastic reference material.
+    v_ref : float
+        Poisson ratio of isotropic elastic reference material.
+    mat_prop_ref_first : dict
+        Isotropic elastic reference material properties converged in the first macroscale
+        loading increment.
+
+    Returns
+    -------
+    is_admissible : bool
+        True if self-consistent scheme iterative solution is admissible, False otherwise.
+    '''
+    # Set admissibility default value
+    is_admissible = False
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Evaluate admissibility conditions:
+    # Reference material Young modulus
+    condition_1 = (E_ref/mat_prop_ref_first['E']) >= 0.025
+    # Reference material Poisson ratio
+    condition_2 = v_ref >= 0 and (v_ref/0.5) <= 1
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set admissibility of self-consistent scheme iterative solution
+    is_admissible = condition_1 and condition_2
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    return is_admissible
