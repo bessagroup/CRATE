@@ -31,6 +31,8 @@ import tensor.matrixoperations as mop
 import clustering.citoperations as citop
 # Homogenized results output
 import ioput.homresoutput as hresout
+# Reference material output
+from ioput.refmatoutput import RefMatOutput
 # VTK output
 import ioput.vtkoutput as vtkoutput
 # Material interface
@@ -95,6 +97,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     input_file_name = dirs_dict['input_file_name']
     postprocess_dir = dirs_dict['postprocess_dir']
     hres_file_path = dirs_dict['hres_file_path']
+    refm_file_path = dirs_dict['refm_file_path']
     # Get problem data
     problem_type = problem_dict['problem_type']
     n_dim = problem_dict['n_dim']
@@ -211,6 +214,13 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         hom_results['hom_stress_33'] = hom_stress_33
     # Write increment homogenized results to associated output file (.hres)
     hresout.writehomresfile(hres_file_path, problem_type, 0, hom_results)
+    #
+    #                                            Reference material output file (.refm file)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Instantiate reference material output
+    ref_mat_output = RefMatOutput(refm_file_path)
+    # Write reference material output file header
+    ref_mat_output.init_ref_mat_file()
     #
     #                                                                 Initial state VTK file
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -661,6 +671,13 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             # loop
             if is_inc_cut:
                 break
+            # ------------------------------------------------------------------------------
+            # Build incremental farfield strain tensor (output purpose only)
+            inc_farfield_strain = mop.gettensorfrommf(inc_farfield_strain_mf, n_dim,
+                                                      comp_order)
+            # Output reference material associated quantities (.refm file)
+            ref_mat_output.write_ref_mat(problem_type, inc, scs_iter, mat_prop_ref,
+                                         inc_farfield_strain)
             # ------------------------------------------------------------------------------
             # Update reference material elastic properties through a given self-consistent
             # scheme

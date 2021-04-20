@@ -27,7 +27,7 @@ import ioput.errors as errors
 # Package directories and paths
 def packdirpaths(input_file_name, input_file_path, input_file_dir, problem_name,
                  problem_dir, offline_stage_dir, postprocess_dir, crve_file_path,
-                 hres_file_path):
+                 hres_file_path, refm_file_path):
     #
     # Object                      Meaning                                           Type
     # -------------------------------------------------------------------------------------
@@ -39,6 +39,7 @@ def packdirpaths(input_file_name, input_file_path, input_file_dir, problem_name,
     # offline_stage_dir           Directory of the offline stage associated files   str
     # crve_file_path              Path of the .crve file                            str
     # hres_file_path              Path of the .hres file                            str
+    # refm_file_path              Path of the .refm file                            str
     # postprocess_dir             Directory of the post-processing files            str
     #
     # Note: The meaning of the previous directories and files is detailed in the module
@@ -55,6 +56,7 @@ def packdirpaths(input_file_name, input_file_path, input_file_dir, problem_name,
     dirs_dict['offline_stage_dir'] = offline_stage_dir
     dirs_dict['crve_file_path'] = crve_file_path
     dirs_dict['hres_file_path'] = hres_file_path
+    dirs_dict['refm_file_path'] = refm_file_path
     dirs_dict['postprocess_dir'] = postprocess_dir
     # Return
     return dirs_dict
