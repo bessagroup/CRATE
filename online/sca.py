@@ -218,7 +218,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     #                                            Reference material output file (.refm file)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Instantiate reference material output
-    ref_mat_output = RefMatOutput(refm_file_path)
+    ref_mat_output = RefMatOutput(refm_file_path, self_consistent_scheme)
     # Write reference material output file header
     ref_mat_output.init_ref_mat_file()
     #
@@ -672,12 +672,11 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             if is_inc_cut:
                 break
             # ------------------------------------------------------------------------------
-            # Build incremental farfield strain tensor (output purpose only)
-            inc_farfield_strain = mop.gettensorfrommf(inc_farfield_strain_mf, n_dim,
-                                                      comp_order)
             # Output reference material associated quantities (.refm file)
-            ref_mat_output.write_ref_mat(problem_type, inc, scs_iter, mat_prop_ref,
-                                         inc_farfield_strain)
+            ref_mat_output.write_ref_mat(problem_type, n_dim, comp_order, inc, scs_iter,
+                                         mat_prop_ref, De_ref_mf, inc_farfield_strain_mf,
+                                         inc_mac_load_mf['strain'],
+                                         inc_hom_strain_mf, inc_hom_stress_mf)
             # ------------------------------------------------------------------------------
             # Update reference material elastic properties through a given self-consistent
             # scheme
