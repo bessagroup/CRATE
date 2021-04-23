@@ -159,24 +159,67 @@ def efftanmod(n_dim, comp_order, material_phases, phase_clusters, clusters_f, cl
     The matricial form storage is perform according to the provided strain/stress
     components order.
     '''
-    # Set second-order identity tensor
-    _, _, _, fosym, _, _, _ = top.getidoperators(n_dim)
-    FOSym_mf = mop.gettensormf(fosym, n_dim, comp_order)
     # Get total number of clusters
     n_total_clusters = len(clusters_f.keys())
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Compute cluster strain concentration tensors system of linear equations coefficient
-    # matrix (derivatives of clusters equilibrium residuals)
+    # Set fourth-order symmetric projection tensor (matricial form)
+    _, _, _, FOsym, _, _, _ = top.getidoperators(n_dim)
+    FOSym_mf = mop.gettensormf(FOsym, n_dim, comp_order)
+    # Compute equilibrium Jacobian matrix (luster strain concentration tensors system of
+    # linear equations coefficient matrix)
     csct_matrix = np.add(scipy.linalg.block_diag(*(n_total_clusters*[FOSym_mf,])),
                          global_cit_D_De_ref_mf)
-    # Compute cluster strain concentration tensors system of linear equations coefficient
-    # right-hand side
-    csct_rhs = numpy.matlib.repmat(FOSym_mf, n_total_clusters, 1)
-    # Initialize system solution matrix
-    csct_solution = np.zeros((n_total_clusters*len(comp_order), len(comp_order)))
-    # Solve cluster strain concentration tensors system of linear equations
-    for i in range(len(comp_order)):
-        csct_solution[:, i] = numpy.linalg.solve(csct_matrix, csct_rhs[:, i])
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Select clusters strain concentration tensors computation option:
+    #
+    # Option 1 - Solve linear system of equations
+    #
+    # Option 2 - Direct computation from inverse of equilibrium Jacobian matrix
+    #
+    option = 2
+    # OPTION 1 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    if option == 1:
+        # Compute cluster strain concentration tensors system of linear equations
+        # right-hand side
+        csct_rhs = numpy.matlib.repmat(FOSym_mf, n_total_clusters, 1)
+        # Initialize system solution matrix (containing clusters strain concentration
+        # tensors)
+        csct_solution = np.zeros((n_total_clusters*len(comp_order), len(comp_order)))
+        # Solve cluster strain concentration tensors system of linear equations
+        for i in range(len(comp_order)):
+            csct_solution[:, i] = numpy.linalg.solve(csct_matrix, csct_rhs[:, i])
+    # OPTION 2 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    elif option == 2:
+        # Compute inverse of equilibrium Jacobian matrix
+        csct_matrix_inv = numpy.linalg.inv(csct_matrix)
+        # Initialize system solution matrix (containing clusters strain concentration
+        # tensors)
+        csct_solution = np.zeros((n_total_clusters*len(comp_order), len(comp_order)))
+        # Initialize cluster indexes
+        i_init = 0
+        i_end = i_init + len(comp_order)
+        j_init = 0
+        j_end = j_init + len(comp_order)
+        # Loop over material phases
+        for mat_phase_I in material_phases:
+            # Loop over material phase clusters
+            for cluster_I in phase_clusters[mat_phase_I]:
+                # Loop over material phases
+                for mat_phase_J in material_phases:
+                    # Loop over material phase clusters
+                    for cluster_J in phase_clusters[mat_phase_J]:
+                        # Add cluster J contribution to cluster I strain concentration
+                        # tensor
+                        csct_solution[i_init:i_end, :] += \
+                            csct_matrix_inv[i_init:i_end, j_init:j_end]
+                        # Increment cluster index
+                        j_init = j_init + len(comp_order)
+                        j_end = j_init + len(comp_order)
+                # Increment cluster indexes
+                i_init = i_init + len(comp_order)
+                i_end = i_init + len(comp_order)
+                j_init = 0
+                j_end = j_init + len(comp_order)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Initialize effective tangent modulus
     eff_tangent_mf = np.zeros((len(comp_order), len(comp_order)))
