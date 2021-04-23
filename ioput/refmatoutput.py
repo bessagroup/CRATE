@@ -62,7 +62,10 @@ class RefMatOutput:
         write_list = ['{:>9s}'.format(self._header[0]) + '  ' +
                       '{:>13s}'.format(self._header[1]) +
                       ''.join([('{:>' + str(self._col_width) + 's}').format(x)
-                      for x in self._header[2:]])]
+                      for x in self._header[2:]]),
+                      '\n' + '{:>9d}'.format(0) + '  ' + '{:>13d}'.format(0) +
+                      ''.join([('{:>' + str(self._col_width) + '.8e}').format(0)
+                      for x in self._header[2:]]),]
         # Write reference material output file header
         refm_file.writelines(write_list)
         # Close homogenized results output file
@@ -117,10 +120,10 @@ class RefMatOutput:
         # Compute self-consistent scheme normalized cost function
         if self._self_consistent_scheme == 1:
             # Compute regression-based scheme cost function
-            scs_cost = \
-                np.linalg.norm(inc_hom_stress_mf - np.matmul(De_ref_mf, inc_hom_strain_mf))
+            scs_cost = np.linalg.norm(inc_hom_stress_mf -
+                                      np.matmul(De_ref_mf, inc_hom_strain_mf))**2
             # Normalize cost function
-            rel_scs_cost = scs_cost/np.linalg.norm(inc_hom_stress_mf)
+            rel_scs_cost = scs_cost/(np.linalg.norm(inc_hom_stress_mf)**2)
         else:
             # If self-consistent scheme cost function computation is not implemented, output
             # normalized cost function value as infinite
