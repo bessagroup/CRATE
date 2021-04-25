@@ -476,13 +476,6 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                     print(global_cit_D_De_ref_mf)
                 # --------------------------------------------------------------------------
                 #
-                #                                                  Effective tangent modulus
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Compute the material effective tangent modulus
-                eff_tangent_mf = hom.efftanmod(n_dim, comp_order, material_phases,
-                                               phase_clusters, clusters_f, clusters_D_mf,
-                                               global_cit_D_De_ref_mf)
-                #
                 #                          Incremental homogenized strain and stress tensors
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Compute homogenized strain and stress tensors (matricial form)
@@ -671,13 +664,22 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             # loop
             if is_inc_cut:
                 break
-            # ------------------------------------------------------------------------------
+            #
+            #                                                      Effective tangent modulus
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Compute the material effective tangent modulus
+            eff_tangent_mf = hom.efftanmod(n_dim, comp_order, material_phases,
+                                           phase_clusters, clusters_f, clusters_D_mf,
+                                           global_cit_D_De_ref_mf,
+                                           gbl_inc_strain_mf, inc_farfield_strain_mf)
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Output reference material associated quantities (.refm file)
             ref_mat_output.write_ref_mat(problem_type, n_dim, comp_order, inc, scs_iter,
                                          mat_prop_ref, De_ref_mf, inc_farfield_strain_mf,
                                          inc_mac_load_mf['strain'],
-                                         inc_hom_strain_mf, inc_hom_stress_mf)
-            # ------------------------------------------------------------------------------
+                                         inc_hom_strain_mf, inc_hom_stress_mf,
+                                         eff_tangent_mf)
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Update reference material elastic properties through a given self-consistent
             # scheme
             if is_lock_prop_ref:
