@@ -218,7 +218,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     #                                            Reference material output file (.refm file)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Instantiate reference material output
-    ref_mat_output = RefMatOutput(refm_file_path, self_consistent_scheme)
+    ref_mat_output = RefMatOutput(refm_file_path, self_consistent_scheme,
+                                  is_farfield_formulation)
     # Write reference material output file header
     ref_mat_output.init_ref_mat_file()
     #
@@ -670,15 +671,20 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             # Compute the material effective tangent modulus
             eff_tangent_mf = hom.efftanmod(n_dim, comp_order, material_phases,
                                            phase_clusters, clusters_f, clusters_D_mf,
-                                           global_cit_D_De_ref_mf,
-                                           gbl_inc_strain_mf, inc_farfield_strain_mf)
+                                           global_cit_D_De_ref_mf)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Output reference material associated quantities (.refm file)
-            ref_mat_output.write_ref_mat(problem_type, n_dim, comp_order, inc, scs_iter,
-                                         mat_prop_ref, De_ref_mf, inc_farfield_strain_mf,
-                                         inc_mac_load_mf['strain'],
-                                         inc_hom_strain_mf, inc_hom_stress_mf,
-                                         eff_tangent_mf)
+            if is_farfield_formulation:
+                ref_mat_output.write_ref_mat(problem_type, n_dim, comp_order, inc, scs_iter,
+                                             mat_prop_ref, De_ref_mf,
+                                             inc_hom_strain_mf, inc_hom_stress_mf,
+                                             eff_tangent_mf, inc_farfield_strain_mf,
+                                             inc_mac_load_mf['strain'])
+            else:
+                ref_mat_output.write_ref_mat(problem_type, n_dim, comp_order, inc, scs_iter,
+                                             mat_prop_ref, De_ref_mf,
+                                             inc_hom_strain_mf, inc_hom_stress_mf,
+                                             eff_tangent_mf)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Update reference material elastic properties through a given self-consistent
             # scheme

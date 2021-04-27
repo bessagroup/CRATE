@@ -28,7 +28,8 @@ class RefMatOutput:
         Output file column width.
     '''
     # --------------------------------------------------------------------------------------
-    def __init__(self, refm_file_path, self_consistent_scheme, ref_output_mode='converged'):
+    def __init__(self, refm_file_path, self_consistent_scheme, is_farfield_formulation=True,
+                 ref_output_mode='converged'):
         '''Reference material output constructor.
 
         Parameters
@@ -37,6 +38,8 @@ class RefMatOutput:
             Path of reference material output file.
         self_consistent_scheme : int
             Self-consistent scheme (1-Regression-based)
+        is_farfield_formulation : bool, default=True
+            True if SCA farfield formulation, False otherwise.
         ref_output_mode : {'iterative', 'converged'}, default='converged'
             Output mode: 'iterative' outputs the reference material quantities at every
             self-consistent scheme iteration; 'converged' outputs the reference material
@@ -44,6 +47,7 @@ class RefMatOutput:
         '''
         self._refm_file_path = refm_file_path
         self._self_consistent_scheme = self_consistent_scheme
+        self._is_farfield_formulation = is_farfield_formulation
         self._ref_output_mode = ref_output_mode
         # Set reference material output file header
         self._header = ['Increment', 'SCS Iteration',
@@ -72,8 +76,9 @@ class RefMatOutput:
         refm_file.close()
     # --------------------------------------------------------------------------------------
     def write_ref_mat(self, problem_type, n_dim, comp_order, inc, scs_iter, mat_prop_ref,
-                            De_ref_mf, inc_farfield_strain_mf, inc_mac_load_strain_mf,
-                            inc_hom_strain_mf, inc_hom_stress_mf, eff_tangent_mf=None):
+                            De_ref_mf, inc_hom_strain_mf, inc_hom_stress_mf,
+                            eff_tangent_mf=None, inc_farfield_strain_mf=None,
+                            inc_mac_load_strain_mf=None):
         '''Write reference material output file.
 
         Parameters
@@ -92,32 +97,46 @@ class RefMatOutput:
             Isotropic elastic reference material properties.
         De_ref_mf : ndarray
             Isotropic elastic reference material tangent modulus (matricial form).
-        inc_farfield_strain_mf : ndarray
-            Incremental farfield strain tensor (matricial form).
-        inc_mac_load_strain_mf : ndarray
-            Incremental prescribed macroscale loading strain tensor (matricial form).
         inc_hom_strain_mf : ndarray
             Incremental homogenized strain tensor (matricial form).
         inc_hom_stress_mf : ndarray
             Incremental homogenized stress tensor (matricial form).
-        eff_tangent_mf : ndarray
+        eff_tangent_mf : ndarray, default=None
             CRVE effective (homogenized) tangent modulus (matricial form).
+        inc_farfield_strain_mf : ndarray, default=None
+            Incremental farfield strain tensor (matricial form).
+        inc_mac_load_strain_mf : ndarray, default=None
+            Incremental prescribed macroscale loading strain tensor (matricial form).
         '''
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Check required parameters if SCA farfield formulation is being used
+        if self._is_farfield_formulation:
+            if inc_farfield_strain_mf is None or inc_mac_load_strain_mf is None:
+                raise RuntimeError('Required parameters for SCA farfield formulation '
+                                   'output are missing.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # When the problem type corresponds to a 2D analysis, build the 3D incremental
         # farfield strain tensor considering the appropriate out-of-plane strain component
         # (output purpose only).
-        inc_farfield_strain = mop.gettensorfrommf(inc_farfield_strain_mf, n_dim, comp_order)
-        out_inc_farfield_strain = np.zeros((3, 3))
-        if problem_type == 1:
-            out_inc_farfield_strain[0:2, 0:2] = inc_farfield_strain
+        if self._is_farfield_formulation:
+            inc_farfield_strain = mop.gettensorfrommf(inc_farfield_strain_mf, n_dim,
+                                                      comp_order)
+            out_inc_farfield_strain = np.zeros((3, 3))
+            if problem_type == 1:
+                out_inc_farfield_strain[0:2, 0:2] = inc_farfield_strain
+            else:
+                out_inc_farfield_strain[:, :] = inc_farfield_strain
         else:
-            out_inc_farfield_strain[:, :] = inc_farfield_strain
+            out_inc_farfield_strain = np.zeros((3, 3))
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute norm of difference between the incremental farfield strain tensor and
         # prescribed macroscale loading strain tensor and then normalize it to obtain
         # relative measure
-        diff_norm = np.linalg.norm(inc_farfield_strain_mf - inc_mac_load_strain_mf)
-        rel_diff_farfield = diff_norm/np.linalg.norm(inc_mac_load_strain_mf)
+        if self._is_farfield_formulation:
+            diff_norm = np.linalg.norm(inc_farfield_strain_mf - inc_mac_load_strain_mf)
+            rel_diff_farfield = diff_norm/np.linalg.norm(inc_mac_load_strain_mf)
+        else:
+            rel_diff_farfield = 0.0
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute self-consistent scheme normalized cost function
         if self._self_consistent_scheme == 1:
@@ -129,7 +148,7 @@ class RefMatOutput:
         else:
             # If self-consistent scheme cost function computation is not implemented, output
             # normalized cost function value as infinite
-            rel_scs_cost = np.inf
+            rel_scs_cost = 0.0
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute norm of difference between the effective tangent modulus and the reference
         # material tangent modulus and then normalize it to obtain a relative measure
@@ -137,7 +156,7 @@ class RefMatOutput:
             diff_norm = np.linalg.norm(De_ref_mf - eff_tangent_mf)
             rel_diff_tangent = diff_norm/np.linalg.norm(eff_tangent_mf)
         else:
-            rel_diff_tangent = np.inf
+            rel_diff_tangent = 0.0
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set reference material format structure
         inc_data = [inc, scs_iter,
