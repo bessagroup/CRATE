@@ -124,9 +124,8 @@ def homoutofplanecomp(problem_type, material_phases, phase_clusters, clusters_f,
 #
 #                                                             CRVE effective tangent modulus
 # ==========================================================================================
-# Compute effective tangent modulus
 def efftanmod(n_dim, comp_order, material_phases, phase_clusters, clusters_f, clusters_D_mf,
-              global_cit_D_De_ref_mf):
+              global_cit_D_De_ref_mf, gbl_inc_strain_mf=None, inc_farfield_strain_mf=None):
     '''Compute CRVE effective (homogenized) tangent modulus.
 
     Parameters
@@ -148,6 +147,12 @@ def efftanmod(n_dim, comp_order, material_phases, phase_clusters, clusters_f, cl
         each cluster interaction tensor (I)(J) is double contracted with the difference
         between the material cluster (J) consistent tangent modulus and the reference
         material elastic tangent modulus (assembled in matricial form).
+    gbl_inc_strain_mf : ndarray, default=None
+        Global cluster incremental strain vector (matricial form). Only required for
+        validation of cluster strain concentration tensors computation.
+    inc_farfield_strain_mf : ndarray, default=None
+        Incremental farfield strain tensor (matricial form). Only required for
+        validation of cluster strain concentration tensors computation.
 
     Returns
     -------
@@ -176,7 +181,7 @@ def efftanmod(n_dim, comp_order, material_phases, phase_clusters, clusters_f, cl
     #
     # Option 2 - Direct computation from inverse of equilibrium Jacobian matrix
     #
-    option = 2
+    option = 1
     # OPTION 1 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     if option == 1:
         # Compute cluster strain concentration tensors system of linear equations
@@ -184,17 +189,17 @@ def efftanmod(n_dim, comp_order, material_phases, phase_clusters, clusters_f, cl
         csct_rhs = numpy.matlib.repmat(FOSym_mf, n_total_clusters, 1)
         # Initialize system solution matrix (containing clusters strain concentration
         # tensors)
-        csct_solution = np.zeros((n_total_clusters*len(comp_order), len(comp_order)))
+        gbl_csct_mf = np.zeros((n_total_clusters*len(comp_order), len(comp_order)))
         # Solve cluster strain concentration tensors system of linear equations
         for i in range(len(comp_order)):
-            csct_solution[:, i] = numpy.linalg.solve(csct_matrix, csct_rhs[:, i])
+            gbl_csct_mf[:, i] = numpy.linalg.solve(csct_matrix, csct_rhs[:, i])
     # OPTION 2 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     elif option == 2:
         # Compute inverse of equilibrium Jacobian matrix
         csct_matrix_inv = numpy.linalg.inv(csct_matrix)
         # Initialize system solution matrix (containing clusters strain concentration
         # tensors)
-        csct_solution = np.zeros((n_total_clusters*len(comp_order), len(comp_order)))
+        gbl_csct_mf = np.zeros((n_total_clusters*len(comp_order), len(comp_order)))
         # Initialize cluster indexes
         i_init = 0
         i_end = i_init + len(comp_order)
@@ -210,7 +215,7 @@ def efftanmod(n_dim, comp_order, material_phases, phase_clusters, clusters_f, cl
                     for cluster_J in phase_clusters[mat_phase_J]:
                         # Add cluster J contribution to cluster I strain concentration
                         # tensor
-                        csct_solution[i_init:i_end, :] += \
+                        gbl_csct_mf[i_init:i_end, :] += \
                             csct_matrix_inv[i_init:i_end, j_init:j_end]
                         # Increment cluster index
                         j_init = j_init + len(comp_order)
@@ -220,6 +225,13 @@ def efftanmod(n_dim, comp_order, material_phases, phase_clusters, clusters_f, cl
                 i_end = i_init + len(comp_order)
                 j_init = 0
                 j_end = j_init + len(comp_order)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Validate cluster strain concentration tensors computation
+    is_csct_validation = False
+    if is_csct_validation:
+        validate_csct(comp_order, material_phases, phase_clusters, gbl_inc_strain_mf,
+                      inc_farfield_strain_mf, gbl_csct_mf)
+
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Initialize effective tangent modulus
     eff_tangent_mf = np.zeros((len(comp_order), len(comp_order)))
@@ -235,7 +247,7 @@ def efftanmod(n_dim, comp_order, material_phases, phase_clusters, clusters_f, cl
             # Get material cluster consistent tangent (matricial form)
             cluster_D_mf = clusters_D_mf[str(cluster)]
             # Get material cluster strain concentration tensor
-            cluster_sct_mf = csct_solution[i_init:i_end, :]
+            cluster_sct_mf = gbl_csct_mf[i_init:i_end, :]
             # Add material cluster contribution to effective tangent modulus
             eff_tangent_mf = eff_tangent_mf + \
                              cluster_f*np.matmul(cluster_D_mf, cluster_sct_mf)
@@ -244,3 +256,53 @@ def efftanmod(n_dim, comp_order, material_phases, phase_clusters, clusters_f, cl
             i_end = i_init + len(comp_order)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return eff_tangent_mf
+#
+#                                             Cluster strain concentration tensor validation
+# ==========================================================================================
+def validate_csct(comp_order, material_phases, phase_clusters, gbl_inc_strain_mf,
+                  inc_farfield_strain_mf, gbl_csct_mf):
+    '''Validate clusters strain concentration tensors computation.
+
+    Parameters
+    ----------
+    comp_order : list
+        Strain/Stress components (str) order.
+    material_phases : list
+        RVE material phases labels (str).
+    phase_clusters : dict
+        Clusters labels (item, list of int) associated to each material phase (key, str).
+    gbl_inc_strain_mf : ndarray
+        Global vector of cluster incremental strain tensors (matricial form).
+    inc_farfield_strain_mf : ndarray
+        Incremental farfield strain tensor (matricial form).
+    gbl_csct_mf : narray
+        Global matrix of cluster strain concentration tensors (matricial form).
+
+    Notes
+    -----
+    This validation procedure requires the incremental homogenized strain tensor instead of
+    the incremental farfield strain tensor in the SCA formulation without the farfield
+    strain tensor.
+    '''
+    # Initialize cluster index
+    i_init = 0
+    i_end = i_init + len(comp_order)
+    # Loop over material phases
+    for mat_phase in material_phases:
+        # Loop over material phase clusters
+        for cluster in phase_clusters[mat_phase]:
+            # Get material cluster strain concentration tensor
+            cluster_sct_mf = gbl_csct_mf[i_init:i_end, :]
+            # Compute cluster incremental strain from strain concentration tensor
+            inc_strain_mf = np.matmul(cluster_sct_mf, inc_farfield_strain_mf)
+            # Compare cluster incremental strain computed from strain concentration tensor
+            # with actual cluster incremental strain. Raise error if equality comparison
+            # fails
+            if not np.allclose(inc_strain_mf, gbl_inc_strain_mf[i_init:i_end],
+                               rtol=1e-05, atol=1e-08):
+                pass
+            else:
+                pass
+            # Increment cluster index
+            i_init = i_init + len(comp_order)
+            i_end = i_init + len(comp_order)
