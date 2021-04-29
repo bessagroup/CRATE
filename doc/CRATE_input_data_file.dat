@@ -182,7 +182,7 @@
 #                base_clustering [n_clusterings, ensemble_method_id]
 #                clustering_algorithm_ID feature_ID [feature_ID]
 #                clustering_algorithm_ID feature_ID [feature_ID]
-#                adaptive_clustering [n_clusterings ensemble_method_id]
+#                adaptive_clustering [n_clusterings, ensemble_method_id]
 #                clustering_algorithm_ID feature_ID [feature_ID]
 #                clustering_algorithm_ID feature_ID [feature_ID]
 #                adaptivity_parameters adaptivity_criterion_ID adaptivity_type_ID
@@ -212,7 +212,8 @@
 #
 # adaptivity_criterion_ID:   1 - Non-spatial
 #
-# adaptivity_type_ID:        1 - Hierarchical Agglomerative Adaptive (HAACRMP)
+# adaptivity_type_ID:        1 - Generalize Adaptive (GACRMP)
+#                            2 - Hierarchical Agglomerative Adaptive (HAACRMP)
 #
 # parameter:                 string (adaptivity criterion parameter, adaptivity type
 #                                    parameter or adaptivity control feature)
@@ -234,6 +235,7 @@
 #   Type             Parameter [M/O]                   Parameter type
 #  -----------------------------------------------------------------------------------
 #   GACRMP           adapt_split_factor [O]            float (defaults to 0.01)
+#                    threshold_n_clusters [O]          integer (defaults to 1M)
 #   HAACRMP          adapt_split_factor [O]            float (defaults to 0.01)
 #  -----------------------------------------------------------------------------------
 #

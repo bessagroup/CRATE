@@ -110,6 +110,15 @@ class ACRMP(CRMP):
         '''
         pass
     # --------------------------------------------------------------------------------------
+    @abstractmethod
+    def _check_adaptivity_lock(self):
+        '''Check ACRMP adaptivity locking conditions.
+
+        Check conditions that may deactivate the adaptive procedures in the ACRMP. Once the
+        ACRMP adaptivity is locked, it is treated as a SCRMP for the remainder of the
+        problem numerical solution.
+        '''
+    # --------------------------------------------------------------------------------------
     @staticmethod
     @abstractmethod
     def get_adaptivity_type_parameters():
@@ -239,7 +248,7 @@ class SCRMP(CRMP):
 #
 #                                        Generalized Adaptive Cluster-Reduced Material Phase
 # ==========================================================================================
-class GACRMP(CRMP):
+class GACRMP(ACRMP):
     '''Generalized Adaptive Cluster-Reduced Material Phase.
 
     This class provides all the required attributes and methods associated with the
@@ -263,6 +272,8 @@ class GACRMP(CRMP):
         Material phase cluster labels.
     adaptive_time : float
         Total amount of time (s) spent in the adaptive procedures.
+    adaptivity_lock : bool
+        True if the adaptive procedures are deactivated, False otherwise.
     '''
     def __init__(self, mat_phase, cluster_data_matrix, n_clusters, adaptivity_type):
         '''Generalized Adaptive Cluster-Reduced Representative Volume Element constructor.
@@ -288,6 +299,7 @@ class GACRMP(CRMP):
         self.max_label = 0
         self.cluster_labels = None
         self.adaptive_time = 0
+        self.adaptivity_lock = False
         # Set clustering adaptivity parameters
         self._set_adaptivity_type_parameters(self._adaptivity_type)
     # --------------------------------------------------------------------------------------
@@ -468,14 +480,30 @@ class GACRMP(CRMP):
             # Update material phase clustering
             self.cluster_labels[target_cluster_idxs] = child_cluster_labels
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Update number of material phase clusters
+        self._n_clusters = len(set(self.cluster_labels))
         # Update material phase maximum cluster label
         self.max_label = max(self.cluster_labels)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Update total amount of time spent in the adaptive procedures
         self.adaptive_time += time.time() - init_time
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Check adaptivity threshold conditions
+        self._check_adaptivity_lock()
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return adaptive_clustering_map
+    # --------------------------------------------------------------------------------------
+    def _check_adaptivity_lock(self):
+        '''Check ACRMP adaptivity locking conditions.
+
+        Check conditions that may deactivate the adaptive procedures in the ACRMP. Once the
+        ACRMP adaptivity is locked, it is treated as a SCRMP for the remainder of the
+        problem numerical solution.
+        '''
+        # Check if the number of clusters threshold as been surpassed
+        if self._n_clusters > self._threshold_n_clusters:
+            self.adaptivity_lock = True
     # --------------------------------------------------------------------------------------
     @staticmethod
     def get_adaptivity_type_parameters():
@@ -495,7 +523,8 @@ class GACRMP(CRMP):
         # Set mandatory adaptivity type parameters
         mandatory_parameters = {}
         # Set optional adaptivity type parameters and associated default values
-        optional_parameters = {'adapt_split_factor': 0.01}
+        optional_parameters = {'adapt_split_factor': 0.01,
+                               'threshold_n_clusters': 10**6}
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return [mandatory_parameters, optional_parameters]
@@ -512,6 +541,7 @@ class GACRMP(CRMP):
         pass
         # Set optional adaptivity type parameters
         self._adapt_split_factor = adaptivity_type['adapt_split_factor']
+        self._threshold_n_clusters = adaptivity_type['threshold_n_clusters']
 #
 #                         Hierarchical Agglomerative Adaptive Cluster-Reduced Material Phase
 # ==========================================================================================

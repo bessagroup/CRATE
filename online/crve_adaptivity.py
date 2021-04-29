@@ -479,6 +479,10 @@ class AdaptivityManager:
                             copy.deepcopy(cluster_dict[target_cluster])
                     # Remove target cluster item
                     cluster_dict.pop(target_cluster)
+            # Check material phase adaptivity lock status. If material phase adaptivity is
+            # deactivated, then set the associated clustering adaptivity frequency to zero
+            if crve._cluster_phases[mat_phase].adaptivity_lock:
+                self._clust_adapt_freq[mat_phase] = 0
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Output execution data
         if verbose:
