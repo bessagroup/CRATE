@@ -321,6 +321,28 @@ class CRVE:
         # Return
         return adaptive_clustering_map
     # --------------------------------------------------------------------------------------
+    def get_adaptivity_output(self):
+        '''Get required data for clustering adaptivity output file.
+
+        Returns
+        -------
+        adaptivity_output : dict
+            For each adaptive material phase (key, str), stores a list (item) containing the
+            current number of clusters and adaptive step.
+        '''
+        # Initialize adaptivity output
+        adaptivity_output = {}
+        # Loop over adaptive material phases
+        for mat_phase in self.adapt_material_phases:
+            # Get adaptive cluster reduced material phase
+            acrmp = self._cluster_phases[mat_phase]
+            # Get number of clusters and adaptive step
+            adaptivity_output[mat_phase] = \
+                [acrmp.get_n_clusters(), acrmp.get_adaptive_step()]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return adaptivity_output
+    # --------------------------------------------------------------------------------------
     @staticmethod
     def get_crmp_types():
         '''Get available cluster-reduced material phases types.

@@ -51,7 +51,7 @@ import online.scs.scs_schemes as scs
 import online.equilibrium.sne_farfield as eqff
 import online.equilibrium.sne_macstrain as eqms
 # CRVE adaptivity
-from online.crve_adaptivity import AdaptivityManager
+from online.crve_adaptivity import AdaptivityManager, ClusteringAdaptivityOutput
 
 
 
@@ -98,6 +98,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     postprocess_dir = dirs_dict['postprocess_dir']
     hres_file_path = dirs_dict['hres_file_path']
     refm_file_path = dirs_dict['refm_file_path']
+    adapt_file_path = dirs_dict['adapt_file_path']
     # Get problem data
     problem_type = problem_dict['problem_type']
     n_dim = problem_dict['n_dim']
@@ -186,6 +187,11 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                                                crve.adaptivity_control_feature,
                                                crve.adaptivity_criterion,
                                                clust_adapt_freq)
+        # Instantiate clustering adaptivity output
+        adapt_output = ClusteringAdaptivityOutput(adapt_file_path,
+                                                  crve.adapt_material_phases)
+        # Write clustering adaptivity output file header
+        adapt_output.write_adapt_file(0, crve, mode='init')
     # --------------------------------------------------------------------------------------
     # Validation:
     if is_Validation[1]:
@@ -896,7 +902,6 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         if problem_type == 1:
             hom_stress_33_old = hom_stress_33
         #
-        #
         #                                    Converged reference material elastic properties
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Save converged reference material elastic properties from first macroscale
@@ -910,6 +915,12 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         De_ref_mf, Se_ref_matrix = scs.refelastictanmod(problem_dict, mat_prop_ref)
         # Update converged reference material elastic properties
         mat_prop_ref_old = copy.deepcopy(mat_prop_ref)
+        #
+        #                                         Clustering adaptivity output (.adapt file)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Update clustering adaptivity output file with converged increment data
+        if is_crve_adaptivity:
+            adapt_output.write_adapt_file(inc, crve, mode='increment')
         #
         #                                                Incremental macroscale loading flow
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

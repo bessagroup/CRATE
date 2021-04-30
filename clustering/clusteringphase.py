@@ -542,6 +542,27 @@ class GACRMP(ACRMP):
         # Set optional adaptivity type parameters
         self._adapt_split_factor = adaptivity_type['adapt_split_factor']
         self._threshold_n_clusters = adaptivity_type['threshold_n_clusters']
+    # --------------------------------------------------------------------------------------
+    def get_n_clusters(self):
+        '''Get current number of clusters.
+
+        Returns
+        -------
+        n_clusters : int
+            Number of material phase clusters.
+        '''
+        return self._n_clusters
+    # --------------------------------------------------------------------------------------
+    def get_adaptive_step(self):
+        '''Get current adaptive clustering step.
+
+        Returns
+        -------
+        adaptive_step : int
+            Counter of adaptive clustering steps, with 0 associated with the base
+            clustering.
+        '''
+        return self._adaptive_step
 #
 #                         Hierarchical Agglomerative Adaptive Cluster-Reduced Material Phase
 # ==========================================================================================

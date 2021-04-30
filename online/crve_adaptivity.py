@@ -24,7 +24,7 @@ import ioput.info as info
 # I/O utilities
 import ioput.ioutilities as ioutil
 #
-#                                                            CRVE Online Adaptivity Criteria
+#                                                         CRVE clustering adaptivity manager
 # ==========================================================================================
 class AdaptivityManager:
     '''Online CRVE clustering adaptivity manager.
@@ -602,3 +602,77 @@ class AdaptivityManager:
                 activated_adapt_phases.append(mat_phase)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return activated_adapt_phases
+# ------------------------------------------------------------------------------------------
+#
+#                                               CRVE clustering adaptivity output file class
+# ==========================================================================================
+class ClusteringAdaptivityOutput:
+    '''Clustering adaptivity output.
+
+    Attributes
+    ----------
+    _header : list
+        List containing the header of each column (str).
+    _col_width : int
+        Output file column width.
+    '''
+    # --------------------------------------------------------------------------------------
+    def __init__(self, adapt_file_path, adapt_material_phases):
+        '''Clustering adaptivity output constructor.
+
+        Parameters
+        ----------
+        adapt_file_path : str
+            Path of clustering adaptivity output file.
+        adapt_material_phases : list
+            RVE adaptive material phases labels (str).
+        '''
+        self._adapt_file_path = adapt_file_path
+        self._adapt_material_phases = adapt_material_phases
+        # Set clustering adaptivity output file header
+        self._header = ['Increment', ]
+        for mat_phase in self._adapt_material_phases:
+            self._header += ['n_clusters_' + mat_phase, 'adapt_step_' + mat_phase]
+        # Set column width
+        self._col_width = max(16, max([len(x) for x in self._header]) + 2)
+    # --------------------------------------------------------------------------------------
+    def write_adapt_file(self, inc, crve, mode='increment'):
+        '''Write clustering adaptivity output file.
+
+        Parameters
+        ----------
+        inc : int
+            Macroscale loading increment.
+        crve : CRVE
+            Cluster-Reduced Representative Volume Element.
+        mode : {'init', 'increment'}, default='increment'
+            Clustering adaptivity output mode. Mode 'init' writes the file header and the
+            increment 0 (base clustering), while 'increment' appends the clustering
+            adaptivity data associated to macroscale loading increment.
+        '''
+        write_list = []
+        if mode == 'init':
+            # Open clustering adaptivity output file (write mode)
+            adapt_file = open(self._adapt_file_path, 'w')
+            # Set clustering adaptivity output file header format structure
+            write_list += ['{:>9s}'.format(self._header[0]) +
+                           ''.join([('{:>' + str(self._col_width) + 's}').format(x)
+                           for x in self._header[1:]]),]
+        elif mode == 'increment':
+            # Open clustering adaptivity output file (append mode)
+            adapt_file = open(self._adapt_file_path, 'a')
+        else:
+            raise RuntimeError('Unknown clustering adaptivity output mode.')
+        # Build adaptive material phases output list
+        adaptivity_output = crve.get_adaptivity_output()
+        output_list = []
+        for mat_phase in self._adapt_material_phases:
+            output_list += adaptivity_output[mat_phase]
+        # Set clustering adaptivity output file increment format structure
+        write_list += ['\n' + '{:>9d}'.format(inc) +
+                       ''.join([('{:>' + str(self._col_width) + 'd}').format(x)
+                       for x in output_list]),]
+        # Write clustering adaptivity output file
+        adapt_file.writelines(write_list)
+        # Close clustering adaptivity output file
+        adapt_file.close()
