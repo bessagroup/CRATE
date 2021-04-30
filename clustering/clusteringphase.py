@@ -111,6 +111,18 @@ class ACRMP(CRMP):
         pass
     # --------------------------------------------------------------------------------------
     @abstractmethod
+    def get_adaptive_output(self):
+        '''Get adaptivity metrics for clustering adaptivity output.
+
+        Returns
+        -------
+        adaptivity_output : list
+            List containing the adaptivity metrics associated to the clustering adaptivity
+            output file.
+        '''
+        pass
+    # --------------------------------------------------------------------------------------
+    @abstractmethod
     def _check_adaptivity_lock(self):
         '''Check ACRMP adaptivity locking conditions.
 
@@ -118,6 +130,7 @@ class ACRMP(CRMP):
         ACRMP adaptivity is locked, it is treated as a SCRMP for the remainder of the
         problem numerical solution.
         '''
+        pass
     # --------------------------------------------------------------------------------------
     @staticmethod
     @abstractmethod
@@ -543,26 +556,19 @@ class GACRMP(ACRMP):
         self._adapt_split_factor = adaptivity_type['adapt_split_factor']
         self._threshold_n_clusters = adaptivity_type['threshold_n_clusters']
     # --------------------------------------------------------------------------------------
-    def get_n_clusters(self):
-        '''Get current number of clusters.
+    def get_adaptive_output(self):
+        '''Get adaptivity metrics for clustering adaptivity output.
 
         Returns
         -------
-        n_clusters : int
-            Number of material phase clusters.
+        adaptivity_output : list
+            List containing the adaptivity metrics associated to the clustering adaptivity
+            output file.
         '''
-        return self._n_clusters
-    # --------------------------------------------------------------------------------------
-    def get_adaptive_step(self):
-        '''Get current adaptive clustering step.
-
-        Returns
-        -------
-        adaptive_step : int
-            Counter of adaptive clustering steps, with 0 associated with the base
-            clustering.
-        '''
-        return self._adaptive_step
+        # Build adaptivity output
+        adaptivity_output = [self._n_clusters, self._adaptive_step, self.adaptive_time]
+        # Return
+        return adaptivity_output
 #
 #                         Hierarchical Agglomerative Adaptive Cluster-Reduced Material Phase
 # ==========================================================================================

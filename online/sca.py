@@ -191,7 +191,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         adapt_output = ClusteringAdaptivityOutput(adapt_file_path,
                                                   crve.adapt_material_phases)
         # Write clustering adaptivity output file header
-        adapt_output.write_adapt_file(0, crve, mode='init')
+        adapt_output.write_adapt_file(0, adaptivity_manager, crve, mode='init')
     # --------------------------------------------------------------------------------------
     # Validation:
     if is_Validation[1]:
@@ -920,7 +920,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Update clustering adaptivity output file with converged increment data
         if is_crve_adaptivity:
-            adapt_output.write_adapt_file(inc, crve, mode='increment')
+            adapt_output.write_adapt_file(inc, adaptivity_manager, crve, mode='increment')
         #
         #                                                Incremental macroscale loading flow
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

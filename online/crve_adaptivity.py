@@ -27,7 +27,7 @@ import ioput.ioutilities as ioutil
 #                                                         CRVE clustering adaptivity manager
 # ==========================================================================================
 class AdaptivityManager:
-    '''Online CRVE clustering adaptivity manager.
+    '''CRVE clustering adaptivity manager.
 
     Attributes
     ----------
@@ -40,6 +40,8 @@ class AdaptivityManager:
     _target_groups_ids : dict
         Target adaptive cluster groups (item, list of int), whose clusters are to adapted,
         for each adaptive material phase (key, str).
+    adaptive_time : float
+        Total amount of time (s) spent in clustering adaptivity procedures.
     '''
     def __init__(self, comp_order, adapt_material_phases, adaptivity_control_feature,
                  adaptivity_criterion, clust_adapt_freq):
@@ -90,6 +92,7 @@ class AdaptivityManager:
         self._target_groups_ids = {mat_phase: None for mat_phase in
                                    adapt_material_phases}
         self._clust_adapt_freq = clust_adapt_freq
+        self.adaptive_time = 0
     # --------------------------------------------------------------------------------------
     @staticmethod
     def get_adaptivity_criterions():
@@ -156,6 +159,7 @@ class AdaptivityManager:
         target_clusters : list
             List containing the labels (int) of clusters to be adapted.
         '''
+        init_time = time.time()
         # Output execution data
         if verbose:
             info.displayinfo('5', 'Clustering adaptivity criterion:')
@@ -252,6 +256,9 @@ class AdaptivityManager:
             is_trigger = True
         else:
             is_trigger = False
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Update total amount of time spent in clustering adaptivity procedures
+        self.adaptive_time += time.time() - init_time
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Output execution data
         if verbose:
@@ -497,8 +504,11 @@ class AdaptivityManager:
         if verbose:
             d_time = time.time() - ref_time
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Update total amount of time spent in the A-CRVE adaptive procedures
+        # Update total amount of time spent in the ACRVE adaptive procedures
         dtime = time.time() - init_time
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Update total amount of time spent in clustering adaptivity procedures
+        self.adaptive_time += time.time() - init_time
         #
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Output execution data
@@ -534,13 +544,13 @@ class AdaptivityManager:
                              indent + '           Time(s)        %' + '\n' +
                              indent + 28*'-' + '\n' +
                              indent + '{:^5s}'.format('A') + '{:^18.4e}'.format(a_time) +
-                             '{:>5.2f}'.format(a_time/dtime) + '\n' +
+                             '{:>5.2f}'.format((a_time/dtime)*100) + '\n' +
                              indent + '{:^5s}'.format('B') + '{:^18.4e}'.format(b_time) +
-                             '{:>5.2f}'.format(b_time/dtime) + '\n' +
+                             '{:>5.2f}'.format((b_time/dtime)*100) + '\n' +
                              indent + '{:^5s}'.format('C') + '{:^18.4e}'.format(c_time) +
-                             '{:>5.2f}'.format(c_time/dtime) + '\n' +
+                             '{:>5.2f}'.format((c_time/dtime)*100) + '\n' +
                              indent + '{:^5s}'.format('D') + '{:^18.4e}'.format(c_time) +
-                             '{:>5.2f}'.format(d_time/dtime) + '\n' +
+                             '{:>5.2f}'.format((d_time/dtime)*100) + '\n' +
                              indent + 28*'-' + '\n' +
                              indent + '{:^5s}'.format('Total') + '{:>14.4e}'.format(dtime),
                              2)
@@ -630,19 +640,22 @@ class ClusteringAdaptivityOutput:
         self._adapt_file_path = adapt_file_path
         self._adapt_material_phases = adapt_material_phases
         # Set clustering adaptivity output file header
-        self._header = ['Increment', ]
+        self._header = ['Increment', 'total_adapt_time', 'crve_adapt_time']
         for mat_phase in self._adapt_material_phases:
-            self._header += ['n_clusters_' + mat_phase, 'adapt_step_' + mat_phase]
+            self._header += ['n_clusters_' + mat_phase, 'adapt_step_' + mat_phase,
+                             'adapt_time_' + mat_phase]
         # Set column width
         self._col_width = max(16, max([len(x) for x in self._header]) + 2)
     # --------------------------------------------------------------------------------------
-    def write_adapt_file(self, inc, crve, mode='increment'):
+    def write_adapt_file(self, inc, adaptivity_manager, crve, mode='increment'):
         '''Write clustering adaptivity output file.
 
         Parameters
         ----------
         inc : int
             Macroscale loading increment.
+        adaptivity_manager : AdaptivityManager
+            CRVE clustering adaptivity manager.
         crve : CRVE
             Cluster-Reduced Representative Volume Element.
         mode : {'init', 'increment'}, default='increment'
@@ -670,8 +683,15 @@ class ClusteringAdaptivityOutput:
             output_list += adaptivity_output[mat_phase]
         # Set clustering adaptivity output file increment format structure
         write_list += ['\n' + '{:>9d}'.format(inc) +
-                       ''.join([('{:>' + str(self._col_width) + 'd}').format(x)
-                       for x in output_list]),]
+                       ('{:>' + str(self._col_width) + '.8e}').format(
+                           adaptivity_manager.adaptive_time) +
+                       ('{:>' + str(self._col_width) + '.8e}').format(
+                           crve.adaptive_time) +
+                       ''.join([''.join([('{:>' + str(self._col_width) + 'd}').format(x)
+                                for x in output_list[3*i:3*i+2]] +
+                               [('{:>' + str(self._col_width) + '.8e}').format(
+                               output_list[3*i+2])])
+                       for i in range(len(self._adapt_material_phases))])]
         # Write clustering adaptivity output file
         adapt_file.writelines(write_list)
         # Close clustering adaptivity output file

@@ -328,7 +328,7 @@ class CRVE:
         -------
         adaptivity_output : dict
             For each adaptive material phase (key, str), stores a list (item) containing the
-            current number of clusters and adaptive step.
+            adaptivity metrics associated to the clustering adaptivity output file.
         '''
         # Initialize adaptivity output
         adaptivity_output = {}
@@ -336,9 +336,9 @@ class CRVE:
         for mat_phase in self.adapt_material_phases:
             # Get adaptive cluster reduced material phase
             acrmp = self._cluster_phases[mat_phase]
-            # Get number of clusters and adaptive step
+            # Get material phase adaptivity metrics
             adaptivity_output[mat_phase] = \
-                [acrmp.get_n_clusters(), acrmp.get_adaptive_step()]
+                [*acrmp.get_adaptive_output()]
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return adaptivity_output
