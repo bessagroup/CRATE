@@ -329,6 +329,10 @@ def openvtkcollectionfile(input_file_name, postprocess_dir):
                    'byte_order=' + enclose(byte_order) + '>' + '\n')
     # Open VTK collection element
     vtk_file.write(indent + '<' + 'Collection' + '>' + '\n')
+    # Close VTK collection element
+    vtk_file.write(indent + '<' + '/Collection' + '>' + '\n')
+    # Close VTK collection file
+    vtk_file.write('<' + '/VTKFile' + '>' + '\n')
     # Close VTK collection file
     vtk_file.close()
 # ------------------------------------------------------------------------------------------
@@ -338,11 +342,16 @@ def writevtkcollectionfile(input_file_name, postprocess_dir, time_step,
     # Set VTK collection file name and path
     vtk_pvd_file_name = input_file_name + '.pvd'
     vtk_pvd_file_path = postprocess_dir + vtk_pvd_file_name
-    # Open VTK collection file (append mode)
-    vtk_file = open(vtk_pvd_file_path, 'a')
+    # Open VTK collection file and read lines (read)
+    file_lines = open(vtk_pvd_file_path, 'r').readlines()
     # Add time step VTK file
-    vtk_file.write(2*indent + '<' + 'DataSet' + ' ' + 'timestep=' + enclose(time_step) + \
-                   ' ' + 'file=' + enclose(time_step_file_path) + '/>' + '\n')
+    file_lines.insert(-2, 2*indent + '<' + 'DataSet' + ' ' + 'timestep=' +
+                      enclose(time_step) + ' ' + 'file=' + enclose(time_step_file_path) +
+                      '/>' + '\n')
+    # Open VTK collection file (write mode)
+    vtk_file = open(vtk_pvd_file_path, 'w')
+    # Write updated VTK collection file
+    vtk_file.writelines(file_lines)
     # Close VTK collection file
     vtk_file.close()
 # ------------------------------------------------------------------------------------------
