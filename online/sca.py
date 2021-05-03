@@ -140,7 +140,9 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     #                                                                        Initializations
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set online stage initial time
-    os_init_time = time.time()
+    ons_init_time = time.time()
+    # Initialize online stage post-processing time
+    ons_post_process_time = 0.0
     # Set far-field formulation flag
     is_farfield_formulation = True
     # Initialize homogenized strain and stress tensors
@@ -187,11 +189,16 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                                                crve.adaptivity_control_feature,
                                                crve.adaptivity_criterion,
                                                clust_adapt_freq)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set post-processing procedure initial time
+        procedure_init_time = time.time()
         # Instantiate clustering adaptivity output
         adapt_output = ClusteringAdaptivityOutput(adapt_file_path,
                                                   crve.adapt_material_phases)
         # Write clustering adaptivity output file header
         adapt_output.write_adapt_file(0, adaptivity_manager, crve, mode='init')
+        # Increment post-processing time
+        ons_post_process_time += time.time() - procedure_init_time
     # --------------------------------------------------------------------------------------
     # Validation:
     if is_Validation[1]:
@@ -218,20 +225,31 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     hom_results['hom_stress'] = hom_stress
     if problem_type == 1:
         hom_results['hom_stress_33'] = hom_stress_33
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set post-processing procedure initial time
+    procedure_init_time = time.time()
     # Write increment homogenized results to associated output file (.hres)
     hresout.writehomresfile(hres_file_path, problem_type, 0, hom_results)
+    # Increment post-processing time
+    ons_post_process_time += time.time() - procedure_init_time
     #
     #                                            Reference material output file (.refm file)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set post-processing procedure initial time
+    procedure_init_time = time.time()
     # Instantiate reference material output
     ref_mat_output = RefMatOutput(refm_file_path, self_consistent_scheme,
                                   is_farfield_formulation)
     # Write reference material output file header
     ref_mat_output.init_ref_mat_file()
+    # Increment post-processing time
+    ons_post_process_time += time.time() - procedure_init_time
     #
     #                                                                 Initial state VTK file
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     if is_VTK_output:
+        # Set post-processing procedure initial time
+        procedure_init_time = time.time()
         # Open VTK collection file
         vtkoutput.openvtkcollectionfile(input_file_name, postprocess_dir)
         # Set increment VTK output arguments
@@ -242,6 +260,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             vtk_args.append(adaptivity_manager)
         # Write VTK file associated to the initial state
         vtkoutput.writevtkmacincrement(*vtk_args)
+        # Increment post-processing time
+        ons_post_process_time += time.time() - procedure_init_time
     #
     #                                                      Material clusters elastic tangent
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -676,14 +696,14 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             # loop
             if is_inc_cut:
                 break
-            #
-            #                                                      Effective tangent modulus
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Compute the material effective tangent modulus
             eff_tangent_mf = hom.efftanmod(n_dim, comp_order, material_phases,
                                            phase_clusters, clusters_f, clusters_D_mf,
                                            global_cit_D_De_ref_mf)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Set post-processing procedure initial time
+            procedure_init_time = time.time()
             # Output reference material associated quantities (.refm file)
             if is_farfield_formulation:
                 ref_mat_output.write_ref_mat(problem_type, n_dim, comp_order, inc, scs_iter,
@@ -696,6 +716,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                                              mat_prop_ref, De_ref_mf,
                                              inc_hom_strain_mf, inc_hom_stress_mf,
                                              eff_tangent_mf)
+            # Increment post-processing time
+            ons_post_process_time += time.time() - procedure_init_time
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Update reference material elastic properties through a given self-consistent
             # scheme
@@ -886,13 +908,20 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         hom_results['hom_stress'] = hom_stress
         if problem_type == 1:
             hom_results['hom_stress_33'] = hom_stress_33
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set post-processing procedure initial time
+        procedure_init_time = time.time()
         # Write increment homogenized results to associated output file (.hres)
         hresout.writehomresfile(hres_file_path, problem_type, inc, hom_results)
+        # Increment post-processing time
+        ons_post_process_time += time.time() - procedure_init_time
         #
         #                                                                 Increment VTK file
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Write VTK file associated to the macroscale loading increment
         if is_VTK_output and inc % vtk_inc_div == 0:
+            # Set post-processing procedure initial time
+            procedure_init_time = time.time()
             # Set increment VTK output arguments
             vtk_args = [vtk_dict, dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict,
                         inc, clusters_state]
@@ -901,6 +930,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                 vtk_args.append(adaptivity_manager)
             # Write VTK file associated to the converged increment
             vtkoutput.writevtkmacincrement(*vtk_args)
+            # Increment post-processing time
+            ons_post_process_time += time.time() - procedure_init_time
         #
         #                                                          Converged state variables
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -931,7 +962,12 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Update clustering adaptivity output file with converged increment data
         if is_crve_adaptivity:
+            # Set post-processing procedure initial time
+            procedure_init_time = time.time()
+            # Update clustering adaptivity output file
             adapt_output.write_adapt_file(inc, adaptivity_manager, crve, mode='increment')
+            # Increment post-processing time
+            ons_post_process_time += time.time() - procedure_init_time
         #
         #                                                Incremental macroscale loading flow
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -940,19 +976,23 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         # Display converged increment data
         if problem_type == 1:
             info.displayinfo('7', 'end', problem_type, hom_strain, hom_stress,
-                             time.time() - inc_init_time, time.time() - os_init_time,
+                             time.time() - inc_init_time, time.time() - ons_init_time,
                              hom_stress_33)
         else:
             info.displayinfo('7', 'end', problem_type, hom_strain, hom_stress,
-                             time.time() - inc_init_time, time.time() - os_init_time)
+                             time.time() - inc_init_time, time.time() - ons_init_time)
         # Return if last macroscale loading increment, otherwise setup new macroscale
         # loading increment
         if is_last_inc:
+            # Get total online stage time
+            ons_total_time = time.time() - ons_init_time
+            # Get total online stage effective time
+            os_effective_time = ons_total_time - ons_post_process_time
             # Output clustering adaptivity summary
             if is_crve_adaptivity:
-                info.displayinfo('15', adaptivity_manager, crve, time.time() - os_init_time)
+                info.displayinfo('15', adaptivity_manager, crve, os_effective_time)
             # Finish online stage
-            return
+            return [ons_total_time, os_effective_time]
         else:
             # Setup new macroscale loading increment
             inc_mac_load_mf, n_presc_strain, presc_strain_idxs, n_presc_stress, \

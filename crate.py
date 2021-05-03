@@ -157,6 +157,9 @@ info.displayinfo('3', 'Read input data file',
 #
 #                                        Offline stage: Compute cluster analysis data matrix
 # ==========================================================================================
+# Initialize offline stage post-processing time
+ofs_post_process_time = 0.0
+# Compute clustering analysis data matrix
 if not is_same_offstage:
     # Display starting phase information and set phase initial time
     info.displayinfo('2', 'Compute cluster analysis data matrix')
@@ -240,11 +243,16 @@ else:
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Write clustering VTK file
     if vtk_dict['is_VTK_output']:
+        # Set post-processing procedure initial time
+        procedure_init_time = time.time()
+        # Write clustering VTK file
         info.displayinfo('5', 'Writing clustering VTK file...')
         vtkoutput.writevtkclusterfile(vtk_dict, dirs_dict, rg_dict, clst_dict)
+        # Increment post-processing time
+        ofs_post_process_time += time.time() - procedure_init_time
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set phase ending time and display finishing phase information
-    phase_end_time = time.time()
+    phase_end_time = time.time() - ofs_post_process_time
     phase_names.append('Perform RVE cluster analysis')
     phase_times = np.append(phase_times, [[phase_init_time, phase_end_time]], axis=0)
     info.displayinfo('3', 'Perform RVE cluster analysis',
@@ -277,15 +285,27 @@ info.displayinfo('2', 'Solve reduced microscale equilibrium problem')
 phase_init_time = time.time()
 # Solve the reduced microscale equilibrium problem through solution of the clusterwise
 # discretized Lippmann-Schwinger system of equilibrium equations
-sca.sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs_dict,
-    algpar_dict, vtk_dict, crve)
+ons_total_time, ons_effective_time = sca.sca(dirs_dict, problem_dict, mat_dict, rg_dict,
+                                             clst_dict, macload_dict, scs_dict, algpar_dict,
+                                             vtk_dict, crve)
 # Set phase ending time and display finishing phase information
-phase_end_time = time.time()
+phase_end_time = phase_init_time + ons_effective_time
 phase_names.append('Solve reduced microscale equilibrium problem')
 phase_times = np.append(phase_times, [[phase_init_time, phase_end_time]], axis=0)
 info.displayinfo('3', 'Solve reduced microscale equilibrium problem',
                  phase_times[phase_times.shape[0] - 1, 1] -
                  phase_times[phase_times.shape[0] - 1, 0])
+#
+#                                                Post-processing operations accumulated time
+# ==========================================================================================
+# Compute online stage post-processing time
+ons_post_process_time = ons_total_time - ons_effective_time
+# Set (fictitious) phase initial time
+phase_init_time = phase_times[-1, 1]
+# Set (fictitious) phase ending time
+phase_end_time = phase_init_time + ofs_post_process_time + ons_post_process_time
+phase_names.append('Accumulated post-processing operations')
+phase_times = np.append(phase_times, [[phase_init_time, phase_end_time]], axis=0)
 #
 #                                                                                End program
 # ==========================================================================================
