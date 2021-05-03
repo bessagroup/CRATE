@@ -937,6 +937,9 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         # Return if last macroscale loading increment, otherwise setup new macroscale
         # loading increment
         if is_last_inc:
+            # Output clustering adaptivity summary
+            if is_crve_adaptivity:
+                info.displayinfo('15', adaptivity_manager, crve, time.time() - os_init_time)
             # Close VTK collection file
             if is_VTK_output:
                 vtkoutput.closevtkcollectionfile(input_file_name, postprocess_dir)

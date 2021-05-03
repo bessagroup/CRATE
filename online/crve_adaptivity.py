@@ -40,6 +40,9 @@ class AdaptivityManager:
     _target_groups_ids : dict
         Target adaptive cluster groups (item, list of int), whose clusters are to adapted,
         for each adaptive material phase (key, str).
+    adaptive_evaluation_time : float
+        Total amount of time (s) spent in selecting target clusters for clustering
+        adaptivity.
     adaptive_time : float
         Total amount of time (s) spent in clustering adaptivity procedures.
     '''
@@ -92,6 +95,7 @@ class AdaptivityManager:
         self._target_groups_ids = {mat_phase: None for mat_phase in
                                    adapt_material_phases}
         self._clust_adapt_freq = clust_adapt_freq
+        self.adaptive_evaluation_time = 0
         self.adaptive_time = 0
     # --------------------------------------------------------------------------------------
     @staticmethod
@@ -257,6 +261,9 @@ class AdaptivityManager:
         else:
             is_trigger = False
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Update total amount of time spent in selecting target clusters for clustering
+        # adaptivity
+        self.adaptive_evaluation_time += time.time() - init_time
         # Update total amount of time spent in clustering adaptivity procedures
         self.adaptive_time += time.time() - init_time
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -640,7 +647,8 @@ class ClusteringAdaptivityOutput:
         self._adapt_file_path = adapt_file_path
         self._adapt_material_phases = adapt_material_phases
         # Set clustering adaptivity output file header
-        self._header = ['Increment', 'total_adapt_time', 'crve_adapt_time']
+        self._header = ['Increment', 'total_adapt_time', 'eval_adapt_time',
+                        'clust_adapt_time', 'cit_adapt_time']
         for mat_phase in self._adapt_material_phases:
             self._header += ['n_clusters_' + mat_phase, 'adapt_step_' + mat_phase,
                              'adapt_time_' + mat_phase]
@@ -686,7 +694,11 @@ class ClusteringAdaptivityOutput:
                        ('{:>' + str(self._col_width) + '.8e}').format(
                            adaptivity_manager.adaptive_time) +
                        ('{:>' + str(self._col_width) + '.8e}').format(
-                           crve.adaptive_time) +
+                            adaptivity_manager.adaptive_evaluation_time) +
+                       ('{:>' + str(self._col_width) + '.8e}').format(
+                           crve.adaptive_clustering_time) +
+                       ('{:>' + str(self._col_width) + '.8e}').format(
+                           crve.adaptive_cit_time) +
                        ''.join([''.join([('{:>' + str(self._col_width) + 'd}').format(x)
                                 for x in output_list[3*i:3*i+2]] +
                                [('{:>' + str(self._col_width) + '.8e}').format(

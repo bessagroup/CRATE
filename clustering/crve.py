@@ -72,8 +72,11 @@ class CRVE:
         (item, ndarray) associated to each pair of clusters (key, str).
     adapt_material_phases : list
         RVE adaptive material phases labels (str).
-    adaptive_time : float
-        Total amount of time (s) spent in clustering adaptivity procedures.
+    adaptive_clustering_time : float
+        Total amount of time (s) spent in clustering adaptivity.
+    adaptive_cit_time : float
+        Total amount of time (s) spent in clustering adaptivity cluster interaction tensors
+        computation procedures.
     '''
     # --------------------------------------------------------------------------------------
     def __init__(self, rve_dims, regular_grid, material_phases, comp_order,
@@ -144,7 +147,8 @@ class CRVE:
         self.cit_X_mf = None
         self.adaptivity_control_feature = adaptivity_control_feature
         self.adaptivity_criterion = adaptivity_criterion
-        self.adaptive_time = 0
+        self.adaptive_clustering_time = 0
+        self.adaptive_cit_time = 0
         # Get number of dimensions
         self._n_dim = len(rve_dims)
         # Get number of voxels on each dimension and total number of voxels
@@ -315,8 +319,8 @@ class CRVE:
         # Compute material clusters' volume fraction
         self._set_clusters_vf()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Update total amount of time spent in clustering adaptivity procedures
-        self.adaptive_time += time.time() - init_time
+        # Update total amount of time spent in clustering adaptivity
+        self.adaptive_clustering_time += time.time() - init_time
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return adaptive_clustering_map
@@ -342,6 +346,28 @@ class CRVE:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return adaptivity_output
+    # --------------------------------------------------------------------------------------
+    def get_clustering_summary(self):
+        '''Get summary of base and final number of clusters of each material phase.
+
+        Returns
+        -------
+        clustering_summary : dict
+            For each material phase (key, str), stores list (item) containing the associated
+            type ('static' or 'adaptive'), the base number of clusters (int) and the final
+            number of clusters (int).
+        '''
+        # Initialize clustering summary
+        clustering_summary = {}
+        # Loop over material phases
+        for mat_phase in self._material_phases:
+            # Build material phase clustering summary
+            clustering_summary[mat_phase] = \
+                [self._clustering_type[mat_phase], self._phase_n_clusters[mat_phase],
+                 self._cluster_phases[mat_phase].get_n_clusters()]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return clustering_summary
     # --------------------------------------------------------------------------------------
     @staticmethod
     def get_crmp_types():
@@ -683,8 +709,9 @@ class CRVE:
                             for i in range(len(self.cit_X_mf)):
                                 self.cit_X_mf[i][mat_phase_pair].pop(cluster_pair)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Update total amount of time spent in clustering adaptivity procedures
-            self.adaptive_time += time.time() - init_time
+            # Update total amount of time spent in clustering adaptivity cluster interaction
+            # tensors computation procedures
+            self.adaptive_cit_time += time.time() - init_time
     # --------------------------------------------------------------------------------------
     def _cluster_filter(self, cluster):
         '''Compute cluster discrete characteristic function (spatial and frequency domains).

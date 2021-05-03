@@ -37,6 +37,17 @@ class CRMP(ABC):
         '''Perform CRMP base clustering.'''
         pass
     # --------------------------------------------------------------------------------------
+    @abstractmethod
+    def get_n_clusters(self):
+        '''Get current number of clusters.
+
+        Returns
+        -------
+        n_clusters : int
+            Number of material phase clusters.
+        '''
+        pass
+    # --------------------------------------------------------------------------------------
     @staticmethod
     @abstractmethod
     def get_valid_clust_algs():
@@ -247,6 +258,16 @@ class SCRMP(CRMP):
         # Update cluster labels
         self.cluster_labels, self.max_label = \
             self._update_cluster_labels(self.cluster_labels, min_label)
+    # --------------------------------------------------------------------------------------
+    def get_n_clusters(self):
+        '''Get current number of clusters.
+
+        Returns
+        -------
+        n_clusters : int
+            Number of material phase clusters.
+        '''
+        return self._n_clusters
     # --------------------------------------------------------------------------------------
     @staticmethod
     def get_valid_clust_algs():
@@ -517,6 +538,16 @@ class GACRMP(ACRMP):
         # Check if the number of clusters threshold as been surpassed
         if self._n_clusters > self._threshold_n_clusters:
             self.adaptivity_lock = True
+    # --------------------------------------------------------------------------------------
+    def get_n_clusters(self):
+        '''Get current number of clusters.
+
+        Returns
+        -------
+        n_clusters : int
+            Number of material phase clusters.
+        '''
+        return self._n_clusters
     # --------------------------------------------------------------------------------------
     @staticmethod
     def get_adaptivity_type_parameters():

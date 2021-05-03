@@ -370,6 +370,76 @@ def displayinfo(code, *args, **kwargs):
                    lock_msg + \
                    '\n' + colorama.Fore.YELLOW + indent + asterisk_line[:-len(indent)] + \
                    colorama.Style.RESET_ALL + '\n'
+    elif code == '15':
+        # Get adaptivity manager and CRVE
+        adaptivity_manager = args[0]
+        crve = args[1]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Get CRVE clustering summary
+        clustering_summary = crve.get_clustering_summary()
+        # Sort and get number of material phases
+        mat_phases = list(clustering_summary.keys())
+        mat_phases.sort()
+        n_mat_phases = len(clustering_summary.keys())
+        # Build output material phases clusters list and get the toal number of base and
+        # final clusters
+        output_clusters = []
+        base_n_clusters = 0
+        final_n_clusters = 0
+        for mat_phase in mat_phases:
+            output_clusters += [mat_phase, ] + clustering_summary[mat_phase]
+            base_n_clusters += clustering_summary[mat_phase][1]
+            final_n_clusters += clustering_summary[mat_phase][2]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Get total clustering adaptivity procedures time and total online stage time
+        total_time_adapt = adaptivity_manager.adaptive_time
+        total_time_os = args[2]
+        # Set output phases designations
+        time_phases = ['Select clustering adaptivity target clusters',
+                       'Perform CRVE clustering adaptivity',
+                       'Compute CRVE cluster interaction tensors',
+                       'Other']
+        n_time_phases = len(time_phases)
+        # Set output phases times
+        adapt_times = [adaptivity_manager.adaptive_evaluation_time,
+                       crve.adaptive_clustering_time, crve.adaptive_cit_time]
+        adapt_times.append(total_time_adapt - sum(adapt_times))
+        # Set output phases relative times
+        if total_time_adapt > 1e-10:
+            adapt_times_rel_1 = [(time/total_time_adapt)*100 for time in adapt_times]
+        else:
+            adapt_times_rel_1 = [0.0 for time in adapt_times]
+        if total_time_os > 1e-10:
+            adapt_times_rel_2 = [(time/total_time_os)*100 for time in adapt_times]
+        else:
+            adapt_times_rel_2 = [0.0 for time in adapt_times]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Build output phases times list
+        output_times = []
+        for i in range(len(time_phases)):
+            output_times += [time_phases[i], adapt_times[i], adapt_times_rel_1[i],
+                             adapt_times_rel_2[i]]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Build output structure
+        arguments = ['Mat. phase', 'Type', 'Base clusters', 'Final clusters',
+                     *output_clusters,
+                     'Total', base_n_clusters, final_n_clusters,
+                     'Phase', 'Duration (s)', '% adapt', '% total',
+                     *output_times, 'Total', total_time_adapt,
+                     ]
+        info = tuple(arguments)
+        template = '\n\n' + \
+                   indent + 'Clustering adaptivity summary:' + '\n\n' + \
+                   2*indent + '{:<10s}{:^21s}{:>20s}{:>20s}' + '\n' + \
+                   2*indent + dashed_line[:-10*len(indent)] + '\n' + \
+                   (2*indent + '{:^10s}{:^21s}{:>20d}{:>20d}' + '\n')*n_mat_phases + \
+                   2*indent + dashed_line[:-10*len(indent)] + '\n' + \
+                   2*indent + '{:<31s}{:>20d}{:>20d}' '\n\n\n' + \
+                   2*indent + '{:50s}{:^20s}{:>7s}{:>10s}' + '\n' + \
+                   2*indent + dashed_line[:-2*len(indent)] + '\n' + \
+                   (2*indent + '{:50s}{:^20.2e}{:>7.2f}{:>10.2f}' + '\n')*n_time_phases + \
+                   2*indent + dashed_line[:-2*len(indent)] + '\n' + \
+                   2*indent + '{:50s}{:^20.2e}'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display information
     ioutil.print2(template.format(*info, width=output_width))
