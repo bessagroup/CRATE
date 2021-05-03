@@ -32,8 +32,9 @@ class AdaptivityManager:
     Attributes
     ----------
     _adapt_groups : dict
-        Adaptive cluster groups (item, list of int) for each adaptive material phase
-        (key, str).
+        For each adaptive material phase (key, str), store a dictionary containing the
+        cluster labels (item, list of int) associated to each adaptive cluster group
+        (key, int).
     _groups_adapt_level : dict
         For each adaptive material phase (key, str), store a dictionary containing the
         adaptive level (item, int) of each associated adaptive cluster group (key, int).
@@ -619,6 +620,47 @@ class AdaptivityManager:
                 activated_adapt_phases.append(mat_phase)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return activated_adapt_phases
+    # --------------------------------------------------------------------------------------
+    def get_adapt_vtk_array(self, voxels_clusters):
+        '''Get regular grid array containing the adaptive level associated to each cluster.
+
+        All the clusters belonging to the same adaptive cluster group share the same
+        adaptive level and that the adaptive level 0 is associated to the base clustering.
+
+        Parameters
+        ----------
+        voxels_clusters : ndarray
+            Regular grid of voxels (spatial discretization of the RVE), where each entry
+            contains the cluster label (int) assigned to the corresponding pixel/voxel.
+
+        Notes
+        -----
+        Such regular grid array is only being currently employed to write the
+        post-processing VTK output files.
+        '''
+        # Initialize flattened regular grid array
+        rg_array = np.zeros(voxels_clusters.shape).flatten('F')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Loop over adaptive material phases
+        for mat_phase in self._adapt_material_phases:
+            # Get adaptive material phase cluster groups
+            adapt_groups_ids = list(self._adapt_groups[mat_phase].keys())
+            # Loop over adaptive cluster groups
+            for group_id in adapt_groups_ids:
+                # Get adaptive cluster group adaptive level
+                adapt_level = self._groups_adapt_level[mat_phase][group_id]
+                # Get adaptive cluster group clusters
+                adapt_group = self._adapt_groups[mat_phase][group_id]
+                # Get flat indexes associated with the adaptive cluster group clusters
+                flat_idxs = np.in1d(voxels_clusters.flatten('F'), adapt_group)
+                # Store adaptive cluster group adaptive level
+                rg_array[flat_idxs] = adapt_level
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Build regular grid array
+        rg_array = rg_array.reshape(voxels_clusters.shape, order='F')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return rg_array
 # ------------------------------------------------------------------------------------------
 #
 #                                               CRVE clustering adaptivity output file class

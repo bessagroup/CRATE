@@ -119,7 +119,7 @@ def writevtkclusterfile(vtk_dict, dirs_dict, rg_dict, clst_dict):
 # ==========================================================================================
 # Write VTK file associated to a given macroscale loading increment
 def writevtkmacincrement(vtk_dict, dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict,
-                         inc, clusters_state):
+                         inc, clusters_state, adaptivity_manager=None):
     # Get VTK output parameters
     vtk_format = vtk_dict['vtk_format']
     vtk_vars = vtk_dict['vtk_vars']
@@ -289,6 +289,21 @@ def writevtkmacincrement(vtk_dict, dirs_dict, problem_dict, mat_dict, rg_dict, c
                     data_parameters = {'Name': data_name, 'format': vtk_format,
                                        'RangeMin': min_val, 'RangeMax': max_val}
                     writevtk_celldataarray(vtk_file, vtk_dict, data_list, data_parameters)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Write VTK cell data array - Cluster adaptive level
+    if not adaptivity_manager is None:
+        rg_array = adaptivity_manager.get_adapt_vtk_array(voxels_clusters)
+
+        data_list = list(rg_array.flatten('F'))
+        min_val = min(data_list)
+        max_val = max(data_list)
+        data_parameters = {'Name': 'Adaptive level', 'format': vtk_format,
+                           'RangeMin': min_val, 'RangeMax':max_val}
+        writevtk_celldataarray(vtk_file, vtk_dict, data_list, data_parameters)
+
+
+
+
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Close VTK dataset element piece cell data
     writevtk_closecelldata(vtk_file)

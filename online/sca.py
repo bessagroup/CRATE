@@ -234,9 +234,14 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     if is_VTK_output:
         # Open VTK collection file
         vtkoutput.openvtkcollectionfile(input_file_name, postprocess_dir)
+        # Set increment VTK output arguments
+        vtk_args = [vtk_dict, dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, 0,
+                    clusters_state]
+        # Add clustering adaptivity arguments
+        if is_crve_adaptivity:
+            vtk_args.append(adaptivity_manager)
         # Write VTK file associated to the initial state
-        vtkoutput.writevtkmacincrement(vtk_dict, dirs_dict, problem_dict, mat_dict, rg_dict,
-                                       clst_dict, 0, clusters_state)
+        vtkoutput.writevtkmacincrement(*vtk_args)
     #
     #                                                      Material clusters elastic tangent
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -888,8 +893,14 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Write VTK file associated to the macroscale loading increment
         if is_VTK_output and inc % vtk_inc_div == 0:
-            vtkoutput.writevtkmacincrement(vtk_dict, dirs_dict, problem_dict, mat_dict,
-                                           rg_dict, clst_dict, inc, clusters_state)
+            # Set increment VTK output arguments
+            vtk_args = [vtk_dict, dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict,
+                        inc, clusters_state]
+            # Add clustering adaptivity arguments
+            if is_crve_adaptivity:
+                vtk_args.append(adaptivity_manager)
+            # Write VTK file associated to the converged increment
+            vtkoutput.writevtkmacincrement(*vtk_args)
         #
         #                                                          Converged state variables
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
