@@ -41,6 +41,11 @@ class AdaptivityManager:
     _target_groups_ids : dict
         Target adaptive cluster groups (item, list of int), whose clusters are to adapted,
         for each adaptive material phase (key, str).
+    inc_adaptive_steps : dict
+        For each macroscale loading increment (key, str), store the performed number of
+        clustering adaptive steps (item, int).
+    max_inc_adaptive_steps : int
+        Maximum number of clustering adaptive steps per macroscale loading increment.
     adaptive_evaluation_time : float
         Total amount of time (s) spent in selecting target clusters for clustering
         adaptivity.
@@ -96,6 +101,8 @@ class AdaptivityManager:
         self._target_groups_ids = {mat_phase: None for mat_phase in
                                    adapt_material_phases}
         self._clust_adapt_freq = clust_adapt_freq
+        self.inc_adaptive_steps = {}
+        self.max_inc_adaptive_steps = 1
         self.adaptive_evaluation_time = 0
         self.adaptive_time = 0
     # --------------------------------------------------------------------------------------
@@ -437,8 +444,9 @@ class AdaptivityManager:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return target_clusters
     # --------------------------------------------------------------------------------------
-    def adaptive_refinement(self, crve, target_clusters, cluster_dicts, verbose=False):
-        '''Perform CRVE online adaptive clustering refinement.
+    def adaptive_refinement(self, crve, target_clusters, cluster_dicts, inc,
+                            improved_init_guess=None, verbose=False):
+        '''Perform CRVE adaptive clustering refinement.
 
         Parameters
         ----------
@@ -448,7 +456,16 @@ class AdaptivityManager:
             List containing the labels (int) of clusters to be refined.
         cluster_dicts : list
             List containing cluster-label-keyd dictionaries (key, str) that will be updated
-            as the result of the CRVE online adaptive refinement.
+            as the result of the CRVE adaptive refinement.
+        inc : int
+            Macroscale loading increment.
+        improved_init_guess : list, default=None
+            List that allows an improved initial iterative guess for the clusters
+            incremental strain global vector (matricial form) after the clustering
+            adaptivity is carried out. Index 0 contains a flag which is True if an improved
+            initial iterative guess is to be computed, False otherwise. Index 1 contains the
+            improved incremental strain global vector (matricial form) if computation flag
+            is True, otherwise is None.
         verbose : bool, default=False
             Enable verbose output.
         '''
@@ -459,11 +476,20 @@ class AdaptivityManager:
             info.displayinfo('5', 'Clustering adaptivity refinement:')
             info.displayinfo('5', 'A - Performing clustering adaptivity...', 2)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Perform CRVE online adaptive clustering refinement
+        # Perform CRVE adaptive clustering refinement
         if not target_clusters:
             return
         else:
+            # Store previous clustering cluster labels and total number of clusters
+            phase_clusters_old = copy.deepcopy(crve.phase_clusters)
+            n_total_clusters_old = crve.get_n_total_clusters()
+            # Perform CRVE adaptive clustering refinement
             adaptive_clustering_map = crve.perform_crve_adaptivity(target_clusters)
+            # Increment current increment adaptive step
+            if str(inc) in self.inc_adaptive_steps.keys():
+                self.inc_adaptive_steps[str(inc)] += 1
+            else:
+                self.inc_adaptive_steps[str(inc)] = 1
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Output execution data
         if verbose:
@@ -498,6 +524,74 @@ class AdaptivityManager:
             # deactivated, then set the associated clustering adaptivity frequency to zero
             if crve._cluster_phases[mat_phase].adaptivity_lock:
                 self._clust_adapt_freq[mat_phase] = 0
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Get improved initial iterative guess flag
+        if improved_init_guess is None:
+            is_improved_init_guess = False
+        else:
+            is_improved_init_guess = improved_init_guess[0]
+            if not is_improved_init_guess:
+                improved_init_guess[1] = None
+        # Compute improved initial iterative guess for the clusters incremental strain
+        # global vector (matricial form)
+        if is_improved_init_guess:
+            # Get CRVE material phases and total number of clusters
+            material_phases = crve.get_material_phases()
+            n_total_clusters = crve.get_n_total_clusters()
+            comp_order = crve.get_comp_order()
+            # Get previous clustering clusters incremental strain global vector
+            if len(improved_init_guess[1]) != n_total_clusters_old*len(comp_order):
+                raise RuntimeError('Unexpected size of previous clustering clusters '
+                                   'incremental strain global vector.')
+            else:
+                gbl_inc_strain_mf_old = copy.deepcopy(improved_init_guess[1])
+            # Initialize new clusters incremental strain global vector
+            gbl_inc_strain_mf_new = np.zeros((n_total_clusters*len(comp_order)))
+            # Initialize material phase initial index in global vector
+            np.set_printoptions(linewidth=50)
+            mat_phase_init_idx_old = 0
+            mat_phase_init_idx_new = 0
+            # Loop over material phases
+            for mat_phase in material_phases:
+                # Loop over previous clustering cluster labels
+                for cluster in phase_clusters_old[mat_phase]:
+                    # Get previous clustering cluster initial index
+                    init_idx_old = mat_phase_init_idx_old + \
+                        phase_clusters_old[mat_phase].index(cluster)*len(comp_order)
+                    # Build new clusters incremental strain global vector. If cluster
+                    # remained unchanged after the clustering adaptive step, then simply
+                    # transfer the associated values to the proper position in the new
+                    # global vector. If cluster has been refined, then copy the associated
+                    # values to its child clusters positions in the new global vector.
+                    if cluster in crve.phase_clusters[mat_phase]:
+                        # Get new clustering cluster initial index
+                        init_idx_new = mat_phase_init_idx_new + \
+                            crve.phase_clusters[mat_phase].index(cluster)*len(comp_order)
+                        # Transfer cluster incremental strain
+                        gbl_inc_strain_mf_new[init_idx_new:init_idx_new+len(comp_order)] = \
+                            gbl_inc_strain_mf_old[init_idx_old:init_idx_old+len(comp_order)]
+                    else:
+                        # Get list of target's child clusters
+                        child_clusters = adaptive_clustering_map[mat_phase][str(cluster)]
+                        # Loop over child clusters
+                        for child_cluster in child_clusters:
+                            # Get new clustering child cluster initial index
+                            init_idx_new = mat_phase_init_idx_new + \
+                                crve.phase_clusters[mat_phase].index(
+                                    child_cluster)*len(comp_order)
+                            # Copy parent cluster incremental strain
+                            gbl_inc_strain_mf_new[init_idx_new:
+                                                  init_idx_new+len(comp_order)] = \
+                                gbl_inc_strain_mf_old[init_idx_old:
+                                                      init_idx_old+len(comp_order)]
+                # Update material phase initial index in global vector
+                mat_phase_init_idx_old += \
+                    len(phase_clusters_old[mat_phase])*len(comp_order)
+                mat_phase_init_idx_new += \
+                    len(crve.phase_clusters[mat_phase])*len(comp_order)
+            # Store improved initial iterative guess for the clusters incremental strain
+            # global vector (matricial form)
+            improved_init_guess[1] = gbl_inc_strain_mf_new
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Output execution data
         if verbose:
@@ -562,6 +656,29 @@ class AdaptivityManager:
                              indent + 28*'-' + '\n' +
                              indent + '{:^5s}'.format('Total') + '{:>14.4e}'.format(dtime),
                              2)
+    # --------------------------------------------------------------------------------------
+    def check_inc_adaptive_steps(self, inc):
+        '''Check number of clustering adaptive steps performed in current loading increment.
+
+        Parameters
+        ----------
+        inc : int
+            Macroscale loading increment.
+
+        Returns
+        -------
+        bool
+            True if maximum number of clustering adaptive steps has not been reached, False
+            otherwise.
+        '''
+        if str(inc) in self.inc_adaptive_steps.keys():
+            if self.inc_adaptive_steps[str(inc)] >= self.max_inc_adaptive_steps:
+                return False
+            else:
+                return True
+        else:
+            self.inc_adaptive_steps[str(inc)] = 0
+            return True
     # --------------------------------------------------------------------------------------
     def _update_group_clusters(self, adaptive_clustering_map):
         '''Update adaptive cluster groups.

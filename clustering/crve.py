@@ -94,7 +94,7 @@ class CRVE:
             Regular grid of voxels (spatial discretization of the RVE), where each entry
             contains the material phase label (int) assigned to the corresponding voxel.
         material_phases : list
-            RVE material phases labels (str).
+            CRVE material phases labels (str).
         comp_order : list
             Strain/Stress components (str) order.
         global_data_matrix: ndarray of shape (n_voxels, n_features_dims)
@@ -325,6 +325,43 @@ class CRVE:
         # Return
         return adaptive_clustering_map
     # --------------------------------------------------------------------------------------
+    def get_material_phases(self):
+        '''Get CRVE material phases.
+
+        Returns
+        -------
+        material_phases : list
+            CRVE material phases labels (str).
+        '''
+        return self._material_phases
+    # --------------------------------------------------------------------------------------
+    def get_comp_order(self):
+        '''Get strain/stress components order.
+
+        Returns
+        -------
+        comp_order : list
+            Strain/Stress components (str) order.
+        '''
+        return self._comp_order
+    # --------------------------------------------------------------------------------------
+    def get_n_total_clusters(self):
+        '''Get current total number of clusters.
+
+        Returns
+        -------
+        n_total_clusters : int
+            Total number of clusters.
+        '''
+        # Initialize total number of clusters
+        n_total_clusters = 0
+        # Loop over material phases
+        for mat_phase in self._material_phases:
+            n_total_clusters += len(self.phase_clusters[mat_phase])
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return n_total_clusters
+    # --------------------------------------------------------------------------------------
     def get_adaptivity_output(self):
         '''Get required data for clustering adaptivity output file.
 
@@ -473,8 +510,8 @@ class CRVE:
         for mat_phase in self._material_phases:
             # Get cluster labels
             self.phase_clusters[mat_phase] = \
-                np.unique(self.voxels_clusters.flatten()[
-                          self._phase_voxel_flatidx[mat_phase]])
+                list(np.unique(self.voxels_clusters.flatten()[
+                               self._phase_voxel_flatidx[mat_phase]]))
     # --------------------------------------------------------------------------------------
     def _set_clusters_vf(self):
         '''Set CRVE clusters' volume fractions.'''

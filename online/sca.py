@@ -170,11 +170,14 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                                                              clst_dict, algpar_dict,
                                                              mat_phase)
     # Get total number of clusters
-    n_total_clusters = sum([phase_n_clusters[mat_phase] for mat_phase in material_phases])
+    n_total_clusters = crve.get_n_total_clusters()
     # Initialize macroscale loading increment cut flag
     is_inc_cut = False
     # Initialize flag that locks reference material elastic properties
     is_lock_prop_ref = False
+    # Initialize flag that signals an improved cluster incremental strains initial iterative
+    # guess
+    is_improved_init_guess = False
     # Check clustering adaptivity and perform required initializations
     is_crve_adaptivity = False
     if len(crve.adapt_material_phases) > 0:
@@ -379,7 +382,10 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         #                                Cluster incremental strains initial iterative guess
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set clusters incremental strain initial iterative guess
-        gbl_inc_strain_mf = np.zeros((n_total_clusters*len(comp_order)))
+        if not is_improved_init_guess:
+            gbl_inc_strain_mf = np.zeros((n_total_clusters*len(comp_order)))
+        else:
+            is_improved_init_guess = False
         # Set additional initial iterative guesses
         if is_farfield_formulation:
             # Set incremental far-field strain initial iterative guess
@@ -873,6 +879,60 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             # Start new macroscale loading increment solution procedures
             continue
         #
+        #                                                              Clustering adaptivity
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # This section should only be executed if the macroscale loading increment where the
+        # clustering adaptivity condition is triggered is to be repeated considering the new
+        # clustering
+        if is_crve_adaptivity and adaptivity_manager.check_inc_adaptive_steps(inc):
+            # Display increment data
+            if is_clust_adapt_output:
+                info.displayinfo('12', crve._adaptive_step + 1)
+            # Get clustering adaptivity trigger condition and target clusters
+            is_trigger, target_clusters = \
+                adaptivity_manager.get_target_clusters(phase_clusters, clusters_state, inc,
+                                                       verbose=is_clust_adapt_output)
+            # Perform clustering adaptivity if adaptivity condition is triggered
+            if is_trigger:
+                # Display clustering adaptivity
+                info.displayinfo('16', 'repeat', inc)
+                # Set improved initial iterative guess for the clusters incremental strain
+                # global vector (matricial form) after the clustering adaptivity
+                is_improved_init_guess = True
+                improved_init_guess = [is_improved_init_guess, gbl_inc_strain_mf]
+                # Perform clustering adaptivity
+                adaptivity_manager.adaptive_refinement(crve, target_clusters,
+                                                       [clusters_state, clusters_state_old,
+                                                       clusters_D_mf, clusters_De_mf],
+                                                       inc, improved_init_guess,
+                                                       verbose=is_clust_adapt_output)
+                # Get improved initial iterative guess for the clusters incremental strain
+                # global vector (matricial form)
+                if is_improved_init_guess:
+                    gbl_inc_strain_mf = improved_init_guess[1]
+                # Update clustering dictionary
+                for mat_phase in material_phases:
+                    phase_n_clusters[mat_phase] = len(crve.phase_clusters[mat_phase])
+                clst_dict['phase_n_clusters'] = phase_n_clusters
+                clst_dict['voxels_clusters'] = crve.voxels_clusters
+                clst_dict['phase_clusters'] = crve.phase_clusters
+                clst_dict['clusters_f'] = crve.clusters_f
+                # Get clusters data
+                phase_n_clusters = clst_dict['phase_n_clusters']
+                phase_clusters = clst_dict['phase_clusters']
+                clusters_f = clst_dict['clusters_f']
+                # Get total number of clusters
+                n_total_clusters = crve.get_n_total_clusters()
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Get increment counter
+                inc = mac_load_path.increm_state['inc']
+                # Display increment data
+                displayincdata(mac_load_path)
+                # Set increment initial time
+                inc_init_time = time.time()
+                # Start new macroscale loading increment solution procedures
+                continue
+        #
         #                                              Homogenized strain and stress tensors
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Build homogenized strain tensor
@@ -1006,8 +1066,13 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             inc_init_time = time.time()
         #
         #                                                              Clustering adaptivity
+        #                                                                      (deactivated)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        if is_crve_adaptivity:
+        # This section should only be executed if the clustering adaptivity is to be
+        # performed in between macroscale loading increments, i.e., the new clustering is
+        # only considered in the following macroscale loading increments.
+        if is_crve_adaptivity and adaptivity_manager.check_inc_adaptive_steps(inc) \
+                and False:
             # Display increment data
             if is_clust_adapt_output:
                 info.displayinfo('12', crve._adaptive_step + 1)
@@ -1015,26 +1080,28 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             is_trigger, target_clusters = \
                 adaptivity_manager.get_target_clusters(phase_clusters, clusters_state, inc,
                                                        verbose=is_clust_adapt_output)
-            # Perform clustering adaptivity
+            # Perform clustering adaptivity if adaptivity condition is triggered
             if is_trigger:
+                # Display clustering adaptivity
+                info.displayinfo('16', 'new', inc)
+                # Perform clustering adaptivity
                 adaptivity_manager.adaptive_refinement(crve, target_clusters,
                                                        [clusters_state, clusters_state_old,
                                                        clusters_D_mf, clusters_De_mf],
-                                                       verbose=is_clust_adapt_output)
-            # Update clustering dictionary
-            for mat_phase in material_phases:
-                phase_n_clusters[mat_phase] = len(crve.phase_clusters[mat_phase])
-            clst_dict['phase_n_clusters'] = phase_n_clusters
-            clst_dict['voxels_clusters'] = crve.voxels_clusters
-            clst_dict['phase_clusters'] = crve.phase_clusters
-            clst_dict['clusters_f'] = crve.clusters_f
-            # Get clusters data
-            phase_n_clusters = clst_dict['phase_n_clusters']
-            phase_clusters = clst_dict['phase_clusters']
-            clusters_f = clst_dict['clusters_f']
-            # Get total number of clusters
-            n_total_clusters = sum([phase_n_clusters[mat_phase]
-                                    for mat_phase in material_phases])
+                                                       inc, verbose=is_clust_adapt_output)
+                # Update clustering dictionary
+                for mat_phase in material_phases:
+                    phase_n_clusters[mat_phase] = len(crve.phase_clusters[mat_phase])
+                clst_dict['phase_n_clusters'] = phase_n_clusters
+                clst_dict['voxels_clusters'] = crve.voxels_clusters
+                clst_dict['phase_clusters'] = crve.phase_clusters
+                clst_dict['clusters_f'] = crve.clusters_f
+                # Get clusters data
+                phase_n_clusters = clst_dict['phase_n_clusters']
+                phase_clusters = clst_dict['phase_clusters']
+                clusters_f = clst_dict['clusters_f']
+                # Get total number of clusters
+                n_total_clusters = crve.get_n_total_clusters()
 #
 #                                                       Macroscale loading increment display
 # ==========================================================================================

@@ -169,24 +169,27 @@ class RefMatOutput:
                       ''.join([('{:>' + str(self._col_width) + '.8e}').format(x)
                       for x in inc_data[2:]])]
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Open reference material output file and read lines (read)
+        file_lines = open(self._refm_file_path, 'r').readlines()
         # Update reference material output file according to output mode
         if self._ref_output_mode == 'iterative':
-            # Open reference material output file (append mode)
-            refm_file = open(self._refm_file_path, 'a')
-            # Write reference material related quantities
-            refm_file.writelines(write_list)
+            # If macroscale loading increment is being repeated for some reason, then
+            # clear associated data and append the first iteration. Otherwise append
+            # iteration belonging to the current macroscale loading increment
+            if len(file_lines) > 1 and int(file_lines[-1].split()[0]) == inc and \
+                not scs_iter > int(file_lines[-1].split()[1]):
+                # If macroscale loading increment is being repeated for some reason, then
+                # clear associated data
+                del file_lines[-(int(file_lines[-1].split()[1]) + 1):]
+                file_lines += write_list[0][1:]
+            else:
+                file_lines += write_list[0]
         else:
-            # Open reference material output file and read lines (read)
-            file_lines = open(self._refm_file_path, 'r').readlines()
             # If is the same macroscale loading increment, then replace the last iteration.
             # Otherwise append iteration belonging to new macroscale loading increment
             if len(file_lines) > 1 and int(file_lines[-1].split()[0]) == inc:
                 file_lines[-1] = write_list[0][1:]
             else:
                 file_lines += write_list[0]
-            # Open reference material output file (write mode)
-            refm_file = open(self._refm_file_path, 'w')
-            # Write reference material related quantities
-            refm_file.writelines(file_lines)
-        # Close reference material output file
-        refm_file.close()
+        # Open reference material output file (write mode)
+        open(self._refm_file_path, 'w').writelines(file_lines)

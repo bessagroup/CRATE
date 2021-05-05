@@ -440,6 +440,27 @@ def displayinfo(code, *args, **kwargs):
                    (2*indent + '{:50s}{:^20.2e}{:>7.2f}{:>10.2f}' + '\n')*n_time_phases + \
                    2*indent + dashed_line[:-2*len(indent)] + '\n' + \
                    2*indent + '{:50s}{:^20.2e}'
+    elif code == '16':
+        mode = args[0]
+        inc = args[1]
+        spacing = indent + len('Clustering adaptivity: ')*' '
+        if mode == 'repeat':
+            msg = 'Adaptivity condition(s) have been triggered and clustering' + '\n' + \
+                  spacing + 'adaptivity will be performed.' + '\n' + \
+                  spacing + 'Current macroscale loading increment ({}) will be repeated' + \
+                  '\n' + spacing + 'considering the new clustering.'
+        elif mode == 'new':
+            msg = 'Adaptivity condition(s) have been triggered and clustering' + '\n' + \
+                  spacing + 'adaptivity will be performed.' + '\n' + \
+                  spacing + 'Performing the new macroscale loading increment ({})' + \
+                  '\n' + spacing + 'considering the new clustering.'
+        arguments = [inc,]
+        info = tuple(arguments)
+        template = '\n\n' + colorama.Fore.CYAN + indent + asterisk_line[:-len(indent)] + \
+                   '\n' + \
+                   indent + 'Clustering adaptivity: ' + colorama.Style.RESET_ALL + msg + \
+                   '\n' + colorama.Fore.CYAN + indent + asterisk_line[:-len(indent)] + \
+                   colorama.Style.RESET_ALL + '\n'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display information
     ioutil.print2(template.format(*info, width=output_width))
