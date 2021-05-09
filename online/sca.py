@@ -275,7 +275,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         vtkoutput.openvtkcollectionfile(input_file_name, postprocess_dir)
         # Set increment VTK output arguments
         vtk_args = [vtk_dict, dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, 0,
-                    clusters_state]
+                    clusters_state, crve]
         # Add clustering adaptivity arguments
         if is_crve_adaptivity:
             vtk_args.append(adaptivity_manager)
@@ -1002,7 +1002,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             procedure_init_time = time.time()
             # Set increment VTK output arguments
             vtk_args = [vtk_dict, dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict,
-                        inc, clusters_state]
+                        inc, clusters_state, crve]
             # Add clustering adaptivity arguments
             if is_crve_adaptivity:
                 vtk_args.append(adaptivity_manager)

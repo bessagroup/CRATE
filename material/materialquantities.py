@@ -60,3 +60,18 @@ class MaterialQuantitiesComputer:
         vm_stress = np.sqrt(3.0/2.0)*np.linalg.norm(dev_stress_mf)
         # Return
         return vm_stress
+    # --------------------------------------------------------------------------------------
+    def get_vm_strain(self, strain_mf):
+        '''Compute von Mises equivalent strain.
+
+        Parameters
+        ----------
+        strain_mf : ndarray
+            Strain tensor (matricial form).
+        '''
+        # Compute deviatoric strain tensor (matricial form)
+        dev_strain_mf = np.matmul(self._fodevprojsym_mf, strain_mf)
+        # Compute von Mises equivalent strain
+        vm_strain = np.sqrt(2.0/3.0)*np.linalg.norm(dev_strain_mf)
+        # Return
+        return vm_strain

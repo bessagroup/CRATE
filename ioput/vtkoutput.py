@@ -32,6 +32,8 @@ import ioput.errors as errors
 import tensor.matrixoperations as mop
 # Links related procedures
 import links.material.linksmaterialmodels as LinksMat
+# Material-related computations
+from ioput.voxelsoutput import VoxelsArraysFactory
 #
 #                                                                           Global variables
 # ==========================================================================================
@@ -119,7 +121,7 @@ def writevtkclusterfile(vtk_dict, dirs_dict, rg_dict, clst_dict):
 # ==========================================================================================
 # Write VTK file associated to a given macroscale loading increment
 def writevtkmacincrement(vtk_dict, dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict,
-                         inc, clusters_state, adaptivity_manager=None):
+                         inc, clusters_state, crve, adaptivity_manager=None):
     # Get VTK output parameters
     vtk_format = vtk_dict['vtk_format']
     vtk_vars = vtk_dict['vtk_vars']
@@ -167,6 +169,8 @@ def writevtkmacincrement(vtk_dict, dirs_dict, problem_dict, mat_dict, rg_dict, c
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Get problem data
     problem_type = problem_dict['problem_type']
+    n_dim = problem_dict['n_dim']
+    comp_order_sym = problem_dict['comp_order_sym']
     # Get material data
     material_phases = mat_dict['material_phases']
     material_phases_models = mat_dict['material_phases_models']
@@ -179,6 +183,8 @@ def writevtkmacincrement(vtk_dict, dirs_dict, problem_dict, mat_dict, rg_dict, c
     # microstructure
     material_models = list(np.unique([material_phases_models[mat_phase]['name'] \
                            for mat_phase in material_phases]))
+    # Instantiate factory of voxels arrays
+    voxels_array_factory = VoxelsArraysFactory(n_dim, comp_order_sym)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Write VTK cell data array - Material phases
     data_list = list(regular_grid.flatten('F'))
@@ -290,6 +296,26 @@ def writevtkmacincrement(vtk_dict, dirs_dict, problem_dict, mat_dict, rg_dict, c
                                        'RangeMin': min_val, 'RangeMax': max_val}
                     writevtk_celldataarray(vtk_file, vtk_dict, data_list, data_parameters)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Write VTK cell data array - Von Mises equivalent stress
+    array_vox = \
+        voxels_array_factory.build_voxels_array(crve, 'vm_stress', clusters_state)[0]
+    data_list = list(array_vox.flatten('F'))
+    min_val = min(data_list)
+    max_val = max(data_list)
+    data_parameters = {'Name': 'Von Mises Eq. Stress', 'format': vtk_format,
+                       'RangeMin': min_val, 'RangeMax': max_val}
+    writevtk_celldataarray(vtk_file, vtk_dict, data_list, data_parameters)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Write VTK cell data array - Von Mises equivalent strain
+    array_vox = \
+        voxels_array_factory.build_voxels_array(crve, 'vm_strain', clusters_state)[0]
+    data_list = list(array_vox.flatten('F'))
+    min_val = min(data_list)
+    max_val = max(data_list)
+    data_parameters = {'Name': 'Von Mises Eq. Strain', 'format': vtk_format,
+                       'RangeMin': min_val, 'RangeMax': max_val}
+    writevtk_celldataarray(vtk_file, vtk_dict, data_list, data_parameters)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Write VTK cell data array - Cluster adaptive level
     if not adaptivity_manager is None:
         rg_array = adaptivity_manager.get_adapt_vtk_array(voxels_clusters)
@@ -300,10 +326,6 @@ def writevtkmacincrement(vtk_dict, dirs_dict, problem_dict, mat_dict, rg_dict, c
         data_parameters = {'Name': 'Adaptive level', 'format': vtk_format,
                            'RangeMin': min_val, 'RangeMax':max_val}
         writevtk_celldataarray(vtk_file, vtk_dict, data_list, data_parameters)
-
-
-
-
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Close VTK dataset element piece cell data
     writevtk_closecelldata(vtk_file)

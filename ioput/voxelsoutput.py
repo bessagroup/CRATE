@@ -145,7 +145,7 @@ class VoxelsArraysFactory:
         '''
         self._n_dim = n_dim
         self._comp_order = comp_order
-        self._available_csbvars = {'vm_stress': 1, 'acc_p_strain': 1}
+        self._available_csbvars = {'vm_stress': 1, 'vm_strain': 1, 'acc_p_strain': 1}
     # --------------------------------------------------------------------------------------
     def build_voxels_array(self, crve, csbvar, clusters_state):
         '''Build clusters state based voxel array.
@@ -203,6 +203,11 @@ class VoxelsArraysFactory:
                         stress_mf = clusters_state[str(cluster)]['stress_mf']
                         # Compute von Mises equivalent stress
                         value = csbvar_computer.get_vm_stress(stress_mf)
+                    elif csbvar == 'vm_strain':
+                        # Get cluster strain tensor (matricial form)
+                        strain_mf = clusters_state[str(cluster)]['strain_mf']
+                        # Compute von Mises equivalent strain
+                        value = csbvar_computer.get_vm_strain(strain_mf)
                     elif csbvar == 'acc_p_strain':
                         # Get cluster accumulated plastic strain
                         if csbvar in clusters_state[str(cluster)].keys():
