@@ -345,6 +345,19 @@ class CRVE:
         '''
         return self._comp_order
     # --------------------------------------------------------------------------------------
+    def get_n_voxels(self):
+        '''Get number of voxels in each dimension and total number of voxels.
+
+        Returns
+        -------
+        n_voxels_dims : list
+            Number of voxels in each dimension of the regular grid (spatial discretization of
+            the RVE).
+        n_voxels : int
+            Total number of voxels of the regular grid (spatial discretization of the RVE).
+        '''
+        return [self._n_voxels_dims, self._n_voxels]
+    # --------------------------------------------------------------------------------------
     def get_n_total_clusters(self):
         '''Get current total number of clusters.
 
@@ -361,6 +374,22 @@ class CRVE:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return n_total_clusters
+    # --------------------------------------------------------------------------------------
+    def get_voxels_array_variables(self):
+        '''Get required variables to build a clusters state based voxels array.
+
+        Returns
+        -------
+        material_phases : list
+            CRVE material phases labels (str).
+        phase_clusters : dict
+            Clusters labels (item, list of int) associated to each material phase
+            (key, str).
+        voxels_clusters : ndarray
+            Regular grid of voxels (spatial discretization of the RVE), where each entry
+            contains the cluster label (int) assigned to the corresponding pixel/voxel.
+        '''
+        return [self._material_phases, self.phase_clusters, self.voxels_clusters]
     # --------------------------------------------------------------------------------------
     def get_adaptivity_output(self):
         '''Get required data for clustering adaptivity output file.

@@ -44,6 +44,7 @@ import clustering.clusteringdata as clstdat
 # Read the input data file
 def readinputdatafile(input_file,dirs_dict):
     # Get input file and problem directory and path data
+    input_file_name = dirs_dict['input_file_name']
     input_file_path = dirs_dict['input_file_path']
     problem_dir = dirs_dict['problem_dir']
     postprocess_dir = dirs_dict['postprocess_dir']
@@ -311,6 +312,18 @@ def readinputdatafile(input_file,dirs_dict):
     else:
         is_VTK_output = False
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Read voxels material-related quantities output options
+    keyword = 'Voxels_Output'
+    is_found, keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
+        is_voxels_output = True
+        # Set voxels material-related quantities output file path
+        voxout_file_path = postprocess_dir + input_file_name + '.voxout'
+        # Store output file path in directories and paths dictionary
+        dirs_dict['voxout_file_path'] = voxout_file_path
+    else:
+        is_voxels_output = False
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read clustering adaptivity output
     keyword = 'Clustering_Adaptivity_Output'
     is_found, keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
@@ -359,6 +372,9 @@ def readinputdatafile(input_file,dirs_dict):
         vtk_dict = packager.packvtk(is_VTK_output, vtk_format, vtk_inc_div, vtk_vars)
     else:
         vtk_dict = packager.packvtk(is_VTK_output)
+    # Package data associated to the output files
+    info.displayinfo('5', 'Packaging general output files data...')
+    output_dict = packager.packoutputfiles(is_voxels_output)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return [problem_dict, mat_dict, macload_dict, rg_dict, clst_dict, scs_dict, algpar_dict,
-            vtk_dict]
+            vtk_dict, output_dict]

@@ -42,6 +42,7 @@ def packdirpaths(input_file_name, input_file_path, input_file_dir, problem_name,
     # refm_file_path              Path of the .refm file                            str
     # adapt_file_path             Path of the .adapt file                           str
     # postprocess_dir             Directory of the post-processing files            str
+    # cbsvar_file_path            Path of the .voxout file                          str
     #
     # Note: The meaning of the previous directories and files is detailed in the module
     #       fileoperations (see function setproblemdirs documentation)
@@ -60,6 +61,7 @@ def packdirpaths(input_file_name, input_file_path, input_file_dir, problem_name,
     dirs_dict['refm_file_path'] = refm_file_path
     dirs_dict['adapt_file_path'] = adapt_file_path
     dirs_dict['postprocess_dir'] = postprocess_dir
+    dirs_dict['voxout_file_path'] = None
     # Return
     return dirs_dict
 # ------------------------------------------------------------------------------------------
@@ -367,3 +369,17 @@ def packvtk(is_VTK_output, *args):
         vtk_dict['vtk_precision'] = 'SinglePrecision'
     # Return
     return vtk_dict
+# ------------------------------------------------------------------------------------------
+# Package data associated to general output files
+def packoutputfiles(is_voxels_output, *args):
+    #
+    # Object                 Meaning                                           Type
+    # -------------------------------------------------------------------------------------
+    # is_voxels_output       Voxels material-related quantities                bool
+    #
+    # Initialize output dictionary
+    output_dict = dict()
+    # Build output dictionary
+    output_dict['is_voxels_output'] = is_voxels_output
+    # Return
+    return output_dict

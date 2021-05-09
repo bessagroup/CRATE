@@ -87,6 +87,7 @@ def setinputdatafilepath(path):
 #            |---- example.adapt
 #            |---- Post_Process/  ------- example.pvd
 #                                   |---- VTK/
+#                                   |---- example.voxout
 #
 # Folders and files meaning:
 # example.dat            - User input data file
@@ -113,6 +114,7 @@ def setinputdatafilepath(path):
 #                          of the problem solution
 # VTK/                   - Folder which constains all the snapshots of the problem solution
 #                          (VTK XML format)
+# example.voxout         - File where voxels material-related quantities are stored
 #
 def setproblemdirs(input_file_name, input_file_dir):
     # Set problem name, directory

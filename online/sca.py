@@ -52,6 +52,8 @@ import online.equilibrium.sne_farfield as eqff
 import online.equilibrium.sne_macstrain as eqms
 # CRVE adaptivity
 from online.crve_adaptivity import AdaptivityManager, ClusteringAdaptivityOutput
+# Voxels output
+from ioput.voxelsoutput import VoxelsOutput
 
 
 
@@ -90,7 +92,7 @@ for i in output_idx:
 #                                                  system of nonlinear equilibrium equations
 # ==========================================================================================
 def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs_dict,
-        algpar_dict, vtk_dict, crve):
+        algpar_dict, vtk_dict, output_dict, crve):
     #                                                                           General data
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Get input data file name and post processing directory
@@ -129,6 +131,10 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     is_VTK_output = vtk_dict['is_VTK_output']
     if is_VTK_output:
         vtk_inc_div = vtk_dict['vtk_inc_div']
+    # Get general output parameters
+    is_voxels_output = output_dict['is_voxels_output']
+    if is_voxels_output:
+        voxout_file_path = dirs_dict['voxout_file_path']
     # --------------------------------------------------------------------------------------
     # Validation:
     if is_Validation[0]:
@@ -247,6 +253,18 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     ref_mat_output.init_ref_mat_file()
     # Increment post-processing time
     ons_post_process_time += time.time() - procedure_init_time
+    #
+    #                          Voxels material-related quantities output file (.voxout file)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    if is_voxels_output:
+        # Set post-processing procedure initial time
+        procedure_init_time = time.time()
+        # Instantiate voxels material-related output
+        voxels_output = VoxelsOutput(voxout_file_path)
+        # Write reference material output file header
+        voxels_output.init_voxels_output_file(crve)
+        # Increment post-processing time
+        ons_post_process_time += time.time() - procedure_init_time
     #
     #                                                                 Initial state VTK file
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1026,6 +1044,17 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             procedure_init_time = time.time()
             # Update clustering adaptivity output file
             adapt_output.write_adapt_file(inc, adaptivity_manager, crve, mode='increment')
+            # Increment post-processing time
+            ons_post_process_time += time.time() - procedure_init_time
+        #
+        #                        Voxels cluster state based quantities output (.voxout file)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Update clustering adaptivity output file with converged increment data
+        if is_voxels_output:
+            # Set post-processing procedure initial time
+            procedure_init_time = time.time()
+            # Update clustering adaptivity output file
+            voxels_output.write_voxels_output_file(n_dim, comp_order, crve, clusters_state)
             # Increment post-processing time
             ons_post_process_time += time.time() - procedure_init_time
         #

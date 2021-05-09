@@ -139,8 +139,8 @@ except FileNotFoundError as message:
     errors.displayexception(location.filename, location.lineno + 1, message)
 # Read input data according to analysis type
 info.displayinfo('5', 'Reading the input data file...')
-problem_dict, mat_dict, macload_dict, rg_dict, clst_dict, scs_dict, algpar_dict, vtk_dict =\
-    rid.readinputdatafile(input_file, dirs_dict)
+problem_dict, mat_dict, macload_dict, rg_dict, clst_dict, scs_dict, algpar_dict, vtk_dict, \
+    output_dict = rid.readinputdatafile(input_file, dirs_dict)
 # Close user input data file
 input_file.close()
 # Save copy of clustering dictionary for compatibility check procedure (loading previously
@@ -287,7 +287,7 @@ phase_init_time = time.time()
 # discretized Lippmann-Schwinger system of equilibrium equations
 ons_total_time, ons_effective_time = sca.sca(dirs_dict, problem_dict, mat_dict, rg_dict,
                                              clst_dict, macload_dict, scs_dict, algpar_dict,
-                                             vtk_dict, crve)
+                                             vtk_dict, output_dict, crve)
 # Set phase ending time and display finishing phase information
 phase_end_time = phase_init_time + ons_effective_time
 phase_names.append('Solve reduced microscale equilibrium problem')
