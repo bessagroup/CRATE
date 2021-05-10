@@ -41,7 +41,8 @@ class VoxelsOutput:
         '''
         self._voxout_file_path = voxout_file_path
         # Set material-related output variables names and number of dimensions
-        self._output_variables = [('vm_stress', 1), ('acc_p_strain', 1)]
+        self._output_variables = [('vm_stress', 1), ('acc_p_strain', 1),
+                                  ('acc_p_energy_dens', 1)]
         # Compute total number of output variables dimensions
         self._output_vars_dims = sum([x[1] for x in self._output_variables])
         # Set column width
@@ -145,7 +146,8 @@ class VoxelsArraysFactory:
         '''
         self._n_dim = n_dim
         self._comp_order = comp_order
-        self._available_csbvars = {'vm_stress': 1, 'vm_strain': 1, 'acc_p_strain': 1}
+        self._available_csbvars = {'vm_stress': 1, 'vm_strain': 1, 'acc_p_strain': 1,
+                                   'acc_p_energy_dens': 1}
     # --------------------------------------------------------------------------------------
     def build_voxels_array(self, crve, csbvar, clusters_state):
         '''Build clusters state based voxel array.
@@ -208,10 +210,10 @@ class VoxelsArraysFactory:
                         strain_mf = clusters_state[str(cluster)]['strain_mf']
                         # Compute von Mises equivalent strain
                         value = csbvar_computer.get_vm_strain(strain_mf)
-                    elif csbvar == 'acc_p_strain':
-                        # Get cluster accumulated plastic strain
+                    elif csbvar in ['acc_p_strain', 'acc_p_energy_dens']:
+                        # Get cluster quantity directly from state variables dictionary
                         if csbvar in clusters_state[str(cluster)].keys():
-                            value = clusters_state[str(cluster)]['acc_p_strain']
+                            value = clusters_state[str(cluster)][csbvar]
                         else:
                             value = 0
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
