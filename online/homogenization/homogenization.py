@@ -124,9 +124,10 @@ def homoutofplanecomp(problem_type, material_phases, phase_clusters, clusters_f,
 #
 #                                                             CRVE effective tangent modulus
 # ==========================================================================================
-def efftanmod(n_dim, comp_order, material_phases, phase_clusters, clusters_f, clusters_D_mf,
-              global_cit_D_De_ref_mf, gbl_inc_strain_mf=None, inc_farfield_strain_mf=None):
-    '''Compute CRVE effective (homogenized) tangent modulus.
+def effective_tangent_modulus(n_dim, comp_order, material_phases, phase_clusters,
+                              clusters_f, clusters_D_mf, global_cit_D_De_ref_mf,
+                              gbl_inc_strain_mf=None, inc_farfield_strain_mf=None):
+    '''Compute CRVE effective tangent modulus and clusters strain concentration tensors.
 
     Parameters
     ----------
@@ -134,6 +135,8 @@ def efftanmod(n_dim, comp_order, material_phases, phase_clusters, clusters_f, cl
         Problem dimension.
     comp_order : list
         Strain/Stress components (str) order.
+    material_phases : list
+        RVE material phases labels (str).
     phase_clusters : dict
         Clusters labels (item, list of int) associated to each material phase (key, str).
     clusters_f : dict
@@ -157,7 +160,10 @@ def efftanmod(n_dim, comp_order, material_phases, phase_clusters, clusters_f, cl
     Returns
     -------
     eff_tangent_mf : ndarray of shape(n_comps, n_comps)
-        CRVE effective (homogenized) tangent modulus in matricial form.
+        CRVE effective tangent modulus in matricial form.
+    clusters_sct_mf : dict
+        Fourth-order strain concentration tensor (matricial form) (item, ndarray) associated
+        to each material cluster (key, str).
 
     Notes
     -----
@@ -235,6 +241,8 @@ def efftanmod(n_dim, comp_order, material_phases, phase_clusters, clusters_f, cl
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Initialize effective tangent modulus
     eff_tangent_mf = np.zeros((len(comp_order), len(comp_order)))
+    # Initialize clusters strain concentration tensors dictionary
+    clusters_sct_mf = {}
     # Initialize cluster index
     i_init = 0
     i_end = i_init + len(comp_order)
@@ -248,6 +256,8 @@ def efftanmod(n_dim, comp_order, material_phases, phase_clusters, clusters_f, cl
             cluster_D_mf = clusters_D_mf[str(cluster)]
             # Get material cluster strain concentration tensor
             cluster_sct_mf = gbl_csct_mf[i_init:i_end, :]
+            # Store material cluster strain concentration tensor (matricial form)
+            clusters_sct_mf[str(cluster)] = cluster_sct_mf
             # Add material cluster contribution to effective tangent modulus
             eff_tangent_mf = eff_tangent_mf + \
                              cluster_f*np.matmul(cluster_D_mf, cluster_sct_mf)
@@ -255,7 +265,40 @@ def efftanmod(n_dim, comp_order, material_phases, phase_clusters, clusters_f, cl
             i_init = i_init + len(comp_order)
             i_end = i_init + len(comp_order)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    return eff_tangent_mf
+    return [eff_tangent_mf, clusters_sct_mf]
+#
+#                                        Cluster strain concentration tensors initialization
+# ==========================================================================================
+def init_clusters_sct(n_dim, comp_order, material_phases, phase_clusters):
+    '''Initialize cluster strain concentration tensors dictionary.
+
+    Parameters
+    ----------
+    n_dim : int
+        Problem dimension.
+    comp_order : list
+        Strain/Stress components (str) order.
+    material_phases : list
+        RVE material phases labels (str).
+    phase_clusters : dict
+        Clusters labels (item, list of int) associated to each material phase (key, str).
+
+    Returns
+    -------
+    clusters_sct_mf : dict
+        Fourth-order strain concentration tensor (matricial form) (item, ndarray) associated
+        to each material cluster (key, str).
+    '''
+    # Initialize cluster strain concentration tensors dictionary
+    cluster_sct_mf = {}
+    # Loop over material phases
+    for mat_phase in material_phases:
+        # Loop over material phase clusters
+        for cluster in phase_clusters[mat_phase]:
+            # Initialize cluster strain concentration tensor (matricial form)
+            cluster_sct_mf[str(cluster)] = np.zeros((len(comp_order), len(comp_order)))
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    return cluster_sct_mf
 #
 #                                             Cluster strain concentration tensor validation
 # ==========================================================================================

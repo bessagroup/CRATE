@@ -175,6 +175,9 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                 material.materialinterface.materialinterface('init', problem_dict, mat_dict,
                                                              clst_dict, algpar_dict,
                                                              mat_phase)
+    # Initialize clusters strain concentration tensor dictionary
+    clusters_sct_mf_old = \
+        hom.init_clusters_sct(n_dim, comp_order, material_phases, phase_clusters)
     # Get total number of clusters
     n_total_clusters = crve.get_n_total_clusters()
     # Initialize macroscale loading increment cut flag
@@ -721,10 +724,12 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             if is_inc_cut:
                 break
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Compute the material effective tangent modulus
-            eff_tangent_mf = hom.efftanmod(n_dim, comp_order, material_phases,
-                                           phase_clusters, clusters_f, clusters_D_mf,
-                                           global_cit_D_De_ref_mf)
+            # Compute CRVE effective tangent modulus and clusters strain concentration
+            # tensors
+            eff_tangent_mf, clusters_sct_mf = \
+                hom.effective_tangent_modulus(n_dim, comp_order, material_phases,
+                                              phase_clusters, clusters_f, clusters_D_mf,
+                                              global_cit_D_De_ref_mf)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Set post-processing procedure initial time
             procedure_init_time = time.time()
@@ -1022,6 +1027,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         hom_stress_old_mf = hom_stress_mf
         if problem_type == 1:
             hom_stress_33_old = hom_stress_33
+        # Update last increment converged clusters strain concentration tensors
+        clusters_sct_mf_old = copy.deepcopy(clusters_sct_mf)
         #
         #                                    Converged reference material elastic properties
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
