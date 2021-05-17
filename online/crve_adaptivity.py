@@ -147,7 +147,8 @@ class AdaptivityManager:
         # Return
         return [mandatory_parameters, optional_parameters]
     # --------------------------------------------------------------------------------------
-    def get_target_clusters(self, phase_clusters, clusters_state, inc=None, verbose=False):
+    def get_target_clusters(self, phase_clusters, clusters_state, clusters_state_old,
+                            inc=None, verbose=False):
         '''Get online adaptive clustering target clusters.
 
         Parameters
@@ -158,6 +159,9 @@ class AdaptivityManager:
         clusters_state : dict
             Material constitutive model state variables (item, dict) associated to each
             material cluster (key, str).
+        clusters_state_old : dict
+            Last increment converged material constitutive model state variables
+            (item, dict) associated to each material cluster (key, str).
         inc : int, default=None
             Incremental counter serving as a reference basis for the clustering adaptivity
             frequency control.
@@ -199,7 +203,8 @@ class AdaptivityManager:
             # Build adaptivity feature data matrix
             adapt_data_matrix = \
                 self._get_adaptivity_data_matrix(mat_phase, adapt_control_feature,
-                                                 phase_clusters, clusters_state)
+                                                 phase_clusters, clusters_state,
+                                                 clusters_state_old)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Set initial adaptive clusters group (labeled as group '0') and initialize
             # associated adaptive level
@@ -300,7 +305,7 @@ class AdaptivityManager:
         return is_trigger, target_clusters
     # --------------------------------------------------------------------------------------
     def _get_adaptivity_data_matrix(self, target_phase, adapt_control_feature,
-                                    phase_clusters, clusters_state):
+                                    phase_clusters, clusters_state, clusters_state_old):
         '''Build adaptivity feature data matrix for a given target adaptive material phase.
 
         Parameters
@@ -317,6 +322,9 @@ class AdaptivityManager:
         clusters_state : dict
             Material constitutive model state variables (item, dict) associated to each
             material cluster (key, str).
+        clusters_state_old : dict
+            Last increment converged material constitutive model state variables
+            (item, dict) associated to each material cluster (key, str).
 
         Returns
         -------
@@ -334,8 +342,30 @@ class AdaptivityManager:
         # Get target material phase state variables
         state_variables = clusters_state[str(int(adapt_data_matrix[0, 0]))].keys()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Evaluate nature of adaptivity feature
+        is_state_variable = False
+        for state_variable in state_variables:
+            if state_variable in adapt_control_feature:
+                is_state_variable = True
+                break
+        is_component = False
+        is_incremental = False
+        if re.search('_[1-3][1-3]$', adapt_control_feature):
+            # If adaptivity feature is component of second order tensor
+            is_component = True
+            # Get second order tensor component and matricial form index
+            feature_comp = adapt_control_feature[-2:]
+            index = self._comp_order.index(feature_comp)
+            # Trim adaptivity feature
+            adapt_control_feature = adapt_control_feature[:-3]
+        if re.search('^inc_', adapt_control_feature):
+            # If considering the incremental value of the adaptivity feature
+            is_incremental = True
+            # Trim adaptivity feature
+            adapt_control_feature = adapt_control_feature[4:]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Clustering adaptivity feature is scalar state variable
-        if adapt_control_feature in state_variables:
+        if is_state_variable and not is_component:
             # Check if adaptivity feature is scalar
             if not ioutil.checknumber(clusters_state[str(int(adapt_data_matrix[0, 0]))]
                                       [adapt_control_feature]):
@@ -348,23 +378,35 @@ class AdaptivityManager:
                     # Get cluster label
                     cluster = int(adapt_data_matrix[i, 0])
                     # Collect adaptivity feature data
-                    adapt_data_matrix[i, 1] = \
-                        clusters_state[str(cluster)][adapt_control_feature]
+                    if is_incremental:
+                        adapt_data_matrix[i, 1] = \
+                            clusters_state[str(cluster)][adapt_control_feature] - \
+                            clusters_state_old[str(cluster)][adapt_control_feature]
+                    else:
+                        adapt_data_matrix[i, 1] = \
+                            clusters_state[str(cluster)][adapt_control_feature]
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Clustering adaptivity feature is component of strain/stress related second order
         # tensor (stored in matricial form) state variable
-        elif re.search('_[1-3][1-3]$', adapt_control_feature) and \
-                adapt_control_feature[:-3] in state_variables:
-            # Get 2nd order tensorial feature (stored in matricial form)
-            adapt_feature_tensor = adapt_control_feature[:-3]
-            index = self._comp_order.index(adapt_control_feature[-2:])
+        elif is_state_variable and is_component:
+            # Check if adaptivity feature is scalar
+            if ioutil.checknumber(clusters_state[str(int(adapt_data_matrix[0, 0]))]
+                                  [adapt_control_feature]):
+                raise RuntimeError('The clustering adaptivity feature (' +
+                                   adapt_control_feature + ') prescribed for material ' +
+                                   'material phase ' + target_phase + ' is a scalar.')
             # Build adaptivity feature data matrix
             for i in range(n_clusters):
                 # Get cluster label
                 cluster = int(adapt_data_matrix[i, 0])
                 # Collect adaptivity feature data
-                adapt_data_matrix[i, 1] = \
-                    clusters_state[str(cluster)][adapt_feature_tensor][index]
+                if is_incremental:
+                    adapt_data_matrix[i, 1] = \
+                        clusters_state[str(cluster)][adapt_control_feature][index] - \
+                        clusters_state_old[str(cluster)][adapt_control_feature][index]
+                else:
+                    adapt_data_matrix[i, 1] = \
+                        clusters_state[str(cluster)][adapt_control_feature][index]
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         else:
             raise RuntimeError('Unknown clustering adaptivity feature.')

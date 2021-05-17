@@ -247,7 +247,9 @@
 #   scalar state variable (e.g. acc_p_strain)
 #   component of strain/stress related second order state variable (e.g. strain_mf_11)
 #  -----------------------------------------------------------------------------------
-
+#  (*) The prefix 'inc_' can be added to the adaptivity control feature in order to
+#      consider the associated incremental value instead.
+#
 # ------------------------------------------------------------------------------------------
 [insert here]
 
@@ -541,6 +543,25 @@
 #
 # Syntax:    Clustering_Adaptivity_Output
 #
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
+#                                                           Clustering adaptivity output [O]
+# ==========================================================================================
+# Meaning:   Output of data associated with voxel material-related quantities
+#            (.voxout file). Quantities are written for every converged macroscale loading
+#            increment. In the current version there are no options concerning this output
+#            and three material-related quantities are written for each voxel on each
+#            increment: (1) Von Mises equivalent stress, (2) accumulated plastic strain and
+#            (3) accumulated plastic strain energy density.
+#
+# Syntax:    Voxels_Output
+#
+# Note: This option should be used with caution as the output file can easily scale to
+#       several GB depending on the number of voxels and number of increments.
 # ------------------------------------------------------------------------------------------
 [insert here]
 

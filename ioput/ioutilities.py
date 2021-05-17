@@ -64,7 +64,7 @@ def checknumber(x):
     try:
         float(x)
         return is_number
-    except ValueError:
+    except:
         is_number = False
         return is_number
 # ------------------------------------------------------------------------------------------
