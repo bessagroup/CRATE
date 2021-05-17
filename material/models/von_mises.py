@@ -51,7 +51,8 @@ def getrequiredproperties():
 #   stress_mf         | Cauchy stress tensor (matricial form)
 #   is_plast          | Plastic step flag
 #   is_su_fail        | State update failure flag
-#   acc_p_energy_dens | Accumulated plastic strain energy density (output only)
+#   acc_e_energy_dens | Accumulated elastic strain energy density (post-process)
+#   acc_p_energy_dens | Accumulated plastic strain energy density (post-process)
 #
 def init(problem_dict):
     # Get problem data
@@ -69,6 +70,7 @@ def init(problem_dict):
                                                         comp_order)
     state_variables_init['is_plast'] = False
     state_variables_init['is_su_fail'] = False
+    state_variables_init['acc_e_energy_dens'] = 0.0
     state_variables_init['acc_p_energy_dens'] = 0.0
     # Set additional out-of-plane strain and stress components
     if problem_type == 1:
@@ -107,6 +109,7 @@ def suct(problem_dict, algpar_dict, material_properties, mat_phase, inc_strain,
     e_strain_old_mf = state_variables_old['e_strain_mf']
     p_strain_old_mf = state_variables_old['strain_mf'] - e_strain_old_mf
     acc_p_strain_old = state_variables_old['acc_p_strain']
+    acc_e_energy_dens_old = state_variables_old['acc_e_energy_dens']
     acc_p_energy_dens_old = state_variables_old['acc_p_energy_dens']
     if problem_type == 1:
         e_strain_33_old = state_variables_old['e_strain_33']
@@ -223,8 +226,8 @@ def suct(problem_dict, algpar_dict, material_properties, mat_phase, inc_strain,
         e_strain_33 = e_strain_mf[comp_order.index('33')]
         stress_33 = stress_mf[comp_order.index('33')]
     #
-    #                                              Accumulated plastic strain energy density
-    #                                                                          (output only)
+    #                                  Accumulated elastic and plastic strain energy density
+    #                                                                         (post-process)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Compute plastic strain tensor
     p_strain_mf = (e_trial_strain_mf + p_strain_old_mf) - e_strain_mf
@@ -233,6 +236,11 @@ def suct(problem_dict, algpar_dict, material_properties, mat_phase, inc_strain,
         p_strain_33 = p_strain_mf[comp_order.index('33')]
     # Compute incremental stress
     delta_stress_mf = np.matmul(e_consistent_tangent_mf, e_strain_mf - e_strain_old_mf)
+    # Compute incremental elastic strain
+    delta_e_strain_mf = e_strain_mf - e_strain_old_mf
+    # Compute accumulated elastic strain energy density
+    acc_e_energy_dens = acc_e_energy_dens_old + np.matmul(delta_stress_mf,
+                                                          delta_e_strain_mf)
     # Compute incremental plastic strain
     delta_p_strain_mf = p_strain_mf - p_strain_old_mf
     # Compute accumulated plastic strain energy density
@@ -262,6 +270,7 @@ def suct(problem_dict, algpar_dict, material_properties, mat_phase, inc_strain,
     state_variables['stress_mf'] = stress_mf
     state_variables['is_su_fail'] = is_su_fail
     state_variables['is_plast'] = is_plast
+    state_variables['acc_e_energy_dens'] = acc_e_energy_dens
     state_variables['acc_p_energy_dens'] = acc_p_energy_dens
     if problem_type == 1:
         state_variables['e_strain_33'] = e_strain_33

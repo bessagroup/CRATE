@@ -43,6 +43,7 @@ def getrequiredproperties():
 #   strain_mf   | Total strain tensor (matricial form)
 #   stress_mf   | Cauchy stress tensor (matricial form)
 #   is_su_fail  | State update failure flag
+#   acc_e_energy_dens | Accumulated elastic strain energy density  (post-process)
 #
 def init(problem_dict):
     # Get problem data
@@ -59,6 +60,7 @@ def init(problem_dict):
                                                         comp_order)
     state_variables_init['is_plast'] = False
     state_variables_init['is_su_fail'] = False
+    state_variables_init['acc_e_energy_dens'] = 0.0
     # Set additional out-of-plane strain and stress components
     if problem_type == 1:
         state_variables_init['e_strain_33'] = 0.0
@@ -81,6 +83,7 @@ def suct(problem_dict, algpar_dict, material_properties, mat_phase, inc_strain,
     v = material_properties[mat_phase]['v']
     # Get last increment converged state variables
     e_strain_old_mf = state_variables_old['e_strain_mf']
+    acc_e_energy_dens_old = state_variables_old['acc_e_energy_dens']
     # Set state update fail flag
     is_su_fail = False
     #
@@ -120,6 +123,19 @@ def suct(problem_dict, algpar_dict, material_properties, mat_phase, inc_strain,
     state_variables['is_su_fail'] = is_su_fail
     if problem_type == 1:
         state_variables['stress_33'] = stress_33
+    #
+    #                                                      Accumulated strain energy density
+    #                                                                         (post-process)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Compute incremental stress
+    delta_stress_mf = np.matmul(consistent_tangent_mf, e_strain_mf - e_strain_old_mf)
+    # Compute incremental elastic strain
+    delta_e_strain_mf = e_strain_mf - e_strain_old_mf
+    # Compute accumulated elastic strain energy density
+    acc_e_energy_dens = acc_e_energy_dens_old + np.matmul(delta_stress_mf,
+                                                          delta_e_strain_mf)
+    # Store accumulated elastic strain energy density
+    state_variables['acc_e_energy_dens'] = acc_e_energy_dens
     #
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Return updated state variables and consistent tangent modulus
