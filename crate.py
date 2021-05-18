@@ -202,9 +202,10 @@ if is_same_offstage:
         crve = pickle.load(crve_file)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Update clustering dictionary
-    clst_dict['voxels_clusters'] = crve.voxels_clusters
-    clst_dict['phase_clusters'] = crve.phase_clusters
-    clst_dict['clusters_f'] = crve.clusters_f
+    clst_dict['voxels_clusters'] = copy.deepcopy(crve.voxels_clusters)
+    clst_dict['phase_n_clusters'] = crve.get_phase_n_clusters()
+    clst_dict['phase_clusters'] = copy.deepcopy(crve.phase_clusters)
+    clst_dict['clusters_f'] = copy.deepcopy(crve.clusters_f)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set phase ending time and display finishing phase information
     phase_end_time = time.time()

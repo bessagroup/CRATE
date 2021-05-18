@@ -910,7 +910,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         if is_crve_adaptivity and adaptivity_manager.check_inc_adaptive_steps(inc):
             # Display increment data
             if is_clust_adapt_output:
-                info.displayinfo('12', crve._adaptive_step + 1)
+                info.displayinfo('12', crve.get_adaptive_step() + 1)
             # Build clusters equilibrium residuals dictionary
             clusters_residuals_mf = eqff.build_clusters_residuals_dict(comp_order,
                 material_phases, phase_clusters, residual)
@@ -940,12 +940,10 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                 if is_improved_init_guess:
                     gbl_inc_strain_mf = improved_init_guess[1]
                 # Update clustering dictionary
-                for mat_phase in material_phases:
-                    phase_n_clusters[mat_phase] = len(crve.phase_clusters[mat_phase])
-                clst_dict['phase_n_clusters'] = phase_n_clusters
-                clst_dict['voxels_clusters'] = crve.voxels_clusters
-                clst_dict['phase_clusters'] = crve.phase_clusters
-                clst_dict['clusters_f'] = crve.clusters_f
+                clst_dict['voxels_clusters'] = copy.deepcopy(crve.voxels_clusters)
+                clst_dict['phase_n_clusters'] = crve.get_phase_n_clusters()
+                clst_dict['phase_clusters'] = copy.deepcopy(crve.phase_clusters)
+                clst_dict['clusters_f'] = copy.deepcopy(crve.clusters_f)
                 # Get clusters data
                 phase_n_clusters = clst_dict['phase_n_clusters']
                 phase_clusters = clst_dict['phase_clusters']
@@ -1117,7 +1115,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                 and False:
             # Display increment data
             if is_clust_adapt_output:
-                info.displayinfo('12', crve._adaptive_step + 1)
+                info.displayinfo('12', crve.get_adaptive_step() + 1)
             # Build clusters equilibrium residuals dictionary
             clusters_residuals_mf = eqff.build_clusters_residuals_dict(comp_order,
                 material_phases, phase_clusters, residual)
@@ -1138,12 +1136,10 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                                                        clusters_D_mf, clusters_De_mf],
                                                        inc, verbose=is_clust_adapt_output)
                 # Update clustering dictionary
-                for mat_phase in material_phases:
-                    phase_n_clusters[mat_phase] = len(crve.phase_clusters[mat_phase])
-                clst_dict['phase_n_clusters'] = phase_n_clusters
-                clst_dict['voxels_clusters'] = crve.voxels_clusters
-                clst_dict['phase_clusters'] = crve.phase_clusters
-                clst_dict['clusters_f'] = crve.clusters_f
+                clst_dict['voxels_clusters'] = copy.deepcopy(crve.voxels_clusters)
+                clst_dict['phase_n_clusters'] = crve.get_phase_n_clusters()
+                clst_dict['phase_clusters'] = copy.deepcopy(crve.phase_clusters)
+                clst_dict['clusters_f'] = copy.deepcopy(crve.clusters_f)
                 # Get clusters data
                 phase_n_clusters = clst_dict['phase_n_clusters']
                 phase_clusters = clst_dict['phase_clusters']

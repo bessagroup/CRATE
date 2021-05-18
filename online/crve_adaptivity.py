@@ -92,15 +92,15 @@ class AdaptivityManager:
         adapt_max_level : int
             Maximum adaptive cluster group adaptive level.
         '''
-        self._comp_order = comp_order
-        self._adapt_material_phases = adapt_material_phases
-        self._adaptivity_control_feature = adaptivity_control_feature
-        self._adaptivity_criterion = adaptivity_criterion
+        self._comp_order = copy.deepcopy(comp_order)
+        self._adapt_material_phases = copy.deepcopy(adapt_material_phases)
+        self._adaptivity_control_feature = copy.deepcopy(adaptivity_control_feature)
+        self._adaptivity_criterion = copy.deepcopy(adaptivity_criterion)
         self._adapt_groups = {mat_phase: {} for mat_phase in adapt_material_phases}
         self._groups_adapt_level = {mat_phase: {} for mat_phase in adapt_material_phases}
         self._target_groups_ids = {mat_phase: None for mat_phase in
                                    adapt_material_phases}
-        self._clust_adapt_freq = clust_adapt_freq
+        self._clust_adapt_freq = copy.deepcopy(clust_adapt_freq)
         self.inc_adaptive_steps = {}
         self.max_inc_adaptive_steps = 1
         self.adaptive_evaluation_time = 0
@@ -628,7 +628,7 @@ class AdaptivityManager:
                     cluster_dict.pop(target_cluster)
             # Check material phase adaptivity lock status. If material phase adaptivity is
             # deactivated, then set the associated clustering adaptivity frequency to zero
-            if crve._cluster_phases[mat_phase].adaptivity_lock:
+            if crve.get_cluster_phases()[mat_phase].adaptivity_lock:
                 self._clust_adapt_freq[mat_phase] = 0
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get improved initial iterative guess flag
