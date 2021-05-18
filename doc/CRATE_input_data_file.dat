@@ -249,6 +249,8 @@
 #  -----------------------------------------------------------------------------------
 #  (*) The prefix 'inc_' can be added to the adaptivity control feature in order to
 #      consider the associated incremental value instead.
+#  (*) The suffix '_norm' can be added to the adaptivity control feature in order to
+#      consider the associated norm instead.
 #
 # ------------------------------------------------------------------------------------------
 [insert here]

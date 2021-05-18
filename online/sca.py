@@ -914,8 +914,9 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             # Get clustering adaptivity trigger condition and target clusters
             is_trigger, target_clusters = \
                 adaptivity_manager.get_target_clusters(phase_clusters, clusters_state,
-                                                       clusters_state_old, inc,
-                                                       verbose=is_clust_adapt_output)
+                                                       clusters_state_old, clusters_sct_mf,
+                                                       clusters_sct_mf_old,
+                                                       inc, verbose=is_clust_adapt_output)
             # Perform clustering adaptivity if adaptivity condition is triggered
             if is_trigger:
                 # Display clustering adaptivity
@@ -1116,8 +1117,9 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             # Get clustering adaptivity trigger condition and target clusters
             is_trigger, target_clusters = \
                 adaptivity_manager.get_target_clusters(phase_clusters, clusters_state,
-                                                       clusters_state_old, inc,
-                                                       verbose=is_clust_adapt_output)
+                                                       clusters_state_old, clusters_sct_mf,
+                                                       clusters_sct_mf_old,
+                                                       inc, verbose=is_clust_adapt_output)
             # Perform clustering adaptivity if adaptivity condition is triggered
             if is_trigger:
                 # Display clustering adaptivity

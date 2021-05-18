@@ -148,7 +148,7 @@ class AdaptivityManager:
         return [mandatory_parameters, optional_parameters]
     # --------------------------------------------------------------------------------------
     def get_target_clusters(self, phase_clusters, clusters_state, clusters_state_old,
-                            inc=None, verbose=False):
+                            clusters_sct_mf, clusters_sct_mf_old, inc=None, verbose=False):
         '''Get online adaptive clustering target clusters.
 
         Parameters
@@ -162,6 +162,12 @@ class AdaptivityManager:
         clusters_state_old : dict
             Last increment converged material constitutive model state variables
             (item, dict) associated to each material cluster (key, str).
+        clusters_sct_mf : dict
+            Fourth-order strain concentration tensor (matricial form) (item, ndarray)
+            associated to each material cluster (key, str).
+        clusters_sct_mf_old : dict
+            Last increment converged fourth-order strain concentration tensor
+            (matricial form) (item, ndarray) associated to each material cluster (key, str).
         inc : int, default=None
             Incremental counter serving as a reference basis for the clustering adaptivity
             frequency control.
@@ -204,7 +210,8 @@ class AdaptivityManager:
             adapt_data_matrix = \
                 self._get_adaptivity_data_matrix(mat_phase, adapt_control_feature,
                                                  phase_clusters, clusters_state,
-                                                 clusters_state_old)
+                                                 clusters_state_old, clusters_sct_mf,
+                                                 clusters_sct_mf_old)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Set initial adaptive clusters group (labeled as group '0') and initialize
             # associated adaptive level
@@ -305,7 +312,8 @@ class AdaptivityManager:
         return is_trigger, target_clusters
     # --------------------------------------------------------------------------------------
     def _get_adaptivity_data_matrix(self, target_phase, adapt_control_feature,
-                                    phase_clusters, clusters_state, clusters_state_old):
+                                    phase_clusters, clusters_state, clusters_state_old,
+                                    clusters_sct_mf, clusters_sct_mf_old):
         '''Build adaptivity feature data matrix for a given target adaptive material phase.
 
         Parameters
@@ -325,6 +333,12 @@ class AdaptivityManager:
         clusters_state_old : dict
             Last increment converged material constitutive model state variables
             (item, dict) associated to each material cluster (key, str).
+        clusters_sct_mf : dict
+            Fourth-order strain concentration tensor (matricial form) (item, ndarray)
+            associated to each material cluster (key, str).
+        clusters_sct_mf_old : dict
+            Last increment converged fourth-order strain concentration tensor
+            (matricial form) (item, ndarray) associated to each material cluster (key, str).
 
         Returns
         -------
@@ -349,6 +363,7 @@ class AdaptivityManager:
                 is_state_variable = True
                 break
         is_component = False
+        is_norm = False
         is_incremental = False
         if re.search('_[1-3][1-3]$', adapt_control_feature):
             # If adaptivity feature is component of second order tensor
@@ -358,6 +373,11 @@ class AdaptivityManager:
             index = self._comp_order.index(feature_comp)
             # Trim adaptivity feature
             adapt_control_feature = adapt_control_feature[:-3]
+        if re.search('_norm$', adapt_control_feature):
+            # If considering the norm of the tensorial adaptivity feature
+            is_norm = True
+            # Trim adaptivity feature
+            adapt_control_feature = adapt_control_feature[:-5]
         if re.search('^inc_', adapt_control_feature):
             # If considering the incremental value of the adaptivity feature
             is_incremental = True
@@ -368,7 +388,7 @@ class AdaptivityManager:
         if is_state_variable and not is_component:
             # Check if adaptivity feature is scalar
             if not ioutil.checknumber(clusters_state[str(int(adapt_data_matrix[0, 0]))]
-                                      [adapt_control_feature]):
+                                      [adapt_control_feature]) and not is_norm:
                 raise RuntimeError('The clustering adaptivity feature (' +
                                    adapt_control_feature + ') prescribed for material ' +
                                    'material phase ' + target_phase + ' must be a scalar.')
@@ -378,13 +398,25 @@ class AdaptivityManager:
                     # Get cluster label
                     cluster = int(adapt_data_matrix[i, 0])
                     # Collect adaptivity feature data
-                    if is_incremental:
-                        adapt_data_matrix[i, 1] = \
-                            clusters_state[str(cluster)][adapt_control_feature] - \
-                            clusters_state_old[str(cluster)][adapt_control_feature]
+                    if is_norm:
+                        if is_incremental:
+                            adapt_data_matrix[i, 1] = \
+                                np.linalg.norm(clusters_state[str(cluster)]
+                                               [adapt_control_feature]) - \
+                                np.linalg.norm(clusters_state_old[str(cluster)]
+                                               [adapt_control_feature])
+                        else:
+                            adapt_data_matrix[i, 1] = \
+                                np.linalg.norm(clusters_state[str(cluster)]
+                                               [adapt_control_feature])
                     else:
-                        adapt_data_matrix[i, 1] = \
-                            clusters_state[str(cluster)][adapt_control_feature]
+                        if is_incremental:
+                            adapt_data_matrix[i, 1] = \
+                                clusters_state[str(cluster)][adapt_control_feature] - \
+                                clusters_state_old[str(cluster)][adapt_control_feature]
+                        else:
+                            adapt_data_matrix[i, 1] = \
+                                clusters_state[str(cluster)][adapt_control_feature]
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Clustering adaptivity feature is component of strain/stress related second order
         # tensor (stored in matricial form) state variable
@@ -408,8 +440,22 @@ class AdaptivityManager:
                     adapt_data_matrix[i, 1] = \
                         clusters_state[str(cluster)][adapt_control_feature][index]
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Clustering adaptivity feature is norm of strain concentration tensor
+        elif adapt_control_feature == 'strain_concentration_tensor' and is_norm:
+            # Build adaptivity feature data matrix
+            for i in range(n_clusters):
+                # Get cluster label
+                cluster = int(adapt_data_matrix[i, 0])
+                # Collect adaptivity feature data
+                if is_incremental:
+                    adapt_data_matrix[i, 1] = \
+                        np.linalg.norm(clusters_sct_mf[str(cluster)]) - \
+                        np.linalg.norm(clusters_sct_mf_old[str(cluster)])
+                else:
+                    adapt_data_matrix[i, 1] = np.linalg.norm(clusters_sct_mf[str(cluster)])
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         else:
-            raise RuntimeError('Unknown clustering adaptivity feature.')
+            raise RuntimeError('Unknown or unavailable clustering adaptivity feature.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return adapt_data_matrix
     # --------------------------------------------------------------------------------------
