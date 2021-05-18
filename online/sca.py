@@ -911,11 +911,15 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             # Display increment data
             if is_clust_adapt_output:
                 info.displayinfo('12', crve._adaptive_step + 1)
+            # Build clusters equilibrium residuals dictionary
+            clusters_residuals_mf = eqff.build_clusters_residuals_dict(comp_order,
+                material_phases, phase_clusters, residual)
             # Get clustering adaptivity trigger condition and target clusters
             is_trigger, target_clusters = \
                 adaptivity_manager.get_target_clusters(phase_clusters, clusters_state,
                                                        clusters_state_old, clusters_sct_mf,
                                                        clusters_sct_mf_old,
+                                                       clusters_residuals_mf,
                                                        inc, verbose=is_clust_adapt_output)
             # Perform clustering adaptivity if adaptivity condition is triggered
             if is_trigger:
@@ -1114,11 +1118,15 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             # Display increment data
             if is_clust_adapt_output:
                 info.displayinfo('12', crve._adaptive_step + 1)
+            # Build clusters equilibrium residuals dictionary
+            clusters_residuals_mf = eqff.build_clusters_residuals_dict(comp_order,
+                material_phases, phase_clusters, residual)
             # Get clustering adaptivity trigger condition and target clusters
             is_trigger, target_clusters = \
                 adaptivity_manager.get_target_clusters(phase_clusters, clusters_state,
                                                        clusters_state_old, clusters_sct_mf,
                                                        clusters_sct_mf_old,
+                                                       clusters_residuals_mf,
                                                        inc, verbose=is_clust_adapt_output)
             # Perform clustering adaptivity if adaptivity condition is triggered
             if is_trigger:

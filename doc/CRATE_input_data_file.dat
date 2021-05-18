@@ -244,8 +244,11 @@
 #  -----------------------------------------------------------------------------------
 #   Feature (mandatory one for each adaptive material phase)
 #  -----------------------------------------------------------------------------------
-#   scalar state variable (e.g. acc_p_strain)
+#   scalar state variable (e.g., acc_p_strain)
+#   norm of tensorial state variable (e.g., e_strain_mf_norm)
 #   component of strain/stress related second order state variable (e.g. strain_mf_11)
+#   norm of cluster strain concentration tensor (strain_concentration_tensor_norm)
+#   norm of cluster equilibrium residual tensor (equilibrium_residual_norm)
 #  -----------------------------------------------------------------------------------
 #  (*) The prefix 'inc_' can be added to the adaptivity control feature in order to
 #      consider the associated incremental value instead.

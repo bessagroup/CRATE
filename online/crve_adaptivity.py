@@ -148,7 +148,8 @@ class AdaptivityManager:
         return [mandatory_parameters, optional_parameters]
     # --------------------------------------------------------------------------------------
     def get_target_clusters(self, phase_clusters, clusters_state, clusters_state_old,
-                            clusters_sct_mf, clusters_sct_mf_old, inc=None, verbose=False):
+                            clusters_sct_mf, clusters_sct_mf_old, clusters_residuals_mf,
+                            inc=None, verbose=False):
         '''Get online adaptive clustering target clusters.
 
         Parameters
@@ -168,6 +169,9 @@ class AdaptivityManager:
         clusters_sct_mf_old : dict
             Last increment converged fourth-order strain concentration tensor
             (matricial form) (item, ndarray) associated to each material cluster (key, str).
+        clusters_residuals_mf : dict
+            Equilibrium residual second-order tensor (matricial form) (item, ndarray)
+            associated to each material cluster (key, str).
         inc : int, default=None
             Incremental counter serving as a reference basis for the clustering adaptivity
             frequency control.
@@ -211,7 +215,7 @@ class AdaptivityManager:
                 self._get_adaptivity_data_matrix(mat_phase, adapt_control_feature,
                                                  phase_clusters, clusters_state,
                                                  clusters_state_old, clusters_sct_mf,
-                                                 clusters_sct_mf_old)
+                                                 clusters_sct_mf_old, clusters_residuals_mf)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Set initial adaptive clusters group (labeled as group '0') and initialize
             # associated adaptive level
@@ -313,7 +317,8 @@ class AdaptivityManager:
     # --------------------------------------------------------------------------------------
     def _get_adaptivity_data_matrix(self, target_phase, adapt_control_feature,
                                     phase_clusters, clusters_state, clusters_state_old,
-                                    clusters_sct_mf, clusters_sct_mf_old):
+                                    clusters_sct_mf, clusters_sct_mf_old,
+                                    clusters_residuals_mf):
         '''Build adaptivity feature data matrix for a given target adaptive material phase.
 
         Parameters
@@ -339,6 +344,9 @@ class AdaptivityManager:
         clusters_sct_mf_old : dict
             Last increment converged fourth-order strain concentration tensor
             (matricial form) (item, ndarray) associated to each material cluster (key, str).
+        clusters_residuals_mf : dict
+            Equilibrium residual second-order tensor (matricial form) (item, ndarray)
+            associated to each material cluster (key, str).
 
         Returns
         -------
@@ -453,6 +461,16 @@ class AdaptivityManager:
                         np.linalg.norm(clusters_sct_mf_old[str(cluster)])
                 else:
                     adapt_data_matrix[i, 1] = np.linalg.norm(clusters_sct_mf[str(cluster)])
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Clustering adaptivity feature is norm of Lippmann-Schwinger equilibrium residual
+        elif adapt_control_feature == 'equilibrium_residual' and is_norm:
+            # Build adaptivity feature data matrix
+            for i in range(n_clusters):
+                # Get cluster label
+                cluster = int(adapt_data_matrix[i, 0])
+                # Collect adaptivity feature data
+                adapt_data_matrix[i, 1] = \
+                    np.linalg.norm(clusters_residuals_mf[str(cluster)])
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         else:
             raise RuntimeError('Unknown or unavailable clustering adaptivity feature.')

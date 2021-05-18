@@ -171,3 +171,52 @@ def checkeqlbconvergence2(comp_order, n_total_clusters, inc_mac_load_mf, n_presc
             and (error_A3 < conv_tol)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return [is_converged, error_A1, error_A2, error_A3]
+#
+#                                                  Clusters equilibrium residuals dictionary
+# ==========================================================================================
+def build_clusters_residuals_dict(comp_order, material_phases, phase_clusters, residual):
+    '''Build clusters equilibrium residuals dictionary.
+
+    Parameters
+    ----------
+    comp_order : list
+        Strain/Stress components (str) order.
+    material_phases : list
+        RVE material phases labels (str).
+    phase_clusters : dict
+        Clusters labels (item, list of int) associated to each material phase
+        (key, str).
+    residual : ndarray
+        Residual vector of discretized Lippmann-Schwinger system of nonlinear
+        equilibrium equations. It is assumed that cluster equilibrium residuals are stored
+        in a sorted manner and previous to any other residuals.
+
+    Returns
+    -------
+    clusters_residuals_mf : dict
+        Equilibrium residual second-order tensor (matricial form) (item, ndarray) associated
+        to each material cluster (key, str).
+
+    Notes
+    -----
+    This procedure is only carried out so that clusters equilibrium residuals are
+    conveniently stored to perform post-processing operations.
+    '''
+    # Initialize clusters equilibrium residuals dictionary
+    clusters_residuals_mf = {}
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Initialize cluster strain range indexes
+    i_init = 0
+    i_end = i_init + len(comp_order)
+    # Loop over material phases
+    for mat_phase in material_phases:
+        # Loop over material phase clusters
+        for cluster in phase_clusters[mat_phase]:
+            # Store cluster equilibrium residual
+            clusters_residuals_mf[str(cluster)] = residual[i_init:i_end]
+            # Update cluster strain range indexes
+            i_init = i_init + len(comp_order)
+            i_end = i_init + len(comp_order)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Return
+    return clusters_residuals_mf
