@@ -51,7 +51,8 @@ import online.scs.scs_schemes as scs
 import online.equilibrium.sne_farfield as eqff
 import online.equilibrium.sne_macstrain as eqms
 # CRVE adaptivity
-from online.crve_adaptivity import AdaptivityManager, ClusteringAdaptivityOutput
+from clustering.adaptivity.crve_adaptivity import AdaptivityManager, \
+                                                  ClusteringAdaptivityOutput
 # Voxels output
 from ioput.voxelsoutput import VoxelsOutput
 

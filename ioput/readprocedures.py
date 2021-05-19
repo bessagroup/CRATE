@@ -41,7 +41,7 @@ from clustering.clusteringphase import SCRMP
 # CRVE generation
 from clustering.crve import CRVE
 # CRVE adaptivity
-from online.crve_adaptivity import AdaptivityManager
+from clustering.adaptivity.crve_adaptivity import AdaptivityManager
 #
 #                                                                           Search functions
 # ==========================================================================================
