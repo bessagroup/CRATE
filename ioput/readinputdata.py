@@ -141,7 +141,7 @@ def readinputdatafile(input_file,dirs_dict):
     # Read cluster analysis scheme
     keyword = 'Cluster_Analysis_Scheme'
     clustering_type, base_clustering_scheme, adaptive_clustering_scheme, \
-        adaptivity_criterion, adaptivity_type, adaptivity_control_feature = \
+        adapt_criterion_data, adaptivity_type, adaptivity_control_feature = \
             rproc.read_cluster_analysis_scheme(input_file, input_file_path, keyword,
                                                material_properties.keys(),
                                                clustering_features)
@@ -354,7 +354,7 @@ def readinputdatafile(input_file,dirs_dict):
                                           standardization_method, links_dict,
                                           phase_n_clusters, rg_dict, clustering_type,
                                           base_clustering_scheme,
-                                          adaptive_clustering_scheme, adaptivity_criterion,
+                                          adaptive_clustering_scheme, adapt_criterion_data,
                                           adaptivity_type, adaptivity_control_feature,
                                           clust_adapt_freq, is_clust_adapt_output)
     # Package data associated to the self-consistent scheme

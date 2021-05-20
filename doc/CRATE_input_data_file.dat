@@ -222,11 +222,11 @@
 #
 #  Adaptivity criterion parameters
 #  -----------------------------------------------------------------------------------
-#   Criterion        Parameter [M/O]                   Parameter type
+#   Criterion            Parameter [M/O]                 Parameter type
 #  -----------------------------------------------------------------------------------
-#   Non-spatial      adapt_trigger_ratio [O]           float (defaults to 0.1)
-#                    adapt_split_threshold [O]         float (defaults to 0.1)
-#                    adapt_max_level [O]               integer (defaults to 15)
+#   Adaptive Cluster     adapt_trigger_ratio [O]         float (defaults to 0.1)
+#       Grouping         adapt_split_threshold [O]       float (defaults to 0.1)
+#                        adapt_max_level [O]             integer (defaults to 15)
 #  -----------------------------------------------------------------------------------
 #
 #

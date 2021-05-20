@@ -85,7 +85,7 @@ class CRVE:
     def __init__(self, rve_dims, regular_grid, material_phases, comp_order,
                  global_data_matrix, clustering_type, phase_n_clusters,
                  base_clustering_scheme, adaptive_clustering_scheme=None,
-                 adaptivity_criterion=None, adaptivity_type=None,
+                 adapt_criterion_data=None, adaptivity_type=None,
                  adaptivity_control_feature=None):
         '''Cluster-Reduced Representative Volume Element constructor.
 
@@ -120,7 +120,7 @@ class CRVE:
             clustering characterized by a clustering algorithm (col 1, int), a list of
             features (col 2, list of int) and a list of the features data matrix' indexes
             (col 3, list of int).
-        adaptivity_criterion : dict, default=None
+        adapt_criterion_data : dict, default=None
             Clustering adaptivity criterion (item, dict) associated to each material phase
             (key, str). This dictionary contains the adaptivity criterion to be used and the
             required parameters.
@@ -149,7 +149,7 @@ class CRVE:
         self.clusters_f = None
         self.cit_X_mf = None
         self.adaptivity_control_feature = copy.deepcopy(adaptivity_control_feature)
-        self.adaptivity_criterion = copy.deepcopy(adaptivity_criterion)
+        self.adapt_criterion_data = copy.deepcopy(adapt_criterion_data)
         self.adaptive_clustering_time = 0
         self.adaptive_cit_time = 0
         # Get number of dimensions

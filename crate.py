@@ -230,7 +230,7 @@ else:
                 clst_dict['phase_n_clusters'],
                 clst_dict['base_clustering_scheme'],
                 clst_dict['adaptive_clustering_scheme'],
-                clst_dict['adaptivity_criterion'],
+                clst_dict['adapt_criterion_data'],
                 clst_dict['adaptivity_type'],
                 clst_dict['adaptivity_control_feature'])
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

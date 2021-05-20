@@ -237,7 +237,7 @@ def packregulargrid(discret_file_path, rve_dims, mat_dict, problem_dict):
 # Package data associated to the clustering on a regular grid of pixels/voxels
 def packrgclustering(clustering_solution_method, standardization_method, links_dict,
                      phase_n_clusters, rg_dict, clustering_type, base_clustering_scheme,
-                     adaptive_clustering_scheme, adaptivity_criterion, adaptivity_type,
+                     adaptive_clustering_scheme, adapt_criterion_data, adaptivity_type,
                      adaptivity_control_feature, clust_adapt_freq, is_clust_adapt_output):
     #
     # Object                       Meaning                                         Type
@@ -257,7 +257,7 @@ def packrgclustering(clustering_solution_method, standardization_method, links_d
     #                              key: material phase id (str)
     # adaptive_clustering_scheme   Adaptive clustering scheme                      dict
     #                              key: material phase id (str)
-    # adaptivity_criterion         Adaptivity criterion parameters                 dict
+    # adapt_criterion_data         Adaptivity criterion parameters                 dict
     #                              key: material phase id (str)
     # adaptivity_type              Adaptivity type parameters                      dict
     #                              key: material phase id (str)
@@ -289,7 +289,7 @@ def packrgclustering(clustering_solution_method, standardization_method, links_d
     clst_dict['clustering_type'] = clustering_type
     clst_dict['base_clustering_scheme'] = base_clustering_scheme
     clst_dict['adaptive_clustering_scheme'] = adaptive_clustering_scheme
-    clst_dict['adaptivity_criterion'] = adaptivity_criterion
+    clst_dict['adapt_criterion_data'] = adapt_criterion_data
     clst_dict['adaptivity_type'] = adaptivity_type
     clst_dict['adaptivity_control_feature'] = adaptivity_control_feature
     clst_dict['clust_adapt_freq'] = clust_adapt_freq

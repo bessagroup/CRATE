@@ -199,8 +199,9 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         is_clust_adapt_output = clst_dict['is_clust_adapt_output']
         # Initialize online CRVE clustering adaptivity manager
         adaptivity_manager = AdaptivityManager(comp_order, crve.adapt_material_phases,
+                                               crve.phase_clusters,
                                                crve.adaptivity_control_feature,
-                                               crve.adaptivity_criterion,
+                                               crve.adapt_criterion_data,
                                                clust_adapt_freq)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set post-processing procedure initial time
