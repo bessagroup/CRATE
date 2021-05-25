@@ -174,6 +174,72 @@ class ACRMP(CRMP):
             Clustering adaptivity parameters.
         '''
         pass
+    # --------------------------------------------------------------------------------------
+    @staticmethod
+    def _dynamic_split_factor(ref_split_factor, adapt_trigger_ratio, magnitude,
+                              dynamic_amp=0):
+        '''Compute dynamic adaptive clustering split factor.
+
+        Parameters
+        ----------
+        ref_split_factor : float
+            Reference (centered) adaptive clustering split factor. The adaptive clustering
+            split factor must be contained between 0 and 1 (included). The lower bound (0)
+            enforces a single split, while the upper bound (1) performs the maximum number
+            splits of each cluster (leading to single-voxel clusters).
+        adapt_trigger_ratio : float
+            Threshold associated to the adaptivity trigger condition.
+        magnitude : float
+            Difference between cluster ratio and adaptive trigger ratio. Given that the
+            cluster ratio ranges between 0 and 1 and only clusters with a ratio greater or
+            equal than the adaptive trigger ratio are targeted, the magnitude ranges between
+            0 and 1 - trigger ratio.
+        dynamic_amp : float, default=0
+            Dynamic split factor amplitude centered around the reference adaptive clustering
+            split factor.
+
+        Returns
+        -------
+        adapt_split_factor : float
+            Adaptive clustering split factor. The adaptive clustering split factor must be
+            contained between 0 and 1 (included). The lower bound (0) enforces a single
+            split, while the upper bound (1) performs the maximum number splits of
+            each cluster (leading to single-voxel clusters).
+        '''
+        # Check provided parameters
+        if not (ref_split_factor >= 0 and ref_split_factor <= 1):
+            raise RuntimeError('Invalid reference adaptive clustering split factor.')
+        if not (adapt_trigger_ratio >= 0 and adapt_trigger_ratio <= 1):
+            raise RuntimeError('Invalid adaptive trigger ratio.')
+        if not (dynamic_amp >= 0):
+            raise RuntimeError('Invalid dynamic split factor amplitude.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # If the dynamic split factor amplitude is null, skip computations and return
+        # reference adaptive clustering split factor. Otherwise, compute adaptive clustering
+        # split factor lower bound
+        if abs(dynamic_amp) < 1e-10:
+            return ref_split_factor
+        else:
+            lower_bound = max(0, ref_split_factor - 0.5*dynamic_amp)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Choose dynamic function type
+        dynamic_type = 'linear'
+        # Set dynamic function
+        if dynamic_type == 'linear':
+            # Linear dynamic function
+            dynamic_function = lambda magnitude : (1/(1 - adapt_trigger_ratio))*magnitude
+        elif dynamic_type == 'quadratic':
+            # Quadratic dynamic function
+            dynamic_function = \
+                lambda magnitude : (1/((1 - adapt_trigger_ratio)**2))*(magnitude**2)
+        else:
+            raise RuntimeError('Unknown dynamic function type.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Compute adaptive clustering split factor
+        adapt_split_factor = lower_bound + dynamic_function(magnitude)*dynamic_amp
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return adapt_split_factor
 #
 #                                                      Static Cluster-Reduced Material Phase
 # ==========================================================================================
@@ -486,7 +552,7 @@ class GACRMP(ACRMP):
                     magnitude = \
                         target_clusters_data[str(target_cluster)]['max_magnitude']
                     # Compute dynamic adaptive clustering split factor
-                    adapt_split_factor = self._dynamic_split_factor(ref_split_factor,
+                    adapt_split_factor = super()._dynamic_split_factor(ref_split_factor,
                         adapt_trigger_ratio, magnitude,
                         dynamic_amp=self._dynamic_split_factor_amp)
                 else:
