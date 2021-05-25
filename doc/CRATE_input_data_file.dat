@@ -242,6 +242,8 @@
 #                    dynamic_split_factor_amp [O]      float (defaults to 0.0)
 #                    threshold_n_clusters [O]          integer (defaults to 1M)
 #   HAACRMP          adapt_split_factor [O]            float (defaults to 0.01)
+#                    dynamic_split_factor_amp [O]      float (defaults to 0.0)
+#                    threshold_n_clusters [O]          integer (defaults to 1M)
 #  -----------------------------------------------------------------------------------
 #
 #

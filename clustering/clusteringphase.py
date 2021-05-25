@@ -369,6 +369,10 @@ class GACRMP(ACRMP):
         contained between 0 and 1 (included). The lower bound (0) enforces a single
         split, while the upper bound (1) performs the maximum number splits of
         each cluster (leading to single-voxel clusters).
+    _threshold_n_clusters : int
+        Threshold number of adaptive material phase number of clusters. Once this threshold
+        is surpassed, the adaptive procedures of the adaptive material phase are
+        deactivated.
     _is_dynamic_split_factor : bool
         True if adaptive clustering split factor is to be computed dynamically. Otherwise,
         the adaptive clustering split factor is always set equal to _adapt_split_factor.
@@ -770,7 +774,7 @@ class GACRMP(ACRMP):
 #
 #                         Hierarchical Agglomerative Adaptive Cluster-Reduced Material Phase
 # ==========================================================================================
-class HAACRMP(CRMP):
+class HAACRMP(ACRMP):
     '''Hierarchical Agglomerative Adaptive Cluster-Reduced Material Phase.
 
     This class provides all the required attributes and methods associated with the
@@ -792,12 +796,21 @@ class HAACRMP(CRMP):
         contained between 0 and 1 (included). The lower bound (0) enforces a single
         split, while the upper bound (1) performs the maximum number splits of
         each cluster (leading to single-voxel clusters).
+    _threshold_n_clusters : int
+        Threshold number of adaptive material phase number of clusters. Once this threshold
+        is surpassed, the adaptive procedures of the adaptive material phase are
+        deactivated.
+    _is_dynamic_split_factor : bool
+        True if adaptive clustering split factor is to be computed dynamically. Otherwise,
+        the adaptive clustering split factor is always set equal to _adapt_split_factor.
     max_label : int
         Clustering maximum label.
     cluster_labels : ndarray of shape (n_phase_voxels,)
         Material phase cluster labels.
     adaptive_time : float
         Total amount of time (s) spent in the adaptive procedures.
+    adaptivity_lock : bool
+        True if the adaptive procedures are deactivated, False otherwise.
     '''
     def __init__(self, mat_phase, cluster_data_matrix, n_clusters, adaptivity_type):
         '''Hierarchical Agglomerative Adaptive Cluster-Reduced Material Phase constructor.
@@ -825,8 +838,14 @@ class HAACRMP(CRMP):
         self.max_label = 0
         self.cluster_labels = None
         self.adaptive_time = 0
+        self.adaptivity_lock = False
         # Set clustering adaptivity parameters
         self._set_adaptivity_type_parameters(self._adaptivity_type)
+        # Set dynamic adaptive split factor
+        if abs(self._dynamic_split_factor_amp) < 1e-10:
+            self._is_dynamic_split_factor = False
+        else:
+            self._is_dynamic_split_factor = True
     # --------------------------------------------------------------------------------------
     def perform_base_clustering(self, base_clustering_scheme, min_label=0):
         '''Perform HAACRMP base clustering.
@@ -844,7 +863,7 @@ class HAACRMP(CRMP):
         # Get number of prescribed clusterings
         n_clusterings = base_clustering_scheme.shape[0]
         if n_clusterings > 1:
-            raise RuntimeError('A HAA-CRMP only accepts a single hierarchical ' +
+            raise RuntimeError('A HAACRMP only accepts a single hierarchical ' +
                                'agglomerative prescribed clustering.')
         # Get number of material phase voxels
         n_phase_voxels = self._cluster_data_matrix.shape[0]
@@ -873,8 +892,8 @@ class HAACRMP(CRMP):
         self.cluster_labels, self.max_label = \
             self._update_cluster_labels(self.cluster_labels, min_label)
     # --------------------------------------------------------------------------------------
-    def perform_adaptive_clustering(self, target_clusters, adaptive_clustering_scheme=None,
-                                    min_label=0):
+    def perform_adaptive_clustering(self, target_clusters, target_clusters_data,
+                                    adaptive_clustering_scheme=None, min_label=0):
         '''Perform HAACRMP adaptive clustering step.
 
         Refine the provided target clusters by splitting them according to the hierarchical
@@ -885,6 +904,9 @@ class HAACRMP(CRMP):
         ----------
         target_clusters : list
             List with the labels (int) of clusters to be adapted.
+        target_clusters_data : dict
+            For each target cluster (key, str), store dictionary (item, dict) containing
+            cluster associated parameters relevant for the adaptive procedures.
         adaptive_clustering_scheme : ndarray of shape (n_clusterings, 3), default=None
             Prescribed adaptive clustering scheme to perform the material phase adaptive
             cluster analysis. Each row is associated with a unique clustering, characterized
@@ -953,8 +975,28 @@ class HAACRMP(CRMP):
                 continue
             else:
                 n_leaves = target_node.get_count()
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Get referece adaptive clustering split factor
+            ref_split_factor = self._adapt_split_factor
+            # Get target cluster dynamic split factor ability
+            is_cluster_dynamic_split_factor = \
+                target_clusters_data[str(target_cluster)]['is_dynamic_split_factor']
+            # Set adaptive clustering split factor
+            if self._is_dynamic_split_factor and is_cluster_dynamic_split_factor:
+                # Get adaptive trigger ratio and magnitude
+                adapt_trigger_ratio = \
+                    target_clusters_data[str(target_cluster)]['adapt_trigger_ratio']
+                magnitude = \
+                    target_clusters_data[str(target_cluster)]['max_magnitude']
+                # Compute dynamic adaptive clustering split factor
+                adapt_split_factor = super()._dynamic_split_factor(ref_split_factor,
+                    adapt_trigger_ratio, magnitude,
+                    dynamic_amp=self._dynamic_split_factor_amp)
+            else:
+                adapt_split_factor = ref_split_factor
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Compute total number of tree node splits, enforcing at least one split
-            n_splits = max(1, int(np.round(self._adapt_split_factor*(n_leaves - 1))))
+            n_splits = max(1, int(np.round(adapt_split_factor*(n_leaves - 1))))
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Initialize child nodes list
             child_nodes = []
@@ -1003,11 +1045,16 @@ class HAACRMP(CRMP):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Update RVE hierarchical agglomerative clustering
         self.cluster_labels = labels
+        # Update number of material phase clusters
+        self._n_clusters = len(set(self.cluster_labels))
         # Update clustering maximum label
         self.max_label = max(self.cluster_labels)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Update total amount of time spent in the adaptive procedures
         self.adaptive_time += time.time() - init_time
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Check adaptivity threshold conditions
+        self._check_adaptivity_lock()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return adaptive_clustering_map
@@ -1035,6 +1082,17 @@ class HAACRMP(CRMP):
         node_list = sorted(node_list, reverse=True, key=lambda x: x.dist)
         # Return sorted tree node list
         return node_list
+    # --------------------------------------------------------------------------------------
+    def _check_adaptivity_lock(self):
+        '''Check ACRMP adaptivity locking conditions.
+
+        Check conditions that may deactivate the adaptive procedures in the ACRMP. Once the
+        ACRMP adaptivity is locked, it is treated as a SCRMP for the remainder of the
+        problem numerical solution.
+        '''
+        # Check if the number of clusters threshold as been surpassed
+        if self._n_clusters > self._threshold_n_clusters:
+            self.adaptivity_lock = True
     # --------------------------------------------------------------------------------------
     def print_adaptive_clustering(self, adaptive_clustering_map, adaptive_tree_node_map):
         '''Print hierarchical adaptive clustering refinement descriptors (validation).'''
@@ -1079,6 +1137,16 @@ class HAACRMP(CRMP):
         '''
         return ['5',]
     # --------------------------------------------------------------------------------------
+    def get_n_clusters(self):
+        '''Get current number of clusters.
+
+        Returns
+        -------
+        n_clusters : int
+            Number of material phase clusters.
+        '''
+        return self._n_clusters
+    # --------------------------------------------------------------------------------------
     @staticmethod
     def get_adaptivity_type_parameters():
         '''Get ACRMP mandatory and optional adaptivity type parameters.
@@ -1097,7 +1165,9 @@ class HAACRMP(CRMP):
         # Set mandatory adaptivity type parameters
         mandatory_parameters = {}
         # Set optional adaptivity type parameters and associated default values
-        optional_parameters = {'adapt_split_factor': 0.01}
+        optional_parameters = {'adapt_split_factor': 0.01,
+                               'dynamic_split_factor_amp': 0.0,
+                               'threshold_n_clusters': 10**6}
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return [mandatory_parameters, optional_parameters]
@@ -1114,3 +1184,19 @@ class HAACRMP(CRMP):
         pass
         # Set optional adaptivity type parameters
         self._adapt_split_factor = adaptivity_type['adapt_split_factor']
+        self._dynamic_split_factor_amp = adaptivity_type['dynamic_split_factor_amp']
+        self._threshold_n_clusters = adaptivity_type['threshold_n_clusters']
+    # --------------------------------------------------------------------------------------
+    def get_adaptive_output(self):
+        '''Get adaptivity metrics for clustering adaptivity output.
+
+        Returns
+        -------
+        adaptivity_output : list
+            List containing the adaptivity metrics associated to the clustering adaptivity
+            output file.
+        '''
+        # Build adaptivity output
+        adaptivity_output = [self._n_clusters, self._adaptive_step, self.adaptive_time]
+        # Return
+        return adaptivity_output
