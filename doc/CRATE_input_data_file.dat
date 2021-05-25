@@ -210,7 +210,8 @@
 #
 # feature_ID:                1 - Fourth-order local elastic strain concentration tensor
 #
-# adaptivity_criterion_ID:   1 - Non-spatial
+# adaptivity_criterion_ID:   1 - Adaptive Cluster Grouping
+#                            2 - Spatial Discontinuities
 #
 # adaptivity_type_ID:        1 - Generalize Adaptive (GACRMP)
 #                            2 - Hierarchical Agglomerative Adaptive (HAACRMP)
@@ -227,6 +228,9 @@
 #   Adaptive Cluster     adapt_trigger_ratio [O]         float (defaults to 0.1)
 #       Grouping         adapt_split_threshold [O]       float (defaults to 0.1)
 #                        adapt_max_level [O]             integer (defaults to 15)
+#       Spatial          adapt_trigger_ratio [O]         float (defaults to 0.1)
+#    Discontinuities     adapt_max_level [O]             integer (defaults to 15)
+#                        adapt_level_max_diff [O]        integer (defaults to 2)
 #  -----------------------------------------------------------------------------------
 #
 #
@@ -235,6 +239,7 @@
 #   Type             Parameter [M/O]                   Parameter type
 #  -----------------------------------------------------------------------------------
 #   GACRMP           adapt_split_factor [O]            float (defaults to 0.01)
+#                    dynamic_split_factor_amp [O]      float (defaults to 0.0)
 #                    threshold_n_clusters [O]          integer (defaults to 1M)
 #   HAACRMP          adapt_split_factor [O]            float (defaults to 0.01)
 #  -----------------------------------------------------------------------------------

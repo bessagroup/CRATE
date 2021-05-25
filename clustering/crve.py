@@ -60,7 +60,7 @@ class CRVE:
         (key, str).
     _adaptive_step : int
         Counter of adaptive clustering steps, with 0 associated with the base clustering.
-    voxels_clusters : ndarray
+    _voxels_clusters : ndarray
         Regular grid of voxels (spatial discretization of the RVE), where each entry
         contains the cluster label (int) assigned to the corresponding pixel/voxel.
     phase_clusters : dict
@@ -144,7 +144,7 @@ class CRVE:
         self._gop_X_dft_vox = None
         self._cluster_phases = None
         self._adaptive_step = 0
-        self.voxels_clusters = None
+        self._voxels_clusters = None
         self.phase_clusters = None
         self.clusters_f = None
         self.cit_X_mf = None
@@ -244,7 +244,7 @@ class CRVE:
             labels[voxels_idxs] = crmp.cluster_labels
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Build base CRVE
-        self.voxels_clusters = np.reshape(np.array(labels, dtype=int), self._n_voxels_dims)
+        self._voxels_clusters = np.reshape(np.array(labels, dtype=int), self._n_voxels_dims)
         # Compute base CRVE descriptors
         info.displayinfo('5', 'Computing CRVE base clustering descriptors...', 2)
         # Store cluster labels belonging to each material phase
@@ -252,13 +252,16 @@ class CRVE:
         # Compute material clusters' volume fraction
         self._set_clusters_vf()
     # --------------------------------------------------------------------------------------
-    def perform_crve_adaptivity(self, target_clusters):
+    def perform_crve_adaptivity(self, target_clusters, target_clusters_data):
         '''Perform CRVE clustering adaptivity.
 
         Parameters
         ----------
         target_clusters : list
             List with the labels (int) of clusters to be adapted.
+        target_clusters_data : dict
+            For each target cluster (key, str), store dictionary (item, dict) containing
+            cluster associated parameters relevant for the adaptive procedures.
 
         Returns
         -------
@@ -271,28 +274,27 @@ class CRVE:
         if len(target_clusters) != len(np.unique(target_clusters)):
             raise RuntimeError('List of target clusters contains duplicated labels.')
         # Check for unexistent target clusters
-        if not set(target_clusters).issubset(set(self.voxels_clusters.flatten())):
+        if not set(target_clusters).issubset(set(self._voxels_clusters.flatten())):
             raise RuntimeError('List of target clusters contains unexistent labels.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         init_time = time.time()
         # Increment adaptive clustering refinement step counter
         self._adaptive_step += 1
         # Get CRVE current clustering
-        labels = self.voxels_clusters.flatten()
-        # Initialize adaptive material phase's target clusters
+        labels = self._voxels_clusters.flatten()
+        # Initialize adaptive material phase's target clusters and associated data
         phase_target_clusters = {mat_phase: [] for mat_phase in self.adapt_material_phases}
-        # Initialize maximum cluster label
-        max_label = -1
-        # Get maximum cluster label and build adaptive material phase's target clusters list
-        for mat_phase in self._material_phases:
-            # Get adaptive cluster-reduced material phase
-            crmp = self._cluster_phases[mat_phase]
-            # Get maximum cluster label
-            max_label = max(max_label, crmp.max_label)
-            # Build adaptive material phase's target clusters lists
-            if mat_phase in self.adapt_material_phases:
-                phase_target_clusters[mat_phase] = \
-                    list(set(target_clusters).intersection(self.phase_clusters[mat_phase]))
+        phase_target_clusters_data = \
+            {mat_phase: [] for mat_phase in self.adapt_material_phases}
+        # Build adaptive material phase's target clusters lists and associated data
+        for mat_phase in self.adapt_material_phases:
+            phase_target_clusters[mat_phase] = \
+                list(set(target_clusters).intersection(self.phase_clusters[mat_phase]))
+            phase_target_clusters_data[mat_phase] = \
+                {str(cluster) : target_clusters_data[str(cluster)]
+                 for cluster in phase_target_clusters[mat_phase]}
+        # Get CRVE maximum cluster label
+        max_label = self._get_clusters_max_label()
         # Set minimum cluster label
         min_label = max_label + 1
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -311,14 +313,15 @@ class CRVE:
             # Perform adaptive clustering
             adaptive_clustering_map[mat_phase] = \
                 crmp.perform_adaptive_clustering(phase_target_clusters[mat_phase],
+                                                 phase_target_clusters_data[mat_phase],
                                                  adaptive_clustering_scheme, min_label)
             # Update minimum cluster label
-            min_label = crmp.max_label + 1
+            min_label = self._get_clusters_max_label() + 1
             # Update CRVE clustering
             labels[self._phase_voxel_flatidx[mat_phase]] = crmp.cluster_labels
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Build adaptive CRVE
-        self.voxels_clusters = np.reshape(np.array(labels, dtype=int), self._n_voxels_dims)
+        self._voxels_clusters = np.reshape(np.array(labels, dtype=int), self._n_voxels_dims)
         # Store cluster labels and update number of clusters belonging to each material
         # phase
         self._set_phase_clusters()
@@ -374,6 +377,17 @@ class CRVE:
         '''
         return copy.deepcopy(self._phase_n_clusters)
     # --------------------------------------------------------------------------------------
+    def get_voxels_clusters(self):
+        '''Get regular grid containing the cluster label of each voxel.
+
+        Returns
+        -------
+        voxels_clusters : ndarray
+            Regular grid of voxels (spatial discretization of the RVE), where each entry
+            contains the cluster label (int) assigned to the corresponding pixel/voxel.
+        '''
+        return copy.deepcopy(self._voxels_clusters)
+    # --------------------------------------------------------------------------------------
     def get_n_total_clusters(self):
         '''Get current total number of clusters.
 
@@ -416,7 +430,7 @@ class CRVE:
             Regular grid of voxels (spatial discretization of the RVE), where each entry
             contains the cluster label (int) assigned to the corresponding pixel/voxel.
         '''
-        return [self._material_phases, self.phase_clusters, self.voxels_clusters]
+        return [self._material_phases, self.phase_clusters, self._voxels_clusters]
     # --------------------------------------------------------------------------------------
     def get_adaptive_step(self):
         '''Get counter of adaptive clustering steps.
@@ -577,7 +591,7 @@ class CRVE:
         for mat_phase in self._material_phases:
             # Get cluster labels
             self.phase_clusters[mat_phase] = \
-                list(np.unique(self.voxels_clusters.flatten()[
+                list(np.unique(self._voxels_clusters.flatten()[
                                self._phase_voxel_flatidx[mat_phase]]))
             # Update material phase number of clusters
             self._phase_n_clusters[mat_phase] = len(self.phase_clusters[mat_phase])
@@ -591,9 +605,28 @@ class CRVE:
         rve_vol = np.prod(self._rve_dims)
         # Compute volume fraction associated to each material cluster
         self.clusters_f = {}
-        for cluster in np.unique(self.voxels_clusters):
-            n_voxels_cluster = np.sum(self.voxels_clusters == cluster)
+        for cluster in np.unique(self._voxels_clusters):
+            n_voxels_cluster = np.sum(self._voxels_clusters == cluster)
             self.clusters_f[str(cluster)] = (n_voxels_cluster*voxel_vol)/rve_vol
+    # --------------------------------------------------------------------------------------
+    def _get_clusters_max_label(self):
+        '''Get CRVE maximum cluster label.
+
+        Returns
+        -------
+        max_label : int
+            CRVE maximum cluster label.
+        '''
+        # Initialize maximum cluster label
+        max_label = -1
+        # Loop over material phases
+        for mat_phase in self._material_phases:
+            # Get cluster-reduced material phase
+            crmp = self._cluster_phases[mat_phase]
+            # Update maximum cluster label
+            max_label = max(max_label, crmp.max_label)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        return max_label
     # --------------------------------------------------------------------------------------
     def _sort_cluster_labels(self):
         '''Reassign and sort CRVE cluster labels material phasewise.
@@ -618,7 +651,7 @@ class CRVE:
         for mat_phase in sorted_mat_phases:
             # Get material phase old cluster labels
             phase_old_clusters = np.unique(
-                self.voxels_clusters.flatten()[self._phase_voxel_flatidx[mat_phase]])
+                self._voxels_clusters.flatten()[self._phase_voxel_flatidx[mat_phase]])
             # Set material phase new cluster labels
             phase_new_clusters = list(range(lbl_init,
                                       lbl_init + self._phase_n_clusters[mat_phase]))
@@ -643,7 +676,7 @@ class CRVE:
         # Sort cluster labels in ascending order of material phase
         for voxel_idx in it.product(*[list(range(self._n_voxels_dims[i])) \
                 for i in range(len(self._n_voxels_dims))]):
-            self.voxels_clusters[voxel_idx] = sort_dict[self.voxels_clusters[voxel_idx]]
+            self._voxels_clusters[voxel_idx] = sort_dict[self._voxels_clusters[voxel_idx]]
     # --------------------------------------------------------------------------------------
     def compute_cit(self, mode='full', adaptive_clustering_map=None):
         '''Compute CRVE cluster interaction tensors.
@@ -838,11 +871,11 @@ class CRVE:
         # Check if valid cluster
         if not isinstance(cluster, int) and not isinstance(cluster, np.integer):
             raise RuntimeError('Cluster label must be an integer.')
-        elif cluster not in self.voxels_clusters:
+        elif cluster not in self._voxels_clusters:
             raise RuntimeError('Cluster label does not exist in the CRVE.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Build cluster filter (spatial domain)
-        cluster_filter = self.voxels_clusters == cluster
+        cluster_filter = self._voxels_clusters == cluster
         # Perform Discrete Fourier Transform (DFT) by means of Fast Fourier Transform (FFT)
         cluster_filter_dft = np.fft.fftn(cluster_filter)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

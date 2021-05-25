@@ -1007,23 +1007,26 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
                                    'adaptivity parameters of material phase ' + mat_phase +
                                    '.')
             else:
+                # Read adaptivity criterion
                 adapt_criterion_id = line[1]
-                adapt_criterion_data[mat_phase]['criterion'] = \
-                    AdaptivityManager.get_adaptivity_criterions()[adapt_criterion_id]
+                adapt_crit = AdaptivityManager.get_adaptivity_criterions()[
+                    adapt_criterion_id]
+                adapt_criterion_data[mat_phase]['criterion'] = adapt_crit
+                # Read adaptivity type
                 adapt_type_id = line[2]
-                AdaptType = CRVE.get_crmp_types()[adapt_type_id]
-                adaptivity_type[mat_phase]['adapt_type'] = AdaptType
+                adapt_type = CRVE.get_crmp_types()[adapt_type_id]
+                adaptivity_type[mat_phase]['adapt_type'] = adapt_type
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get adaptive cluster-reduced material phase valid clustering algorithms
-        valid_algorithms = AdaptType.get_valid_clust_algs()
+        valid_algorithms = adapt_type.get_valid_clust_algs()
         # Check validity of prescribed base clustering scheme
         check_clustering_scheme(mat_phase, adaptive_clustering_scheme[mat_phase],
                                 valid_algorithms, clustering_features)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get mandatory and optional adaptivity criterion parameters
-        macp, oacp = AdaptivityManager.get_adaptivity_criterion_parameters()
+        macp, oacp = adapt_crit.get_parameters()
         # Get mandatory and optional adaptivity type parameters
-        matp, oatp = AdaptType.get_adaptivity_type_parameters()
+        matp, oatp = adapt_type.get_adaptivity_type_parameters()
         # Collect all mandatory and optional adaptivity parameters
         madapt_parameters = {**macp, **matp}
         oadapt_parameters = {**oacp, **oatp}

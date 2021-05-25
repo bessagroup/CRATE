@@ -917,10 +917,11 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             clusters_residuals_mf = eqff.build_clusters_residuals_dict(comp_order,
                 material_phases, phase_clusters, residual)
             # Get clustering adaptivity trigger condition and target clusters
-            is_trigger, target_clusters = \
-                adaptivity_manager.get_target_clusters(phase_clusters, clusters_state,
-                                                       clusters_state_old, clusters_sct_mf,
-                                                       clusters_sct_mf_old,
+            is_trigger, target_clusters, target_clusters_data = \
+                adaptivity_manager.get_target_clusters(phase_clusters,
+                                                       crve.get_voxels_clusters(),
+                                                       clusters_state, clusters_state_old,
+                                                       clusters_sct_mf, clusters_sct_mf_old,
                                                        clusters_residuals_mf,
                                                        inc, verbose=is_clust_adapt_output)
             # Perform clustering adaptivity if adaptivity condition is triggered
@@ -933,6 +934,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                 improved_init_guess = [is_improved_init_guess, gbl_inc_strain_mf]
                 # Perform clustering adaptivity
                 adaptivity_manager.adaptive_refinement(crve, target_clusters,
+                                                       target_clusters_data,
                                                        [clusters_state, clusters_state_old,
                                                        clusters_D_mf, clusters_De_mf],
                                                        inc, improved_init_guess,
@@ -942,7 +944,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                 if is_improved_init_guess:
                     gbl_inc_strain_mf = improved_init_guess[1]
                 # Update clustering dictionary
-                clst_dict['voxels_clusters'] = copy.deepcopy(crve.voxels_clusters)
+                clst_dict['voxels_clusters'] = crve.get_voxels_clusters()
                 clst_dict['phase_n_clusters'] = crve.get_phase_n_clusters()
                 clst_dict['phase_clusters'] = copy.deepcopy(crve.phase_clusters)
                 clst_dict['clusters_f'] = copy.deepcopy(crve.clusters_f)
@@ -1122,10 +1124,11 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             clusters_residuals_mf = eqff.build_clusters_residuals_dict(comp_order,
                 material_phases, phase_clusters, residual)
             # Get clustering adaptivity trigger condition and target clusters
-            is_trigger, target_clusters = \
-                adaptivity_manager.get_target_clusters(phase_clusters, clusters_state,
-                                                       clusters_state_old, clusters_sct_mf,
-                                                       clusters_sct_mf_old,
+            is_trigger, target_clusters, target_clusters_data = \
+                adaptivity_manager.get_target_clusters(phase_clusters,
+                                                       crve.get_voxels_clusters(),
+                                                       clusters_state, clusters_state_old,
+                                                       clusters_sct_mf, clusters_sct_mf_old,
                                                        clusters_residuals_mf,
                                                        inc, verbose=is_clust_adapt_output)
             # Perform clustering adaptivity if adaptivity condition is triggered
@@ -1134,11 +1137,12 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                 info.displayinfo('16', 'new', inc)
                 # Perform clustering adaptivity
                 adaptivity_manager.adaptive_refinement(crve, target_clusters,
+                                                       target_clusters_data,
                                                        [clusters_state, clusters_state_old,
                                                        clusters_D_mf, clusters_De_mf],
                                                        inc, verbose=is_clust_adapt_output)
                 # Update clustering dictionary
-                clst_dict['voxels_clusters'] = copy.deepcopy(crve.voxels_clusters)
+                clst_dict['voxels_clusters'] = crve.get_voxels_clusters()
                 clst_dict['phase_n_clusters'] = crve.get_phase_n_clusters()
                 clst_dict['phase_clusters'] = copy.deepcopy(crve.phase_clusters)
                 clst_dict['clusters_f'] = copy.deepcopy(crve.clusters_f)

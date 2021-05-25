@@ -29,7 +29,7 @@ class AdaptivityCriterion(ABC):
     # --------------------------------------------------------------------------------------
     @staticmethod
     @abstractmethod
-    def get_parameters(self):
+    def get_parameters():
         '''Get clustering adaptivity criterion mandatory and optional parameters.
 
         Besides returning the mandatory and optional adaptivity criterion parameters, this
@@ -47,12 +47,15 @@ class AdaptivityCriterion(ABC):
     # --------------------------------------------------------------------------------------
     @abstractmethod
     def get_target_clusters(self):
-        '''Get clustering adaptivity target clusters.
+        '''Get clustering adaptivity target clusters ans associated data.
 
         Returns
         -------
         target_clusters : list
             List containing the labels (int) of clusters to be adapted.
+        target_clusters_data : dict
+            For each target cluster (key, str), store dictionary (item, dict) containing
+            cluster associated parameters required for the adaptive procedures.
         '''
         pass
 #
@@ -168,6 +171,8 @@ class AdaptiveClusterGrouping(AdaptivityCriterion):
         '''
         # Initialize target clusters list
         target_clusters = []
+        # Initialize target clusters data
+        target_clusters_data = {}
         # Initialize target cluster groups
         self._target_groups_ids = []
         # Get adaptive material phase cluster groups
@@ -218,7 +223,7 @@ class AdaptiveClusterGrouping(AdaptivityCriterion):
                 # Assemble target clusters
                 target_clusters += group_target_clusters
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        return target_clusters
+        return target_clusters, target_clusters_data
     # --------------------------------------------------------------------------------------
     def update_group_clusters(self, adaptive_clustering_map):
         '''Update adaptive cluster groups after adaptive procedures.
@@ -326,3 +331,327 @@ class AdaptiveClusterGrouping(AdaptivityCriterion):
         target_clusters = [int(x) for x in adapt_data_matrix[idxs, 0]]
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return target_clusters
+#
+#                                              Adaptivity criterion: Spatial discontinuities
+# ==========================================================================================
+class SpatialDiscontinuities(AdaptivityCriterion):
+    '''Spatial discontinuities criterion.
+
+    Class that provides all the required attributes and methods associated with the
+    spatial discontinuities CRVE clustering adaptivity criterion.
+
+    Attributes
+    ----------
+    _clusters_adapt_level : dict
+        Adaptive level (item, int) of each cluster (key, str).
+
+    '''
+    def __init__(self, adapt_mat_phase, phase_clusters, adapt_trigger_ratio=None,
+                 adapt_max_level=None, adapt_level_max_diff=None):
+        '''Spatial discontinuities criterion constructor.
+
+        Parameters
+        ----------
+        adapt_mat_phase : str
+            Adaptive material phase label.
+        phase_clusters : dict
+            Clusters labels (item, list of int) associated to each material phase
+            (key, str).
+        adapt_trigger_ratio : float, default=None
+            Threshold associated to the adaptivity trigger condition.
+        adapt_max_level : int, default=None
+            Maximum cluster adaptive level.
+        '''
+        # Initialize clusters adaptive level
+        self._clusters_adapt_level = {str(cluster) : 0 for cluster in
+                                      phase_clusters[adapt_mat_phase]}
+        # Get optional parameters
+        optional_parameters = type(self).get_parameters()
+        # Get adaptivity trigger ratio
+        if adapt_trigger_ratio is None:
+            self._adapt_trigger_ratio = optional_parameters['adapt_trigger_ratio']
+        else:
+            self._adapt_trigger_ratio = adapt_trigger_ratio
+        # Get maximum cluster adaptive level
+        if adapt_max_level is None:
+            self._adapt_max_level = optional_parameters['adapt_max_level']
+        else:
+            self._adapt_max_level = adapt_max_level
+        # Get cluster adaptive level maximum difference
+        if adapt_max_level is None:
+            self._adapt_level_max_diff = optional_parameters['adapt_level_max_diff']
+        else:
+            self._adapt_level_max_diff = adapt_level_max_diff
+    # --------------------------------------------------------------------------------------
+    @staticmethod
+    def get_parameters():
+        '''Get clustering adaptivity criterion mandatory and optional parameters.
+
+        Besides returning the mandatory and optional adaptivity criterion parameters, this
+        method establishes the default values for the optional parameters.
+
+        Returns
+        -------
+        mandatory_parameters : dict
+            Mandatory adaptivity type parameters (str) and associated type (item, type).
+        optional_parameters : dict
+            Optional adaptivity type parameters (key, str) and associated default value
+            (item).
+        '''
+        # Set mandatory adaptivity criterion parameters
+        mandatory_parameters = {}
+        # Set optional adaptivity criterion parameters and associated default values
+        optional_parameters = {'adapt_trigger_ratio': 0.1,
+                               'adapt_max_level': 15,
+                               'adapt_level_max_diff': 2}
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return [mandatory_parameters, optional_parameters]
+    # --------------------------------------------------------------------------------------
+    def get_target_clusters(self, adapt_data_matrix, voxels_clusters):
+        '''Get clustering adaptivity target clusters.
+
+        Parameters
+        ----------
+        adapt_data_matrix : ndarray of shape (adapt_phase_n_clusters, 2)
+            Adaptivity feature data matrix that, for the i-th cluster of the adaptive
+            material phase, contains the cluster label in adapt_data_matrix[i, 0] and the
+            associated adaptive feature value in adapt_data_matrix[i, 1].
+        voxels_clusters : ndarray
+            Regular grid of voxels (spatial discretization of the RVE), where each entry
+            contains the cluster label (int) assigned to the corresponding pixel/voxel.
+        Returns
+        -------
+        target_clusters : list
+            List containing the labels (int) of clusters to be adapted.
+        target_clusters_data : dict
+            For each target cluster (key, str), store dictionary (item, dict) containing
+            cluster associated parameters required for the adaptive procedures.
+        '''
+        # Initialize target clusters list
+        target_clusters = []
+        # Initialize target clusters data
+        target_clusters_data = {}
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Perform required spatial evaluations, update list of target clusters and
+        # associated data
+        if len(voxels_clusters.shape) == 2:
+            self._swipe_dimension(adapt_data_matrix, voxels_clusters, target_clusters,
+                                  target_clusters_data, '12')
+            self._swipe_dimension(adapt_data_matrix, voxels_clusters, target_clusters,
+                                  target_clusters_data, '21')
+        elif len(voxels_clusters.shape) == 3:
+            self._swipe_dimension(adapt_data_matrix, voxels_clusters, target_clusters,
+                                  target_clusters_data, '123')
+            self._swipe_dimension(adapt_data_matrix, voxels_clusters, target_clusters,
+                                  target_clusters_data, '213')
+            self._swipe_dimension(adapt_data_matrix, voxels_clusters, target_clusters,
+                                  target_clusters_data, '312')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        return target_clusters, target_clusters_data
+    # --------------------------------------------------------------------------------------
+    def update_clusters_adapt_level(self, adaptive_clustering_map):
+        '''Update clusters adaptive level after adaptive procedures.
+
+        Parameters
+        ----------
+        adaptive_clustering_map : dict
+            List of new cluster labels (item, list of int) resulting from the adaptive
+            procedures over each target cluster (key, str).
+        '''
+        for old_cluster in adaptive_clustering_map.keys():
+            # Get parent cluster adaptive level
+            old_cluster_adapt_level = self._clusters_adapt_level[str(old_cluster)]
+            # Update child clusters adaptive level
+            for cluster in adaptive_clustering_map[str(old_cluster)]:
+                self._clusters_adapt_level[str(cluster)] = old_cluster_adapt_level + 1
+            # Remove parent cluster
+            self._clusters_adapt_level.pop(old_cluster)
+    # --------------------------------------------------------------------------------------
+    def get_clusters_adapt_level(self):
+        '''Get clusters adaptive level.
+
+        Returns
+        -------
+        clusters_adapt_level : dict
+            Adaptive level (item, int) of each cluster (key, str).
+        '''
+        return copy.deepcopy(self._clusters_adapt_level)
+    # --------------------------------------------------------------------------------------
+    def _swipe_dimension(self, adapt_data_matrix, voxels_clusters, target_clusters,
+                         target_clusters_data, dim_loops):
+        '''Evaluate spatial discontinuities along a given dimension.
+
+        The spatial dimensions are cycled according to the code provided in 'dim_loops'.
+        The dimension where the spatial discontinuities are evaluated is always the first
+        dimension specified in this code (assumed dimension i), while the others cycle the
+        remainder dimensions (assumed dimensions j and k). During this process, both the
+        list of target clusters and the dictionary containing associated data are updated.
+
+        Parameters
+        ----------
+        adapt_data_matrix : ndarray of shape (adapt_phase_n_clusters, 2)
+            Adaptivity feature data matrix that, for the i-th cluster of the adaptive
+            material phase, contains the cluster label in adapt_data_matrix[i, 0] and the
+            associated adaptive feature value in adapt_data_matrix[i, 1].
+        voxels_clusters : ndarray
+            Regular grid of voxels (spatial discretization of the RVE), where each entry
+            contains the cluster label (int) assigned to the corresponding pixel/voxel.
+        target_clusters : list
+            List containing the labels (int) of clusters to be adapted.
+        target_clusters_data : dict
+            For each target cluster (key, str), store dictionary (item, dict) containing
+            cluster associated parameters required for the adaptive procedures.
+        dim_loops : string
+            Ordered specification of dimension cycles, being the spatial discontinuities
+            evaluated along dimension dim_loops[0].
+        '''
+        # Get material phase clusters
+        phase_clusters = adapt_data_matrix[:, 0]
+        # Get number of voxels in each dimension
+        n_voxels_dims = [voxels_clusters.shape[i] for i in
+                         range(len(voxels_clusters.shape))]
+        # Set numbers of voxels associated to dimension cycles
+        if len(n_voxels_dims) == 2:
+            if dim_loops not in ('12', '21'):
+                raise RuntimeError('Invalid dimension cycles code.')
+            else:
+                # Set cycling dimensions map (ordered as i, j)
+                cycle_spatial_map = [int(dim_loops[0]) - 1,
+                                     int(dim_loops[1]) - 1]
+                # Set cycling dimensions numbers of voxels
+                n_voxels_i = n_voxels_dims[0]
+                n_voxels_j = n_voxels_dims[1]
+                n_voxels_k = 1
+        elif len(n_voxels_dims) == 3:
+            if dim_loops not in ('123', '132', '213', '231', '312', '321'):
+                raise RuntimeError('Invalid dimension cycles code.')
+            else:
+                # Set cycling dimensions map (ordered as i, j, k)
+                cycle_spatial_map = [int(dim_loops[0]) - 1,
+                                     int(dim_loops[1]) - 1,
+                                     int(dim_loops[2]) - 1]
+                # Set cycling dimensions numbers of voxels
+                n_voxels_i = n_voxels_dims[0]
+                n_voxels_j = n_voxels_dims[1]
+                n_voxels_k = n_voxels_dims[2]
+        else:
+            raise RuntimeError('Invalid number of dimensions.')
+        # Set spatial dimensions map (ordered as 1, 2 [, 3])
+        spatial_cycle_map = [cycle_spatial_map.index(i) for i in range(len(n_voxels_dims))]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Get minimum and maximum value of adaptivity feature
+        min_feature_val = min(adapt_data_matrix[:, 1])
+        max_feature_val = max(adapt_data_matrix[:, 1])
+        # Get absolute value of maximum range of adaptivity feature
+        norm_factor = abs(max_feature_val - min_feature_val)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Loop over voxels of dimension k
+        for voxel_k in range(n_voxels_k):
+            # Loop over voxels of dimension j
+            for voxel_j in range(n_voxels_j):
+                # Loop over voxels of dimension i (evaluation of spatial discontinuities)
+                for voxel_i in range(n_voxels_i):
+                    # Get voxel (i) ordered spatial indexes
+                    idxs = [(voxel_i, voxel_j, voxel_k)[i] for i in spatial_cycle_map]
+                    # Get cluster label of voxel (i)
+                    cluster = voxels_clusters[tuple(idxs)]
+                    # Get next voxel (i+1) ordered spatial indexes. If voxel (i) is the last
+                    # one, then the next voxel (i+1) is the first one
+                    if voxel_i == n_voxels_i - 1:
+                        idxs[cycle_spatial_map[0]] = 0
+                    else:
+                        idxs[cycle_spatial_map[0]] += 1
+                    # Get cluster labels of next voxel (i+1)
+                    cluster_next = voxels_clusters[tuple(idxs)]
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    # Skip computations if at least one of the clusters does not belong to
+                    # the adaptive material phase associated to the criterion instance
+                    if cluster not in phase_clusters or cluster_next not in phase_clusters:
+                        continue
+                    # Skip computations if voxels belong to the same cluster
+                    if cluster == cluster_next:
+                        continue
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    # Evaluate clusters adaptive levels
+                    is_cluster_targetable = self._clusters_adapt_level[str(cluster)] < \
+                        self._adapt_max_level
+                    is_cluster_next_targetable = \
+                        self._clusters_adapt_level[str(cluster_next)] < \
+                            self._adapt_max_level
+                    # Skip computations if both clusters are untargetable
+                    if not is_cluster_targetable and not is_cluster_next_targetable:
+                        continue
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    # Get cluster index and feature value
+                    cluster_idx = list(adapt_data_matrix[:, 0]).index(cluster)
+                    value = adapt_data_matrix[cluster_idx, 1]
+                    # Get cluster of next voxel and feature value
+                    cluster_next_idx = list(adapt_data_matrix[:, 0]).index(cluster_next)
+                    value_next = adapt_data_matrix[cluster_next_idx, 1]
+                    # Compute normalized spatial discontinuity along dimension i
+                    ratio = abs(value_next - value)/norm_factor
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    # Skip computations if normalized spatial discontinuity is lower than
+                    # prescribed threshold. Otherwise, compute associated magnitude
+                    if ratio < self._adapt_trigger_ratio:
+                        continue
+                    else:
+                        magnitude = abs(ratio - self._adapt_trigger_ratio)
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    # Evaluate if clusters have already been targeted
+                    is_cluster_targeted = cluster in target_clusters
+                    is_cluster_next_targeted = cluster_next in target_clusters
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    # Update previously targeted clusters data
+                    if is_cluster_targeted:
+                        max_magn = target_clusters_data[str(cluster)]['max_magnitude']
+                        if magnitude > max_magn:
+                            target_clusters_data[str(cluster)]['max_magnitude'] = magnitude
+                    if is_cluster_next_targeted:
+                        max_magn = target_clusters_data[str(cluster_next)]['max_magnitude']
+                        if magnitude > max_magn:
+                            target_clusters_data[str(cluster_next)]['max_magnitude'] = \
+                                magnitude
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    # Update target clusters list and associated data
+                    if not(is_cluster_targeted and is_cluster_next_targeted):
+                        # Evaluate clusters adaptive level
+                        cluster_adapt_level = self._clusters_adapt_level[str(cluster)]
+                        cluster_next_adapt_level = \
+                            self._clusters_adapt_level[str(cluster_next)]
+                        # Compute differences of clusters adaptive level
+                        diff_1 = cluster_next_adapt_level - cluster_adapt_level
+                        diff_2 = cluster_adapt_level - cluster_next_adapt_level
+                        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                        # Update target clusters list according to associated adaptive
+                        # and update data of new targeted clusters
+                        if diff_1 > self._adapt_level_max_diff:
+                            if not is_cluster_targeted and is_cluster_targetable:
+                                target_clusters.append(cluster)
+                                target_clusters_data[str(cluster)] = {}
+                                target_clusters_data[str(cluster)]['max_magnitude'] = \
+                                    magnitude
+                        elif diff_2 > self._adapt_level_max_diff:
+                            if not is_cluster_next_targeted and is_cluster_next_targetable:
+                                target_clusters.append(cluster_next)
+                                target_clusters_data[str(cluster_next)] = {}
+                                target_clusters_data[str(cluster_next)]['max_magnitude'] = \
+                                    magnitude
+                        else:
+                            if not is_cluster_targeted and is_cluster_targetable:
+                                target_clusters.append(cluster)
+                                target_clusters_data[str(cluster)] = {}
+                                target_clusters_data[str(cluster)]['max_magnitude'] = \
+                                    magnitude
+                            if not is_cluster_next_targeted and is_cluster_next_targetable:
+                                target_clusters.append(cluster_next)
+                                target_clusters_data[str(cluster_next)] = {}
+                                target_clusters_data[str(cluster_next)]['max_magnitude'] = \
+                                    magnitude
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Loop over target clusters
+        for cluster in target_clusters:
+            # Store adaptive trigger ratio for each target cluster
+            target_clusters_data[str(cluster)]['adapt_trigger_ratio'] = \
+                self._adapt_trigger_ratio

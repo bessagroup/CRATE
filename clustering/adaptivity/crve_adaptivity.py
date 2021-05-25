@@ -24,7 +24,8 @@ import ioput.info as info
 # I/O utilities
 import ioput.ioutilities as ioutil
 # Clustering adaptivity criterions
-from clustering.adaptivity.adaptivity_criterion import AdaptiveClusterGrouping
+from clustering.adaptivity.adaptivity_criterion import AdaptiveClusterGrouping, \
+                                                       SpatialDiscontinuities
 #
 #                                                         CRVE clustering adaptivity manager
 # ==========================================================================================
@@ -99,6 +100,18 @@ class AdaptivityManager:
                                             adapt_trigger_ratio=adapt_trigger_ratio,
                                             adapt_max_level=adapt_max_level,
                                             adapt_split_threshold=adapt_split_threshold)
+            elif adapt_criterion == SpatialDiscontinuities:
+                # Get clustering adaptivity criterion parameters
+                adapt_trigger_ratio = adapt_criterion_data[mat_phase]['adapt_trigger_ratio']
+                adapt_max_level = adapt_criterion_data[mat_phase]['adapt_max_level']
+                adapt_level_max_diff = adapt_criterion_data[mat_phase]\
+                    ['adapt_level_max_diff']
+                # Initialize clustering adaptivity criterion
+                self._adapt_phase_criterions[mat_phase] = \
+                    SpatialDiscontinuities(mat_phase, phase_clusters,
+                                           adapt_trigger_ratio=adapt_trigger_ratio,
+                                           adapt_max_level=adapt_max_level,
+                                           adapt_level_max_diff=adapt_level_max_diff)
             else:
                 raise RuntimeError('Unknown clustering adaptivity criterion.')
     # --------------------------------------------------------------------------------------
@@ -113,40 +126,16 @@ class AdaptivityManager:
             associated identifiers (key, str).
         '''
         # Set available clustering adaptivity criterions
-        available_adapt_criterions = {'1': AdaptiveClusterGrouping}
+        available_adapt_criterions = {'1': AdaptiveClusterGrouping,
+                                      '2': SpatialDiscontinuities}
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return available_adapt_criterions
     # --------------------------------------------------------------------------------------
-    @staticmethod
-    def get_adaptivity_criterion_parameters():
-        '''Get mandatory and optional adaptivity criterion parameters.
-
-        Besides returning the mandatory and optional adaptivity criterion parameters, this
-        method establishes the default values for the optional parameters.
-
-        Returns
-        ----------
-        mandatory_parameters : dict
-            Mandatory adaptivity type parameters (str) and associated type (item, type).
-        optional_parameters : dict
-            Optional adaptivity type parameters (key, str) and associated default value
-            (item).
-        '''
-        # Set mandatory adaptivity criterion parameters
-        mandatory_parameters = {}
-        # Set optional adaptivity criterion parameters and associated default values
-        optional_parameters = {'adapt_trigger_ratio': 0.1,
-                               'adapt_split_threshold': 0.1,
-                               'adapt_max_level': 15}
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Return
-        return [mandatory_parameters, optional_parameters]
-    # --------------------------------------------------------------------------------------
-    def get_target_clusters(self, phase_clusters, clusters_state, clusters_state_old,
-                            clusters_sct_mf, clusters_sct_mf_old, clusters_residuals_mf,
-                            inc=None, verbose=False):
-        '''Get online adaptive clustering target clusters.
+    def get_target_clusters(self, phase_clusters, voxels_clusters, clusters_state,
+                            clusters_state_old, clusters_sct_mf, clusters_sct_mf_old,
+                            clusters_residuals_mf, inc=None, verbose=False):
+        '''Get adaptive clustering target clusters.
 
         Parameters
         ----------
@@ -193,6 +182,8 @@ class AdaptivityManager:
             activated_adapt_phases = self._adapt_material_phases
         # Initialize target clusters list
         target_clusters = []
+        # Initialize target clusters data
+        target_clusters_data = {}
         # Loop over activated adaptive material phases
         for mat_phase in activated_adapt_phases:
             # Get adaptivity feature
@@ -207,7 +198,15 @@ class AdaptivityManager:
             # Get material phase clustering adaptivity criterion
             adapt_criterion = self._adapt_phase_criterions[mat_phase]
             # Get material phase clustering adaptivity target clusters
-            target_clusters += adapt_criterion.get_target_clusters(adapt_data_matrix)
+            if isinstance(adapt_criterion, AdaptiveClusterGrouping):
+                phase_target_clusters, phase_target_clusters_data = \
+                    adapt_criterion.get_target_clusters(adapt_data_matrix)
+            elif isinstance(adapt_criterion, SpatialDiscontinuities):
+                phase_target_clusters, phase_target_clusters_data = \
+                    adapt_criterion.get_target_clusters(adapt_data_matrix, voxels_clusters)
+            # Update list of target clusters and associated data
+            target_clusters += phase_target_clusters
+            target_clusters_data.update(phase_target_clusters_data)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set adaptivity trigger flag according to the list of target clusters
         if target_clusters:
@@ -243,7 +242,7 @@ class AdaptivityManager:
                              '{:>11d}'.format(output_total) + '\n',
                              2)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        return is_trigger, target_clusters
+        return is_trigger, target_clusters, target_clusters_data
     # --------------------------------------------------------------------------------------
     def _get_adaptivity_data_matrix(self, target_phase, adapt_control_feature,
                                     phase_clusters, clusters_state, clusters_state_old,
@@ -407,8 +406,8 @@ class AdaptivityManager:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return adapt_data_matrix
     # --------------------------------------------------------------------------------------
-    def adaptive_refinement(self, crve, target_clusters, cluster_dicts, inc,
-                            improved_init_guess=None, verbose=False):
+    def adaptive_refinement(self, crve, target_clusters, target_clusters_data,
+                            cluster_dicts, inc, improved_init_guess=None, verbose=False):
         '''Perform CRVE adaptive clustering refinement.
 
         Parameters
@@ -417,6 +416,9 @@ class AdaptivityManager:
             Cluster-Reduced Representative Volume Element.
         target_clusters : list
             List containing the labels (int) of clusters to be refined.
+        target_clusters_data : dict
+            For each target cluster (key, str), store dictionary (item, dict) containing
+            cluster associated parameters required for the adaptive procedures.
         cluster_dicts : list
             List containing cluster-label-keyd dictionaries (key, str) that will be updated
             as the result of the CRVE adaptive refinement.
@@ -447,7 +449,8 @@ class AdaptivityManager:
             phase_clusters_old = copy.deepcopy(crve.phase_clusters)
             n_total_clusters_old = crve.get_n_total_clusters()
             # Perform CRVE adaptive clustering refinement
-            adaptive_clustering_map = crve.perform_crve_adaptivity(target_clusters)
+            adaptive_clustering_map = crve.perform_crve_adaptivity(target_clusters,
+                                                                   target_clusters_data)
             # Increment current increment adaptive step
             if str(inc) in self.inc_adaptive_steps.keys():
                 self.inc_adaptive_steps[str(inc)] += 1
@@ -571,6 +574,10 @@ class AdaptivityManager:
             if isinstance(adapt_criterion, AdaptiveClusterGrouping):
                 # Update adaptive cluster groups
                 adapt_criterion.update_group_clusters(adaptive_clustering_map[mat_phase])
+            elif isinstance(adapt_criterion, SpatialDiscontinuities):
+                # Update clusters adaptive level
+                adapt_criterion.update_clusters_adapt_level(
+                    adaptive_clustering_map[mat_phase])
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Output execution data
         if verbose:
@@ -684,8 +691,12 @@ class AdaptivityManager:
     def get_adapt_vtk_array(self, voxels_clusters):
         '''Get regular grid array containing the adaptive level associated to each cluster.
 
-        All the clusters belonging to the same adaptive cluster group share the same
-        adaptive level and that the adaptive level 0 is associated to the base clustering.
+        A cluster adaptive level of 0 is associated to the base clustering and is increased
+        by one whenever the cluster is refined.
+        In the adaptive cluster grouping criterion, all the clusters belonging to the same
+        adaptive cluster group share the same adaptive level.
+        In the spatial discontinuities criterion, each cluster adaptive level is monitored
+        independently.
 
         Parameters
         ----------
@@ -706,7 +717,7 @@ class AdaptivityManager:
             # Get adaptive material phase clustering adaptivity criterion
             adapt_criterion = self._adapt_phase_criterions[mat_phase]
             # Assemble flattened regular grid array
-            if adapt_criterion is AdaptiveClusterGrouping:
+            if isinstance(adapt_criterion, AdaptiveClusterGrouping):
                 # Get adaptive cluster groups and associated adaptive level
                 adapt_groups = adapt_criterion.get_adapt_groups()
                 groups_adapt_level = adapt_criterion.get_groups_adapt_level()
@@ -722,6 +733,15 @@ class AdaptivityManager:
                     flat_idxs = np.in1d(voxels_clusters.flatten('F'), adapt_group)
                     # Store adaptive cluster group adaptive level
                     rg_array[flat_idxs] = adapt_level
+            elif isinstance(adapt_criterion, SpatialDiscontinuities):
+                # Get cluster adaptive level
+                clusters_adapt_level = adapt_criterion.get_clusters_adapt_level()
+                # Loop over clusters
+                for cluster in clusters_adapt_level.keys():
+                    # Get cluster flat indexes
+                    flat_idxs = np.in1d(voxels_clusters.flatten('F'), int(cluster))
+                    # Store cluster adaptive level
+                    rg_array[flat_idxs] = clusters_adapt_level[str(cluster)]
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Build regular grid array
         rg_array = rg_array.reshape(voxels_clusters.shape, order='F')

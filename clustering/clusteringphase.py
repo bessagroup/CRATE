@@ -105,13 +105,16 @@ class CRMP(ABC):
 class ACRMP(CRMP):
     '''Adaptive Cluster-Reduced Material Phase interface.'''
     @abstractmethod
-    def perform_adaptive_clustering(self, target_clusters):
+    def perform_adaptive_clustering(self, target_clusters, target_clusters_data):
         '''Perform ACRMP adaptive clustering step.
 
         Parameters
         ----------
         target_clusters : list
             List with the labels (int) of clusters to be adapted.
+        target_clusters_data : dict
+            For each target cluster (key, str), store dictionary (item, dict) containing
+            cluster associated parameters relevant for the adaptive procedures.
 
         Returns
         -------
@@ -300,6 +303,9 @@ class GACRMP(ACRMP):
         contained between 0 and 1 (included). The lower bound (0) enforces a single
         split, while the upper bound (1) performs the maximum number splits of
         each cluster (leading to single-voxel clusters).
+    _is_dynamic_split_factor : bool
+        True if adaptive clustering split factor is to be computed dynamically. Otherwise,
+        the adaptive clustering split factor is always set equal to _adapt_split_factor.
     max_label : int
         Clustering maximum label.
     cluster_labels : ndarray of shape (n_phase_voxels,)
@@ -336,6 +342,11 @@ class GACRMP(ACRMP):
         self.adaptivity_lock = False
         # Set clustering adaptivity parameters
         self._set_adaptivity_type_parameters(self._adaptivity_type)
+        # Set dynamic adaptive split factor
+        if abs(self._dynamic_split_factor_amp) < 1e-10:
+            self._is_dynamic_split_factor = False
+        else:
+            self._is_dynamic_split_factor = True
     # --------------------------------------------------------------------------------------
     def perform_base_clustering(self, base_clustering_scheme, min_label=0):
         '''Perform GACRMP base clustering.
@@ -398,8 +409,8 @@ class GACRMP(ACRMP):
         '''
         return list(ClusterAnalysis.available_clustering_alg.keys())
     # --------------------------------------------------------------------------------------
-    def perform_adaptive_clustering(self, target_clusters, adaptive_clustering_scheme=None,
-                                    min_label=0):
+    def perform_adaptive_clustering(self, target_clusters, target_clusters_data,
+                                    adaptive_clustering_scheme=None, min_label=0):
         '''Perform GACRMP adaptive clustering step.
 
         Refine the provided target clusters by splitting them according to the prescribed
@@ -409,6 +420,9 @@ class GACRMP(ACRMP):
         ----------
         target_clusters : list
             List with the labels (int) of clusters to be adapted.
+        target_clusters_data : dict
+            For each target cluster (key, str), store dictionary (item, dict) containing
+            cluster associated parameters required for the adaptive procedures.
         adaptive_clustering_scheme : ndarray of shape (n_clusterings, 3), default=None
             Prescribed adaptive clustering scheme to perform the material phase adaptive
             cluster analysis. Each row is associated with a unique clustering, characterized
@@ -459,9 +473,25 @@ class GACRMP(ACRMP):
             if n_cluster_voxels == 1:
                 continue
             else:
+                # Get referece adaptive clustering split factor
+                ref_split_factor = self._adapt_split_factor
+                # Set adaptive clustering split factor
+                if self._is_dynamic_split_factor:
+                    # Get adaptive trigger ratio and magnitude
+                    adapt_trigger_ratio = \
+                        target_clusters_data[str(target_cluster)]['adapt_trigger_ratio']
+                    magnitude = \
+                        target_clusters_data[str(target_cluster)]['max_magnitude']
+                    # Compute dynamic adaptive clustering split factor
+                    adapt_split_factor = self._dynamic_split_factor(ref_split_factor,
+                        adapt_trigger_ratio, magnitude,
+                        dynamic_amp=self._dynamic_split_factor_amp)
+                else:
+                    adapt_split_factor = ref_split_factor
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Compute number of child clusters, enforcing at least two clusters
                 n_new_clusters = \
-                    max(2, int(np.round(self._adapt_split_factor*n_cluster_voxels)))
+                    max(2, int(np.round(adapt_split_factor*n_cluster_voxels)))
                 # Compare number of child clusters and number of target cluster number of
                 # voxels
                 if n_cluster_voxels <= n_new_clusters:
@@ -528,6 +558,72 @@ class GACRMP(ACRMP):
         # Return
         return adaptive_clustering_map
     # --------------------------------------------------------------------------------------
+    @staticmethod
+    def _dynamic_split_factor(ref_split_factor, adapt_trigger_ratio, magnitude,
+                              dynamic_amp=0):
+        '''Compute dynamic adaptive clustering split factor.
+
+        Parameters
+        ----------
+        ref_split_factor : float
+            Reference (centered) adaptive clustering split factor. The adaptive clustering
+            split factor must be contained between 0 and 1 (included). The lower bound (0)
+            enforces a single split, while the upper bound (1) performs the maximum number
+            splits of each cluster (leading to single-voxel clusters).
+        adapt_trigger_ratio : float
+            Threshold associated to the adaptivity trigger condition.
+        magnitude : float
+            Difference between cluster ratio and adaptive trigger ratio. Given that the
+            cluster ratio ranges between 0 and 1 and only clusters with a ratio greater or
+            equal than the adaptive trigger ratio are targeted, the magnitude ranges between
+            0 and 1 - trigger ratio.
+        dynamic_amp : float, default=0
+            Dynamic split factor amplitude centered around the reference adaptive clustering
+            split factor.
+
+        Returns
+        -------
+        adapt_split_factor : float
+            Adaptive clustering split factor. The adaptive clustering split factor must be
+            contained between 0 and 1 (included). The lower bound (0) enforces a single
+            split, while the upper bound (1) performs the maximum number splits of
+            each cluster (leading to single-voxel clusters).
+        '''
+        # Check provided parameters
+        if not (ref_split_factor >= 0 and ref_split_factor <= 1):
+            raise RuntimeError('Invalid reference adaptive clustering split factor.')
+        if not (adapt_trigger_ratio >= 0 and adapt_trigger_ratio <= 1):
+            raise RuntimeError('Invalid adaptive trigger ratio.')
+        if not (dynamic_amp >= 0):
+            raise RuntimeError('Invalid dynamic split factor amplitude.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # If the dynamic split factor amplitude is null, skip computations and return
+        # reference adaptive clustering split factor. Otherwise, compute adaptive clustering
+        # split factor lower bound
+        if abs(dynamic_amp) < 1e-10:
+            return ref_split_factor
+        else:
+            lower_bound = max(0, ref_split_factor - 0.5*dynamic_amp)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Choose dynamic function type
+        dynamic_type = 'linear'
+        # Set dynamic function
+        if dynamic_type == 'linear':
+            # Linear dynamic function
+            dynamic_function = lambda magnitude : (1/(1 - adapt_trigger_ratio))*magnitude
+        elif dynamic_type == 'quadratic':
+            # Quadratic dynamic function
+            dynamic_function = \
+                lambda magnitude : (1/((1 - adapt_trigger_ratio)**2))*(magnitude**2)
+        else:
+            raise RuntimeError('Unknown dynamic function type.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Compute adaptive clustering split factor
+        adapt_split_factor = lower_bound + dynamic_function(magnitude)*dynamic_amp
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return adapt_split_factor
+    # --------------------------------------------------------------------------------------
     def _check_adaptivity_lock(self):
         '''Check ACRMP adaptivity locking conditions.
 
@@ -568,6 +664,7 @@ class GACRMP(ACRMP):
         mandatory_parameters = {}
         # Set optional adaptivity type parameters and associated default values
         optional_parameters = {'adapt_split_factor': 0.01,
+                               'dynamic_split_factor_amp': 0.0,
                                'threshold_n_clusters': 10**6}
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
@@ -585,6 +682,7 @@ class GACRMP(ACRMP):
         pass
         # Set optional adaptivity type parameters
         self._adapt_split_factor = adaptivity_type['adapt_split_factor']
+        self._dynamic_split_factor_amp = adaptivity_type['dynamic_split_factor_amp']
         self._threshold_n_clusters = adaptivity_type['threshold_n_clusters']
     # --------------------------------------------------------------------------------------
     def get_adaptive_output(self):

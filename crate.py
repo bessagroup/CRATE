@@ -202,7 +202,7 @@ if is_same_offstage:
         crve = pickle.load(crve_file)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Update clustering dictionary
-    clst_dict['voxels_clusters'] = copy.deepcopy(crve.voxels_clusters)
+    clst_dict['voxels_clusters'] = crve.get_voxels_clusters()
     clst_dict['phase_n_clusters'] = crve.get_phase_n_clusters()
     clst_dict['phase_clusters'] = copy.deepcopy(crve.phase_clusters)
     clst_dict['clusters_f'] = copy.deepcopy(crve.clusters_f)
@@ -238,7 +238,7 @@ else:
     crve.perform_crve_base_clustering()
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Update clustering dictionary
-    clst_dict['voxels_clusters'] = crve.voxels_clusters
+    clst_dict['voxels_clusters'] = crve.get_voxels_clusters()
     clst_dict['phase_clusters'] = crve.phase_clusters
     clst_dict['clusters_f'] = crve.clusters_f
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
