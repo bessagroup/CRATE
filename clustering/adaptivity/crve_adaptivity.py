@@ -722,13 +722,13 @@ class AdaptivityManager:
                 adapt_groups = adapt_criterion.get_adapt_groups()
                 groups_adapt_level = adapt_criterion.get_groups_adapt_level()
                 # Get adaptive material phase cluster groups
-                adapt_groups_ids = list(adapt_groups[mat_phase].keys())
+                adapt_groups_ids = list(adapt_groups.keys())
                 # Loop over adaptive cluster groups
                 for group_id in adapt_groups_ids:
                     # Get adaptive cluster group adaptive level
-                    adapt_level = groups_adapt_level[mat_phase][group_id]
+                    adapt_level = groups_adapt_level[group_id]
                     # Get adaptive cluster group clusters
-                    adapt_group = adapt_groups[mat_phase][group_id]
+                    adapt_group = adapt_groups[group_id]
                     # Get flat indexes associated with the adaptive cluster group clusters
                     flat_idxs = np.in1d(voxels_clusters.flatten('F'), adapt_group)
                     # Store adaptive cluster group adaptive level

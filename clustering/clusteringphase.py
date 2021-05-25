@@ -475,8 +475,11 @@ class GACRMP(ACRMP):
             else:
                 # Get referece adaptive clustering split factor
                 ref_split_factor = self._adapt_split_factor
+                # Get target cluster dynamic split factor ability
+                is_cluster_dynamic_split_factor = \
+                    target_clusters_data[str(target_cluster)]['is_dynamic_split_factor']
                 # Set adaptive clustering split factor
-                if self._is_dynamic_split_factor:
+                if self._is_dynamic_split_factor and is_cluster_dynamic_split_factor:
                     # Get adaptive trigger ratio and magnitude
                     adapt_trigger_ratio = \
                         target_clusters_data[str(target_cluster)]['adapt_trigger_ratio']

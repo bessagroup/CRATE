@@ -168,6 +168,9 @@ class AdaptiveClusterGrouping(AdaptivityCriterion):
         -------
         target_clusters : list
             List containing the labels (int) of clusters to be adapted.
+        target_clusters_data : dict
+            For each target cluster (key, str), store dictionary (item, dict) containing
+            cluster associated parameters required for the adaptive procedures.
         '''
         # Initialize target clusters list
         target_clusters = []
@@ -222,6 +225,11 @@ class AdaptiveClusterGrouping(AdaptivityCriterion):
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Assemble target clusters
                 target_clusters += group_target_clusters
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Loop over target clusters
+        for cluster in target_clusters:
+            # Build target cluster data dictionary
+            target_clusters_data[str(cluster)] = {'is_dynamic_split_factor': False}
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return target_clusters, target_clusters_data
     # --------------------------------------------------------------------------------------
@@ -655,3 +663,5 @@ class SpatialDiscontinuities(AdaptivityCriterion):
             # Store adaptive trigger ratio for each target cluster
             target_clusters_data[str(cluster)]['adapt_trigger_ratio'] = \
                 self._adapt_trigger_ratio
+            # Set dynamic adaptive clustering split factor flag
+            target_clusters_data[str(cluster)]['is_dynamic_split_factor'] = True
