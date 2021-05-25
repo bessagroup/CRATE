@@ -106,12 +106,18 @@ class AdaptivityManager:
                 adapt_max_level = adapt_criterion_data[mat_phase]['adapt_max_level']
                 adapt_level_max_diff = adapt_criterion_data[mat_phase]\
                     ['adapt_level_max_diff']
+                swipe_dim_1_every = adapt_criterion_data[mat_phase]['swipe_dim_1_every']
+                swipe_dim_2_every = adapt_criterion_data[mat_phase]['swipe_dim_2_every']
+                swipe_dim_3_every = adapt_criterion_data[mat_phase]['swipe_dim_3_every']
                 # Initialize clustering adaptivity criterion
                 self._adapt_phase_criterions[mat_phase] = \
                     SpatialDiscontinuities(mat_phase, phase_clusters,
                                            adapt_trigger_ratio=adapt_trigger_ratio,
                                            adapt_max_level=adapt_max_level,
-                                           adapt_level_max_diff=adapt_level_max_diff)
+                                           adapt_level_max_diff=adapt_level_max_diff,
+                                           swipe_dim_1_every=swipe_dim_1_every,
+                                           swipe_dim_2_every=swipe_dim_2_every,
+                                           swipe_dim_3_every=swipe_dim_3_every)
             else:
                 raise RuntimeError('Unknown clustering adaptivity criterion.')
     # --------------------------------------------------------------------------------------

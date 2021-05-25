@@ -352,10 +352,13 @@ class SpatialDiscontinuities(AdaptivityCriterion):
     ----------
     _clusters_adapt_level : dict
         Adaptive level (item, int) of each cluster (key, str).
-
+    _swipe_dims_every : list, default=None
+        Swipe frequency (item, int) of each spatial dimension. First and last (boundary)
+        voxels are always considered, irrespective of the swipe frequency.
     '''
     def __init__(self, adapt_mat_phase, phase_clusters, adapt_trigger_ratio=None,
-                 adapt_max_level=None, adapt_level_max_diff=None):
+                 adapt_max_level=None, adapt_level_max_diff=None, swipe_dim_1_every=None,
+                 swipe_dim_2_every=None, swipe_dim_3_every=None):
         '''Spatial discontinuities criterion constructor.
 
         Parameters
@@ -369,6 +372,17 @@ class SpatialDiscontinuities(AdaptivityCriterion):
             Threshold associated to the adaptivity trigger condition.
         adapt_max_level : int, default=None
             Maximum cluster adaptive level.
+        adapt_level_max_diff : int, default=None
+            Maximum adaptive level difference when targeting clusters of adjacent voxels.
+        swipe_dim_1_every : int, default=None
+            Swipe frequency of spatial dimension 1. First and last (boundary) voxels are
+            always considered.
+        swipe_dim_2_every : int, default=None
+            Swipe frequency of spatial dimension 2. First and last (boundary) voxels are
+            always considered.
+        swipe_dim_3_every : int, default=None
+            Swipe frequency of spatial dimension 3. First and last (boundary) voxels are
+            always considered.
         '''
         # Initialize clusters adaptive level
         self._clusters_adapt_level = {str(cluster) : 0 for cluster in
@@ -390,6 +404,20 @@ class SpatialDiscontinuities(AdaptivityCriterion):
             self._adapt_level_max_diff = optional_parameters['adapt_level_max_diff']
         else:
             self._adapt_level_max_diff = adapt_level_max_diff
+        # Get spatial dimensions swipe frequencies
+        self._swipe_dims_every = []
+        if swipe_dim_1_every is None:
+            self._swipe_dims_every.append(optional_parameters['swipe_dim_1_every'])
+        else:
+            self._swipe_dims_every.append(max(swipe_dim_1_every, 1))
+        if swipe_dim_2_every is None:
+            self._swipe_dims_every.append(optional_parameters['swipe_dim_2_every'])
+        else:
+            self._swipe_dims_every.append(max(swipe_dim_2_every, 1))
+        if swipe_dim_3_every is None:
+            self._swipe_dims_every.append(optional_parameters['swipe_dim_3_every'])
+        else:
+            self._swipe_dims_every.append(max(swipe_dim_3_every, 1))
     # --------------------------------------------------------------------------------------
     @staticmethod
     def get_parameters():
@@ -411,7 +439,10 @@ class SpatialDiscontinuities(AdaptivityCriterion):
         # Set optional adaptivity criterion parameters and associated default values
         optional_parameters = {'adapt_trigger_ratio': 0.1,
                                'adapt_max_level': 15,
-                               'adapt_level_max_diff': 2}
+                               'adapt_level_max_diff': 2,
+                               'swipe_dim_1_every': 1,
+                               'swipe_dim_2_every': 1,
+                               'swipe_dim_3_every': 1}
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return [mandatory_parameters, optional_parameters]
@@ -548,6 +579,14 @@ class SpatialDiscontinuities(AdaptivityCriterion):
         # Set spatial dimensions map (ordered as 1, 2 [, 3])
         spatial_cycle_map = [cycle_spatial_map.index(i) for i in range(len(n_voxels_dims))]
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set cycling dimensions swipe frequencies
+        swipe_dim_i_every = self._swipe_dims_every[cycle_spatial_map[0]]
+        swipe_dim_j_every = self._swipe_dims_every[cycle_spatial_map[1]]
+        if len(cycle_spatial_map) == 3:
+            swipe_dim_k_every = self._swipe_dims_every[cycle_spatial_map[2]]
+        else:
+            swipe_dim_k_every = 1
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get minimum and maximum value of adaptivity feature
         min_feature_val = min(adapt_data_matrix[:, 1])
         max_feature_val = max(adapt_data_matrix[:, 1])
@@ -556,10 +595,28 @@ class SpatialDiscontinuities(AdaptivityCriterion):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over voxels of dimension k
         for voxel_k in range(n_voxels_k):
+            # Proceed according swiping frequency of dimension k. First and last voxels are
+            # always considered
+            if voxel_k == 0 or voxel_k == n_voxels_k - 1:
+                pass
+            elif voxel_k % swipe_dim_k_every != 0:
+                continue
             # Loop over voxels of dimension j
             for voxel_j in range(n_voxels_j):
+                # Proceed according swiping frequency of dimension j. First and last voxels
+                # are always considered
+                if voxel_j == 0 or voxel_j == n_voxels_j - 1:
+                    pass
+                elif voxel_j % swipe_dim_j_every != 0:
+                    continue
                 # Loop over voxels of dimension i (evaluation of spatial discontinuities)
                 for voxel_i in range(n_voxels_i):
+                    # Proceed according swiping frequency of dimension i. First and last
+                    # voxels are always considered
+                    if voxel_i == 0 or voxel_i == n_voxels_i - 1:
+                        pass
+                    elif voxel_i % swipe_dim_i_every != 0:
+                        continue
                     # Get voxel (i) ordered spatial indexes
                     idxs = [(voxel_i, voxel_j, voxel_k)[i] for i in spatial_cycle_map]
                     # Get cluster label of voxel (i)
