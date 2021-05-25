@@ -193,6 +193,9 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     if len(crve.adapt_material_phases) > 0:
         # Switch on clustering adaptivity flag
         is_crve_adaptivity = True
+        # Set flag that controls if the macroscale loading increment where the clustering
+        # adaptivity is triggered is to be repeated considering the new clustering
+        is_adapt_repeat_inc = True
         # Get clustering adaptivity frequency
         clust_adapt_freq = clst_dict['clust_adapt_freq']
         # Get clustering adaptivity output
@@ -909,7 +912,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         # This section should only be executed if the macroscale loading increment where the
         # clustering adaptivity condition is triggered is to be repeated considering the new
         # clustering
-        if is_crve_adaptivity and adaptivity_manager.check_inc_adaptive_steps(inc):
+        if is_crve_adaptivity and is_adapt_repeat_inc and \
+                adaptivity_manager.check_inc_adaptive_steps(inc):
             # Display increment data
             if is_clust_adapt_output:
                 info.displayinfo('12', crve.get_adaptive_step() + 1)
@@ -1115,8 +1119,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         # This section should only be executed if the clustering adaptivity is to be
         # performed in between macroscale loading increments, i.e., the new clustering is
         # only considered in the following macroscale loading increments.
-        if is_crve_adaptivity and adaptivity_manager.check_inc_adaptive_steps(inc) \
-                and False:
+        if is_crve_adaptivity and not is_adapt_repeat_inc and \
+                adaptivity_manager.check_inc_adaptive_steps(inc):
             # Display increment data
             if is_clust_adapt_output:
                 info.displayinfo('12', crve.get_adaptive_step() + 1)

@@ -319,7 +319,6 @@ def writevtkmacincrement(vtk_dict, dirs_dict, problem_dict, mat_dict, rg_dict, c
     # Write VTK cell data array - Cluster adaptive level
     if not adaptivity_manager is None:
         rg_array = adaptivity_manager.get_adapt_vtk_array(voxels_clusters)
-
         data_list = list(rg_array.flatten('F'))
         min_val = min(data_list)
         max_val = max(data_list)
