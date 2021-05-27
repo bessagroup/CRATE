@@ -268,7 +268,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         # Set post-processing procedure initial time
         procedure_init_time = time.time()
         # Instantiate voxels material-related output
-        voxels_output = VoxelsOutput(voxout_file_path)
+        voxels_output = VoxelsOutput(voxout_file_path, problem_type)
         # Write reference material output file header
         voxels_output.init_voxels_output_file(crve)
         # Increment post-processing time

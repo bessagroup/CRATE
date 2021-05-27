@@ -130,10 +130,10 @@ def suct(problem_dict, algpar_dict, material_properties, mat_phase, inc_strain,
         comp_order = comp_order_sym
         # Build strain tensors (matricial form) by including the appropriate out-of-plain
         # components
-        inc_strain_mf = mop.getstate3Dmffrom2Dmf(problem_dict, inc_strain_mf, 0.0)
-        e_strain_old_mf = mop.getstate3Dmffrom2Dmf(problem_dict, e_strain_old_mf,
+        inc_strain_mf = mop.getstate3Dmffrom2Dmf(problem_type, inc_strain_mf, 0.0)
+        e_strain_old_mf = mop.getstate3Dmffrom2Dmf(problem_type, e_strain_old_mf,
                                                    e_strain_33_old)
-        p_strain_old_mf = mop.getstate3Dmffrom2Dmf(problem_dict, p_strain_old_mf,
+        p_strain_old_mf = mop.getstate3Dmffrom2Dmf(problem_type, p_strain_old_mf,
                                                    p_strain_33_old)
     #
     #                                                                           State update
@@ -254,10 +254,10 @@ def suct(problem_dict, algpar_dict, material_properties, mat_phase, inc_strain,
     if problem_type == 1:
         # Builds 2D strain and stress tensors (matricial form) from the associated 3D
         # counterparts
-        e_trial_strain_mf = mop.getstate2Dmffrom3Dmf(problem_dict, e_trial_strain_mf)
-        e_strain_mf = mop.getstate2Dmffrom3Dmf(problem_dict, e_strain_mf)
-        stress_mf = mop.getstate2Dmffrom3Dmf(problem_dict, stress_mf)
-        p_strain_old_mf = mop.getstate2Dmffrom3Dmf(problem_dict, p_strain_old_mf)
+        e_trial_strain_mf = mop.getstate2Dmffrom3Dmf(problem_type, e_trial_strain_mf)
+        e_strain_mf = mop.getstate2Dmffrom3Dmf(problem_type, e_strain_mf)
+        stress_mf = mop.getstate2Dmffrom3Dmf(problem_type, stress_mf)
+        p_strain_old_mf = mop.getstate2Dmffrom3Dmf(problem_type, p_strain_old_mf)
     #
     #                                                                Updated state variables
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -300,7 +300,7 @@ def suct(problem_dict, algpar_dict, material_properties, mat_phase, inc_strain,
     # When the problem type corresponds to a 2D analysis, build the 2D consistent tangent
     # modulus (matricial form) once the 3D counterpart
     if problem_type == 1:
-        consistent_tangent_mf = mop.getstate2Dmffrom3Dmf(problem_dict,
+        consistent_tangent_mf = mop.getstate2Dmffrom3Dmf(problem_type,
                                                          consistent_tangent_mf)
     #
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

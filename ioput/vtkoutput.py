@@ -169,8 +169,6 @@ def writevtkmacincrement(vtk_dict, dirs_dict, problem_dict, mat_dict, rg_dict, c
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Get problem data
     problem_type = problem_dict['problem_type']
-    n_dim = problem_dict['n_dim']
-    comp_order_sym = problem_dict['comp_order_sym']
     # Get material data
     material_phases = mat_dict['material_phases']
     material_phases_models = mat_dict['material_phases_models']
@@ -184,7 +182,7 @@ def writevtkmacincrement(vtk_dict, dirs_dict, problem_dict, mat_dict, rg_dict, c
     material_models = list(np.unique([material_phases_models[mat_phase]['name'] \
                            for mat_phase in material_phases]))
     # Instantiate factory of voxels arrays
-    voxels_array_factory = VoxelsArraysFactory(n_dim, comp_order_sym)
+    voxels_array_factory = VoxelsArraysFactory(problem_type)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Write VTK cell data array - Material phases
     data_list = list(regular_grid.flatten('F'))

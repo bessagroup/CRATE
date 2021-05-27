@@ -358,9 +358,7 @@ def getcondmatrix(matrix, rows, cols):
 # Given a 2D strain/stress tensor (matricial form) associated to a given 2D problem type,
 # build the corresponding 3D counterpart by including the appropriate out-of-plain strain
 # components
-def getstate3Dmffrom2Dmf(problem_dict, mf_2d, comp_33):
-    # Get problem type
-    problem_type = problem_dict['problem_type']
+def getstate3Dmffrom2Dmf(problem_type, mf_2d, comp_33):
     # Get 2D strain/stress components order in symmetric and nonsymmetric cases
     _, comp_order_sym_2d, comp_order_nsym_2d = getproblemtypeparam(problem_type)
     # Get 3D strain/stress components order in symmetric and nonsymmetric cases
@@ -385,9 +383,7 @@ def getstate3Dmffrom2Dmf(problem_dict, mf_2d, comp_33):
 # Given a 3D strain/stress second-order tensor (matricial form) or a 3D strain/stress
 # related fourth-order tensor associated to a given 2D problem type, build the reduced 2D
 # counterpart including only the in-plain strain/stress components
-def getstate2Dmffrom3Dmf(problem_dict, mf_3d):
-    # Get problem type
-    problem_type = problem_dict['problem_type']
+def getstate2Dmffrom3Dmf(problem_type, mf_3d):
     # Get 2D strain/stress components order in symmetric and nonsymmetric cases
     _, comp_order_sym_2d, comp_order_nsym_2d = getproblemtypeparam(problem_type)
     # Get 3D strain/stress components order in symmetric and nonsymmetric cases
