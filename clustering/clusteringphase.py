@@ -203,8 +203,8 @@ class ACRMP(CRMP):
         adapt_split_factor : float
             Adaptive clustering split factor. The adaptive clustering split factor must be
             contained between 0 and 1 (included). The lower bound (0) enforces a single
-            split, while the upper bound (1) performs the maximum number splits of
-            each cluster (leading to single-voxel clusters).
+            split, i.e., 2 new clusters, while the upper bound (1) is associated to a
+            maximum defined number of new voxels.
         '''
         # Check provided parameters
         if not (ref_split_factor >= 0 and ref_split_factor <= 1):
@@ -216,7 +216,7 @@ class ACRMP(CRMP):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # If the dynamic split factor amplitude is null, skip computations and return
         # reference adaptive clustering split factor. Otherwise, compute adaptive clustering
-        # split factor lower bound
+        # split factor lower and upper bounds
         if abs(dynamic_amp) < 1e-10:
             return ref_split_factor
         else:
@@ -236,7 +236,7 @@ class ACRMP(CRMP):
             raise RuntimeError('Unknown dynamic function type.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute adaptive clustering split factor
-        adapt_split_factor = lower_bound + dynamic_function(magnitude)*dynamic_amp
+        adapt_split_factor = min(1, lower_bound + dynamic_function(magnitude)*dynamic_amp)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return adapt_split_factor
@@ -367,8 +367,8 @@ class GACRMP(ACRMP):
     _adapt_split_factor : float
         Adaptive clustering split factor. The adaptive clustering split factor must be
         contained between 0 and 1 (included). The lower bound (0) enforces a single
-        split, while the upper bound (1) performs the maximum number splits of
-        each cluster (leading to single-voxel clusters).
+        split, i.e., 2 new clusters, while the upper bound (1) is associated to a
+        maximum defined number of new voxels.
     _threshold_n_clusters : int
         Threshold number of adaptive material phase number of clusters. Once this threshold
         is surpassed, the adaptive procedures of the adaptive material phase are
@@ -563,8 +563,8 @@ class GACRMP(ACRMP):
                     adapt_split_factor = ref_split_factor
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Compute number of child clusters, enforcing at least two clusters
-                n_new_clusters = \
-                    max(2, int(np.round(adapt_split_factor*n_cluster_voxels)))
+                n_new_clusters = max(2, int(adapt_split_factor*
+                                            int(1.0/self._child_cluster_vol_fraction)))
                 # Compare number of child clusters and number of target cluster number of
                 # voxels
                 if n_cluster_voxels <= n_new_clusters:
@@ -671,6 +671,7 @@ class GACRMP(ACRMP):
         mandatory_parameters = {}
         # Set optional adaptivity type parameters and associated default values
         optional_parameters = {'adapt_split_factor': 0.01,
+                               'child_cluster_vol_fraction' : 0.5,
                                'dynamic_split_factor_amp': 0.0,
                                'threshold_n_clusters': 10**6}
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -689,6 +690,7 @@ class GACRMP(ACRMP):
         pass
         # Set optional adaptivity type parameters
         self._adapt_split_factor = adaptivity_type['adapt_split_factor']
+        self._child_cluster_vol_fraction = adaptivity_type['child_cluster_vol_fraction']
         self._dynamic_split_factor_amp = adaptivity_type['dynamic_split_factor_amp']
         self._threshold_n_clusters = adaptivity_type['threshold_n_clusters']
     # --------------------------------------------------------------------------------------
@@ -728,8 +730,8 @@ class HAACRMP(ACRMP):
     _adapt_split_factor : float
         Adaptive clustering split factor. The adaptive clustering split factor must be
         contained between 0 and 1 (included). The lower bound (0) enforces a single
-        split, while the upper bound (1) performs the maximum number splits of
-        each cluster (leading to single-voxel clusters).
+        split, i.e., 2 new clusters, while the upper bound (1) is associated to a
+        maximum defined number of new voxels.
     _threshold_n_clusters : int
         Threshold number of adaptive material phase number of clusters. Once this threshold
         is surpassed, the adaptive procedures of the adaptive material phase are
@@ -930,7 +932,8 @@ class HAACRMP(ACRMP):
                 adapt_split_factor = ref_split_factor
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Compute total number of tree node splits, enforcing at least one split
-            n_splits = max(1, int(np.round(adapt_split_factor*(n_leaves - 1))))
+            n_splits = max(1, int(adapt_split_factor*
+                                  int(int(1.0/self._child_cluster_vol_fraction) - 1)))
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Initialize child nodes list
             child_nodes = []
@@ -1100,6 +1103,7 @@ class HAACRMP(ACRMP):
         mandatory_parameters = {}
         # Set optional adaptivity type parameters and associated default values
         optional_parameters = {'adapt_split_factor': 0.01,
+                               'child_cluster_vol_fraction' : 0.5,
                                'dynamic_split_factor_amp': 0.0,
                                'threshold_n_clusters': 10**6}
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1118,6 +1122,7 @@ class HAACRMP(ACRMP):
         pass
         # Set optional adaptivity type parameters
         self._adapt_split_factor = adaptivity_type['adapt_split_factor']
+        self._child_cluster_vol_fraction = adaptivity_type['child_cluster_vol_fraction']
         self._dynamic_split_factor_amp = adaptivity_type['dynamic_split_factor_amp']
         self._threshold_n_clusters = adaptivity_type['threshold_n_clusters']
     # --------------------------------------------------------------------------------------
