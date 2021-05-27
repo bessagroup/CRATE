@@ -15,6 +15,8 @@ from abc import ABC, abstractmethod
 import numpy as np
 # Shallow and deep copy operations
 import copy
+# Generate pseudo-random numbers
+import random
 # I/O utilities
 import ioput.ioutilities as ioutil
 #
@@ -418,6 +420,8 @@ class SpatialDiscontinuities(AdaptivityCriterion):
             self._swipe_dims_every.append(optional_parameters['swipe_dim_3_every'])
         else:
             self._swipe_dims_every.append(max(swipe_dim_3_every, 1))
+        # Initialize spatial dimensions swipe frequency initial index
+        self._swipe_dims_init_idx = [0, 0, 0]
     # --------------------------------------------------------------------------------------
     @staticmethod
     def get_parameters():
@@ -471,6 +475,9 @@ class SpatialDiscontinuities(AdaptivityCriterion):
         target_clusters = []
         # Initialize target clusters data
         target_clusters_data = {}
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Randomly update the spatial dimensions swipe frequency initial index
+        self._update_swipe_dims_init_idx()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Perform required spatial evaluations, update list of target clusters and
         # associated data
@@ -586,6 +593,13 @@ class SpatialDiscontinuities(AdaptivityCriterion):
             swipe_dim_k_every = self._swipe_dims_every[cycle_spatial_map[2]]
         else:
             swipe_dim_k_every = 1
+        # Set cycling dimensions swipe frequency initial index
+        swipe_dim_i_init = self._swipe_dims_init_idx[cycle_spatial_map[0]]
+        swipe_dim_j_init = self._swipe_dims_init_idx[cycle_spatial_map[1]]
+        if len(cycle_spatial_map) == 3:
+            swipe_dim_k_init = self._swipe_dims_init_idx[2]
+        else:
+            swipe_dim_k_init = 0
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get minimum and maximum value of adaptivity feature
         min_feature_val = min(adapt_data_matrix[:, 1])
@@ -599,7 +613,7 @@ class SpatialDiscontinuities(AdaptivityCriterion):
             # always considered
             if voxel_k == 0 or voxel_k == n_voxels_k - 1:
                 pass
-            elif voxel_k % swipe_dim_k_every != 0:
+            elif (voxel_k - swipe_dim_k_init) % swipe_dim_k_every != 0:
                 continue
             # Loop over voxels of dimension j
             for voxel_j in range(n_voxels_j):
@@ -607,7 +621,7 @@ class SpatialDiscontinuities(AdaptivityCriterion):
                 # are always considered
                 if voxel_j == 0 or voxel_j == n_voxels_j - 1:
                     pass
-                elif voxel_j % swipe_dim_j_every != 0:
+                elif (voxel_j - swipe_dim_j_init) % swipe_dim_j_every != 0:
                     continue
                 # Loop over voxels of dimension i (evaluation of spatial discontinuities)
                 for voxel_i in range(n_voxels_i):
@@ -615,7 +629,7 @@ class SpatialDiscontinuities(AdaptivityCriterion):
                     # voxels are always considered
                     if voxel_i == 0 or voxel_i == n_voxels_i - 1:
                         pass
-                    elif voxel_i % swipe_dim_i_every != 0:
+                    elif (voxel_i - swipe_dim_i_init) % swipe_dim_i_every != 0:
                         continue
                     # Get voxel (i) ordered spatial indexes
                     idxs = [(voxel_i, voxel_j, voxel_k)[i] for i in spatial_cycle_map]
@@ -722,3 +736,10 @@ class SpatialDiscontinuities(AdaptivityCriterion):
                 self._adapt_trigger_ratio
             # Set dynamic adaptive clustering split factor flag
             target_clusters_data[str(cluster)]['is_dynamic_split_factor'] = True
+    # --------------------------------------------------------------------------------------
+    def _update_swipe_dims_init_idx(self):
+        '''Randomly update the spatial dimensions swipe frequency initial index.'''
+        for i in range(len(self._swipe_dims_every)):
+            if self._swipe_dims_every[i] > 1:
+                self._swipe_dims_init_idx[i] = \
+                    random.choice(range(self._swipe_dims_every[i]))
