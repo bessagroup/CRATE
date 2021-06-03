@@ -566,7 +566,7 @@
 
 
 
-#                                                           Clustering adaptivity output [O]
+#                                                          Voxel material-related output [O]
 # ==========================================================================================
 # Meaning:   Output of data associated with voxel material-related quantities
 #            (.voxout file). Quantities are written for every converged macroscale loading
