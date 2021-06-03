@@ -322,25 +322,27 @@ def kelvinfactor(idx, comp_order):
 # Note: Lists of rows and columns cannot contain duplicated indexes
 #
 def getcondmatrix(matrix, rows, cols):
-    # Check validity of rows and columns indexes to perform the condensation
-    if not np.all([isinstance(rows[i], int) or isinstance(rows[i], np.integer)
-            for i in range(len(rows))]):
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00032', location.filename, location.lineno + 1)
-    elif not np.all([isinstance(cols[i], int) or isinstance(cols[i], np.integer)
-            for i in range(len(cols))]):
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00032', location.filename, location.lineno + 1)
-    elif len(list(dict.fromkeys(rows))) != len(rows) or \
-            len(list(dict.fromkeys(cols))) != len(cols):
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00033', location.filename, location.lineno + 1)
-    elif np.any([rows[i] not in range(matrix.shape[0]) for i in range(len(rows))]):
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00034', location.filename, location.lineno + 1)
-    elif np.any([cols[i] not in range(matrix.shape[1]) for i in range(len(cols))]):
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00035', location.filename, location.lineno + 1)
+    ## Check validity of rows and columns indexes to perform the condensation
+    check_validity = False
+    if check_validity:
+        if not np.all([isinstance(rows[i], int) or isinstance(rows[i], np.integer)
+                for i in range(len(rows))]):
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayerror('E00032', location.filename, location.lineno + 1)
+        elif not np.all([isinstance(cols[i], int) or isinstance(cols[i], np.integer)
+                for i in range(len(cols))]):
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayerror('E00032', location.filename, location.lineno + 1)
+        elif len(list(dict.fromkeys(rows))) != len(rows) or \
+                len(list(dict.fromkeys(cols))) != len(cols):
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayerror('E00033', location.filename, location.lineno + 1)
+        elif np.any([rows[i] not in range(matrix.shape[0]) for i in range(len(rows))]):
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayerror('E00034', location.filename, location.lineno + 1)
+        elif np.any([cols[i] not in range(matrix.shape[1]) for i in range(len(cols))]):
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayerror('E00035', location.filename, location.lineno + 1)
     # Build auxiliary matrices with rows and columns condensation indexes
     rows_matrix = np.zeros((len(rows), len(cols)), dtype=int)
     cols_matrix = np.zeros((len(rows), len(cols)), dtype=int)
