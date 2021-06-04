@@ -606,6 +606,10 @@ class SpatialDiscontinuities(AdaptivityCriterion):
         max_feature_val = max(adapt_data_matrix[:, 1])
         # Get absolute value of maximum range of adaptivity feature
         norm_factor = abs(max_feature_val - min_feature_val)
+        # If the maximum range of the adaptivity feature is null, then its value is uniform
+        # in the adaptive material phase
+        if abs(norm_factor) < 1e-10:
+            return
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over voxels of dimension k
         for voxel_k in range(n_voxels_k):
