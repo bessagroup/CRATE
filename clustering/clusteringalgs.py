@@ -67,6 +67,9 @@ class ClusterAnalysis:
             Cluster label (int) assigned to each dataset item.
         clust_alg : clustering algorithm
             Clustering fitted estimator.
+        is_n_clusters_satisfied : bool
+            True if the number of clusters obtained from the cluster analysis matches the
+            prescribed number of clusters, False otherwise.
         '''
         # Get number of dataset items
         n_items = data_matrix.shape[0]
@@ -153,11 +156,11 @@ class ClusterAnalysis:
                                'the cluster analysis.')
         # Check number of clusters formed
         if len(set(cluster_labels)) != n_clusters:
-            raise RuntimeError('The number of clusters (' + str(len(set(cluster_labels))) +
-                               ') obtained is different from the prescribed number of ' +
-                               'clusters (' + str(n_clusters) + ').')
+            is_n_clusters_satisfied = False
+        else:
+            is_n_clusters_satisfied = True
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        return [cluster_labels, clust_alg]
+        return [cluster_labels, clust_alg, is_n_clusters_satisfied]
 #
 #                                                           Clustering algorithms interfaces
 # ==========================================================================================

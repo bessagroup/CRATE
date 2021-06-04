@@ -311,9 +311,15 @@ class SCRMP(CRMP):
                                             list(range(n_phase_voxels)), indexes)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Perform cluster analysis
-            cluster_labels, _ = ClusterAnalysis().get_fitted_estimator(data_matrix,
-                                                                       clust_alg_id,
-                                                                       self._n_clusters)
+            cluster_labels, _, is_n_clusters_satisfied = \
+                ClusterAnalysis().get_fitted_estimator(data_matrix, clust_alg_id,
+                                                       self._n_clusters)
+            # Check if prescribed number of clusters is satisfied
+            if not is_n_clusters_satisfied:
+                raise RuntimeError('The number of clusters (' +
+                                   str(len(set(cluster_labels))) +
+                                   ') obtained is different from the prescribed number ' +
+                                   'of clusters (' + str(self._n_clusters) + ').')
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Add clustering to collection of clustering solutions
             clustering_solutions.append(cluster_labels)
@@ -451,9 +457,15 @@ class GACRMP(ACRMP):
                                             list(range(n_phase_voxels)), indexes)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Perform cluster analysis
-            cluster_labels, _ = ClusterAnalysis().get_fitted_estimator(data_matrix,
-                                                                       clust_alg_id,
-                                                                       self._n_clusters)
+            cluster_labels, _, is_n_clusters_satisfied = \
+                ClusterAnalysis().get_fitted_estimator(data_matrix, clust_alg_id,
+                                                       self._n_clusters)
+            # Check if prescribed number of clusters is satisfied
+            if not is_n_clusters_satisfied:
+                raise RuntimeError('The number of clusters (' +
+                                   str(len(set(cluster_labels))) +
+                                   ') obtained is different from the prescribed number ' +
+                                   'of clusters (' + str(self._n_clusters) + ').')
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Add clustering to collection of clustering solutions
             clustering_solutions.append(cluster_labels)
@@ -594,9 +606,14 @@ class GACRMP(ACRMP):
                                                 target_cluster_idxs, indexes)
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Perform cluster analysis
-                cluster_labels, _ = \
+                cluster_labels, _, is_n_clusters_satisfied = \
                     ClusterAnalysis().get_fitted_estimator(data_matrix, clust_alg_id,
                                                            n_new_clusters)
+                # Check if prescribed number of clusters is satisfied
+                if not is_n_clusters_satisfied:
+                    # If the prescribed number of clusters is not satisfied, proceed with
+                    # the number of clusters obtained
+                    pass
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Add clustering to collection of clustering solutions
                 clustering_solutions.append(cluster_labels)
@@ -815,9 +832,15 @@ class HAACRMP(ACRMP):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Perform cluster analysis
         cluster_analysis = clstalgs.ClusterAnalysis()
-        cluster_labels, clust_alg = cluster_analysis.get_fitted_estimator(data_matrix,
-                                                                          clust_alg_id,
-                                                                          self._n_clusters)
+        cluster_labels, clust_alg, is_n_clusters_satisfied = \
+            cluster_analysis.get_fitted_estimator(data_matrix, clust_alg_id,
+                                                  self._n_clusters)
+        # Check if prescribed number of clusters is satisfied
+        if not is_n_clusters_satisfied:
+            raise RuntimeError('The number of clusters (' +
+                               str(len(set(cluster_labels))) +
+                               ') obtained is different from the prescribed number ' +
+                               'of clusters (' + str(self._n_clusters) + ').')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set cluster labels
         self.cluster_labels = cluster_labels
