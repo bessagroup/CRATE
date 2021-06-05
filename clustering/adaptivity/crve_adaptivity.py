@@ -21,8 +21,12 @@ import time
 import re
 # Display messages
 import ioput.info as info
+# Matricial operations
+import tensor.matrixoperations as mop
 # I/O utilities
 import ioput.ioutilities as ioutil
+# Material-related computations
+from material.materialquantities import MaterialQuantitiesComputer
 # Clustering adaptivity criterions
 from clustering.adaptivity.adaptivity_criterion import AdaptiveClusterGrouping, \
                                                        SpatialDiscontinuities
@@ -48,12 +52,14 @@ class AdaptivityManager:
     adaptive_time : float
         Total amount of time (s) spent in clustering adaptivity procedures.
     '''
-    def __init__(self, comp_order, adapt_material_phases, phase_clusters,
+    def __init__(self, problem_type, comp_order, adapt_material_phases, phase_clusters,
                  adaptivity_control_feature, adapt_criterion_data, clust_adapt_freq):
         '''Online CRVE clustering adaptivity manager constructor.
 
         Parameters
         ----------
+        problem_type : int
+            Problem type identifier (1 - Plain strain (2D), 4- Tridimensional)
         comp_order : list
             Strain/Stress components (str) order.
         adapt_material_phases : list
@@ -73,6 +79,7 @@ class AdaptivityManager:
             (item, int, default=1) associated with each adaptive cluster-reduced
             material phase (key, str).
         '''
+        self._problem_type = problem_type
         self._comp_order = copy.deepcopy(comp_order)
         self._adapt_material_phases = copy.deepcopy(adapt_material_phases)
         self._adaptivity_control_feature = copy.deepcopy(adaptivity_control_feature)
@@ -382,6 +389,80 @@ class AdaptivityManager:
                 else:
                     adapt_data_matrix[i, 1] = \
                         clusters_state[str(cluster)][adapt_control_feature][index]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Clustering adaptivity feature is Von Mises equivalent stress
+        elif adapt_control_feature == 'vm_stress':
+            # Instantiate material state computations
+            csbvar_computer = MaterialQuantitiesComputer()
+            # Build adaptivity feature data matrix
+            for i in range(n_clusters):
+                # Get cluster label
+                cluster = int(adapt_data_matrix[i, 0])
+                # Get cluster stress tensor (matricial form)
+                stress_mf = clusters_state[str(cluster)]['stress_mf']
+                # Build 3D stress tensor (matricial form)
+                if self._problem_type == 1:
+                    # Get out-of-plain stress component
+                    stress_33 = clusters_state[str(cluster)]['stress_33']
+                    # Build 3D stress tensor (matricial form)
+                    stress_mf = mop.getstate3Dmffrom2Dmf(self._problem_type,
+                                                         stress_mf, stress_33)
+                # Compute von Mises equivalent stress
+                vm_stress = csbvar_computer.get_vm_stress(stress_mf)
+                # Assemble adaptivity feature data matrix
+                if is_incremental:
+                    # Get cluster previously converged stress tensor (matricial form)
+                    stress_mf = clusters_state_old[str(cluster)]['stress_mf']
+                    # Build 3D stress tensor (matricial form)
+                    if self._problem_type == 1:
+                        # Get out-of-plain stress component
+                        stress_33 = clusters_state_old[str(cluster)]['stress_33']
+                        # Build 3D stress tensor (matricial form)
+                        stress_mf = mop.getstate3Dmffrom2Dmf(self._problem_type,
+                                                             stress_mf, stress_33)
+                    # Compute previously converged von Mises equivalent stress
+                    vm_stress_old = csbvar_computer.get_vm_stress(stress_mf)
+                    # Assemble incremental adaptivity feature data matrix
+                    adapt_data_matrix[i, 1] = vm_stress - vm_stress_old
+                else:
+                    adapt_data_matrix[i, 1] = vm_stress
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Clustering adaptivity feature is Von Mises equivalent strain
+        elif adapt_control_feature == 'vm_strain':
+            # Instantiate material state computations
+            csbvar_computer = MaterialQuantitiesComputer()
+            # Build adaptivity feature data matrix
+            for i in range(n_clusters):
+                # Get cluster label
+                cluster = int(adapt_data_matrix[i, 0])
+                # Get cluster strain tensor (matricial form)
+                strain_mf = clusters_state[str(cluster)]['strain_mf']
+                # Build 3D strain tensor (matricial form)
+                if self._problem_type == 1:
+                    # Get out-of-plain strain component
+                    strain_33 = 0.0
+                    # Build 3D strain tensor (matricial form)
+                    strain_mf = mop.getstate3Dmffrom2Dmf(self._problem_type,
+                                                         strain_mf, strain_33)
+                # Compute von Mises equivalent strain
+                vm_strain = csbvar_computer.get_vm_strain(strain_mf)
+                # Assemble adaptivity feature data matrix
+                if is_incremental:
+                    # Get cluster previously converged strain tensor (matricial form)
+                    strain_mf = clusters_state_old[str(cluster)]['strain_mf']
+                    # Build 3D strain tensor (matricial form)
+                    if self._problem_type == 1:
+                        # Get out-of-plain strain component
+                        strain_33 = 0.0
+                        # Build 3D strain tensor (matricial form)
+                        strain_mf = mop.getstate3Dmffrom2Dmf(self._problem_type,
+                                                             strain_mf, strain_33)
+                    # Compute previously converged von Mises equivalent strain
+                    vm_strain_old = csbvar_computer.get_vm_strain(strain_mf)
+                    # Assemble incremental adaptivity feature data matrix
+                    adapt_data_matrix[i, 1] = vm_strain - vm_strain_old
+                else:
+                    adapt_data_matrix[i, 1] = vm_strain
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Clustering adaptivity feature is norm of strain concentration tensor
         elif adapt_control_feature == 'strain_concentration_tensor' and is_norm:
