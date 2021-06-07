@@ -65,8 +65,12 @@ class VoxelsOutput:
         _, n_voxels = crve.get_n_voxels()
         # Initialize voxels output array
         voxels_array = np.zeros((self._output_vars_dims, n_voxels))
-        # Loop over material-related output variables and build format structure
+        # Initialize format structure
         write_list = []
+        # Append voxels material phase labels
+        write_list += [''.join([('{:>' + str(self._col_width) + 'd}').format(x)
+                                for x in crve.get_regular_grid().flatten('F')])  + '\n']
+        # Loop over and append material-related output variables
         for i in range(len(self._output_variables)):
             write_list += [''.join([('{:>' + str(self._col_width) + '.8e}').format(x)
                                     for x in voxels_array[i, :]])  + '\n']

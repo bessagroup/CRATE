@@ -133,6 +133,7 @@ class CRVE:
             phase (key, str).
         '''
         self._rve_dims = copy.deepcopy(rve_dims)
+        self._regular_grid = copy.deepcopy(regular_grid)
         self._material_phases = copy.deepcopy(material_phases)
         self._comp_order = copy.deepcopy(comp_order)
         self._global_data_matrix = copy.deepcopy(global_data_matrix)
@@ -366,6 +367,17 @@ class CRVE:
             Total number of voxels of the regular grid (spatial discretization of the RVE).
         '''
         return [self._n_voxels_dims, self._n_voxels]
+    # --------------------------------------------------------------------------------------
+    def get_regular_grid(self):
+        '''Get regular grid of voxels with material phase labels.
+
+        Returns
+        -------
+        regular_grid : ndarray
+            Regular grid of voxels (spatial discretization of the RVE), where each entry
+            contains the material phase label (int) assigned to the corresponding voxel.
+        '''
+        return copy.deepcopy(self._regular_grid)
     # --------------------------------------------------------------------------------------
     def get_phase_n_clusters(self):
         '''Get number of clusters associated to each material phase.
