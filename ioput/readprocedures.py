@@ -1039,8 +1039,8 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
                     get_adaptivity_parameter(parameter, oacp[parameter])
             # Optional adaptivity type parameters
             else:
-                # Store adaptivity criterion parameter
-                adapt_criterion_data[mat_phase][parameter] = \
+                # Store adaptivity type parameter
+                adaptivity_type[mat_phase][parameter] = \
                     get_adaptivity_parameter(parameter, oatp[parameter])
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Read following line
@@ -1070,8 +1070,8 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
                 adapt_criterion_data[mat_phase][parameter] = \
                     get_adaptivity_parameter(parameter, line[1], etype=macp[parameter])
             elif parameter in matp.keys():
-                # Store adaptivity criterion parameter
-                adapt_criterion_data[mat_phase][parameter] = \
+                # Store adaptivity type parameter
+                adaptivity_type[mat_phase][parameter] = \
                     get_adaptivity_parameter(parameter, line[1], etype=matp[parameter])
             elif parameter in oacp.keys():
                 # Get parameter value
@@ -1086,7 +1086,7 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
             elif parameter in oatp.keys():
                 # Get parameter value
                 value = get_adaptivity_parameter(parameter, line[1])
-                # Store adaptivity criterion parameter
+                # Store adaptivity type parameter
                 if type(value) == type(oatp[parameter]):
                     adaptivity_type[mat_phase][parameter] = \
                         get_adaptivity_parameter(parameter, type(oatp[parameter])(line[1]))
@@ -1118,7 +1118,7 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Check if all the mandatory adaptivity criterion parameters have been prescribed
         for parameter in macp.keys():
-            if parameter not in adaptivity_type[mat_phase].keys():
+            if parameter not in adapt_criterion_data[mat_phase].keys():
                 raise RuntimeError('The mandatory adaptivity criterion parameter \'' +
                                    str(parameter) + '\' has not been prescribed for ' +
                                    'material phase ' + mat_phase + '.')
