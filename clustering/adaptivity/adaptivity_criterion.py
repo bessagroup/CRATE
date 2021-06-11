@@ -359,8 +359,8 @@ class SpatialDiscontinuities(AdaptivityCriterion):
         voxels are always considered, irrespective of the swipe frequency.
     '''
     def __init__(self, adapt_mat_phase, phase_clusters, adapt_trigger_ratio=None,
-                 adapt_max_level=None, adapt_level_max_diff=None, swipe_dim_1_every=None,
-                 swipe_dim_2_every=None, swipe_dim_3_every=None):
+                 adapt_max_level=None, adapt_min_voxels=None, adapt_level_max_diff=None,
+                 swipe_dim_1_every=None, swipe_dim_2_every=None, swipe_dim_3_every=None):
         '''Spatial discontinuities criterion constructor.
 
         Parameters
@@ -374,6 +374,9 @@ class SpatialDiscontinuities(AdaptivityCriterion):
             Threshold associated to the adaptivity trigger condition.
         adapt_max_level : int, default=None
             Maximum cluster adaptive level.
+        adapt_min_voxels : int, default=None
+            Minimum number of voxels that cluster must contain to be targeted for
+            adaptivity.
         adapt_level_max_diff : int, default=None
             Maximum adaptive level difference when targeting clusters of adjacent voxels.
         swipe_dim_1_every : int, default=None
@@ -401,6 +404,12 @@ class SpatialDiscontinuities(AdaptivityCriterion):
             self._adapt_max_level = optional_parameters['adapt_max_level']
         else:
             self._adapt_max_level = adapt_max_level
+        # Get minimum number of voxels that cluster must contain to be targeted for
+        # adaptivity
+        if adapt_min_voxels is None:
+            self._adapt_min_voxels = optional_parameters['adapt_min_voxels']
+        else:
+            self._adapt_min_voxels = adapt_min_voxels
         # Get cluster adaptive level maximum difference
         if adapt_max_level is None:
             self._adapt_level_max_diff = optional_parameters['adapt_level_max_diff']
@@ -443,6 +452,7 @@ class SpatialDiscontinuities(AdaptivityCriterion):
         # Set optional adaptivity criterion parameters and associated default values
         optional_parameters = {'adapt_trigger_ratio': 0.1,
                                'adapt_max_level': 15,
+                               'adapt_min_voxels': 1,
                                'adapt_level_max_diff': 2,
                                'swipe_dim_1_every': 1,
                                'swipe_dim_2_every': 1,
@@ -656,12 +666,28 @@ class SpatialDiscontinuities(AdaptivityCriterion):
                     if cluster == cluster_next:
                         continue
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                    # Evaluate clusters adaptive levels
-                    is_cluster_targetable = self._clusters_adapt_level[str(cluster)] < \
-                        self._adapt_max_level
-                    is_cluster_next_targetable = \
+                    # Get clusters number of voxels
+                    if self._adapt_min_voxels > 1:
+                        n_cluster_voxels = np.count_nonzero(voxels_clusters == cluster)
+                        n_cluster_next_voxels = \
+                            np.count_nonzero(voxels_clusters == cluster_next)
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    # Evaluate clusters adaptive level
+                    is_cond_1 = \
+                        self._clusters_adapt_level[str(cluster)] < self._adapt_max_level
+                    is_cond_next_1 = \
                         self._clusters_adapt_level[str(cluster_next)] < \
                             self._adapt_max_level
+                    # Evaluate clusters number of voxels
+                    if self._adapt_min_voxels > 1:
+                        is_cond_2 = n_cluster_voxels > self._adapt_min_voxels
+                        is_cond_next_2 = n_cluster_next_voxels > self._adapt_min_voxels
+                    else:
+                        is_cond_2 = True
+                        is_cond_next_2 = True
+                    # Evaluate target conditions
+                    is_cluster_targetable = is_cond_1 and is_cond_2
+                    is_cluster_next_targetable = is_cond_next_1 and is_cond_next_2
                     # Skip computations if both clusters are untargetable
                     if not is_cluster_targetable and not is_cluster_next_targetable:
                         continue

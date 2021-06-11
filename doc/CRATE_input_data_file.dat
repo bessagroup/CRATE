@@ -230,6 +230,7 @@
 #                        adapt_max_level [O]             integer (defaults to 15)
 #       Spatial          adapt_trigger_ratio [O]         float (defaults to 0.1)
 #    Discontinuities     adapt_max_level [O]             integer (defaults to 15)
+#                        adapt_min_voxels [O]            integer (defaults to 1)
 #                        adapt_level_max_diff [O]        integer (defaults to 2)
 #                        swipe_dim_1_every [O]           integer (defaults to 1)
 #                        swipe_dim_2_every [O]           integer (defaults to 1)

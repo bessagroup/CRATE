@@ -111,6 +111,7 @@ class AdaptivityManager:
                 # Get clustering adaptivity criterion parameters
                 adapt_trigger_ratio = adapt_criterion_data[mat_phase]['adapt_trigger_ratio']
                 adapt_max_level = adapt_criterion_data[mat_phase]['adapt_max_level']
+                adapt_min_voxels = adapt_criterion_data[mat_phase]['adapt_min_voxels']
                 adapt_level_max_diff = adapt_criterion_data[mat_phase]\
                     ['adapt_level_max_diff']
                 swipe_dim_1_every = adapt_criterion_data[mat_phase]['swipe_dim_1_every']
@@ -121,6 +122,7 @@ class AdaptivityManager:
                     SpatialDiscontinuities(mat_phase, phase_clusters,
                                            adapt_trigger_ratio=adapt_trigger_ratio,
                                            adapt_max_level=adapt_max_level,
+                                           adapt_min_voxels=adapt_min_voxels,
                                            adapt_level_max_diff=adapt_level_max_diff,
                                            swipe_dim_1_every=swipe_dim_1_every,
                                            swipe_dim_2_every=swipe_dim_2_every,
@@ -601,7 +603,6 @@ class AdaptivityManager:
             # Initialize new clusters incremental strain global vector
             gbl_inc_strain_mf_new = np.zeros((n_total_clusters*len(comp_order)))
             # Initialize material phase initial index in global vector
-            np.set_printoptions(linewidth=50)
             mat_phase_init_idx_old = 0
             mat_phase_init_idx_new = 0
             # Loop over material phases
