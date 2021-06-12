@@ -569,6 +569,27 @@
 
 
 
+#                                                         Final clustering state storage [O]
+# ==========================================================================================
+# Meaning:   Store CRVE final clustering state in '.crve' file. This option is only relevant
+#            when considering clustering adaptivity, allowing that the CRVE final clustering
+#            state is considered as the base clustering in the next analysis.
+#
+# Syntax:    Store_Final_Clustering_State
+#
+# Note: As stated in the warning message displayed when attempting to consider an already
+#       existent offline stage, make sure that the problem input data file is consistent
+#       with the previously stored '.crve' file. In what concerns the clustering adaptivity,
+#       all the adaptive parameters can be changed and are properly updated, except the
+#       clustering adaptivity type of each adaptive material phase. In order to lock the
+#       adaptive procedures of a given phase in the next analysis, the associated
+#       clustering adaptivity frequency can be set to None.
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
 #                                                          Voxel material-related output [O]
 # ==========================================================================================
 # Meaning:   Output of data associated with voxel material-related quantities

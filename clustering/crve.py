@@ -455,6 +455,17 @@ class CRVE:
         '''
         return self._adaptive_step
     # --------------------------------------------------------------------------------------
+    def get_clustering_type(self):
+        '''Get clustering type of each material phase.
+
+        Returns
+        -------
+        clustering_type : dict
+            Clustering type (item, {'static', 'adaptive'}) of each material phase
+            (key, str).
+        '''
+        return self._clustering_type
+    # --------------------------------------------------------------------------------------
     def get_adaptivity_output(self):
         '''Get required data for clustering adaptivity output file.
 
@@ -498,6 +509,70 @@ class CRVE:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return clustering_summary
+    # --------------------------------------------------------------------------------------
+    def reset_adaptive_parameters(self):
+        '''Reset CRVE adaptive progress parameters and set base clustering.'''
+        # Reset counter of adaptive clustering steps
+        self._adaptive_step = 0
+        # Set number of clusters prescribed (base clustering) for each material phase
+        self._base_phase_n_clusters = copy.deepcopy(self._phase_n_clusters)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Reset time spent in clustering adaptivity procedures
+        self.adaptive_clustering_time = 0
+        self.adaptive_cit_time = 0
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Loop over adaptive material phases
+        for mat_phase in self.adapt_material_phases:
+            # Get cluster-reduced material phase
+            crmp = self._cluster_phases[mat_phase]
+            # Reset adaptive progress parameters
+            crmp.reset_adaptive_parameters()
+    # --------------------------------------------------------------------------------------
+    def update_adaptive_parameters(self, adaptive_clustering_scheme, adapt_criterion_data,
+                                   adaptivity_type, adaptivity_control_feature):
+        '''Update CRVE clustering adaptivity attributes.
+
+        Parameters
+        ----------
+        adaptive_clustering_scheme : dict
+            Prescribed adaptive clustering scheme (item, ndarry of shape (n_clusterings, 3))
+            for each material phase (key, str). Each row is associated with a unique
+            clustering characterized by a clustering algorithm (col 1, int), a list of
+            features (col 2, list of int) and a list of the features data matrix' indexes
+            (col 3, list of int).
+        adapt_criterion_data : dict
+            Clustering adaptivity criterion (item, dict) associated to each material phase
+            (key, str). This dictionary contains the adaptivity criterion to be used and the
+            required parameters.
+        adaptivity_type : dict
+            Clustering adaptivity type (item, dict) associated to each material phase
+            (key, str). This dictionary contains the adaptivity type to be used and the
+            required parameters.
+        adaptivity_control_feature : dict
+            Clustering adaptivity control feature (item, str) associated to each material
+            phase (key, str).
+        '''
+        # Update prescribed adaptive clustering scheme
+        self._adaptive_clustering_scheme = adaptive_clustering_scheme
+        # Update clustering adaptivity criterion data
+        self.adapt_criterion_data = adapt_criterion_data
+        # Update clustering adaptivity type data
+        self._adaptivity_type = adaptivity_type
+        # Update clustering adaptivity control feature data
+        self.adaptivity_control_feature = adaptivity_control_feature
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Loop over adaptive material phases
+        for mat_phase in self.adapt_material_phases:
+            # Get adaptive clustering scheme features indexes from the base clustering
+            # scheme
+            for i in range(self._adaptive_clustering_scheme[mat_phase].shape[0]):
+                self._adaptive_clustering_scheme[mat_phase][i, 2] = \
+                    copy.deepcopy(self._base_clustering_scheme[mat_phase][i, 2])
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Get cluster-reduced material phase
+            crmp = self._cluster_phases[mat_phase]
+            # Update clustering adaptivity type parameters
+            crmp.update_adaptivity_type(adaptivity_type[mat_phase])
     # --------------------------------------------------------------------------------------
     @staticmethod
     def get_crmp_types():

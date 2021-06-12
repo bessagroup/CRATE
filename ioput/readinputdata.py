@@ -332,6 +332,14 @@ def readinputdatafile(input_file,dirs_dict):
     else:
         is_clust_adapt_output = False
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Read final clustering state storage option
+    keyword = 'Store_Final_Clustering_State'
+    is_found, keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
+        is_store_final_clustering = True
+    else:
+        is_store_final_clustering = False
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Package problem general data
     info.displayinfo('5', 'Packaging problem general data...')
     problem_dict = packager.packproblem(strain_formulation, problem_type, n_dim,
@@ -356,7 +364,8 @@ def readinputdatafile(input_file,dirs_dict):
                                           base_clustering_scheme,
                                           adaptive_clustering_scheme, adapt_criterion_data,
                                           adaptivity_type, adaptivity_control_feature,
-                                          clust_adapt_freq, is_clust_adapt_output)
+                                          clust_adapt_freq, is_clust_adapt_output,
+                                          is_store_final_clustering)
     # Package data associated to the self-consistent scheme
     info.displayinfo('5', 'Packaging self-consistent scheme data...')
     scs_dict = packager.packagescs(self_consistent_scheme, scs_max_n_iterations,

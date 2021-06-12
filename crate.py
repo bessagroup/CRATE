@@ -207,6 +207,14 @@ if is_same_offstage:
     clst_dict['phase_clusters'] = copy.deepcopy(crve.phase_clusters)
     clst_dict['clusters_f'] = copy.deepcopy(crve.clusters_f)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Update CRVE clustering adaptivity attributes
+    if 'adaptive' in crve.get_clustering_type().values():
+        crve.update_adaptive_parameters(
+            copy.deepcopy(clst_dict['adaptive_clustering_scheme']),
+            copy.deepcopy(clst_dict['adapt_criterion_data']),
+            copy.deepcopy(clst_dict['adaptivity_type']),
+            copy.deepcopy(clst_dict['adaptivity_control_feature']))
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set phase ending time and display finishing phase information
     phase_end_time = time.time()
     phase_names.append('Import offline state CRVE instance')
@@ -296,6 +304,14 @@ phase_times = np.append(phase_times, [[phase_init_time, phase_end_time]], axis=0
 info.displayinfo('3', 'Solve reduced microscale equilibrium problem',
                  phase_times[phase_times.shape[0] - 1, 1] -
                  phase_times[phase_times.shape[0] - 1, 0])
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Store CRVE final clustering state into file
+if clst_dict['is_store_final_clustering']:
+    # Reset CRVE adaptive progress parameters and set base clustering
+    crve.reset_adaptive_parameters()
+    # Dump CRVE into file
+    crve_file_path = dirs_dict['crve_file_path']
+    crve.save_crve_file(crve, crve_file_path)
 #
 #                                                Post-processing operations accumulated time
 # ==========================================================================================

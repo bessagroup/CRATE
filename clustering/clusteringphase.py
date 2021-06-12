@@ -724,6 +724,26 @@ class GACRMP(ACRMP):
         adaptivity_output = [self._n_clusters, self._adaptive_step, self.adaptive_time]
         # Return
         return adaptivity_output
+    # --------------------------------------------------------------------------------------
+    def reset_adaptive_parameters(self):
+        '''Reset clustering adaptive progress parameters.'''
+        # Reset counter of adaptive clustering steps
+        self._adaptive_step = 0
+        # Reset time spent in adaptive procedures
+        self.adaptive_time = 0
+    # --------------------------------------------------------------------------------------
+    def update_adaptivity_type(self, adaptivity_type):
+        '''Update clustering adaptivity parameters.
+
+        Parameters
+        ----------
+        adaptivity_type : dict
+            Clustering adaptivity parameters.
+        '''
+        # Update clustering adaptivity parameters
+        self._adaptivity_type = adaptivity_type
+        # Set clustering adaptivity parameters
+        self._set_adaptivity_type_parameters(self._adaptivity_type)
 #
 #                         Hierarchical Agglomerative Adaptive Cluster-Reduced Material Phase
 # ==========================================================================================

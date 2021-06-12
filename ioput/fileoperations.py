@@ -169,7 +169,7 @@ def setproblemdirs(input_file_name, input_file_dir):
             # file and the already existent offline state '.crve' data file
             ioutil.useraction('\n\nWarning: Please make sure that the problem input ' + \
                               'data file is consistent with the already ' + '\n' + \
-                              len('Warning: ')*' ' + 'existent offline state \'.crve\' ' + \
+                              len('Warning: ')*' ' + 'existent offline stage \'.crve\' ' + \
                               'data file (stored in Offline_Stage/) to avoid ' + \
                               '\n' + \
                               len('Warning: ')*' ' + 'unexpected errors or ' + \
