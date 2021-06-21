@@ -95,7 +95,8 @@ def writevtkclusterfile(vtk_dict, dirs_dict, rg_dict, clst_dict):
     writevtk_celldataarray(vtk_file, vtk_dict, data_list, data_parameters)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Write VTK cell data array - Clusters
-    data_list = list(voxels_clusters.flatten('F'))
+    voxels_clusters_flat = reset_labels_from_zero(voxels_clusters.flatten('F'))
+    data_list = list(voxels_clusters_flat)
     min_val = min(data_list)
     max_val = max(data_list)
     data_parameters = {'Name': 'Cluster', 'format': vtk_format, 'RangeMin': min_val,
@@ -193,7 +194,8 @@ def writevtkmacincrement(vtk_dict, dirs_dict, problem_dict, mat_dict, rg_dict, c
     writevtk_celldataarray(vtk_file, vtk_dict, data_list, data_parameters)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Write VTK cell data array - Clusters
-    data_list = list(voxels_clusters.flatten('F'))
+    voxels_clusters_flat = reset_labels_from_zero(voxels_clusters.flatten('F'))
+    data_list = list(voxels_clusters_flat)
     min_val = min(data_list)
     max_val = max(data_list)
     data_parameters = {'Name': 'Cluster', 'format': vtk_format, 'RangeMin': min_val,
@@ -662,3 +664,37 @@ def setdataname(problem_dict, var_name, var_type, index, is_common_var, *args):
         data_name = prefix + var_name + '_' + comp_order_nsym[index]
     # Return
     return data_name
+# ------------------------------------------------------------------------------------------
+def reset_labels_from_zero(array_1d):
+    '''Reset 1d array of integers starting from zero.
+
+    Parameters
+    ----------
+    array_1d : ndarray
+        1d array of integers.
+
+    Returns
+    -------
+    array_1d_new : ndarray
+        Relabeled 1d array of integers.
+    '''
+    # Get sorted old labels
+    old_labels = np.array(sorted(set(array_1d)))
+    # Set new labels
+    new_labels = np.array(range(len(set(array_1d))))
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Initialize relabeled 1d array
+    array_1d_new = np.full(len(array_1d), -1, dtype=int)
+    # Loop over old labels
+    for i in range(len(old_labels)):
+        # Get old label indexes
+        idxs = np.where(array_1d == old_labels[i])
+        # Reset old label
+        array_1d_new[idxs] = new_labels[i]
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Check if all labels have been reset successfuly
+    if np.any(array_1d_new == -1):
+        raise RuntimeError('At least one label has not been successfuly reset.')
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Return
+    return array_1d_new
