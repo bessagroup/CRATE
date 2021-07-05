@@ -99,14 +99,19 @@ class AdaptivityManager:
                 # Get clustering adaptivity criterion parameters
                 adapt_trigger_ratio = adapt_criterion_data[mat_phase]['adapt_trigger_ratio']
                 adapt_max_level = adapt_criterion_data[mat_phase]['adapt_max_level']
+                adapt_min_voxels = adapt_criterion_data[mat_phase]['adapt_min_voxels']
                 adapt_split_threshold = \
                     adapt_criterion_data[mat_phase]['adapt_split_threshold']
+                is_merge_adapt_groups = \
+                    bool(adapt_criterion_data[mat_phase]['is_merge_adapt_groups'])
                 # Initialize clustering adaptivity criterion
                 self._adapt_phase_criterions[mat_phase] = \
                     AdaptiveClusterGrouping(mat_phase, phase_clusters,
                                             adapt_trigger_ratio=adapt_trigger_ratio,
+                                            adapt_split_threshold=adapt_split_threshold,
                                             adapt_max_level=adapt_max_level,
-                                            adapt_split_threshold=adapt_split_threshold)
+                                            adapt_min_voxels=adapt_min_voxels,
+                                            is_merge_adapt_groups=is_merge_adapt_groups)
             elif adapt_criterion == SpatialDiscontinuities:
                 # Get clustering adaptivity criterion parameters
                 adapt_trigger_ratio = adapt_criterion_data[mat_phase]['adapt_trigger_ratio']
@@ -215,7 +220,7 @@ class AdaptivityManager:
             # Get material phase clustering adaptivity target clusters
             if isinstance(adapt_criterion, AdaptiveClusterGrouping):
                 phase_target_clusters, phase_target_clusters_data = \
-                    adapt_criterion.get_target_clusters(adapt_data_matrix)
+                    adapt_criterion.get_target_clusters(adapt_data_matrix, voxels_clusters)
             elif isinstance(adapt_criterion, SpatialDiscontinuities):
                 phase_target_clusters, phase_target_clusters_data = \
                     adapt_criterion.get_target_clusters(adapt_data_matrix, voxels_clusters)

@@ -80,7 +80,8 @@ class AdaptiveClusterGrouping(AdaptivityCriterion):
         Target adaptive cluster groups (item, list of int) whose clusters are to adapted.
     '''
     def __init__(self, adapt_mat_phase, phase_clusters, adapt_trigger_ratio=None,
-                 adapt_split_threshold=None, adapt_max_level=None):
+                 adapt_split_threshold=None, adapt_max_level=None, adapt_min_voxels=None,
+                 is_merge_adapt_groups=None):
         '''Adaptive cluster grouping criterion constructor.
 
         Parameters
@@ -105,7 +106,12 @@ class AdaptiveClusterGrouping(AdaptivityCriterion):
             groups.
         adapt_max_level : int, default=None
             Maximum adaptive cluster group adaptive level.
-
+        adapt_min_voxels : int, default=None
+            Minimum number of voxels that cluster must contain to be targeted for
+            adaptivity.
+        is_merge_adapt_groups : bool, default=True
+            True if the adaptive cluster groups of the same adaptive level are to be merged,
+            False if each adaptive cluster group follows an independent hierarchy.
         '''
         # Set initial adaptive clusters group (labeled as group '0') and initialize
         # associated adaptive level
@@ -130,6 +136,17 @@ class AdaptiveClusterGrouping(AdaptivityCriterion):
             self._adapt_max_level = optional_parameters['adapt_max_level']
         else:
             self._adapt_max_level = adapt_max_level
+        # Get minimum number of voxels that cluster must contain to be targeted for
+        # adaptivity
+        if adapt_min_voxels is None:
+            self._adapt_min_voxels = optional_parameters['adapt_min_voxels']
+        else:
+            self._adapt_min_voxels = adapt_min_voxels
+        # Set merge adaptive cluster groups flag
+        if is_merge_adapt_groups is None:
+            self._is_merge_adapt_groups = bool(optional_parameters['is_merge_adapt_groups'])
+        else:
+            self._is_merge_adapt_groups = bool(is_merge_adapt_groups)
     # --------------------------------------------------------------------------------------
     @staticmethod
     def get_parameters():
@@ -151,12 +168,14 @@ class AdaptiveClusterGrouping(AdaptivityCriterion):
         # Set optional adaptivity criterion parameters and associated default values
         optional_parameters = {'adapt_trigger_ratio': 0.1,
                                'adapt_split_threshold': 0.1,
-                               'adapt_max_level': 15}
+                               'adapt_max_level': 15,
+                               'adapt_min_voxels': 1,
+                               'is_merge_adapt_groups': 1}
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return [mandatory_parameters, optional_parameters]
     # --------------------------------------------------------------------------------------
-    def get_target_clusters(self, adapt_data_matrix):
+    def get_target_clusters(self, adapt_data_matrix, voxels_clusters):
         '''Get clustering adaptivity target clusters.
 
         Parameters
@@ -165,6 +184,9 @@ class AdaptiveClusterGrouping(AdaptivityCriterion):
             Adaptivity feature data matrix that, for the i-th cluster of the adaptive
             material phase, contains the cluster label in adapt_data_matrix[i, 0] and the
             associated adaptive feature value in adapt_data_matrix[i, 1].
+        voxels_clusters : ndarray
+            Regular grid of voxels (spatial discretization of the RVE), where each entry
+            contains the cluster label (int) assigned to the corresponding pixel/voxel.
 
         Returns
         -------
@@ -181,17 +203,19 @@ class AdaptiveClusterGrouping(AdaptivityCriterion):
         # Initialize target cluster groups
         self._target_groups_ids = []
         # Get adaptive material phase cluster groups
-        adapt_groups_ids = list(self._adapt_groups.keys())
+        adapt_groups_old = copy.deepcopy(self._adapt_groups)
+        adapt_groups_ids_old = list(adapt_groups_old.keys())
+        groups_adapt_level_old = copy.deepcopy(self._groups_adapt_level)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over adaptive cluster groups
-        for group_id in adapt_groups_ids:
+        for group_id in adapt_groups_ids_old:
             # Check if adaptive cluster group can be further adapted and, if not, skip
             # to the next one
-            if self._groups_adapt_level[group_id] >= self._adapt_max_level:
+            if groups_adapt_level_old[group_id] >= self._adapt_max_level:
                 continue
             # Get adaptive cluster group clusters and current adaptive level
-            adapt_group = self._adapt_groups[group_id]
-            base_adapt_level = self._groups_adapt_level[group_id]
+            adapt_group = adapt_groups_old[group_id]
+            base_adapt_level = groups_adapt_level_old[group_id]
             # Get adaptivity data matrix row indexes associated with the adaptive
             # cluster group clusters
             adapt_group_idxs = np.where(np.in1d(adapt_data_matrix[:, 0], adapt_group))[0]
@@ -207,29 +231,56 @@ class AdaptiveClusterGrouping(AdaptivityCriterion):
                 group_target_clusters = self._adaptivity_selection_criterion(
                     adapt_data_matrix[adapt_group_idxs, :])
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Get maximum adaptive cluster group id
-                max_group_id = np.max([int(x) for x in self._adapt_groups.keys()])
-                # Set child adaptive cluster group to be adapted (set id, set clusters
-                # and increment adaptive level relative to parent cluster group)
-                child_group_1_id = str(max_group_id + 1)
-                self._adapt_groups[child_group_1_id] = group_target_clusters
-                self._groups_adapt_level[child_group_1_id] = base_adapt_level + 1
-                self._target_groups_ids.append(child_group_1_id)
-                # Set child adaptive cluster group to be left unchanged (set id, set
-                # clusters and set adaptive level equal to the parent cluster group)
-                child_group_2_id = str(max_group_id + 2)
-                self._adapt_groups[child_group_2_id] = list(set(adapt_group) - \
-                                                            set(group_target_clusters))
-                self._groups_adapt_level[child_group_2_id] = base_adapt_level
-                # Remove parent adaptive cluster group
-                self._adapt_groups.pop(group_id)
-                self._groups_adapt_level.pop(group_id)
+                if self._is_merge_adapt_groups:
+                    # Add target clusters to adaptive cluster group according to the
+                    # current adaptive level
+                    target_group_id = base_adapt_level + 1
+                    if target_group_id in self._adapt_groups.keys():
+                        self._adapt_groups[target_group_id] += group_target_clusters
+                    else:
+                        self._adapt_groups[target_group_id] = group_target_clusters
+                        self._groups_adapt_level[target_group_id] = target_group_id
+                    # Update target adaptive cluster groups
+                    if target_group_id not in self._target_groups_ids:
+                        self._target_groups_ids.append(target_group_id)
+                    # Remove target clusters from old adaptive cluster group
+                    for cluster in group_target_clusters:
+                        self._adapt_groups[group_id].remove(cluster)
+                else:
+                    # Get maximum adaptive cluster group id
+                    max_group_id = np.max([int(x) for x in self._adapt_groups.keys()])
+                    # Set child adaptive cluster group to be adapted (set id, set clusters
+                    # and increment adaptive level relative to parent cluster group)
+                    child_group_1_id = str(max_group_id + 1)
+                    self._adapt_groups[child_group_1_id] = group_target_clusters
+                    self._groups_adapt_level[child_group_1_id] = base_adapt_level + 1
+                    self._target_groups_ids.append(child_group_1_id)
+                    # Set child adaptive cluster group to be left unchanged (set id, set
+                    # clusters and set adaptive level equal to the parent cluster group)
+                    child_group_2_id = str(max_group_id + 2)
+                    self._adapt_groups[child_group_2_id] = list(set(adapt_group) - \
+                                                                set(group_target_clusters))
+                    self._groups_adapt_level[child_group_2_id] = base_adapt_level
+                    # Remove parent adaptive cluster group
+                    self._adapt_groups.pop(group_id)
+                    self._groups_adapt_level.pop(group_id)
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Assemble target clusters
                 target_clusters += group_target_clusters
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over target clusters
-        for cluster in target_clusters:
+        target_clusters_copy = copy.deepcopy(target_clusters)
+        for cluster in target_clusters_copy:
+            # Evaluate target conditions
+            if self._adapt_min_voxels > 1:
+                # Evaluate target cluster number of voxels
+                n_cluster_voxels = np.count_nonzero(voxels_clusters == cluster)
+                is_cond = n_cluster_voxels > self._adapt_min_voxels
+                # Untarget cluster if number of voxels is lower or equal than minimum, then
+                # proceed to the next target cluster
+                if not is_cond:
+                    target_clusters.remove(cluster)
+                    continue
             # Build target cluster data dictionary
             target_clusters_data[str(cluster)] = {'is_dynamic_split_factor': False}
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
