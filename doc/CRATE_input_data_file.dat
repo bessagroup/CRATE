@@ -226,7 +226,7 @@
 #   Criterion            Parameter [M/O]                 Parameter type
 #  -----------------------------------------------------------------------------------
 #   Adaptive Cluster     adapt_trigger_ratio [O]         float (defaults to 0.1)
-#       Grouping         adapt_split_threshold [O]       float (defaults to 0.1)
+#       Grouping         adapt_split_threshold [O]       float (defaults to 0.5)
 #                        adapt_max_level [O]             integer (defaults to 15)
 #                        adapt_min_voxels [O]            integer (defaults to 1)
 #                        is_merge_adapt_groups [O]       bool (0 or 1, defaults to 1)

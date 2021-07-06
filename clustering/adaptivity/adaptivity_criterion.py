@@ -100,10 +100,9 @@ class AdaptiveClusterGrouping(AdaptivityCriterion):
             Threshold associated to the adaptivity selection criterion, defining the split
             boundary of each adaptive cluster group according to the associated position in
             terms of the adaptivity value range within the group. For instance, a
-            adapt_split_threshold=0.2 means that the split boundary divides the clusters
+            adapt_split_threshold=0.8 means that the split boundary divides the clusters
             whose adaptivity feature value is above min + 0.8*(max - min) (top 20% of the
-            value range) from the remaining clusters, resulting two child adaptive cluster
-            groups.
+            value range) from the remaining clusters.
         adapt_max_level : int, default=None
             Maximum adaptive cluster group adaptive level.
         adapt_min_voxels : int, default=None
@@ -167,7 +166,7 @@ class AdaptiveClusterGrouping(AdaptivityCriterion):
         mandatory_parameters = {}
         # Set optional adaptivity criterion parameters and associated default values
         optional_parameters = {'adapt_trigger_ratio': 0.1,
-                               'adapt_split_threshold': 0.1,
+                               'adapt_split_threshold': 0.5,
                                'adapt_max_level': 15,
                                'adapt_min_voxels': 1,
                                'is_merge_adapt_groups': 1}
@@ -383,8 +382,8 @@ class AdaptiveClusterGrouping(AdaptivityCriterion):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get split boundary adaptivity feature value
         adapt_boundary = min(adapt_data_matrix[:, 1]) + \
-            (1.0 - self._adapt_split_threshold)*(max(adapt_data_matrix[:, 1]) -
-                                                 min(adapt_data_matrix[:, 1]))
+            self._adapt_split_threshold*(max(adapt_data_matrix[:, 1]) -
+                                         min(adapt_data_matrix[:, 1]))
         # Get indexes of clusters whose adaptivity feature value is greater or equal than
         # the split boundary value
         idxs = adapt_data_matrix[:, 1] >= adapt_boundary
