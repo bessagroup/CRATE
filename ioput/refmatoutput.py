@@ -193,3 +193,32 @@ class RefMatOutput:
                 file_lines += write_list[0]
         # Open reference material output file (write mode)
         open(self._refm_file_path, 'w').writelines(file_lines)
+    # --------------------------------------------------------------------------------------
+    def rewind_file(self, rewind_inc):
+        '''Rewind reference material output file.
+
+        Parameters
+        ----------
+        rewind_inc : int
+            Increment associated to the rewind state.
+        '''
+        # Open reference material output file and read lines (read)
+        file_lines = open(self._refm_file_path, 'r').readlines()
+        # Rewind reference material output file according to output mode
+        if self._ref_output_mode == 'iterative':
+            # Loop over file lines
+            for i in range(1, len(file_lines)):
+                # Get file line
+                line = file_lines[i]
+                # Check for increment after increment associated to rewind state
+                if int(line.split()[0]) == rewind_inc + 1:
+                    # Set output file last line
+                    last_line = i - 1
+                    break
+        else:
+            # Set output file last line
+            last_line = 1 + rewind_inc
+        # Remove next line character
+        file_lines[last_line] = file_lines[last_line][:-1]
+        # Open reference material output file (write mode)
+        open(self._refm_file_path, 'w').writelines(file_lines[: last_line + 1])
