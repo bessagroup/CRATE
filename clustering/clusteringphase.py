@@ -710,6 +710,11 @@ class GACRMP(ACRMP):
         self._child_cluster_vol_fraction = adaptivity_type['child_cluster_vol_fraction']
         self._dynamic_split_factor_amp = adaptivity_type['dynamic_split_factor_amp']
         self._threshold_n_clusters = adaptivity_type['threshold_n_clusters']
+        # Set dynamic adaptive split factor
+        if abs(self._dynamic_split_factor_amp) < 1e-10:
+            self._is_dynamic_split_factor = False
+        else:
+            self._is_dynamic_split_factor = True
     # --------------------------------------------------------------------------------------
     def get_adaptive_output(self):
         '''Get adaptivity metrics for clustering adaptivity output.
