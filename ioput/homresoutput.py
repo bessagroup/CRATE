@@ -136,3 +136,19 @@ class HomResOutput:
         hres_file.writelines(write_list)
         # Close homogenized results output file
         hres_file.close()
+    # --------------------------------------------------------------------------------------
+    def rewind_file(self, rewind_inc):
+        '''Rewind homogenized results output file.
+
+        Parameters
+        ----------
+        rewind_inc : int
+            Increment associated to the rewind state.
+        '''
+        # Open homogenized results output file and read lines (read)
+        file_lines = open(self._hres_file_path, 'r').readlines()
+        # Set output file last line
+        last_line = 1 + rewind_inc
+        file_lines[last_line] = file_lines[last_line][:-1]
+        # Open homogenized results output file (write mode)
+        open(self._hres_file_path, 'w').writelines(file_lines[: last_line + 1])
