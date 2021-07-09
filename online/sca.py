@@ -30,7 +30,7 @@ import tensor.matrixoperations as mop
 # Cluster interaction tensors operations
 import clustering.citoperations as citop
 # Homogenized results output
-import ioput.homresoutput as hresout
+from ioput.homresoutput import HomResOutput
 # Reference material output
 from ioput.refmatoutput import RefMatOutput
 # VTK output
@@ -244,8 +244,12 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set post-processing procedure initial time
     procedure_init_time = time.time()
-    # Write increment homogenized results to associated output file (.hres)
-    hresout.writehomresfile(hres_file_path, problem_type, 0, hom_results)
+    # Instantiate homogenized results output
+    hres_output = HomResOutput(hres_file_path)
+    # Write homogenized results output file header
+    hres_output.init_hres_file()
+    # Write homogenized results initial state
+    hres_output.write_hres_file(problem_type, 0, hom_results)
     # Increment post-processing time
     ons_post_process_time += time.time() - procedure_init_time
     #
@@ -1005,8 +1009,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set post-processing procedure initial time
         procedure_init_time = time.time()
-        # Write increment homogenized results to associated output file (.hres)
-        hresout.writehomresfile(hres_file_path, problem_type, inc, hom_results)
+        # Write increment homogenized results (.hres)
+        hres_output.write_hres_file(problem_type, inc, hom_results)
         # Increment post-processing time
         ons_post_process_time += time.time() - procedure_init_time
         #
