@@ -74,8 +74,8 @@ class VoxelsOutput:
         for i in range(len(self._output_variables)):
             write_list += [''.join([('{:>' + str(self._col_width) + '.8e}').format(x)
                                     for x in voxels_array[i, :]])  + '\n']
-        # Open reference material output file (write mode) and write voxels material-related
-        # output variables initial values
+        # Open voxels material-related output file (write mode) and write voxels
+        # material-related output variables initial values
         open(self._voxout_file_path, 'w').writelines(write_list)
     # --------------------------------------------------------------------------------------
     def write_voxels_output_file(self, n_dim, comp_order, crve, clusters_state):
@@ -127,9 +127,25 @@ class VoxelsOutput:
             write_list += [''.join([('{:>' + str(self._col_width) + '.8e}').format(x)
                                           for x in voxels_array[i, :]]) + '\n']
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Open reference material output file (append mode) and append voxels
+        # Open voxels material-related output file (append mode) and append voxels
         # material-related output variables of current macroscale loading increment
         open(self._voxout_file_path, 'a').writelines(write_list)
+    # --------------------------------------------------------------------------------------
+    def rewind_file(self, rewind_inc):
+        '''Rewind voxels material-related output file.
+
+        Parameters
+        ----------
+        rewind_inc : int
+            Increment associated to the rewind state.
+        '''
+        # Open voxels material-related output file and read lines (read)
+        file_lines = open(self._voxout_file_path, 'r').readlines()
+        # Set output file last line
+        last_line = 1 + rewind_inc
+        file_lines[last_line] = file_lines[last_line][:-1]
+        # Open voxels material-related output file (write mode)
+        open(self._voxout_file_path, 'w').writelines(file_lines[: last_line + 1])
 #
 #                                                                Voxels arrays factory class
 # ==========================================================================================
