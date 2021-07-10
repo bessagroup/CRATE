@@ -64,7 +64,7 @@ class VTKOutput:
         base_name : str
             Base name of VTK files.
         vtk_dir : str
-            Directory where VTK files are stored by default.
+            Directory where VTK files are stored.
         pvd_dir : str, default=None
             Directory where PVD file is stored.
         '''
@@ -82,20 +82,16 @@ class VTKOutput:
             self._pvd_dir = pvd_dir
         self._vtk_collection = None
     # --------------------------------------------------------------------------------------
-    def write_VTK_file_clustering(self, crve, vtk_dir=None):
+    def write_VTK_file_clustering(self, crve):
         '''Write VTK file associated to the CRVE clustering.
 
         Parameters
         ----------
         crve : CRVE
             Cluster-Reduced Representative Volume Element.
-        vtk_dir : str, default=None
-            Directory of the VTK file associated to the CRVE clustering.
         '''
         # Set clustering VTK file path
-        if vtk_dir == None:
-            vtk_dir = self._vtk_dir
-        vtk_file_path = vtk_dir + self._base_name + '_clusters.vti'
+        vtk_file_path = self._vtk_dir + self._base_name + '_clusters.vti'
         # Open clustering VTK file (append mode)
         if os.path.isfile(vtk_file_path):
             os.remove(vtk_file_path)
@@ -187,9 +183,7 @@ class VTKOutput:
             CRVE clustering adaptivity manager.
         '''
         # Set VTK file path
-        if vtk_dir == None:
-            vtk_dir = self._vtk_dir
-        vtk_file_path = vtk_dir + self._base_name + '_' + str(time_step) + '.vti'
+        vtk_file_path = self._vtk_dir + self._base_name + '_' + str(time_step) + '.vti'
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Open VTK collection file
         if time_step == 0:
@@ -427,6 +421,30 @@ class VTKOutput:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Close clustering VTK file
         vtk_file.close()
+    # --------------------------------------------------------------------------------------
+    def rewind_files(self, rewind_inc):
+        '''Rewind VTK output files.
+
+        Parameters
+        ----------
+        rewind_inc : int
+            Increment associated to the rewind state.
+        '''
+        # Get VTK output files
+        vtk_files_paths = [os.path.join(self._vtk_dir, file_path)
+                           for file_path in os.listdir(self._vtk_dir)
+                           if os.path.isfile(os.path.join(self._vtk_dir, file_path))]
+        # Loop over VTK output files
+        for vtk_file_path in vtk_files_paths:
+            # Get VTK output file time step
+            time_step = int(os.path.splitext(vtk_file_path)[0].split('_')[-1])
+            # Delete VTK output file and remove it from VTK collection
+            if time_step > rewind_inc:
+                # Delete VTK output file
+                os.remove(vtk_file_path)
+                # Remove VTK output file from VTK collection
+                self._vtk_collection.remove_vtk_collection_file(
+                    time_step_file_path=vtk_file_path)
     # --------------------------------------------------------------------------------------
     def _set_image_data_parameters(self, rve_dims, n_voxels_dims):
         '''Set ImageData dataset parameters.
@@ -794,6 +812,32 @@ class VTKCollection:
                           'timestep=' + XMLGenerator.enclose(time_step) + ' ' +
                           'file=' + XMLGenerator.enclose(time_step_file_path) +
                           '/>' + '\n')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Write updated VTK collection file
+        open(self._pvd_file_path, 'w').writelines(file_lines)
+    # --------------------------------------------------------------------------------------
+    def remove_vtk_collection_file(self, time_step_file_path):
+        '''Remove VTK file from VTK collection file.
+
+        Parameters
+        ----------
+        time_step_file_path : str
+            Path of time step VTK file.
+        '''
+        # Open VTK collection file and read lines (read)
+        file_lines = open(self._pvd_file_path, 'r').readlines()
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Loop over VTK output files
+        for i in range(len(file_lines)):
+            # Find index of VTK output file to be removed
+            if time_step_file_path in file_lines[i]:
+                break
+            # Raise error if VTK output file to be removed does not exist
+            if i == len(file_lines) - 1:
+                raise RuntimeError('VTK output file to be removed does not exist.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Remove VTK output file
+        file_lines.pop(i)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Write updated VTK collection file
         open(self._pvd_file_path, 'w').writelines(file_lines)
