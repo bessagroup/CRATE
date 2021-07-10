@@ -335,6 +335,16 @@ class CRVE:
         # Return
         return adaptive_clustering_map
     # --------------------------------------------------------------------------------------
+    def get_rve_dims(self):
+        '''Get RVE dimensions.
+
+        Returns
+        -------
+        rve_dims : list
+            RVE size in each dimension.
+        '''
+        return copy.deepcopy(self._rve_dims)
+    # --------------------------------------------------------------------------------------
     def get_material_phases(self):
         '''Get CRVE material phases.
 
@@ -388,6 +398,17 @@ class CRVE:
             Number of clusters (item, int) associated to each material phase (key, str).
         '''
         return copy.deepcopy(self._phase_n_clusters)
+    # --------------------------------------------------------------------------------------
+    def get_phase_clusters(self):
+        '''Get clusters associated to each material phase.
+
+        Returns
+        -------
+        phase_clusters : dict
+            Clusters labels (item, list of int) associated to each material phase
+            (key, str).
+        '''
+        return copy.deepcopy(self.phase_clusters)
     # --------------------------------------------------------------------------------------
     def get_voxels_clusters(self):
         '''Get regular grid containing the cluster label of each voxel.

@@ -81,7 +81,7 @@ import clustering.clusteringdata as clstdata
 # Online stage
 import online.sca as sca
 # VTK output
-import ioput.vtkoutput as vtkoutput
+from ioput.vtkoutput import VTKOutput
 # CRVE generation
 from clustering.crve import CRVE
 #
@@ -254,9 +254,20 @@ else:
     if vtk_dict['is_VTK_output']:
         # Set post-processing procedure initial time
         procedure_init_time = time.time()
+        # Set VTK output files parameters
+        vtk_byte_order = vtk_dict['vtk_byte_order']
+        vtk_format = vtk_dict['vtk_format']
+        vtk_precision = vtk_dict['vtk_precision']
+        vtk_vars = vtk_dict['vtk_vars']
+        vtk_inc_div = vtk_dict['vtk_inc_div']
+        # Instantiante VTK output
+        vtk_output = VTKOutput(type='ImageData', version='1.0', byte_order=vtk_byte_order,
+                               format=vtk_format, precision=vtk_precision,
+                               header_type='UInt64', base_name=input_file_name,
+                               vtk_dir=offline_stage_dir)
         # Write clustering VTK file
         info.displayinfo('5', 'Writing clustering VTK file...')
-        vtkoutput.writevtkclusterfile(vtk_dict, dirs_dict, rg_dict, clst_dict)
+        vtk_output.write_VTK_file_clustering(crve=crve)
         # Increment post-processing time
         ofs_post_process_time += time.time() - procedure_init_time
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

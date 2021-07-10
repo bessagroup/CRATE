@@ -9,6 +9,8 @@
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
+# Parse command-line options and arguments
+import sys
 # Working with arrays
 import numpy as np
 # Inspect file name and line
@@ -357,6 +359,7 @@ def packvtk(is_VTK_output, *args):
     # vtk_inc_div          VTK increment output divisor                             int
     # vtk_vars             VTK state variables output                               str
     # vtk_precision        VTK file precision                                       str
+    # vtk_byte_order       VTK file byte order                                      str
     #
     # Initialize VTK dictionary
     vtk_dict = dict()
@@ -370,6 +373,10 @@ def packvtk(is_VTK_output, *args):
         vtk_dict['vtk_inc_div'] = vtk_inc_div
         vtk_dict['vtk_vars'] = vtk_vars
         vtk_dict['vtk_precision'] = 'SinglePrecision'
+        if sys.byteorder == 'little':
+            vtk_dict['vtk_byte_order'] = 'LittleEndian'
+        else:
+            vtk_dict['vtk_byte_order'] = 'BigEndian'
     # Return
     return vtk_dict
 # ------------------------------------------------------------------------------------------

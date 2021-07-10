@@ -34,7 +34,7 @@ from ioput.homresoutput import HomResOutput
 # Reference material output
 from ioput.refmatoutput import RefMatOutput
 # VTK output
-import ioput.vtkoutput as vtkoutput
+from ioput.vtkoutput import VTKOutput
 # Material interface
 import material.materialinterface
 # Linear elastic constitutive model
@@ -111,6 +111,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     material_phases = mat_dict['material_phases']
     material_phases_f = mat_dict['material_phases_f']
     material_properties = mat_dict['material_properties']
+    material_phases_models = mat_dict['material_phases_models']
     # Get clusters data
     phase_n_clusters = clst_dict['phase_n_clusters']
     phase_clusters = clst_dict['phase_clusters']
@@ -131,7 +132,19 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     # Get VTK output parameters
     is_VTK_output = vtk_dict['is_VTK_output']
     if is_VTK_output:
+        # Set VTK output files parameters
+        vtk_dir = postprocess_dir + 'VTK/'
+        pvd_dir = postprocess_dir
+        vtk_byte_order = vtk_dict['vtk_byte_order']
+        vtk_format = vtk_dict['vtk_format']
+        vtk_precision = vtk_dict['vtk_precision']
+        vtk_vars = vtk_dict['vtk_vars']
         vtk_inc_div = vtk_dict['vtk_inc_div']
+        # Instantiante VTK output
+        vtk_output = VTKOutput(type='ImageData', version='1.0', byte_order=vtk_byte_order,
+                               format=vtk_format, precision=vtk_precision,
+                               header_type='UInt64', base_name=input_file_name,
+                               vtk_dir=vtk_dir, pvd_dir=pvd_dir)
     # Get general output parameters
     is_voxels_output = output_dict['is_voxels_output']
     if is_voxels_output:
@@ -190,6 +203,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     is_improved_init_guess = False
     # Check clustering adaptivity and perform required initializations
     is_crve_adaptivity = False
+    adaptivity_manager = None
     if len(crve.adapt_material_phases) > 0:
         # Switch on clustering adaptivity flag
         is_crve_adaptivity = True
@@ -282,16 +296,11 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     if is_VTK_output:
         # Set post-processing procedure initial time
         procedure_init_time = time.time()
-        # Open VTK collection file
-        vtkoutput.openvtkcollectionfile(input_file_name, postprocess_dir)
-        # Set increment VTK output arguments
-        vtk_args = [vtk_dict, dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, 0,
-                    clusters_state, crve]
-        # Add clustering adaptivity arguments
-        if is_crve_adaptivity:
-            vtk_args.append(adaptivity_manager)
         # Write VTK file associated to the initial state
-        vtkoutput.writevtkmacincrement(*vtk_args)
+        vtk_output.write_VTK_file_time_step(time_step=0,
+            problem_type=problem_type, crve=crve, clusters_state=clusters_state,
+                material_phases_models=material_phases_models, vtk_vars=vtk_vars,
+                    adaptivity_manager=adaptivity_manager)
         # Increment post-processing time
         ons_post_process_time += time.time() - procedure_init_time
     #
@@ -1020,14 +1029,11 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         if is_VTK_output and inc % vtk_inc_div == 0:
             # Set post-processing procedure initial time
             procedure_init_time = time.time()
-            # Set increment VTK output arguments
-            vtk_args = [vtk_dict, dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict,
-                        inc, clusters_state, crve]
-            # Add clustering adaptivity arguments
-            if is_crve_adaptivity:
-                vtk_args.append(adaptivity_manager)
             # Write VTK file associated to the converged increment
-            vtkoutput.writevtkmacincrement(*vtk_args)
+            vtk_output.write_VTK_file_time_step(time_step=inc,
+                problem_type=problem_type, crve=crve, clusters_state=clusters_state,
+                    material_phases_models=material_phases_models, vtk_vars=vtk_vars,
+                        adaptivity_manager=adaptivity_manager)
             # Increment post-processing time
             ons_post_process_time += time.time() - procedure_init_time
         #

@@ -1465,7 +1465,7 @@ def readvtkoptions(file, file_path, keyword, keyword_line_number):
     else:
         vtk_inc_div = 1
     if 'common_variables' in line:
-        vtk_vars = 'common_variables'
+        vtk_vars = 'common'
     else:
         vtk_vars = 'all'
     return [vtk_format, vtk_inc_div, vtk_vars]
