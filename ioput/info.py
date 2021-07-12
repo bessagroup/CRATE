@@ -461,6 +461,22 @@ def displayinfo(code, *args, **kwargs):
                    indent + 'Clustering adaptivity: ' + colorama.Style.RESET_ALL + msg + \
                    '\n' + colorama.Fore.CYAN + indent + asterisk_line[:-len(indent)] + \
                    colorama.Style.RESET_ALL + '\n'
+    elif code == '17':
+        rewind_inc = args[0]
+        spacing = indent + len('Analysis rewind: ')*' '
+        msg = 'Rewind condition(s) have been triggered and the analysis will be' + '\n' + \
+              spacing + 'rewound back to the end of macroscale loading increment {}.' + \
+              '\n' + \
+              spacing + 'The current CRVE clustering is considered, being a suitable' + \
+              '\n' + \
+              spacing + 'transference of cluster-related variables performed.'
+        arguments = [rewind_inc, ]
+        info = tuple(arguments)
+        template = '\n\n' + colorama.Fore.CYAN + indent + asterisk_line[:-len(indent)] + \
+                   '\n' + \
+                   indent + 'Analysis rewind: ' + colorama.Style.RESET_ALL + msg + \
+                   '\n' + colorama.Fore.CYAN + indent + asterisk_line[:-len(indent)] + \
+                   colorama.Style.RESET_ALL + '\n'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display information
     ioutil.print2(template.format(*info, width=output_width))

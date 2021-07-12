@@ -557,3 +557,372 @@ class LoadingSubpath:
             for i in range(len(self._applied_load[ltype])):
                 if self._presctype[i] == ltype:
                     self._applied_load[ltype][i] = self._total_lfact*self._load[ltype][i]
+# ------------------------------------------------------------------------------------------
+class IncrementRewinder:
+    '''Rewind analysis to initial instant (rewind state) of past macroscale loading
+    increment.
+
+    Attributes
+    ----------
+    _rewind_inc : int
+        Increment associated to the rewind state.
+    _loading_path : LoadingPath
+        Loading path instance rewind state.
+    _hom_strain_mf : ndarray of shape (n_comps,)
+        Homogenized strain tensor in matricial form at rewind state.
+    _hom_stress_mf : ndarray of shape (n_comps,)
+        Homogenized stress tensor in matricial form at rewind state.
+    _hom_stress_33 : float
+        Homogenized out-of-plain stress component at rewind state.
+    _clusters_state : dict
+        Material constitutive model state variables (item, dict) associated to each material
+        cluster (key, str) at rewind state.
+    _clusters_sct_mf : dict
+        Fourth-order strain concentration tensor (matricial form) (item, ndarray)
+        associated to each material cluster (key, str).
+    _mat_prop_ref : dict
+        Isotropic elastic reference material properties.
+    '''
+    def __init__(self, rewind_inc):
+        '''Increment rewinder constructor.
+
+        Parameters
+        ----------
+        rewind_inc : int
+            Increment associated to the rewind state.
+        '''
+        self._rewind_inc = rewind_inc
+        # Initialize loading path rewind state
+        self._loading_path = None
+        # Initialize homogenized strain and stress tensors
+        self._hom_strain_mf = None
+        self._hom_stress_mf = None
+        self._hom_stress_33 = None
+        # Initialize clusters state
+        self._clusters_state = None
+        # Initialize reference material properties
+        self._mat_prop_ref = None
+    # --------------------------------------------------------------------------------------
+    def get_rewind_inc(self):
+        '''Get increment associated to the rewind state.
+
+        Parameters
+        ----------
+        rewind_inc : int
+            Increment associated to the rewind state.
+        '''
+        return self._rewind_inc
+    # --------------------------------------------------------------------------------------
+    def save_loading_path(self, loading_path):
+        '''Save loading path state.
+
+        Parameters
+        ----------
+        loading_path : LoadingPath
+            LoadingPath instance.
+        '''
+        # Save loading path rewind state
+        self._loading_path = copy.deepcopy(loading_path)
+    # --------------------------------------------------------------------------------------
+    def get_loading_path(self):
+        '''Get loading path at rewind state.
+
+        Returns
+        -------
+        loading_path : LoadingPath
+            Loading path instance rewind state.
+        '''
+        return self._loading_path
+    # --------------------------------------------------------------------------------------
+    def save_homogenized_state(self, hom_strain_mf, hom_stress_mf, hom_stress_33=None):
+        '''Save homogenized strain and stress state.
+
+        Parameters
+        ----------
+        hom_strain_mf : ndarray of shape (n_comps,)
+            Homogenized strain tensor in matricial form.
+        hom_stress_mf : ndarray of shape (n_comps,)
+            Homogenized stress tensor in matricial form.
+        hom_stress_33 : float
+            Homogenized out-of-plain stress component.
+        '''
+        # Save homogenized strain and stress tensors
+        self._hom_strain_mf = copy.deepcopy(hom_strain_mf)
+        self._hom_stress_mf = copy.deepcopy(hom_stress_mf)
+        if hom_stress_33 != None:
+            self._hom_stress_33 = hom_stress_33
+    # --------------------------------------------------------------------------------------
+    def get_homogenized_state(self):
+        '''Get homogenized strain and stress state at rewind state.
+
+        Returns
+        -------
+        hom_strain_mf : ndarray of shape (n_comps,)
+            Homogenized strain tensor in matricial form at rewind state.
+        hom_stress_mf : ndarray of shape (n_comps,)
+            Homogenized stress tensor in matricial form at rewind state.
+        hom_stress_33 : float
+            Homogenized out-of-plain stress component at rewind state.
+        '''
+        return copy.deepcopy(self._hom_strain_mf), copy.deepcopy(self._hom_stress_mf), \
+            self._hom_stress_33
+    # --------------------------------------------------------------------------------------
+    def save_clusters_state(self, clusters_state):
+        '''Save clusters state variables.
+
+        Parameters
+        ----------
+        clusters_state : dict
+            Material constitutive model state variables (item, dict) associated to each
+            material cluster (key, str).
+        '''
+        # Save clusters state variables
+        self._clusters_state = copy.deepcopy(clusters_state)
+    # --------------------------------------------------------------------------------------
+    def get_clusters_state(self, clusters_state, problem_type, material_phases,
+                           material_phases_models, phase_clusters):
+        '''Get clusters state variables at rewind state.
+
+        Parameters
+        ----------
+        clusters_state : dict
+            Material constitutive model state variables (item, dict) associated to each
+            material cluster (key, str).
+        problem_type : int
+            Problem type identifier (1 - Plain strain (2D), 4- Tridimensional)
+        material_phases : list
+            CRVE material phases labels (str).
+        material_phases_models : dict
+            Constitutive model (item, dict) associated to each material phase (key, str).
+        phase_clusters : dict
+            Clusters labels (item, list of int) associated to each material phase
+            (key, str).
+
+        Returns
+        -------
+        clusters_state : dict
+            Material constitutive model state variables (item, dict) associated to each
+            material cluster (key, str).
+        '''
+        # If the current CRVE clustering is coincident with the CRVE clustering at the
+        # rewind state, simply return the clusters state variables stored at rewind state.
+        # Otherwise, perform a suitable transfer of state variables between the rewind state
+        # CRVE clustering and the current CRVE clustering
+        if set(clusters_state.keys()) == set(self._clusters_state.keys()):
+            # Return clusters state variables stored at rewind state
+            return copy.deepcopy(self._clusters_state)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        else:
+            raise RuntimeError('Transference of cluster state variables has not been ' +
+                               'implemented yet.')
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Get problem type parameters
+            n_dim, comp_order_sym, comp_order_nsym = mop.getproblemtypeparam(problem_type)
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Temporary approach: Assuming that the rewind state is associated with an
+            #                     elastic increment, i.e., path-dependent state variables
+            #                     have not evolved yet.
+            #
+            # Initialize clusters state variables dictionaries
+            clusters_state = dict()
+            # Loop over material phases
+            for mat_phase in material_phases:
+                # Loop over material phase clusters
+                for cluster in phase_clusters[mat_phase]:
+                    # Initialize state variables
+                    clusters_state[str(cluster)] = material_phases_models[str(mat_phase)]\
+                        ['init']({'n_dim': n_dim, 'comp_order_sym': comp_order_sym,
+                                  'comp_order_nsym': comp_order_nsym})
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Return clusters state variables
+            return clusters_state
+    # --------------------------------------------------------------------------------------
+    def save_clusters_sct(self, clusters_sct_mf):
+        '''Save clusters strain concentration tensors.
+
+        Parameters
+        ----------
+        clusters_sct_mf : dict
+            Fourth-order strain concentration tensor (matricial form) (item, ndarray)
+            associated to each material cluster (key, str).
+        '''
+        # Save clusters state variables
+        self._clusters_sct_mf = copy.deepcopy(clusters_sct_mf)
+    # --------------------------------------------------------------------------------------
+    def get_clusters_sct(self):
+        '''Get clusters strain concentration tensors.
+
+        Returns
+        -------
+        clusters_sct_mf : dict
+            Fourth-order strain concentration tensor (matricial form) (item, ndarray)
+            associated to each material cluster (key, str).
+        '''
+        # Save clusters state variables
+        return copy.deepcopy(self._clusters_sct_mf)
+    # --------------------------------------------------------------------------------------
+    def save_reference_material(self, mat_prop_ref):
+        '''Save reference material properties.
+
+        Parameters
+        ----------
+        mat_prop_ref : dict
+            Isotropic elastic reference material properties.
+        '''
+        # Save clusters state variables
+        self._mat_prop_ref = copy.deepcopy(mat_prop_ref)
+    # --------------------------------------------------------------------------------------
+    def get_reference_material(self):
+        '''Get reference material properties at rewind state.
+
+        Returns
+        -------
+        mat_prop_ref : dict
+            Isotropic elastic reference material properties.
+        '''
+        return copy.deepcopy(self._mat_prop_ref)
+    # --------------------------------------------------------------------------------------
+    def rewind_output_files(self, hres_output=None, ref_mat_output=None, voxels_output=None,
+                            adapt_output=None, vtk_output=None):
+        '''Rewind output files to the rewind state.
+
+        Parameters
+        ----------
+        hres_output : HomResOutput
+            Output associated to the homogenized results.
+        ref_mat_output : RefMatOutput
+            Output associated to the reference material.
+        voxels_output : VoxelsOutput
+            Output associated to voxels material-related quantities.
+        adapt_output : ClusteringAdaptivityOutput
+            Output associated to the clustering adaptivity procedures.
+        vtk_output : VTKOutput
+            Output associated to the VTK files.
+        '''
+        # Rewind output files
+        if hres_output != None:
+            hres_output.rewind_file(self._rewind_inc)
+        if ref_mat_output != None:
+            ref_mat_output.rewind_file(self._rewind_inc)
+        if voxels_output != None:
+            voxels_output.rewind_file(self._rewind_inc)
+        if adapt_output != None:
+            adapt_output.rewind_file(self._rewind_inc)
+        if vtk_output != None:
+            vtk_output.rewind_files(self._rewind_inc)
+# ------------------------------------------------------------------------------------------
+class RewindManager:
+    '''Manage analysis rewind operations and evaluate analysis rewind criteria.
+
+    Attributes
+    ----------
+    _n_rewinds : int
+        Number of rewind operations.
+    '''
+    def __init__(self, max_n_rewinds=0):
+        '''Analysis rewind manager constructor.
+
+        Parameters
+        ----------
+        max_n_rewinds : int, default=1
+            Maximum number of rewind operations.
+        '''
+        self._max_n_rewinds = max_n_rewinds
+        # Initialize number of rewind operations
+        self._n_rewinds = 0
+    # --------------------------------------------------------------------------------------
+    def is_rewind_available(self):
+        '''Evaluate if rewind operations are available.
+
+        Returns
+        -------
+        is_available : bool
+            True if rewind operations are available, False otherwise.
+        '''
+        # Initialize rewind operations availability
+        is_available = True
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Evaluate maximum number of rewind operations
+        if self._n_rewinds >= self._max_n_rewinds:
+            is_available = False
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return rewind operations availability
+        return is_available
+    # --------------------------------------------------------------------------------------
+    def is_save_rewind_state(self, inc):
+        '''Evaluate conditions to save rewind state.
+
+        Parameters
+        ----------
+        inc : int
+            Macroscale loading increment.
+
+        Returns
+        -------
+        is_save_state : bool
+            True if conditions to save rewind state are satisfied, False otherwise.
+        '''
+        # Initialize save rewind state flag
+        is_save_state = False
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Evaluate macroscale loading increment
+        if inc == 5:
+            is_save_state = True
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return save rewind state flag
+        return is_save_state
+    # --------------------------------------------------------------------------------------
+    def is_rewind_criteria(self, material_phases, phase_clusters, clusters_state,
+                           criterion=None):
+        '''Check analysis rewind criteria.
+
+        Parameters
+        ----------
+        material_phases : list
+            CRVE material phases labels (str).
+        phase_clusters : dict
+            Clusters labels (item, list of int) associated to each material phase
+            (key, str).
+        clusters_state : dict
+            Material constitutive model state variables (item, dict) associated to each
+            material cluster (key, str).
+        criterion : str, {'max_acc_p_strain'}, default=None
+            Analysis rewind criterion.
+
+        Returns
+        -------
+        is_rewind : bool
+            True if analysis rewind criteria are satisfied, False otherwise.
+        '''
+        # Initialize analysis rewind flag
+        is_rewind = False
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Evaluate analysis rewind criterion
+        if criterion == 'max_acc_p_strain':
+            # Criterion: Analysis is rewound when the accumulated plastic strain surpasses
+            #            a given threshold value
+            #
+            # Set accumulated plastic strain threshold
+            threshold = 2e-4
+            # Loop over material phases
+            for mat_phase in material_phases:
+                # Loop over material phase clusters
+                for cluster in phase_clusters[mat_phase]:
+                    # Get cluster state variables
+                    state_variables = clusters_state[str(cluster)]
+                    # Check if accumulated plastic strain is cluster state variable
+                    if not 'acc_p_strain' in state_variables:
+                        continue
+                    # Evaluate accumulated plastic strain
+                    if state_variables['acc_p_strain'] > threshold:
+                        is_rewind = True
+                        break
+                if is_rewind:
+                    break
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Increment number of rewind operations
+        if is_rewind:
+            self._n_rewinds += 1
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return analysis rewind flag
+        return is_rewind

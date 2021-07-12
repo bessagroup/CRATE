@@ -40,7 +40,8 @@ import material.materialinterface
 # Linear elastic constitutive model
 import material.models.linear_elastic
 # Macroscale load incrementation
-from online.incrementation.macloadincrem import LoadingPath
+from online.incrementation.macloadincrem import LoadingPath, IncrementRewinder, \
+                                                RewindManager
 # Homogenization
 import online.homogenization.homogenization as hom
 # Clusters state
@@ -170,6 +171,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     hom_strain_old_mf = np.zeros(len(comp_order))
     hom_stress_mf = np.zeros(len(comp_order))
     hom_stress_old_mf = np.zeros(len(comp_order))
+    hom_stress_33 = None
     if problem_type == 1:
         hom_stress_33 = 0.0
         hom_stress_33_old = 0.0
@@ -204,6 +206,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     # Check clustering adaptivity and perform required initializations
     is_crve_adaptivity = False
     adaptivity_manager = None
+    adapt_output = None
     if len(crve.adapt_material_phases) > 0:
         # Switch on clustering adaptivity flag
         is_crve_adaptivity = True
@@ -229,6 +232,10 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         adapt_output.write_adapt_file(0, adaptivity_manager, crve, mode='init')
         # Increment post-processing time
         ons_post_process_time += time.time() - procedure_init_time
+    # Initialize increment rewinder manager
+    rewind_manager = RewindManager(max_n_rewinds=1)
+    is_inc_rewinder = False
+    inc_rewinder = None
     # --------------------------------------------------------------------------------------
     # Validation:
     if is_Validation[1]:
@@ -900,7 +907,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             is_inc_cut = False
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Reset reference material elastic properties to the last converged increment
-            # values and leave self-consistent iterative loop
+            # values
             mat_prop_ref = copy.deepcopy(mat_prop_ref_old)
             # Compute the reference material elastic tangent (matricial form) and compliance
             # tensor (matrix)
@@ -918,6 +925,56 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             inc_init_time = time.time()
             # Start new macroscale loading increment solution procedures
             continue
+        #
+        #                                                Macroscale loading increment rewind
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Check rewind operations availability
+        if is_inc_rewinder and rewind_manager.is_rewind_available():
+            # Check analysis rewind criteria
+            is_rewind = rewind_manager.is_rewind_criteria(material_phases,
+                phase_clusters, clusters_state, criterion='max_acc_p_strain')
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Rewind analysis if criteria are met
+            if is_rewind:
+                info.displayinfo('17', inc_rewinder.get_rewind_inc())
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Rewind loading path
+                mac_load_path = inc_rewinder.get_loading_path()
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Rewind homogenized strain and stress state
+                hom_strain_old_mf, hom_stress_old_mf, hom_stress_33_old = \
+                    inc_rewinder.get_homogenized_state()
+                # Rewind clusters state variables
+                clusters_state_old = inc_rewinder.get_clusters_state(clusters_state,
+                    problem_type, material_phases, material_phases_models, phase_clusters)
+                # Rewind clusters strain concentration tensors
+                clusters_sct_mf_old = inc_rewinder.get_clusters_sct()
+                # Rewind reference material properties
+                mat_prop_ref_old = inc_rewinder.get_reference_material()
+                # Rewind output files
+                inc_rewinder.rewind_output_files(hres_output, ref_mat_output, voxels_output,
+                                                 adapt_output, vtk_output)
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Reset reference material elastic properties to the last converged
+                # increment values
+                mat_prop_ref = copy.deepcopy(mat_prop_ref_old)
+                # Compute the reference material elastic tangent (matricial form) and
+                # compliance tensor (matrix)
+                De_ref_mf, Se_ref_matrix = scs.refelastictanmod(problem_dict, mat_prop_ref)
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Setup new macroscale loading increment
+                inc_mac_load_mf, n_presc_strain, presc_strain_idxs, n_presc_stress, \
+                    presc_stress_idxs, is_last_inc = mac_load_path.new_load_increment(
+                        n_dim, comp_order)
+                # Get increment counter
+                inc = mac_load_path.increm_state['inc']
+                # Display increment data
+                displayincdata(mac_load_path)
+                # Set increment initial time
+                inc_init_time = time.time()
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Start new macroscale loading increment solution procedures
+                continue
         #
         #                                                              Clustering adaptivity
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1098,6 +1155,25 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         else:
             info.displayinfo('7', 'end', problem_type, hom_strain, hom_stress,
                              time.time() - inc_init_time, time.time() - ons_init_time)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Save macroscale loading increment (converged) state
+        if rewind_manager.is_rewind_available() and \
+                rewind_manager.is_save_rewind_state(inc):
+            # Instantiate increment rewinder
+            inc_rewinder = IncrementRewinder(rewind_inc=inc)
+            # Save loading path state
+            inc_rewinder.save_loading_path(loading_path=mac_load_path)
+            # Save homogenized strain and stress state
+            inc_rewinder.save_homogenized_state(hom_strain_mf, hom_stress_mf, hom_stress_33)
+            # Save clusters state variables
+            inc_rewinder.save_clusters_state(clusters_state)
+            # Save clusters strain concentration tensors
+            inc_rewinder.save_clusters_sct(clusters_sct_mf)
+            # Save reference material properties
+            inc_rewinder.save_reference_material(mat_prop_ref)
+            # Set increment rewinder flag
+            is_inc_rewinder = True
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return if last macroscale loading increment, otherwise setup new macroscale
         # loading increment
         if is_last_inc:
