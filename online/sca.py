@@ -954,6 +954,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                 # Rewind output files
                 inc_rewinder.rewind_output_files(hres_output, ref_mat_output, voxels_output,
                                                  adapt_output, vtk_output)
+                # Update total rewind time
+                rewind_manager.update_rewind_time(mode='update')
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Reset reference material elastic properties to the last converged
                 # increment values
@@ -1159,6 +1161,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         # Save macroscale loading increment (converged) state
         if rewind_manager.is_rewind_available() and \
                 rewind_manager.is_save_rewind_state(inc):
+            # Set reference rewind time
+            rewind_manager.update_rewind_time(mode='init')
             # Instantiate increment rewinder
             inc_rewinder = IncrementRewinder(rewind_inc=inc)
             # Save loading path state

@@ -18,6 +18,8 @@ import numpy as np
 import inspect
 # Shallow and deep copy operations
 import copy
+# Date and time
+import time
 # Display errors, warnings and built-in exceptions
 import ioput.errors as errors
 # Matricial operations
@@ -818,6 +820,10 @@ class RewindManager:
     ----------
     _n_rewinds : int
         Number of rewind operations.
+    _rewind_time : float
+        Total time spent in rewind operations and in deleted analysis increments.
+    _init_time : float
+        Reference time.
     '''
     def __init__(self, max_n_rewinds=0):
         '''Analysis rewind manager constructor.
@@ -830,6 +836,26 @@ class RewindManager:
         self._max_n_rewinds = max_n_rewinds
         # Initialize number of rewind operations
         self._n_rewinds = 0
+        # Initialize total rewind time
+        self._rewind_time = 0
+    # --------------------------------------------------------------------------------------
+    def update_rewind_time(self, mode='init'):
+        '''Update total rewind time.
+
+        Parameters
+        ----------
+        mode : str, {'init', 'update'}, default='init'
+        '''
+        if mode == 'init':
+            # Set reference initial time
+            self._init_time = time.time()
+        elif mode == 'update':
+            # Update total rewind time
+            self._rewind_time += time.time() - self._init_time
+            # Set reference initial time
+            self._init_time = time.time()
+        else:
+            raise RuntimeError('Unknown mode.')
     # --------------------------------------------------------------------------------------
     def is_rewind_available(self):
         '''Evaluate if rewind operations are available.
