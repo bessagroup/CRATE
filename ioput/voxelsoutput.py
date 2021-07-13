@@ -142,7 +142,7 @@ class VoxelsOutput:
         # Open voxels material-related output file and read lines (read)
         file_lines = open(self._voxout_file_path, 'r').readlines()
         # Set output file last line
-        last_line = 1 + (1 + rewind_inc)*self._output_vars_dims
+        last_line = (1 + rewind_inc)*self._output_vars_dims
         file_lines[last_line] = file_lines[last_line][:-1]
         # Open voxels material-related output file (write mode)
         open(self._voxout_file_path, 'w').writelines(file_lines[: last_line + 1])
