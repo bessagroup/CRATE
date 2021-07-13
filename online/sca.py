@@ -9,6 +9,7 @@
 # Development history:
 # Bernardo P. Ferreira | Feb 2020 | Initial coding.
 # Bernardo P. Ferreira | Dec 2020 | Implemented clustering adaptivity.
+# Bernardo P. Ferreira | Jul 2021 | Implemented analysis rewind operation.
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
@@ -233,7 +234,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         # Increment post-processing time
         ons_post_process_time += time.time() - procedure_init_time
     # Initialize increment rewinder manager
-    rewind_manager = RewindManager(max_n_rewinds=1)
+    rewind_manager = RewindManager(max_n_rewinds=0)
     is_inc_rewinder = False
     inc_rewinder = None
     # --------------------------------------------------------------------------------------
@@ -944,11 +945,9 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                 # Rewind homogenized strain and stress state
                 hom_strain_old_mf, hom_stress_old_mf, hom_stress_33_old = \
                     inc_rewinder.get_homogenized_state()
-                # Rewind clusters state variables
-                clusters_state_old = inc_rewinder.get_clusters_state(clusters_state,
-                    problem_type, material_phases, material_phases_models, phase_clusters)
-                # Rewind clusters strain concentration tensors
-                clusters_sct_mf_old = inc_rewinder.get_clusters_sct()
+                # Rewind clusters state variables and strain concentration tensors
+                clusters_state_old, clusters_sct_mf_old = \
+                    inc_rewinder.get_clusters_state(clusters_state, crve)
                 # Rewind reference material properties
                 mat_prop_ref_old = inc_rewinder.get_reference_material()
                 # Rewind output files
@@ -1164,7 +1163,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             # Set reference rewind time
             rewind_manager.update_rewind_time(mode='init')
             # Instantiate increment rewinder
-            inc_rewinder = IncrementRewinder(rewind_inc=inc)
+            inc_rewinder = IncrementRewinder(rewind_inc=inc,
+                phase_clusters=crve.get_phase_clusters())
             # Save loading path state
             inc_rewinder.save_loading_path(loading_path=mac_load_path)
             # Save homogenized strain and stress state

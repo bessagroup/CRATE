@@ -9,6 +9,7 @@
 # Bernardo P. Ferreira | Feb 2020 | Initial coding.
 # Bernardo P. Ferreira | Jul 2020 | Implemented LoadingPath and LoadingSubpath classes.
 # Bernardo P. Ferreira | Nov 2020 | Updated documentation.
+# Bernardo P. Ferreira | Jul 2021 | Implemented RewindManager and IncrementRewinder classes.
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
@@ -20,6 +21,9 @@ import inspect
 import copy
 # Date and time
 import time
+# Tree data structure
+from anytree.walker import Walker
+from anytree.exporter import DotExporter
 # Display errors, warnings and built-in exceptions
 import ioput.errors as errors
 # Matricial operations
@@ -585,7 +589,7 @@ class IncrementRewinder:
     _mat_prop_ref : dict
         Isotropic elastic reference material properties.
     '''
-    def __init__(self, rewind_inc):
+    def __init__(self, rewind_inc, phase_clusters):
         '''Increment rewinder constructor.
 
         Parameters
@@ -594,6 +598,7 @@ class IncrementRewinder:
             Increment associated to the rewind state.
         '''
         self._rewind_inc = rewind_inc
+        self._phase_clusters = copy.deepcopy(phase_clusters)
         # Initialize loading path rewind state
         self._loading_path = None
         # Initialize homogenized strain and stress tensors
@@ -634,7 +639,7 @@ class IncrementRewinder:
         loading_path : LoadingPath
             Loading path instance rewind state.
         '''
-        return self._loading_path
+        return copy.deepcopy(self._loading_path)
     # --------------------------------------------------------------------------------------
     def save_homogenized_state(self, hom_strain_mf, hom_stress_mf, hom_stress_33=None):
         '''Save homogenized strain and stress state.
@@ -681,63 +686,105 @@ class IncrementRewinder:
         # Save clusters state variables
         self._clusters_state = copy.deepcopy(clusters_state)
     # --------------------------------------------------------------------------------------
-    def get_clusters_state(self, clusters_state, problem_type, material_phases,
-                           material_phases_models, phase_clusters):
-        '''Get clusters state variables at rewind state.
+    def get_clusters_state(self, clusters_state, crve):
+        '''Get clusters state variables and strain concentration tensors at rewind state.
 
         Parameters
         ----------
         clusters_state : dict
             Material constitutive model state variables (item, dict) associated to each
             material cluster (key, str).
-        problem_type : int
-            Problem type identifier (1 - Plain strain (2D), 4- Tridimensional)
-        material_phases : list
-            CRVE material phases labels (str).
-        material_phases_models : dict
-            Constitutive model (item, dict) associated to each material phase (key, str).
-        phase_clusters : dict
-            Clusters labels (item, list of int) associated to each material phase
-            (key, str).
+        crve : CRVE
+            Cluster-Reduced Representative Volume Element.
 
         Returns
         -------
         clusters_state : dict
             Material constitutive model state variables (item, dict) associated to each
             material cluster (key, str).
+        clusters_sct_mf : dict
+            Fourth-order strain concentration tensor (matricial form) (item, ndarray)
+            associated to each material cluster (key, str).
         '''
         # If the current CRVE clustering is coincident with the CRVE clustering at the
-        # rewind state, simply return the clusters state variables stored at rewind state.
+        # rewind state, simply return the clusters state variables and strain concentration
+        # tensors stored at rewind state.
         # Otherwise, perform a suitable transfer of state variables between the rewind state
         # CRVE clustering and the current CRVE clustering
-        if set(clusters_state.keys()) == set(self._clusters_state.keys()):
-            # Return clusters state variables stored at rewind state
-            return copy.deepcopy(self._clusters_state)
+        if self._phase_clusters == crve.get_cluster_phases():
+            # Return clusters state variables and strain concentration tensors stored at
+            # rewind state
+            return copy.deepcopy(self._clusters_state), copy.deepcopy(self._clusters_sct_mf)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         else:
-            raise RuntimeError('Transference of cluster state variables has not been ' +
-                               'implemented yet.')
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Get problem type parameters
-            n_dim, comp_order_sym, comp_order_nsym = mop.getproblemtypeparam(problem_type)
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Temporary approach: Assuming that the rewind state is associated with an
-            #                     elastic increment, i.e., path-dependent state variables
-            #                     have not evolved yet.
-            #
             # Initialize clusters state variables dictionaries
             clusters_state = dict()
+            clusters_sct_mf = dict()
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Get material phases
+            material_phases = crve.get_material_phases()
+            # Get cluster-reduced material phases
+            cluster_phases = crve.get_cluster_phases()
+            # Get clusters associated to each material phase
+            phase_clusters = crve.get_phase_clusters()
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Loop over material phases
             for mat_phase in material_phases:
-                # Loop over material phase clusters
-                for cluster in phase_clusters[mat_phase]:
-                    # Initialize state variables
-                    clusters_state[str(cluster)] = material_phases_models[str(mat_phase)]\
-                        ['init']({'n_dim': n_dim, 'comp_order_sym': comp_order_sym,
-                                  'comp_order_nsym': comp_order_nsym})
+                # Get cluster-reduced material phase
+                crmp = cluster_phases[mat_phase]
+                # Get clustering type
+                clustering_type = crmp.get_clustering_type()
+                # Proceed according to clustering type
+                if clustering_type == 'static':
+                    # Loop over material phase clusters
+                    for cluster in phase_clusters[mat_phase]:
+                        # Set cluster state variables
+                        clusters_state[str(cluster)] = \
+                            copy.deepcopy(self._clusters_state[str(cluster)])
+                        # Set cluster strain concentration tensor
+                        clusters_sct_mf[str(cluster)] = \
+                            copy.deepcopy(self._clusters_sct_mf[str(cluster)])
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                elif clustering_type == 'adaptive':
+                    # Get cluster-reduced material phase clustering tree nodes
+                    clustering_tree_nodes, root_cluster_node = \
+                        crmp.get_clustering_tree_nodes()
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    # Get rewind state cluster nodes
+                    rewind_clusters_nodes = []
+                    for cluster in self._phase_clusters[mat_phase]:
+                        rewind_clusters_nodes.append(clustering_tree_nodes[str(cluster)])
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    # Initialize node walker
+                    node_walker = Walker()
+                    # Loop over material phase clusters
+                    for cluster in phase_clusters[mat_phase]:
+                        # Get cluster node
+                        cluster_node = clustering_tree_nodes[str(cluster)]
+                        # Build walk from cluster node up to the root node
+                        node_walk_to_root = node_walker.walk(cluster_node,
+                                                             root_cluster_node)
+                        # Loop over walk nodes
+                        for node in node_walk_to_root[0]:
+                            # Find hierarchicaly closest rewind state cluster node
+                            if node in rewind_clusters_nodes:
+                                # Get node cluster
+                                parent_cluster = int(node.name)
+                                # Set cluster state variables
+                                clusters_state[str(cluster)] = \
+                                    copy.deepcopy(self._clusters_state[str(parent_cluster)])
+                                # Set cluster strain concentration tensor
+                                clusters_sct_mf[str(cluster)] = copy.deepcopy(
+                                    self._clusters_sct_mf[str(parent_cluster)])
+                                # Skip to the following cluster
+                                break
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                else:
+                    raise RuntimeError('Unknown material phase clustering type.')
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Return clusters state variables
-            return clusters_state
+            # Return clusters state variables and strain concentration tensors stored at
+            # rewind state
+            return clusters_state, clusters_sct_mf
     # --------------------------------------------------------------------------------------
     def save_clusters_sct(self, clusters_sct_mf):
         '''Save clusters strain concentration tensors.
@@ -750,18 +797,6 @@ class IncrementRewinder:
         '''
         # Save clusters state variables
         self._clusters_sct_mf = copy.deepcopy(clusters_sct_mf)
-    # --------------------------------------------------------------------------------------
-    def get_clusters_sct(self):
-        '''Get clusters strain concentration tensors.
-
-        Returns
-        -------
-        clusters_sct_mf : dict
-            Fourth-order strain concentration tensor (matricial form) (item, ndarray)
-            associated to each material cluster (key, str).
-        '''
-        # Save clusters state variables
-        return copy.deepcopy(self._clusters_sct_mf)
     # --------------------------------------------------------------------------------------
     def save_reference_material(self, mat_prop_ref):
         '''Save reference material properties.
@@ -830,7 +865,7 @@ class RewindManager:
 
         Parameters
         ----------
-        max_n_rewinds : int, default=1
+        max_n_rewinds : int, default=0
             Maximum number of rewind operations.
         '''
         self._max_n_rewinds = max_n_rewinds

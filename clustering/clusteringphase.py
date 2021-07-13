@@ -17,6 +17,9 @@ from abc import ABC, abstractmethod
 import time
 # Shallow and deep copy operations
 import copy
+# Tree data structure
+from anytree import Node
+from anytree.exporter import DotExporter
 # Unsupervised clustering algorithms
 import clustering.clusteringalgs as clstalgs
 from clustering.clusteringalgs import ClusterAnalysis
@@ -45,6 +48,17 @@ class CRMP(ABC):
         -------
         n_clusters : int
             Number of material phase clusters.
+        '''
+        pass
+    # --------------------------------------------------------------------------------------
+    @abstractmethod
+    def get_clustering_type(self):
+        '''Get cluster-reduced material phase adaptivity type.
+
+        Returns
+        -------
+        clustering_type : str
+            Type of cluster-reduced material phase.
         '''
         pass
     # --------------------------------------------------------------------------------------
@@ -344,6 +358,16 @@ class SCRMP(CRMP):
         '''
         return self._n_clusters
     # --------------------------------------------------------------------------------------
+    def get_clustering_type(self):
+        '''Get cluster-reduced material phase adaptivity type.
+
+        Returns
+        -------
+        clustering_type : str
+            Type of cluster-reduced material phase.
+        '''
+        return self._clustering_type
+    # --------------------------------------------------------------------------------------
     @staticmethod
     def get_valid_clust_algs():
         '''Get valid clustering algorithms to compute the CRMP.
@@ -382,6 +406,11 @@ class GACRMP(ACRMP):
     _is_dynamic_split_factor : bool
         True if adaptive clustering split factor is to be computed dynamically. Otherwise,
         the adaptive clustering split factor is always set equal to _adapt_split_factor.
+    _clustering_tree_nodes : dict
+        Clustering tree node (item, anytree.Node) associated to each material cluster
+        (key, str).
+    _root_cluster_node : anytree.Node
+        Clustering tree root node.
     max_label : int
         Clustering maximum label.
     cluster_labels : ndarray of shape (n_phase_voxels,)
@@ -412,6 +441,7 @@ class GACRMP(ACRMP):
         self._n_clusters = n_clusters
         self._adaptivity_type = adaptivity_type
         self._adaptive_step = 0
+        self._clustering_tree_nodes = {}
         self.max_label = 0
         self.cluster_labels = None
         self.adaptive_time = 0
@@ -423,6 +453,10 @@ class GACRMP(ACRMP):
             self._is_dynamic_split_factor = False
         else:
             self._is_dynamic_split_factor = True
+        # Set clustering tree root node
+        root_cluster = -1
+        self._root_cluster_node = Node(-1)
+        self._clustering_tree_nodes[str(root_cluster)] = self._root_cluster_node
     # --------------------------------------------------------------------------------------
     def perform_base_clustering(self, base_clustering_scheme, min_label=0):
         '''Perform GACRMP base clustering.
@@ -479,6 +513,12 @@ class GACRMP(ACRMP):
         # Update cluster labels
         self.cluster_labels, self.max_label = \
             self._update_cluster_labels(self.cluster_labels, min_label)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Loop over base clustering clusters
+        for cluster in set(self.cluster_labels):
+            # Update clustering tree
+            self._clustering_tree_nodes[str(cluster)] = \
+                Node(cluster, parent=self._root_cluster_node)
     # --------------------------------------------------------------------------------------
     @staticmethod
     def get_valid_clust_algs():
@@ -639,6 +679,16 @@ class GACRMP(ACRMP):
         # Update material phase maximum cluster label
         self.max_label = max(self.cluster_labels)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Loop over target clusters
+        for target_cluster in adaptive_clustering_map.keys():
+            # Get target cluster node
+            parent_node = self._clustering_tree_nodes[str(target_cluster)]
+            # Loop over child clusters
+            for child_cluster in adaptive_clustering_map[target_cluster]:
+                # Set child cluster tree node
+                self._clustering_tree_nodes[str(child_cluster)] = \
+                    Node(child_cluster, parent=parent_node)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Update total amount of time spent in the adaptive procedures
         self.adaptive_time += time.time() - init_time
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -668,6 +718,29 @@ class GACRMP(ACRMP):
             Number of material phase clusters.
         '''
         return self._n_clusters
+    # --------------------------------------------------------------------------------------
+    def get_clustering_type(self):
+        '''Get cluster-reduced material phase adaptivity type.
+
+        Returns
+        -------
+        clustering_type : str
+            Type of cluster-reduced material phase.
+        '''
+        return self._clustering_type
+    # --------------------------------------------------------------------------------------
+    def get_clustering_tree_nodes(self):
+        '''Get clustering tree nodes.
+
+        Returns
+        -------
+        clustering_tree_nodes : dict
+            Clustering tree node (item, anytree.Node) associated to each material cluster
+            (key, str).
+        root_cluster_node : anytree.Node
+            Clustering tree root node.
+        '''
+        return self._clustering_tree_nodes, self._root_cluster_node
     # --------------------------------------------------------------------------------------
     @staticmethod
     def get_adaptivity_type_parameters():
@@ -1131,6 +1204,16 @@ class HAACRMP(ACRMP):
             Number of material phase clusters.
         '''
         return self._n_clusters
+    # --------------------------------------------------------------------------------------
+    def get_clustering_type(self):
+        '''Get cluster-reduced material phase adaptivity type.
+
+        Returns
+        -------
+        clustering_type : str
+            Type of cluster-reduced material phase.
+        '''
+        return self._clustering_type
     # --------------------------------------------------------------------------------------
     @staticmethod
     def get_adaptivity_type_parameters():
