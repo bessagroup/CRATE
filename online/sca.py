@@ -953,6 +953,10 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                 # Rewind output files
                 inc_rewinder.rewind_output_files(hres_output, ref_mat_output, voxels_output,
                                                  adapt_output, vtk_output)
+                # Reset number of clustering adaptive steps
+                if is_crve_adaptivity:
+                    adaptivity_manager.clear_inc_adaptive_steps(
+                        inc_threshold=inc_rewinder.get_rewind_inc())
                 # Update total rewind time
                 rewind_manager.update_rewind_time(mode='update')
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

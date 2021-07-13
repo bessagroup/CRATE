@@ -740,6 +740,8 @@ class GACRMP(ACRMP):
         root_cluster_node : anytree.Node
             Clustering tree root node.
         '''
+        #DotExporter(self._root_cluster_node).to_picture('clustering_tree_nodes_phase_' +
+        #                                                self._mat_phase + '.png')
         return self._clustering_tree_nodes, self._root_cluster_node
     # --------------------------------------------------------------------------------------
     @staticmethod

@@ -41,7 +41,7 @@ class AdaptivityManager:
     _adapt_phase_criterions : dict
         Clustering adaptivity criterion instance (item, AdaptivityCriterion) associated to
         each material phase (key, str).
-    inc_adaptive_steps : dict
+    _inc_adaptive_steps : dict
         For each macroscale loading increment (key, str), store the performed number of
         clustering adaptive steps (item, int).
     max_inc_adaptive_steps : int
@@ -85,7 +85,7 @@ class AdaptivityManager:
         self._adaptivity_control_feature = copy.deepcopy(adaptivity_control_feature)
         self._adapt_criterion_data = copy.deepcopy(adapt_criterion_data)
         self._clust_adapt_freq = copy.deepcopy(clust_adapt_freq)
-        self.inc_adaptive_steps = {}
+        self._inc_adaptive_steps = {}
         self.max_inc_adaptive_steps = 1
         self.adaptive_evaluation_time = 0
         self.adaptive_time = 0
@@ -546,10 +546,10 @@ class AdaptivityManager:
             adaptive_clustering_map = crve.perform_crve_adaptivity(target_clusters,
                                                                    target_clusters_data)
             # Increment current increment adaptive step
-            if str(inc) in self.inc_adaptive_steps.keys():
-                self.inc_adaptive_steps[str(inc)] += 1
+            if str(inc) in self._inc_adaptive_steps.keys():
+                self._inc_adaptive_steps[str(inc)] += 1
             else:
-                self.inc_adaptive_steps[str(inc)] = 1
+                self._inc_adaptive_steps[str(inc)] = 1
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Output execution data
         if verbose:
@@ -741,14 +741,31 @@ class AdaptivityManager:
             True if maximum number of clustering adaptive steps has not been reached, False
             otherwise.
         '''
-        if str(inc) in self.inc_adaptive_steps.keys():
-            if self.inc_adaptive_steps[str(inc)] >= self.max_inc_adaptive_steps:
+        if str(inc) in self._inc_adaptive_steps.keys():
+            if self._inc_adaptive_steps[str(inc)] >= self.max_inc_adaptive_steps:
                 return False
             else:
                 return True
         else:
-            self.inc_adaptive_steps[str(inc)] = 0
+            self._inc_adaptive_steps[str(inc)] = 0
             return True
+    # --------------------------------------------------------------------------------------
+    def clear_inc_adaptive_steps(self, inc_threshold):
+        '''Reset number of clustering adaptive steps performed after threshold increment.
+
+        Parameters
+        ----------
+        inc_threshold : int
+            Macroscale loading increment.
+        '''
+        # Get clustering adaptive steps associated increments
+        adaptive_steps_incs = [int(x) for x in self._inc_adaptive_steps.keys()]
+        # Loop over clustering adaptive steps associated increments
+        for inc in adaptive_steps_incs:
+            # Reset number of clustering adaptive steps if increment is greater than
+            # provided threshold
+            if inc > inc_threshold:
+                self._inc_adaptive_steps[str(inc)] = 0
     # --------------------------------------------------------------------------------------
     def _get_activated_adaptive_phases(self, inc):
         '''Get activated adaptive material phases for a given incremental counter.
