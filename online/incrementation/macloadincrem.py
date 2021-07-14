@@ -927,18 +927,20 @@ class RewindManager:
         is_save_state = False
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Evaluate macroscale loading increment
-        if inc == 5:
+        if inc == 10:
             is_save_state = True
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return save rewind state flag
         return is_save_state
     # --------------------------------------------------------------------------------------
-    def is_rewind_criteria(self, material_phases, phase_clusters, clusters_state,
-                           criterion=None):
+    def is_rewind_criteria(self, inc, material_phases, phase_clusters, clusters_state,
+                           criterion=None, crit_inc=None, crit_acc_p_strain=None):
         '''Check analysis rewind criteria.
 
         Parameters
         ----------
+        inc : int
+            Macroscale loading increment.
         material_phases : list
             CRVE material phases labels (str).
         phase_clusters : dict
@@ -947,8 +949,14 @@ class RewindManager:
         clusters_state : dict
             Material constitutive model state variables (item, dict) associated to each
             material cluster (key, str).
-        criterion : str, {'max_acc_p_strain'}, default=None
+        criterion : str, {'increment_number', 'max_acc_p_strain'}, default=None
             Analysis rewind criterion.
+        crit_inc : int, default=None
+            Macroscale loading increment associated to analysis rewind criterion
+            'increment_number'.
+        crit_acc_p_strain : float, default=None
+            Accumulated plastic strain value associated to analysis rewind criterion
+            'max_acc_p_strain'.
 
         Returns
         -------
@@ -959,27 +967,39 @@ class RewindManager:
         is_rewind = False
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Evaluate analysis rewind criterion
-        if criterion == 'max_acc_p_strain':
+        if criterion == 'increment_number':
+            # Criterion: Analysis is rewound when a given increment is reached
+            #
+            # Check increment number
+            if crit_inc != None:
+                is_rewind = int(inc) == int(crit_inc)
+            else:
+                raise RuntimeError('Increment \'crit_inc\' must be provided together ',
+                                   'with rewind criterion \'' + criterion + '\'.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        elif criterion == 'max_acc_p_strain':
             # Criterion: Analysis is rewound when the accumulated plastic strain surpasses
             #            a given threshold value
             #
-            # Set accumulated plastic strain threshold
-            threshold = 2e-4
-            # Loop over material phases
-            for mat_phase in material_phases:
-                # Loop over material phase clusters
-                for cluster in phase_clusters[mat_phase]:
-                    # Get cluster state variables
-                    state_variables = clusters_state[str(cluster)]
-                    # Check if accumulated plastic strain is cluster state variable
-                    if not 'acc_p_strain' in state_variables:
-                        continue
-                    # Evaluate accumulated plastic strain
-                    if state_variables['acc_p_strain'] > threshold:
-                        is_rewind = True
+            if crit_acc_p_strain != None:
+                # Loop over material phases
+                for mat_phase in material_phases:
+                    # Loop over material phase clusters
+                    for cluster in phase_clusters[mat_phase]:
+                        # Get cluster state variables
+                        state_variables = clusters_state[str(cluster)]
+                        # Check if accumulated plastic strain is cluster state variable
+                        if not 'acc_p_strain' in state_variables:
+                            continue
+                        # Evaluate accumulated plastic strain
+                        if state_variables['acc_p_strain'] > crit_acc_p_strain:
+                            is_rewind = True
+                            break
+                    if is_rewind:
                         break
-                if is_rewind:
-                    break
+            else:
+                raise RuntimeError('Increment \'crit_acc_p_strain\' must be provided ',
+                                   'together with rewind criterion \'' + criterion + '\'.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Increment number of rewind operations
         if is_rewind:

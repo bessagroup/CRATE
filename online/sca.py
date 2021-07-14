@@ -932,8 +932,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         # Check rewind operations availability
         if is_inc_rewinder and rewind_manager.is_rewind_available():
             # Check analysis rewind criteria
-            is_rewind = rewind_manager.is_rewind_criteria(material_phases,
-                phase_clusters, clusters_state, criterion='max_acc_p_strain')
+            is_rewind = rewind_manager.is_rewind_criteria(inc, material_phases,
+                                                          phase_clusters, clusters_state)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Rewind analysis if criteria are met
             if is_rewind:
