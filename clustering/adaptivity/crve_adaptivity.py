@@ -44,6 +44,12 @@ class AdaptivityManager:
     _inc_adaptive_steps : dict
         For each macroscale loading increment (key, str), store the performed number of
         clustering adaptive steps (item, int).
+    _adapt_ref_init_inc : dict
+        Clustering adaptivity reference initial increment (item, int) associated to each
+        material phase (key, str).
+    _adapt_feature_min_trigger : dict
+        Clustering adaptivity feature minimum significant value surpassed status
+        (item, bool) associated to each material phase (key, str).
     max_inc_adaptive_steps : int
         Maximum number of clustering adaptive steps per macroscale loading increment.
     adaptive_evaluation_time : float
@@ -86,6 +92,9 @@ class AdaptivityManager:
         self._adapt_criterion_data = copy.deepcopy(adapt_criterion_data)
         self._clust_adapt_freq = copy.deepcopy(clust_adapt_freq)
         self._inc_adaptive_steps = {}
+        self._adapt_ref_init_inc = {mat_phase: 0 for mat_phase in adapt_material_phases}
+        self._adapt_feature_min_trigger = \
+            {mat_phase: False for mat_phase in adapt_material_phases}
         self.max_inc_adaptive_steps = 1
         self.adaptive_evaluation_time = 0
         self.adaptive_time = 0
@@ -104,6 +113,8 @@ class AdaptivityManager:
                     adapt_criterion_data[mat_phase]['adapt_split_threshold']
                 is_merge_adapt_groups = \
                     bool(adapt_criterion_data[mat_phase]['is_merge_adapt_groups'])
+                min_adapt_feature_val = \
+                    adapt_criterion_data[mat_phase]['min_adapt_feature_val']
                 # Initialize clustering adaptivity criterion
                 self._adapt_phase_criterions[mat_phase] = \
                     AdaptiveClusterGrouping(mat_phase, phase_clusters,
@@ -111,7 +122,8 @@ class AdaptivityManager:
                                             adapt_split_threshold=adapt_split_threshold,
                                             adapt_max_level=adapt_max_level,
                                             adapt_min_voxels=adapt_min_voxels,
-                                            is_merge_adapt_groups=is_merge_adapt_groups)
+                                            is_merge_adapt_groups=is_merge_adapt_groups,
+                                            min_adapt_feature_val=min_adapt_feature_val)
             elif adapt_criterion == SpatialDiscontinuities:
                 # Get clustering adaptivity criterion parameters
                 adapt_trigger_ratio = adapt_criterion_data[mat_phase]['adapt_trigger_ratio']
@@ -122,6 +134,8 @@ class AdaptivityManager:
                 swipe_dim_1_every = adapt_criterion_data[mat_phase]['swipe_dim_1_every']
                 swipe_dim_2_every = adapt_criterion_data[mat_phase]['swipe_dim_2_every']
                 swipe_dim_3_every = adapt_criterion_data[mat_phase]['swipe_dim_3_every']
+                min_adapt_feature_val = \
+                    adapt_criterion_data[mat_phase]['min_adapt_feature_val']
                 # Initialize clustering adaptivity criterion
                 self._adapt_phase_criterions[mat_phase] = \
                     SpatialDiscontinuities(mat_phase, phase_clusters,
@@ -131,7 +145,8 @@ class AdaptivityManager:
                                            adapt_level_max_diff=adapt_level_max_diff,
                                            swipe_dim_1_every=swipe_dim_1_every,
                                            swipe_dim_2_every=swipe_dim_2_every,
-                                           swipe_dim_3_every=swipe_dim_3_every)
+                                           swipe_dim_3_every=swipe_dim_3_every,
+                                           min_adapt_feature_val=min_adapt_feature_val)
             else:
                 raise RuntimeError('Unknown clustering adaptivity criterion.')
     # --------------------------------------------------------------------------------------
@@ -195,17 +210,19 @@ class AdaptivityManager:
         if verbose:
             info.displayinfo('5', 'Clustering adaptivity criterion:')
             info.displayinfo('5', 'Selecting target clusters...', 2)
-        # Get activated adaptive material phases
-        if inc != None:
-            activated_adapt_phases = self._get_activated_adaptive_phases(inc)
-        else:
-            activated_adapt_phases = self._adapt_material_phases
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize target clusters list
         target_clusters = []
         # Initialize target clusters data
         target_clusters_data = {}
         # Loop over activated adaptive material phases
-        for mat_phase in activated_adapt_phases:
+        for mat_phase in self._adapt_material_phases:
+            # Check material phase adaptivity activation if clustering adaptivity feature
+            # minimum significant value has already been surpassed
+            if self._adapt_feature_min_trigger[mat_phase]:
+                if not self.is_adapt_phase_activated(mat_phase, inc):
+                    continue
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Get adaptivity feature
             adapt_control_feature = self._adaptivity_control_feature[mat_phase]
             # Build adaptivity feature data matrix
@@ -217,6 +234,22 @@ class AdaptivityManager:
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Get material phase clustering adaptivity criterion
             adapt_criterion = self._adapt_phase_criterions[mat_phase]
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Check clustering adaptivity feature minimum significant value surpassed status
+            # if hasn't been previously triggered
+            if not self._adapt_feature_min_trigger[mat_phase]:
+                # Get clustering adaptivity feature minimum significant value
+                min_sign_value = adapt_criterion.get_min_adapt_feature_val()
+                # Check clustering adaptivity feature minimum significant value
+                if np.max(adapt_data_matrix[:, 1]) >= min_sign_value:
+                    # Set clustering adaptivity reference initial increment
+                    self._adapt_ref_init_inc[mat_phase] = inc
+                    # Update clustering adaptivity feature minimum significant value
+                    # surpassed status
+                    self._adapt_feature_min_trigger[mat_phase] = True
+                else:
+                    continue
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Get material phase clustering adaptivity target clusters
             if isinstance(adapt_criterion, AdaptiveClusterGrouping):
                 phase_target_clusters, phase_target_clusters_data = \
@@ -767,36 +800,35 @@ class AdaptivityManager:
             if inc > inc_threshold:
                 self._inc_adaptive_steps[str(inc)] = 0
     # --------------------------------------------------------------------------------------
-    def _get_activated_adaptive_phases(self, inc):
-        '''Get activated adaptive material phases for a given incremental counter.
+    def is_adapt_phase_activated(self, mat_phase, inc):
+        '''Check if material phase adaptivity procedures are activated.
 
         Parameters
         ----------
+        mat_phase : str
+            Material phase label.
         inc : int
             Incremental counter serving as a reference basis for the clustering adaptivity
             frequency control.
 
         Returns
         -------
-        activated_adapt_phases : list
-            List of adaptive cluster-reduced material phases (str) whose associated
-            adaptivity procedures are to be performed in the current state of the
-            incremental counter.
+        is_activated : bool
+            True if material phase adaptivity procedures are activated, False otherwise.
         '''
-        # Check incremental counter
-        if not ioutil.checkposint(inc):
-            raise RuntimeError('Incremental counter must be positive integer.')
-        # Initialize list of activated adaptive material phases
-        activated_adapt_phases = []
-        # Loop over adaptive material phases
-        for mat_phase in self._clust_adapt_freq.keys():
-            # Append activated material phase
-            if self._clust_adapt_freq[mat_phase] == 0:
-                continue
-            elif inc % self._clust_adapt_freq[mat_phase] == 0:
-                activated_adapt_phases.append(mat_phase)
+        # Get clustering adaptivity reference initial increment
+        ref_inc = self._adapt_ref_init_inc[mat_phase]
+        # Get clustering adaptivity frequency
+        adapt_freq = self._clust_adapt_freq[mat_phase]
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        return activated_adapt_phases
+        # Initialize adaptivity activation flag
+        is_activated = False
+        # Evaluate activation conditions
+        if adapt_freq != 0 and (inc - ref_inc) % adapt_freq == 0:
+            is_activated = True
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return adaptivity activation flag
+        return is_activated
     # --------------------------------------------------------------------------------------
     def get_adapt_vtk_array(self, voxels_clusters):
         '''Get regular grid array containing the adaptive level associated to each cluster.

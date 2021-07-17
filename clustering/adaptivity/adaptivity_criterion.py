@@ -81,7 +81,7 @@ class AdaptiveClusterGrouping(AdaptivityCriterion):
     '''
     def __init__(self, adapt_mat_phase, phase_clusters, adapt_trigger_ratio=None,
                  adapt_split_threshold=None, adapt_max_level=None, adapt_min_voxels=None,
-                 is_merge_adapt_groups=None):
+                 is_merge_adapt_groups=None, min_adapt_feature_val=None):
         '''Adaptive cluster grouping criterion constructor.
 
         Parameters
@@ -108,9 +108,11 @@ class AdaptiveClusterGrouping(AdaptivityCriterion):
         adapt_min_voxels : int, default=None
             Minimum number of voxels that cluster must contain to be targeted for
             adaptivity.
-        is_merge_adapt_groups : bool, default=True
+        is_merge_adapt_groups : bool, default=None
             True if the adaptive cluster groups of the same adaptive level are to be merged,
             False if each adaptive cluster group follows an independent hierarchy.
+        min_adapt_feature_val : float, default=None
+            Minimum significant value of clustering adaptivity control feature.
         '''
         # Set initial adaptive clusters group (labeled as group '0') and initialize
         # associated adaptive level
@@ -146,6 +148,11 @@ class AdaptiveClusterGrouping(AdaptivityCriterion):
             self._is_merge_adapt_groups = bool(optional_parameters['is_merge_adapt_groups'])
         else:
             self._is_merge_adapt_groups = bool(is_merge_adapt_groups)
+        # Set minimum significant value of clustering adaptivity control feature
+        if min_adapt_feature_val is None:
+            self._min_adapt_feature_val = optional_parameters['min_adapt_feature_val']
+        else:
+            self._min_adapt_feature_val = min_adapt_feature_val
     # --------------------------------------------------------------------------------------
     @staticmethod
     def get_parameters():
@@ -169,7 +176,8 @@ class AdaptiveClusterGrouping(AdaptivityCriterion):
                                'adapt_split_threshold': 0.5,
                                'adapt_max_level': 15,
                                'adapt_min_voxels': 1,
-                               'is_merge_adapt_groups': 1}
+                               'is_merge_adapt_groups': 1,
+                               'min_adapt_feature_val': 0.0}
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return [mandatory_parameters, optional_parameters]
@@ -329,6 +337,16 @@ class AdaptiveClusterGrouping(AdaptivityCriterion):
         '''
         return copy.deepcopy(self._groups_adapt_level)
     # --------------------------------------------------------------------------------------
+    def get_min_adapt_feature_val(self):
+        '''Get minimum significant value of clustering adaptivity control feature.
+
+        Returns
+        -------
+        min_adapt_feature_val : float
+            Minimum significant value of clustering adaptivity control feature.
+        '''
+        return self._min_adapt_feature_val
+    # --------------------------------------------------------------------------------------
     def _adaptivity_trigger_condition(self, adapt_data_matrix):
         '''Evaluate adaptive cluster group adaptivity trigger condition.
 
@@ -410,7 +428,8 @@ class SpatialDiscontinuities(AdaptivityCriterion):
     '''
     def __init__(self, adapt_mat_phase, phase_clusters, adapt_trigger_ratio=None,
                  adapt_max_level=None, adapt_min_voxels=None, adapt_level_max_diff=None,
-                 swipe_dim_1_every=None, swipe_dim_2_every=None, swipe_dim_3_every=None):
+                 swipe_dim_1_every=None, swipe_dim_2_every=None, swipe_dim_3_every=None,
+                 min_adapt_feature_val=None):
         '''Spatial discontinuities criterion constructor.
 
         Parameters
@@ -438,6 +457,8 @@ class SpatialDiscontinuities(AdaptivityCriterion):
         swipe_dim_3_every : int, default=None
             Swipe frequency of spatial dimension 3. First and last (boundary) voxels are
             always considered.
+        min_adapt_feature_val : float, default=None
+            Minimum significant value of clustering adaptivity control feature.
         '''
         # Initialize clusters adaptive level
         self._clusters_adapt_level = {str(cluster) : 0 for cluster in
@@ -479,6 +500,11 @@ class SpatialDiscontinuities(AdaptivityCriterion):
             self._swipe_dims_every.append(optional_parameters['swipe_dim_3_every'])
         else:
             self._swipe_dims_every.append(max(swipe_dim_3_every, 1))
+        # Set minimum significant value of clustering adaptivity control feature
+        if min_adapt_feature_val is None:
+            self._min_adapt_feature_val = optional_parameters['min_adapt_feature_val']
+        else:
+            self._min_adapt_feature_val = min_adapt_feature_val
         # Initialize spatial dimensions swipe frequency initial index
         self._swipe_dims_init_idx = [0, 0, 0]
     # --------------------------------------------------------------------------------------
@@ -506,7 +532,8 @@ class SpatialDiscontinuities(AdaptivityCriterion):
                                'adapt_level_max_diff': 2,
                                'swipe_dim_1_every': 1,
                                'swipe_dim_2_every': 1,
-                               'swipe_dim_3_every': 1}
+                               'swipe_dim_3_every': 1,
+                               'min_adapt_feature_val': 0.0}
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return [mandatory_parameters, optional_parameters]
@@ -583,6 +610,16 @@ class SpatialDiscontinuities(AdaptivityCriterion):
             Adaptive level (item, int) of each cluster (key, str).
         '''
         return copy.deepcopy(self._clusters_adapt_level)
+    # --------------------------------------------------------------------------------------
+    def get_min_adapt_feature_val(self):
+        '''Get minimum significant value of clustering adaptivity control feature.
+
+        Returns
+        -------
+        min_adapt_feature_val : float
+            Minimum significant value of clustering adaptivity control feature.
+        '''
+        return self._min_adapt_feature_val
     # --------------------------------------------------------------------------------------
     def _swipe_dimension(self, adapt_data_matrix, voxels_clusters, target_clusters,
                          target_clusters_data, dim_loops):

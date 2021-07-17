@@ -874,6 +874,16 @@ class RewindManager:
         # Initialize total rewind time
         self._rewind_time = 0
     # --------------------------------------------------------------------------------------
+    def get_rewind_time(self):
+        '''Get total time spent in rewind operations and deleted analysis increments.
+
+        Parameters
+        ----------
+        rewind_time : float
+            Total time spent in rewind operations and in deleted analysis increments.
+        '''
+        return self._rewind_time
+    # --------------------------------------------------------------------------------------
     def update_rewind_time(self, mode='init'):
         '''Update total rewind time.
 
