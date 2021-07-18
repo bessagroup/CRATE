@@ -215,7 +215,7 @@ class AdaptivityManager:
         target_clusters = []
         # Initialize target clusters data
         target_clusters_data = {}
-        # Loop over activated adaptive material phases
+        # Loop over adaptive material phases
         for mat_phase in self._adapt_material_phases:
             # Check material phase adaptivity activation if clustering adaptivity feature
             # minimum significant value has already been surpassed
@@ -824,11 +824,24 @@ class AdaptivityManager:
         # Initialize adaptivity activation flag
         is_activated = False
         # Evaluate activation conditions
-        if adapt_freq != 0 and (inc - ref_inc) % adapt_freq == 0:
-            is_activated = True
+        if adapt_freq != 0:
+            # Clustering adaptivity incremental frequency
+            if inc < ref_inc:
+                raise RuntimeError('Activation increment cannot precede the clustering ' +
+                                   'adaptivity reference initial increment.')
+            else:
+                if (inc - ref_inc) % adapt_freq == 0:
+                    is_activated = True
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return adaptivity activation flag
         return is_activated
+    # --------------------------------------------------------------------------------------
+    def reset_adapt_activation_parameters(self):
+        '''Reset parameters associated to clustering adaptivity activation.'''
+        self._adapt_ref_init_inc = \
+            {mat_phase: 0 for mat_phase in self._adapt_material_phases}
+        self._adapt_feature_min_trigger = \
+            {mat_phase: False for mat_phase in self._adapt_material_phases}
     # --------------------------------------------------------------------------------------
     def get_adapt_vtk_array(self, voxels_clusters):
         '''Get regular grid array containing the adaptive level associated to each cluster.

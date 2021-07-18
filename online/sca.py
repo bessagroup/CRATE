@@ -927,60 +927,6 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             # Start new macroscale loading increment solution procedures
             continue
         #
-        #                                                Macroscale loading increment rewind
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Check rewind operations availability
-        if is_inc_rewinder and rewind_manager.is_rewind_available():
-            # Check analysis rewind criteria
-            is_rewind = rewind_manager.is_rewind_criteria(inc, material_phases,
-                                                          phase_clusters, clusters_state)
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Rewind analysis if criteria are met
-            if is_rewind:
-                info.displayinfo('17', inc_rewinder.get_rewind_inc())
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Rewind loading path
-                mac_load_path = inc_rewinder.get_loading_path()
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Rewind homogenized strain and stress state
-                hom_strain_old_mf, hom_stress_old_mf, hom_stress_33_old = \
-                    inc_rewinder.get_homogenized_state()
-                # Rewind clusters state variables and strain concentration tensors
-                clusters_state_old, clusters_sct_mf_old = \
-                    inc_rewinder.get_clusters_state(clusters_state, crve)
-                # Rewind reference material properties
-                mat_prop_ref_old = inc_rewinder.get_reference_material()
-                # Rewind output files
-                inc_rewinder.rewind_output_files(hres_output, ref_mat_output, voxels_output,
-                                                 adapt_output, vtk_output)
-                # Reset number of clustering adaptive steps
-                if is_crve_adaptivity:
-                    adaptivity_manager.clear_inc_adaptive_steps(
-                        inc_threshold=inc_rewinder.get_rewind_inc())
-                # Update total rewind time
-                rewind_manager.update_rewind_time(mode='update')
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Reset reference material elastic properties to the last converged
-                # increment values
-                mat_prop_ref = copy.deepcopy(mat_prop_ref_old)
-                # Compute the reference material elastic tangent (matricial form) and
-                # compliance tensor (matrix)
-                De_ref_mf, Se_ref_matrix = scs.refelastictanmod(problem_dict, mat_prop_ref)
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Setup new macroscale loading increment
-                inc_mac_load_mf, n_presc_strain, presc_strain_idxs, n_presc_stress, \
-                    presc_stress_idxs, is_last_inc = mac_load_path.new_load_increment(
-                        n_dim, comp_order)
-                # Get increment counter
-                inc = mac_load_path.increm_state['inc']
-                # Display increment data
-                displayincdata(mac_load_path)
-                # Set increment initial time
-                inc_init_time = time.time()
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Start new macroscale loading increment solution procedures
-                continue
-        #
         #                                                              Clustering adaptivity
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # This section should only be executed if the macroscale loading increment where the
@@ -1039,6 +985,69 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                 displayincdata(mac_load_path)
                 # Set increment initial time
                 inc_init_time = time.time()
+                # Start new macroscale loading increment solution procedures
+                continue
+        #
+        #                                                Macroscale loading increment rewind
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Check rewind operations availability
+        if is_inc_rewinder and rewind_manager.is_rewind_available():
+            # Check analysis rewind criteria
+            is_rewind = rewind_manager.is_rewind_criteria(inc, material_phases,
+                                                          phase_clusters, clusters_state,
+                                                          criterion='max_acc_p_strain',
+                                                          crit_acc_p_strain=0.0175)
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Rewind analysis if criteria are met
+            if is_rewind:
+                info.displayinfo('17', inc_rewinder.get_rewind_inc())
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Rewind loading path
+                mac_load_path = inc_rewinder.get_loading_path()
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Rewind homogenized strain and stress state
+                hom_strain_old_mf, hom_stress_old_mf, hom_stress_33_old = \
+                    inc_rewinder.get_homogenized_state()
+                # Rewind clusters state variables and strain concentration tensors
+                clusters_state_old, clusters_sct_mf_old = \
+                    inc_rewinder.get_clusters_state(clusters_state, crve)
+                # Rewind reference material properties
+                mat_prop_ref_old = inc_rewinder.get_reference_material()
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Set post-processing procedure initial time
+                procedure_init_time = time.time()
+                # Rewind output files
+                inc_rewinder.rewind_output_files(hres_output, ref_mat_output, voxels_output,
+                                                 adapt_output, vtk_output)
+                # Increment post-processing time
+                ons_post_process_time += time.time() - procedure_init_time
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Reset clustering adaptivity parameters
+                if is_crve_adaptivity:
+                    adaptivity_manager.clear_inc_adaptive_steps(
+                        inc_threshold=inc_rewinder.get_rewind_inc())
+                    adaptivity_manager.reset_adapt_activation_parameters()
+                # Update total rewind time
+                rewind_manager.update_rewind_time(mode='update')
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Reset reference material elastic properties to the last converged
+                # increment values
+                mat_prop_ref = copy.deepcopy(mat_prop_ref_old)
+                # Compute the reference material elastic tangent (matricial form) and
+                # compliance tensor (matrix)
+                De_ref_mf, Se_ref_matrix = scs.refelastictanmod(problem_dict, mat_prop_ref)
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Setup new macroscale loading increment
+                inc_mac_load_mf, n_presc_strain, presc_strain_idxs, n_presc_stress, \
+                    presc_stress_idxs, is_last_inc = mac_load_path.new_load_increment(
+                        n_dim, comp_order)
+                # Get increment counter
+                inc = mac_load_path.increm_state['inc']
+                # Display increment data
+                displayincdata(mac_load_path)
+                # Set increment initial time
+                inc_init_time = time.time()
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Start new macroscale loading increment solution procedures
                 continue
         #
