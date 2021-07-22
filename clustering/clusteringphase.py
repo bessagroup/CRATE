@@ -615,8 +615,8 @@ class GACRMP(ACRMP):
                     adapt_split_factor = ref_split_factor
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Compute number of child clusters, enforcing at least two clusters
-                n_new_clusters = max(2, int(adapt_split_factor*
-                                            int(1.0/self._child_cluster_vol_fraction)))
+                n_new_clusters = max(2, int(round(adapt_split_factor*
+                    int(round(1.0/self._child_cluster_vol_fraction)))))
                 # Compare number of child clusters and number of target cluster number of
                 # voxels
                 if n_cluster_voxels <= n_new_clusters:
@@ -1055,8 +1055,8 @@ class HAACRMP(ACRMP):
                 adapt_split_factor = ref_split_factor
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Compute total number of tree node splits, enforcing at least one split
-            n_splits = max(1, int(adapt_split_factor*
-                                  int(int(1.0/self._child_cluster_vol_fraction) - 1)))
+            n_splits = max(1, int(round(adapt_split_factor*
+                  int(int(round(1.0/self._child_cluster_vol_fraction)) - 1))))
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Initialize child nodes list
             child_nodes = []
