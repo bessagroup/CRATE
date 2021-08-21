@@ -239,15 +239,19 @@ class ACRMP(CRMP):
         # Choose dynamic function type
         dynamic_type = 'linear'
         # Set dynamic function
-        if dynamic_type == 'linear':
+        if dynamic_type == 'power':
+            # Set dynamic function power
+            n = 0.1
+            # Check power admissibility
+            if n < 0:
+                raise RuntimeError('Dynamic function power must be greater or equal than '
+                                   'zero.')
+            # Power dynamic function
+            dynamic_function = \
+                lambda magnitude : (1/((1 - adapt_trigger_ratio)**n))*(magnitude**n)
+        else:
             # Linear dynamic function
             dynamic_function = lambda magnitude : (1/(1 - adapt_trigger_ratio))*magnitude
-        elif dynamic_type == 'quadratic':
-            # Quadratic dynamic function
-            dynamic_function = \
-                lambda magnitude : (1/((1 - adapt_trigger_ratio)**2))*(magnitude**2)
-        else:
-            raise RuntimeError('Unknown dynamic function type.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute adaptive clustering split factor
         adapt_split_factor = min(1, lower_bound + dynamic_function(magnitude)*dynamic_amp)
