@@ -429,7 +429,7 @@ class SpatialDiscontinuities(AdaptivityCriterion):
     def __init__(self, adapt_mat_phase, phase_clusters, adapt_trigger_ratio=None,
                  adapt_max_level=None, adapt_min_voxels=None, adapt_level_max_diff=None,
                  swipe_dim_1_every=None, swipe_dim_2_every=None, swipe_dim_3_every=None,
-                 min_adapt_feature_val=None):
+                 min_adapt_feature_val=None, magnitude_lower_factor=None):
         '''Spatial discontinuities criterion constructor.
 
         Parameters
@@ -459,6 +459,9 @@ class SpatialDiscontinuities(AdaptivityCriterion):
             always considered.
         min_adapt_feature_val : float, default=None
             Minimum significant value of clustering adaptivity control feature.
+        magnitude_lower_factor : float, default=None
+            Factor which affects the maximum stored magnitude associated to the lower valued
+            targeted cluster.
         '''
         # Initialize clusters adaptive level
         self._clusters_adapt_level = {str(cluster) : 0 for cluster in
@@ -505,6 +508,11 @@ class SpatialDiscontinuities(AdaptivityCriterion):
             self._min_adapt_feature_val = optional_parameters['min_adapt_feature_val']
         else:
             self._min_adapt_feature_val = min_adapt_feature_val
+        # Set magnitude factor associated to lower valued targeted cluster
+        if magnitude_lower_factor is None:
+            self._magnitude_lower_factor = optional_parameters['magnitude_lower_factor']
+        else:
+            self._magnitude_lower_factor = magnitude_lower_factor
         # Initialize spatial dimensions swipe frequency initial index
         self._swipe_dims_init_idx = [0, 0, 0]
     # --------------------------------------------------------------------------------------
@@ -533,7 +541,8 @@ class SpatialDiscontinuities(AdaptivityCriterion):
                                'swipe_dim_1_every': 1,
                                'swipe_dim_2_every': 1,
                                'swipe_dim_3_every': 1,
-                               'min_adapt_feature_val': 0.0}
+                               'min_adapt_feature_val': 0.0,
+                               'magnitude_lower_factor': 1.0}
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return [mandatory_parameters, optional_parameters]
@@ -802,13 +811,24 @@ class SpatialDiscontinuities(AdaptivityCriterion):
                     # Update previously targeted clusters data
                     if is_cluster_targeted:
                         max_magn = target_clusters_data[str(cluster)]['max_magnitude']
-                        if magnitude > max_magn:
-                            target_clusters_data[str(cluster)]['max_magnitude'] = magnitude
+                        if value >= value_next:
+                            if magnitude > max_magn:
+                                target_clusters_data[str(cluster)]['max_magnitude'] = \
+                                    magnitude
+                        else:
+                            if self._magnitude_lower_factor*magnitude > max_magn:
+                                target_clusters_data[str(cluster)]['max_magnitude'] = \
+                                    self._magnitude_lower_factor*magnitude
                     if is_cluster_next_targeted:
                         max_magn = target_clusters_data[str(cluster_next)]['max_magnitude']
-                        if magnitude > max_magn:
-                            target_clusters_data[str(cluster_next)]['max_magnitude'] = \
-                                magnitude
+                        if value_next > value:
+                            if magnitude > max_magn:
+                                target_clusters_data[str(cluster_next)]['max_magnitude'] = \
+                                    magnitude
+                        else:
+                            if self._magnitude_lower_factor*magnitude > max_magn:
+                                target_clusters_data[str(cluster_next)]['max_magnitude'] = \
+                                    self._magnitude_lower_factor*magnitude
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     # Update target clusters list and associated data
                     if not(is_cluster_targeted and is_cluster_next_targeted):
@@ -826,25 +846,43 @@ class SpatialDiscontinuities(AdaptivityCriterion):
                             if not is_cluster_targeted and is_cluster_targetable:
                                 target_clusters.append(cluster)
                                 target_clusters_data[str(cluster)] = {}
-                                target_clusters_data[str(cluster)]['max_magnitude'] = \
-                                    magnitude
+                                if value > value_next:
+                                    target_clusters_data[str(cluster)]['max_magnitude'] = \
+                                        magnitude
+                                else:
+                                    target_clusters_data[str(cluster)]['max_magnitude'] = \
+                                        self._magnitude_lower_factor*magnitude
                         elif diff_2 > self._adapt_level_max_diff:
                             if not is_cluster_next_targeted and is_cluster_next_targetable:
                                 target_clusters.append(cluster_next)
                                 target_clusters_data[str(cluster_next)] = {}
-                                target_clusters_data[str(cluster_next)]['max_magnitude'] = \
-                                    magnitude
+                                if value_next > value:
+                                    target_clusters_data[str(cluster_next)]\
+                                        ['max_magnitude'] = magnitude
+                                else:
+                                    target_clusters_data[str(cluster_next)]\
+                                        ['max_magnitude'] = \
+                                            self._magnitude_lower_factor*magnitude
                         else:
                             if not is_cluster_targeted and is_cluster_targetable:
                                 target_clusters.append(cluster)
                                 target_clusters_data[str(cluster)] = {}
-                                target_clusters_data[str(cluster)]['max_magnitude'] = \
-                                    magnitude
+                                if value > value_next:
+                                    target_clusters_data[str(cluster)]['max_magnitude'] = \
+                                        magnitude
+                                else:
+                                    target_clusters_data[str(cluster)]['max_magnitude'] = \
+                                        self._magnitude_lower_factor*magnitude
                             if not is_cluster_next_targeted and is_cluster_next_targetable:
                                 target_clusters.append(cluster_next)
                                 target_clusters_data[str(cluster_next)] = {}
-                                target_clusters_data[str(cluster_next)]['max_magnitude'] = \
-                                    magnitude
+                                if value_next > value:
+                                    target_clusters_data[str(cluster_next)]\
+                                        ['max_magnitude'] = magnitude
+                                else:
+                                    target_clusters_data[str(cluster_next)]\
+                                        ['max_magnitude'] = \
+                                            self._magnitude_lower_factor*magnitude
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over target clusters
         for cluster in target_clusters:

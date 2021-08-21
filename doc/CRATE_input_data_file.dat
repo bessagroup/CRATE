@@ -239,6 +239,7 @@
 #                        swipe_dim_2_every [O]           integer (defaults to 1)
 #                        swipe_dim_3_every [O]           integer (defaults to 1)
 #                        min_adapt_feature_val [O]       float (default to 0.0)
+#                        magnitude_lower_factor [O]      float (default to 1.0)
 #  -----------------------------------------------------------------------------------
 #
 #

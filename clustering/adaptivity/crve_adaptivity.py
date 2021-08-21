@@ -136,6 +136,8 @@ class AdaptivityManager:
                 swipe_dim_3_every = adapt_criterion_data[mat_phase]['swipe_dim_3_every']
                 min_adapt_feature_val = \
                     adapt_criterion_data[mat_phase]['min_adapt_feature_val']
+                magnitude_lower_factor = \
+                    adapt_criterion_data[mat_phase]['magnitude_lower_factor']
                 # Initialize clustering adaptivity criterion
                 self._adapt_phase_criterions[mat_phase] = \
                     SpatialDiscontinuities(mat_phase, phase_clusters,
@@ -146,7 +148,8 @@ class AdaptivityManager:
                                            swipe_dim_1_every=swipe_dim_1_every,
                                            swipe_dim_2_every=swipe_dim_2_every,
                                            swipe_dim_3_every=swipe_dim_3_every,
-                                           min_adapt_feature_val=min_adapt_feature_val)
+                                           min_adapt_feature_val=min_adapt_feature_val,
+                                           magnitude_lower_factor=magnitude_lower_factor)
             else:
                 raise RuntimeError('Unknown clustering adaptivity criterion.')
     # --------------------------------------------------------------------------------------
