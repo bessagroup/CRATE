@@ -587,6 +587,24 @@ class GACRMP(ACRMP):
         # Initialize new cluster label
         new_cluster_label = min_label
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Initialize sorted target clusters flag
+        is_sorted_target_clusters = False
+        # Check if target clusters magnitude is available
+        if 'max_magnitude' in target_clusters_data[str(target_clusters[0])].keys():
+            # Set sorted target clusters flag
+            is_sorted_target_clusters = True
+            # Get target clusters magnitude
+            target_clusters_magnitude = \
+                {str(cluster): target_clusters_data[str(cluster)]['max_magnitude']
+                    for cluster in target_clusters}
+            # Get target clusters in descending order of magnitude
+            target_clusters_sorted = \
+                [int(x[0]) for x in sorted(target_clusters_magnitude.items(),
+                                           key=lambda x: x[1], reverse=True)]
+            # Set sorted target clusters
+            if set(target_clusters) == set(target_clusters_sorted):
+                target_clusters = copy.deepcopy(target_clusters_sorted)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over target clusters
         for i in range(len(target_clusters)):
             # Get target cluster label
@@ -677,11 +695,17 @@ class GACRMP(ACRMP):
             adaptive_clustering_map[str(target_cluster)] += list(set(child_cluster_labels))
             # Update material phase clustering
             self.cluster_labels[target_cluster_idxs] = child_cluster_labels
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Check if number of clusters threshold has been surpassed
+            if is_sorted_target_clusters:
+                if len(set(self.cluster_labels)) > self._threshold_n_clusters:
+                    break
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Update number of material phase clusters
         self._n_clusters = len(set(self.cluster_labels))
         # Update material phase maximum cluster label
         self.max_label = max(self.cluster_labels)
+        print('updated number of clusters (matrix): ', self._n_clusters)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over target clusters
         for target_cluster in adaptive_clustering_map.keys():
