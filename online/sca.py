@@ -1022,11 +1022,10 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                 # Increment post-processing time
                 ons_post_process_time += time.time() - procedure_init_time
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Reset clustering adaptivity parameters
+                # Reset clustering adaptive steps
                 if is_crve_adaptivity:
                     adaptivity_manager.clear_inc_adaptive_steps(
                         inc_threshold=inc_rewinder.get_rewind_inc())
-                    adaptivity_manager.reset_adapt_activation_parameters()
                 # Update total rewind time
                 rewind_manager.update_rewind_time(mode='update')
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
