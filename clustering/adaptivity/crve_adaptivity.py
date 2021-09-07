@@ -829,12 +829,8 @@ class AdaptivityManager:
         # Evaluate activation conditions
         if adapt_freq != 0:
             # Clustering adaptivity incremental frequency
-            if inc < ref_inc:
-                raise RuntimeError('Activation increment cannot precede the clustering ' +
-                                   'adaptivity reference initial increment.')
-            else:
-                if (inc - ref_inc) % adapt_freq == 0:
-                    is_activated = True
+            if inc > ref_inc and (inc - ref_inc) % adapt_freq == 0:
+                is_activated = True
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return adaptivity activation flag
         return is_activated
