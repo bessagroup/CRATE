@@ -237,11 +237,11 @@ class ACRMP(CRMP):
             lower_bound = max(0, ref_split_factor - 0.5*dynamic_amp)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Choose dynamic function type
-        dynamic_type = 'linear'
+        dynamic_type = 'power'
         # Set dynamic function
         if dynamic_type == 'power':
             # Set dynamic function power
-            n = 0.1
+            n = 1.0
             # Check power admissibility
             if n < 0:
                 raise RuntimeError('Dynamic function power must be greater or equal than '
