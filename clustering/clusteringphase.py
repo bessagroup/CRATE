@@ -705,7 +705,6 @@ class GACRMP(ACRMP):
         self._n_clusters = len(set(self.cluster_labels))
         # Update material phase maximum cluster label
         self.max_label = max(self.cluster_labels)
-        print('updated number of clusters (matrix): ', self._n_clusters)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over target clusters
         for target_cluster in adaptive_clustering_map.keys():
