@@ -346,6 +346,44 @@
 
 
 
+#                                                                     Analysis rewinding [O]
+# ==========================================================================================
+# Meaning:   Analysis rewinding procedure, allowing that the solution is rewound back to
+#            previous stored state when given rewinding condition is met.
+#
+# Syntax:    Analysis_Rewinding
+#            Analysis_Rewind_State_Criterion criterion parameter_value
+#            Analysis_Rewinding_Criterion criterion parameter_value
+#            [Max_Number_of_Rewinds x]
+#
+# criterion:         string
+# parameter_value:   integer, float, string, on/off (depends on parameter)
+# x:                 integer (optional, defaults to 1)
+#
+#
+#  Analysis rewind state criterion
+#  -----------------------------------------------------------------------------------
+#   Criterion            Parameter [M/O]                 Parameter type
+#  -----------------------------------------------------------------------------------
+#   increment_number     increment [M]                   integer
+#  -----------------------------------------------------------------------------------
+#
+#
+#  Analysis rewinding criterion
+#  -----------------------------------------------------------------------------------
+#   Criterion            Parameter [M/O]                 Parameter type
+#  -----------------------------------------------------------------------------------
+#   increment_number     increment [M]                   integer
+#   max_acc_p_strain     accumulated plastic strain [M]  float
+#  -----------------------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
 #                                                                           Loading time [O]
 # ==========================================================================================
 # Meaning:   Time associated to the macroscale loading incrementation. For a given

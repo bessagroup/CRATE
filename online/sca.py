@@ -122,6 +122,11 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     mac_load = macload_dict['mac_load']
     mac_load_presctype = macload_dict['mac_load_presctype']
     mac_load_increm = macload_dict['mac_load_increm']
+    is_solution_rewinding = macload_dict['is_solution_rewinding']
+    if is_solution_rewinding:
+        rewind_state_criterion = macload_dict['rewind_state_criterion']
+        rewinding_criterion = macload_dict['rewinding_criterion']
+        max_n_rewinds = macload_dict['max_n_rewinds']
     # Get self-consistent scheme data
     self_consistent_scheme = scs_dict['self_consistent_scheme']
     scs_max_n_iterations = scs_dict['scs_max_n_iterations']
@@ -133,6 +138,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     max_cinc_cuts = algpar_dict['max_cinc_cuts']
     # Get VTK output parameters
     is_VTK_output = vtk_dict['is_VTK_output']
+    vtk_output = None
     if is_VTK_output:
         # Set VTK output files parameters
         vtk_dir = postprocess_dir + 'VTK/'
@@ -234,9 +240,13 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         # Increment post-processing time
         ons_post_process_time += time.time() - procedure_init_time
     # Initialize increment rewinder manager
-    rewind_manager = RewindManager(max_n_rewinds=0)
-    is_inc_rewinder = False
-    inc_rewinder = None
+    if is_solution_rewinding:
+        # Initialize increment rewinder manager
+        rewind_manager = RewindManager(rewind_state_criterion=rewind_state_criterion,
+                                       rewinding_criterion=rewinding_criterion,
+                                       max_n_rewinds=max_n_rewinds)
+        # Initialize increment rewinder flag
+        is_inc_rewinder = False
     # --------------------------------------------------------------------------------------
     # Validation:
     if is_Validation[1]:
@@ -289,6 +299,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     #
     #                          Voxels material-related quantities output file (.voxout file)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    voxels_output = None
     if is_voxels_output:
         # Set post-processing procedure initial time
         procedure_init_time = time.time()
@@ -368,6 +379,28 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                                 max_cinc_cuts)
     # Set initial homogenized state
     mac_load_path.update_hom_state(n_dim, comp_order, hom_strain, hom_stress)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Get increment counter
+    inc = mac_load_path.increm_state['inc']
+    # Save macroscale loading increment (converged) state
+    if is_solution_rewinding and rewind_manager.is_rewind_available() and \
+            rewind_manager.is_save_rewind_state(inc):
+        # Set reference rewind time
+        rewind_manager.update_rewind_time(mode='init')
+        # Instantiate increment rewinder
+        inc_rewinder = IncrementRewinder(rewind_inc=inc,
+            phase_clusters=crve.get_phase_clusters())
+        # Save loading path state
+        inc_rewinder.save_loading_path(loading_path=mac_load_path)
+        # Save homogenized strain and stress state
+        inc_rewinder.save_homogenized_state(hom_strain_mf, hom_stress_mf, hom_stress_33)
+        # Save clusters state variables
+        inc_rewinder.save_clusters_state(clusters_state)
+        # Save reference material properties
+        inc_rewinder.save_reference_material(mat_prop_ref)
+        # Set increment rewinder flag
+        is_inc_rewinder = True
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Setup first macroscale loading increment
     inc_mac_load_mf, n_presc_strain, presc_strain_idxs, n_presc_stress, \
         presc_stress_idxs, is_last_inc = mac_load_path.new_load_increment(n_dim, comp_order)
@@ -991,12 +1024,11 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         #                                                Macroscale loading increment rewind
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Check rewind operations availability
-        if is_inc_rewinder and rewind_manager.is_rewind_available():
+        if is_solution_rewinding and is_inc_rewinder and \
+                rewind_manager.is_rewind_available():
             # Check analysis rewind criteria
-            is_rewind = rewind_manager.is_rewind_criteria(inc, material_phases,
-                                                          phase_clusters, clusters_state,
-                                                          criterion='max_acc_p_strain',
-                                                          crit_acc_p_strain=0.0175)
+            is_rewind = rewind_manager.is_rewinding_criteria(inc, material_phases,
+                                                             phase_clusters, clusters_state)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Rewind analysis if criteria are met
             if is_rewind:
@@ -1009,8 +1041,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                 hom_strain_old_mf, hom_stress_old_mf, hom_stress_33_old = \
                     inc_rewinder.get_homogenized_state()
                 # Rewind clusters state variables and strain concentration tensors
-                clusters_state_old, clusters_sct_mf_old = \
-                    inc_rewinder.get_clusters_state(clusters_state, crve)
+                clusters_state_old = inc_rewinder.get_clusters_state(clusters_state, crve)
                 # Rewind reference material properties
                 mat_prop_ref_old = inc_rewinder.get_reference_material()
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1170,7 +1201,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                              time.time() - inc_init_time, time.time() - ons_init_time)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Save macroscale loading increment (converged) state
-        if rewind_manager.is_rewind_available() and \
+        if is_solution_rewinding and rewind_manager.is_rewind_available() and \
                 rewind_manager.is_save_rewind_state(inc):
             # Set reference rewind time
             rewind_manager.update_rewind_time(mode='init')
@@ -1183,8 +1214,6 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             inc_rewinder.save_homogenized_state(hom_strain_mf, hom_stress_mf, hom_stress_33)
             # Save clusters state variables
             inc_rewinder.save_clusters_state(clusters_state)
-            # Save clusters strain concentration tensors
-            inc_rewinder.save_clusters_sct(clusters_sct_mf)
             # Save reference material properties
             inc_rewinder.save_reference_material(mat_prop_ref)
             # Set increment rewinder flag

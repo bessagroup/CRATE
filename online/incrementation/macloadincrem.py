@@ -687,7 +687,7 @@ class IncrementRewinder:
         self._clusters_state = copy.deepcopy(clusters_state)
     # --------------------------------------------------------------------------------------
     def get_clusters_state(self, clusters_state, crve):
-        '''Get clusters state variables and strain concentration tensors at rewind state.
+        '''Get clusters state variables at rewind state.
 
         Parameters
         ----------
@@ -702,9 +702,6 @@ class IncrementRewinder:
         clusters_state : dict
             Material constitutive model state variables (item, dict) associated to each
             material cluster (key, str).
-        clusters_sct_mf : dict
-            Fourth-order strain concentration tensor (matricial form) (item, ndarray)
-            associated to each material cluster (key, str).
         '''
         # If the current CRVE clustering is coincident with the CRVE clustering at the
         # rewind state, simply return the clusters state variables and strain concentration
@@ -741,9 +738,6 @@ class IncrementRewinder:
                         # Set cluster state variables
                         clusters_state[str(cluster)] = \
                             copy.deepcopy(self._clusters_state[str(cluster)])
-                        # Set cluster strain concentration tensor
-                        clusters_sct_mf[str(cluster)] = \
-                            copy.deepcopy(self._clusters_sct_mf[str(cluster)])
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 elif clustering_type == 'adaptive':
                     # Get cluster-reduced material phase clustering tree nodes
@@ -773,9 +767,6 @@ class IncrementRewinder:
                                 # Set cluster state variables
                                 clusters_state[str(cluster)] = \
                                     copy.deepcopy(self._clusters_state[str(parent_cluster)])
-                                # Set cluster strain concentration tensor
-                                clusters_sct_mf[str(cluster)] = copy.deepcopy(
-                                    self._clusters_sct_mf[str(parent_cluster)])
                                 # Skip to the following cluster
                                 break
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -784,7 +775,7 @@ class IncrementRewinder:
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Return clusters state variables and strain concentration tensors stored at
             # rewind state
-            return clusters_state, clusters_sct_mf
+            return clusters_state
     # --------------------------------------------------------------------------------------
     def save_clusters_sct(self, clusters_sct_mf):
         '''Save clusters strain concentration tensors.
@@ -860,14 +851,20 @@ class RewindManager:
     _init_time : float
         Reference time.
     '''
-    def __init__(self, max_n_rewinds=0):
+    def __init__(self, rewind_state_criterion, rewinding_criterion, max_n_rewinds=1):
         '''Analysis rewind manager constructor.
 
         Parameters
         ----------
-        max_n_rewinds : int, default=0
+        rewind_state_criterion : tuple
+            Rewind state storage criterion [0] and associated parameter [1].
+        rewinding_criterion : dict
+            Rewinding criterion [0] and associated parameter [1].
+        max_n_rewinds : int, default=1
             Maximum number of rewind operations.
         '''
+        self._rewind_state_criterion = rewind_state_criterion
+        self._rewinding_criterion = rewinding_criterion
         self._max_n_rewinds = max_n_rewinds
         # Initialize number of rewind operations
         self._n_rewinds = 0
@@ -936,16 +933,22 @@ class RewindManager:
         # Initialize save rewind state flag
         is_save_state = False
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Evaluate macroscale loading increment
-        if inc == 10:
-            is_save_state = True
+        # Get rewind state criterion
+        criterion = self._rewind_state_criterion[0]
+        # Evaluate rewind state criterion
+        if criterion == 'increment_number':
+            # Evaluate increment number
+            if inc == self._rewind_state_criterion[1]:
+                is_save_state = True
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        else:
+            raise RuntimeError('Unknown rewind state criterion.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return save rewind state flag
         return is_save_state
     # --------------------------------------------------------------------------------------
-    def is_rewind_criteria(self, inc, material_phases, phase_clusters, clusters_state,
-                           criterion=None, crit_inc=None, crit_acc_p_strain=None):
-        '''Check analysis rewind criteria.
+    def is_rewinding_criteria(self, inc, material_phases, phase_clusters, clusters_state):
+        '''Check analysis rewinding criteria.
 
         Parameters
         ----------
@@ -959,61 +962,78 @@ class RewindManager:
         clusters_state : dict
             Material constitutive model state variables (item, dict) associated to each
             material cluster (key, str).
-        criterion : str, {'increment_number', 'max_acc_p_strain'}, default=None
-            Analysis rewind criterion.
-        crit_inc : int, default=None
-            Macroscale loading increment associated to analysis rewind criterion
-            'increment_number'.
-        crit_acc_p_strain : float, default=None
-            Accumulated plastic strain value associated to analysis rewind criterion
-            'max_acc_p_strain'.
 
         Returns
         -------
         is_rewind : bool
-            True if analysis rewind criteria are satisfied, False otherwise.
+            True if analysis rewinding criteria are satisfied, False otherwise.
         '''
         # Initialize analysis rewind flag
         is_rewind = False
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Evaluate analysis rewind criterion
+        # Get rewinding criterion
+        criterion = self._rewinding_criterion[0]
+        # Evaluate analysis rewinding criterion
         if criterion == 'increment_number':
-            # Criterion: Analysis is rewound when a given increment is reached
-            #
-            # Check increment number
-            if crit_inc != None:
-                is_rewind = int(inc) == int(crit_inc)
-            else:
-                raise RuntimeError('Increment \'crit_inc\' must be provided together ',
-                                   'with rewind criterion \'' + criterion + '\'.')
+            # Evaluate increment number
+            is_rewind = inc == self._rewinding_criterion[1]
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         elif criterion == 'max_acc_p_strain':
-            # Criterion: Analysis is rewound when the accumulated plastic strain surpasses
-            #            a given threshold value
-            #
-            if crit_acc_p_strain != None:
-                # Loop over material phases
-                for mat_phase in material_phases:
-                    # Loop over material phase clusters
-                    for cluster in phase_clusters[mat_phase]:
-                        # Get cluster state variables
-                        state_variables = clusters_state[str(cluster)]
-                        # Check if accumulated plastic strain is cluster state variable
-                        if not 'acc_p_strain' in state_variables:
-                            continue
-                        # Evaluate accumulated plastic strain
-                        if state_variables['acc_p_strain'] > crit_acc_p_strain:
-                            is_rewind = True
-                            break
-                    if is_rewind:
+            # Evaluate accumulated plastic strain threshold
+            for mat_phase in material_phases:
+                # Loop over material phase clusters
+                for cluster in phase_clusters[mat_phase]:
+                    # Get cluster state variables
+                    state_variables = clusters_state[str(cluster)]
+                    # Check if accumulated plastic strain is cluster state variable
+                    if not 'acc_p_strain' in state_variables:
+                        continue
+                    # Evaluate accumulated plastic strain
+                    if state_variables['acc_p_strain'] > self._rewinding_criterion[1]:
+                        is_rewind = True
                         break
-            else:
-                raise RuntimeError('Increment \'crit_acc_p_strain\' must be provided ',
-                                   'together with rewind criterion \'' + criterion + '\'.')
+                if is_rewind:
+                    break
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        else:
+            raise RuntimeError('Unknown rewinding criterion.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Increment number of rewind operations
         if is_rewind:
             self._n_rewinds += 1
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Return analysis rewind flag
+        # Return analysis rewinding flag
         return is_rewind
+    # --------------------------------------------------------------------------------------
+    @staticmethod
+    def get_save_rewind_state_criteria():
+        '''Get available rewind state storage criteria and default parameters.
+
+        Returns
+        -------
+        available_save_rewind_state_criteria : dict
+            Available rewind state storage criteria (key, str) and associated default
+            parameters (item).
+        '''
+        # Set available rewind state storage criteria
+        available_save_rewind_state_criteria = {'increment_number': 0,}
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return available_save_rewind_state_criteria
+    # --------------------------------------------------------------------------------------
+    @staticmethod
+    def get_rewinding_criteria():
+        '''Get rewinding criteria and default parameters.
+
+        Returns
+        -------
+        available_rewinding_criteria : dict
+            Available rewinding criteria (key, str) and associated default
+            parameters (item).
+        '''
+        # Set available rewinding criteria
+        available_rewinding_criteria = {'increment_number': 0,
+                                        'max_acc_p_strain': 1.0e-10}
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return available_rewinding_criteria

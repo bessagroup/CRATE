@@ -103,6 +103,36 @@ def readinputdatafile(input_file,dirs_dict):
         input_file, input_file_path, mac_load_type, strain_formulation, n_dim,
         comp_order_nsym)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Read analysis rewinding procedure (optional)
+    keyword = 'Analysis_Rewinding'
+    is_found, keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
+        is_solution_rewinding = True
+        # Read rewind state criterion
+        keyword = 'Analysis_Rewind_State_Criterion'
+        rewind_state_criterion = \
+            rproc.read_rewind_state_parameters(input_file, input_file_path, keyword)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Read rewinding criterion
+        keyword = 'Analysis_Rewinding_Criterion'
+        rewinding_criterion = \
+            rproc.read_rewinding_criterion_parameters(input_file, input_file_path, keyword)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Read maximum number of rewinds
+        keyword = 'Max_Number_of_Rewinds'
+        is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
+        if is_found:
+            max_val = '~'
+            max_n_rewinds = rproc.readtypeAkeyword(input_file, input_file_path, keyword,
+                                                   max_val)
+        else:
+            max_n_rewinds = 1
+    else:
+        is_solution_rewinding = False
+        rewind_state_criterion = None
+        rewinding_criterion = None
+        max_n_rewinds = None
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read self consistent scheme (optional). If the associated keyword is not found, then
     # a default specification is assumed
     keyword = 'Self_Consistent_Scheme'
@@ -351,7 +381,11 @@ def readinputdatafile(input_file,dirs_dict):
     # Package data associated to the macroscale loading
     info.displayinfo('5', 'Packaging macroscale loading data...')
     macload_dict = packager.packmacroscaleloading(mac_load_type, mac_load,
-                                                  mac_load_presctype, mac_load_increm)
+                                                  mac_load_presctype, mac_load_increm,
+                                                  is_solution_rewinding,
+                                                  rewind_state_criterion,
+                                                  rewinding_criterion,
+                                                  max_n_rewinds)
     # Package data associated to the spatial discretization file(s)
     info.displayinfo('5', 'Packaging regular grid data...')
     rg_dict = packager.packregulargrid(discret_file_path, rve_dims, mat_dict,

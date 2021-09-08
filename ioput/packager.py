@@ -119,7 +119,9 @@ def packmaterialphases(n_material_phases, material_phases_models, material_prope
     return mat_dict
 # ------------------------------------------------------------------------------------------
 # Package data associated to the macroscale loading
-def packmacroscaleloading(mac_load_type, mac_load, mac_load_presctype, mac_load_increm):
+def packmacroscaleloading(mac_load_type, mac_load, mac_load_presctype, mac_load_increm,
+                          is_solution_rewinding, rewind_state_criterion=None,
+                          rewinding_criterion=None, max_n_rewinds=None):
     #
     # Object                      Meaning                                           Type
     # -------------------------------------------------------------------------------------
@@ -129,6 +131,10 @@ def packmacroscaleloading(mac_load_type, mac_load, mac_load_presctype, mac_load_
     # mac_load_presctype          Macroscale loading component type                 ndarray
     # mac_load_increm             Macroscale loading subpaths incrementation        dict
     #                             key: loading subpath (str)
+    # is_solution_rewinding       Analysis rewinding flag                           bool
+    # rewind_state_criterion      Rewind state criterion and parameter              tuple
+    # rewinding_criterion         Rewinding criterion and parameter                 tuple
+    # max_n_rewinds               Maximum number of solution rewinds                int
     #
     # Initialize macroscale loading dictionary
     macload_dict = dict()
@@ -137,6 +143,11 @@ def packmacroscaleloading(mac_load_type, mac_load, mac_load_presctype, mac_load_
     macload_dict['mac_load'] = mac_load
     macload_dict['mac_load_presctype'] = mac_load_presctype
     macload_dict['mac_load_increm'] = mac_load_increm
+    macload_dict['is_solution_rewinding'] = is_solution_rewinding
+    if is_solution_rewinding:
+        macload_dict['rewind_state_criterion'] = rewind_state_criterion
+        macload_dict['rewinding_criterion'] = rewinding_criterion
+        macload_dict['max_n_rewinds'] = max_n_rewinds
     # Return
     return macload_dict
 # ------------------------------------------------------------------------------------------
@@ -355,6 +366,7 @@ def packvtk(is_VTK_output, *args):
     #
     # Object                      Meaning                                           Type
     # -------------------------------------------------------------------------------------
+    # is_VTK_output        VTK output flag                                          bool
     # vtk_format           VTK file format                                          str
     # vtk_inc_div          VTK increment output divisor                             int
     # vtk_vars             VTK state variables output                               str
