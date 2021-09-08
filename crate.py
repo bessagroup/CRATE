@@ -21,31 +21,13 @@
 # the analysis at the expense of an acceptable decrease of accuracy.
 # ------------------------------------------------------------------------------------------
 # Author(s):
-# This program initial version was coded by Bernardo P. Ferreira (bpferreira@fe.up.pt,
-# CM2S research group, Department of Mechanical Engineering, Faculty of Engineering,
-# University of Porto) and developed in colaboration with Dr. Miguel A. Bessa
-# (m.a.bessa@tudelft.nl, Faculty of Mechanical, Maritime and Materials Engineering,
-# Delft University of Technology) and Dr. Francisco M. Andrade Pires (fpires@fe.up.pt,
-# CM2S research group, Department of Mechanical Engineering, Faculty of Engineering,
-# University of Porto).
+# This program initial version was designed and fully coded by Bernardo P. Ferreira
+# (bpferreira@fe.up.pt) and developed in colaboration with Dr. Miguel A. Bessa and
+# Dr. Francisco M. Andrade Pires.
 # ------------------------------------------------------------------------------------------
 # Licensing and Copyrights:
 # ...
 # ------------------------------------------------------------------------------------------
-# Development history:
-#
-# Release v0.1.0 - Bernardo P. Ferreira (June 2020)
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#   > Initial coding.
-#   > Implementation of the FFT-based homogenization basic scheme proposed by H. Moulinec
-#     and P. Suquet (1994).
-#   > Implementation of the Self-Consistent Clustering Analysis (SCA) proposed by Z. Liu,
-#     M. A. Bessa and W. K. Liu (2016)
-#   > Implementation of suitable interfaces with the multi-scale finite element code Links
-#     (CM2S research group, Faculty of Engineering, University of Porto)
-#   > All the details about this release can be found in the PhD seminar of Bernardo P.
-#     Ferreira ("Accurate and efficient multi-scale analyses of nonlinear heterogeneous
-#     materials based on clustering-based reduced order models", University of Porto, 2020)
 #
 # ==========================================================================================
 #                                                                             Import modules
