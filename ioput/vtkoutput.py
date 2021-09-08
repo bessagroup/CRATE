@@ -193,7 +193,7 @@ class VTKOutput:
             self._vtk_collection.init_vtk_collection_file()
         # Add VTK file path to collection
         self._vtk_collection.write_vtk_collection_file(time_step=time_step,
-                                                       time_step_file_path=vtk_file_path)
+            time_step_file_path='VTK/' + vtk_file_path.split('VTK/', 1)[1])
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Open clustering VTK file (append mode)
         if os.path.isfile(vtk_file_path):
@@ -444,7 +444,7 @@ class VTKOutput:
                 os.remove(vtk_file_path)
                 # Remove VTK output file from VTK collection
                 self._vtk_collection.remove_vtk_collection_file(
-                    time_step_file_path=vtk_file_path)
+                    time_step_file_path='VTK/' + vtk_file_path.split('VTK/', 1)[1])
     # --------------------------------------------------------------------------------------
     def _set_image_data_parameters(self, rve_dims, n_voxels_dims):
         '''Set ImageData dataset parameters.
