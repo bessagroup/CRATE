@@ -52,7 +52,7 @@ def displayinfo(code, *args, **kwargs):
             sys.exit(1)
     elif code == '0':
         arguments = ['CRATE - Clustering-based Nonlinear Analysis of Materials',
-                     'Created by Bernardo P. Ferreira', 'Release 0.7.0 (Dec 2020)'] + \
+                     'Created by Bernardo P. Ferreira', 'Release 0.9.0 (Sep 2021)'] + \
                      2*[args[0],] + list(args[1:3])
         info = tuple(arguments)
         template = '\n' + colorama.Fore.WHITE + tilde_line + colorama.Style.RESET_ALL + \
@@ -303,6 +303,180 @@ def displayinfo(code, *args, **kwargs):
         template = '\n\n' + \
                    indent + 'Adaptive clustering step: {:3d}' + '\n' + \
                    indent + tilde_line[:-len(indent)]
+    elif code == '13':
+        mode = args[0]
+        if mode == 'init':
+            if args[1] == 0:
+                format_1 = '{:.4e}'
+                format_2 = '-'
+            else:
+                format_1 = '{:.4e}'
+                format_2 = '{:.4e}'
+            arguments = args[1:]
+            info = tuple(arguments)
+            template = colorama.Fore.YELLOW + \
+                       '\n\n' + indent + 'Self-consistent scheme iteration: {:3d}' + \
+                       '\n' + \
+                       indent + tilde_line[:-len(indent)] + '\n' + \
+                       indent + 'Young modulus (E): ' + format_1 + \
+                       '  (norm. change: ' + format_2 + ')' + ' \U0001F512' + \
+                       '\n' + \
+                       indent + 'Poisson ratio (\u03BD): ' + format_1 + \
+                       '  (norm. change: ' + format_2 + ')' + ' \U0001F512' + \
+                       '\n' + \
+                       indent + tilde_line[:-len(indent)] + '\n' + \
+                       colorama.Style.RESET_ALL
+        elif mode == 'end':
+            arguments = args[1:]
+            info = tuple(arguments)
+            template = indent + dashed_line[:-len(indent)] + \
+                       '\n\n' + indent + tilde_line[:-len(indent)] + '\n' + \
+                       indent + 'Iteration run time (s): {:>11.4e}' + ' \U0001F512'
+    elif code == '14':
+        mode = args[0]
+        if mode == 'max_scs_iter':
+            arguments = [args[1],]
+            lock_msg = 'Maximum number of self-consistent iterations ({}) reached' + '\n' +\
+                       indent + len('Locking reference properties: ')*' ' + \
+                       'without convergence.' + '\n' + \
+                       indent + len('Locking reference properties: ')*' ' + \
+                       'Performing one last self-consistent scheme iteration with ' + \
+                       '\n' + indent + len('Locking reference properties: ')*' ' + \
+                       'the last converged increment reference material elastic' + \
+                       '\n' + indent + len('Locking reference properties: ')*' ' + \
+                       'properties.'
+        elif mode == 'inadmissible_scs_solution':
+            arguments = []
+            lock_msg = 'Inadmissible self-consistent scheme iterative solution.' + '\n' +\
+                       indent + len('Locking reference properties: ')*' ' + \
+                       'Performing one last self-consistent scheme iteration with ' + \
+                       '\n' + indent + len('Locking reference properties: ')*' ' + \
+                       'the last converged increment reference material elastic ' + \
+                       '\n' + indent + len('Locking reference properties: ')*' ' + \
+                       'properties.'
+        elif mode == 'locked_scs_solution':
+            arguments = []
+            lock_msg = 'Inadmissible self-consistent scheme iterative solution.' + '\n' +\
+                       indent + len('Locking reference properties: ')*' ' + \
+                       'Accepting solution with the last converged increment ' + \
+                       '\n' + indent + len('Locking reference properties: ')*' ' + \
+                       'reference material elastic properties.'
+        else:
+            lock_msg = 'Undefined locking message.'
+        info = tuple(arguments)
+        template = '\n\n' + colorama.Fore.YELLOW + indent + asterisk_line[:-len(indent)] + \
+                   '\n' + \
+                   indent + 'Locking reference properties: ' + colorama.Style.RESET_ALL + \
+                   lock_msg + \
+                   '\n' + colorama.Fore.YELLOW + indent + asterisk_line[:-len(indent)] + \
+                   colorama.Style.RESET_ALL + '\n'
+    elif code == '15':
+        # Get adaptivity manager and CRVE
+        adaptivity_manager = args[0]
+        crve = args[1]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Get CRVE clustering summary
+        clustering_summary = crve.get_clustering_summary()
+        # Sort and get number of material phases
+        mat_phases = list(clustering_summary.keys())
+        mat_phases.sort()
+        n_mat_phases = len(clustering_summary.keys())
+        # Build output material phases clusters list and get the toal number of base and
+        # final clusters
+        output_clusters = []
+        base_n_clusters = 0
+        final_n_clusters = 0
+        for mat_phase in mat_phases:
+            output_clusters += [mat_phase, ] + clustering_summary[mat_phase]
+            base_n_clusters += clustering_summary[mat_phase][1]
+            final_n_clusters += clustering_summary[mat_phase][2]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Get total clustering adaptivity procedures time and total online stage time
+        total_time_adapt = adaptivity_manager.adaptive_time
+        total_time_os = args[2]
+        # Set output phases designations
+        time_phases = ['Select clustering adaptivity target clusters',
+                       'Perform CRVE clustering adaptivity',
+                       'Compute CRVE cluster interaction tensors',
+                       'Other']
+        n_time_phases = len(time_phases)
+        # Set output phases times
+        adapt_times = [adaptivity_manager.adaptive_evaluation_time,
+                       crve.adaptive_clustering_time, crve.adaptive_cit_time]
+        adapt_times.append(total_time_adapt - sum(adapt_times))
+        # Set output phases relative times
+        if total_time_adapt > 1e-10:
+            adapt_times_rel_1 = [(time/total_time_adapt)*100 for time in adapt_times]
+        else:
+            adapt_times_rel_1 = [0.0 for time in adapt_times]
+        if total_time_os > 1e-10:
+            adapt_times_rel_2 = [(time/total_time_os)*100 for time in adapt_times]
+        else:
+            adapt_times_rel_2 = [0.0 for time in adapt_times]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Build output phases times list
+        output_times = []
+        for i in range(len(time_phases)):
+            output_times += [time_phases[i], adapt_times[i], adapt_times_rel_1[i],
+                             adapt_times_rel_2[i]]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Build output structure
+        arguments = ['Mat. phase', 'Type', 'Base clusters', 'Final clusters',
+                     *output_clusters,
+                     'Total', base_n_clusters, final_n_clusters,
+                     'Phase', 'Duration (s)', '% adapt', '% total',
+                     *output_times, 'Total', total_time_adapt,
+                     ]
+        info = tuple(arguments)
+        template = '\n\n' + \
+                   indent + 'Clustering adaptivity summary:' + '\n\n' + \
+                   2*indent + '{:<10s}{:^21s}{:>20s}{:>20s}' + '\n' + \
+                   2*indent + dashed_line[:-10*len(indent)] + '\n' + \
+                   (2*indent + '{:^10s}{:^21s}{:>20d}{:>20d}' + '\n')*n_mat_phases + \
+                   2*indent + dashed_line[:-10*len(indent)] + '\n' + \
+                   2*indent + '{:<31s}{:>20d}{:>20d}' '\n\n\n' + \
+                   2*indent + '{:50s}{:^20s}{:>7s}{:>10s}' + '\n' + \
+                   2*indent + dashed_line[:-2*len(indent)] + '\n' + \
+                   (2*indent + '{:50s}{:^20.2e}{:>7.2f}{:>10.2f}' + '\n')*n_time_phases + \
+                   2*indent + dashed_line[:-2*len(indent)] + '\n' + \
+                   2*indent + '{:50s}{:^20.2e}'
+    elif code == '16':
+        mode = args[0]
+        inc = args[1]
+        spacing = indent + len('Clustering adaptivity: ')*' '
+        if mode == 'repeat':
+            msg = 'Adaptivity condition(s) have been triggered and clustering' + '\n' + \
+                  spacing + 'adaptivity will be performed.' + '\n' + \
+                  spacing + 'Current macroscale loading increment ({}) will be repeated' + \
+                  '\n' + spacing + 'considering the new clustering.'
+        elif mode == 'new':
+            msg = 'Adaptivity condition(s) have been triggered and clustering' + '\n' + \
+                  spacing + 'adaptivity will be performed.' + '\n' + \
+                  spacing + 'Performing the new macroscale loading increment ({})' + \
+                  '\n' + spacing + 'considering the new clustering.'
+        arguments = [inc,]
+        info = tuple(arguments)
+        template = '\n\n' + colorama.Fore.CYAN + indent + asterisk_line[:-len(indent)] + \
+                   '\n' + \
+                   indent + 'Clustering adaptivity: ' + colorama.Style.RESET_ALL + msg + \
+                   '\n' + colorama.Fore.CYAN + indent + asterisk_line[:-len(indent)] + \
+                   colorama.Style.RESET_ALL + '\n'
+    elif code == '17':
+        rewind_inc = args[0]
+        spacing = indent + len('Analysis rewind: ')*' '
+        msg = 'Rewind condition(s) have been triggered and the analysis will be' + '\n' + \
+              spacing + 'rewound back to the end of macroscale loading increment {}.' + \
+              '\n' + \
+              spacing + 'The current CRVE clustering is considered, being a suitable' + \
+              '\n' + \
+              spacing + 'transference of cluster-related variables performed.'
+        arguments = [rewind_inc, ]
+        info = tuple(arguments)
+        template = '\n\n' + colorama.Fore.CYAN + indent + asterisk_line[:-len(indent)] + \
+                   '\n' + \
+                   indent + 'Analysis rewind: ' + colorama.Style.RESET_ALL + msg + \
+                   '\n' + colorama.Fore.CYAN + indent + asterisk_line[:-len(indent)] + \
+                   colorama.Style.RESET_ALL + '\n'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display information
     ioutil.print2(template.format(*info, width=output_width))

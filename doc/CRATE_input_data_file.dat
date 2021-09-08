@@ -13,9 +13,7 @@
 #       other parameters).
 # ==========================================================================================
 # Development history:
-# Bernardo P. Ferreira | Jun 2020 | Initial version (along with CRATE v0.1.0).
-# Bernardo P. Ferreira | Jul 2020 | Updated version (along with CRATE v0.3.0).
-# Bernardo P. Ferreira | Dec 2020 | Updated version (along with CRATE v0.7.0).
+# Bernardo P. Ferreira | Jun 2020 | Initial version.
 # ==========================================================================================
 
 
@@ -182,7 +180,7 @@
 #                base_clustering [n_clusterings, ensemble_method_id]
 #                clustering_algorithm_ID feature_ID [feature_ID]
 #                clustering_algorithm_ID feature_ID [feature_ID]
-#                adaptive_clustering [n_clusterings ensemble_method_id]
+#                adaptive_clustering [n_clusterings, ensemble_method_id]
 #                clustering_algorithm_ID feature_ID [feature_ID]
 #                clustering_algorithm_ID feature_ID [feature_ID]
 #                adaptivity_parameters adaptivity_criterion_ID adaptivity_type_ID
@@ -210,9 +208,11 @@
 #
 # feature_ID:                1 - Fourth-order local elastic strain concentration tensor
 #
-# adaptivity_criterion_ID:   1 - Non-spatial
+# adaptivity_criterion_ID:   1 - Adaptive Cluster Grouping
+#                            2 - Spatial Discontinuities
 #
-# adaptivity_type_ID:        1 - Hierarchical Agglomerative Adaptive (HAACRMP)
+# adaptivity_type_ID:        1 - Generalize Adaptive (GACRMP)
+#                            2 - Hierarchical Agglomerative Adaptive (HAACRMP)
 #
 # parameter:                 string (adaptivity criterion parameter, adaptivity type
 #                                    parameter or adaptivity control feature)
@@ -221,11 +221,23 @@
 #
 #  Adaptivity criterion parameters
 #  -----------------------------------------------------------------------------------
-#   Criterion        Parameter [M/O]                   Parameter type
+#   Criterion            Parameter [M/O]                 Parameter type
 #  -----------------------------------------------------------------------------------
-#   Non-spatial      adapt_trigger_ratio [O]           float (defaults to 0.1)
-#                    adapt_split_threshold [O]         float (defaults to 0.1)
-#                    adapt_max_level [O]               integer (defaults to 15)
+#   Adaptive Cluster     adapt_trigger_ratio [O]         float (defaults to 0.1)
+#       Grouping         adapt_split_threshold [O]       float (defaults to 0.5)
+#                        adapt_max_level [O]             integer (defaults to 15)
+#                        adapt_min_voxels [O]            integer (defaults to 1)
+#                        is_merge_adapt_groups [O]       bool (0 or 1, defaults to 1)
+#                        min_adapt_feature_val [O]       float (default to 0.0)
+#       Spatial          adapt_trigger_ratio [O]         float (defaults to 0.1)
+#    Discontinuities     adapt_max_level [O]             integer (defaults to 15)
+#                        adapt_min_voxels [O]            integer (defaults to 1)
+#                        adapt_level_max_diff [O]        integer (defaults to 2)
+#                        swipe_dim_1_every [O]           integer (defaults to 1)
+#                        swipe_dim_2_every [O]           integer (defaults to 1)
+#                        swipe_dim_3_every [O]           integer (defaults to 1)
+#                        min_adapt_feature_val [O]       float (default to 0.0)
+#                        magnitude_lower_factor [O]      float (default to 1.0)
 #  -----------------------------------------------------------------------------------
 #
 #
@@ -234,7 +246,13 @@
 #   Type             Parameter [M/O]                   Parameter type
 #  -----------------------------------------------------------------------------------
 #   GACRMP           adapt_split_factor [O]            float (defaults to 0.01)
+#                    child_cluster_vol_fraction [O]    float (defaults to 0.5)
+#                    dynamic_split_factor_amp [O]      float (defaults to 0.0)
+#                    threshold_n_clusters [O]          integer (defaults to 1M)
 #   HAACRMP          adapt_split_factor [O]            float (defaults to 0.01)
+#                    child_cluster_vol_fraction [O]    float (defaults to 0.5)
+#                    dynamic_split_factor_amp [O]      float (defaults to 0.0)
+#                    threshold_n_clusters [O]          integer (defaults to 1M)
 #  -----------------------------------------------------------------------------------
 #
 #
@@ -242,10 +260,19 @@
 #  -----------------------------------------------------------------------------------
 #   Feature (mandatory one for each adaptive material phase)
 #  -----------------------------------------------------------------------------------
-#   scalar state variable (e.g. acc_p_strain)
+#   scalar state variable (e.g., acc_p_strain)
+#   norm of tensorial state variable (e.g., e_strain_mf_norm)
 #   component of strain/stress related second order state variable (e.g. strain_mf_11)
+#   Von Mises equivalent stress (vm_stress)
+#   Von Mises equivalent strain (vm_strain)
+#   norm of cluster strain concentration tensor (strain_concentration_tensor_norm)
+#   norm of cluster equilibrium residual tensor (equilibrium_residual_norm)
 #  -----------------------------------------------------------------------------------
-
+#  (*) The prefix 'inc_' can be added to the adaptivity control feature in order to
+#      consider the associated incremental value instead.
+#  (*) The suffix '_norm' can be added to the adaptivity control feature in order to
+#      consider the associated norm instead.
+#
 # ------------------------------------------------------------------------------------------
 [insert here]
 
@@ -311,6 +338,44 @@
 #            x
 #
 # x:         string (discretization file path)
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
+#                                                                     Analysis rewinding [O]
+# ==========================================================================================
+# Meaning:   Analysis rewinding procedure, allowing that the solution is rewound back to
+#            previous stored state when given rewinding condition is met.
+#
+# Syntax:    Analysis_Rewinding
+#            Analysis_Rewind_State_Criterion criterion parameter_value
+#            Analysis_Rewinding_Criterion criterion parameter_value
+#            [Max_Number_of_Rewinds x]
+#
+# criterion:         string
+# parameter_value:   integer, float, string, on/off (depends on parameter)
+# x:                 integer (optional, defaults to 1)
+#
+#
+#  Analysis rewind state criterion
+#  -----------------------------------------------------------------------------------
+#   Criterion            Parameter [M/O]                 Parameter type
+#  -----------------------------------------------------------------------------------
+#   increment_number     increment [M]                   integer
+#  -----------------------------------------------------------------------------------
+#
+#
+#  Analysis rewinding criterion
+#  -----------------------------------------------------------------------------------
+#   Criterion            Parameter [M/O]                 Parameter type
+#  -----------------------------------------------------------------------------------
+#   increment_number     increment [M]                   integer
+#   max_acc_p_strain     accumulated plastic strain [M]  float
+#  -----------------------------------------------------------------------------------
+#
+#
 # ------------------------------------------------------------------------------------------
 [insert here]
 
@@ -539,6 +604,46 @@
 #
 # Syntax:    Clustering_Adaptivity_Output
 #
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
+#                                                         Final clustering state storage [O]
+# ==========================================================================================
+# Meaning:   Store CRVE final clustering state in '.crve' file. This option is only relevant
+#            when considering clustering adaptivity, allowing that the CRVE final clustering
+#            state is considered as the base clustering in the next analysis.
+#
+# Syntax:    Store_Final_Clustering_State
+#
+# Note: As stated in the warning message displayed when attempting to consider an already
+#       existent offline stage, make sure that the problem input data file is consistent
+#       with the previously stored '.crve' file. In what concerns the clustering adaptivity,
+#       all the adaptive parameters can be changed and are properly updated, except the
+#       clustering adaptivity type of each adaptive material phase. In order to lock the
+#       adaptive procedures of a given phase in the next analysis, the associated
+#       clustering adaptivity frequency can be set to None.
+# ------------------------------------------------------------------------------------------
+[insert here]
+
+
+
+
+#                                                          Voxel material-related output [O]
+# ==========================================================================================
+# Meaning:   Output of data associated with voxel material-related quantities
+#            (.voxout file). Quantities are written for every converged macroscale loading
+#            increment. In the current version there are no options concerning this output
+#            and three material-related quantities are written for each voxel on each
+#            increment: (1) Von Mises equivalent stress, (2) accumulated plastic strain and
+#            (3) accumulated plastic strain energy density.
+#
+# Syntax:    Voxels_Output
+#
+# Note: This option should be used with caution as the output file can easily scale to
+#       several GB depending on the number of voxels and number of increments.
 # ------------------------------------------------------------------------------------------
 [insert here]
 

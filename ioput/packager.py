@@ -9,6 +9,8 @@
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
+# Parse command-line options and arguments
+import sys
 # Working with arrays
 import numpy as np
 # Inspect file name and line
@@ -27,7 +29,7 @@ import ioput.errors as errors
 # Package directories and paths
 def packdirpaths(input_file_name, input_file_path, input_file_dir, problem_name,
                  problem_dir, offline_stage_dir, postprocess_dir, crve_file_path,
-                 hres_file_path):
+                 hres_file_path, refm_file_path, adapt_file_path):
     #
     # Object                      Meaning                                           Type
     # -------------------------------------------------------------------------------------
@@ -39,7 +41,10 @@ def packdirpaths(input_file_name, input_file_path, input_file_dir, problem_name,
     # offline_stage_dir           Directory of the offline stage associated files   str
     # crve_file_path              Path of the .crve file                            str
     # hres_file_path              Path of the .hres file                            str
+    # refm_file_path              Path of the .refm file                            str
+    # adapt_file_path             Path of the .adapt file                           str
     # postprocess_dir             Directory of the post-processing files            str
+    # cbsvar_file_path            Path of the .voxout file                          str
     #
     # Note: The meaning of the previous directories and files is detailed in the module
     #       fileoperations (see function setproblemdirs documentation)
@@ -55,7 +60,10 @@ def packdirpaths(input_file_name, input_file_path, input_file_dir, problem_name,
     dirs_dict['offline_stage_dir'] = offline_stage_dir
     dirs_dict['crve_file_path'] = crve_file_path
     dirs_dict['hres_file_path'] = hres_file_path
+    dirs_dict['refm_file_path'] = refm_file_path
+    dirs_dict['adapt_file_path'] = adapt_file_path
     dirs_dict['postprocess_dir'] = postprocess_dir
+    dirs_dict['voxout_file_path'] = None
     # Return
     return dirs_dict
 # ------------------------------------------------------------------------------------------
@@ -111,7 +119,9 @@ def packmaterialphases(n_material_phases, material_phases_models, material_prope
     return mat_dict
 # ------------------------------------------------------------------------------------------
 # Package data associated to the macroscale loading
-def packmacroscaleloading(mac_load_type, mac_load, mac_load_presctype, mac_load_increm):
+def packmacroscaleloading(mac_load_type, mac_load, mac_load_presctype, mac_load_increm,
+                          is_solution_rewinding, rewind_state_criterion=None,
+                          rewinding_criterion=None, max_n_rewinds=None):
     #
     # Object                      Meaning                                           Type
     # -------------------------------------------------------------------------------------
@@ -121,6 +131,10 @@ def packmacroscaleloading(mac_load_type, mac_load, mac_load_presctype, mac_load_
     # mac_load_presctype          Macroscale loading component type                 ndarray
     # mac_load_increm             Macroscale loading subpaths incrementation        dict
     #                             key: loading subpath (str)
+    # is_solution_rewinding       Analysis rewinding flag                           bool
+    # rewind_state_criterion      Rewind state criterion and parameter              tuple
+    # rewinding_criterion         Rewinding criterion and parameter                 tuple
+    # max_n_rewinds               Maximum number of solution rewinds                int
     #
     # Initialize macroscale loading dictionary
     macload_dict = dict()
@@ -129,6 +143,11 @@ def packmacroscaleloading(mac_load_type, mac_load, mac_load_presctype, mac_load_
     macload_dict['mac_load'] = mac_load
     macload_dict['mac_load_presctype'] = mac_load_presctype
     macload_dict['mac_load_increm'] = mac_load_increm
+    macload_dict['is_solution_rewinding'] = is_solution_rewinding
+    if is_solution_rewinding:
+        macload_dict['rewind_state_criterion'] = rewind_state_criterion
+        macload_dict['rewinding_criterion'] = rewinding_criterion
+        macload_dict['max_n_rewinds'] = max_n_rewinds
     # Return
     return macload_dict
 # ------------------------------------------------------------------------------------------
@@ -231,8 +250,9 @@ def packregulargrid(discret_file_path, rve_dims, mat_dict, problem_dict):
 # Package data associated to the clustering on a regular grid of pixels/voxels
 def packrgclustering(clustering_solution_method, standardization_method, links_dict,
                      phase_n_clusters, rg_dict, clustering_type, base_clustering_scheme,
-                     adaptive_clustering_scheme, adaptivity_criterion, adaptivity_type,
-                     adaptivity_control_feature, clust_adapt_freq, is_clust_adapt_output):
+                     adaptive_clustering_scheme, adapt_criterion_data, adaptivity_type,
+                     adaptivity_control_feature, clust_adapt_freq, is_clust_adapt_output,
+                     is_store_final_clustering):
     #
     # Object                       Meaning                                         Type
     # ------------------------------------------------------------------------------------
@@ -251,7 +271,7 @@ def packrgclustering(clustering_solution_method, standardization_method, links_d
     #                              key: material phase id (str)
     # adaptive_clustering_scheme   Adaptive clustering scheme                      dict
     #                              key: material phase id (str)
-    # adaptivity_criterion         Adaptivity criterion parameters                 dict
+    # adapt_criterion_data         Adaptivity criterion parameters                 dict
     #                              key: material phase id (str)
     # adaptivity_type              Adaptivity type parameters                      dict
     #                              key: material phase id (str)
@@ -260,6 +280,7 @@ def packrgclustering(clustering_solution_method, standardization_method, links_d
     # clust_adapt_freq             Clustering adaptivity frequency                 dict
     #                              key: material phase id (str)
     # is_clust_adapt_output        Adaptivity output                               bool
+    # is_store_final_clustering    Final clustering state storage                  bool
     #
     # Get regular grid data
     n_voxels_dims = rg_dict['n_voxels_dims']
@@ -283,11 +304,12 @@ def packrgclustering(clustering_solution_method, standardization_method, links_d
     clst_dict['clustering_type'] = clustering_type
     clst_dict['base_clustering_scheme'] = base_clustering_scheme
     clst_dict['adaptive_clustering_scheme'] = adaptive_clustering_scheme
-    clst_dict['adaptivity_criterion'] = adaptivity_criterion
+    clst_dict['adapt_criterion_data'] = adapt_criterion_data
     clst_dict['adaptivity_type'] = adaptivity_type
     clst_dict['adaptivity_control_feature'] = adaptivity_control_feature
     clst_dict['clust_adapt_freq'] = clust_adapt_freq
     clst_dict['is_clust_adapt_output'] = is_clust_adapt_output
+    clst_dict['is_store_final_clustering'] = is_store_final_clustering
     # Return
     return clst_dict
 # ------------------------------------------------------------------------------------------
@@ -344,10 +366,12 @@ def packvtk(is_VTK_output, *args):
     #
     # Object                      Meaning                                           Type
     # -------------------------------------------------------------------------------------
+    # is_VTK_output        VTK output flag                                          bool
     # vtk_format           VTK file format                                          str
     # vtk_inc_div          VTK increment output divisor                             int
     # vtk_vars             VTK state variables output                               str
     # vtk_precision        VTK file precision                                       str
+    # vtk_byte_order       VTK file byte order                                      str
     #
     # Initialize VTK dictionary
     vtk_dict = dict()
@@ -361,5 +385,23 @@ def packvtk(is_VTK_output, *args):
         vtk_dict['vtk_inc_div'] = vtk_inc_div
         vtk_dict['vtk_vars'] = vtk_vars
         vtk_dict['vtk_precision'] = 'SinglePrecision'
+        if sys.byteorder == 'little':
+            vtk_dict['vtk_byte_order'] = 'LittleEndian'
+        else:
+            vtk_dict['vtk_byte_order'] = 'BigEndian'
     # Return
     return vtk_dict
+# ------------------------------------------------------------------------------------------
+# Package data associated to general output files
+def packoutputfiles(is_voxels_output, *args):
+    #
+    # Object                 Meaning                                           Type
+    # -------------------------------------------------------------------------------------
+    # is_voxels_output       Voxels material-related quantities                bool
+    #
+    # Initialize output dictionary
+    output_dict = dict()
+    # Build output dictionary
+    output_dict['is_voxels_output'] = is_voxels_output
+    # Return
+    return output_dict

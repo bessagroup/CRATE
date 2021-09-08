@@ -45,12 +45,14 @@ def getrequiredproperties():
 #
 # List of constitutive model state variables:
 #
-#   e_strain_mf  | Elastic strain tensor (matricial form)
-#   acc_p_strain | Accumulated plastic strain
-#   strain_mf    | Total strain tensor (matricial form)
-#   stress_mf    | Cauchy stress tensor (matricial form)
-#   is_plast     | Plastic step flag
-#   is_su_fail   | State update failure flag
+#   e_strain_mf       | Elastic strain tensor (matricial form)
+#   acc_p_strain      | Accumulated plastic strain
+#   strain_mf         | Total strain tensor (matricial form)
+#   stress_mf         | Cauchy stress tensor (matricial form)
+#   is_plast          | Plastic step flag
+#   is_su_fail        | State update failure flag
+#   acc_e_energy_dens | Accumulated elastic strain energy density (post-process)
+#   acc_p_energy_dens | Accumulated plastic strain energy density (post-process)
 #
 def init(problem_dict):
     # Get problem data
@@ -68,9 +70,12 @@ def init(problem_dict):
                                                         comp_order)
     state_variables_init['is_plast'] = False
     state_variables_init['is_su_fail'] = False
+    state_variables_init['acc_e_energy_dens'] = 0.0
+    state_variables_init['acc_p_energy_dens'] = 0.0
     # Set additional out-of-plane strain and stress components
     if problem_type == 1:
         state_variables_init['e_strain_33'] = 0.0
+        state_variables_init['p_strain_33'] = 0.0
         state_variables_init['stress_33'] = 0.0
     # Return initialized state variables dictionary
     return state_variables_init
@@ -104,8 +109,11 @@ def suct(problem_dict, algpar_dict, material_properties, mat_phase, inc_strain,
     e_strain_old_mf = state_variables_old['e_strain_mf']
     p_strain_old_mf = state_variables_old['strain_mf'] - e_strain_old_mf
     acc_p_strain_old = state_variables_old['acc_p_strain']
+    acc_e_energy_dens_old = state_variables_old['acc_e_energy_dens']
+    acc_p_energy_dens_old = state_variables_old['acc_p_energy_dens']
     if problem_type == 1:
         e_strain_33_old = state_variables_old['e_strain_33']
+        p_strain_33_old = state_variables_old['p_strain_33']
     # Initialize state update failure flag
     is_su_fail = False
     # Initialize plastic step flag
@@ -122,9 +130,11 @@ def suct(problem_dict, algpar_dict, material_properties, mat_phase, inc_strain,
         comp_order = comp_order_sym
         # Build strain tensors (matricial form) by including the appropriate out-of-plain
         # components
-        inc_strain_mf = mop.getstate3Dmffrom2Dmf(problem_dict, inc_strain_mf, 0.0)
-        e_strain_old_mf = mop.getstate3Dmffrom2Dmf(problem_dict, e_strain_old_mf,
+        inc_strain_mf = mop.getstate3Dmffrom2Dmf(problem_type, inc_strain_mf, 0.0)
+        e_strain_old_mf = mop.getstate3Dmffrom2Dmf(problem_type, e_strain_old_mf,
                                                    e_strain_33_old)
+        p_strain_old_mf = mop.getstate3Dmffrom2Dmf(problem_type, p_strain_old_mf,
+                                                   p_strain_33_old)
     #
     #                                                                           State update
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -216,6 +226,27 @@ def suct(problem_dict, algpar_dict, material_properties, mat_phase, inc_strain,
         e_strain_33 = e_strain_mf[comp_order.index('33')]
         stress_33 = stress_mf[comp_order.index('33')]
     #
+    #                                  Accumulated elastic and plastic strain energy density
+    #                                                                         (post-process)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Compute plastic strain tensor
+    p_strain_mf = (e_trial_strain_mf + p_strain_old_mf) - e_strain_mf
+    # Get the out-of-plane plastic strain component
+    if problem_type == 1:
+        p_strain_33 = p_strain_mf[comp_order.index('33')]
+    # Compute incremental stress
+    delta_stress_mf = np.matmul(e_consistent_tangent_mf, e_strain_mf - e_strain_old_mf)
+    # Compute incremental elastic strain
+    delta_e_strain_mf = e_strain_mf - e_strain_old_mf
+    # Compute accumulated elastic strain energy density
+    acc_e_energy_dens = acc_e_energy_dens_old + np.matmul(delta_stress_mf,
+                                                          delta_e_strain_mf)
+    # Compute incremental plastic strain
+    delta_p_strain_mf = p_strain_mf - p_strain_old_mf
+    # Compute accumulated plastic strain energy density
+    acc_p_energy_dens = acc_p_energy_dens_old + np.matmul(delta_stress_mf,
+                                                          delta_p_strain_mf)
+    #
     #                                                                     3D > 2D Conversion
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # When the problem type corresponds to a 2D analysis, build the 2D strain and stress
@@ -223,9 +254,10 @@ def suct(problem_dict, algpar_dict, material_properties, mat_phase, inc_strain,
     if problem_type == 1:
         # Builds 2D strain and stress tensors (matricial form) from the associated 3D
         # counterparts
-        e_trial_strain_mf = mop.getstate2Dmffrom3Dmf(problem_dict, e_trial_strain_mf)
-        e_strain_mf = mop.getstate2Dmffrom3Dmf(problem_dict, e_strain_mf)
-        stress_mf = mop.getstate2Dmffrom3Dmf(problem_dict, stress_mf)
+        e_trial_strain_mf = mop.getstate2Dmffrom3Dmf(problem_type, e_trial_strain_mf)
+        e_strain_mf = mop.getstate2Dmffrom3Dmf(problem_type, e_strain_mf)
+        stress_mf = mop.getstate2Dmffrom3Dmf(problem_type, stress_mf)
+        p_strain_old_mf = mop.getstate2Dmffrom3Dmf(problem_type, p_strain_old_mf)
     #
     #                                                                Updated state variables
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -238,8 +270,11 @@ def suct(problem_dict, algpar_dict, material_properties, mat_phase, inc_strain,
     state_variables['stress_mf'] = stress_mf
     state_variables['is_su_fail'] = is_su_fail
     state_variables['is_plast'] = is_plast
+    state_variables['acc_e_energy_dens'] = acc_e_energy_dens
+    state_variables['acc_p_energy_dens'] = acc_p_energy_dens
     if problem_type == 1:
         state_variables['e_strain_33'] = e_strain_33
+        state_variables['p_strain_33'] = p_strain_33
         state_variables['stress_33'] = stress_33
     #
     #                                                             Consistent tangent modulus
@@ -265,7 +300,7 @@ def suct(problem_dict, algpar_dict, material_properties, mat_phase, inc_strain,
     # When the problem type corresponds to a 2D analysis, build the 2D consistent tangent
     # modulus (matricial form) once the 3D counterpart
     if problem_type == 1:
-        consistent_tangent_mf = mop.getstate2Dmffrom3Dmf(problem_dict,
+        consistent_tangent_mf = mop.getstate2Dmffrom3Dmf(problem_type,
                                                          consistent_tangent_mf)
     #
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -83,8 +83,11 @@ def setinputdatafilepath(path):
 #            |---- Offline_Stage/ ------- example.crve
 #            |                      |---- example_clusters.vti
 #            |---- example.hres
+#            |---- example.refm
+#            |---- example.adapt
 #            |---- Post_Process/  ------- example.pvd
 #                                   |---- VTK/
+#                                   |---- example.voxout
 #
 # Folders and files meaning:
 # example.dat            - User input data file
@@ -101,11 +104,17 @@ def setinputdatafilepath(path):
 # example_clusters.vti   - VTK XML file with data related to the material phases and
 #                          material clusters
 # example.hres           - File where the homogenized results are stored
+# example.refm           - File where the reference material properties and associated
+#                          farfield strain are stored
+# example.adapt          - File where the adaptive material phases number of clusters and
+#                          adaptivity steps are stored (only if clustering adaptivity is
+#                          activated)
 # Post_Process/          - Post processing folder
 # example.pvd            - VTK XML file which contains the references to all the snapshots
 #                          of the problem solution
 # VTK/                   - Folder which constains all the snapshots of the problem solution
 #                          (VTK XML format)
+# example.voxout         - File where voxels material-related quantities are stored
 #
 def setproblemdirs(input_file_name, input_file_dir):
     # Set problem name, directory
@@ -122,6 +131,10 @@ def setproblemdirs(input_file_name, input_file_dir):
     crve_file_path = offline_stage_dir + input_file_name + '.crve'
     # Set '.hres' path
     hres_file_path = problem_dir + input_file_name + '.hres'
+    # Set '.refm' path
+    refm_file_path = problem_dir + input_file_name + '.refm'
+    # Set '.adapt' path
+    adapt_file_path = problem_dir + input_file_name + '.adapt'
     # Check if the problem directory already exists or not
     if not os.path.exists(problem_dir):
         status = 0
@@ -156,7 +169,7 @@ def setproblemdirs(input_file_name, input_file_dir):
             # file and the already existent offline state '.crve' data file
             ioutil.useraction('\n\nWarning: Please make sure that the problem input ' + \
                               'data file is consistent with the already ' + '\n' + \
-                              len('Warning: ')*' ' + 'existent offline state \'.crve\' ' + \
+                              len('Warning: ')*' ' + 'existent offline stage \'.crve\' ' + \
                               'data file (stored in Offline_Stage/) to avoid ' + \
                               '\n' + \
                               len('Warning: ')*' ' + 'unexpected errors or ' + \
@@ -180,4 +193,4 @@ def setproblemdirs(input_file_name, input_file_dir):
         info.displayinfo('-1', problem_dir, status)
     # Return
     return [problem_name, problem_dir, offline_stage_dir, postprocess_dir, is_same_offstage,
-            crve_file_path, hres_file_path]
+            crve_file_path, hres_file_path, refm_file_path, adapt_file_path]

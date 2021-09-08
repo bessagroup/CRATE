@@ -322,25 +322,27 @@ def kelvinfactor(idx, comp_order):
 # Note: Lists of rows and columns cannot contain duplicated indexes
 #
 def getcondmatrix(matrix, rows, cols):
-    # Check validity of rows and columns indexes to perform the condensation
-    if not np.all([isinstance(rows[i], int) or isinstance(rows[i], np.integer)
-            for i in range(len(rows))]):
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00032', location.filename, location.lineno + 1)
-    elif not np.all([isinstance(cols[i], int) or isinstance(cols[i], np.integer)
-            for i in range(len(cols))]):
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00032', location.filename, location.lineno + 1)
-    elif len(list(dict.fromkeys(rows))) != len(rows) or \
-            len(list(dict.fromkeys(cols))) != len(cols):
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00033', location.filename, location.lineno + 1)
-    elif np.any([rows[i] not in range(matrix.shape[0]) for i in range(len(rows))]):
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00034', location.filename, location.lineno + 1)
-    elif np.any([cols[i] not in range(matrix.shape[1]) for i in range(len(cols))]):
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00035', location.filename, location.lineno + 1)
+    ## Check validity of rows and columns indexes to perform the condensation
+    check_validity = False
+    if check_validity:
+        if not np.all([isinstance(rows[i], int) or isinstance(rows[i], np.integer)
+                for i in range(len(rows))]):
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayerror('E00032', location.filename, location.lineno + 1)
+        elif not np.all([isinstance(cols[i], int) or isinstance(cols[i], np.integer)
+                for i in range(len(cols))]):
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayerror('E00032', location.filename, location.lineno + 1)
+        elif len(list(dict.fromkeys(rows))) != len(rows) or \
+                len(list(dict.fromkeys(cols))) != len(cols):
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayerror('E00033', location.filename, location.lineno + 1)
+        elif np.any([rows[i] not in range(matrix.shape[0]) for i in range(len(rows))]):
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayerror('E00034', location.filename, location.lineno + 1)
+        elif np.any([cols[i] not in range(matrix.shape[1]) for i in range(len(cols))]):
+            location = inspect.getframeinfo(inspect.currentframe())
+            errors.displayerror('E00035', location.filename, location.lineno + 1)
     # Build auxiliary matrices with rows and columns condensation indexes
     rows_matrix = np.zeros((len(rows), len(cols)), dtype=int)
     cols_matrix = np.zeros((len(rows), len(cols)), dtype=int)
@@ -358,9 +360,7 @@ def getcondmatrix(matrix, rows, cols):
 # Given a 2D strain/stress tensor (matricial form) associated to a given 2D problem type,
 # build the corresponding 3D counterpart by including the appropriate out-of-plain strain
 # components
-def getstate3Dmffrom2Dmf(problem_dict, mf_2d, comp_33):
-    # Get problem type
-    problem_type = problem_dict['problem_type']
+def getstate3Dmffrom2Dmf(problem_type, mf_2d, comp_33):
     # Get 2D strain/stress components order in symmetric and nonsymmetric cases
     _, comp_order_sym_2d, comp_order_nsym_2d = getproblemtypeparam(problem_type)
     # Get 3D strain/stress components order in symmetric and nonsymmetric cases
@@ -385,9 +385,7 @@ def getstate3Dmffrom2Dmf(problem_dict, mf_2d, comp_33):
 # Given a 3D strain/stress second-order tensor (matricial form) or a 3D strain/stress
 # related fourth-order tensor associated to a given 2D problem type, build the reduced 2D
 # counterpart including only the in-plain strain/stress components
-def getstate2Dmffrom3Dmf(problem_dict, mf_3d):
-    # Get problem type
-    problem_type = problem_dict['problem_type']
+def getstate2Dmffrom3Dmf(problem_type, mf_3d):
     # Get 2D strain/stress components order in symmetric and nonsymmetric cases
     _, comp_order_sym_2d, comp_order_nsym_2d = getproblemtypeparam(problem_type)
     # Get 3D strain/stress components order in symmetric and nonsymmetric cases

@@ -44,6 +44,7 @@ import clustering.clusteringdata as clstdat
 # Read the input data file
 def readinputdatafile(input_file,dirs_dict):
     # Get input file and problem directory and path data
+    input_file_name = dirs_dict['input_file_name']
     input_file_path = dirs_dict['input_file_path']
     problem_dir = dirs_dict['problem_dir']
     postprocess_dir = dirs_dict['postprocess_dir']
@@ -102,6 +103,36 @@ def readinputdatafile(input_file,dirs_dict):
         input_file, input_file_path, mac_load_type, strain_formulation, n_dim,
         comp_order_nsym)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Read analysis rewinding procedure (optional)
+    keyword = 'Analysis_Rewinding'
+    is_found, keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
+        is_solution_rewinding = True
+        # Read rewind state criterion
+        keyword = 'Analysis_Rewind_State_Criterion'
+        rewind_state_criterion = \
+            rproc.read_rewind_state_parameters(input_file, input_file_path, keyword)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Read rewinding criterion
+        keyword = 'Analysis_Rewinding_Criterion'
+        rewinding_criterion = \
+            rproc.read_rewinding_criterion_parameters(input_file, input_file_path, keyword)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Read maximum number of rewinds
+        keyword = 'Max_Number_of_Rewinds'
+        is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
+        if is_found:
+            max_val = '~'
+            max_n_rewinds = rproc.readtypeAkeyword(input_file, input_file_path, keyword,
+                                                   max_val)
+        else:
+            max_n_rewinds = 1
+    else:
+        is_solution_rewinding = False
+        rewind_state_criterion = None
+        rewinding_criterion = None
+        max_n_rewinds = None
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read self consistent scheme (optional). If the associated keyword is not found, then
     # a default specification is assumed
     keyword = 'Self_Consistent_Scheme'
@@ -140,7 +171,7 @@ def readinputdatafile(input_file,dirs_dict):
     # Read cluster analysis scheme
     keyword = 'Cluster_Analysis_Scheme'
     clustering_type, base_clustering_scheme, adaptive_clustering_scheme, \
-        adaptivity_criterion, adaptivity_type, adaptivity_control_feature = \
+        adapt_criterion_data, adaptivity_type, adaptivity_control_feature = \
             rproc.read_cluster_analysis_scheme(input_file, input_file_path, keyword,
                                                material_properties.keys(),
                                                clustering_features)
@@ -311,6 +342,18 @@ def readinputdatafile(input_file,dirs_dict):
     else:
         is_VTK_output = False
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Read voxels material-related quantities output options
+    keyword = 'Voxels_Output'
+    is_found, keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
+        is_voxels_output = True
+        # Set voxels material-related quantities output file path
+        voxout_file_path = postprocess_dir + input_file_name + '.voxout'
+        # Store output file path in directories and paths dictionary
+        dirs_dict['voxout_file_path'] = voxout_file_path
+    else:
+        is_voxels_output = False
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read clustering adaptivity output
     keyword = 'Clustering_Adaptivity_Output'
     is_found, keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
@@ -318,6 +361,14 @@ def readinputdatafile(input_file,dirs_dict):
         is_clust_adapt_output = True
     else:
         is_clust_adapt_output = False
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Read final clustering state storage option
+    keyword = 'Store_Final_Clustering_State'
+    is_found, keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
+        is_store_final_clustering = True
+    else:
+        is_store_final_clustering = False
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Package problem general data
     info.displayinfo('5', 'Packaging problem general data...')
@@ -330,7 +381,11 @@ def readinputdatafile(input_file,dirs_dict):
     # Package data associated to the macroscale loading
     info.displayinfo('5', 'Packaging macroscale loading data...')
     macload_dict = packager.packmacroscaleloading(mac_load_type, mac_load,
-                                                  mac_load_presctype, mac_load_increm)
+                                                  mac_load_presctype, mac_load_increm,
+                                                  is_solution_rewinding,
+                                                  rewind_state_criterion,
+                                                  rewinding_criterion,
+                                                  max_n_rewinds)
     # Package data associated to the spatial discretization file(s)
     info.displayinfo('5', 'Packaging regular grid data...')
     rg_dict = packager.packregulargrid(discret_file_path, rve_dims, mat_dict,
@@ -341,9 +396,10 @@ def readinputdatafile(input_file,dirs_dict):
                                           standardization_method, links_dict,
                                           phase_n_clusters, rg_dict, clustering_type,
                                           base_clustering_scheme,
-                                          adaptive_clustering_scheme, adaptivity_criterion,
+                                          adaptive_clustering_scheme, adapt_criterion_data,
                                           adaptivity_type, adaptivity_control_feature,
-                                          clust_adapt_freq, is_clust_adapt_output)
+                                          clust_adapt_freq, is_clust_adapt_output,
+                                          is_store_final_clustering)
     # Package data associated to the self-consistent scheme
     info.displayinfo('5', 'Packaging self-consistent scheme data...')
     scs_dict = packager.packagescs(self_consistent_scheme, scs_max_n_iterations,
@@ -359,6 +415,9 @@ def readinputdatafile(input_file,dirs_dict):
         vtk_dict = packager.packvtk(is_VTK_output, vtk_format, vtk_inc_div, vtk_vars)
     else:
         vtk_dict = packager.packvtk(is_VTK_output)
+    # Package data associated to the output files
+    info.displayinfo('5', 'Packaging general output files data...')
+    output_dict = packager.packoutputfiles(is_voxels_output)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return [problem_dict, mat_dict, macload_dict, rg_dict, clst_dict, scs_dict, algpar_dict,
-            vtk_dict]
+            vtk_dict, output_dict]

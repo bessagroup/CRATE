@@ -41,7 +41,9 @@ from clustering.clusteringphase import SCRMP
 # CRVE generation
 from clustering.crve import CRVE
 # CRVE adaptivity
-from online.crve_adaptivity import AdaptivityManager
+from clustering.adaptivity.crve_adaptivity import AdaptivityManager
+# Macroscale loading
+from online.incrementation.macloadincrem import RewindManager
 #
 #                                                                           Search functions
 # ==========================================================================================
@@ -69,6 +71,56 @@ def searchoptkeywordline(file, keyword):
             is_found = True
             return [is_found,line_number]
     return [is_found,line_number]
+#
+#                                                                        Parameter formatter
+# ==========================================================================================
+def get_formatted_parameter(parameter, x, etype=None):
+    '''Get parameter with appropriate type.
+
+    Parameters
+    ----------
+    parameter : str
+        Parameter name.
+    x : str
+        Parameter specification.
+    etype : class, default=None
+        Parameter expected type.
+
+    Returns
+    -------
+    y : etype
+        Parameter value.
+    '''
+    # Get parameter specification type and associated value
+    try:
+        a = float(x)
+        b = int(a)
+        if a == b and len(str(x)) == len(str(b)):
+            stype_name = 'int'
+            y = int(x)
+        else:
+            stype_name = 'float'
+            y = float(x)
+    except (TypeError, ValueError):
+        if x.lower() == 'on':
+            stype_name = 'bool'
+            y = True
+        elif x.lower() == 'off':
+            stype_name = 'bool'
+            y = False
+        else:
+            stype_name = 'str'
+            y = x
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Check if specification type agrees with expected type
+    if etype != None:
+        if stype_name != etype.__name__:
+            raise TypeError('The parameter \'' + str(parameter) + '\' hasn\'t ' +
+                            'been properly specified: expected ' + etype.__name__ +
+                            ' but found ' + stype_name + '.')
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Return
+    return y
 #
 #                                                                             Keyword type A
 # ==========================================================================================
@@ -883,7 +935,7 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
         clustering characterized by a clustering algorithm (col 1, int), a list of
         features (col 2, list of int) and a list of the features data matrix' indexes
         (col 3, list of int).
-    adaptivity_criterion : dict
+    adapt_criterion_data : dict
         Clustering adaptivity criterion (item, dict) associated to each material phase
         (key, str). This dictionary contains the adaptivity criterion to be used and the
         required parameters.
@@ -906,7 +958,7 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
     base_clustering_scheme = {}
     # Initialize adaptive clustering scheme and adaptivity related dictionaries
     adaptive_clustering_scheme = {}
-    adaptivity_criterion = {}
+    adapt_criterion_data = {}
     adaptivity_type = {}
     adaptivity_control_feature = {}
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -968,7 +1020,7 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
             continue
         else:
             # Initialize material phase adaptivity related dictionaries
-            adaptivity_criterion[mat_phase] = {}
+            adapt_criterion_data[mat_phase] = {}
             adaptivity_type[mat_phase] = {}
             # Read following line
             line_number += 1
@@ -1007,21 +1059,26 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
                                    'adaptivity parameters of material phase ' + mat_phase +
                                    '.')
             else:
+                # Read adaptivity criterion
                 adapt_criterion_id = line[1]
+                adapt_crit = AdaptivityManager.get_adaptivity_criterions()[
+                    adapt_criterion_id]
+                adapt_criterion_data[mat_phase]['criterion'] = adapt_crit
+                # Read adaptivity type
                 adapt_type_id = line[2]
-                AdaptType = CRVE.get_crmp_types()[adapt_type_id]
-                adaptivity_type[mat_phase]['adapt_type'] = AdaptType
+                adapt_type = CRVE.get_crmp_types()[adapt_type_id]
+                adaptivity_type[mat_phase]['adapt_type'] = adapt_type
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get adaptive cluster-reduced material phase valid clustering algorithms
-        valid_algorithms = AdaptType.get_valid_clust_algs()
+        valid_algorithms = adapt_type.get_valid_clust_algs()
         # Check validity of prescribed base clustering scheme
         check_clustering_scheme(mat_phase, adaptive_clustering_scheme[mat_phase],
                                 valid_algorithms, clustering_features)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get mandatory and optional adaptivity criterion parameters
-        macp, oacp = AdaptivityManager.get_adaptivity_criterion_parameters()
+        macp, oacp = adapt_crit.get_parameters()
         # Get mandatory and optional adaptivity type parameters
-        matp, oatp = AdaptType.get_adaptivity_type_parameters()
+        matp, oatp = adapt_type.get_adaptivity_type_parameters()
         # Collect all mandatory and optional adaptivity parameters
         madapt_parameters = {**macp, **matp}
         oadapt_parameters = {**oacp, **oatp}
@@ -1030,13 +1087,13 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
             # Optional adaptivity criterion parameters
             if parameter in oacp.keys():
                 # Store adaptivity criterion parameter
-                adaptivity_criterion[mat_phase][parameter] = \
-                    get_adaptivity_parameter(parameter, oacp[parameter])
+                adapt_criterion_data[mat_phase][parameter] = \
+                    get_formatted_parameter(parameter, oacp[parameter])
             # Optional adaptivity type parameters
             else:
-                # Store adaptivity criterion parameter
-                adaptivity_criterion[mat_phase][parameter] = \
-                    get_adaptivity_parameter(parameter, oatp[parameter])
+                # Store adaptivity type parameter
+                adaptivity_type[mat_phase][parameter] = \
+                    get_formatted_parameter(parameter, oatp[parameter])
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Read following line
         line = linecache.getline(file_path, line_number + 1)
@@ -1062,29 +1119,29 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
             # Get adaptivity parameter
             if parameter in macp.keys():
                 # Store adaptivity criterion parameter
-                adaptivity_criterion[mat_phase][parameter] = \
-                    get_adaptivity_parameter(parameter, line[1], etype=macp[parameter])
+                adapt_criterion_data[mat_phase][parameter] = \
+                    get_formatted_parameter(parameter, line[1], etype=type(macp[parameter]))
             elif parameter in matp.keys():
-                # Store adaptivity criterion parameter
-                adaptivity_criterion[mat_phase][parameter] = \
-                    get_adaptivity_parameter(parameter, line[1], etype=matp[parameter])
+                # Store adaptivity type parameter
+                adaptivity_type[mat_phase][parameter] = \
+                    get_formatted_parameter(parameter, line[1], etype=type(matp[parameter]))
             elif parameter in oacp.keys():
                 # Get parameter value
-                value = get_adaptivity_parameter(parameter, line[1])
+                value = get_formatted_parameter(parameter, line[1])
                 # Store adaptivity criterion parameter
                 if type(value) == type(oacp[parameter]):
-                    adaptivity_criterion[mat_phase][parameter] = \
-                        get_adaptivity_parameter(parameter, type(oacp[parameter])(line[1]))
+                    adapt_criterion_data[mat_phase][parameter] = \
+                        get_formatted_parameter(parameter, type(oacp[parameter])(line[1]))
                 else:
                     raise TypeError('The adaptivity parameter \'' + str(parameter) +
                                     '\' hasn\'t been properly specified.')
             elif parameter in oatp.keys():
                 # Get parameter value
-                value = get_adaptivity_parameter(parameter, line[1])
-                # Store adaptivity criterion parameter
+                value = get_formatted_parameter(parameter, line[1])
+                # Store adaptivity type parameter
                 if type(value) == type(oatp[parameter]):
                     adaptivity_type[mat_phase][parameter] = \
-                        get_adaptivity_parameter(parameter, type(oatp[parameter])(line[1]))
+                        get_formatted_parameter(parameter, type(oatp[parameter])(line[1]))
                 else:
                     raise TypeError('The adaptivity parameter \'' + str(parameter) +
                                     '\' hasn\'t been properly specified.')
@@ -1113,7 +1170,7 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Check if all the mandatory adaptivity criterion parameters have been prescribed
         for parameter in macp.keys():
-            if parameter not in adaptivity_type[mat_phase].keys():
+            if parameter not in adapt_criterion_data[mat_phase].keys():
                 raise RuntimeError('The mandatory adaptivity criterion parameter \'' +
                                    str(parameter) + '\' has not been prescribed for ' +
                                    'material phase ' + mat_phase + '.')
@@ -1130,8 +1187,8 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
         # Set default values for all the optional adaptivity criterion parameters that have
         # not been prescribed
         for parameter in oacp.keys():
-            if parameter not in adaptivity_criterion[mat_phase].keys():
-                adaptivity_criterion[mat_phase][parameter] = oacp[parameter]
+            if parameter not in adapt_criterion_data[mat_phase].keys():
+                adapt_criterion_data[mat_phase][parameter] = oacp[parameter]
         # Set default values for all the optional adaptivity type parameters that have not
         # been prescribed
         for parameter in oatp.keys():
@@ -1143,24 +1200,8 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
         raise RuntimeError('The cluster analysis scheme must be specified has not been ' +
                            'prescribed for all material phases.')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Validation output:
-    # print('Reader: Cluster Analysis Scheme')
-    # print(len('Reader: Cluster Analysis Scheme')*'-')
-    # print('\nclustering_type: ')
-    # print(clustering_type)
-    # print('\nbase_clustering_scheme: ')
-    # print(base_clustering_scheme)
-    # print('\nadaptive_clustering_scheme: ')
-    # print(adaptive_clustering_scheme)
-    # print('\nadaptivity_criterion: ')
-    # print(adaptivity_criterion)
-    # print('\nadaptivity_type: ')
-    # print(adaptivity_type)
-    # print('\nadaptivity_control_feature: ')
-    # print(adaptivity_control_feature)
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return [clustering_type, base_clustering_scheme, adaptive_clustering_scheme,
-            adaptivity_criterion, adaptivity_type, adaptivity_control_feature]
+            adapt_criterion_data, adaptivity_type, adaptivity_control_feature]
 # ------------------------------------------------------------------------------------------
 def read_clustering_scheme(file, file_path, line_number):
     '''Read prescribed clustering scheme.
@@ -1243,54 +1284,6 @@ def check_clustering_scheme(mat_phase, clustering_scheme, valid_algorithms, vali
         if any([str(x) not in valid_features for x in clustering_scheme[j, 1]]):
             raise RuntimeError('An invalid clustering feature has been prescribed for ' +
                                'material phase ' + mat_phase + '.')
-# ------------------------------------------------------------------------------------------
-def get_adaptivity_parameter(parameter, x, etype=None):
-    '''Get adaptivity parameter
-
-    Parameters
-    ----------
-    parameter : str
-        Adaptivity parameter.
-    x : str
-        Adaptivity parameter specification.
-    etype : str, {'int', 'float', 'bool', 'str'}, default=None
-        Adaptivity parameter expected type.
-
-    Returns
-    -------
-    y : etype
-        Adaptivity parameter value.
-    '''
-    # Get adaptivity parameter specification type and associated value
-    try:
-        a = float(x)
-        b = int(a)
-        if a == b and len(str(x)) == len(str(b)):
-            stype = 'int'
-            y = int(x)
-        else:
-            stype = 'float'
-            y = float(x)
-    except (TypeError, ValueError):
-        if x.lower() == 'on':
-            stype = 'bool'
-            y = True
-        elif x.lower() == 'off':
-            stype = 'bool'
-            y = False
-        else:
-            stype = 'str'
-            y = x
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Check if specification type agrees with expected type
-    if etype != None:
-        if stype != etype:
-            raise TypeError('The adaptivity parameter \'' + str(parameter) + '\' hasn\'t ' +
-                            'been properly specified: expected ' + etype + ' but found ' +
-                            stype + '.')
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Return
-    return y
 #
 #                                                            Clustering adaptivity frequency
 # ==========================================================================================
@@ -1374,6 +1367,101 @@ def read_adaptivity_frequency(file, file_path, keyword, adapt_material_phases):
             break
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return clust_adapt_freq
+#
+#                                                               Analysis rewinding procedure
+# ==========================================================================================
+# Read solution rewind state parameters
+def read_rewind_state_parameters(file, file_path, keyword):
+    '''Read the solution rewind state criterion.
+
+    Parameters
+    ----------
+    file: file
+        Input data file where the data is searched and read from.
+    file_path: str
+        Input data file absolute path.
+    keyword: str
+        Keyword to be searched in the input data file.
+
+    Returns
+    -------
+    rewind_state_criterion : tuple
+        Rewind state storage criterion [0] and associated parameter [1].
+    '''
+    # Find keyword line number
+    keyword_line_number = searchkeywordline(file, keyword)
+    # Get keyword lowercased line
+    line = linecache.getline(file_path, keyword_line_number).split()
+    line = [x.lower() if not ioutil.checknumber(x) else x for x in line]
+    if len(line) == 1:
+        raise RuntimeError('Rewind state storage criterion has not been specified.')
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Get available rewind state storage criteria and associated default parameters
+    available_criteria = RewindManager.get_save_rewind_state_criteria()
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Get rewind state storage criterion
+    if line[1] in available_criteria.keys():
+        criterion = line[1]
+    else:
+        raise RuntimeError('Unknown rewind state storage criterion specification.')
+    # Get rewind state storage criterion parameter
+    if len(line) > 2:
+        # Get specified parameter
+        parameter = get_formatted_parameter(criterion, line[2],
+                                            etype=type(available_criteria[criterion]))
+        # Set rewind state storage criterion
+        rewind_state_criterion = (criterion, parameter)
+    else:
+        raise RuntimeError('Rewind state storage criterion parameter has not been ' +
+                           'specified.')
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    return rewind_state_criterion
+# ------------------------------------------------------------------------------------------
+# Read solution rewinding criterion parameters
+def read_rewinding_criterion_parameters(file, file_path, keyword):
+    '''Read the solution rewinding criterion.
+
+    Parameters
+    ----------
+    file: file
+        Input data file where the data is searched and read from.
+    file_path: str
+        Input data file absolute path.
+    keyword: str
+        Keyword to be searched in the input data file.
+
+    Returns
+    -------
+    rewinding_criterion : dict
+        Rewinding criterion [0] and associated parameter [1].
+    '''
+    # Find keyword line number
+    keyword_line_number = searchkeywordline(file, keyword)
+    # Get keyword lowercased line
+    line = linecache.getline(file_path, keyword_line_number).split()
+    line = [x.lower() if not ioutil.checknumber(x) else x for x in line]
+    if len(line) == 1:
+        raise RuntimeError('Rewinding criterion has not been specified.')
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Get available rewinding criteria and associated default parameters
+    available_criteria = RewindManager.get_rewinding_criteria()
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Get rewinding criterion
+    if line[1] in available_criteria.keys():
+        criterion = line[1]
+    else:
+        raise RuntimeError('Unknown rewinding criterion specification.')
+    # Get rewinding criterion parameter
+    if len(line) > 2:
+        # Get specified parameter
+        parameter = get_formatted_parameter(criterion, line[2],
+                                            etype=type(available_criteria[criterion]))
+        # Set rewinding criterion
+        rewinding_criterion = (criterion, parameter)
+    else:
+        raise RuntimeError('Rewinding criterion parameter has not been specified.')
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    return rewinding_criterion
 #
 #                                                                   Discretization file path
 # ==========================================================================================
@@ -1460,7 +1548,7 @@ def readvtkoptions(file, file_path, keyword, keyword_line_number):
     else:
         vtk_inc_div = 1
     if 'common_variables' in line:
-        vtk_vars = 'common_variables'
+        vtk_vars = 'common'
     else:
         vtk_vars = 'all'
     return [vtk_format, vtk_inc_div, vtk_vars]

@@ -9,6 +9,7 @@
 # Development history:
 # Bernardo P. Ferreira | Feb 2020 | Initial coding.
 # Bernardo P. Ferreira | Dec 2020 | Implemented clustering adaptivity.
+# Bernardo P. Ferreira | Jul 2021 | Implemented analysis rewind operation.
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
@@ -30,15 +31,18 @@ import tensor.matrixoperations as mop
 # Cluster interaction tensors operations
 import clustering.citoperations as citop
 # Homogenized results output
-import ioput.homresoutput as hresout
+from ioput.homresoutput import HomResOutput
+# Reference material output
+from ioput.refmatoutput import RefMatOutput
 # VTK output
-import ioput.vtkoutput as vtkoutput
+from ioput.vtkoutput import VTKOutput
 # Material interface
 import material.materialinterface
 # Linear elastic constitutive model
 import material.models.linear_elastic
 # Macroscale load incrementation
-from online.incrementation.macloadincrem import LoadingPath
+from online.incrementation.macloadincrem import LoadingPath, IncrementRewinder, \
+                                                RewindManager
 # Homogenization
 import online.homogenization.homogenization as hom
 # Clusters state
@@ -49,7 +53,10 @@ import online.scs.scs_schemes as scs
 import online.equilibrium.sne_farfield as eqff
 import online.equilibrium.sne_macstrain as eqms
 # CRVE adaptivity
-from online.crve_adaptivity import AdaptivityManager
+from clustering.adaptivity.crve_adaptivity import AdaptivityManager, \
+                                                  ClusteringAdaptivityOutput
+# Voxels output
+from ioput.voxelsoutput import VoxelsOutput
 
 
 
@@ -88,13 +95,15 @@ for i in output_idx:
 #                                                  system of nonlinear equilibrium equations
 # ==========================================================================================
 def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs_dict,
-        algpar_dict, vtk_dict, crve):
+        algpar_dict, vtk_dict, output_dict, crve):
     #                                                                           General data
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Get input data file name and post processing directory
     input_file_name = dirs_dict['input_file_name']
     postprocess_dir = dirs_dict['postprocess_dir']
     hres_file_path = dirs_dict['hres_file_path']
+    refm_file_path = dirs_dict['refm_file_path']
+    adapt_file_path = dirs_dict['adapt_file_path']
     # Get problem data
     problem_type = problem_dict['problem_type']
     n_dim = problem_dict['n_dim']
@@ -104,6 +113,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     material_phases = mat_dict['material_phases']
     material_phases_f = mat_dict['material_phases_f']
     material_properties = mat_dict['material_properties']
+    material_phases_models = mat_dict['material_phases_models']
     # Get clusters data
     phase_n_clusters = clst_dict['phase_n_clusters']
     phase_clusters = clst_dict['phase_clusters']
@@ -112,6 +122,11 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     mac_load = macload_dict['mac_load']
     mac_load_presctype = macload_dict['mac_load_presctype']
     mac_load_increm = macload_dict['mac_load_increm']
+    is_solution_rewinding = macload_dict['is_solution_rewinding']
+    if is_solution_rewinding:
+        rewind_state_criterion = macload_dict['rewind_state_criterion']
+        rewinding_criterion = macload_dict['rewinding_criterion']
+        max_n_rewinds = macload_dict['max_n_rewinds']
     # Get self-consistent scheme data
     self_consistent_scheme = scs_dict['self_consistent_scheme']
     scs_max_n_iterations = scs_dict['scs_max_n_iterations']
@@ -123,8 +138,25 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     max_cinc_cuts = algpar_dict['max_cinc_cuts']
     # Get VTK output parameters
     is_VTK_output = vtk_dict['is_VTK_output']
+    vtk_output = None
     if is_VTK_output:
+        # Set VTK output files parameters
+        vtk_dir = postprocess_dir + 'VTK/'
+        pvd_dir = postprocess_dir
+        vtk_byte_order = vtk_dict['vtk_byte_order']
+        vtk_format = vtk_dict['vtk_format']
+        vtk_precision = vtk_dict['vtk_precision']
+        vtk_vars = vtk_dict['vtk_vars']
         vtk_inc_div = vtk_dict['vtk_inc_div']
+        # Instantiante VTK output
+        vtk_output = VTKOutput(type='ImageData', version='1.0', byte_order=vtk_byte_order,
+                               format=vtk_format, precision=vtk_precision,
+                               header_type='UInt64', base_name=input_file_name,
+                               vtk_dir=vtk_dir, pvd_dir=pvd_dir)
+    # Get general output parameters
+    is_voxels_output = output_dict['is_voxels_output']
+    if is_voxels_output:
+        voxout_file_path = dirs_dict['voxout_file_path']
     # --------------------------------------------------------------------------------------
     # Validation:
     if is_Validation[0]:
@@ -136,7 +168,9 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     #                                                                        Initializations
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set online stage initial time
-    os_init_time = time.time()
+    ons_init_time = time.time()
+    # Initialize online stage post-processing time
+    ons_post_process_time = 0.0
     # Set far-field formulation flag
     is_farfield_formulation = True
     # Initialize homogenized strain and stress tensors
@@ -144,6 +178,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     hom_strain_old_mf = np.zeros(len(comp_order))
     hom_stress_mf = np.zeros(len(comp_order))
     hom_stress_old_mf = np.zeros(len(comp_order))
+    hom_stress_33 = None
     if problem_type == 1:
         hom_stress_33 = 0.0
         hom_stress_33_old = 0.0
@@ -163,24 +198,55 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                 material.materialinterface.materialinterface('init', problem_dict, mat_dict,
                                                              clst_dict, algpar_dict,
                                                              mat_phase)
+    # Initialize clusters strain concentration tensor dictionary
+    clusters_sct_mf_old = \
+        hom.init_clusters_sct(n_dim, comp_order, material_phases, phase_clusters)
     # Get total number of clusters
-    n_total_clusters = sum([phase_n_clusters[mat_phase] for mat_phase in material_phases])
+    n_total_clusters = crve.get_n_total_clusters()
     # Initialize macroscale loading increment cut flag
     is_inc_cut = False
+    # Initialize flag that locks reference material elastic properties
+    is_lock_prop_ref = False
+    # Initialize flag that signals an improved cluster incremental strains initial iterative
+    # guess
+    is_improved_init_guess = False
     # Check clustering adaptivity and perform required initializations
     is_crve_adaptivity = False
+    adaptivity_manager = None
+    adapt_output = None
     if len(crve.adapt_material_phases) > 0:
         # Switch on clustering adaptivity flag
         is_crve_adaptivity = True
+        # Set flag that controls if the macroscale loading increment where the clustering
+        # adaptivity is triggered is to be repeated considering the new clustering
+        is_adapt_repeat_inc = True
         # Get clustering adaptivity frequency
         clust_adapt_freq = clst_dict['clust_adapt_freq']
         # Get clustering adaptivity output
         is_clust_adapt_output = clst_dict['is_clust_adapt_output']
         # Initialize online CRVE clustering adaptivity manager
-        adaptivity_manager = AdaptivityManager(comp_order, crve.adapt_material_phases,
-                                               crve.adaptivity_control_feature,
-                                               crve.adaptivity_criterion,
-                                               clust_adapt_freq)
+        adaptivity_manager = \
+            AdaptivityManager(problem_type, comp_order, crve.adapt_material_phases,
+                              crve.phase_clusters, crve.adaptivity_control_feature,
+                              crve.adapt_criterion_data, clust_adapt_freq)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set post-processing procedure initial time
+        procedure_init_time = time.time()
+        # Instantiate clustering adaptivity output
+        adapt_output = ClusteringAdaptivityOutput(adapt_file_path,
+                                                  crve.adapt_material_phases)
+        # Write clustering adaptivity output file header
+        adapt_output.write_adapt_file(0, adaptivity_manager, crve, mode='init')
+        # Increment post-processing time
+        ons_post_process_time += time.time() - procedure_init_time
+    # Initialize increment rewinder manager
+    if is_solution_rewinding:
+        # Initialize increment rewinder manager
+        rewind_manager = RewindManager(rewind_state_criterion=rewind_state_criterion,
+                                       rewinding_criterion=rewinding_criterion,
+                                       max_n_rewinds=max_n_rewinds)
+        # Initialize increment rewinder flag
+        is_inc_rewinder = False
     # --------------------------------------------------------------------------------------
     # Validation:
     if is_Validation[1]:
@@ -207,17 +273,55 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     hom_results['hom_stress'] = hom_stress
     if problem_type == 1:
         hom_results['hom_stress_33'] = hom_stress_33
-    # Write increment homogenized results to associated output file (.hres)
-    hresout.writehomresfile(hres_file_path, problem_type, 0, hom_results)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set post-processing procedure initial time
+    procedure_init_time = time.time()
+    # Instantiate homogenized results output
+    hres_output = HomResOutput(hres_file_path)
+    # Write homogenized results output file header
+    hres_output.init_hres_file()
+    # Write homogenized results initial state
+    hres_output.write_hres_file(problem_type, 0, hom_results)
+    # Increment post-processing time
+    ons_post_process_time += time.time() - procedure_init_time
+    #
+    #                                            Reference material output file (.refm file)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set post-processing procedure initial time
+    procedure_init_time = time.time()
+    # Instantiate reference material output
+    ref_mat_output = RefMatOutput(refm_file_path, self_consistent_scheme,
+                                  is_farfield_formulation)
+    # Write reference material output file header
+    ref_mat_output.init_ref_mat_file()
+    # Increment post-processing time
+    ons_post_process_time += time.time() - procedure_init_time
+    #
+    #                          Voxels material-related quantities output file (.voxout file)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    voxels_output = None
+    if is_voxels_output:
+        # Set post-processing procedure initial time
+        procedure_init_time = time.time()
+        # Instantiate voxels material-related output
+        voxels_output = VoxelsOutput(voxout_file_path, problem_type)
+        # Write reference material output file header
+        voxels_output.init_voxels_output_file(crve)
+        # Increment post-processing time
+        ons_post_process_time += time.time() - procedure_init_time
     #
     #                                                                 Initial state VTK file
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     if is_VTK_output:
-        # Open VTK collection file
-        vtkoutput.openvtkcollectionfile(input_file_name, postprocess_dir)
+        # Set post-processing procedure initial time
+        procedure_init_time = time.time()
         # Write VTK file associated to the initial state
-        vtkoutput.writevtkmacincrement(vtk_dict, dirs_dict, problem_dict, mat_dict, rg_dict,
-                                       clst_dict, 0, clusters_state)
+        vtk_output.write_VTK_file_time_step(time_step=0,
+            problem_type=problem_type, crve=crve, clusters_state=clusters_state,
+                material_phases_models=material_phases_models, vtk_vars=vtk_vars,
+                    adaptivity_manager=adaptivity_manager)
+        # Increment post-processing time
+        ons_post_process_time += time.time() - procedure_init_time
     #
     #                                                      Material clusters elastic tangent
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -250,6 +354,9 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     # Compute the reference material elastic tangent (matricial form) and compliance tensor
     # (matrix)
     De_ref_mf, Se_ref_matrix = scs.refelastictanmod(problem_dict, mat_prop_ref)
+    # Initialize reference material elastic properties from first macroscale loading
+    # increment
+    mat_prop_ref_first = dict.fromkeys(mat_prop_ref.keys())
     # --------------------------------------------------------------------------------------
     # Validation:
     if is_Validation[4]:
@@ -272,6 +379,28 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                                 max_cinc_cuts)
     # Set initial homogenized state
     mac_load_path.update_hom_state(n_dim, comp_order, hom_strain, hom_stress)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Get increment counter
+    inc = mac_load_path.increm_state['inc']
+    # Save macroscale loading increment (converged) state
+    if is_solution_rewinding and rewind_manager.is_rewind_available() and \
+            rewind_manager.is_save_rewind_state(inc):
+        # Set reference rewind time
+        rewind_manager.update_rewind_time(mode='init')
+        # Instantiate increment rewinder
+        inc_rewinder = IncrementRewinder(rewind_inc=inc,
+            phase_clusters=crve.get_phase_clusters())
+        # Save loading path state
+        inc_rewinder.save_loading_path(loading_path=mac_load_path)
+        # Save homogenized strain and stress state
+        inc_rewinder.save_homogenized_state(hom_strain_mf, hom_stress_mf, hom_stress_33)
+        # Save clusters state variables
+        inc_rewinder.save_clusters_state(clusters_state)
+        # Save reference material properties
+        inc_rewinder.save_reference_material(mat_prop_ref)
+        # Set increment rewinder flag
+        is_inc_rewinder = True
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Setup first macroscale loading increment
     inc_mac_load_mf, n_presc_strain, presc_strain_idxs, n_presc_stress, \
         presc_stress_idxs, is_last_inc = mac_load_path.new_load_increment(n_dim, comp_order)
@@ -332,7 +461,10 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         #                                Cluster incremental strains initial iterative guess
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set clusters incremental strain initial iterative guess
-        gbl_inc_strain_mf = np.zeros((n_total_clusters*len(comp_order)))
+        if not is_improved_init_guess:
+            gbl_inc_strain_mf = np.zeros((n_total_clusters*len(comp_order)))
+        else:
+            is_improved_init_guess = False
         # Set additional initial iterative guesses
         if is_farfield_formulation:
             # Set incremental far-field strain initial iterative guess
@@ -362,7 +494,10 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize self-consistent scheme iteration counter
         scs_iter = 0
-        info.displayinfo('8', 'init', scs_iter, mat_prop_ref['E'], mat_prop_ref['v'])
+        if is_lock_prop_ref:
+            info.displayinfo('13', 'init', scs_iter, mat_prop_ref['E'], mat_prop_ref['v'])
+        else:
+            info.displayinfo('8', 'init', scs_iter, mat_prop_ref['E'], mat_prop_ref['v'])
         # Set self-consistent scheme iteration initial time
         scs_iter_init_time = time.time()
         # ----------------------------------------------------------------------------------
@@ -457,13 +592,6 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                     print('\n' + 'global_cit_D_De_ref_mf:' + '\n')
                     print(global_cit_D_De_ref_mf)
                 # --------------------------------------------------------------------------
-                #
-                #                                                  Effective tangent modulus
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Compute the material effective tangent modulus
-                eff_tangent_mf = hom.efftanmod(n_dim, comp_order, material_phases,
-                                               phase_clusters, clusters_f, clusters_D_mf,
-                                               global_cit_D_De_ref_mf)
                 #
                 #                          Incremental homogenized strain and stress tensors
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -649,29 +777,94 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             #
             #                                                         Self-consistent scheme
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # If raising a macroscale loading increment cut, reset reference material
-            # elastic properties to the last converged increment values and leave
-            # self-consistent iterative loop
+            # If raising a macroscale loading increment cut, leave self-consistent iterative
+            # loop
             if is_inc_cut:
-                mat_prop_ref = copy.deepcopy(mat_prop_ref_old)
                 break
-            # ------------------------------------------------------------------------------
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Compute CRVE effective tangent modulus and clusters strain concentration
+            # tensors
+            eff_tangent_mf, clusters_sct_mf = \
+                hom.effective_tangent_modulus(n_dim, comp_order, material_phases,
+                                              phase_clusters, clusters_f, clusters_D_mf,
+                                              global_cit_D_De_ref_mf)
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Set post-processing procedure initial time
+            procedure_init_time = time.time()
+            # Output reference material associated quantities (.refm file)
+            if is_farfield_formulation:
+                ref_mat_output.write_ref_mat(problem_type, n_dim, comp_order, inc, scs_iter,
+                                             mat_prop_ref, De_ref_mf,
+                                             inc_hom_strain_mf, inc_hom_stress_mf,
+                                             eff_tangent_mf, inc_farfield_strain_mf,
+                                             inc_mac_load_mf['strain'])
+            else:
+                ref_mat_output.write_ref_mat(problem_type, n_dim, comp_order, inc, scs_iter,
+                                             mat_prop_ref, De_ref_mf,
+                                             inc_hom_strain_mf, inc_hom_stress_mf,
+                                             eff_tangent_mf)
+            # Increment post-processing time
+            ons_post_process_time += time.time() - procedure_init_time
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Update reference material elastic properties through a given self-consistent
             # scheme
-            if self_consistent_scheme == 1:
-                scs_args = (self_consistent_scheme, problem_dict, inc_hom_strain_mf,
-                            inc_hom_stress_mf, mat_prop_ref)
-                if problem_type == 1:
-                    scs_args = scs_args + (inc_hom_stress_33,)
-            elif self_consistent_scheme == 2:
-                if is_farfield_formulation:
-                    scs_args = (self_consistent_scheme, problem_dict,
-                                inc_farfield_strain_mf, inc_hom_stress_mf, mat_prop_ref,
-                                eff_tangent_mf)
-                else:
+            if is_lock_prop_ref:
+                # Skip update of reference material elastic properties
+                E_ref = mat_prop_ref['E']
+                v_ref = mat_prop_ref['v']
+            else:
+                # Set self-consistent scheme arguments
+                if self_consistent_scheme == 1:
                     scs_args = (self_consistent_scheme, problem_dict, inc_hom_strain_mf,
-                                inc_hom_stress_mf, mat_prop_ref, eff_tangent_mf)
-            E_ref, v_ref = scs.scsupdate(*scs_args)
+                                inc_hom_stress_mf, mat_prop_ref)
+                    if problem_type == 1:
+                        scs_args = scs_args + (inc_hom_stress_33,)
+                elif self_consistent_scheme == 2:
+                    if is_farfield_formulation:
+                        scs_args = (self_consistent_scheme, problem_dict,
+                                    inc_farfield_strain_mf, inc_hom_stress_mf, mat_prop_ref,
+                                    eff_tangent_mf)
+                    else:
+                        scs_args = (self_consistent_scheme, problem_dict, inc_hom_strain_mf,
+                                    inc_hom_stress_mf, mat_prop_ref, eff_tangent_mf)
+                # Update reference material elastic properties
+                E_ref, v_ref = scs.scsupdate(*scs_args)
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Evaluate admissibility of self-consistent scheme iterative solution
+                if inc == 1:
+                    is_scs_admissible = True
+                else:
+                    is_scs_admissible = scs.check_scs_solution(E_ref, v_ref,
+                                                               mat_prop_ref_first)
+                # If self-consistent scheme iterative solution is not admissible, either
+                # accept the current solution (first self-consistent scheme iteration) or
+                # perform one last self-consistent scheme iteration with the last converged
+                # increment reference material elastic properties
+                if not is_scs_admissible:
+                    info.displayinfo('8', 'end', time.time() - scs_iter_init_time)
+                    if scs_iter == 0:
+                        # Display locking of reference material elastic properties
+                        info.displayinfo('14', 'locked_scs_solution')
+                        # Leave self-consistent scheme iterative loop (accepted solution)
+                        break
+                    else:
+                        # Display locking of reference material elastic properties
+                        info.displayinfo('14', 'inadmissible_scs_solution')
+                        # If inadmissible self-consistent scheme solution, reset reference
+                        # material elastic properties to the last converged increment values
+                        mat_prop_ref = copy.deepcopy(mat_prop_ref_old)
+                        # Lock reference material elastic properties
+                        is_lock_prop_ref = True
+                        # Perform one last self-consistent scheme iteration with the last
+                        # converged increment reference material elastic properties
+                        info.displayinfo('13', 'init', 0, mat_prop_ref['E'],
+                                         mat_prop_ref['v'])
+                        # Compute the reference material elastic tangent (matricial form)
+                        # and compliance tensor (matrix)
+                        De_ref_mf, Se_ref_matrix = scs.refelastictanmod(problem_dict,
+                                                                        mat_prop_ref)
+                        # Proceed to last self-consistent scheme iteration
+                        continue
             # ------------------------------------------------------------------------------
             # Validation:
             if is_Validation[19]:
@@ -690,19 +883,22 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             info.displayinfo('8', 'end', time.time() - scs_iter_init_time)
             # Control self-consistent scheme iteration loop flow
             if is_scs_converged:
+                # Reset flag that locks reference material elastic properties
+                is_lock_prop_ref = False
                 # Leave self-consistent scheme iterative loop (converged solution)
                 break
             elif scs_iter == scs_max_n_iterations:
+                # Display locking of reference material elastic properties
+                info.displayinfo('14', 'max_scs_iter', scs_max_n_iterations)
                 # If the maximum number of self-consistent scheme iterations is reached
                 # without convergence, reset reference material elastic properties to the
-                # last converged increment values and leave self-consistent iterative loop
+                # last converged increment values
                 mat_prop_ref = copy.deepcopy(mat_prop_ref_old)
-                # Raise macroscale increment cut procedure
-                is_inc_cut = True
-                # Display increment cut
-                info.displayinfo('11', 'max_scs_iter', scs_max_n_iterations)
-                # Leave Newton-Raphson equilibrium iterative loop
-                break
+                # Lock reference material elastic properties
+                is_lock_prop_ref = True
+                # Perform one last self-consistent scheme iteration with the last converged
+                # increment reference material elastic properties
+                info.displayinfo('13', 'init', 0, mat_prop_ref['E'], mat_prop_ref['v'])
             else:
                 # Update reference material elastic properties
                 mat_prop_ref['E'] = E_ref
@@ -743,6 +939,14 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         if is_inc_cut:
             # Reset macroscale loading increment cut flag
             is_inc_cut = False
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Reset reference material elastic properties to the last converged increment
+            # values
+            mat_prop_ref = copy.deepcopy(mat_prop_ref_old)
+            # Compute the reference material elastic tangent (matricial form) and compliance
+            # tensor (matrix)
+            De_ref_mf, Se_ref_matrix = scs.refelastictanmod(problem_dict, mat_prop_ref)
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Perform macroscale increment cut and setup new macroscale loading increment
             inc_mac_load_mf, n_presc_strain, presc_strain_idxs, n_presc_stress, \
                 presc_stress_idxs, is_last_inc = mac_load_path.increment_cut(
@@ -755,6 +959,127 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             inc_init_time = time.time()
             # Start new macroscale loading increment solution procedures
             continue
+        #
+        #                                                              Clustering adaptivity
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # This section should only be executed if the macroscale loading increment where the
+        # clustering adaptivity condition is triggered is to be repeated considering the new
+        # clustering
+        if is_crve_adaptivity and is_adapt_repeat_inc and \
+                adaptivity_manager.check_inc_adaptive_steps(inc):
+            # Display increment data
+            if is_clust_adapt_output:
+                info.displayinfo('12', crve.get_adaptive_step() + 1)
+            # Build clusters equilibrium residuals dictionary
+            clusters_residuals_mf = eqff.build_clusters_residuals_dict(comp_order,
+                material_phases, phase_clusters, residual)
+            # Get clustering adaptivity trigger condition and target clusters
+            is_trigger, target_clusters, target_clusters_data = \
+                adaptivity_manager.get_target_clusters(phase_clusters,
+                                                       crve.get_voxels_clusters(),
+                                                       clusters_state, clusters_state_old,
+                                                       clusters_sct_mf, clusters_sct_mf_old,
+                                                       clusters_residuals_mf,
+                                                       inc, verbose=is_clust_adapt_output)
+            # Perform clustering adaptivity if adaptivity condition is triggered
+            if is_trigger:
+                # Display clustering adaptivity
+                info.displayinfo('16', 'repeat', inc)
+                # Set improved initial iterative guess for the clusters incremental strain
+                # global vector (matricial form) after the clustering adaptivity
+                is_improved_init_guess = True
+                improved_init_guess = [is_improved_init_guess, gbl_inc_strain_mf]
+                # Perform clustering adaptivity
+                adaptivity_manager.adaptive_refinement(crve, target_clusters,
+                                                       target_clusters_data,
+                                                       [clusters_state, clusters_state_old,
+                                                       clusters_D_mf, clusters_De_mf],
+                                                       inc, improved_init_guess,
+                                                       verbose=is_clust_adapt_output)
+                # Get improved initial iterative guess for the clusters incremental strain
+                # global vector (matricial form)
+                if is_improved_init_guess:
+                    gbl_inc_strain_mf = improved_init_guess[1]
+                # Update clustering dictionary
+                clst_dict['voxels_clusters'] = crve.get_voxels_clusters()
+                clst_dict['phase_n_clusters'] = crve.get_phase_n_clusters()
+                clst_dict['phase_clusters'] = copy.deepcopy(crve.phase_clusters)
+                clst_dict['clusters_f'] = copy.deepcopy(crve.clusters_f)
+                # Get clusters data
+                phase_n_clusters = clst_dict['phase_n_clusters']
+                phase_clusters = clst_dict['phase_clusters']
+                clusters_f = clst_dict['clusters_f']
+                # Get total number of clusters
+                n_total_clusters = crve.get_n_total_clusters()
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Get increment counter
+                inc = mac_load_path.increm_state['inc']
+                # Display increment data
+                displayincdata(mac_load_path)
+                # Set increment initial time
+                inc_init_time = time.time()
+                # Start new macroscale loading increment solution procedures
+                continue
+        #
+        #                                                Macroscale loading increment rewind
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Check rewind operations availability
+        if is_solution_rewinding and is_inc_rewinder and \
+                rewind_manager.is_rewind_available():
+            # Check analysis rewind criteria
+            is_rewind = rewind_manager.is_rewinding_criteria(inc, material_phases,
+                                                             phase_clusters, clusters_state)
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Rewind analysis if criteria are met
+            if is_rewind:
+                info.displayinfo('17', inc_rewinder.get_rewind_inc())
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Rewind loading path
+                mac_load_path = inc_rewinder.get_loading_path()
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Rewind homogenized strain and stress state
+                hom_strain_old_mf, hom_stress_old_mf, hom_stress_33_old = \
+                    inc_rewinder.get_homogenized_state()
+                # Rewind clusters state variables and strain concentration tensors
+                clusters_state_old = inc_rewinder.get_clusters_state(clusters_state, crve)
+                # Rewind reference material properties
+                mat_prop_ref_old = inc_rewinder.get_reference_material()
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Set post-processing procedure initial time
+                procedure_init_time = time.time()
+                # Rewind output files
+                inc_rewinder.rewind_output_files(hres_output, ref_mat_output, voxels_output,
+                                                 adapt_output, vtk_output)
+                # Increment post-processing time
+                ons_post_process_time += time.time() - procedure_init_time
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Reset clustering adaptive steps
+                if is_crve_adaptivity:
+                    adaptivity_manager.clear_inc_adaptive_steps(
+                        inc_threshold=inc_rewinder.get_rewind_inc())
+                # Update total rewind time
+                rewind_manager.update_rewind_time(mode='update')
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Reset reference material elastic properties to the last converged
+                # increment values
+                mat_prop_ref = copy.deepcopy(mat_prop_ref_old)
+                # Compute the reference material elastic tangent (matricial form) and
+                # compliance tensor (matrix)
+                De_ref_mf, Se_ref_matrix = scs.refelastictanmod(problem_dict, mat_prop_ref)
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Setup new macroscale loading increment
+                inc_mac_load_mf, n_presc_strain, presc_strain_idxs, n_presc_stress, \
+                    presc_stress_idxs, is_last_inc = mac_load_path.new_load_increment(
+                        n_dim, comp_order)
+                # Get increment counter
+                inc = mac_load_path.increm_state['inc']
+                # Display increment data
+                displayincdata(mac_load_path)
+                # Set increment initial time
+                inc_init_time = time.time()
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Start new macroscale loading increment solution procedures
+                continue
         #
         #                                              Homogenized strain and stress tensors
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -791,15 +1116,27 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         hom_results['hom_stress'] = hom_stress
         if problem_type == 1:
             hom_results['hom_stress_33'] = hom_stress_33
-        # Write increment homogenized results to associated output file (.hres)
-        hresout.writehomresfile(hres_file_path, problem_type, inc, hom_results)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set post-processing procedure initial time
+        procedure_init_time = time.time()
+        # Write increment homogenized results (.hres)
+        hres_output.write_hres_file(problem_type, inc, hom_results)
+        # Increment post-processing time
+        ons_post_process_time += time.time() - procedure_init_time
         #
         #                                                                 Increment VTK file
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Write VTK file associated to the macroscale loading increment
         if is_VTK_output and inc % vtk_inc_div == 0:
-            vtkoutput.writevtkmacincrement(vtk_dict, dirs_dict, problem_dict, mat_dict,
-                                           rg_dict, clst_dict, inc, clusters_state)
+            # Set post-processing procedure initial time
+            procedure_init_time = time.time()
+            # Write VTK file associated to the converged increment
+            vtk_output.write_VTK_file_time_step(time_step=inc,
+                problem_type=problem_type, crve=crve, clusters_state=clusters_state,
+                    material_phases_models=material_phases_models, vtk_vars=vtk_vars,
+                        adaptivity_manager=adaptivity_manager)
+            # Increment post-processing time
+            ons_post_process_time += time.time() - procedure_init_time
         #
         #                                                          Converged state variables
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -811,12 +1148,44 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         hom_stress_old_mf = hom_stress_mf
         if problem_type == 1:
             hom_stress_33_old = hom_stress_33
-        #
+        # Update last increment converged clusters strain concentration tensors
+        clusters_sct_mf_old = copy.deepcopy(clusters_sct_mf)
         #
         #                                    Converged reference material elastic properties
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Save converged reference material elastic properties from first macroscale
+        # loading increment
+        if inc == 1:
+            mat_prop_ref_first = copy.deepcopy(mat_prop_ref)
+        # Compute the reference material elastic tangent (matricial form)
+        # and compliance tensor (matrix)
+        # Note: This operation is not strictly necessary but is left here as a safeguard for
+        #       potential future changes of the self-consistent scheme
+        De_ref_mf, Se_ref_matrix = scs.refelastictanmod(problem_dict, mat_prop_ref)
         # Update converged reference material elastic properties
         mat_prop_ref_old = copy.deepcopy(mat_prop_ref)
+        #
+        #                                         Clustering adaptivity output (.adapt file)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Update clustering adaptivity output file with converged increment data
+        if is_crve_adaptivity:
+            # Set post-processing procedure initial time
+            procedure_init_time = time.time()
+            # Update clustering adaptivity output file
+            adapt_output.write_adapt_file(inc, adaptivity_manager, crve, mode='increment')
+            # Increment post-processing time
+            ons_post_process_time += time.time() - procedure_init_time
+        #
+        #                        Voxels cluster state based quantities output (.voxout file)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Update clustering adaptivity output file with converged increment data
+        if is_voxels_output:
+            # Set post-processing procedure initial time
+            procedure_init_time = time.time()
+            # Update clustering adaptivity output file
+            voxels_output.write_voxels_output_file(n_dim, comp_order, crve, clusters_state)
+            # Increment post-processing time
+            ons_post_process_time += time.time() - procedure_init_time
         #
         #                                                Incremental macroscale loading flow
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -825,19 +1194,43 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         # Display converged increment data
         if problem_type == 1:
             info.displayinfo('7', 'end', problem_type, hom_strain, hom_stress,
-                             time.time() - inc_init_time, time.time() - os_init_time,
+                             time.time() - inc_init_time, time.time() - ons_init_time,
                              hom_stress_33)
         else:
             info.displayinfo('7', 'end', problem_type, hom_strain, hom_stress,
-                             time.time() - inc_init_time, time.time() - os_init_time)
+                             time.time() - inc_init_time, time.time() - ons_init_time)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Save macroscale loading increment (converged) state
+        if is_solution_rewinding and rewind_manager.is_rewind_available() and \
+                rewind_manager.is_save_rewind_state(inc):
+            # Set reference rewind time
+            rewind_manager.update_rewind_time(mode='init')
+            # Instantiate increment rewinder
+            inc_rewinder = IncrementRewinder(rewind_inc=inc,
+                phase_clusters=crve.get_phase_clusters())
+            # Save loading path state
+            inc_rewinder.save_loading_path(loading_path=mac_load_path)
+            # Save homogenized strain and stress state
+            inc_rewinder.save_homogenized_state(hom_strain_mf, hom_stress_mf, hom_stress_33)
+            # Save clusters state variables
+            inc_rewinder.save_clusters_state(clusters_state)
+            # Save reference material properties
+            inc_rewinder.save_reference_material(mat_prop_ref)
+            # Set increment rewinder flag
+            is_inc_rewinder = True
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return if last macroscale loading increment, otherwise setup new macroscale
         # loading increment
         if is_last_inc:
-            # Close VTK collection file
-            if is_VTK_output:
-                vtkoutput.closevtkcollectionfile(input_file_name, postprocess_dir)
+            # Get total online stage time
+            ons_total_time = time.time() - ons_init_time
+            # Get total online stage effective time
+            os_effective_time = ons_total_time - ons_post_process_time
+            # Output clustering adaptivity summary
+            if is_crve_adaptivity:
+                info.displayinfo('15', adaptivity_manager, crve, os_effective_time)
             # Finish online stage
-            return
+            return [ons_total_time, os_effective_time]
         else:
             # Setup new macroscale loading increment
             inc_mac_load_mf, n_presc_strain, presc_strain_idxs, n_presc_stress, \
@@ -851,35 +1244,48 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             inc_init_time = time.time()
         #
         #                                                              Clustering adaptivity
+        #                                                                      (deactivated)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        if is_crve_adaptivity:
+        # This section should only be executed if the clustering adaptivity is to be
+        # performed in between macroscale loading increments, i.e., the new clustering is
+        # only considered in the following macroscale loading increments.
+        if is_crve_adaptivity and not is_adapt_repeat_inc and \
+                adaptivity_manager.check_inc_adaptive_steps(inc):
             # Display increment data
             if is_clust_adapt_output:
-                info.displayinfo('12', crve._adaptive_step + 1)
+                info.displayinfo('12', crve.get_adaptive_step() + 1)
+            # Build clusters equilibrium residuals dictionary
+            clusters_residuals_mf = eqff.build_clusters_residuals_dict(comp_order,
+                material_phases, phase_clusters, residual)
             # Get clustering adaptivity trigger condition and target clusters
-            is_trigger, target_clusters = \
-                adaptivity_manager.get_target_clusters(phase_clusters, clusters_state, inc,
-                                                       verbose=is_clust_adapt_output)
-            # Perform clustering adaptivity
+            is_trigger, target_clusters, target_clusters_data = \
+                adaptivity_manager.get_target_clusters(phase_clusters,
+                                                       crve.get_voxels_clusters(),
+                                                       clusters_state, clusters_state_old,
+                                                       clusters_sct_mf, clusters_sct_mf_old,
+                                                       clusters_residuals_mf,
+                                                       inc, verbose=is_clust_adapt_output)
+            # Perform clustering adaptivity if adaptivity condition is triggered
             if is_trigger:
+                # Display clustering adaptivity
+                info.displayinfo('16', 'new', inc)
+                # Perform clustering adaptivity
                 adaptivity_manager.adaptive_refinement(crve, target_clusters,
+                                                       target_clusters_data,
                                                        [clusters_state, clusters_state_old,
                                                        clusters_D_mf, clusters_De_mf],
-                                                       verbose=is_clust_adapt_output)
-            # Update clustering dictionary
-            for mat_phase in material_phases:
-                phase_n_clusters[mat_phase] = len(crve.phase_clusters[mat_phase])
-            clst_dict['phase_n_clusters'] = phase_n_clusters
-            clst_dict['voxels_clusters'] = crve.voxels_clusters
-            clst_dict['phase_clusters'] = crve.phase_clusters
-            clst_dict['clusters_f'] = crve.clusters_f
-            # Get clusters data
-            phase_n_clusters = clst_dict['phase_n_clusters']
-            phase_clusters = clst_dict['phase_clusters']
-            clusters_f = clst_dict['clusters_f']
-            # Get total number of clusters
-            n_total_clusters = sum([phase_n_clusters[mat_phase]
-                                    for mat_phase in material_phases])
+                                                       inc, verbose=is_clust_adapt_output)
+                # Update clustering dictionary
+                clst_dict['voxels_clusters'] = crve.get_voxels_clusters()
+                clst_dict['phase_n_clusters'] = crve.get_phase_n_clusters()
+                clst_dict['phase_clusters'] = copy.deepcopy(crve.phase_clusters)
+                clst_dict['clusters_f'] = copy.deepcopy(crve.clusters_f)
+                # Get clusters data
+                phase_n_clusters = clst_dict['phase_n_clusters']
+                phase_clusters = clst_dict['phase_clusters']
+                clusters_f = clst_dict['clusters_f']
+                # Get total number of clusters
+                n_total_clusters = crve.get_n_total_clusters()
 #
 #                                                       Macroscale loading increment display
 # ==========================================================================================
