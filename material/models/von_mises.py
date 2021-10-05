@@ -12,10 +12,6 @@
 # ==========================================================================================
 # Working with arrays
 import numpy as np
-# Inspect file name and line
-import inspect
-# Display errors, warnings and built-in exceptions
-import ioput.errors as errors
 # Tensorial operations
 import tensor.tensoroperations as top
 # Matricial operations
