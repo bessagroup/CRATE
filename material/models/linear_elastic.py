@@ -22,7 +22,7 @@ from material.materialmodeling import ConstitutiveModel
 #
 #                                                                 Elastic constitutive model
 # ==========================================================================================
-class VonMises(ConstitutiveModel):
+class Elastic(ConstitutiveModel):
     '''Elastic constitutive model.
 
     Attributes
@@ -128,19 +128,19 @@ class VonMises(ConstitutiveModel):
         state_variables : dict
             Constitutive model material state variables.
         consistent_tangent_mf : ndarray
-            Constitutive model consistent tangent modulus.
+            Constitutive model consistent tangent modulus in matricial form.
         '''
         # Get material properties
         E = self._material_properties['E']
         v = self._material_properties['v']
-        # ----------------------------------------------------------------------------------
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute Lamé parameters
         lam = (E*v)/((1.0 + v)*(1.0 - 2.0*v))
         miu = E/(2.0*(1.0 + v))
-        # ----------------------------------------------------------------------------------
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get last increment converged state variables
         e_strain_old_mf = state_variables_old['e_strain_mf']
-        # ----------------------------------------------------------------------------------
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set state update fail flag
         is_su_fail = False
         #
@@ -148,7 +148,7 @@ class VonMises(ConstitutiveModel):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set required fourth-order tensors
         _, _, _, fosym, fodiagtrace, _, _ = top.getidoperators(self._n_dim)
-        # ----------------------------------------------------------------------------------
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute consistent tangent modulus according to problem type
         if self._problem_type in [1, 4]:
             consistent_tangent = lam*fodiagtrace + 2.0*miu*fosym
@@ -160,12 +160,12 @@ class VonMises(ConstitutiveModel):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Build incremental strain matricial form
         inc_strain_mf = mop.gettensormf(inc_strain, self._n_dim, self._comp_order_sym)
-        # ----------------------------------------------------------------------------------
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Update elastic strain
         e_strain_mf = e_strain_old_mf + inc_strain_mf
         # Update stress
         stress_mf = np.matmul(consistent_tangent_mf, e_strain_mf)
-        # ----------------------------------------------------------------------------------
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute out-of-plane stress component in a 2D plane strain problem (output purpose
         # only)
         if self._problem_type == 1:
@@ -187,6 +187,47 @@ class VonMises(ConstitutiveModel):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return [state_variables, consistent_tangent_mf]
+    # --------------------------------------------------------------------------------------
+    @staticmethod
+    def elastic_tangent_modulus(problem_type, elastic_properties):
+        '''Compute elastic tangent modulus.
+
+        Parameters
+        ----------
+        problem_type : int
+            Problem type: 2D plane strain (1), 2D plane stress (2), 2D axisymmetric (3) and
+            3D (4).
+        elastic_properties : dict
+            Elastic material properties (key, str) values (item, float). Expecting Young
+            modulus ('E') and Poisson's ratio ('v').
+
+        Returns
+        -------
+        elastic_tangent_mf : ndarray
+            Elastic tangent modulus in matricial form.
+        '''
+        # Get problem type parameters
+        n_dim, comp_order_sym, _ = mop.getproblemtypeparam(problem_type)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Get Young's Modulus and Poisson's ratio
+        E = elastic_properties['E']
+        v = elastic_properties['v']
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Compute Lamé parameters
+        lam = (E*v)/((1.0 + v)*(1.0 - 2.0*v))
+        miu = E/(2.0*(1.0 + v))
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set required fourth-order tensors
+        _, _, _, fosym, fodiagtrace, _, _ = top.getidoperators(n_dim)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Compute consistent tangent modulus according to problem type
+        if problem_type in [1, 4]:
+            # 2D problem (plane strain) / 3D problem
+            elastic_tangent = lam*fodiagtrace + 2.0*miu*fosym
+        # Build consistent tangent modulus matricial form
+        elastic_tangent_mf = mop.gettensormf(elastic_tangent, n_dim, comp_order_sym)
+        # Return
+        return elastic_tangent_mf
 #
 #                                                               Required material properties
 #                                                                    (check input data file)

@@ -19,7 +19,7 @@ import copy
 import tensor.tensoroperations as top
 # Matricial operations
 import tensor.matrixoperations as mop
-# Constitutive models
+# Material constitutive state and constitutive model interface
 from material.materialmodeling import ConstitutiveModel
 #
 #                                                               Von Mises constitutive model
@@ -111,7 +111,7 @@ class VonMises(ConstitutiveModel):
         if self._problem_type == 1:
             state_variables_init['e_strain_33'] = 0.0
             state_variables_init['stress_33'] = 0.0
-        # ----------------------------------------------------------------------------------
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return state_variables_init
     # --------------------------------------------------------------------------------------
@@ -139,27 +139,27 @@ class VonMises(ConstitutiveModel):
         '''
         # Build incremental strain matricial form
         inc_strain_mf = mop.gettensormf(inc_strain, self._n_dim, self._comp_order_sym)
-        # ----------------------------------------------------------------------------------
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get material properties
         E = self._material_properties['E']
         v = self._material_properties['v']
         # Get material isotropic strain hardening law
         hardeningLaw = self._material_properties['hardeningLaw']
         hardening_parameters = self._material_properties['hardening_parameters']
-        # ----------------------------------------------------------------------------------
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute shear modulus
         G = E/(2.0*(1.0 + v))
         # Compute Lamé parameters
         lam = (E*v)/((1.0 + v)*(1.0 - 2.0*v))
         miu = E/(2.0*(1.0 + v))
-        # ----------------------------------------------------------------------------------
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get last increment converged state variables
         e_strain_old_mf = state_variables_old['e_strain_mf']
         p_strain_old_mf = state_variables_old['strain_mf'] - e_strain_old_mf
         acc_p_strain_old = state_variables_old['acc_p_strain']
         if self._problem_type == 1:
             e_strain_33_old = state_variables_old['e_strain_33']
-        # ----------------------------------------------------------------------------------
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize state update failure flag
         is_su_fail = False
         # Initialize plastic step flag
@@ -188,17 +188,17 @@ class VonMises(ConstitutiveModel):
         # Set required fourth-order tensors
         _, _, _, fosym, fodiagtrace, _, fodevprojsym = top.getidoperators(n_dim)
         FODevProjSym_mf = mop.gettensormf(fodevprojsym, n_dim, comp_order_sym)
-        # ----------------------------------------------------------------------------------
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute elastic trial strain
         e_trial_strain_mf = e_strain_old_mf + inc_strain_mf
-        # ----------------------------------------------------------------------------------
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute elastic consistent tangent modulus according to problem type and store it
         # in matricial form
         if self._problem_type in [1, 4]:
             e_consistent_tangent = lam*fodiagtrace + 2.0*miu*fosym
         e_consistent_tangent_mf = mop.gettensormf(e_consistent_tangent, n_dim,
                                                   comp_order_sym)
-        # ----------------------------------------------------------------------------------
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute trial stress
         trial_stress_mf = np.matmul(e_consistent_tangent_mf, e_trial_strain_mf)
         # Compute deviatoric trial stress
@@ -216,7 +216,7 @@ class VonMises(ConstitutiveModel):
         acc_p_trial_strain = acc_p_strain_old
         # Compute trial yield stress
         yield_stress, _ = hardeningLaw(hardening_parameters, acc_p_trial_strain)
-        # ----------------------------------------------------------------------------------
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Check yield function
         yield_function = vm_trial_stress - yield_stress
         # If the trial stress state lies inside the von Mises yield function, then the state
@@ -237,7 +237,7 @@ class VonMises(ConstitutiveModel):
             inc_p_mult = 0
             # Initialize Newton-Raphson iteration counter
             nr_iter = 0
-            # ------------------------------------------------------------------------------
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Start Newton-Raphson iterative loop
             while True:
                 # Compute current yield stress and hardening modulus
@@ -274,7 +274,7 @@ class VonMises(ConstitutiveModel):
             stress_mf = np.matmul(e_consistent_tangent_mf, e_strain_mf)
             # Update accumulated plastic strain
             acc_p_strain = acc_p_strain_old + inc_p_mult
-        # ----------------------------------------------------------------------------------
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get the out-of-plane strain and stress components
         if self._problem_type == 1:
             e_strain_33 = e_strain_mf[comp_order_sym.index('33')]
