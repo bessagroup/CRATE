@@ -34,6 +34,8 @@ class VonMises(ConstitutiveModel):
         ('infinitesimal'), finite strain formulation ('finite') or finite strain
         formulation through kinematic extension (infinitesimal constitutive formulation and
         purely finite strain kinematic extension - 'finite-kinext').
+    _source : str, {'crate', }
+        Material constitutive model source.
     _ndim : int
         Problem number of spatial dimensions.
     _comp_order_sym : list
@@ -52,7 +54,10 @@ class VonMises(ConstitutiveModel):
         '''
         self._problem_type = problem_type
         self._material_properties = material_properties
+        # Set strain formulation
         self._strain_type = 'finite-kinext'
+        # Set source
+        self._source = 'crate'
         # Get problem type parameters
         n_dim, comp_order_sym, _ = mop.getproblemtypeparam(problem_type)
         self._n_dim = n_dim
@@ -89,6 +94,16 @@ class VonMises(ConstitutiveModel):
             and purely finite strain kinematic extension - 'finite-kinext').
         '''
         return self._strain_type
+    # --------------------------------------------------------------------------------------
+    def get_source(self):
+        '''Get material constitutive model source.
+
+        Returns
+        -------
+        source : str, {'crate', }
+            Material constitutive model source.
+        '''
+        return self._source
     # --------------------------------------------------------------------------------------
     def state_init(self):
         '''Initialize material constitutive model state variables.
