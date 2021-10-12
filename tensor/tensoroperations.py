@@ -23,6 +23,8 @@ dyad22 = lambda a2, b2 : np.einsum('ij,kl -> ijkl', a2, b2)
 # Tensorial single contractions
 dot21_1 = lambda a2, b1 : np.einsum('ij,j -> i', a2, b1)
 dot12_1 = lambda a1, b2 : np.einsum('i,ij -> j', a1, b2)
+dot42_1 = lambda a4, b2 : np.einsum('ijkl,lm -> ijkm', a4, b2)
+dot42_2 = lambda a4, b2 : np.einsum('ijkl,jm -> imkl', a4, b2)
 # Tensorial double contractions
 ddot22_1 = lambda a2, b2 : np.einsum('ij,ij', a2, b2)
 ddot42_1 = lambda a4, b2 : np.einsum('ijkl,kl -> ij', a4, b2)
