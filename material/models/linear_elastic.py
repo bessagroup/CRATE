@@ -73,6 +73,19 @@ class Elastic(ConstitutiveModel):
         # Return
         return req_material_properties
     # --------------------------------------------------------------------------------------
+    def get_strain_type(self):
+        '''Get material constitutive model strain formulation.
+
+        Returns
+        -------
+        strain_type : str, {'infinitesimal', 'finite', 'finite-kinext'}
+            Constitutive model strain formulation: infinitesimal strain formulation
+            ('infinitesimal'), finite strain formulation ('finite') or finite strain
+            formulation through kinematic extension (infinitesimal constitutive formulation
+            and purely finite strain kinematic extension - 'finite-kinext').
+        '''
+        return self._strain_type
+    # --------------------------------------------------------------------------------------
     def state_init(self):
         '''Initialize constitutive model material state variables.
 
@@ -190,7 +203,7 @@ class Elastic(ConstitutiveModel):
     # --------------------------------------------------------------------------------------
     @staticmethod
     def elastic_tangent_modulus(problem_type, elastic_properties):
-        '''Compute elastic tangent modulus.
+        '''Compute infinitesimal strains elasticity tensor.
 
         Parameters
         ----------
@@ -204,7 +217,7 @@ class Elastic(ConstitutiveModel):
         Returns
         -------
         elastic_tangent_mf : ndarray
-            Elastic tangent modulus in matricial form.
+            Infinitesimal strains elasticity tensor in matricial form.
         '''
         # Get problem type parameters
         n_dim, comp_order_sym, _ = mop.getproblemtypeparam(problem_type)
@@ -220,12 +233,13 @@ class Elastic(ConstitutiveModel):
         # Set required fourth-order tensors
         _, _, _, fosym, fodiagtrace, _, _ = top.getidoperators(n_dim)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Compute consistent tangent modulus according to problem type
+        # Compute infinitesimal strains elasticity tensor according to problem type
         if problem_type in [1, 4]:
             # 2D problem (plane strain) / 3D problem
             elastic_tangent = lam*fodiagtrace + 2.0*miu*fosym
-        # Build consistent tangent modulus matricial form
+        # Build infinitesimal strains elasticity tensor matricial form
         elastic_tangent_mf = mop.gettensormf(elastic_tangent, n_dim, comp_order_sym)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return elastic_tangent_mf
 #

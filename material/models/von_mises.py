@@ -77,6 +77,19 @@ class VonMises(ConstitutiveModel):
         # Return
         return req_material_properties
     # --------------------------------------------------------------------------------------
+    def get_strain_type(self):
+        '''Get material constitutive model strain formulation.
+
+        Returns
+        -------
+        strain_type : str, {'infinitesimal', 'finite', 'finite-kinext'}
+            Constitutive model strain formulation: infinitesimal strain formulation
+            ('infinitesimal'), finite strain formulation ('finite') or finite strain
+            formulation through kinematic extension (infinitesimal constitutive formulation
+            and purely finite strain kinematic extension - 'finite-kinext').
+        '''
+        return self._strain_type
+    # --------------------------------------------------------------------------------------
     def state_init(self):
         '''Initialize material constitutive model state variables.
 
