@@ -48,7 +48,7 @@ def suct(problem_dict, clst_dict, material_properties, material_phases_models, m
     # Set thickness of the current Gauss point (only plane stress)
     thkgp = 0.0
     # Set the incremental strain tensor according to strain formulation
-    if strain_formulation == 1:
+    if strain_formulation == 'infinitesimal':
         if problem_type == 1:
             eincr = np.zeros(4)
             eincr[0:3] = linksutil.gettensormflinks(inc_strain, n_dim,
@@ -186,7 +186,10 @@ def setrequiredmodulevars(problem_dict, iprops_py, rprops_py, rstava_py, lalgva_
     strain_formulation = problem_dict['strain_formulation']
     problem_type = problem_dict['problem_type']
     # Set Links strain formulation flag
-    nlarge = 0 if strain_formulation == 1 else 1
+    if strain_formulation == 'infinitesimal':
+        nlarge = 0
+    else:
+        nlarge = 1
     # Set Links problem type
     problem_type_converter = {'1': 2, '2': 1, '3': 3, '4': 6}
     ntype = problem_type_converter[str(problem_type)]

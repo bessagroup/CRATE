@@ -578,7 +578,7 @@ def readmacroscaleloading(file, file_path, mac_load_type, strain_formulation, n_
                         mac_load_presctype[i_comp, j] = ltype
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Check small strain formulation symmetry
-    if strain_formulation == 1:
+    if strain_formulation == 'infinitesimal':
         # Set symmetric indexes (columnwise)
         if n_dim**2 == 4:
             symmetric_indexes = np.array([[2], [1]])

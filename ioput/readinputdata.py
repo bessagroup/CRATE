@@ -52,12 +52,14 @@ def readinputdatafile(input_file,dirs_dict):
     # Read strain formulation
     keyword = 'Strain_Formulation'
     max_val = 2
-    strain_formulation = rproc.readtypeAkeyword(input_file, input_file_path, keyword,
-                                                max_val)
-    # Large strain formulation has not been implemented yet
-    if strain_formulation == 2:
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00016', location.filename, location.lineno + 1)
+    strain_formulation_code = rproc.readtypeAkeyword(input_file, input_file_path, keyword,
+                                                     max_val)
+    if strain_formulation_code == 1:
+        strain_formulation = 'infinitesimal'
+    elif strain_formulation_code == 2:
+        strain_formulation = 'finite'
+    else:
+        raise RuntimeError('Unknown problem strain formulation.')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read problem type and set problem dimensions
     keyword = 'Problem_Type'

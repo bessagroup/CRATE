@@ -21,6 +21,8 @@ from abc import ABC, abstractmethod
 import sklearn.preprocessing as skpp
 # Display messages
 import ioput.info as info
+# Matricial operations
+import tensor.matrixoperations as mop
 # RVE response database
 from clustering.rveelasticdatabase import RVEElasticDatabase
 #
@@ -97,8 +99,8 @@ def get_available_clustering_features(strain_formulation, n_dim, comp_order_sym,
 
     Parameters
     ----------
-    strain_formulation: int
-        Strain formulation: (1) infinitesimal strains, (2) finite strains.
+    strain_formulation: str, {'infinitesimal', 'finite'}
+        Problem strain formulation.
     n_dim: int
         Number of spatial dimensions.
     comp_order_sym: list
@@ -115,10 +117,13 @@ def get_available_clustering_features(strain_formulation, n_dim, comp_order_sym,
     '''
     features_descriptors = {}
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    if strain_formulation == 1:
+    # Set strain/stress components order according to problem strain formulation
+    if strain_formulation == 'infinitesimal':
         comp_order = comp_order_sym
+    elif strain_formulation == 'finite':
+        comp_order == comp_order_nsym
     else:
-        comp_order = comp_order_nsym
+        raise RuntimeError('Unknown problem strain formulation.')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Fourth-order local elastic strain concentration tensor:
     # Set number of feature dimensions
@@ -131,7 +136,7 @@ def get_available_clustering_features(strain_formulation, n_dim, comp_order_sym,
         # Set macroscopic strain loading
         mac_strain = np.zeros((n_dim, n_dim))
         mac_strain[so_idx] = 1.0
-        if strain_formulation == 1 and comp_i[0] != comp_i[1]:
+        if strain_formulation == 'infinitesimal' and comp_i[0] != comp_i[1]:
             mac_strain[so_idx[::-1]] = 1.0
         mac_strains.append(mac_strain)
     # Set feature computation algorithm
@@ -155,13 +160,16 @@ class ClusterAnalysisData:
     _feature_loads_ids :  dict
         List of macroscale loadings identifiers (item, list of int) associated to each
         feature (key, str).
+    _comp_order_sym : list
+        Strain/Stress components symmetric order.
+    _comp_order_nsym : list
+        Strain/Stress components nonsymmetric order.
     global_data_matrix : ndarray of shape (n_voxels, n_features_dims)
         Data matrix containing the required clustering features' data to perform all the
         prescribed RVE clusterings.
     '''
     def __init__(self, base_clustering_scheme, adaptive_clustering_scheme,
-                 feature_descriptors, strain_formulation, comp_order_sym, comp_order_nsym,
-                 n_voxels):
+                 feature_descriptors, strain_formulation, problem_type, n_voxels):
         '''Clustering data constructor.
 
         Parameters
@@ -182,12 +190,11 @@ class ClusterAnalysisData:
             Available clustering features identifiers (key, int) and descriptors (tuple
             structured as (number of feature dimensions (int), list of macroscale strain
             loadings (list of ndarrays), feature computation algorithm (function)).
-        strain_formulation : int
-            Strain formulation: (1) infinitesimal strains, (2) finite strains.
-        comp_order_sym : list
-            Symmetric strain/stress components (str) order.
-        comp_order_nsym : list
-            Nonsymmetric strain/stress components (str) order.
+        strain_formulation: str, {'infinitesimal', 'finite'}
+            Problem strain formulation.
+        problem_type : int
+            Problem type: 2D plane strain (1), 2D plane stress (2), 2D axisymmetric (3) and
+            3D (4).
         n_voxels : int
             Total number of voxels of the regular grid (spatial discretization of the
             RVE).
@@ -195,16 +202,16 @@ class ClusterAnalysisData:
         self._base_clustering_scheme = base_clustering_scheme
         self._adaptive_clustering_scheme = adaptive_clustering_scheme
         self._feature_descriptors = feature_descriptors
-        if strain_formulation == 1:
-            self._comp_order = comp_order_sym
-        else:
-            self._comp_order = comp_order_nsym
         self._n_voxels = n_voxels
         self._features = None
         self._n_features_dims = None
         self._features_idxs = None
         self._features_loads_ids = None
         self.global_data_matrix = None
+        # Get problem type parameters
+        _, comp_order_sym, comp_order_nsym = mop.getproblemtypeparam(problem_type)
+        self._comp_order_sym = comp_order_sym
+        self._comp_order_nsym = comp_order_nsym
     # --------------------------------------------------------------------------------------
     def set_prescribed_features(self):
         '''Set prescribed clustering features.'''
@@ -275,12 +282,6 @@ class ClusterAnalysisData:
                     # Set clustering features data matrix' indexes
                     self._adaptive_clustering_scheme[mat_phase][i, 2] = \
                         copy.deepcopy(indexes)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Validation output:
-        # print('\nbase_clustering_scheme: ')
-        # print(self._base_clustering_scheme)
-        # print('\nadaptive_clustering_scheme: ')
-        # print(self._adaptive_clustering_scheme)
     # --------------------------------------------------------------------------------------
     def get_clustering_mac_strains(self):
         '''Get required macroscale strain loadings to compute clustering features.
@@ -335,6 +336,13 @@ class ClusterAnalysisData:
             RVE elastic response for the required set of macroscale loadings, where each
             macroscale loading is associated with a set of independent strain components.
         '''
+        # Set strain/stress components order according to problem strain formulation
+        if self._strain_formulation == 'infinitesimal':
+            comp_order = self._comp_order_sym
+        elif self._strain_formulation == 'finite':
+            comp_order == self._comp_order_nsym
+        else:
+            raise RuntimeError('Unknown problem strain formulation.')
         # Initialize clustering global data matrix
         self.global_data_matrix = np.zeros((self._n_voxels, self._n_features_dims))
         # Loop over prescribed clustering features
@@ -346,8 +354,8 @@ class ClusterAnalysisData:
             # loadings)
             rve_response = np.zeros((self._n_voxels, 0))
             for mac_load_id in mac_loads_ids:
-                j_init = mac_load_id*len(self._comp_order)
-                j_end = j_init + len(self._comp_order)
+                j_init = mac_load_id*len(comp_order)
+                j_end = j_init + len(comp_order)
                 rve_response = np.append(rve_response, rve_global_response[:, j_init:j_end],
                                          axis=1)
             # Get clustering feature's computation algorithm and compute associated data

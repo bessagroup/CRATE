@@ -61,8 +61,8 @@ class LoadingPath:
 
         Parameters
         ----------
-        strain_formulation : int
-            Strain formulation: (1) infinitesimal strains, (2) finite strains.
+        strain_formulation: str, {'infinitesimal', 'finite'}
+            Problem strain formulation.
         comp_order_sym : list
             Symmetric strain/stress components (str) order.
         comp_order_nsym : list
@@ -94,7 +94,7 @@ class LoadingPath:
         self._max_subinc_level = max_subinc_level
         self._max_cinc_cuts = max_cinc_cuts
         # Remove symmetric components under an infinitesimal strain formulation
-        if strain_formulation == 1:
+        if strain_formulation == 'infinitesimal':
             self._remove_sym(comp_order_sym, comp_order_nsym)
         # Set total number of loading subpaths
         self._n_load_subpaths = len(mac_load_increm.keys())

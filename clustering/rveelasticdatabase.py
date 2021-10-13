@@ -54,7 +54,7 @@ class RVEElasticDatabase:
         self._rg_dict = rg_dict
         self._mat_dict = mat_dict
         self._clst_dict = clst_dict
-        if self._problem_dict['strain_formulation'] == 1:
+        if self._problem_dict['strain_formulation'] == 'infinitesimal':
             self.comp_order = self._problem_dict['comp_order_sym']
         else:
             self.comp_order = self._problem_dict['comp_order_nsym']

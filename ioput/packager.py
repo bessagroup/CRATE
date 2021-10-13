@@ -72,7 +72,7 @@ def packproblem(strain_formulation, problem_type, n_dim, comp_order_sym, comp_or
     #
     # Object                      Meaning                                           Type
     # -------------------------------------------------------------------------------------
-    # strain_formulation          Strain formulation                                int
+    # strain_formulation          Strain formulation                                str
     # problem_type                Problem type                                      int
     # n_dim                       Number of problem dimensions                      int
     # comp_order_sym              Symmetric strain/stress components order          list
