@@ -516,8 +516,35 @@ class MaterialState:
         # Return
         return material_consistent_tangent
     # --------------------------------------------------------------------------------------
-    def update_clusters_dependencies(self):
-        pass
+    def clustering_adaptivity_update(self, adaptive_clustering_map):
+        '''Update cluster-related dictionaries according to clustering adaptivity step.
+
+        Parameters
+        ----------
+        adaptive_clustering_map : dict
+            Adaptive clustering map (item, dict with list of new cluster labels (item,
+            list of int) resulting from the refinement of each target cluster (key, str))
+            for each material phase (key, str).
+        '''
+        # Group cluster-related dictionaries
+        cluster_dicts = [self._clusters_def_gradient_mf, self._clusters_def_gradient_old_mf,
+                         self._clusters_state, self._clusters_state_old,
+                         self._clusters_tangent_mf]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Loop over adaptive material phases
+        for mat_phase in adaptive_clustering_map.keys():
+            # Loop over material phase target clusters
+            for target_cluster in adaptive_clustering_map[mat_phase].keys():
+                # Get list of target's child clusters
+                child_clusters = adaptive_clustering_map[mat_phase][target_cluster]
+                # Loop over cluster-keyd dictionaries
+                for cluster_dict in cluster_dicts:
+                    # Loop over child clusters and build their items
+                    for child_cluster in child_clusters:
+                        cluster_dict[str(child_cluster)] = \
+                            copy.deepcopy(cluster_dict[target_cluster])
+                    # Remove target cluster item
+                    cluster_dict.pop(target_cluster)
 #
 #                                                               Constitutive model interface
 # ==========================================================================================
