@@ -154,9 +154,10 @@ class Elastic(ConstitutiveModel):
         Returns
         -------
         state_variables : dict
-            Constitutive model material state variables.
+            Material constitutive model state variables.
         consistent_tangent_mf : ndarray
-            Constitutive model consistent tangent modulus in matricial form.
+            Material constitutive model material consistent tangent modulus in matricial
+            form.
         '''
         # Get material properties
         E = self._material_properties['E']

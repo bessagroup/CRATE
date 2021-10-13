@@ -163,7 +163,8 @@ class VonMises(ConstitutiveModel):
         state_variables : dict
             Material constitutive model state variables.
         consistent_tangent_mf : ndarray
-            Material Constitutive model consistent tangent modulus in matricial form.
+            Material constitutive model material consistent tangent modulus in matricial
+            form.
         '''
         # Build incremental strain matricial form
         inc_strain_mf = mop.gettensormf(inc_strain, self._n_dim, self._comp_order_sym)
