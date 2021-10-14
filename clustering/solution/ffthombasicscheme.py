@@ -708,11 +708,11 @@ def getElasticityTensor(problem_type, n_dim, comp_order, properties):
     # 2D problem (plane strain)
     if problem_type == 1:
         De_tensor = lam*fodiagtrace + 2.0*miu*fosym
-        De_tensor_mf = mop.gettensormf(De_tensor, n_dim, comp_order)
+        De_tensor_mf = mop.get_tensor_mf(De_tensor, n_dim, comp_order)
     # 3D problem
     elif problem_type == 4:
         De_tensor = lam*fodiagtrace + 2.0*miu*fosym
-        De_tensor_mf = mop.gettensormf(De_tensor, n_dim, comp_order)
+        De_tensor_mf = mop.get_tensor_mf(De_tensor, n_dim, comp_order)
     # Return
     return De_tensor_mf
 #

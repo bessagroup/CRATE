@@ -118,14 +118,14 @@ class Elastic(ConstitutiveModel):
         # Initialize constitutive model state variables
         state_variables_init = dict()
         state_variables_init['e_strain_mf'] = \
-            mop.gettensormf(np.zeros((self._n_dim, self._n_dim)), self._n_dim,
-                            self._comp_order_sym)
+            mop.get_tensor_mf(np.zeros((self._n_dim, self._n_dim)), self._n_dim,
+                              self._comp_order_sym)
         state_variables_init['strain_mf'] = \
-            mop.gettensormf(np.zeros((self._n_dim, self._n_dim)), self._n_dim,
-                            self._comp_order_sym)
+            mop.get_tensor_mf(np.zeros((self._n_dim, self._n_dim)), self._n_dim,
+                              self._comp_order_sym)
         state_variables_init['stress_mf'] = \
-            mop.gettensormf(np.zeros((self._n_dim, self._n_dim)), self._n_dim,
-                            self._comp_order_sym)
+            mop.get_tensor_mf(np.zeros((self._n_dim, self._n_dim)), self._n_dim,
+                              self._comp_order_sym)
         state_variables_init['is_plast'] = False
         state_variables_init['is_su_fail'] = False
         # Set additional out-of-plane strain and stress components
@@ -182,13 +182,13 @@ class Elastic(ConstitutiveModel):
         if self._problem_type in [1, 4]:
             consistent_tangent = lam*fodiagtrace + 2.0*miu*fosym
         # Build consistent tangent modulus matricial form
-        consistent_tangent_mf = mop.gettensormf(consistent_tangent, self._n_dim,
-                                                self._comp_order_sym)
+        consistent_tangent_mf = mop.get_tensor_mf(consistent_tangent, self._n_dim,
+                                                  self._comp_order_sym)
         #
         #                                                                       State update
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Build incremental strain matricial form
-        inc_strain_mf = mop.gettensormf(inc_strain, self._n_dim, self._comp_order_sym)
+        inc_strain_mf = mop.get_tensor_mf(inc_strain, self._n_dim, self._comp_order_sym)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Update elastic strain
         e_strain_mf = e_strain_old_mf + inc_strain_mf
@@ -254,7 +254,7 @@ class Elastic(ConstitutiveModel):
             # 2D problem (plane strain) / 3D problem
             elastic_tangent = lam*fodiagtrace + 2.0*miu*fosym
         # Build infinitesimal strains elasticity tensor matricial form
-        elastic_tangent_mf = mop.gettensormf(elastic_tangent, n_dim, comp_order_sym)
+        elastic_tangent_mf = mop.get_tensor_mf(elastic_tangent, n_dim, comp_order_sym)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return elastic_tangent_mf
@@ -294,12 +294,12 @@ def init(problem_dict):
     problem_type = problem_dict['problem_type']
     # Define constitutive model state variables (names and initialization)
     state_variables_init = dict()
-    state_variables_init['e_strain_mf'] = mop.gettensormf(np.zeros((n_dim, n_dim)), n_dim,
+    state_variables_init['e_strain_mf'] = mop.get_tensor_mf(np.zeros((n_dim, n_dim)), n_dim,
+                                                            comp_order)
+    state_variables_init['strain_mf'] = mop.get_tensor_mf(np.zeros((n_dim, n_dim)), n_dim,
                                                           comp_order)
-    state_variables_init['strain_mf'] = mop.gettensormf(np.zeros((n_dim, n_dim)), n_dim,
-                                                        comp_order)
-    state_variables_init['stress_mf'] = mop.gettensormf(np.zeros((n_dim, n_dim)), n_dim,
-                                                        comp_order)
+    state_variables_init['stress_mf'] = mop.get_tensor_mf(np.zeros((n_dim, n_dim)), n_dim,
+                                                          comp_order)
     state_variables_init['is_plast'] = False
     state_variables_init['is_su_fail'] = False
     state_variables_init['acc_e_energy_dens'] = 0.0
@@ -341,12 +341,12 @@ def suct(problem_dict, algpar_dict, material_properties, mat_phase, inc_strain,
         # 2D problem (plane strain) / 3D problem
         consistent_tangent = lam*fodiagtrace + 2.0*miu*fosym
     # Build consistent tangent modulus matricial form
-    consistent_tangent_mf = mop.gettensormf(consistent_tangent, n_dim, comp_order)
+    consistent_tangent_mf = mop.get_tensor_mf(consistent_tangent, n_dim, comp_order)
     #
     #                                                                           State update
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Build incremental strain matricial form
-    inc_strain_mf = mop.gettensormf(inc_strain, n_dim, comp_order)
+    inc_strain_mf = mop.get_tensor_mf(inc_strain, n_dim, comp_order)
     # Update elastic strain
     e_strain_mf = e_strain_old_mf + inc_strain_mf
     # Update stress
@@ -404,6 +404,6 @@ def ct(problem_dict, properties):
         # 2D problem (plane strain) / 3D problem
         consistent_tangent = lam*fodiagtrace + 2.0*miu*fosym
     # Build consistent tangent modulus matricial form
-    consistent_tangent_mf = mop.gettensormf(consistent_tangent, n_dim, comp_order)
+    consistent_tangent_mf = mop.get_tensor_mf(consistent_tangent, n_dim, comp_order)
     # Return
     return consistent_tangent_mf

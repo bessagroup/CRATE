@@ -396,7 +396,7 @@ class LoadingPath:
                     else:
                         load_matrix[j, i] = load_matrix[i, j]
         # Set incremental macroscopic load matricial form
-        load_mf = mop.gettensormf(load_matrix, n_dim, comp_order)
+        load_mf = mop.get_tensor_mf(load_matrix, n_dim, comp_order)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return load_mf
 # ------------------------------------------------------------------------------------------

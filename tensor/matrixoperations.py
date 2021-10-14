@@ -53,7 +53,7 @@ def get_problem_type_parameters(problem_type):
 #
 #                                                    Tensorial < > Matricial form conversion
 # ==========================================================================================
-def gettensormf(tensor, n_dim, comp_order):
+def get_tensor_mf(tensor, n_dim, comp_order):
     '''Get tensor matricial form.
 
     Store a given second-order or fourth-order tensor in matricial form for a given number

@@ -167,12 +167,12 @@ def linksxmatx(mode,*args):
         comp_order_sym = problem_dict['comp_order_sym']
         # Get consistent tangent modulus (matricial form)
         if problem_type == 1:
-            consistent_tangent_mf = mop.gettensormf(
+            consistent_tangent_mf = mop.get_tensor_mf(
                 linksutil.gettensorfrommflinks(dmatx[0:3, 0:3], n_dim,
                                                comp_order_sym, 'elasticity'),
                 n_dim, comp_order_sym)
         else:
-            consistent_tangent_mf = mop.gettensormf(
+            consistent_tangent_mf = mop.get_tensor_mf(
                 linksutil.gettensorfrommflinks(dmatx, n_dim, comp_order_sym, 'elasticity'),
                 n_dim, comp_order_sym)
         # Return

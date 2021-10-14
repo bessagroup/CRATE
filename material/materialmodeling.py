@@ -144,7 +144,7 @@ class MaterialState:
         self._clusters_def_gradient_old_mf = {}
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set second-order identity tensor matricial form
-        soid_mf = mop.gettensormf(np.eye(self._n_dim), self._n_dim, self._comp_order_nsym)
+        soid_mf = mop.get_tensor_mf(np.eye(self._n_dim), self._n_dim, self._comp_order_nsym)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over material phases
         for mat_phase in self._material_phases:
@@ -229,14 +229,14 @@ class MaterialState:
                 else:
                     # Deformation gradient tensor (nonsymmetric)
                     comp_order = self._comp_order_nsym
-                inc_strain = mop.gettensormf(inc_strain_mf, self._n_dim, comp_order)
+                inc_strain = mop.get_tensor_mf(inc_strain_mf, self._n_dim, comp_order)
                 # Get material cluster last converged state variables
                 state_variables_old = self._clusters_state_old[str(cluster)]
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Get material cluster last converged deformation gradient tensor
                 def_gradient_old_mf = self._clusters_def_gradient_old_mf[str(cluster)]
-                def_gradient_old = \
-                    mop.gettensormf(def_gradient_old_mf, self._n_dim, self._comp_order_nsym)
+                def_gradient_old = mop.get_tensor_mf(def_gradient_old_mf, self._n_dim,
+                                                     self._comp_order_nsym)
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Perform state update through the suitable material interface
                 if source == 'crate':
@@ -330,7 +330,7 @@ class MaterialState:
             # Compute Cauchy stress tensor (matricial form)
             cauchy_stress = MaterialState.cauchy_from_kirchhoff(def_gradient,
                                                                 kirchhoff_stress)
-            cauchy_stress_mf = mop.gettensormf(cauchy_stress, n_dim, comp_order_sym)
+            cauchy_stress_mf = mop.get_tensor_mf(cauchy_stress, n_dim, comp_order_sym)
             # Update stress tensor
             state_variables['stress_mf'] = cauchy_stress_mf
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -348,8 +348,8 @@ class MaterialState:
             material_consistent_tangent = \
                 MaterialState.material_from_spatial_tangent_modulus(
                     spatial_consistent_tangent, def_gradient)
-            consistent_tangent_mf = mop.gettensormf(material_consistent_tangent, n_dim,
-                                                    comp_order_nsym)
+            consistent_tangent_mf = mop.get_tensor_mf(material_consistent_tangent, n_dim,
+                                                      comp_order_nsym)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return state_variables, consistent_tangent_mf

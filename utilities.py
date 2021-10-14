@@ -1095,7 +1095,7 @@ def utility6():
     # Compute consistent tangent modulus (Lamé parameters)
     consistent_tangent = lam*fodiagtrace + 2.0*miu*fosym
     # Build consistent tangent modulus (Lamé parameters) matricial form
-    consistent_tangent_mf = mop.gettensormf(consistent_tangent,n_dim,comp_order)
+    consistent_tangent_mf = mop.get_tensor_mf(consistent_tangent,n_dim,comp_order)
     # Print consistent tangent modulus (Lamé parameters)
     print('\n' + '>> consistent_tangent = lam*fodiagtrace + 2.0*miu*fosym')
     print('\n' + 'consistent_tangent_mf (Lamé parameters):' + '\n')
@@ -1103,7 +1103,7 @@ def utility6():
     # Compute consistent tangent modulus (bulk and shear modulii)
     consistent_tangent = K*fodiagtrace + 2.0*G*fodevprojsym
     # Build consistent tangent modulus (bulk and shear modulii) matricial form
-    consistent_tangent_mf = mop.gettensormf(consistent_tangent,n_dim,comp_order)
+    consistent_tangent_mf = mop.get_tensor_mf(consistent_tangent,n_dim,comp_order)
     # Print consistent tangent modulus (bulk and shear modulii)
     print('\n\n' + '>> consistent_tangent = K*fodiagtrace + 2.0*G*(fosym - ' + \
                                                                    '(1.0/3.0)*fodiagtrace)')
@@ -1123,7 +1123,7 @@ def utility6():
     # Compute consistent tangent modulus (Lamé parameters)
     consistent_tangent = lam*fodiagtrace + 2.0*miu*fosym
     # Build consistent tangent modulus (Lamé parameters) matricial form
-    consistent_tangent_mf = mop.gettensormf(consistent_tangent,n_dim,comp_order)
+    consistent_tangent_mf = mop.get_tensor_mf(consistent_tangent,n_dim,comp_order)
     # Print consistent tangent modulus (Lamé parameters)
     print('\n' + '>> consistent_tangent = lam*fodiagtrace + 2.0*miu*fosym')
     print('\n' + 'consistent_tangent_mf (Lamé parameters):' + '\n')
@@ -1131,7 +1131,7 @@ def utility6():
     # Compute consistent tangent modulus (bulk and shear modulii)
     consistent_tangent = K*fodiagtrace + 2.0*G*fodevprojsym
     # Build consistent tangent modulus (bulk and shear modulii) matricial form
-    consistent_tangent_mf = mop.gettensormf(consistent_tangent,n_dim,comp_order)
+    consistent_tangent_mf = mop.get_tensor_mf(consistent_tangent,n_dim,comp_order)
     # Print consistent tangent modulus (bulk and shear modulii)
     print('\n\n' + '>> consistent_tangent = K*fodiagtrace + 2.0*G*(fosym - ' + \
                                                                    '(1.0/3.0)*fodiagtrace)')
@@ -1156,7 +1156,7 @@ def utility6():
     # Compute consistent tangent modulus (bulk and shear modulii)
     consistent_tangent = K2d*fodiagtrace + 2.0*G*fodevprojsym
     # Build consistent tangent modulus (bulk and shear modulii) matricial form
-    consistent_tangent_mf = mop.gettensormf(consistent_tangent,n_dim,comp_order)
+    consistent_tangent_mf = mop.get_tensor_mf(consistent_tangent,n_dim,comp_order)
     # Print consistent tangent modulus (bulk and shear modulii)
     print('\n' + '>> consistent_tangent = K2d*fodiagtrace + 2.0*G*(fosym - ' + \
                                                                    '(1.0/2.0)*fodiagtrace)')

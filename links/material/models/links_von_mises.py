@@ -40,13 +40,13 @@ def getlinksmodelprocedures():
         problem_type = problem_dict['problem_type']
         # Define constitutive model state variables (names and initialization)
         state_variables_init = dict()
-        state_variables_init['e_strain_mf'] = mop.gettensormf(np.zeros((n_dim, n_dim)),
-                                                              n_dim, comp_order)
+        state_variables_init['e_strain_mf'] = mop.get_tensor_mf(np.zeros((n_dim, n_dim)),
+                                                                n_dim, comp_order)
         state_variables_init['acc_p_strain'] = 0.0
-        state_variables_init['strain_mf'] = mop.gettensormf(np.zeros((n_dim, n_dim)),
-                                                            n_dim, comp_order)
-        state_variables_init['stress_mf'] = mop.gettensormf(np.zeros((n_dim, n_dim)),
-                                                            n_dim, comp_order)
+        state_variables_init['strain_mf'] = mop.get_tensor_mf(np.zeros((n_dim, n_dim)),
+                                                              n_dim, comp_order)
+        state_variables_init['stress_mf'] = mop.get_tensor_mf(np.zeros((n_dim, n_dim)),
+                                                              n_dim, comp_order)
         state_variables_init['is_plast'] = False
         state_variables_init['is_su_fail'] = False
         state_variables_init['inc_p_mult'] = 0.0
@@ -186,14 +186,14 @@ def getlinksmodelprocedures():
             state_variables = init(problem_dict)
             # Get stress from stres
             idx = len(comp_order)
-            state_variables['stress_mf'] = mop.gettensormf(
+            state_variables['stress_mf'] = mop.get_tensor_mf(
                 LinksUtil.gettensorfrommflinks(stres[0:idx], n_dim,
                 links_comp_order, 'stress'), n_dim, comp_order)
             if problem_type == 1:
                 state_variables['stress_33'] = stres[idx]
             # Get real state variables from rstava
             idx = len(comp_order)
-            state_variables['e_strain_mf'] = mop.gettensormf(
+            state_variables['e_strain_mf'] = mop.get_tensor_mf(
                 LinksUtil.gettensorfrommflinks(rstava[0:idx], n_dim, links_comp_order,
                                                'strain'), n_dim, comp_order)
             state_variables['strain_mf'] = np.zeros_like(rstava[0:idx])

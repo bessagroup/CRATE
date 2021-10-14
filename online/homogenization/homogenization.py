@@ -170,12 +170,12 @@ def effective_tangent_modulus(n_dim, comp_order, material_phases, phase_clusters
     The matricial form storage is perform according to the provided strain/stress
     components order.
     '''
+    # Set second-order identity tensor
+    _, _, _, fosym, _, _, _ = top.getidoperators(n_dim)
+    FOSym_mf = mop.get_tensor_mf(fosym, n_dim, comp_order)
     # Get total number of clusters
     n_total_clusters = len(clusters_f.keys())
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Set fourth-order symmetric projection tensor (matricial form)
-    _, _, _, FOsym, _, _, _ = top.getidoperators(n_dim)
-    FOSym_mf = mop.gettensormf(FOsym, n_dim, comp_order)
     # Compute equilibrium Jacobian matrix (luster strain concentration tensors system of
     # linear equations coefficient matrix)
     csct_matrix = np.add(scipy.linalg.block_diag(*(n_total_clusters*[FOSym_mf,])),

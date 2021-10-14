@@ -44,7 +44,7 @@ def refelastictanmod(problem_dict, mat_prop_ref):
     Se_ref = -(lam_ref/(2*miu_ref*(3*lam_ref + 2*miu_ref)))*fodiagtrace + \
         (1.0/(2.0*miu_ref))*fosym
     # Compute reference material compliance tensor (matricial form)
-    Se_ref_mf = mop.gettensormf(Se_ref, n_dim, comp_order)
+    Se_ref_mf = mop.get_tensor_mf(Se_ref, n_dim, comp_order)
     # Store reference material compliance tensor in a matrix similar to matricial form
     # but without any associated coefficients
     Se_ref_matrix = np.zeros(Se_ref_mf.shape)
@@ -183,7 +183,7 @@ def scsupdate(self_consistent_scheme, problem_dict, inc_strain_mf, inc_stress_mf
             comp_order = problem_dict['comp_order_sym']
             # Set fourth-order deviatoric projection tensor (matricial form)
             _, _, _, _, _, _, fodevprojsym = top.getidoperators(n_dim)
-            FODevProjSym_mf = mop.gettensormf(fodevprojsym, n_dim, comp_order)
+            FODevProjSym_mf = mop.get_tensor_mf(fodevprojsym, n_dim, comp_order)
             # Compute incremental deviatoric strain
             inc_dev_strain_mf = np.matmul(FODevProjSym_mf, inc_strain_mf)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
