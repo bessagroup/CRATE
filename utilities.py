@@ -784,13 +784,13 @@ def utility5():
         strain_mf = np.zeros(len(comp_order))
         for i in range(len(comp_order)):
             comp = comp_order[i]
-            strain_mf[i] = mop.kelvinfactor(i,comp_order)*strain_vox[comp][voxel_idx]
+            strain_mf[i] = mop.kelvin_factor(i,comp_order)*strain_vox[comp][voxel_idx]
         # Update stress for current discrete frequency
         stress_mf = np.zeros(len(comp_order))
         stress_mf = top.dot21_1(De_tensor_mf,strain_mf)
         for i in range(len(comp_order)):
             comp = comp_order[i]
-            stress_vox[comp][voxel_idx] = (1.0/mop.kelvinfactor(i,comp_order))*stress_mf[i]
+            stress_vox[comp][voxel_idx] = (1.0/mop.kelvin_factor(i,comp_order))*stress_mf[i]
     # --------------------------------------------------------------------------------------
     # Time profile
     phase_end_time = time.time()

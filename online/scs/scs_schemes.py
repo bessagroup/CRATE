@@ -50,8 +50,8 @@ def refelastictanmod(problem_dict, mat_prop_ref):
     Se_ref_matrix = np.zeros(Se_ref_mf.shape)
     for j in range(len(comp_order)):
         for i in range(len(comp_order)):
-            Se_ref_matrix[i, j] = (1.0/mop.kelvinfactor(i, comp_order))*\
-                (1.0/mop.kelvinfactor(j, comp_order))*Se_ref_mf[i, j]
+            Se_ref_matrix[i, j] = (1.0/mop.kelvin_factor(i, comp_order))*\
+                (1.0/mop.kelvin_factor(j, comp_order))*Se_ref_mf[i, j]
     # Return
     return [De_ref_mf, Se_ref_matrix]
 #

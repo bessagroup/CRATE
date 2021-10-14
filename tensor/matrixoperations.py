@@ -274,7 +274,7 @@ def get_tensor_from_mf(tensor_mf, n_dim, comp_order):
     # Return
     return tensor
 # ------------------------------------------------------------------------------------------
-def kelvinfactor(idx, comp_order):
+def kelvin_factor(idx, comp_order):
     '''Set Kelvin notation coefficient associated to given strain/stress component.
 
     Parameters

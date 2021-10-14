@@ -454,12 +454,12 @@ def ffthombasicscheme(problem_dict, rg_dict, mat_dict, mac_strain):
                     comp = comp_order[i]
                     # Build stress tensor Discrete Fourier Transform (DFT) matricial form
                     stress_DFT_mf[i] = \
-                        mop.kelvinfactor(i,comp_order)*stress_DFT_vox[comp][freq_idx]
+                        mop.kelvin_factor(i,comp_order)*stress_DFT_vox[comp][freq_idx]
                     # Store stress tensor Discrete Fourier Transform (DFT) matricial form
                     # for zero-frequency
                     if freq_idx == n_dim*(0,):
                         stress_DFT_0_mf[i] = \
-                            mop.kelvinfactor(i,comp_order)*stress_DFT_vox[comp][freq_idx]
+                            mop.kelvin_factor(i,comp_order)*stress_DFT_vox[comp][freq_idx]
                 # Build stress tensor Discrete Fourier Transform (DFT)
                 stress_DFT = np.zeros((n_dim, n_dim), dtype=complex)
                 stress_DFT = mop.get_tensor_from_mf(stress_DFT_mf, n_dim, comp_order)
@@ -563,10 +563,10 @@ def ffthombasicscheme(problem_dict, rg_dict, mat_dict, mac_strain):
                 idx1 = [comp_order.index(compi), comp_order.index(compj)]
                 idx2 = comp_order.index(compj)
                 aux = np.add(aux,np.multiply(
-                    mop.kelvinfactor(idx1, comp_order)*Gop_DFT_vox[compi + compj],
-                    mop.kelvinfactor(idx2, comp_order)*stress_DFT_vox[compj]))
+                    mop.kelvin_factor(idx1, comp_order)*Gop_DFT_vox[compi + compj],
+                    mop.kelvin_factor(idx2, comp_order)*stress_DFT_vox[compj]))
             strain_DFT_vox[compi] = np.subtract(strain_DFT_vox[compi],
-                (1.0/mop.kelvinfactor(i, comp_order))*aux)
+                (1.0/mop.kelvin_factor(i, comp_order))*aux)
             # Enforce macroscopic strain at the zero-frequency strain component
             freq_0_idx = n_dim*(0,)
             strain_DFT_vox[compi][freq_0_idx] = mac_strain_DFT_0[i]
