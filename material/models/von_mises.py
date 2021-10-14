@@ -207,9 +207,8 @@ class VonMises(ConstitutiveModel):
             n_dim, comp_order_sym, _ = mop.getproblemtypeparam(4)
             # Build strain tensors (matricial form) by including the appropriate
             # out-of-plain components
-            inc_strain_mf = mop.getstate3Dmffrom2Dmf({'problem_type': self._problem_type},
-                                                     inc_strain_mf, 0.0)
-            e_strain_old_mf = mop.getstate3Dmffrom2Dmf({'problem_type': self._problem_type},
+            inc_strain_mf = mop.getstate3Dmffrom2Dmf(self._problem_type, inc_strain_mf, 0.0)
+            e_strain_old_mf = mop.getstate3Dmffrom2Dmf(self._problem_type,
                                                        e_strain_old_mf, e_strain_33_old)
         #
         #                                                                       State update
@@ -316,12 +315,10 @@ class VonMises(ConstitutiveModel):
         if self._problem_type == 1:
             # Builds 2D strain and stress tensors (matricial form) from the associated 3D
             # counterparts
-            e_trial_strain_mf = mop.getstate2Dmffrom3Dmf(
-                {'problem_type': self._problem_type}, e_trial_strain_mf)
-            e_strain_mf = mop.getstate2Dmffrom3Dmf(
-                {'problem_type': self._problem_type}, e_strain_mf)
-            stress_mf = mop.getstate2Dmffrom3Dmf(
-                {'problem_type': self._problem_type}, stress_mf)
+            e_trial_strain_mf = mop.getstate2Dmffrom3Dmf(self._problem_type,
+                                                         e_trial_strain_mf)
+            e_strain_mf = mop.getstate2Dmffrom3Dmf(self._problem_type, e_strain_mf)
+            stress_mf = mop.getstate2Dmffrom3Dmf(self._problem_type, stress_mf)
         #
         #                                                             Update state variables
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -361,8 +358,8 @@ class VonMises(ConstitutiveModel):
         # When the problem type corresponds to a 2D analysis, build the 2D consistent
         # tangent modulus (matricial form) once the 3D counterpart
         if self._problem_type == 1:
-            consistent_tangent_mf = mop.getstate2Dmffrom3Dmf(
-                {'problem_type': self._problem_type}, consistent_tangent_mf)
+            consistent_tangent_mf = mop.getstate2Dmffrom3Dmf(self._problem_type,
+                                                             consistent_tangent_mf)
         #
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
