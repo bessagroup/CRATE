@@ -361,7 +361,7 @@ def get_condensed_matrix(matrix, rows, cols):
 #
 #                                         Strain/Stress 2D < > 3D matricial form conversions
 # ==========================================================================================
-def getstate3Dmffrom2Dmf(problem_type, mf_2d, comp_33):
+def get_state_3Dmf_from_2Dmf(problem_type, mf_2d, comp_33):
     '''Build 3D strain/stress second-order tensor from 2D strain/stress second-order tensor.
 
     Parameters

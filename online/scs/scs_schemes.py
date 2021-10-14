@@ -93,9 +93,10 @@ def scsupdate(self_consistent_scheme, problem_dict, inc_strain_mf, inc_stress_mf
                 inc_stress_33 = args[0]
                 # Build the incremental strain/stress tensors (matricial form) by including
                 # the appropriate out-of-plain components
-                inc_strain_mf = top.getstate3Dmffrom2Dmf(problem_type, inc_strain_mf, 0.0)
-                inc_stress_mf = top.getstate3Dmffrom2Dmf(problem_type, inc_stress_mf,
-                                                         inc_stress_33)
+                inc_strain_mf = top.get_state_3Dmf_from_2Dmf(problem_type, inc_strain_mf,
+                                                             comp_order=0.0)
+                inc_stress_mf = top.get_state_3Dmf_from_2Dmf(problem_type, inc_stress_mf,
+                                                             inc_stress_33)
             # Solve the regression-based self-consistent scheme always considering the
             # 3D strain and stress tensors
             problem_type = 4

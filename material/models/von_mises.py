@@ -207,9 +207,11 @@ class VonMises(ConstitutiveModel):
             n_dim, comp_order_sym, _ = mop.get_problem_type_parameters(4)
             # Build strain tensors (matricial form) by including the appropriate
             # out-of-plain components
-            inc_strain_mf = mop.getstate3Dmffrom2Dmf(self._problem_type, inc_strain_mf, 0.0)
-            e_strain_old_mf = mop.getstate3Dmffrom2Dmf(self._problem_type,
-                                                       e_strain_old_mf, e_strain_33_old)
+            inc_strain_mf = mop.get_state_3Dmf_from_2Dmf(self._problem_type, inc_strain_mf,
+                                                         comp_33=0.0)
+            e_strain_old_mf = mop.get_state_3Dmf_from_2Dmf(self._problem_type,
+                                                           e_strain_old_mf,
+                                                           e_strain_33_old)
         #
         #                                                                       State update
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -475,11 +477,11 @@ def suct(problem_dict, algpar_dict, material_properties, mat_phase, inc_strain,
         comp_order = comp_order_sym
         # Build strain tensors (matricial form) by including the appropriate out-of-plain
         # components
-        inc_strain_mf = mop.getstate3Dmffrom2Dmf(problem_type, inc_strain_mf, 0.0)
-        e_strain_old_mf = mop.getstate3Dmffrom2Dmf(problem_type, e_strain_old_mf,
-                                                   e_strain_33_old)
-        p_strain_old_mf = mop.getstate3Dmffrom2Dmf(problem_type, p_strain_old_mf,
-                                                   p_strain_33_old)
+        inc_strain_mf = mop.get_state_3Dmf_from_2Dmf(problem_type, inc_strain_mf, 0.0)
+        e_strain_old_mf = mop.get_state_3Dmf_from_2Dmf(problem_type, e_strain_old_mf,
+                                                       e_strain_33_old)
+        p_strain_old_mf = mop.get_state_3Dmf_from_2Dmf(problem_type, p_strain_old_mf,
+                                                       p_strain_33_old)
     #
     #                                                                           State update
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
