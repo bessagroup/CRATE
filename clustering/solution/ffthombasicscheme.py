@@ -462,7 +462,7 @@ def ffthombasicscheme(problem_dict, rg_dict, mat_dict, mac_strain):
                             mop.kelvinfactor(i,comp_order)*stress_DFT_vox[comp][freq_idx]
                 # Build stress tensor Discrete Fourier Transform (DFT)
                 stress_DFT = np.zeros((n_dim, n_dim), dtype=complex)
-                stress_DFT = mop.gettensorfrommf(stress_DFT_mf, n_dim, comp_order)
+                stress_DFT = mop.get_tensor_from_mf(stress_DFT_mf, n_dim, comp_order)
                 # Add discrete frequency contribution to discrete error required sum
                 error_sum = error_sum + \
                     np.linalg.norm(top.dot12_1(1j*np.asarray(freq_coord), stress_DFT))**2

@@ -109,8 +109,8 @@ def scsupdate(self_consistent_scheme, problem_dict, inc_strain_mf, inc_stress_mf
         scs_matrix = np.zeros((2,2))
         scs_rhs = np.zeros(2)
         # Get incremental strain and stress tensors
-        inc_strain = mop.gettensorfrommf(inc_strain_mf, n_dim, comp_order)
-        inc_stress = mop.gettensorfrommf(inc_stress_mf, n_dim, comp_order)
+        inc_strain = mop.get_tensor_from_mf(inc_strain_mf, n_dim, comp_order)
+        inc_stress = mop.get_tensor_from_mf(inc_stress_mf, n_dim, comp_order)
         # Compute self-consistent scheme system of linear equations right-hand side
         scs_rhs[0] = np.trace(inc_stress)
         scs_rhs[1] = top.ddot22_1(inc_stress, inc_strain)

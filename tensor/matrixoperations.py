@@ -153,7 +153,7 @@ def get_tensor_mf(tensor, n_dim, comp_order):
     # Return
     return tensor_mf
 # ------------------------------------------------------------------------------------------
-def gettensorfrommf(tensor_mf, n_dim, comp_order):
+def get_tensor_from_mf(tensor_mf, n_dim, comp_order):
     '''Recover tensor from associated matricial form.
 
     Recover a given second-order or fourth-order tensor from the associated matricial form,

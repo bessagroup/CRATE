@@ -595,11 +595,11 @@ class VTKOutput:
                 if len(stored_var) == len(comp_order_sym):
                     var_type = 'sym_matrix_mf'
                     var_n_comp = len(comp_order_sym)
-                    var = mop.gettensorfrommf(stored_var, n_dim, comp_order_sym)
+                    var = mop.get_tensor_from_mf(stored_var, n_dim, comp_order_sym)
                 else:
                     var_type = 'nsym_matrix_mf'
                     var_n_comp = len(comp_order_nsym)
-                    var = mop.gettensorfrommf(stored_var, n_dim, comp_order_nsym)
+                    var = mop.get_tensor_from_mf(stored_var, n_dim, comp_order_nsym)
         else:
             var_type = 'matrix'
             var_n_comp = len(comp_order_nsym)

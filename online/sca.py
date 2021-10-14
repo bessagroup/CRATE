@@ -258,9 +258,9 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     #                                         Initial state homogenized results (.hres file)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Build homogenized strain tensor
-    hom_strain = mop.gettensorfrommf(hom_strain_mf, n_dim, comp_order)
+    hom_strain = mop.get_tensor_from_mf(hom_strain_mf, n_dim, comp_order)
     # Build homogenized stress tensor
-    hom_stress = mop.gettensorfrommf(hom_stress_mf, n_dim, comp_order)
+    hom_stress = mop.get_tensor_from_mf(hom_stress_mf, n_dim, comp_order)
     # Compute homogenized out-of-plane stress component in a 2D plane strain problem /
     # strain component in a 2D plane stress problem (output purpose only)
     if problem_type == 1:
@@ -1084,9 +1084,9 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         #                                              Homogenized strain and stress tensors
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Build homogenized strain tensor
-        hom_strain = mop.gettensorfrommf(hom_strain_mf, n_dim, comp_order)
+        hom_strain = mop.get_tensor_from_mf(hom_strain_mf, n_dim, comp_order)
         # Build homogenized stress tensor
-        hom_stress = mop.gettensorfrommf(hom_stress_mf, n_dim, comp_order)
+        hom_stress = mop.get_tensor_from_mf(hom_stress_mf, n_dim, comp_order)
         # Compute homogenized out-of-plane stress component in a 2D plane strain problem /
         # strain component in a 2D plane stress problem (output purpose only)
         if problem_type == 1:

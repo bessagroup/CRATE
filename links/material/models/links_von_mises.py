@@ -152,14 +152,14 @@ def getlinksmodelprocedures():
             stres = np.zeros(nstre)
             idx = len(comp_order)
             stres[0:idx] = LinksUtil.gettensormflinks(
-                mop.gettensorfrommf(stress_mf, n_dim, comp_order), n_dim, links_comp_order,
-                'stress')
+                mop.get_tensor_from_mf(stress_mf, n_dim, comp_order), n_dim,
+                    links_comp_order, 'stress')
             if problem_type == 1:
                 stres[idx] = stress_33
             # Set Links rstava array
             rstava = np.zeros(nstra + 1)
             idx = len(comp_order)
-            rstava[0:idx] = LinksUtil.gettensormflinks(mop.gettensorfrommf(
+            rstava[0:idx] = LinksUtil.gettensormflinks(mop.get_tensor_from_mf(
                 e_strain_mf, n_dim, comp_order), n_dim, links_comp_order, 'strain')
             if problem_type == 1:
                 rstava[idx] = e_strain_33

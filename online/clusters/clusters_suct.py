@@ -67,7 +67,7 @@ def clusterssuct(problem_dict, mat_dict, clst_dict, algpar_dict, phase_clusters,
             # Get material cluster incremental strain (matricial form)
             inc_strain_mf = gbl_inc_strain_mf[i_init:i_end]
             # Build material cluster incremental strain tensor
-            inc_strain = mop.gettensorfrommf(inc_strain_mf, n_dim, comp_order)
+            inc_strain = mop.get_tensor_from_mf(inc_strain_mf, n_dim, comp_order)
             # Get material cluster last increment converged state variables
             state_variables_old = copy.deepcopy(clusters_state_old[str(cluster)])
             # Perform material cluster state update and compute associated

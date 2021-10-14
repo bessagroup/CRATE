@@ -311,8 +311,8 @@ class MaterialState:
             def_gradient = def_gradient_old + inc_def_gradient
             # Get last converged elastic logarithmic strain tensor
             e_log_strain_old_mf = state_variables_old['e_strain_mf']
-            e_log_strain_old = mop.gettensorfrommf(e_log_strain_old_mf, n_dim,
-                                                   comp_order_sym)
+            e_log_strain_old = mop.get_tensor_from_mf(e_log_strain_old_mf, n_dim,
+                                                      comp_order_sym)
             # Compute incremental logarithmic strain tensor
             inc_strain = MaterialState.compute_inc_log_strain(e_log_strain_old,
                                                               inc_def_gradient=inc_strain)
@@ -325,8 +325,8 @@ class MaterialState:
         if strain_type == 'finite-kinext':
             # Get Kirchhoff stress tensor
             kirchhoff_stress_mf = state_variables['stress_mf']
-            kirchhoff_stress = mop.gettensorfrommf(kirchhoff_stress_mf, n_dim,
-                                                   comp_order_sym)
+            kirchhoff_stress = mop.get_tensor_from_mf(kirchhoff_stress_mf, n_dim,
+                                                      comp_order_sym)
             # Compute Cauchy stress tensor (matricial form)
             cauchy_stress = MaterialState.cauchy_from_kirchhoff(def_gradient,
                                                                 kirchhoff_stress)
@@ -336,8 +336,8 @@ class MaterialState:
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Get last converged elastic logarithmic strain tensor
             e_log_strain_old_mf = state_variables_old['e_strain_mf']
-            e_log_strain_old = mop.gettensorfrommf(e_log_strain_old_mf, n_dim,
-                                                   comp_order_sym)
+            e_log_strain_old = mop.get_tensor_from_mf(e_log_strain_old_mf, n_dim,
+                                                      comp_order_sym)
             # Compute spatial consistent tangent modulus
             spatial_consistent_tangent = \
                 MaterialState.compute_spatial_tangent_modulus(e_log_strain_old,

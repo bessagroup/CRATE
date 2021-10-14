@@ -128,16 +128,16 @@ def getlinksmodelprocedures():
             idx = len(comp_order)
             stres = np.zeros(nstre)
             stres[0:idx] = LinksUtil.gettensormflinks(
-                mop.gettensorfrommf(stress_mf, n_dim, comp_order), n_dim, links_comp_order,
-                'stress')
+                mop.get_tensor_from_mf(stress_mf, n_dim, comp_order), n_dim,
+                    links_comp_order, 'stress')
             if problem_type == 1:
                 stres[idx] = stress_33
             # Set Links rstava array
             idx = len(comp_order)
             rstava = np.zeros(nstra)
             rstava[0:idx] = LinksUtil.gettensormflinks(
-                mop.gettensorfrommf(e_strain_mf, n_dim, comp_order), n_dim,
-                links_comp_order,'strain')
+                mop.get_tensor_from_mf(e_strain_mf, n_dim, comp_order), n_dim,
+                    links_comp_order,'strain')
             if problem_type == 1:
                 rstava[idx] = e_strain_33
             # Set Links lalgva array

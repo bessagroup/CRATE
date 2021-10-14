@@ -344,8 +344,9 @@ class VonMises(ConstitutiveModel):
             # Compute elastoplastic consistent tangent modulus
             factor_1 = ((inc_p_mult*6.0*G**2)/vm_trial_stress)
             factor_2 = (6.0*G**2)*((inc_p_mult/vm_trial_stress) - (1.0/(3.0*G + H)))
-            unit_flow_vector = np.sqrt(2.0/3.0)*mop.gettensorfrommf(flow_vector_mf, n_dim,
-                                                                    comp_order_sym)
+            unit_flow_vector = \
+                np.sqrt(2.0/3.0)*mop.get_tensor_from_mf(flow_vector_mf, n_dim,
+                                                        comp_order_sym)
             consistent_tangent = e_consistent_tangent - factor_1*fodevprojsym + \
                 factor_2*top.dyad22(unit_flow_vector, unit_flow_vector)
         else:
@@ -630,8 +631,8 @@ def suct(problem_dict, algpar_dict, material_properties, mat_phase, inc_strain,
         # Compute elastoplastic consistent tangent modulus
         factor_1 = ((inc_p_mult*6.0*G**2)/vm_trial_stress)
         factor_2 = (6.0*G**2)*((inc_p_mult/vm_trial_stress) - (1.0/(3.0*G + H)))
-        unit_flow_vector = np.sqrt(2.0/3.0)*mop.gettensorfrommf(flow_vector_mf, n_dim,
-                                                                comp_order)
+        unit_flow_vector = np.sqrt(2.0/3.0)*mop.get_tensor_from_mf(flow_vector_mf, n_dim,
+                                                                   comp_order)
         consistent_tangent = e_consistent_tangent - factor_1*fodevprojsym + \
             factor_2*top.dyad22(unit_flow_vector, unit_flow_vector)
     else:
