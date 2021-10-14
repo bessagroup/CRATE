@@ -407,7 +407,7 @@ def get_state_3Dmf_from_2Dmf(problem_type, mf_2d, comp_33):
     # Return
     return mf_3d
 # ------------------------------------------------------------------------------------------
-def getstate2Dmffrom3Dmf(problem_type, mf_3d):
+def get_state_2Dmf_from_3Dmf(problem_type, mf_3d):
     '''Build 2D counterpart of 3D strain/stress related second- or fourth-order tensor.
 
     Parameters
