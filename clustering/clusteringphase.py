@@ -325,8 +325,8 @@ class SCRMP(CRMP):
             # Get clustering features' column indexes
             indexes = base_clustering_scheme[i, 2]
             # Get base clustering data matrix
-            data_matrix = mop.getcondmatrix(self._cluster_data_matrix,
-                                            list(range(n_phase_voxels)), indexes)
+            data_matrix = mop.get_condensed_matrix(self._cluster_data_matrix,
+                                                   list(range(n_phase_voxels)), indexes)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Perform cluster analysis
             cluster_labels, _, is_n_clusters_satisfied = \
@@ -491,8 +491,8 @@ class GACRMP(ACRMP):
             # Get clustering features' column indexes
             indexes = base_clustering_scheme[i, 2]
             # Get base clustering data matrix
-            data_matrix = mop.getcondmatrix(self._cluster_data_matrix,
-                                            list(range(n_phase_voxels)), indexes)
+            data_matrix = mop.get_condensed_matrix(self._cluster_data_matrix,
+                                                   list(range(n_phase_voxels)), indexes)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Perform cluster analysis
             cluster_labels, _, is_n_clusters_satisfied = \
@@ -664,8 +664,8 @@ class GACRMP(ACRMP):
                 # Get clustering features' column indexes
                 indexes = adaptive_clustering_scheme[i, 2]
                 # Get adaptive clustering data matrix
-                data_matrix = mop.getcondmatrix(self._cluster_data_matrix,
-                                                target_cluster_idxs, indexes)
+                data_matrix = mop.get_condensed_matrix(self._cluster_data_matrix,
+                                                       target_cluster_idxs, indexes)
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Perform cluster analysis
                 cluster_labels, _, is_n_clusters_satisfied = \
@@ -954,8 +954,8 @@ class HAACRMP(ACRMP):
         # Get base clustering features' column indexes
         indexes = base_clustering_scheme[0, 2]
         # Get base clustering data matrix
-        data_matrix = mop.getcondmatrix(self._cluster_data_matrix,
-                                        list(range(n_phase_voxels)), indexes)
+        data_matrix = mop.get_condensed_matrix(self._cluster_data_matrix,
+                                               list(range(n_phase_voxels)), indexes)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Perform cluster analysis
         cluster_analysis = clstalgs.ClusterAnalysis()

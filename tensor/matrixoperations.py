@@ -312,7 +312,7 @@ def kelvin_factor(idx, comp_order):
 #
 #                                                                Matricial form condensation
 # ==========================================================================================
-def getcondmatrix(matrix, rows, cols):
+def get_condensed_matrix(matrix, rows, cols):
     '''Perform condensation of matrix given a set of rows and columns.
 
     Parameters

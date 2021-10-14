@@ -210,8 +210,8 @@ class CRVE:
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Get material phase cluster data matrix containing the required data to perform
             # all the prescribed cluster analyses
-            cluster_data_matrix = mop.getcondmatrix(self._global_data_matrix,
-                                                    voxels_idxs, features_idxs)
+            cluster_data_matrix = mop.get_condensed_matrix(self._global_data_matrix,
+                                                           voxels_idxs, features_idxs)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Instatiate cluster-reduced material phase
             if ctype == 'static':
