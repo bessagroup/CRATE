@@ -216,7 +216,7 @@ class VonMises(ConstitutiveModel):
         #                                                                       State update
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set required fourth-order tensors
-        _, _, _, fosym, fodiagtrace, _, fodevprojsym = top.getidoperators(n_dim)
+        _, _, _, fosym, fodiagtrace, _, fodevprojsym = top.get_id_operators(n_dim)
         FODevProjSym_mf = mop.get_tensor_mf(fodevprojsym, n_dim, comp_order_sym)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute elastic trial strain
@@ -486,7 +486,7 @@ def suct(problem_dict, algpar_dict, material_properties, mat_phase, inc_strain,
     #                                                                           State update
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set required fourth-order tensors
-    _, _, _, fosym, fodiagtrace, _, fodevprojsym = top.getidoperators(n_dim)
+    _, _, _, fosym, fodiagtrace, _, fodevprojsym = top.get_id_operators(n_dim)
     FODevProjSym_mf = mop.get_tensor_mf(fodevprojsym, n_dim, comp_order)
     # Compute elastic trial strain
     e_trial_strain_mf = e_strain_old_mf + inc_strain_mf

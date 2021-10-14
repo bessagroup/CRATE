@@ -176,7 +176,7 @@ class Elastic(ConstitutiveModel):
         #                                                         Consistent tangent modulus
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set required fourth-order tensors
-        _, _, _, fosym, fodiagtrace, _, _ = top.getidoperators(self._n_dim)
+        _, _, _, fosym, fodiagtrace, _, _ = top.get_id_operators(self._n_dim)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute consistent tangent modulus according to problem type
         if self._problem_type in [1, 4]:
@@ -247,7 +247,7 @@ class Elastic(ConstitutiveModel):
         miu = E/(2.0*(1.0 + v))
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set required fourth-order tensors
-        _, _, _, fosym, fodiagtrace, _, _ = top.getidoperators(n_dim)
+        _, _, _, fosym, fodiagtrace, _, _ = top.get_id_operators(n_dim)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute infinitesimal strains elasticity tensor according to problem type
         if problem_type in [1, 4]:
@@ -335,7 +335,7 @@ def suct(problem_dict, algpar_dict, material_properties, mat_phase, inc_strain,
     lam = (E*v)/((1.0 + v)*(1.0 - 2.0*v))
     miu = E/(2.0*(1.0 + v))
     # Set required fourth-order tensors
-    _, _, _, fosym, fodiagtrace, _, _ = top.getidoperators(n_dim)
+    _, _, _, fosym, fodiagtrace, _, _ = top.get_id_operators(n_dim)
     # Compute consistent tangent modulus according to problem type
     if problem_type in [1, 4]:
         # 2D problem (plane strain) / 3D problem
@@ -398,7 +398,7 @@ def ct(problem_dict, properties):
     lam = (E*v)/((1.0 + v)*(1.0 - 2.0*v))
     miu = E/(2.0*(1.0 + v))
     # Set required fourth-order tensors
-    _, _, _, fosym, fodiagtrace, _, _ = top.getidoperators(n_dim)
+    _, _, _, fosym, fodiagtrace, _, _ = top.get_id_operators(n_dim)
     # Compute consistent tangent modulus according to problem type
     if problem_type in [1, 4]:
         # 2D problem (plane strain) / 3D problem

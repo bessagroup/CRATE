@@ -704,7 +704,7 @@ def getElasticityTensor(problem_type, n_dim, comp_order, properties):
     lam = (E*v)/((1.0 + v)*(1.0-2.0*v))
     miu = E/(2.0*(1.0 + v))
     # Set required fourth-order tensors
-    _, _, _, fosym, fodiagtrace, _, _ = top.getidoperators(n_dim)
+    _, _, _, fosym, fodiagtrace, _, _ = top.get_id_operators(n_dim)
     # 2D problem (plane strain)
     if problem_type == 1:
         De_tensor = lam*fodiagtrace + 2.0*miu*fosym

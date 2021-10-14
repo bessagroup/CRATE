@@ -171,7 +171,7 @@ def effective_tangent_modulus(n_dim, comp_order, material_phases, phase_clusters
     components order.
     '''
     # Set second-order identity tensor
-    _, _, _, fosym, _, _, _ = top.getidoperators(n_dim)
+    _, _, _, fosym, _, _, _ = top.get_id_operators(n_dim)
     FOSym_mf = mop.get_tensor_mf(fosym, n_dim, comp_order)
     # Get total number of clusters
     n_total_clusters = len(clusters_f.keys())

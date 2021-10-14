@@ -54,7 +54,7 @@ def dd(i, j):
     value = 1 if i == j else 0
     return value
 # ------------------------------------------------------------------------------------------
-def getidoperators(n_dim):
+def get_id_operators(n_dim):
     '''Set common identity operators.
 
     Parameters
@@ -290,7 +290,7 @@ def derivative_isotropic_tensor(mode, x):
     n_dim = x.shape[0]
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set required second-order and fourth-order identity tensors
-    soid, foid, _, fosym, _, _, _ = getidoperators(n_dim)
+    soid, foid, _, fosym, _, _, _ = get_id_operators(n_dim)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set scalar function with single argument and associated derivative
     if mode == 'log':

@@ -1090,8 +1090,8 @@ def utility6():
     n_dim = 3
     comp_order = ['11','22','33','12','23','13']
     # Set required fourth-order tensors
-    soid,foid,fotransp,fosym,fodiagtrace,fodevproj,fodevprojsym = \
-                                                               top.getidoperators(n_dim)
+    soid, foid, fotransp, fosym, fodiagtrace, fodevproj, fodevprojsym = \
+        top.get_id_operators(n_dim)
     # Compute consistent tangent modulus (Lamé parameters)
     consistent_tangent = lam*fodiagtrace + 2.0*miu*fosym
     # Build consistent tangent modulus (Lamé parameters) matricial form
@@ -1118,8 +1118,8 @@ def utility6():
     n_dim = 2
     comp_order = ['11','22','12']
     # Set required fourth-order tensors
-    soid,foid,fotransp,fosym,fodiagtrace,fodevproj,fodevprojsym = \
-                                                               top.getidoperators(n_dim)
+    soid, foid, fotransp, fosym, fodiagtrace, fodevproj, fodevprojsym = \
+        top.get_id_operators(n_dim)
     # Compute consistent tangent modulus (Lamé parameters)
     consistent_tangent = lam*fodiagtrace + 2.0*miu*fosym
     # Build consistent tangent modulus (Lamé parameters) matricial form
@@ -1147,7 +1147,7 @@ def utility6():
     n_dim = 2
     comp_order = ['11','22','12']
     # Set required fourth-order tensors
-    soid,foid,fotransp,fosym,fodiagtrace,_,_ = top.getidoperators(n_dim)
+    soid,foid,fotransp,fosym,fodiagtrace,_,_ = top.get_id_operators(n_dim)
     # Set fourth-order deviatoric projection tensor (second order symmetric tensors)
     fodevprojsym = fosym - (1.0/2.0)*fodiagtrace
     # Compute 2D bulk modulus

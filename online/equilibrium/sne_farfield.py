@@ -79,7 +79,7 @@ def buildjacobian2(problem_dict, material_phases, phase_clusters, n_total_cluste
     n_dim = problem_dict['n_dim']
     comp_order = problem_dict['comp_order_sym']
     # Set fourth-order symmetric projection tensor (matricial form)
-    _, _, _, fosym, _, _, _ = top.getidoperators(n_dim)
+    _, _, _, fosym, _, _, _ = top.get_id_operators(n_dim)
     fosym_mf = mop.get_tensor_mf(fosym, n_dim, comp_order)
     # Initialize Jacobian matrix
     jacobian = np.zeros(2*(n_total_clusters*len(comp_order) + len(comp_order),))
