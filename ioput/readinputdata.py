@@ -65,7 +65,7 @@ def readinputdatafile(input_file,dirs_dict):
     keyword = 'Problem_Type'
     max_val = 4
     problem_type = rproc.readtypeAkeyword(input_file, input_file_path, keyword, max_val)
-    n_dim, comp_order_sym, comp_order_nsym = mop.getproblemtypeparam(problem_type)
+    n_dim, comp_order_sym, comp_order_nsym = mop.get_problem_type_parameters(problem_type)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read RVE dimensions
     keyword = 'RVE_Dimensions'

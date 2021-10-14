@@ -157,7 +157,8 @@ class CRVE:
         self.adaptive_clustering_time = 0
         self.adaptive_cit_time = 0
         # Get problem type parameters
-        n_dim, comp_order_sym, comp_order_nsym = mop.getproblemtypeparam(problem_type)
+        n_dim, comp_order_sym, comp_order_nsym = \
+            mop.get_problem_type_parameters(problem_type)
         self._n_dim = n_dim
         self._comp_order_sym = comp_order_sym
         self._comp_order_nsym = comp_order_nsym

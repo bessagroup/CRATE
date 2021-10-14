@@ -17,7 +17,7 @@ import itertools as it
 #
 #                                                                    Problem type parameters
 # ==========================================================================================
-def getproblemtypeparam(problem_type):
+def get_problem_type_parameters(problem_type):
     '''Get parameters dependent on the problem type.
 
     Parameters
@@ -380,9 +380,9 @@ def getstate3Dmffrom2Dmf(problem_type, mf_2d, comp_33):
         Matricial form of 3D strain/stress second-order tensor.
     '''
     # Get 2D strain/stress components order in symmetric and nonsymmetric cases
-    _, comp_order_sym_2d, comp_order_nsym_2d = getproblemtypeparam(problem_type=1)
+    _, comp_order_sym_2d, comp_order_nsym_2d = get_problem_type_parameters(problem_type=1)
     # Get 3D strain/stress components order in symmetric and nonsymmetric cases
-    _, comp_order_sym_3d, comp_order_nsym_3d = getproblemtypeparam(problem_type=4)
+    _, comp_order_sym_3d, comp_order_nsym_3d = get_problem_type_parameters(problem_type=4)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set required strain/stress component order according to strain tensor symmetry
     if len(mf_2d) == len(comp_order_sym_2d):
@@ -424,9 +424,9 @@ def getstate2Dmffrom3Dmf(problem_type, mf_3d):
         Matricial form of 2D strain/stress related tensor.
     '''
     # Get 2D strain/stress components order in symmetric and nonsymmetric cases
-    _, comp_order_sym_2d, comp_order_nsym_2d = getproblemtypeparam(problem_type=1)
+    _, comp_order_sym_2d, comp_order_nsym_2d = get_problem_type_parameters(problem_type=1)
     # Get 3D strain/stress components order in symmetric and nonsymmetric cases
-    _, comp_order_sym_3d, comp_order_nsym_3d = getproblemtypeparam(problem_type=4)
+    _, comp_order_sym_3d, comp_order_nsym_3d = get_problem_type_parameters(problem_type=4)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set required strain/stress component order according to strain tensor symmetry
     if len(mf_3d) == len(comp_order_sym_3d):

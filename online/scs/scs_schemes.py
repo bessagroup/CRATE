@@ -99,7 +99,7 @@ def scsupdate(self_consistent_scheme, problem_dict, inc_strain_mf, inc_stress_mf
             # Solve the regression-based self-consistent scheme always considering the
             # 3D strain and stress tensors
             problem_type = 4
-            n_dim, comp_order_sym, _ = mop.getproblemtypeparam(problem_type)
+            n_dim, comp_order_sym, _ = mop.get_problem_type_parameters(problem_type)
             comp_order = comp_order_sym
         # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         # Set second-order identity tensor

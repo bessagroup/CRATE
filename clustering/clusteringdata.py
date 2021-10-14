@@ -209,7 +209,7 @@ class ClusterAnalysisData:
         self._features_loads_ids = None
         self.global_data_matrix = None
         # Get problem type parameters
-        _, comp_order_sym, comp_order_nsym = mop.getproblemtypeparam(problem_type)
+        _, comp_order_sym, comp_order_nsym = mop.get_problem_type_parameters(problem_type)
         self._comp_order_sym = comp_order_sym
         self._comp_order_nsym = comp_order_nsym
     # --------------------------------------------------------------------------------------

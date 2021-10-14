@@ -59,7 +59,7 @@ class VonMises(ConstitutiveModel):
         # Set source
         self._source = 'crate'
         # Get problem type parameters
-        n_dim, comp_order_sym, _ = mop.getproblemtypeparam(problem_type)
+        n_dim, comp_order_sym, _ = mop.get_problem_type_parameters(problem_type)
         self._n_dim = n_dim
         self._comp_order_sym = comp_order_sym
     # --------------------------------------------------------------------------------------
@@ -204,7 +204,7 @@ class VonMises(ConstitutiveModel):
             comp_order_sym = self._comp_order_sym
         else:
             # Set 3D problem parameters
-            n_dim, comp_order_sym, _ = mop.getproblemtypeparam(4)
+            n_dim, comp_order_sym, _ = mop.get_problem_type_parameters(4)
             # Build strain tensors (matricial form) by including the appropriate
             # out-of-plain components
             inc_strain_mf = mop.getstate3Dmffrom2Dmf(self._problem_type, inc_strain_mf, 0.0)
@@ -470,7 +470,7 @@ def suct(problem_dict, algpar_dict, material_properties, mat_phase, inc_strain,
     # out-of-plain strain and stress components
     if problem_type == 1:
         # Set 3D problem parameters
-        n_dim,comp_order_sym,_ = mop.getproblemtypeparam(4)
+        n_dim,comp_order_sym,_ = mop.get_problem_type_parameters(4)
         comp_order = comp_order_sym
         # Build strain tensors (matricial form) by including the appropriate out-of-plain
         # components

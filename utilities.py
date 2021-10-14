@@ -44,7 +44,7 @@ def utility1():
     # Set problem type
     problem_type = 1
     # Set problem parameters
-    n_dim, comp_order_sym, comp_order_nsym = mop.getproblemtypeparam(problem_type)
+    n_dim, comp_order_sym, comp_order_nsym = mop.get_problem_type_parameters(problem_type)
     # Set problem data
     problem_dict = dict()
     problem_dict['problem_type'] = problem_type

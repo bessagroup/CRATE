@@ -96,7 +96,8 @@ class MaterialState:
         self._clusters_state_old = None
         self._clusters_tangent_mf = None
         # Get problem type parameters
-        n_dim, comp_order_sym, comp_order_nsym = mop.getproblemtypeparam(problem_type)
+        n_dim, comp_order_sym, comp_order_nsym = \
+            mop.get_problem_type_parameters(problem_type)
         self._n_dim = n_dim
         self._comp_order_sym = comp_order_sym
         self._comp_order_nsym = comp_order_nsym
@@ -297,7 +298,8 @@ class MaterialState:
             form.
         '''
         # Get problem type parameters
-        n_dim, comp_order_sym, comp_order_nsym = mop.getproblemtypeparam(problem_type)
+        n_dim, comp_order_sym, comp_order_nsym = \
+            mop.get_problem_type_parameters(problem_type)
         # Get material phase constitutive model strain type
         strain_type = constitutive_model.get_strain_type()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
