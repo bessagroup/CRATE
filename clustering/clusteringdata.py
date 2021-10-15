@@ -8,7 +8,7 @@
 # Development history:
 # Bernardo P. Ferreira | Jan 2020 | Initial coding.
 # Bernardo P. Ferreira | Oct 2020 | Refactoring and OOP implementation.
-# Bernardo P. Ferreira | Oct 2021 | Extension to finite strains.
+# Bernardo P. Ferreira | Oct 2021 | Finite strains extension.
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
@@ -115,12 +115,12 @@ def get_available_clustering_features(strain_formulation, problem_type):
 
     Returns
     -------
-    features_descriptors: dict
-        Available clustering features identifiers (key, str) and descriptors (tuple
-        structured as (number of feature dimensions (int), list of macroscale strain
-        loadings (list of ndarrays), feature computation algorithm). The macroscale strain
-        loading is the infinitesimal strain tensor (infinitesimal strains) and the
-        deformation gradient (finite strains).
+    features_descriptors : dict
+        Data (tuple structured as (number of feature dimensions (int), feature
+        computation algorithm (function), list of macroscale strain loadings (list of
+        2darrays), strain magnitude factor (float))) associated to each feature
+        (key,str). The macroscale strain loading is the infinitesimal strain tensor
+        (infinitesimal strains) and the deformation gradient (finite strains).
     '''
     features_descriptors = {}
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -132,6 +132,8 @@ def get_available_clustering_features(strain_formulation, problem_type):
     comp_order = comp_order_sym
     # Set number of feature dimensions
     n_feature_dim = len(comp_order)**2
+    # Set feature computation algorithm
+    feature_algorithm = StrainConcentrationTensor()
     # Set macroscale strain loadings required to compute feature
     mac_strains = []
     for i in range(len(comp_order)):
@@ -139,23 +141,30 @@ def get_available_clustering_features(strain_formulation, problem_type):
         comp = comp_order[i]
         so_idx = tuple([int(x) - 1 for x in list(comp_order[i])])
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set macroscale strain magnitude factor
+        if strain_formulation == 'finite':
+            strain_magnitude_factor = 1.0e-6
+        else:
+            strain_magnitude_factor = 1.0
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set orthogonal infinitesimal strain tensor (infinitesimal strains) or material
         # logarithmic strain tensor (finite strains)
         mac_strain = np.zeros((n_dim, n_dim))
-        mac_strain[so_idx] = 1.0
+        mac_strain[so_idx] = 1.0*strain_magnitude_factor
         if comp[0] != comp[1]:
-            mac_strain[so_idx[::-1]] = 1.0
+            mac_strain[so_idx[::-1]] = mac_strain[so_idx]
         # Compute deformation gradient associated to the material logarithmic strain tensor
         if strain_formulation == 'finite':
             mac_strain = def_gradient_from_log_strain(mac_strain)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Store macroscale strain loading
         mac_strains.append(mac_strain)
-    # Set feature computation algorithm
-    feature_algorithm = StrainConcentrationTensor()
-    # Assemble to available clustering features
-    features_descriptors['1'] = (n_feature_dim, mac_strains, feature_algorithm)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Assemble to available clustering features
+    features_descriptors['1'] = (n_feature_dim, feature_algorithm,
+                                 mac_strains, strain_magnitude_factor)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Return
     return features_descriptors
 # ------------------------------------------------------------------------------------------
 def def_gradient_from_log_strain(log_strain):
@@ -235,9 +244,11 @@ class ClusterAnalysisData:
             features (col 2, list of int) and a list of the features data matrix' indexes
             (col 3, list of int).
         features_descriptors : dict
-            Available clustering features identifiers (key, int) and descriptors (tuple
-            structured as (number of feature dimensions (int), list of macroscale strain
-            loadings (list of ndarrays), feature computation algorithm (function)).
+            Data (tuple structured as (number of feature dimensions (int), feature
+            computation algorithm (function), list of macroscale strain loadings (list of
+            2darrays), strain_magnitude_factor (float))) associated to each feature
+            (key,str). The macroscale strain loading is the infinitesimal strain tensor
+            (infinitesimal strains) and the deformation gradient (finite strains).
         strain_formulation: str, {'infinitesimal', 'finite'}
             Problem strain formulation.
         problem_type : int
@@ -351,7 +362,7 @@ class ClusterAnalysisData:
         for feature in self._features:
             self._features_loads_ids[str(feature)] = []
             # Loop over clustering feature's required macroscale strain loadings
-            for mac_strain in self._feature_descriptors[str(feature)][1]:
+            for mac_strain in self._feature_descriptors[str(feature)][2]:
                 is_new_mac_strain = True
                 # Loop over already prescribed macroscale strain loadings
                 for i in range(len(self._mac_strains)):
@@ -418,8 +429,16 @@ class ClusterAnalysisData:
                                          axis=1)
             # Get clustering feature's computation algorithm and compute associated data
             # matrix
-            feature_algorithm = self._feature_descriptors[str(feature)][2]
+            feature_algorithm = self._feature_descriptors[str(feature)][1]
             data_matrix = feature_algorithm.get_feature_data_matrix(rve_response)
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Normalize data matrix according to strain magnitude factor
+            if type(feature_algorithm) == StrainConcentrationTensor:
+                # Get macroscale strain magnitude factor
+                strain_magnitude_factor = self._feature_descriptors[str(feature)][3]
+                # Normalize data matrix
+                data_matrix = (1.0/strain_magnitude_factor)*data_matrix
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Assemble clustering feature's data matrix to clustering global data matrix
             j_init = self._features_idxs[str(feature)][0]
             j_end = self._features_idxs[str(feature)][-1] + 1
@@ -429,10 +448,9 @@ class ClusterAnalysisData:
 # ==========================================================================================
 class FeatureAlgorithm(ABC):
     '''Feature computation algorithm interface.'''
-
     @abstractmethod
     def get_feature_data_matrix(self, rve_response):
-        '''Compute data matrix associated to a given clustering feature.
+        '''Compute data matrix associated to clustering feature.
 
         Parameters
         ----------
@@ -448,8 +466,27 @@ class FeatureAlgorithm(ABC):
         pass
 # ------------------------------------------------------------------------------------------
 class StrainConcentrationTensor(FeatureAlgorithm):
-    '''Fourth-order elastic strain concentration tensor.'''
+    '''Fourth-order elastic strain concentration tensor.
+
+    The fourth-order elastic strain concentration tensor is defined in terms of the
+    infinitesimal strain tensor (infinitesimal strains) and the material logarithmic strain
+    tensor (finite strains). Note that both strain tensors are symmetric and admit the
+    reduced matricial form.
+    '''
     def get_feature_data_matrix(self, rve_response):
+        '''Compute data matrix associated to clustering feature.
+
+        Parameters
+        ----------
+        rve_response : ndarray of shape (n_voxels, n_strain_comps)
+            RVE elastic response for one or more macroscale loadings, where each macroscale
+            loading is associated with a set of independent strain components.
+
+        Returns
+        -------
+        data_matrix : ndarray of shape (n_voxels, n_feature_dim)
+            Clustering feature's data matrix.
+        '''
         data_matrix = copy.deepcopy(rve_response)
         return data_matrix
 #
