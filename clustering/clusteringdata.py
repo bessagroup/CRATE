@@ -6,8 +6,9 @@
 # basis to perform the RVE clustering-based domain decomposition.
 # ------------------------------------------------------------------------------------------
 # Development history:
-# Bernardo P. Ferreira | January 2020 | Initial coding.
-# Bernardo P. Ferreira | October 2020 | Refactoring and OOP implementation.
+# Bernardo P. Ferreira | Jan 2020 | Initial coding.
+# Bernardo P. Ferreira | Oct 2020 | Refactoring and OOP implementation.
+# Bernardo P. Ferreira | Oct 2021 | Extension to finite strains.
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
@@ -57,7 +58,8 @@ def set_clustering_data(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict):
     clustering_data.set_prescribed_features()
     # Set prescribed clustering features' clustering global data matrix' indexes
     clustering_data.set_feature_global_indexes()
-    # Get required macroscale strain loadings to compute clustering features
+    # Set required macroscale strain loadings to compute clustering features
+    clustering_data.set_clustering_mac_strains()
     mac_strains = clustering_data.get_clustering_mac_strains()
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     info.displayinfo('5', 'Computing RVE local elastic strain response database...')
@@ -200,8 +202,12 @@ class ClusterAnalysisData:
     _features_idxs : dict
         Global data matrix's indexes (item, list) associated to each feature (key, str).
     _feature_loads_ids :  dict
-        List of macroscale loadings identifiers (item, list of int) associated to each
-        feature (key, str).
+        List of macroscale strain loadings identifiers (item, list of int) associated to
+        each feature (key, str).
+    _mac_strains : list
+        List of macroscale strain loadings required to compute the clustering features.
+        The macroscale strain loading is the infinitesimal strain tensor (infinitesimal
+        strains) and the deformation gradient (finite strains).
     _comp_order_sym : list
         Strain/Stress components symmetric order.
     _comp_order_nsym : list
@@ -249,6 +255,7 @@ class ClusterAnalysisData:
         self._n_features_dims = None
         self._features_idxs = None
         self._features_loads_ids = None
+        self._mac_strains = None
         self.global_data_matrix = None
         # Get problem type parameters
         _, comp_order_sym, comp_order_nsym = mop.get_problem_type_parameters(problem_type)
@@ -259,6 +266,7 @@ class ClusterAnalysisData:
         '''Set prescribed clustering features.'''
         # Get material phases
         material_phases = self._base_clustering_scheme.keys()
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize clustering features
         self._features = []
         # Loop over material phases' prescribed clustering schemes and append associated
@@ -271,6 +279,7 @@ class ClusterAnalysisData:
             if mat_phase in self._adaptive_clustering_scheme.keys():
                 for i in range(self._adaptive_clustering_scheme[mat_phase].shape[0]):
                     self._features += self._adaptive_clustering_scheme[mat_phase][i, 1]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get set of unique prescribed clustering features
         self._features = set(self._features)
     # --------------------------------------------------------------------------------------
@@ -314,6 +323,7 @@ class ClusterAnalysisData:
                     indexes += self._features_idxs[str(feature)]
                 # Set clustering features data matrix' indexes
                 self._base_clustering_scheme[mat_phase][i, 2] = copy.deepcopy(indexes)
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Loop over material phase adaptive clustering scheme
             if mat_phase in self._adaptive_clustering_scheme.keys():
                 for i in range(self._adaptive_clustering_scheme[mat_phase].shape[0]):
@@ -325,22 +335,18 @@ class ClusterAnalysisData:
                     self._adaptive_clustering_scheme[mat_phase][i, 2] = \
                         copy.deepcopy(indexes)
     # --------------------------------------------------------------------------------------
-    def get_clustering_mac_strains(self):
-        '''Get required macroscale strain loadings to compute clustering features.
+    def set_clustering_mac_strains(self):
+        '''Set macroscale strain loadings required to compute clustering features.
 
-        List the required macroscale strain loadings (second-order macroscale strain
-        tensor) to compute all the prescribed clustering features. In addition, assign the
-        macroscale strain loadings identifiers (index in the previous list) associated
-        to each clustering feature.
-
-        Returns
-        -------
-        mac_strains : list
-            List of macroscale strain loadings (ndarray, second-order strain tensor)
-            required to compute all the prescribed clustering features.
+        List the required macroscale strain loadings to compute all the prescribed
+        clustering features. The macroscale strain loading is the infinitesimal strain
+        tensor (infinitesimal strains) and the deformation gradient (finite strains).
+        In addition, assign the macroscale strain loadings identifiers (index in the
+        previous list) associated to each clustering feature.
         '''
-        mac_strains = []
+        self._mac_strains = []
         self._features_loads_ids = {}
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over prescribed clustering features
         for feature in self._features:
             self._features_loads_ids[str(feature)] = []
@@ -348,8 +354,8 @@ class ClusterAnalysisData:
             for mac_strain in self._feature_descriptors[str(feature)][1]:
                 is_new_mac_strain = True
                 # Loop over already prescribed macroscale strain loadings
-                for i in range(len(mac_strains)):
-                    array = mac_strains[i]
+                for i in range(len(self._mac_strains)):
+                    array = self._mac_strains[i]
                     if np.allclose(mac_strain, array, atol=1e-10):
                         # Append macroscale strain loading identifier to clustering feature
                         self._features_loads_ids[str(feature)].append(i)
@@ -358,11 +364,21 @@ class ClusterAnalysisData:
                 # Assemble new macroscale strain loading
                 if is_new_mac_strain:
                     # Append macroscale strain loading identifier to clustering feature
-                    self._features_loads_ids[str(feature)].append(len(mac_strains))
+                    self._features_loads_ids[str(feature)].append(len(self._mac_strains))
                     # Append macroscale strain loading
-                    mac_strains.append(mac_strain)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        return mac_strains
+                    self._mac_strains.append(mac_strain)
+    # --------------------------------------------------------------------------------------
+    def get_clustering_mac_strains(self):
+        '''Set macroscale strain loadings required to compute clustering features.
+
+        Returns
+        -------
+        mac_strains : list
+            List of macroscale strain loadings required to compute the clustering features.
+            The macroscale strain loading is the infinitesimal strain tensor (infinitesimal
+            strains) and the deformation gradient (finite strains).
+        '''
+        return self._mac_strains
     # --------------------------------------------------------------------------------------
     def set_global_data_matrix(self, rve_global_response):
         '''Compute clustering global data matrix containing all clustering features.
