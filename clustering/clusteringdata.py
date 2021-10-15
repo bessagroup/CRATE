@@ -21,6 +21,8 @@ from abc import ABC, abstractmethod
 import sklearn.preprocessing as skpp
 # Display messages
 import ioput.info as info
+# Tensorial operations
+import tensor.tensoroperations as top
 # Matricial operations
 import tensor.matrixoperations as mop
 # RVE response database
@@ -32,9 +34,7 @@ def set_clustering_data(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict):
     '''Compute the physical-based data required to perform the RVE cluster analyses.'''
     # Get problem data
     strain_formulation = problem_dict['strain_formulation']
-    n_dim = problem_dict['n_dim']
-    comp_order_sym = problem_dict['comp_order_sym']
-    comp_order_nsym = problem_dict['comp_order_nsym']
+    problem_type = problem_dict['problem_type']
     # Get regular grid data
     n_voxels_dims = rg_dict['n_voxels_dims']
     # Get clustering data
@@ -47,13 +47,12 @@ def set_clustering_data(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     info.displayinfo('5', 'Setting cluster analysis\' features...')
     # Get available clustering features descriptors
-    feature_descriptors = get_available_clustering_features(strain_formulation, n_dim,
-                                                            comp_order_sym, comp_order_nsym)
+    feature_descriptors = get_available_clustering_features(strain_formulation,
+                                                            problem_type)
     # Instatiante cluster analysis data
     clustering_data = ClusterAnalysisData(base_clustering_scheme,
                                           adaptive_clustering_scheme, feature_descriptors,
-                                          strain_formulation, comp_order_sym,
-                                          comp_order_nsym, n_voxels)
+                                          strain_formulation, problem_type, n_voxels)
     # Set prescribed clustering features
     clustering_data.set_prescribed_features()
     # Set prescribed clustering features' clustering global data matrix' indexes
@@ -90,17 +89,21 @@ def set_clustering_data(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict):
 #
 #                                                              Available clustering features
 # ==========================================================================================
-def get_available_clustering_features(strain_formulation, n_dim, comp_order_sym,
-                                      comp_order_nsym):
-    '''Get available clustering features in CRATE.
+def get_available_clustering_features(strain_formulation, problem_type):
+    '''Get available clustering features.
 
     Available clustering features identifiers:
     1 - Fourth-order local elastic strain concentration tensor
+        > Infinitesimal strains: Infinitesimal strain tensor;
+        > Finite strains: Material logarithmic strain tensor;
 
     Parameters
     ----------
     strain_formulation: str, {'infinitesimal', 'finite'}
         Problem strain formulation.
+    problem_type : int
+        Problem type: 2D plane strain (1), 2D plane stress (2), 2D axisymmetric (3) and
+        3D (4).
     n_dim: int
         Number of spatial dimensions.
     comp_order_sym: list
@@ -111,33 +114,40 @@ def get_available_clustering_features(strain_formulation, n_dim, comp_order_sym,
     Returns
     -------
     features_descriptors: dict
-        Available clustering features identifiers (key, int) and descriptors (tuple
+        Available clustering features identifiers (key, str) and descriptors (tuple
         structured as (number of feature dimensions (int), list of macroscale strain
-        loadings (list of ndarrays), feature computation algorithm.
+        loadings (list of ndarrays), feature computation algorithm). The macroscale strain
+        loading is the infinitesimal strain tensor (infinitesimal strains) and the
+        deformation gradient (finite strains).
     '''
     features_descriptors = {}
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Set strain/stress components order according to problem strain formulation
-    if strain_formulation == 'infinitesimal':
-        comp_order = comp_order_sym
-    elif strain_formulation == 'finite':
-        comp_order == comp_order_nsym
-    else:
-        raise RuntimeError('Unknown problem strain formulation.')
+    # Get problem type parameters
+    n_dim, comp_order_sym, comp_order_nsym = mop.get_problem_type_parameters(problem_type)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Fourth-order local elastic strain concentration tensor:
+    # Set strain components order
+    comp_order = comp_order_sym
     # Set number of feature dimensions
     n_feature_dim = len(comp_order)**2
     # Set macroscale strain loadings required to compute feature
     mac_strains = []
     for i in range(len(comp_order)):
-        comp_i = comp_order[i]
+        # Get strain component and associated indexes
+        comp = comp_order[i]
         so_idx = tuple([int(x) - 1 for x in list(comp_order[i])])
-        # Set macroscopic strain loading
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set orthogonal infinitesimal strain tensor (infinitesimal strains) or material
+        # logarithmic strain tensor (finite strains)
         mac_strain = np.zeros((n_dim, n_dim))
         mac_strain[so_idx] = 1.0
-        if strain_formulation == 'infinitesimal' and comp_i[0] != comp_i[1]:
+        if comp[0] != comp[1]:
             mac_strain[so_idx[::-1]] = 1.0
+        # Compute deformation gradient associated to the material logarithmic strain tensor
+        if strain_formulation == 'finite':
+            mac_strain = def_gradient_from_log_strain(mac_strain)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Store macroscale strain loading
         mac_strains.append(mac_strain)
     # Set feature computation algorithm
     feature_algorithm = StrainConcentrationTensor()
@@ -145,6 +155,38 @@ def get_available_clustering_features(strain_formulation, n_dim, comp_order_sym,
     features_descriptors['1'] = (n_feature_dim, mac_strains, feature_algorithm)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return features_descriptors
+# ------------------------------------------------------------------------------------------
+def def_gradient_from_log_strain(log_strain):
+    '''Get deformation gradient corresponding to material logarithmic strain tensor.
+
+    Among the multitude of deformation gradients that may correspond to a given material
+    logarithmic strain tensor, a particular choice stems from assuming that both tensors
+    are coaxial, i.e., that the deformation gradient shares the eigenvectors with the
+    material logarithmic strain tensor. In this case, the deformation gradient is symmetric
+    and admits spectral decomposition.
+
+    Parameters
+    ----------
+    log_strain : 2darray
+        Material logarithmic strain tensor.
+
+    Returns
+    -------
+    def_gradient : 2darray
+        Deformation gradient.
+    '''
+    # Perform spectral decomposition of material logarithmic strain tensor
+    log_eigenvalues, log_eigenvectors, _, _ = top.spectral_decomposition(log_strain)
+    # Compute deformation gradient eigenvalues
+    dg_eigenvalues = np.exp(log_eigenvalues)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Compute deformation gradient from spectral decomposition by assuming coaxility with
+    # the material logarithmic strain tensor
+    def_gradient = np.matmul(log_eigenvectors, np.matmul(np.diag(dg_eigenvalues),
+                                                         np.transpose(log_eigenvectors)))
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Return
+    return def_gradient
 #
 #                                                                      Cluster analysis data
 # ==========================================================================================
