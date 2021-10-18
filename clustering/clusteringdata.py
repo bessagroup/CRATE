@@ -37,9 +37,20 @@ def set_clustering_data(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict):
     strain_formulation = problem_dict['strain_formulation']
     problem_type = problem_dict['problem_type']
     # Get regular grid data
+    rve_dims = rg_dict['rve_dims']
     n_voxels_dims = rg_dict['n_voxels_dims']
+    regular_grid = rg_dict['regular_grid']
+    # Get material data
+    material_phases = mat_dict['material_phases']
+    material_properties = mat_dict['material_properties']
     # Get clustering data
     clustering_solution_method = clst_dict['clustering_solution_method']
+    if clustering_solution_method == 1:
+        dns_method = 'fft_basic'
+    elif clustering_solution_method == 2:
+        dns_method = 'fem_links'
+    else:
+        raise RuntimeError('Unknown DNS solution method.')
     standardization_method = clst_dict['standardization_method']
     base_clustering_scheme = clst_dict['base_clustering_scheme']
     adaptive_clustering_scheme = clst_dict['adaptive_clustering_scheme']
@@ -64,11 +75,11 @@ def set_clustering_data(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     info.displayinfo('5', 'Computing RVE local elastic strain response database...')
     # Instatiate RVE's local elastic response database
-    rve_elastic_database = RVEElasticDatabase(clustering_solution_method, mac_strains,
-                                              problem_dict, dirs_dict, rg_dict, mat_dict,
-                                              clst_dict)
+    rve_elastic_database = RVEElasticDatabase(strain_formulation, problem_type, rve_dims,
+                                              n_voxels_dims, regular_grid, material_phases,
+                                              material_properties)
     # Compute RVE's elastic response database
-    rve_elastic_database.set_RVE_response_database()
+    rve_elastic_database.compute_rve_response_database(dns_method, mac_strains)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     info.displayinfo('5', 'Computing cluster analysis global data matrix...')
     # Compute clustering global data matrix containing all clustering features

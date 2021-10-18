@@ -8,7 +8,8 @@
 # solution of microscale equilibrium problems of linear elastic heterogeneous materials.
 # ------------------------------------------------------------------------------------------
 # Development history:
-# Bernardo P. Ferreira | January 2020 | Initial coding.
+# Bernardo P. Ferreira | Jan 2020 | Initial coding.
+# Bernardo P. Ferreira | Oct 2021 | Refactoring and OOP implementation.
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
@@ -22,6 +23,446 @@ import itertools as it
 import tensor.tensoroperations as top
 # Matricial operations
 import tensor.matrixoperations as mop
+# DNS homogenization-based multi-scale methods interface
+from clustering.rveelasticdatabase import DNSHomogenizationMethod
+#
+#                                                      FFT-based homogenization basic scheme
+# ==========================================================================================
+class FFTBasicScheme(DNSHomogenizationMethod):
+    '''FFT-based homogenization basic scheme.
+
+    FFT-based homogenization basic scheme proposed by H. Moulinec and P. Suquet
+    ("A numerical method for computing the overall response of nonlinear composites with
+    complex microstructure" Comp Methods Appl M 157 (1998):69-94). For a given RVE
+    discretized in a regular grid of voxels, this method solves the microscale static
+    equilibrium problem when the RVE is subjected to a macroscale strain and is constrained
+    by periodic boundary conditions.
+
+    Attributes
+    ----------
+    _n_dim : int
+        Problem number of spatial dimensions.
+    _comp_order_sym : list
+        Strain/Stress components symmetric order.
+    _comp_order_nsym : list
+        Strain/Stress components nonsymmetric order.
+    _max_n_iterations : int
+        Maximum number of iterations to convergence.
+    _conv_criterion : str, {'stress_div', 'avg_stress'}
+        Convergence criterion: 'stress_div' is the original convergence criterion based on
+        the evaluation of the divergence of the stress tensor; 'avg_stress' is based on the
+        evolution of the average stress norm.
+    _conv_tol : float
+        Convergence tolerance.
+
+    Notes
+    -----
+    Current implementation is compatible with infinitesimal strains problems with isotropic
+    linear elastic material phases.
+    '''
+    def __init__(self, strain_formulation, problem_type, rve_dims, n_voxels_dims,
+                 regular_grid, material_phases, material_properties):
+        '''FFT-based homogenization basic scheme constructor.
+
+        Parameters
+        ----------
+        strain_formulation: str, {'infinitesimal', 'finite'}
+            Problem strain formulation.
+        problem_type : int
+            Problem type: 2D plane strain (1), 2D plane stress (2), 2D axisymmetric (3) and
+            3D (4).
+        rve_dims : list
+            RVE size in each dimension.
+        n_voxels_dims : list
+            Number of voxels in each dimension of the regular grid (spatial discretization
+            of the RVE).
+        regular_grid : ndarray
+            Regular grid of voxels (spatial discretization of the RVE), where each entry
+            contains the material phase label (int) assigned to the corresponding voxel.
+        material_phases : list
+            RVE material phases labels (str).
+        material_properties : dict
+            Constitutive model material properties (key, str) values (item, int/float/bool).
+        '''
+        self._strain_formulation = strain_formulation
+        self._problem_type = problem_type
+        self._rve_dims = rve_dims
+        self._n_voxels_dims = n_voxels_dims
+        self._regular_grid = regular_grid
+        self._material_phases = material_phases
+        self._material_properties = material_properties
+        # Get problem type parameters
+        n_dim, comp_order_sym, comp_order_nsym = \
+            mop.get_problem_type_parameters(self._problem_type)
+        self._n_dim = n_dim
+        self._comp_order_sym = comp_order_sym
+        self._comp_order_nsym = comp_order_nsym
+        # Set maximum number of iterations
+        self._max_n_iterations = 100
+        # Set convergence criterion and tolerance
+        self._conv_criterion = 'avg_stress'
+        self._conv_tol = 1e-6
+    # --------------------------------------------------------------------------------------
+    def compute_rve_local_response(self, mac_strain):
+        '''Compute RVE local elastic strain response.
+
+        Compute the local response of the material's representative volume element (RVE)
+        subjected to a given macroscale strain loading. It is assumed that the RVE is
+        spatially discretized in a regular grid of voxels.
+
+        Parameters
+        ----------
+        mac_strain : 2darray
+            Macroscale strain second-order tensor.
+
+        Returns
+        -------
+        strain_vox: dict
+            Local strain response (item, ndarray of shape equal to RVE regular grid
+            discretization) for each strain component (key, str).
+        '''
+        # Set strain/stress components order
+        comp_order = self._comp_order_sym
+        # Compute total number of voxels
+        n_voxels = np.prod(self._n_voxels_dims)
+        #
+        #                                                 Material phases elasticity tensors
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set elastic properties-related optimized variables
+        var6 = np.zeros(tuple(self._n_voxels_dims))
+        var7 = np.zeros(tuple(self._n_voxels_dims))
+        for mat_phase in material_phases:
+            # Get material phase elastic properties
+            E = material_properties[mat_phase]['E']
+            v = material_properties[mat_phase]['v']
+            # Build optimized variables
+            var6[regular_grid == int(mat_phase)] = (E*v)/((1.0 + v)*(1.0 - 2.0*v))
+            var7[regular_grid == int(mat_phase)] = np.multiply(2,E/(2.0*(1.0 + v)))
+        var8 = np.add(var6, var7)
+        #
+        #                                              Reference material elastic properties
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set reference material elastic properties as the mean between the minimum and
+        # maximum values existent among the microstructure's material phases
+        mat_prop_ref = dict()
+        mat_prop_ref['E'] = \
+            0.5*(min([material_properties[phase]['E'] for phase in material_phases]) + \
+                 max([material_properties[phase]['E'] for phase in material_phases]))
+        mat_prop_ref['v'] = \
+            0.5*(min([material_properties[phase]['v'] for phase in material_phases]) + \
+                 max([material_properties[phase]['v'] for phase in material_phases]))
+        #
+        #                                                           Frequency discretization
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set discrete frequencies (rad/m) for each dimension
+        freqs_dims = list()
+        for i in range(self._n_dim):
+            # Set sampling spatial period
+            sampling_period = self._rve_dims[i]/self._n_voxels_dims[i]
+            # Set discrete frequencies
+            freqs_dims.append(2*np.pi*np.fft.fftfreq(self._n_voxels_dims[i],
+                                                     sampling_period))
+        #
+        #                                                  Reference material Green operator
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Get reference material Young modulus and Poisson coeficient
+        E_ref = mat_prop_ref['E']
+        v_ref = mat_prop_ref['v']
+        # Compute reference material Lamé parameters
+        lam_ref = (E_ref*v_ref)/((1.0 + v_ref)*(1.0 - 2.0*v_ref))
+        miu_ref = E_ref/(2.0*(1.0 + v_ref))
+        # Compute Green operator reference material related constants
+        c1 = 1.0/(4.0*miu_ref)
+        c2 = (miu_ref + lam_ref)/(miu_ref*(lam_ref + 2.0*miu_ref))
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set Green operator matricial form components
+        comps = list(it.product(comp_order, comp_order))
+        # Set mapping between Green operator fourth-order tensorial and matricial form
+        # components (matching list indexes)
+        fo_indexes = list()
+        mf_indexes = list()
+        for i in range(len(comp_order)**2):
+            fo_indexes.append([int(x) - 1 for x in list(comps[i][0] + comps[i][1])])
+            mf_indexes.append([x for x in \
+                              [comp_order.index(comps[i][0]),
+                               comp_order.index(comps[i][1])]])
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set discrete frequencies-related optimized variables
+        var1 = [*np.meshgrid(*freqs_dims, indexing = 'ij')]
+        var2 = dict()
+        # Loop over Green operator fourth-order components
+        for fo_idx in fo_indexes:
+            # Build discrete frequencies required products
+            if str(fo_idx[1]) + str(fo_idx[3]) not in var2.keys():
+                var2[str(fo_idx[1]) + str(fo_idx[3])] = \
+                    np.multiply(var1[fo_idx[1]], var1[fo_idx[3]])
+            if str(fo_idx[1]) + str(fo_idx[2]) not in var2.keys():
+                var2[str(fo_idx[1]) + str(fo_idx[2])] = \
+                    np.multiply(var1[fo_idx[1]], var1[fo_idx[2]])
+            if str(fo_idx[0]) + str(fo_idx[2]) not in var2.keys():
+                var2[str(fo_idx[0]) + str(fo_idx[2])] = \
+                    np.multiply(var1[fo_idx[0]], var1[fo_idx[2]])
+            if str(fo_idx[0]) + str(fo_idx[3]) not in var2.keys():
+                var2[str(fo_idx[0]) + str(fo_idx[3])] = \
+                    np.multiply(var1[fo_idx[0]], var1[fo_idx[3]])
+            if ''.join([str(x) for x in fo_idx]) not in var2.keys():
+                var2[''.join([str(x) for x in fo_idx])] = \
+                    np.multiply(np.multiply(var1[fo_idx[0]], var1[fo_idx[1]]),
+                                np.multiply(var1[fo_idx[2]], var1[fo_idx[3]]))
+        # Build norm of discrete frequency vector
+        if self._n_dim == 2:
+            var3 = np.sqrt(np.add(np.square(var1[0]), np.square(var1[1])))
+        else:
+            var3 = np.sqrt(np.add(np.add(np.square(var1[0]), np.square(var1[1])),
+                                  np.square(var1[2])))
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Initialize Green operator
+        Gop_DFT_vox = {''.join([str(x + 1) for x in idx]): \
+            np.zeros(tuple(self._n_voxels_dims)) for idx in fo_indexes}
+        # Compute Green operator matricial form components
+        for i in range(len(mf_indexes)):
+            # Get fourth-order tensor indexes
+            fo_idx = fo_indexes[i]
+            # Get Green operator component
+            comp = ''.join([str(x + 1) for x in fo_idx])
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Set Dirac's delta-related optimized variables
+            var4 = [fo_idx[0] == fo_idx[2], fo_idx[0] == fo_idx[3],
+                    fo_idx[1] == fo_idx[3], fo_idx[1] == fo_idx[2]]
+            var5 = [str(fo_idx[1]) + str(fo_idx[3]), str(fo_idx[1]) + str(fo_idx[2]),
+                    str(fo_idx[0]) + str(fo_idx[2]), str(fo_idx[0]) + str(fo_idx[3])]
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Compute first material independent term of Green operator
+            first_term = np.zeros(tuple(self._n_voxels_dims))
+            for j in range(len(var4)):
+                if var4[j]:
+                    # Add discrete frequencies product
+                    first_term = np.add(first_term, var2[var5[j]])
+            first_term = np.divide(first_term, np.square(var3), where = abs(var3) > 1e-10)
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Compute second material independent term of Green operator
+            second_term = -1.0*np.divide(var2[''.join([str(x) for x in fo_idx])],
+                                         np.square(np.square(var3)),
+                                         where = abs(var3) > 1e-10)
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Compute Green operator matricial form component
+            Gop_DFT_vox[comp] = c1*first_term + c2*second_term
+        #
+        #                                                            Initial iterative guess
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Initialize strain and stress tensors
+        strain_vox = {comp: np.zeros(tuple(self._n_voxels_dims)) for comp in comp_order}
+        stress_vox = {comp: np.zeros(tuple(self._n_voxels_dims)) for comp in comp_order}
+        # Set strain initial iterative guess
+        for comp in comp_order:
+            so_idx = tuple([int(x) - 1 for x in comp])
+            strain_vox[comp] = np.full(self._regular_grid.shape, mac_strain[so_idx])
+        # Compute stress initial iterative guess
+        if problem_type == 1:
+            stress_vox['11'] = np.add(np.multiply(var8, strain_vox['11']),
+                                      np.multiply(var6, strain_vox['22']))
+            stress_vox['22'] = np.add(np.multiply(var8, strain_vox['22']),
+                                      np.multiply(var6, strain_vox['11']))
+            stress_vox['12'] = np.multiply(var7, strain_vox['12'])
+        else:
+            stress_vox['11'] = np.add(np.multiply(var8, strain_vox['11']),
+                                      np.multiply(var6, np.add(strain_vox['22'],
+                                                               strain_vox['33'])))
+            stress_vox['22'] = np.add(np.multiply(var8, strain_vox['22']),
+                                      np.multiply(var6, np.add(strain_vox['11'],
+                                                               strain_vox['33'])))
+            stress_vox['33'] = np.add(np.multiply(var8, strain_vox['33']),
+                                      np.multiply(var6, np.add(strain_vox['11'],
+                                                               strain_vox['22'])))
+            stress_vox['12'] = np.multiply(var7, strain_vox['12'])
+            stress_vox['23'] = np.multiply(var7, strain_vox['23'])
+            stress_vox['13'] = np.multiply(var7, strain_vox['13'])
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Compute average stress norm
+        if self._conv_criterion == 'avg_stress':
+            # Compute initial guess average stress norm
+            avg_stress_norm = 0.0
+            for i in range(len(comp_order)):
+                comp = comp_order[i]
+                if comp[0] == comp[1]:
+                    avg_stress_norm = avg_stress_norm + np.square(stress_vox[comp])
+                else:
+                    avg_stress_norm = avg_stress_norm + 2.0*np.square(stress_vox[comp])
+            avg_stress_norm = np.sum(np.sqrt(avg_stress_norm))/n_voxels
+            # Initialize last iteration average stress norm
+            avg_stress_norm_old = 0.0
+        #
+        #                                            Strain Discrete Fourier Transform (DFT)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Compute strain Discrete Fourier Transform (DFT)
+        strain_DFT_vox = {comp: np.zeros(tuple(self._n_voxels_dims), dtype=complex) \
+                          for comp in comp_order}
+        # Loop over strain components
+        for comp in comp_order:
+            # Discrete Fourier Transform (DFT) by means of Fast Fourier Transform (FFT)
+            strain_DFT_vox[comp] = np.fft.fftn(strain_vox[comp])
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Enforce macroscale strain DFT at the zero-frequency
+        freq_0_idx = self._n_dim*(0,)
+        mac_strain_DFT_0 = \
+            np.array([strain_DFT_vox[comp][freq_0_idx] for comp in comp_order])
+        #
+        #                                                                   Iterative scheme
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Initialize iteration counter:
+        iter = 0
+        # Start iterative loop
+        while True:
+            #
+            #                                        Stress Discrete Fourier Transform (DFT)
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Compute stress Discrete Fourier Transform (DFT)
+            stress_DFT_vox = {comp: np.zeros(tuple(self._n_voxels_dims), dtype=complex) \
+                              for comp in comp_order}
+            for comp in comp_order:
+                # Discrete Fourier Transform (DFT) by means of Fast Fourier Transform (FFT)
+                stress_DFT_vox[comp] = np.fft.fftn(stress_vox[comp])
+            #
+            #                                                         Convergence evaluation
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Evaluate convergence criterion
+            if self._conv_criterion == 'stress_div':
+                # Initialize discrete error sum
+                error_sum = 0.0
+                # Initialize stress DFT at the zero-frequency
+                stress_DFT_0_mf = np.zeros(len(comp_order), dtype=complex)
+                # Initialize stress divergence DFT
+                div_stress_DFT = \
+                    {str(comp + 1): np.zeros(tuple(self._n_voxels_dims), dtype=complex)
+                     for comp in range(self._n_dim)}
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Loop over discrete frequencies
+                for freq_coord in it.product(*freqs_dims):
+                    # Get discrete frequency index
+                    freq_idx = tuple([list(freqs_dims[x]).index(freq_coord[x]) \
+                                      for x in range(self._n_dim)])
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    # Initialize stress tensor DFT matricial form
+                    stress_DFT_mf = np.zeros(len(comp_order), dtype=complex)
+                    # Loop over stress components
+                    for i in range(len(comp_order)):
+                        # Get stress component
+                        comp = comp_order[i]
+                        # Build stress tensor DFT matricial form
+                        stress_DFT_mf[i] = \
+                            mop.kelvin_factor(i, comp_order)*stress_DFT_vox[comp][freq_idx]
+                        # Store stress tensor DFT matricial form for zero-frequency
+                        if freq_idx == self._n_dim*(0,):
+                            stress_DFT_0_mf[i] = mop.kelvin_factor(i, comp_order)*\
+                                stress_DFT_vox[comp][freq_idx]
+                    # Build stress tensor DFT
+                    stress_DFT = mop.get_tensor_from_mf(stress_DFT_mf, self._n_dim,
+                                                        comp_order)
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    # Add discrete frequency contribution to discrete error sum
+                    error_sum = error_sum + np.linalg.norm(
+                        top.dot12_1(1j*np.asarray(freq_coord), stress_DFT))**2
+                    # Compute stress divergence Discrete Fourier Transform (DFT)
+                    for i in range(self._n_dim):
+                        div_stress_DFT[str(i + 1)][freq_idx] = \
+                            top.dot12_1(1j*np.asarray(freq_coord), stress_DFT)[i]
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Compute discrete error
+                discrete_error = \
+                    np.sqrt(error_sum/n_voxels)/np.linalg.norm(stress_DFT_0_mf)
+                # Compute stress divergence Inverse Discrete Fourier Transform (IDFT)
+                div_stress = {str(comp + 1): np.zeros(tuple(self._n_voxels_dims)) \
+                              for comp in range(self._n_dim)}
+                for i in range(self._n_dim):
+                    # Inverse Discrete Fourier Transform (IDFT) by means of Fast Fourier
+                    # Transform (FFT)
+                    div_stress[str(i + 1)] = \
+                        np.real(np.fft.ifftn(div_stress_DFT[str(i + 1)]))
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            elif self._conv_criterion == 'avg_stress':
+                # Compute discrete error
+                discrete_error = abs(avg_stress_norm - avg_stress_norm_old)/avg_stress_norm
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Check solution convergence and increment iteration counter
+            if discrete_error <= self._conv_tol:
+                # Return local strain field
+                return strain_vox
+            elif iter == self._max_n_iterations:
+                raise RuntimeError('Maximum number of iterations reached without '
+                                   'convergence.')
+            else:
+                iter += 1
+        #
+        #                                            Strain Discrete Fourier Transform (DFT)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~----~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Loop over strain components
+        for i in range(len(comp_order)):
+            # Get strain component
+            comp_i = comp_order[i]
+            # Initialize auxiliar variable
+            aux = 0.0
+            # Loop over strain components
+            for j in range(len(comp_order)):
+                # Get strain component
+                comp_j = comp_order[j]
+                # Compute product between Green operator and stress DFT
+                idx1 = [comp_order.index(comp_i), comp_order.index(comp_j)]
+                idx2 = comp_order.index(comp_j)
+                aux = np.add(aux,np.multiply(
+                    mop.kelvin_factor(idx1, comp_order)*Gop_DFT_vox[comp_i + comp_j],
+                    mop.kelvin_factor(idx2, comp_order)*stress_DFT_vox[comp_j]))
+            # Update strain DFT
+            strain_DFT_vox[comp_i] = np.subtract(strain_DFT_vox[comp_i],
+                (1.0/mop.kelvin_factor(i, comp_order))*aux)
+            # Enforce macroscale strain DFT at the zero-frequency
+            freq_0_idx = n_dim*(0,)
+            strain_DFT_vox[comp_i][freq_0_idx] = mac_strain_DFT_0[i]
+        #
+        #                                   Strain Inverse Discrete Fourier Transform (IDFT)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Compute strain Inverse Discrete Fourier Transform (IDFT)
+        for comp in comp_order:
+            # Inverse Discrete Fourier Transform (IDFT) by means of Fast Fourier
+            # Transform (FFT)
+            strain_vox[comp] = np.real(np.fft.ifftn(strain_DFT_vox[comp]))
+        #
+        #                                                                      Stress update
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Update stress
+        if problem_type == 1:
+            stress_vox['11'] = np.add(np.multiply(var8, strain_vox['11']),
+                                      np.multiply(var6, strain_vox['22']))
+            stress_vox['22'] = np.add(np.multiply(var8, strain_vox['22']),
+                                      np.multiply(var6, strain_vox['11']))
+            stress_vox['12'] = np.multiply(var7, strain_vox['12'])
+        else:
+            stress_vox['11'] = np.add(np.multiply(var8, strain_vox['11']),
+                                      np.multiply(var6, np.add(strain_vox['22'],
+                                                               strain_vox['33'])))
+            stress_vox['22'] = np.add(np.multiply(var8, strain_vox['22']),
+                                      np.multiply(var6, np.add(strain_vox['11'],
+                                                               strain_vox['33'])))
+            stress_vox['33'] = np.add(np.multiply(var8, strain_vox['33']),
+                                      np.multiply(var6, np.add(strain_vox['11'],
+                                                               strain_vox['22'])))
+            stress_vox['12'] = np.multiply(var7, strain_vox['12'])
+            stress_vox['23'] = np.multiply(var7, strain_vox['23'])
+            stress_vox['13'] = np.multiply(var7, strain_vox['13'])
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Update last iteration average stress norm
+        avg_stress_norm_old = avg_stress_norm
+        # Compute average stress norm
+        avg_stress_norm = 0
+        for i in range(len(comp_order)):
+            comp = comp_order[i]
+            if comp[0] == comp[1]:
+                avg_stress_norm = avg_stress_norm + np.square(stress_vox[comp])
+            else:
+                avg_stress_norm = avg_stress_norm + 2.0*np.square(stress_vox[comp])
+        avg_stress_norm = np.sum(np.sqrt(avg_stress_norm))/n_voxels
+# ------------------------------------------------------------------------------------------
+
+# OLD CODE BELOW (TO BE REMOVED LATER)
 #
 #                                                      FFT-Based Homogenization Basic Scheme
 # ==========================================================================================
