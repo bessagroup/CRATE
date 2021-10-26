@@ -115,7 +115,7 @@ class VTKOutput:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Write VTK dataset element
         dataset_parameters, piece_parameters = \
-            self._set_image_data_parameters(rve_dims, n_voxels_dims)
+            type(self)._set_image_data_parameters(rve_dims, n_voxels_dims)
         xml.write_open_dataset_elem(vtk_file, dataset_parameters)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Open VTK dataset element piece
@@ -233,7 +233,7 @@ class VTKOutput:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Write VTK dataset element
         dataset_parameters, piece_parameters = \
-            self._set_image_data_parameters(rve_dims, n_voxels_dims)
+            type(self)._set_image_data_parameters(rve_dims, n_voxels_dims)
         xml.write_open_dataset_elem(vtk_file, dataset_parameters)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Open VTK dataset element piece
@@ -446,7 +446,8 @@ class VTKOutput:
                 self._vtk_collection.remove_vtk_collection_file(
                     time_step_file_path='VTK/' + vtk_file_path.split('VTK/', 1)[1])
     # --------------------------------------------------------------------------------------
-    def _set_image_data_parameters(self, rve_dims, n_voxels_dims):
+    @staticmethod
+    def _set_image_data_parameters(rve_dims, n_voxels_dims):
         '''Set ImageData dataset parameters.
 
         Parameters
