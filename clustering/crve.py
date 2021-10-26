@@ -8,7 +8,8 @@
 # Development history:
 # Bernardo P. Ferreira | Oct 2020 | Initial coding.
 # Bernardo P. Ferreira | Nov 2020 | Merged cluster interaction tensors computation methods.
-# Bernardo P. Ferreira | Dec 2020 | Reformulated CRVE class (cluster-reduced mat. phases).
+# Bernardo P. Ferreira | Dec 2020 | Refactorized CRVE class.
+# Bernardo P. Ferreira | Oct 2021 | Extension to finite strains.
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
@@ -82,8 +83,8 @@ class CRVE:
         computation procedures.
     '''
     # --------------------------------------------------------------------------------------
-    def __init__(self, rve_dims, regular_grid, material_phases, comp_order,
-                 global_data_matrix, clustering_type, phase_n_clusters,
+    def __init__(self, rve_dims, regular_grid, material_phases, strain_formulation,
+                 problem_type, global_data_matrix, clustering_type, phase_n_clusters,
                  base_clustering_scheme, adaptive_clustering_scheme=None,
                  adapt_criterion_data=None, adaptivity_type=None,
                  adaptivity_control_feature=None):
@@ -98,8 +99,11 @@ class CRVE:
             contains the material phase label (int) assigned to the corresponding voxel.
         material_phases : list
             CRVE material phases labels (str).
-        comp_order : list
-            Strain/Stress components (str) order.
+        strain_formulation: str, {'infinitesimal', 'finite'}
+            Problem strain formulation.
+        problem_type : int
+            Problem type: 2D plane strain (1), 2D plane stress (2), 2D axisymmetric (3) and
+            3D (4).
         global_data_matrix: ndarray of shape (n_voxels, n_features_dims)
             Data matrix containing the required clustering features' data to perform all
             the prescribed cluster analyses.
@@ -135,7 +139,6 @@ class CRVE:
         self._rve_dims = copy.deepcopy(rve_dims)
         self._regular_grid = copy.deepcopy(regular_grid)
         self._material_phases = copy.deepcopy(material_phases)
-        self._comp_order = copy.deepcopy(comp_order)
         self._global_data_matrix = copy.deepcopy(global_data_matrix)
         self._clustering_type = copy.deepcopy(clustering_type)
         self._phase_n_clusters = copy.deepcopy(phase_n_clusters)
@@ -153,8 +156,11 @@ class CRVE:
         self.adapt_criterion_data = copy.deepcopy(adapt_criterion_data)
         self.adaptive_clustering_time = 0
         self.adaptive_cit_time = 0
-        # Get number of dimensions
-        self._n_dim = len(self._rve_dims)
+        # Get problem type parameters
+        n_dim, comp_order_sym, comp_order_nsym = mop.getproblemtypeparam(problem_type)
+        self._n_dim = n_dim
+        self._comp_order_sym = comp_order_sym
+        self._comp_order_nsym = comp_order_nsym
         # Get number of voxels on each dimension and total number of voxels
         self._n_voxels_dims = \
             [regular_grid.shape[i] for i in range(len(regular_grid.shape))]
@@ -824,9 +830,10 @@ class CRVE:
                     for i in range(len(self.cit_X_mf)):
                         self.cit_X_mf[i][mat_phase_A + '_' + mat_phase_B] = {}
             # Compute Green operator material independent terms
-            self._gop_X_dft_vox = citop.gop_matindterms(self._n_dim, self._rve_dims,
-                                                        self._comp_order,
-                                                        self._n_voxels_dims)
+            self._gop_X_dft_vox = \
+                citop.gop_material_independent_terms(self._strain_formulation, self._n_dim,
+                    self._rve_dims, self._n_voxels_dims, self._comp_order_sym,
+                        self._comp_order_nsym)
         elif mode == 'adaptive':
             init_time = time.time()
             # Build lists with old (preexistent) clusters and new (adapted) clusters for
@@ -1035,6 +1042,14 @@ class CRVE:
             cluster characteristic function and the zero-frequency Green operator (material
             independent) term in the spatial domain (inverse discrete Fourier transform).
         '''
+        # Set strain/stress components order according to problem strain formulation
+        if self._strain_formulation == 'infinitesimal':
+            comp_order = self._comp_order_sym
+        elif self._strain_formulation == 'finite':
+            comp_order == self._comp_order_nsym
+        else:
+            raise RuntimeError('Unknown problem strain formulation.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize discrete convolution (spatial and frequency domain)
         gop_1_filt_dft_vox = copy.deepcopy(gop_1_dft_vox)
         gop_2_filt_dft_vox = copy.deepcopy(gop_2_dft_vox)
@@ -1047,10 +1062,10 @@ class CRVE:
         n_voxels = np.prod(self._n_voxels_dims)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over Green operator components
-        for i in range(len(self._comp_order)):
-            compi = self._comp_order[i]
-            for j in range(len(self._comp_order)):
-                compj = self._comp_order[j]
+        for i in range(len(comp_order)):
+            compi = comp_order[i]
+            for j in range(len(comp_order)):
+                compj = comp_order[j]
                 # Perform discrete convolution in the frequency domain
                 gop_1_filt_dft_vox[compi + compj] = \
                     np.multiply((rve_vol/n_voxels), np.multiply(cluster_filter_dft,
@@ -1116,25 +1131,33 @@ class CRVE:
             convolution between the material cluster J characteristic function and the
             zero-frequency Green operator (material independent) term in the spatial domain.
         '''
+        # Set strain/stress components order according to problem strain formulation
+        if self._strain_formulation == 'infinitesimal':
+            comp_order = self._comp_order_sym
+        elif self._strain_formulation == 'finite':
+            comp_order == self._comp_order_nsym
+        else:
+            raise RuntimeError('Unknown problem strain formulation.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize discrete integral
-        cit_1_integral_mf = np.zeros((len(self._comp_order), len(self._comp_order)))
-        cit_2_integral_mf = np.zeros((len(self._comp_order), len(self._comp_order)))
-        cit_0_freq_integral_mf = np.zeros((len(self._comp_order), len(self._comp_order)))
+        cit_1_integral_mf = np.zeros((len(comp_order), len(comp_order)))
+        cit_2_integral_mf = np.zeros((len(comp_order), len(comp_order)))
+        cit_0_freq_integral_mf = np.zeros((len(comp_order), len(comp_order)))
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over matricial form components
-        for i in range(len(self._comp_order)):
-            compi = self._comp_order[i]
-            for j in range(len(self._comp_order)):
-                compj = self._comp_order[j]
+        for i in range(len(comp_order)):
+            compi = comp_order[i]
+            for j in range(len(comp_order)):
+                compj = comp_order[j]
                 # Perform discrete integral over the spatial domain of material cluster I
-                cit_1_integral_mf[i, j] = mop.kelvinfactor(i, self._comp_order)* \
-                    mop.kelvinfactor(j, self._comp_order)*\
+                cit_1_integral_mf[i, j] = mop.kelvinfactor(i, comp_order)* \
+                    mop.kelvinfactor(j, comp_order)*\
                         np.sum(np.multiply(cluster_filter, gop_1_filt_vox[compi + compj]))
-                cit_2_integral_mf[i, j] = mop.kelvinfactor(i, self._comp_order)* \
-                    mop.kelvinfactor(j, self._comp_order)*\
+                cit_2_integral_mf[i, j] = mop.kelvinfactor(i, comp_order)* \
+                    mop.kelvinfactor(j, comp_order)*\
                         np.sum(np.multiply(cluster_filter, gop_2_filt_vox[compi + compj]))
-                cit_0_freq_integral_mf[i, j] = mop.kelvinfactor(i, self._comp_order)*\
-                    mop.kelvinfactor(j, self._comp_order)*\
+                cit_0_freq_integral_mf[i, j] = mop.kelvinfactor(i, comp_order)*\
+                    mop.kelvinfactor(j, comp_order)*\
                         np.sum(np.multiply(cluster_filter,
                                            gop_0_freq_filt_vox[compi + compj]))
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

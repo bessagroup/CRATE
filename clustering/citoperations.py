@@ -10,6 +10,7 @@
 # Bernardo P. Ferreira | Nov 2020 | Merged update and assemble methods.
 # Bernardo P. Ferreira | Nov 2020 | Migrated cluster interaction tensors direct computation
 #                                 | methods to CRVE class.
+# Bernardo P. Ferreira | Oct 2021 | Extension to finite strains.
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
@@ -56,20 +57,25 @@ def setdiscretefreq(n_dim, rve_dims, n_voxels_dims):
 #
 #                                                                             Green operator
 # ==========================================================================================
-def gop_matindterms(n_dim, rve_dims, comp_order, n_voxels_dims):
+def gop_material_independent_terms(strain_formulation, n_dim, rve_dims, n_voxels_dims,
+                                   comp_order_sym, comp_order_nsym):
     '''Compute Green operator material independent terms in the frequency domain.
 
     Parameters
     ----------
+    strain_formulation: str, {'infinitesimal', 'finite'}
+        Problem number of spatial dimensions.
     n_dim : int
         Problem dimension.
     rve_dims : list
         RVE size in each dimension.
-    comp_order : list
-        Strain/Stress components (str) order.
     n_voxels_dims : list
         Number of voxels in each dimension of the regular grid (spatial discretization of
         the RVE).
+    comp_order_sym : list
+        Strain/Stress components symmetric order.
+    comp_order_nsym : list
+        Strain/Stress components nonsymmetric order.
 
     Returns
     -------
@@ -95,6 +101,14 @@ def gop_matindterms(n_dim, rve_dims, comp_order, n_voxels_dims):
     perform an efficient update of the Green operator if the associated reference material
     elastic properties are updated by any means (e.g., self-consistent scheme).
     '''
+    # Set strain/stress components order according to problem strain formulation
+    if strain_formulation == 'infinitesimal':
+        comp_order = comp_order_sym
+    elif strain_formulation == 'finite':
+        comp_order == comp_order_nsym
+    else:
+        raise RuntimeError('Unknown problem strain formulation.')
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set discrete frequencies (rad/m) for each dimension
     freqs_dims = setdiscretefreq(n_dim, rve_dims, n_voxels_dims)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -114,19 +128,20 @@ def gop_matindterms(n_dim, rve_dims, comp_order, n_voxels_dims):
         if str(fo_idx[1]) + str(fo_idx[3]) not in var2.keys():
             var2[str(fo_idx[1]) + str(fo_idx[3])] = \
                 np.multiply(var1[fo_idx[1]], var1[fo_idx[3]])
-        if str(fo_idx[1]) + str(fo_idx[2]) not in var2.keys():
-            var2[str(fo_idx[1]) + str(fo_idx[2])] = \
-                np.multiply(var1[fo_idx[1]], var1[fo_idx[2]])
-        if str(fo_idx[0]) + str(fo_idx[2]) not in var2.keys():
-            var2[str(fo_idx[0]) + str(fo_idx[2])] = \
-                np.multiply(var1[fo_idx[0]], var1[fo_idx[2]])
-        if str(fo_idx[0]) + str(fo_idx[3]) not in var2.keys():
-            var2[str(fo_idx[0]) + str(fo_idx[3])] = \
-                np.multiply(var1[fo_idx[0]], var1[fo_idx[3]])
         if ''.join([str(x) for x in fo_idx]) not in var2.keys():
             var2[''.join([str(x) for x in fo_idx])] = \
                 np.multiply(np.multiply(var1[fo_idx[0]], var1[fo_idx[1]]),
                             np.multiply(var1[fo_idx[2]], var1[fo_idx[3]]))
+        if strain_formulation == 'infinitesimal':
+            if str(fo_idx[1]) + str(fo_idx[2]) not in var2.keys():
+                var2[str(fo_idx[1]) + str(fo_idx[2])] = \
+                    np.multiply(var1[fo_idx[1]], var1[fo_idx[2]])
+            if str(fo_idx[0]) + str(fo_idx[2]) not in var2.keys():
+                var2[str(fo_idx[0]) + str(fo_idx[2])] = \
+                    np.multiply(var1[fo_idx[0]], var1[fo_idx[2]])
+            if str(fo_idx[0]) + str(fo_idx[3]) not in var2.keys():
+                var2[str(fo_idx[0]) + str(fo_idx[3])] = \
+                    np.multiply(var1[fo_idx[0]], var1[fo_idx[3]])
     if n_dim == 2:
         var3 = np.sqrt(np.add(np.square(var1[0]), np.square(var1[1])))
     else:
@@ -151,6 +166,12 @@ def gop_matindterms(n_dim, rve_dims, comp_order, n_voxels_dims):
                 fo_idx[1] == fo_idx[3], fo_idx[1] == fo_idx[2]]
         var5 = [str(fo_idx[1]) + str(fo_idx[3]), str(fo_idx[1]) + str(fo_idx[2]),
                 str(fo_idx[0]) + str(fo_idx[2]), str(fo_idx[0]) + str(fo_idx[3])]
+        var4 = [fo_idx[0] == fo_idx[2],]
+        var5 = [str(fo_idx[1]) + str(fo_idx[3]),]
+        if strain_formulation == 'infinitesimal':
+            var4 += [fo_idx[0] == fo_idx[3], fo_idx[1] == fo_idx[3], fo_idx[1] == fo_idx[2]]
+            var5 += [str(fo_idx[1]) + str(fo_idx[2]), str(fo_idx[0]) + str(fo_idx[2]),
+                     str(fo_idx[0]) + str(fo_idx[3])]
         # Compute first material independent term of Green operator
         first_term = np.zeros(tuple(n_voxels_dims))
         for j in range(len(var4)):
