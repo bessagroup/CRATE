@@ -18,6 +18,8 @@
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
+# Operating system related functions
+import os
 # Parse command-line options and arguments
 import sys
 # Date and time
@@ -114,10 +116,10 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         self._comp_order_sym = comp_order_sym
         self._comp_order_nsym = comp_order_nsym
         # Set maximum number of iterations
-        self._max_n_iterations = 20
+        self._max_n_iterations = 100
         # Set convergence criterion and tolerance
         self._conv_criterion = 'avg_stress'
-        self._conv_tol = 1e-2
+        self._conv_tol = 1e-6
         # Set macroscale loading subincrementation parameters
         self._max_subinc_level = 5
         self._max_cinc_cuts = 5
@@ -149,7 +151,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         # Set initial time
         init_time = time.time()
         # Display greetings
-        type(self).display_greetings()
+        type(self)._display_greetings()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Store total macroscale strain tensor
         mac_strain_total = copy.deepcopy(mac_strain)
@@ -257,7 +259,8 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         mac_strain = mac_strain_incrementer.get_current_mac_strain()
         # Display increment data
         if verbose:
-            type(self).display_increment_init(*mac_strain_incrementer.get_inc_output_data())
+            type(self)._display_increment_init(
+                *mac_strain_incrementer.get_inc_output_data())
         # Set increment initial time
         inc_init_time = time.time()
         # Set iteration initial time
@@ -288,17 +291,17 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                 strain_vox = copy.deepcopy(strain_old_vox)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Compute stress initial iterative guess
-            stress_vox = self.elastic_constitutive_model(strain_vox, evar1, evar2, evar3)
+            stress_vox = self._elastic_constitutive_model(strain_vox, evar1, evar2, evar3)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Compute average strain/stress norm
             if self._conv_criterion == 'avg_stress':
                 # Compute initial guess average stress norm
-                avg_stress_norm = self.compute_avg_state_vox(stress_vox)
+                avg_stress_norm = self._compute_avg_state_vox(stress_vox)
                 # Initialize last iteration average stress norm
                 avg_stress_norm_old = 0.0
             elif self._conv_criterion == 'avg_strain':
                 # Compute initial guess average strain norm
-                avg_strain_norm = self.compute_avg_state_vox(strain_vox)
+                avg_strain_norm = self._compute_avg_state_vox(strain_vox)
                 # Initialize last iteration average strain norm
                 avg_strain_norm_old = 0.0
             #
@@ -351,7 +354,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                 # Evaluate convergence criterion
                 if self._conv_criterion == 'stress_div':
                     # Compute discrete error
-                    discrete_error = self.stress_div_conv_criterion(freqs_dims,
+                    discrete_error = self._stress_div_conv_criterion(freqs_dims,
                                                                     stress_DFT_vox)
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 elif self._conv_criterion == 'avg_stress':
@@ -366,8 +369,8 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Display iteration data
                 if verbose:
-                    type(self).display_iteration(iter, time.time() - iter_init_time,
-                                                 discrete_error)
+                    type(self)._display_iteration(iter, time.time() - iter_init_time,
+                                                  discrete_error)
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Check solution convergence and iteration counter
                 if discrete_error <= self._conv_tol:
@@ -378,7 +381,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                     # Raise macroscale increment cut procedure
                     is_inc_cut = True
                     # Display increment cut (maximum number of iterations)
-                    type(self).display_increment_cut(self._max_n_iterations)
+                    type(self)._display_increment_cut(self._max_n_iterations)
                     # Leave fixed-point iterative scheme
                     break
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -426,19 +429,19 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Update stress
                 stress_vox = \
-                    self.elastic_constitutive_model(strain_vox, evar1, evar2, evar3)
+                    self._elastic_constitutive_model(strain_vox, evar1, evar2, evar3)
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Compute average strain/stress norm
                 if self._conv_criterion == 'avg_stress':
                     # Update last iteration average stress norm
                     avg_stress_norm_old = avg_stress_norm
                     # Compute average stress norm
-                    avg_stress_norm = self.compute_avg_state_vox(stress_vox)
+                    avg_stress_norm = self._compute_avg_state_vox(stress_vox)
                 elif self._conv_criterion == 'avg_strain':
                     # Update last iteration average strain norm
                     avg_strain_norm_old = avg_strain_norm
                     # Compute average strain norm
-                    avg_strain_norm = self.compute_avg_state_vox(strain_vox)
+                    avg_strain_norm = self._compute_avg_state_vox(strain_vox)
             #
             #                                                Macroscale strain increment cut
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -452,7 +455,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Display increment data
                 if verbose:
-                    type(self).display_increment_init(
+                    type(self)._display_increment_init(
                         *mac_strain_incrementer.get_inc_output_data())
                 # Start new macroscale strain increment solution procedure
                 continue
@@ -460,14 +463,14 @@ class FFTBasicScheme(DNSHomogenizationMethod):
             #                                        Macroscale strain increment convergence
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Compute homogenized strain and stress tensor
-            hom_strain = self.compute_homogenized_field(strain_vox)
-            hom_stress = self.compute_homogenized_field(stress_vox)
+            hom_strain = self._compute_homogenized_field(strain_vox)
+            hom_stress = self._compute_homogenized_field(stress_vox)
             # Display increment data
             if verbose:
-                type(self).display_increment_end(self._strain_formulation,
-                                                 hom_strain, hom_stress,
-                                                 time.time() - inc_init_time,
-                                                 time.time() - init_time)
+                type(self)._display_increment_end(self._strain_formulation,
+                                                  hom_strain, hom_stress,
+                                                  time.time() - inc_init_time,
+                                                  time.time() - init_time)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Return if last macroscale loading increment
             if mac_strain_incrementer.get_is_last_inc():
@@ -509,10 +512,10 @@ class FFTBasicScheme(DNSHomogenizationMethod):
             inc_init_time = time.time()
             # Display increment data
             if verbose:
-                type(self).display_increment_init(
+                type(self)._display_increment_init(
                     *mac_strain_incrementer.get_inc_output_data())
     # --------------------------------------------------------------------------------------
-    def elastic_constitutive_model(self, strain_vox, evar1, evar2, evar3):
+    def _elastic_constitutive_model(self, strain_vox, evar1, evar2, evar3):
         '''Material elastic or hyperelastic constitutive model.
 
         Infinitesimal strains: standard isotropic linear elastic constitutive model
@@ -646,7 +649,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         # Return
         return stress_vox
     # --------------------------------------------------------------------------------------
-    def stress_div_conv_criterion(self, freqs_dims, stress_DFT_vox):
+    def _stress_div_conv_criterion(self, freqs_dims, stress_DFT_vox):
         '''Convergence criterion based on the divergence of the stress tensor.
 
         Convergence criterion proposed by H. Moulinec and P. Suquet ("A numerical method for
@@ -734,7 +737,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         # Return
         return discrete_error
     # --------------------------------------------------------------------------------------
-    def compute_avg_state_vox(self, state_vox):
+    def _compute_avg_state_vox(self, state_vox):
         '''Compute average norm of strain or stress local field.
 
         Parameters
@@ -776,7 +779,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         # Return
         return avg_state_norm
     # --------------------------------------------------------------------------------------
-    def compute_homogenized_field(self, state_vox):
+    def _compute_homogenized_field(self, state_vox):
         '''Perform strain or stress homogenization over regular grid spatial discretization.
 
         Parameters
@@ -818,7 +821,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         return hom_state
     # --------------------------------------------------------------------------------------
     @staticmethod
-    def display_greetings():
+    def _display_greetings():
         '''Output homogenization-based multiscale DNS method method greetings.'''
         # Get display features
         display_features = ioutil.setdisplayfeatures()
@@ -840,7 +843,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         #ioutil.print2(template.format(*info, width=output_width))
     # --------------------------------------------------------------------------------------
     @staticmethod
-    def display_increment_init(inc, subinc_level, total_lfact, inc_lfact):
+    def _display_increment_init(inc, subinc_level, total_lfact, inc_lfact):
         '''Output increment initial data.
 
         Parameters
@@ -886,8 +889,8 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         #ioutil.print2(template.format(*info, width=output_width))
     # --------------------------------------------------------------------------------------
     @staticmethod
-    def display_increment_end(strain_formulation, hom_strain, hom_stress, inc_time,
-                              total_time):
+    def _display_increment_end(strain_formulation, hom_strain, hom_stress, inc_time,
+                               total_time):
         '''Output increment end data.
 
         Parameters
@@ -960,7 +963,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         #ioutil.print2(template.format(*info, width=output_width))
     # --------------------------------------------------------------------------------------
     @staticmethod
-    def display_iteration(iter, iter_time, discrete_error):
+    def _display_iteration(iter, iter_time, discrete_error):
         '''Output iteration data.
 
         Parameters
@@ -998,7 +1001,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         #ioutil.print2(template.format(*info, width=output_width))
     # --------------------------------------------------------------------------------------
     @staticmethod
-    def display_increment_cut(max_n_iterations):
+    def _display_increment_cut(max_n_iterations):
         '''Output increment cut data.
 
         Parameters
@@ -1010,9 +1013,6 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         display_features = ioutil.setdisplayfeatures()
         output_width, _, indent, asterisk_line = display_features[0:4]
         _, _ = display_features[4:6]
-        space_1 = (output_width - 29)*' '
-        space_2 = (output_width - 35)*' '
-        space_3 = (output_width - 38)*' '
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set increment cut cause
         cut_msg = 'Maximum number of iterations ({}) reached without convergence.'
@@ -2013,137 +2013,18 @@ def writeIterationConvergence(file_path, mode, *args):
               '  {:>11.4e}'.format(error2),file=file)
 # ------------------------------------------------------------------------------------------
 if __name__ == '__main__':
-
-    '''
-    # Set functions being validated
-    val_functions = ['ffthombasicscheme()','getElasticityTensor()']
-    # Display validation header
-    print('\nValidation: ',(len(val_functions)*'{}, ').format(*val_functions), 3*'\b', ' ')
-    print(92*'-')
-    # Set functions arguments:
-    # Set problem type
-    problem_type = 1
-    # Set problem parameters (number of dimensions and components order)
-    n_dim, comp_order_sym, comp_order_nsym = mop.get_problem_type_parameters(problem_type)
-    # Set problem data
-    problem_dict = dict()
-    problem_dict['problem_type'] = problem_type
-    problem_dict['n_dim'] = n_dim
-    problem_dict['comp_order_sym'] = comp_order_sym
-    problem_dict['comp_order_nsym'] = comp_order_nsym
-    # Set spatial discretization file absolute path
-    if problem_type == 1:
-        rve_dims = [1.0,1.0]
-        discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
-                            'debug/FFT_Homogenization_Method/validation/' + \
-                            'RVE_2D_2Phases_1025x1025_Circular_Fiber.rgmsh.npy'
-    else:
-        rve_dims = [1.0,1.0,1.0]
-        discret_file_path = '/home/bernardoferreira/Documents/SCA/' + \
-                            'debug/FFT_Homogenization_Method/issues/stress_divergence/' + \
-                            'examples/RVE_3D_2Phases_50x50_Homogeneous.rgmsh.npy'
-    # Read spatial discretization file and set regular grid data
-    regular_grid = np.load(discret_file_path)
-    n_voxels_dims = [regular_grid.shape[i] for i in range(len(regular_grid.shape))]
-    rg_dict = dict()
-    rg_dict['rve_dims'] = rve_dims
-    rg_dict['regular_grid'] = regular_grid
-    rg_dict['n_voxels_dims'] = n_voxels_dims
-    # Set material properties
-    material_properties = dict()
-    material_properties['2'] = dict()
-    material_properties['2']['E'] = 68.9e3
-    material_properties['2']['v'] = 0.35
-    material_properties['1'] = dict()
-    material_properties['1']['E'] = 400e3
-    material_properties['1']['v'] = 0.23
-    mat_dict = dict()
-    mat_dict['material_properties'] = material_properties
-    material_phases = [str(x) for x in list(np.unique(regular_grid))]
-    mat_dict['material_phases'] = material_phases
-    # Set macroscale strain loading
-    if n_dim == 2:
-        mac_strain = np.array([[0,0.005],[0.005,0]])
-    else:
-        mac_strain = np.array([[2,0.5,0.5],[0.5,1,1],[0.5,1,3]])
-    # Set numpy default print options
-    np.set_printoptions(precision=4,linewidth=np.inf)
-    # Set absolute path of the file where the stress divergence tensor for a given voxel
-    # is written at every iteration
-    div_file_path = '/home/bernardoferreira/Documents/SCA/validation/' + \
-                    'FFT_Homogenization_Method/validation/' + \
-                    'StressDivergenceEvolution.dat'
-    if n_dim == 2:
-        val_voxel_idx = (2,1)
-    else:
-        val_voxel_idx = (2,1,3)
-    writeVoxelStressDivergence(div_file_path,'header',val_voxel_idx)
-    # Set absolute path of the file where the error for the diferent convergence criteria
-    # is written at every iteration
-    conv_file_path = '/home/bernardoferreira/Documents/SCA/validation/' + \
-                     'FFT_Homogenization_Method/validation/' + \
-                     'ConvergenceEvolution.dat'
-    writeIterationConvergence(conv_file_path,'header')
-    # Call function
-    strain_vox = ffthombasicscheme(problem_dict,rg_dict,mat_dict,mac_strain)
-    # Write VTK file with material phases
-    import ioput.vtkoutput as vtkoutput
-    import copy
-    import ntpath
-    dirs_dict = dict()
-    dirs_dict['input_file_name'] = \
-                ntpath.splitext(ntpath.splitext(ntpath.basename(discret_file_path))[-2])[-2]
-    dirs_dict['offline_stage_dir'] = ntpath.dirname(discret_file_path) + '/'
-    clst_dict = dict()
-    clst_dict['voxels_clusters'] = np.full(n_voxels_dims,-1,dtype=int)
-    vtk_dict = dict()
-    vtk_dict['format'] = 'ascii'
-    vtk_dict['precision'] = 'SinglePrecision'
-    vtkoutput.writevtkclusterfile(vtk_dict,copy.deepcopy(dirs_dict),copy.deepcopy(rg_dict),
-                                                                   copy.deepcopy(clst_dict))
-    # 2D matplotlib plot
-    import matplotlib
-    import matplotlib.pyplot as plt
-    import matplotlib.ticker as ticker
-    matplotlib.rc('text',usetex=True)
-    matplotlib.rc('font',**{'family':'serif'})
-    figure1 = plt.figure()
-    axes1 = figure1.add_subplot(111)
-    axes1.set_title('Validation Example - Circular Fiber')
-    figure1.set_figheight(8, forward=True)
-    figure1.set_figwidth(8, forward=True)
-    axes1.set_frame_on(True)
-    axes1.set_xlabel('$x_{1}$', fontsize=12, labelpad=10)
-    axes1.set_ylabel('$\\varepsilon_{12}$', fontsize=12, labelpad=8)
-    axes1.ticklabel_format(axis='x', style='plain', scilimits=(3,4))
-    axes1.xaxis.set_minor_locator(ticker.AutoMinorLocator(2))
-    axes1.xaxis.set_minor_formatter(ticker.NullFormatter())
-    axes1.yaxis.set_major_locator(ticker.AutoLocator())
-    axes1.yaxis.set_minor_locator(ticker.AutoMinorLocator(2))
-    axes1.tick_params(which='major', width=1.0, length=10, labelcolor='0.0', labelsize=12)
-    axes1.tick_params(which='minor', width=1.0, length=5, labelsize=12)
-    axes1.grid(linestyle='-',linewidth=0.5, color='0.5',zorder=15)
-    axes1.set_xlim(xmin=0.4,xmax=0.6)
-    axes1.set_ylim(ymin=0,ymax=0.008)
-    aux1 = np.array(range(n_voxels_dims[0]))*(rve_dims[0]/n_voxels_dims[0])
-    x = aux1[int(np.nonzero(aux1>=0.4)[0][0]):int(np.nonzero(aux1>=0.6)[0][0])+1]
-    y = [strain_vox['12'][(i,int(n_voxels_dims[0]/2))] \
-        for i in range(int(np.nonzero(aux1>=0.4)[0][0]),int(np.nonzero(aux1>=0.6)[0][0])+1)]
-    axes1.plot(x,y,color='k',linewidth=2,linestyle='-',clip_on=False)
-    plt.show()
-    figure1.set_figheight(3.6, forward=False)
-    figure1.set_figwidth(3.6, forward=False)
-    figure1.savefig('Validation'+'.pdf', transparent=False, dpi=300, bbox_inches='tight')
-    # Display validation footer
-    print('\n' + 92*'-' + '\n')
-    '''
-    # Insert this at import modules of module
-    # p = os.path.abspath('/home/bernardoferreira/Documents/CRATE/src')
-    # sys.path.insert(1, p)
+    # Insert this at import modules section
+    #p = os.path.abspath('/home/bernardoferreira/Documents/CRATE/src')
+    #sys.path.insert(1, p)
+    from ioput.vtkoutput import XMLGenerator, VTKOutput
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set working directory
+    working_dir = '/home/bernardoferreira/Documents/CRATE/developments/finite_strains/3d/'
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set problem strain formulation
     strain_formulation = 'infinitesimal'
     # Set problem type
-    problem_type = 1
+    problem_type = 4
     # Get problem type parameters
     n_dim, comp_order_sym, comp_order_nsym = mop.get_problem_type_parameters(problem_type)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2151,8 +2032,10 @@ if __name__ == '__main__':
     rve_dims = n_dim*[1.0,]
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set RVE spatial discretization file absolute path
-    discrete_file_path = '/home/bernardoferreira/Documents/CRATE/developments/' + \
-                         'finite_strains/2d/Disk_50_0.3_100_100.rgmsh.npy'
+    if problem_type == 1:
+        discrete_file_path = working_dir + 'Disk_50_0.3_100_100.rgmsh.npy'
+    else:
+        discrete_file_path = working_dir + 'Sphere_10_0.2_30_30_30.rgmsh.npy'
     # Read spatial discretization file and set regular grid data
     regular_grid = np.load(discrete_file_path)
     n_voxels_dims = [regular_grid.shape[i] for i in range(len(regular_grid.shape))]
@@ -2167,13 +2050,23 @@ if __name__ == '__main__':
     # Set macroscale strain loading
     if strain_formulation == 'infinitesimal':
         # Set macroscale infinitesimal strain tensor
-        mac_strain = np.array([[1.000e-6, 0.000e+0],
-                               [0.000e+0, 0.000e+0]])
+        if n_dim == 2:
+            mac_strain = np.array([[5.000e-3, 0.000e+0],
+                                   [0.000e+0, 0.000e+0]])
+        else:
+            mac_strain = np.array([[5.000e-3, 0.000e+0, 0.000+0],
+                                   [0.000e+0, 0.000e+0, 0.000+0],
+                                   [0.000e+0, 0.000e+0, 0.000+0]])
         mac_strain_inf = mac_strain
     else:
         # Set macroscale deformation gradient tensor
-        mac_strain = np.array([[1.005, 0.000e+0],
-                               [0.000e+0, 1.000e+0]])
+        if n_dim == 2:
+            mac_strain = np.array([[1.005e+0, 0.000e+0],
+                                   [0.000e+0, 1.000e+0]])
+        else:
+            mac_strain = np.array([[1.005e+0, 0.000e+0, 0.000+0],
+                                   [0.000e+0, 1.000e+0, 0.000+0],
+                                   [0.000e+0, 0.000e+0, 1.000+0]])
         # Compute gradient of displacement field
         disp_grad = mac_strain - np.eye(n_dim)
         # Compute infinitesimal strain tensor
@@ -2192,9 +2085,9 @@ if __name__ == '__main__':
                                            material_properties)
     strain_vox_new = homogenization_method.compute_rve_local_response(mac_strain,
                                                                       verbose=True)
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # --------------------------------------------------------------------------------------
+    # MATPLOTLIB OUTPUT
     # Import modules
-    import matplotlib
     import matplotlib.pyplot as plt
     import matplotlib.ticker as ticker
     # Set plot font
@@ -2230,10 +2123,16 @@ if __name__ == '__main__':
     range_init = int(np.nonzero(x >= 0.0)[0][0])
     range_end = int(np.nonzero(x <= 1.0)[-1][-1]) + 1
     x = x[range_init:range_end]
-    y1 = [strain_vox_old['11'][(i, int(n_voxels_dims[0]/2))]
-         for i in range(range_init, range_end)]
-    y2 = [strain_vox_new['11'][(i, int(n_voxels_dims[0]/2))]
-         for i in range(range_init, range_end)]
+    if n_dim == 2:
+        y1 = [strain_vox_old['11'][(i, int(n_voxels_dims[1]/2))]
+             for i in range(range_init, range_end)]
+        y2 = [strain_vox_new['11'][(i, int(n_voxels_dims[1]/2))]
+             for i in range(range_init, range_end)]
+    else:
+        y1 = [strain_vox_old['11'][(i, int(n_voxels_dims[1]/2), int(n_voxels_dims[2]/2))]
+             for i in range(range_init, range_end)]
+        y2 = [strain_vox_new['11'][(i, int(n_voxels_dims[1]/2), int(n_voxels_dims[2]/2))]
+             for i in range(range_init, range_end)]
     # Plot data
     axes.plot(x, y1, label='original', color='r', linewidth=2, linestyle='-', clip_on=False)
     axes.plot(x, y2, label='OOP', color='b', linewidth=1, linestyle='--', clip_on=False)
@@ -2244,7 +2143,65 @@ if __name__ == '__main__':
     # Save plot
     figure1.set_figheight(3.6, forward=False)
     figure1.set_figwidth(3.6, forward=False)
-    fig_dir = '/home/bernardoferreira/Documents/CRATE/developments/finite_strains/2d/'
-    figure1.savefig(fig_dir + 'Validation.pdf', transparent=False, dpi=300, bbox_inches='tight')
-    # Display validation footer
-    print('\n' + 92*'-' + '\n')
+    fig_path = working_dir + strain_formulation + '_strain_plot.pdf'
+    figure1.savefig(fig_path, transparent=False, dpi=300, bbox_inches='tight')
+    # --------------------------------------------------------------------------------------
+    # VTK OUTPUT
+    # Set clustering VTK file path
+    vtk_file_path = working_dir + strain_formulation + '_fft_local_fields.vti'
+    # Open clustering VTK file (append mode)
+    if os.path.isfile(vtk_file_path):
+        os.remove(vtk_file_path)
+    vtk_file = open(vtk_file_path, 'a')
+    # Instantiate VTK XML generator
+    xml = XMLGenerator('ImageData', '1.0', 'LittleEndian', 'ascii', 'SinglePrecision',
+                       'UInt64')
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Write VTK file header
+    xml.write_file_header(vtk_file)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Write VTK dataset element
+    dataset_parameters, piece_parameters = \
+        VTKOutput._set_image_data_parameters(rve_dims, n_voxels_dims)
+    xml.write_open_dataset_elem(vtk_file, dataset_parameters)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Open VTK dataset element piece
+    xml.write_open_dataset_piece(vtk_file, piece_parameters)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Open VTK dataset element piece cell data
+    xml.write_open_cell_data(vtk_file)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set strain/stress components order according to problem strain formulation
+    if strain_formulation == 'infinitesimal':
+        # Infinitesimal strain tensor and Cauchy stress tensor
+        comp_order = comp_order_sym
+    elif strain_formulation == 'finite':
+        # Deformation gradient and First Piola-Kirchhoff stress tensor
+        comp_order = comp_order_nsym
+    # Loop over strain components
+    for comp in comp_order:
+        # Set data name
+        data_name = 'strain_' + comp
+        # Set data
+        data_list = list(strain_vox_new[comp].flatten('F'))
+        min_val = min(data_list)
+        max_val = max(data_list)
+        data_parameters = {'Name': data_name, 'format': 'ascii',
+                           'RangeMin': min_val, 'RangeMax': max_val}
+        # Write cell data array
+        xml.write_cell_data_array(vtk_file, data_list, data_parameters)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Close VTK dataset element cell data
+    xml.write_close_cell_data(vtk_file)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Close VTK dataset element piece
+    xml.write_close_dataset_piece(vtk_file)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Close VTK dataset element
+    xml.write_close_dataset_elem(vtk_file)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Write VTK file footer
+    xml.write_file_footer(vtk_file)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Close clustering VTK file
+    vtk_file.close()
