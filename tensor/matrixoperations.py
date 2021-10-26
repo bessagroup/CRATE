@@ -12,6 +12,8 @@
 # ==========================================================================================
 # Working with arrays
 import numpy as np
+# Scientific computation
+import scipy.linalg
 # Generate efficient iterators
 import itertools as it
 #
@@ -451,3 +453,26 @@ def get_state_2Dmf_from_3Dmf(problem_type, mf_3d):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Return
     return mf_2d
+#
+#                                                                 P-th root of square matrix
+# ==========================================================================================
+def matrix_root(matrix, p):
+    '''Compute p-th root of general nonsymmetric square matrix.
+
+    Parameters
+    ----------
+    matrix : 2darray
+        Square matrix.
+    p : float
+        Factor which defines the p-th root of square matrix.
+
+    Returns
+    -------
+    matrix_proot : 2darray
+        p-th root of square matrix.
+    '''
+    # Compute p-th root of square matrix
+    matrix_proot = scipy.linalg.expm(p*scipy.linalg.logm(matrix))
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Return
+    return matrix_proot

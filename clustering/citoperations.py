@@ -105,7 +105,7 @@ def gop_material_independent_terms(strain_formulation, n_dim, rve_dims, n_voxels
     if strain_formulation == 'infinitesimal':
         comp_order = comp_order_sym
     elif strain_formulation == 'finite':
-        comp_order == comp_order_nsym
+        comp_order = comp_order_nsym
     else:
         raise RuntimeError('Unknown problem strain formulation.')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
