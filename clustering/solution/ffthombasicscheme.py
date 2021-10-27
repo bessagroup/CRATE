@@ -215,8 +215,12 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         lam_ref = (E_ref*v_ref)/((1.0 + v_ref)*(1.0 - 2.0*v_ref))
         miu_ref = E_ref/(2.0*(1.0 + v_ref))
         # Compute Green operator reference material related constants
-        c1 = 1.0/(4.0*miu_ref)
-        c2 = (miu_ref + lam_ref)/(miu_ref*(lam_ref + 2.0*miu_ref))
+        if self._strain_formulation == 'infinitesimal':
+            c1 = 1.0/(4.0*miu_ref)
+            c2 = (miu_ref + lam_ref)/(miu_ref*(lam_ref + 2.0*miu_ref))
+        else:
+            c1 = 1.0/(miu_ref)
+            c2 = (miu_ref + lam_ref)/(miu_ref*(lam_ref + 2.0*miu_ref))
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute Green operator material independent terms
         gop_1_dft_vox, gop_2_dft_vox, _ = citop.gop_material_independent_terms(
