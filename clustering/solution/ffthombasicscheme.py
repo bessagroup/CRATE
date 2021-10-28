@@ -151,7 +151,8 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         # Set initial time
         init_time = time.time()
         # Display greetings
-        type(self)._display_greetings()
+        if verbose:
+            type(self)._display_greetings()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Store total macroscale strain tensor
         mac_strain_total = copy.deepcopy(mac_strain)
@@ -216,11 +217,13 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         miu_ref = E_ref/(2.0*(1.0 + v_ref))
         # Compute Green operator reference material related constants
         if self._strain_formulation == 'infinitesimal':
+            # Symmetrized isotropic reference material elasticity tensor
             c1 = 1.0/(4.0*miu_ref)
             c2 = (miu_ref + lam_ref)/(miu_ref*(lam_ref + 2.0*miu_ref))
         else:
-            c1 = 1.0/(miu_ref)
-            c2 = (miu_ref + lam_ref)/(miu_ref*(lam_ref + 2.0*miu_ref))
+            # Non-symmetrized isotropic reference material elasticity tensor
+            c1 = 1.0/(2.0*miu_ref)
+            c2 = (miu_ref + lam_ref)/(2.0*miu_ref*(lam_ref + 2.0*miu_ref))
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute Green operator material independent terms
         gop_1_dft_vox, gop_2_dft_vox, _ = citop.gop_material_independent_terms(
