@@ -495,7 +495,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                             def_gradient[so_idx] = strain_vox[comp][voxel]
                         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                         # Compute material logarithmic strain tensor
-                        log_strain = 0.5*top.isotropic_tensor('log',
+                        mat_log_strain = 0.5*top.isotropic_tensor('log',
                             np.matmul(np.transpose(def_gradient), def_gradient))
                         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                         # Loop over material logarithmic strain tensor components
@@ -503,7 +503,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                             # Get second-order array index
                             so_idx = tuple([int(i) - 1 for i in comp])
                             # Store material logarithmic strain tensor
-                            strain_vox[comp][voxel] = log_strain[so_idx]
+                            strain_vox[comp][voxel] = mat_log_strain[so_idx]
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Return local strain field
                 return strain_vox
@@ -569,7 +569,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         # Compute spatial logarithmic strain tensor
         if self._strain_formulation == 'finite':
             # Initialize spatial logarithmic strain tensor
-            log_strain_vox = {comp: np.zeros(tuple(self._n_voxels_dims))
+            spatial_log_strain_vox = {comp: np.zeros(tuple(self._n_voxels_dims))
                               for comp in self._comp_order_sym}
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Loop over voxels
@@ -584,7 +584,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                     def_gradient[so_idx] = strain_vox[comp][voxel]
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Compute spatial logarithmic strain tensor
-                log_strain = 0.5*top.isotropic_tensor('log',
+                spatial_log_strain = 0.5*top.isotropic_tensor('log',
                     np.matmul(def_gradient, np.transpose(def_gradient)))
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Loop over spatial logarithmic strain tensor components
@@ -592,10 +592,10 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                     # Get second-order array index
                     so_idx = tuple([int(i) - 1 for i in comp])
                     # Store spatial logarithmic strain tensor
-                    log_strain_vox[comp][voxel] = log_strain[so_idx]
+                    spatial_log_strain_vox[comp][voxel] = spatial_log_strain[so_idx]
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Set spatial logarithmic strain tensor
-            strain_vox = log_strain_vox
+            strain_vox = spatial_log_strain_vox
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute Cauchy stress tensor from infinitesimal strain tensor (infinitesimal
         # strains) or Kirchhoff stress tensor from spatial logarithmic strain tensor
