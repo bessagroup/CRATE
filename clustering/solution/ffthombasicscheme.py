@@ -77,6 +77,12 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         Maximum level of macroscale loading subincrementation.
     _max_cinc_cuts : int
         Maximum number of consecutive macroscale loading increment cuts.
+    _hom_stress_strain : 2darray
+        Homogenized stress-strain material response. The homogenized strain and homogenized
+        stress tensor components of the i-th loading increment are stored columnwise
+        in the i-th row, sorted respectively. Infinitesimal strains: Cauchy stress tensor -
+        infinitesimal strains tensor. Finite strains: first Piola-Kirchhoff stress tensor -
+        deformation gradient.
     '''
     def __init__(self, strain_formulation, problem_type, rve_dims, n_voxels_dims,
                  regular_grid, material_phases, material_properties):
@@ -123,6 +129,10 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         # Set macroscale loading subincrementation parameters
         self._max_subinc_level = 5
         self._max_cinc_cuts = 5
+        # Initialize homogenized strain-stress response
+        self._hom_stress_strain = np.zeros((1, 2*n_dim**2))
+        if self._strain_formulation == 'finite':
+            self._hom_stress_strain[0, 0] = 1.0
     # --------------------------------------------------------------------------------------
     def compute_rve_local_response(self, mac_strain, verbose=False):
         '''Compute RVE local elastic strain response.
@@ -472,6 +482,9 @@ class FFTBasicScheme(DNSHomogenizationMethod):
             # Compute homogenized strain and stress tensor
             hom_strain = self._compute_homogenized_field(strain_vox)
             hom_stress = self._compute_homogenized_field(stress_vox)
+            # Append to homogenized strain-stress response
+            self._hom_stress_strain = np.vstack([self._hom_stress_strain,
+                np.concatenate((hom_strain.flatten('F'), hom_stress.flatten('F')))])
             # Display increment data
             if verbose:
                 type(self)._display_increment_end(self._strain_formulation,
@@ -826,6 +839,20 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return hom_state
+    # --------------------------------------------------------------------------------------
+    def get_hom_stress_strain(self):
+        '''Get homogenized strain-stress material response.
+
+        Returns
+        -------
+        _hom_stress_strain : 2darray
+            Homogenized stress-strain material response. The homogenized strain and
+            homogenized stress tensor components of the i-th loading increment are stored
+            columnwise in the i-th row, sorted respectively. Infinitesimal strains: Cauchy
+            stress tensor - infinitesimal strains tensor. Finite strains: first
+            Piola-Kirchhoff stress tensor - deformation gradient.
+        '''
+        return copy.deepcopy(self._hom_stress_strain)
     # --------------------------------------------------------------------------------------
     @staticmethod
     def _display_greetings():
