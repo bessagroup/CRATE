@@ -66,11 +66,10 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         Strain/Stress components nonsymmetric order.
     _max_n_iterations : int
         Maximum number of iterations to convergence.
-    _conv_criterion : str, {'stress_div', 'avg_stress_norm', 'avg_strain_norm'}
+    _conv_criterion : str, {'stress_div', 'avg_stress_norm'}
         Convergence criterion: 'stress_div' is the original convergence criterion based on
         the evaluation of the divergence of the stress tensor; 'avg_stress_norm' is based on
-        the iterative change of the average stress norm; 'avg_strain_norm' is based on the
-        iterative change of the average stress norm.
+        the iterative change of the average stress norm.
     _conv_tol : float
         Convergence tolerance.
     _max_subinc_level : int
@@ -124,7 +123,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         # Set maximum number of iterations
         self._max_n_iterations = 100
         # Set convergence criterion and tolerance
-        self._conv_criterion = 'avg_strain_norm'
+        self._conv_criterion = 'avg_stress_norm'
         self._conv_tol = 1e-6
         # Set macroscale loading subincrementation parameters
         self._max_subinc_level = 5
@@ -316,11 +315,6 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                 avg_stress_norm = self._compute_avg_state_vox(stress_vox)
                 # Initialize last iteration average stress norm
                 avg_stress_norm_itold = 0.0
-            elif self._conv_criterion == 'avg_strain_norm':
-                # Compute initial guess average strain norm
-                avg_strain_norm = self._compute_avg_state_vox(strain_vox)
-                # Initialize last iteration average strain norm
-                avg_strain_norm_itold = 0.0
             #
             #                                        Strain Discrete Fourier Transform (DFT)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -378,11 +372,6 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                     # Compute discrete error
                     discrete_error = \
                         abs(avg_stress_norm - avg_stress_norm_itold)/avg_stress_norm
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                elif self._conv_criterion == 'avg_strain_norm':
-                    # Compute discrete error
-                    discrete_error = \
-                        abs(avg_strain_norm - avg_strain_norm_itold)/avg_strain_norm
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Display iteration data
                 if verbose:
@@ -454,11 +443,6 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                     avg_stress_norm_itold = avg_stress_norm
                     # Compute average stress norm
                     avg_stress_norm = self._compute_avg_state_vox(stress_vox)
-                elif self._conv_criterion == 'avg_strain_norm':
-                    # Update last iteration average strain norm
-                    avg_strain_norm_itold = avg_strain_norm
-                    # Compute average strain norm
-                    avg_strain_norm = self._compute_avg_state_vox(strain_vox)
             #
             #                                                Macroscale strain increment cut
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
