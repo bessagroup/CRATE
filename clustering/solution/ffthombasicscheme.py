@@ -519,7 +519,8 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                 type(self)._display_increment_init(
                     *mac_strain_incrementer.get_inc_output_data())
     # --------------------------------------------------------------------------------------
-    def _elastic_constitutive_model(self, strain_vox, evar1, evar2, evar3):
+    def _elastic_constitutive_model(self, strain_vox, evar1, evar2, evar3,
+                                    is_optimized=True):
         '''Material elastic or hyperelastic constitutive model.
 
         Infinitesimal strains: standard isotropic linear elastic constitutive model
@@ -544,6 +545,8 @@ class FFTBasicScheme(DNSHomogenizationMethod):
             quantity associated to each voxel: (E*v)/((1.0 + v)*(1.0 - 2.0*v)) +
             2.0*(E/(2.0*(1.0 + v)), where E and v are the Young's Modulus and Poisson's
             ratio, respectively.
+        is_optimized : bool
+            Optimization flag (minimizes loops over spatial discretization voxels).
 
         Returns
         -------
@@ -565,6 +568,9 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute spatial logarithmic strain tensor
         if self._strain_formulation == 'finite':
+            # Save deformation gradient
+            def_gradient_vox = copy.deepcopy(strain_vox)
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Initialize spatial logarithmic strain tensor
             spatial_log_strain_vox = {comp: np.zeros(tuple(self._n_voxels_dims))
                               for comp in self._comp_order_sym}
@@ -622,30 +628,161 @@ class FFTBasicScheme(DNSHomogenizationMethod):
             # Initialize First Piola-Kirchhoff stress tensor
             piola_stress_vox = {comp: np.zeros(tuple(self._n_voxels_dims))
                                 for comp in self._comp_order_nsym}
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Loop over voxels
-            for voxel in it.product(*[list(range(n)) for n in self._n_voxels_dims]):
-                # Initialize Kirchhoff stress tensor
-                kirchhoff_stress = np.zeros((self._n_dim, self._n_dim))
-                # Loop over Kirchhoff stress tensor components
-                for comp in self._comp_order_sym:
-                    # Get second-order array index
-                    so_idx = tuple([int(i) - 1 for i in comp])
-                    # Get voxel Kirchhoff stress tensor component
-                    kirchhoff_stress[so_idx] = stress_vox[comp][voxel]
-                    if so_idx[0] != so_idx[1]:
-                        kirchhoff_stress[so_idx[::-1]] = kirchhoff_stress[so_idx]
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Compute First Piola-Kirchhoff stress tensor
-                piola_stress = np.matmul(kirchhoff_stress,
-                                         np.transpose(np.linalg.inv(def_gradient)))
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Loop over First Piola-Kirchhoff stress tensor components
-                for comp in self._comp_order_nsym:
-                    # Get second-order array index
-                    so_idx = tuple([int(i) - 1 for i in comp])
-                    # Store First Piola-Kirchhoff stress tensor
-                    piola_stress_vox[comp][voxel] = piola_stress[so_idx]
+            # Compute First Piola-Kirchhoff stress tensor
+            if is_optimized:
+                if self._n_dim == 2:
+                    # Compute voxelwise determinant of deformation gradient
+                    jvar = np.reciprocal(np.subtract(np.multiply(def_gradient_vox['11'],
+                                                                 def_gradient_vox['22']),
+                                                     np.multiply(def_gradient_vox['21'],
+                                                                 def_gradient_vox['12'])))
+                    # Compute First Piola-Kirchhoff stress tensor
+                    piola_stress_vox['11'] = np.multiply(jvar,
+                        np.subtract(np.multiply(stress_vox['11'], def_gradient_vox['22']),
+                                    np.multiply(stress_vox['12'], def_gradient_vox['12'])))
+                    piola_stress_vox['21'] = np.multiply(jvar,
+                        np.subtract(np.multiply(stress_vox['12'], def_gradient_vox['22']),
+                                    np.multiply(stress_vox['22'], def_gradient_vox['12'])))
+                    piola_stress_vox['12'] = np.multiply(jvar,
+                        np.subtract(np.multiply(stress_vox['12'], def_gradient_vox['11']),
+                                    np.multiply(stress_vox['11'], def_gradient_vox['21'])))
+                    piola_stress_vox['22'] = np.multiply(jvar,
+                        np.subtract(np.multiply(stress_vox['22'], def_gradient_vox['11']),
+                                    np.multiply(stress_vox['12'], def_gradient_vox['21'])))
+                else:
+                    # Compute voxelwise determinant of deformation gradient
+                    jvar = np.reciprocal(np.add(np.subtract(
+                        np.multiply(def_gradient_vox['11'],
+                                    np.subtract(np.multiply(def_gradient_vox['22'],
+                                                            def_gradient_vox['33']),
+                                                np.multiply(def_gradient_vox['23'],
+                                                            def_gradient_vox['32']))),
+                        np.multiply(def_gradient_vox['12'],
+                                    np.subtract(np.multiply(def_gradient_vox['21'],
+                                                            def_gradient_vox['33']),
+                                                np.multiply(def_gradient_vox['23'],
+                                                            def_gradient_vox['31'])))),
+                        np.multiply(def_gradient_vox['13'],
+                                    np.subtract(np.multiply(def_gradient_vox['21'],
+                                                            def_gradient_vox['32']),
+                                                np.multiply(def_gradient_vox['22'],
+                                                            def_gradient_vox['31'])))))
+                    # Compute voxelwise transpose of inverse of deformationg gradient
+                    fitvar11 = np.multiply(jvar,
+                        np.subtract(np.multiply(def_gradient_vox['22'],
+                                                def_gradient_vox['33']),
+                                    np.multiply(def_gradient_vox['23'],
+                                                def_gradient_vox['32'])))
+                    fitvar21 = np.multiply(jvar,
+                        np.subtract(np.multiply(def_gradient_vox['13'],
+                                                def_gradient_vox['32']),
+                                    np.multiply(def_gradient_vox['12'],
+                                                def_gradient_vox['33'])))
+                    fitvar31 = np.multiply(jvar,
+                        np.subtract(np.multiply(def_gradient_vox['12'],
+                                                def_gradient_vox['23']),
+                                    np.multiply(def_gradient_vox['13'],
+                                                def_gradient_vox['22'])))
+                    fitvar12 = np.multiply(jvar,
+                        np.subtract(np.multiply(def_gradient_vox['23'],
+                                                def_gradient_vox['31']),
+                                    np.multiply(def_gradient_vox['21'],
+                                                def_gradient_vox['33'])))
+                    fitvar22 = np.multiply(jvar,
+                        np.subtract(np.multiply(def_gradient_vox['11'],
+                                                def_gradient_vox['33']),
+                                    np.multiply(def_gradient_vox['13'],
+                                                def_gradient_vox['31'])))
+                    fitvar32 = np.multiply(jvar,
+                        np.subtract(np.multiply(def_gradient_vox['13'],
+                                                def_gradient_vox['21']),
+                                    np.multiply(def_gradient_vox['11'],
+                                                def_gradient_vox['23'])))
+                    fitvar13 = np.multiply(jvar,
+                        np.subtract(np.multiply(def_gradient_vox['21'],
+                                                def_gradient_vox['32']),
+                                    np.multiply(def_gradient_vox['22'],
+                                                def_gradient_vox['31'])))
+                    fitvar23 = np.multiply(jvar,
+                        np.subtract(np.multiply(def_gradient_vox['12'],
+                                                def_gradient_vox['31']),
+                                    np.multiply(def_gradient_vox['11'],
+                                                def_gradient_vox['32'])))
+                    fitvar33 = np.multiply(jvar,
+                        np.subtract(np.multiply(def_gradient_vox['11'],
+                                                def_gradient_vox['22']),
+                                    np.multiply(def_gradient_vox['12'],
+                                                def_gradient_vox['21'])))
+                    # Compute First Piola-Kirchhoff stress tensor
+                    piola_stress_vox['11'] = \
+                        np.add(np.add(np.multiply(stress_vox['11'], fitvar11),
+                                      np.multiply(stress_vox['12'], fitvar21)),
+                               np.multiply(stress_vox['13'], fitvar31))
+                    piola_stress_vox['21'] = \
+                        np.add(np.add(np.multiply(stress_vox['12'], fitvar11),
+                                      np.multiply(stress_vox['22'], fitvar21)),
+                               np.multiply(stress_vox['23'], fitvar31))
+                    piola_stress_vox['31'] = \
+                        np.add(np.add(np.multiply(stress_vox['13'], fitvar11),
+                                      np.multiply(stress_vox['23'], fitvar21)),
+                               np.multiply(stress_vox['33'], fitvar31))
+                    piola_stress_vox['12'] = \
+                        np.add(np.add(np.multiply(stress_vox['11'], fitvar12),
+                                      np.multiply(stress_vox['12'], fitvar22)),
+                               np.multiply(stress_vox['13'], fitvar32))
+                    piola_stress_vox['22'] = \
+                        np.add(np.add(np.multiply(stress_vox['12'], fitvar12),
+                                      np.multiply(stress_vox['22'], fitvar22)),
+                               np.multiply(stress_vox['23'], fitvar32))
+                    piola_stress_vox['32'] = \
+                        np.add(np.add(np.multiply(stress_vox['13'], fitvar12),
+                                      np.multiply(stress_vox['23'], fitvar22)),
+                               np.multiply(stress_vox['33'], fitvar32))
+                    piola_stress_vox['13'] = \
+                        np.add(np.add(np.multiply(stress_vox['11'], fitvar13),
+                                      np.multiply(stress_vox['12'], fitvar23)),
+                               np.multiply(stress_vox['13'], fitvar33))
+                    piola_stress_vox['23'] = \
+                        np.add(np.add(np.multiply(stress_vox['12'], fitvar13),
+                                      np.multiply(stress_vox['22'], fitvar23)),
+                               np.multiply(stress_vox['23'], fitvar33))
+                    piola_stress_vox['33'] = \
+                        np.add(np.add(np.multiply(stress_vox['13'], fitvar13),
+                                      np.multiply(stress_vox['23'], fitvar23)),
+                               np.multiply(stress_vox['33'], fitvar33))
+            else:
+                # Loop over voxels
+                for voxel in it.product(*[list(range(n)) for n in self._n_voxels_dims]):
+                    # Initialize deformation gradient
+                    def_gradient = np.zeros((self._n_dim, self._n_dim))
+                    # Loop over deformation gradient components
+                    for comp in self._comp_order_nsym:
+                        # Get second-order array index
+                        so_idx = tuple([int(i) - 1 for i in comp])
+                        # Get voxel deformation gradient component
+                        def_gradient[so_idx] = def_gradient_vox[comp][voxel]
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    # Initialize Kirchhoff stress tensor
+                    kirchhoff_stress = np.zeros((self._n_dim, self._n_dim))
+                    # Loop over Kirchhoff stress tensor components
+                    for comp in self._comp_order_sym:
+                        # Get second-order array index
+                        so_idx = tuple([int(i) - 1 for i in comp])
+                        # Get voxel Kirchhoff stress tensor component
+                        kirchhoff_stress[so_idx] = stress_vox[comp][voxel]
+                        if so_idx[0] != so_idx[1]:
+                            kirchhoff_stress[so_idx[::-1]] = kirchhoff_stress[so_idx]
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    # Compute First Piola-Kirchhoff stress tensor
+                    piola_stress = np.matmul(kirchhoff_stress,
+                                             np.transpose(np.linalg.inv(def_gradient)))
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    # Loop over First Piola-Kirchhoff stress tensor components
+                    for comp in self._comp_order_nsym:
+                        # Get second-order array index
+                        so_idx = tuple([int(i) - 1 for i in comp])
+                        # Store First Piola-Kirchhoff stress tensor
+                        piola_stress_vox[comp][voxel] = piola_stress[so_idx]
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Set First Piola-Kirchhoff stress tensor
             stress_vox = piola_stress_vox
@@ -1356,7 +1493,7 @@ if __name__ == '__main__':
                 material_properties=material_properties)
     # Compute local strain field
     strain_vox = homogenization_method.compute_rve_local_response(mac_strain,
-                                                                      verbose=True)
+                                                                  verbose=True)
     # Get homogenized stress-strain response
     hom_stress_strain = homogenization_method.get_hom_stress_strain()
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
