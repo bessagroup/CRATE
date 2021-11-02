@@ -1865,6 +1865,16 @@ if __name__ == '__main__':
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set plots directory
     plots_dir = working_dir
+    # Set strain plot component
+    plot_strain = '11'
+    # Set stress plot component
+    plot_stress = '11'
+    # Get strain plot component (nonsymmetric) index
+    plot_strain_idx = comp_order_nsym.index(plot_strain)
+    plot_strain_so_idx = tuple([int(i) - 1 for i in plot_strain])
+    # Get stress plot component (nonsymmetric) index
+    plot_stress_idx = len(comp_order_nsym) + comp_order_nsym.index(plot_stress)
+    plot_stress_so_idx = tuple([int(i) - 1 for i in plot_stress])
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Strain mid-plane profile:
     # Infinitesimal strains: Infinitesimal strain tensor
@@ -1878,10 +1888,10 @@ if __name__ == '__main__':
     range_end = int(np.nonzero(x <= 1.0)[-1][-1]) + 1
     x = x[range_init:range_end]
     if n_dim == 2:
-        y = [strain_vox['11'][(i, int(n_voxels_dims[1]/2))]
+        y = [strain_vox[plot_strain][(i, int(n_voxels_dims[1]/2))]
             for i in range(range_init, range_end)]
     else:
-        y = [strain_vox['11'][(i, int(n_voxels_dims[1]/2), int(n_voxels_dims[2]/2))]
+        y = [strain_vox[plot_strain][(i, int(n_voxels_dims[1]/2), int(n_voxels_dims[2]/2))]
             for i in range(range_init, range_end)]
     # Build plot data array
     data_array = np.zeros((x.shape[0], 2))
@@ -1890,9 +1900,9 @@ if __name__ == '__main__':
     # Set axes labels
     x_label = '$x_{1}$'
     if strain_formulation == 'infinitesimal':
-        y_label = '$\\varepsilon_{11}$'
+        y_label = '$\\varepsilon_{' + plot_strain + '}$'
     else:
-        y_label = '$E_{11}$'
+        y_label = '$E_{' + plot_strain + '}$'
     # Output plot
     newgate_line_plots(plots_dir, fig_name, data_array, x_label=x_label, y_label=y_label)
     # Comparison between infinitesimal and finite strains
@@ -1905,14 +1915,16 @@ if __name__ == '__main__':
         range_end = int(np.nonzero(x <= 1.0)[-1][-1]) + 1
         x = x[range_init:range_end]
         if n_dim == 2:
-            y1 = [strain_vox_is['11'][(i, int(n_voxels_dims[1]/2))]
+            y1 = [strain_vox_is[plot_strain][(i, int(n_voxels_dims[1]/2))]
                  for i in range(range_init, range_end)]
-            y2 = [strain_vox['11'][(i, int(n_voxels_dims[1]/2))]
+            y2 = [strain_vox[plot_strain][(i, int(n_voxels_dims[1]/2))]
                  for i in range(range_init, range_end)]
         else:
-            y1 = [strain_vox_is['11'][(i, int(n_voxels_dims[1]/2), int(n_voxels_dims[2]/2))]
+            y1 = [strain_vox_is[plot_strain][(i, int(n_voxels_dims[1]/2),
+                                              int(n_voxels_dims[2]/2))]
                  for i in range(range_init, range_end)]
-            y2 = [strain_vox['11'][(i, int(n_voxels_dims[1]/2), int(n_voxels_dims[2]/2))]
+            y2 = [strain_vox[plot_strain][(i, int(n_voxels_dims[1]/2),
+                                           int(n_voxels_dims[2]/2))]
                  for i in range(range_init, range_end)]
         # Build plot data array
         data_array = np.zeros((x.shape[0], 4))
@@ -1925,7 +1937,8 @@ if __name__ == '__main__':
                        '$\mathrm{FFT-Finite}$']
         # Set axes labels
         x_label = '$x_{1}$'
-        y_label = '$\\varepsilon_{11} \, \mathrm{(IS)}$ / $E_{11} \, \mathrm{(FS)}$'
+        y_label = '$\\varepsilon_{' + plot_strain + '} \, \mathrm{(IS)}$ / ' + \
+                  '$E_{' + plot_strain + '} \, \mathrm{(FS)}$'
         # Set data labels
         data_labels = ['$\mathrm{Infinitesimal \; strains}$',
                        '$\mathrm{Finite \; strains}$']
@@ -1944,15 +1957,15 @@ if __name__ == '__main__':
     # Build plot data array
     n_incs = hom_stress_strain.shape[0]
     data_array = np.zeros((n_incs, 2))
-    data_array[:, 0] = hom_stress_strain[:, 0]
-    data_array[:, 1] = hom_stress_strain[:, 4]
+    data_array[:, 0] = hom_stress_strain[:, plot_strain_idx]
+    data_array[:, 1] = hom_stress_strain[:, plot_stress_idx]
     # Set axes labels
     if strain_formulation == 'infinitesimal':
-        x_label = '$\\varepsilon_{11}$'
-        y_label = '$\\sigma_{11}$'
+        x_label = '$\\varepsilon_{' + plot_strain + '}$'
+        y_label = '$\\sigma_{' + plot_stress + '}$'
     else:
-        x_label = '$F_{11}$'
-        y_label = '$P_{11}$'
+        x_label = '$F_{' + plot_strain + '}$'
+        y_label = '$P_{' + plot_stress + '}$'
     # Output plot
     newgate_line_plots(plots_dir, fig_name, data_array, x_label=x_label, y_label=y_label)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1963,57 +1976,62 @@ if __name__ == '__main__':
     # Homogenized stress:
     #   Cauchy stress tensor - Increment
     #
-    # Output options:
-    # 'strain' - Homogenized strain comparison
-    # 'stress' - Homogenized stress comparison
-    option = 'stress'
-    #
     if strain_formulation == 'finite' and is_is_fs_comparison:
         # Set figure name
-        fig_name = 'is_vs_fs_hom_' + option + '_plot'
+        fig_name = 'is_vs_fs_hom_strain_plot'
         # Build plot data array
         n_incs = hom_stress_strain.shape[0]
         data_array = np.zeros((n_incs, 4))
         data_array[:, 0] = np.array([x for x in range(n_incs)])
         data_array[:, 2] = np.array([x for x in range(n_incs)])
-        if option == 'strain':
-            data_array[:, 1] = hom_stress_strain_is[:, 0]
-            # Loop over increments
-            for inc in range(1, n_incs):
-                # Get deformation gradient
-                def_gradient = np.reshape(hom_stress_strain[inc, 0:n_dim**2],
-                                          (n_dim, n_dim), order='F')
-                # Compute material logarithmic strain tensor
-                mat_log_strain = \
-                    0.5*top.isotropic_tensor('log', np.matmul(np.transpose(def_gradient),
-                                                              def_gradient))
-                # Store material logarithmic strain tensor
-                data_array[inc, 3] = mat_log_strain[0, 0]
-        elif option == 'stress':
-            data_array[:, 1] = hom_stress_strain_is[:, 4]
-            # Loop over increments
-            for inc in range(1, n_incs):
-                # Get deformation gradient
-                def_gradient = np.reshape(hom_stress_strain[inc, 0:n_dim**2],
-                                          (n_dim, n_dim), order='F')
-                # Get first Piola-Kirchhoff stress tensor
-                first_piola_kirchhoff = np.reshape(hom_stress_strain[inc, 4:4 + n_dim**2],
-                                                   (n_dim, n_dim), order='F')
-                # Compute Cauchy stress tensor
-                cauchy = \
-                    (1.0/np.linalg.det(def_gradient))*np.matmul(first_piola_kirchhoff,
-                                                                np.transpose(def_gradient))
-                # Store Cauchy stress tensor
-                data_array[inc, 3] = cauchy[0, 0]
-        else:
-            raise RuntimeError('Option must be either \'strain\' or \'stress\'.')
+        data_array[:, 1] = hom_stress_strain_is[:, plot_strain_idx]
+        # Loop over increments
+        for inc in range(1, n_incs):
+            # Get deformation gradient
+            def_gradient = np.reshape(hom_stress_strain[inc, 0:n_dim**2],
+                                      (n_dim, n_dim), order='F')
+            # Compute material logarithmic strain tensor
+            mat_log_strain = \
+                0.5*top.isotropic_tensor('log', np.matmul(np.transpose(def_gradient),
+                                                          def_gradient))
+            # Store material logarithmic strain tensor
+            data_array[inc, 3] = mat_log_strain[plot_strain_so_idx]
         # Set axes labels
-        if option == 'strain':
-            x_label = '$\mathrm{Increment}$'
-            y_label = '$\\varepsilon_{11} \, \mathrm{(IS)}$ / $E_{11} \, \mathrm{(FS)}$'
-        else:
-            x_label = '$\mathrm{Increment}$'
-            y_label = '$\\sigma_{11}$'
+        x_label = '$\mathrm{Increment}$'
+        y_label = '$\\varepsilon_{11} \, \mathrm{(IS)}$ / $E_{11} \, \mathrm{(FS)}$'
+        # Set data labels
+        data_labels = ['$\mathrm{Infinitesimal \; strains}$',
+                       '$\mathrm{Finite \; strains}$']
+        # Output plot
+        newgate_line_plots(plots_dir, fig_name, data_array, x_label=x_label,
+                           y_label=y_label, data_labels=data_labels)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set figure name
+        fig_name = 'is_vs_fs_hom_stress_plot'
+        # Build plot data array
+        n_incs = hom_stress_strain.shape[0]
+        data_array = np.zeros((n_incs, 4))
+        data_array[:, 0] = np.array([x for x in range(n_incs)])
+        data_array[:, 2] = np.array([x for x in range(n_incs)])
+        data_array[:, 1] = hom_stress_strain_is[:, plot_stress_idx]
+        # Loop over increments
+        for inc in range(1, n_incs):
+            # Get deformation gradient
+            def_gradient = np.reshape(hom_stress_strain[inc, 0:n_dim**2],
+                                      (n_dim, n_dim), order='F')
+            # Get first Piola-Kirchhoff stress tensor
+            first_piola_kirchhoff = \
+                np.reshape(hom_stress_strain[inc, n_dim**2:2*n_dim**2],
+                           (n_dim, n_dim), order='F')
+            # Compute Cauchy stress tensor
+            cauchy = \
+                (1.0/np.linalg.det(def_gradient))*np.matmul(first_piola_kirchhoff,
+                                                            np.transpose(def_gradient))
+            # Store Cauchy stress tensor
+            data_array[inc, 3] = cauchy[plot_stress_so_idx]
+        # Set axes labels
+        x_label = '$\mathrm{Increment}$'
+        y_label = '$\\sigma_{' + plot_stress + '}$'
         # Set data labels
         data_labels = ['$\mathrm{Infinitesimal \; strains}$',
                        '$\mathrm{Finite \; strains}$']
