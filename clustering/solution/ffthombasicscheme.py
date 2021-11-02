@@ -575,27 +575,106 @@ class FFTBasicScheme(DNSHomogenizationMethod):
             spatial_log_strain_vox = {comp: np.zeros(tuple(self._n_voxels_dims))
                               for comp in self._comp_order_sym}
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Loop over voxels
-            for voxel in it.product(*[list(range(n)) for n in self._n_voxels_dims]):
-                # Initialize deformation gradient
-                def_gradient = np.zeros((self._n_dim, self._n_dim))
-                # Loop over deformation gradient components
-                for comp in self._comp_order_nsym:
-                    # Get second-order array index
-                    so_idx = tuple([int(i) - 1 for i in comp])
-                    # Get voxel deformation gradient component
-                    def_gradient[so_idx] = strain_vox[comp][voxel]
+            # Compute spatial logarithmic strain tensor
+            if is_optimized:
+                # Compute voxelwise right Cauchy-Green strain tensor
+                if self._n_dim == 2:
+                    ftfvar11 = np.add(np.multiply(def_gradient_vox['11'],
+                                                  def_gradient_vox['11']),
+                                      np.multiply(def_gradient_vox['12'],
+                                                  def_gradient_vox['12']))
+                    ftfvar22 = np.add(np.multiply(def_gradient_vox['21'],
+                                                  def_gradient_vox['21']),
+                                      np.multiply(def_gradient_vox['22'],
+                                                  def_gradient_vox['22']))
+                    ftfvar12 = np.add(np.multiply(def_gradient_vox['11'],
+                                                  def_gradient_vox['21']),
+                                      np.multiply(def_gradient_vox['12'],
+                                                  def_gradient_vox['22']))
+                else:
+                    ftfvar11 = np.add(np.add(np.multiply(def_gradient_vox['11'],
+                                                         def_gradient_vox['11']),
+                                             np.multiply(def_gradient_vox['12'],
+                                                         def_gradient_vox['12'])),
+                                      np.multiply(def_gradient_vox['13'],
+                                                  def_gradient_vox['13']))
+                    ftfvar12 = np.add(np.add(np.multiply(def_gradient_vox['11'],
+                                                         def_gradient_vox['21']),
+                                             np.multiply(def_gradient_vox['12'],
+                                                         def_gradient_vox['22'])),
+                                      np.multiply(def_gradient_vox['13'],
+                                                  def_gradient_vox['23']))
+                    ftfvar13 = np.add(np.add(np.multiply(def_gradient_vox['11'],
+                                                         def_gradient_vox['31']),
+                                             np.multiply(def_gradient_vox['12'],
+                                                         def_gradient_vox['32'])),
+                                      np.multiply(def_gradient_vox['13'],
+                                                  def_gradient_vox['33']))
+                    ftfvar22 = np.add(np.add(np.multiply(def_gradient_vox['21'],
+                                                         def_gradient_vox['21']),
+                                             np.multiply(def_gradient_vox['22'],
+                                                         def_gradient_vox['22'])),
+                                      np.multiply(def_gradient_vox['23'],
+                                                  def_gradient_vox['23']))
+                    ftfvar23 = np.add(np.add(np.multiply(def_gradient_vox['21'],
+                                                         def_gradient_vox['31']),
+                                             np.multiply(def_gradient_vox['22'],
+                                                         def_gradient_vox['32'])),
+                                      np.multiply(def_gradient_vox['23'],
+                                                  def_gradient_vox['33']))
+                    ftfvar33 = np.add(np.add(np.multiply(def_gradient_vox['31'],
+                                                         def_gradient_vox['31']),
+                                             np.multiply(def_gradient_vox['32'],
+                                                         def_gradient_vox['32'])),
+                                      np.multiply(def_gradient_vox['33'],
+                                                  def_gradient_vox['33']))
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Compute spatial logarithmic strain tensor
-                spatial_log_strain = 0.5*top.isotropic_tensor('log',
-                    np.matmul(def_gradient, np.transpose(def_gradient)))
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Loop over spatial logarithmic strain tensor components
-                for comp in self._comp_order_sym:
-                    # Get second-order array index
-                    so_idx = tuple([int(i) - 1 for i in comp])
-                    # Store spatial logarithmic strain tensor
-                    spatial_log_strain_vox[comp][voxel] = spatial_log_strain[so_idx]
+                # Loop over voxels
+                for voxel in it.product(*[list(range(n)) for n in self._n_voxels_dims]):
+                    # Build right Cauchy-Green strain tensor
+                    if self._n_dim == 2:
+                        right_cauchy_green = np.reshape(
+                            np.array([ftfvar11[voxel], ftfvar12[voxel],
+                                      ftfvar12[voxel], ftfvar22[voxel]]),
+                            (self._n_dim, self._n_dim), 'F')
+                    else:
+                        right_cauchy_green = np.reshape(
+                            np.array([ftfvar11[voxel], ftfvar12[voxel], ftfvar13[voxel],
+                                      ftfvar12[voxel], ftfvar22[voxel], ftfvar23[voxel],
+                                      ftfvar13[voxel], ftfvar23[voxel], ftfvar33[voxel]]),
+                            (self._n_dim, self._n_dim), 'F')
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    # Compute spatial logarithmic strain tensor
+                    spatial_log_strain = 0.5*top.isotropic_tensor('log', right_cauchy_green)
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    # Loop over spatial logarithmic strain tensor components
+                    for comp in self._comp_order_sym:
+                        # Get second-order array index
+                        so_idx = tuple([int(i) - 1 for i in comp])
+                        # Store spatial logarithmic strain tensor
+                        spatial_log_strain_vox[comp][voxel] = spatial_log_strain[so_idx]
+            else:
+                # Loop over voxels
+                for voxel in it.product(*[list(range(n)) for n in self._n_voxels_dims]):
+                    # Initialize deformation gradient
+                    def_gradient = np.zeros((self._n_dim, self._n_dim))
+                    # Loop over deformation gradient components
+                    for comp in self._comp_order_nsym:
+                        # Get second-order array index
+                        so_idx = tuple([int(i) - 1 for i in comp])
+                        # Get voxel deformation gradient component
+                        def_gradient[so_idx] = strain_vox[comp][voxel]
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    # Compute spatial logarithmic strain tensor
+                    spatial_log_strain = 0.5*top.isotropic_tensor('log',
+                        np.matmul(def_gradient, np.transpose(def_gradient)))
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    # Loop over spatial logarithmic strain tensor components
+                    for comp in self._comp_order_sym:
+                        # Get second-order array index
+                        so_idx = tuple([int(i) - 1 for i in comp])
+                        # Store spatial logarithmic strain tensor
+                        spatial_log_strain_vox[comp][voxel] = spatial_log_strain[so_idx]
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Set spatial logarithmic strain tensor
             strain_vox = spatial_log_strain_vox
