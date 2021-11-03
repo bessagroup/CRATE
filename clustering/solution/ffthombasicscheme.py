@@ -28,6 +28,10 @@ import time
 import copy
 # Working with arrays
 import numpy as np
+# Scientific computation
+import scipy.linalg
+# Warnings management
+import warnings
 # Generate efficient iterators
 import itertools as it
 # Terminal colors
@@ -383,7 +387,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                     # Leave fixed-point iterative scheme
                     break
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                elif iter == self._max_n_iterations:
+                elif iter == self._max_n_iterations or not np.isfinite(discrete_error):
                     # Raise macroscale increment cut procedure
                     is_inc_cut = True
                     # Display increment cut (maximum number of iterations)
@@ -718,8 +722,15 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                                          ), (self._n_dim, self._n_dim), 'F')
                         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                         # Compute spatial logarithmic strain tensor
-                        spatial_log_strain = 0.5*top.isotropic_tensor('log',
-                                                                      left_cauchy_green)
+                        with warnings.catch_warnings():
+                            # Supress warnings
+                            warnings.simplefilter('ignore', category=RuntimeWarning)
+                            # Compute spatial logarithmic strain tensor
+                            spatial_log_strain = 0.5*top.isotropic_tensor('log',
+                                                                          left_cauchy_green)
+                            if np.any(np.logical_not(np.isfinite(spatial_log_strain))):
+                                spatial_log_strain = \
+                                    0.5*scipy.linalg.logm(left_cauchy_green)
                         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                         # Loop over spatial logarithmic strain tensor components
                         for comp in self._comp_order_sym:
@@ -757,8 +768,15 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                                 mat_green_lagr_strain[so_idx]
                     else:
                         # Compute spatial logarithmic strain tensor
-                        spatial_log_strain = 0.5*top.isotropic_tensor('log',
-                            np.matmul(def_gradient, np.transpose(def_gradient)))
+                        with warnings.catch_warnings():
+                            # Supress warnings
+                            warnings.simplefilter('ignore', category=RuntimeWarning)
+                            # Compute spatial logarithmic strain tensor
+                            spatial_log_strain = 0.5*top.isotropic_tensor('log',
+                                np.matmul(def_gradient, np.transpose(def_gradient)))
+                            if np.any(np.logical_not(np.isfinite(spatial_log_strain))):
+                                spatial_log_strain = 0.5*scipy.linalg.logm(
+                                    np.matmul(def_gradient, np.transpose(def_gradient)))
                         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                         # Loop over symmetric strain components
                         for comp in self._comp_order_sym:
