@@ -268,11 +268,17 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         #
         #                                           Macroscale strain loading incrementation
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set number of increments
+        if self._strain_formulation == 'infinitesimal':
+            n_incs = 1
+        else:
+            n_incs = 10
+        # Set incremental load factors
+        inc_lfacts = n_incs*[1.0/n_incs,]
         # Initialize macroscale strain incrementer
         mac_strain_incrementer = MacroscaleStrainIncrementer(self._strain_formulation,
-                                                             self._problem_type,
-                                                             mac_strain_total,
-                                                             inc_lfacts=[1.0,])
+            self._problem_type, mac_strain_total, inc_lfacts=inc_lfacts,
+                max_subinc_level=self._max_subinc_level, max_cinc_cuts=self._max_cinc_cuts)
         # Set first macroscale strain increment
         mac_strain_incrementer.update_inc()
         # Get current macroscale strain tensor
@@ -388,10 +394,16 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                     break
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 elif iter == self._max_n_iterations or not np.isfinite(discrete_error):
+                    # Set increment cut output
+                    if not np.isfinite(discrete_error):
+                        cut_msg = 'Solution diverged.'
+                    else:
+                        cut_msg = 'Maximum number of iterations reached without ' + \
+                                  'convergence.'
                     # Raise macroscale increment cut procedure
                     is_inc_cut = True
                     # Display increment cut (maximum number of iterations)
-                    type(self)._display_increment_cut(self._max_n_iterations)
+                    type(self)._display_increment_cut(cut_msg)
                     # Leave fixed-point iterative scheme
                     break
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1426,24 +1438,21 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         #ioutil.print2(template.format(*info, width=output_width))
     # --------------------------------------------------------------------------------------
     @staticmethod
-    def _display_increment_cut(max_n_iterations):
+    def _display_increment_cut(cut_msg=''):
         '''Output increment cut data.
 
         Parameters
         ----------
-        max_n_iterations : int
-            Maximum number of iterations to convergence.
+        cut_msg : str
+            Increment cut output message.
         '''
         # Get display features
         display_features = ioutil.setdisplayfeatures()
         output_width, _, indent, asterisk_line = display_features[0:4]
         _, _ = display_features[4:6]
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Set increment cut cause
-        cut_msg = 'Maximum number of iterations ({}) reached without convergence.'
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set output data
-        info = (max_n_iterations, )
+        info = ()
         # Set output template
         template = '\n\n' + colorama.Fore.RED + indent + asterisk_line[:-len(indent)] + \
                    '\n' + \
