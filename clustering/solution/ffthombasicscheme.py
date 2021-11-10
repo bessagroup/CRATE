@@ -1702,6 +1702,7 @@ if __name__ == '__main__':
     # Insert this at import modules section
     #p = os.path.abspath('/home/bernardoferreira/Documents/CRATE/src')
     #sys.path.insert(1, p)
+    import pickle
     from ioput.vtkoutput import XMLGenerator, VTKOutput
     from clustering.clusteringdata import def_gradient_from_log_strain
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1713,7 +1714,7 @@ if __name__ == '__main__':
     is_vtk_output = False
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set problem strain formulation
-    strain_formulation = 'infinitesimal'
+    strain_formulation = 'finite'
     # Set problem type
     problem_type = 1
     # Get problem type parameters
@@ -1752,28 +1753,227 @@ if __name__ == '__main__':
     else:
         # Set macroscale deformation gradient tensor
         if n_dim == 2:
-            mac_strain = np.array([[1.100e+0, 0.000e+0],
-                                   [0.000e+0, 1.000e+0]])
+            mac_strain = np.eye(2) + np.array([[0.300e+0,  0.000e+0],
+                                               [0.000e+0,  0.000e+0]])*1.0
         else:
-            mac_strain = np.array([[1.100e+0, 0.000e+0, 0.000+0],
-                                   [0.000e+0, 1.000e+0, 0.000+0],
-                                   [0.000e+0, 0.000e+0, 1.000+0]])
+            mac_strain = np.eye(3) + np.array([[0.100e+0, -0.100e+0, 0.050+0],
+                                               [0.050e+0, -0.050e+0, 0.100+0],
+                                               [-0.100e+0, 0.050e+0, 0.050+0]])
         # Compute gradient of displacement field
         disp_grad = mac_strain - np.eye(n_dim)
         # Compute infinitesimal strain tensor
         mac_strain_is = 0.5*(disp_grad + np.transpose(disp_grad))
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #
+    # Strain concentration tensor study
+    # ---------------------------------
+    #
+    # Define method to compute strain concentration tensor at a given voxel
+    def compute_sct(strain_formulation, n_dim, n_voxels_dims, comp_order_sym, target_voxel,
+                    strain_magnitude_factor=1.0):
+        '''Compute strain concentration tensor at target voxel.
+
+        Parameters
+        ----------
+        strain_formulation: str, {'infinitesimal', 'finite'}
+            Problem strain formulation.
+        n_dim : int
+            Problem number of spatial dimensions.
+        n_voxels_dims : list
+            Number of voxels in each dimension of the regular grid (spatial discretization
+            of the RVE).
+        comp_order_sym : list
+            Strain/Stress components symmetric order.
+        target_voxel : tuple
+            Voxel where the strain concentration tensor is computed.
+        strain_magnitude_factor : float, default=1.0
+            Macroscale strain magnitude factor.
+
+        Returns
+        -------
+        sct : 2darray
+            Strain concentration tensor at target voxel.
+        mac_strains : list
+            Macroscale strain (orthogonal) loadings.
+        local_strains : list
+            Local strain tensor (target voxel) associated to each macroscale strain loading.
+        '''
+        # Set macroscale strain loadings required to compute strain concentration tensor
+        mac_strains = []
+        for i in range(len(comp_order_sym)):
+            # Get strain component and associated indexes
+            comp = comp_order_sym[i]
+            so_idx = tuple([int(x) - 1 for x in list(comp_order_sym[i])])
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Set orthogonal infinitesimal strain tensor (infinitesimal strains) or material
+            # logarithmic strain tensor (finite strains)
+            mac_strain = np.zeros((n_dim, n_dim))
+            mac_strain[so_idx] = 1.0*strain_magnitude_factor
+            if comp[0] != comp[1]:
+                mac_strain[so_idx[::-1]] = mac_strain[so_idx]
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Store macroscale strain loading
+            mac_strains.append(mac_strain)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Initialize FFT-based homogenization basic scheme
+        homogenization_method = FFTBasicScheme(strain_formulation=strain_formulation,
+            problem_type=problem_type, rve_dims=rve_dims, n_voxels_dims=n_voxels_dims,
+                regular_grid=regular_grid, material_phases=material_phases,
+                    material_properties=material_properties)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Initialize strain concentration tensor
+        sct = np.zeros((len(comp_order_sym), len(comp_order_sym)))
+        # Initialize local strain tensor associated to each macroscale strain loading
+        local_strains = []
+        # Loop over macroscale strain loadings
+        for j in range(len(mac_strains)):
+            # Get macroscale strain loading
+            mac_strain = mac_strains[j]
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Compute deformation gradient associated to the material logarithmic strain
+            # tensor
+            if strain_formulation == 'finite':
+                mac_strain_imposed = def_gradient_from_log_strain(mac_strain)
+            else:
+                mac_strain_imposed = mac_strain
+            # Compute local strain field
+            strain_vox = \
+                homogenization_method.compute_rve_local_response(mac_strain_imposed,
+                                                                 verbose=True)
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Initialize local strain tensor
+            local_strain = np.zeros(len(comp_order_sym))
+            # Loop over strain components
+            for i in range(len(comp_order_sym)):
+                # Get strain component
+                comp = comp_order_sym[i]
+                # Build local strain tensor
+                local_strain[i] = strain_vox[comp][target_voxel]
+            # Store local strain tensor
+            local_strains.append(local_strain)
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Assemble strain concentration tensor column
+            sct[:, j] = copy.deepcopy(local_strain)
+        # Normalize strain concentration tensor
+        sct = (1.0/strain_magnitude_factor)*sct
+
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Loop over macroscale strain loadings
+        for j in range(len(mac_strains)):
+            # Get macroscale strain loading
+            mac_strain = mac_strains[j]
+            # Build macroscale strain vector
+            mac_strain_vec = np.zeros(len(comp_order_sym))
+            for k in range(len(comp_order_sym)):
+                # Get strain component and associated indexes
+                comp = comp_order_sym[k]
+                so_idx = tuple([int(x) - 1 for x in list(comp)])
+                # Assemble macroscale strain vector
+                mac_strain_vec[k] = mac_strain[so_idx]
+            # Compute local strain tensor from strain concentration tensor
+            local_strain = np.matmul(sct, mac_strain_vec)
+            # Validate strain concentration tensor computation
+            if not np.allclose(local_strain, local_strains[j]):
+                raise RuntimeError('Error in SCT computation.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        return sct, mac_strains, local_strains
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # New version: FFT-based homogenization basic scheme
-    homogenization_method = FFTBasicScheme(strain_formulation=strain_formulation,
-        problem_type=problem_type, rve_dims=rve_dims, n_voxels_dims=n_voxels_dims,
-            regular_grid=regular_grid, material_phases=material_phases,
-                material_properties=material_properties)
-    # Compute local strain field
-    strain_vox = homogenization_method.compute_rve_local_response(mac_strain,
-                                                                  verbose=True)
-    # Get homogenized stress-strain response
-    hom_stress_strain = homogenization_method.get_hom_stress_strain()
+    # Set strain concentration tensor data file path
+    sct_data_path = working_dir + 'sca_data.dat'
+    # Set pickle flag
+    is_pickle_sct = False
+    # Set voxels under analysis
+    target_voxels = [(100, 300), (300, 300), (325, 70), (50, 125)]
+    # Set macroscale strain magnitude factors
+    strain_magnitude_factors = [1.0e-4, 3.1628e-4, 1.0e-3, 3.1628e-3, 1.0e-2, 3.1628e-2,
+                                1.0e-1]
+    # Build or recover strain concentration data array
+    if is_pickle_sct:
+        # Get strain concentration data array
+        with open(sct_data_path, 'rb') as sct_file:
+            data_array = pickle.load(sct_file)
+    else:
+        # Initialize strain concentration data array
+        data_array = np.zeros((len(strain_magnitude_factors), 2*2*len(target_voxels)))
+        # Loop over target voxels
+        for j in range(len(target_voxels)):
+            # Get target_voxel
+            target_voxel = target_voxels[j]
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Loop over macroscale strain magnitude factors
+            for i in range(len(strain_magnitude_factors)):
+                # Get macroscale strain magnitude factor
+                strain_magnitude_factor = strain_magnitude_factors[i]
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Loop over
+                for strain_formulation in ('infinitesimal', 'finite'):
+                    # Compute strain concentration tensor
+                    sct, mac_strains, local_strains = \
+                        compute_sct(strain_formulation, n_dim, n_voxels_dims,
+                                    comp_order_sym, target_voxel,
+                                    strain_magnitude_factor=strain_magnitude_factor)
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    # Compute norm of strain concentration tensor
+                    sct_norm = np.linalg.norm(sct)
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    # Assemble to plot data array
+                    if strain_formulation == 'infinitesimal':
+                        data_array[i, 2*j] = strain_magnitude_factor
+                        data_array[i, 2*j + 1] = sct_norm
+                    else:
+                        offset = 2*len(target_voxels)
+                        data_array[i, offset + 2*j] = strain_magnitude_factor
+                        data_array[i, offset + 2*j + 1] = sct_norm
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Dump strain concentration tensor data array
+        with open(sct_data_path, 'wb') as sct_file:
+            pickle.dump(data_array, sct_file)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Output results:
+    if False:
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        print('\nMacroscale strain and local strain:')
+        # Initialize macroscale strain vectors
+        mac_strains_vec = []
+        # Loop over macroscale strain loadings
+        for j in range(len(mac_strains)):
+            # Get macroscale strain loading
+            mac_strain = mac_strains[j]
+            # Build macroscale strain vector
+            mac_strain_vec = np.zeros(len(comp_order_sym))
+            for k in range(len(comp_order_sym)):
+                # Get strain component and associated indexes
+                comp = comp_order_sym[k]
+                so_idx = tuple([int(x) - 1 for x in list(comp)])
+                # Assemble macroscale strain vector
+                mac_strain_vec[k] = mac_strain[so_idx]
+            mac_strains_vec.append(mac_strain_vec)
+            # Get local strain tensor
+            local_strain = local_strains[j]
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Output macroscale strain loading and local strain tensor
+            print('  mac_strain: ', mac_strain_vec, ' -> local_strain: ', local_strain)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        print('\n' + 'Strain concentration tensor ( normalization factor = ',
+              strain_magnitude_factor, '):\n', sct)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        print('\n' + 'Strain concentration tensor norms:')
+        print('  global norm   = ', np.linalg.norm(sct), '\n')
+        # Loop over macroscale strain loadings
+        for j in range(len(mac_strains)):
+            print('  column ' + str(j) + ' norm = ', np.linalg.norm(sct[:, j]))
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    if False:
+        # New version: FFT-based homogenization basic scheme
+        homogenization_method = FFTBasicScheme(strain_formulation=strain_formulation,
+            problem_type=problem_type, rve_dims=rve_dims, n_voxels_dims=n_voxels_dims,
+                regular_grid=regular_grid, material_phases=material_phases,
+                    material_properties=material_properties)
+        # Compute local strain field
+        strain_vox = homogenization_method.compute_rve_local_response(mac_strain,
+                                                                      verbose=True)
+        # Get homogenized stress-strain response
+        hom_stress_strain = homogenization_method.get_hom_stress_strain()
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Compute infinitesimal strains response for comparison with finite strains case
     is_is_fs_comparison = False
@@ -1865,6 +2065,8 @@ if __name__ == '__main__':
         else:
             cycler_color = cycler.cycler('color',
                 [color_list[i] for i in use_colors[str(n_plot_lines)]])
+        #cycler_linestyle = cycler.cycler('linestyle',4*['--','-'])
+        #cycler_color = cycler.cycler('color', [color_list[i] for i in [0,0,2,2,4,4,3,3]])
         # Set default cycler
         if is_marker:
             default_cycler = cycler_marker*cycler_linestyle*cycler_color
@@ -1901,7 +2103,7 @@ if __name__ == '__main__':
         # 1. log x - linear y
         # 2. linear x - log y
         # 3. log x - log y
-        scale_option = 0
+        scale_option = 1
         #
         # Configure axes scales
         if scale_option == 1:
@@ -1984,7 +2186,7 @@ if __name__ == '__main__':
         else:
             DNS_plot_line = -1
         # Set markers at specific points
-        is_special_markers = True
+        is_special_markers = False
         if is_special_markers:
             # Adaptivity steps
             marker_symbol = 'd'
@@ -2002,9 +2204,11 @@ if __name__ == '__main__':
         if is_special_markers:
             mark_every = markers_on
         else:
-            marker_symbol = None
+            marker_symbol = 'o'
             marker_size = 5
             mark_every = {i: 1 for i in range(n_plot_lines)}
+
+            marker_symbols = int(n_plot_lines)*['v', '^']
         # Loop over plot lines
         for i in range(n_plot_lines):
             # Get plot line key
@@ -2020,6 +2224,11 @@ if __name__ == '__main__':
             # Set plot line layer
             layer = 10 + i
 
+            if np.mod(i, 2) == 0:
+                layer = 10 - i
+            else:
+                layer = 10 + i
+
             if i == DNS_plot_line:
                 axes.plot(x, y, label=data_label, linewidth=line_width, clip_on=False,
                                 marker=marker_symbol, markersize=marker_size,
@@ -2029,7 +2238,7 @@ if __name__ == '__main__':
 
             # Plot line
             axes.plot(x, y, label=data_label, linewidth=line_width, clip_on=False,
-                            marker=marker_symbol, markersize=marker_size,
+                            marker=marker_symbols[i], markersize=marker_size,
                             markevery=mark_every[i], zorder=layer)
         #
         #                                                                        Axis limits
@@ -2042,10 +2251,11 @@ if __name__ == '__main__':
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set plot legend
         if data_labels != None:
-            axes.legend(loc='center',ncol=3, numpoints=1, frameon=True, fancybox=True,
+            axes.legend(loc='center',ncol=4, numpoints=2, frameon=True, fancybox=True,
                         facecolor='inherit', edgecolor='inherit', fontsize=10,
                         framealpha=1.0, bbox_to_anchor=(0, 1.1, 1.0, 0.1),
-                        borderaxespad=0.0, markerscale=0.0)
+                        borderaxespad=0.0, markerscale=1.0, handlelength=2.5,
+                        handletextpad=0.5)
         #
         #                                                                              Print
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2243,6 +2453,38 @@ if __name__ == '__main__':
             # Output plot
             newgate_line_plots(plots_dir, fig_name, data_array, x_label=x_label,
                                y_label=y_label, data_labels=data_labels)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    if True:
+        # Set plots directory
+        plots_dir = working_dir
+        # Set figure name
+        fig_name = strain_formulation + '_strain_magnitude_factor'
+        # Set axes labels
+        x_label = '$\chi$'
+        y_label = '$\\norm{\mathbf{H}^{e}}(\\bm{Y}_{s})$'
+        # Set axes limits
+        x_min = 7.94328e-5
+        x_max = 1.258925e-1
+        y_min = 2.05
+        y_max=2.35
+        # Set data labels
+        point_labels = ['A', 'A', 'B', 'B', 'C', 'C', 'D', 'D']
+        data_labels = ['$\\bm{Y}_' + point_labels[x] + '$'
+                       for x in range(2*len(target_voxels))]
+        # Build plot data array
+        data_array_complete = copy.deepcopy(data_array)
+        data_array[:, 0:2] = data_array_complete[:, 0:2]
+        data_array[:, 2:4] = data_array_complete[:, 8:10]
+        data_array[:, 4:6] = data_array_complete[:, 2:4]
+        data_array[:, 6:8] = data_array_complete[:, 10:12]
+        data_array[:, 8:10] = data_array_complete[:, 4:6]
+        data_array[:, 10:12] = data_array_complete[:, 12:14]
+        data_array[:, 12:14] = data_array_complete[:, 6:8]
+        data_array[:, 14:16] = data_array_complete[:, 14:16]
+        # Output plot
+        newgate_line_plots(plots_dir, fig_name, data_array, data_labels=data_labels,
+                           x_label=x_label, y_label=y_label, x_min=x_min, x_max=x_max,
+                           y_min=y_min, y_max=y_max)
     #
     # --------------------------------------------------------------------------------------
     # VTK OUTPUT
