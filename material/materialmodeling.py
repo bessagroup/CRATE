@@ -1,10 +1,9 @@
 #
-# Material Interface (CRATE Program)
+# Material State (CRATE Program)
 # ==========================================================================================
 # Summary:
-# Module containing the required procedures to perform the constitutive state update of the
-# the material clusters. Includes proper interfaces to implement constitutive models from
-# different sources.
+# Module containing the required procedures to perform the state update of the material
+# clusters constitutive models.
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | Feb 2020 | Initial coding.
@@ -17,8 +16,6 @@
 import numpy as np
 # Shallow and deep copy operations
 import copy
-# Defining abstract base classes
-from abc import ABC, abstractmethod
 # Generate efficient iterators
 import itertools as it
 # Tensorial operations
@@ -28,6 +25,9 @@ import tensor.matrixoperations as mop
 # Constitutive models
 from material.models.linear_elastic import Elastic
 from material.models.von_mises import VonMises
+# Links constitutive models
+from links.material.models.links_elastic import LinksElastic
+from links.material.models.links_von_mises import LinksVonMises
 #
 #                                                                             Material state
 # ==========================================================================================
@@ -45,6 +45,9 @@ class MaterialState:
     _material_phases_models : dict
         Material constitutive model (item, ConstitutiveModel) associated to each material
         phase (key, str).
+    phase_clusters : dict
+        Clusters labels (item, list of int) associated to each material phase
+        (key, str).
     _clusters_def_gradient_mf : dict
         Deformation gradient (item, 1darray) associated to each material cluster (key, str),
         stored in matricial form.
@@ -62,7 +65,7 @@ class MaterialState:
         cluster (key, str), stored in matricial form.
     '''
     def __init__(self, strain_formulation, problem_type, material_phases,
-                 material_phases_properties, material_phases_f, phase_clusters):
+                 material_phases_properties, material_phases_vf):
         '''CRVE material constitutive state constructor.
 
         Parameters
@@ -77,18 +80,15 @@ class MaterialState:
         material_phases_properties : dict
             Constitutive model material properties (item, dict) associated to each material
             phase (key, str).
-        material_phases_f : dict
+        material_phases_vf : dict
             Volume fraction (item, float) associated to each material phase (key, str).
-        phase_clusters : dict
-            Clusters labels (item, list of int) associated to each material phase
-            (key, str).
         '''
         self._strain_formulation = strain_formulation
         self._problem_type = problem_type
         self._material_phases = material_phases
         self._material_phases_properties = material_phases_properties
-        self._material_phases_f = material_phases_f
-        self._phase_clusters = phase_clusters
+        self._material_phases_vf = material_phases_vf
+        self._phase_clusters = None
         self._material_phases_models = {mat_phase: None for mat_phase in material_phases}
         self._clusters_def_gradient_mf = None
         self._clusters_def_gradient_old_mf = None
@@ -117,16 +117,23 @@ class MaterialState:
         # Initialize material phase constitutive model
         if model_source == 'crate':
             if model_name == 'elastic':
-                constitutive_model = Elastic(self._problem_type,
+                constitutive_model = Elastic(self._strain_formulation, self._problem_type,
                                              self._material_phases_properties[mat_phase])
             elif model_name == 'von_mises':
-                constitutive_model = VonMises(self._problem_type,
+                constitutive_model = VonMises(self._strain_formulation, self._problem_type,
                                               self._material_phases_properties[mat_phase])
             else:
                 raise RuntimeError('Unknown constitutive model from CRATE\'s source.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         elif model_source == 'links':
-            raise RuntimeError('Links: Not implemented yet.')
+            if model_name == 'ELASTIC':
+                constitutive_model = \
+                    LinksElastic(self._strain_formulation, self._problem_type,
+                                 self._material_phases_properties[mat_phase])
+            elif model_name == 'VON_MISES':
+                constitutive_model = \
+                    LinksVonMises(self._strain_formulation, self._problem_type,
+                                  self._material_phases_properties[mat_phase])
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         else:
             raise RuntimeError('Unknown material constitutive model source.')
@@ -161,6 +168,17 @@ class MaterialState:
                 # Initialize clusters deformation gradient
                 self._clusters_def_gradient_mf[str(cluster)] = soid_mf
                 self._clusters_def_gradient_old_mf[str(cluster)] = soid_mf
+    # --------------------------------------------------------------------------------------
+    def set_phase_clusters(self, phase_clusters):
+        '''Set CRVE cluster labels associated to each material phase.
+
+        Parameters
+        ----------
+        phase_clusters : dict
+            Clusters labels (item, list of int) associated to each material phase
+            (key, str).
+        '''
+        self._phase_clusters = copy.deepcopy(phase_clusters)
     # --------------------------------------------------------------------------------------
     def get_clusters_inc_strain_mf(self, global_inc_strain_mf):
         '''Get clusters incremental strain in matricial form.
@@ -245,7 +263,10 @@ class MaterialState:
                                                     copy.deepcopy(inc_strain),
                                                     copy.deepcopy(state_variables_old))
                 else:
-                    raise RuntimeError('Links: Not implemented yet.')
+                    state_variables, consistent_tangent_mf = \
+                        constitutive_model.state_update(copy.deepcopy(inc_strain),
+                                                        copy.deepcopy(state_variables_old),
+                                                        copy.deepcopy(def_gradient_old))
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Check state update failure status
                 try:
@@ -261,8 +282,9 @@ class MaterialState:
                                        '(\'is_su_fail\': bool)')
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Update cluster deformation gradient
-                self._clusters_def_gradient_mf[str(cluster)] = \
-                    np.matmul(inc_strain_mf, def_gradient_old_mf)
+                if self._strain_formulation == 'finite':
+                    self._clusters_def_gradient_mf[str(cluster)] = \
+                        np.matmul(inc_strain_mf, def_gradient_old_mf)
                 # Update cluster state variables and material consistent tangent modulus
                 self._clusters_state[str(cluster)] = state_variables
                 self._clusters_tangent_mf[str(cluster)] = consistent_tangent_mf
@@ -548,109 +570,6 @@ class MaterialState:
                     # Remove target cluster item
                     cluster_dict.pop(target_cluster)
 #
-#                                                               Constitutive model interface
-# ==========================================================================================
-class ConstitutiveModel(ABC):
-    '''Constitutive model interface.
-
-    Attributes
-    ----------
-    _strain_type : str, {'infinitesimal', 'finite', 'finite-kinext'}
-        Constitutive model strain formulation: infinitesimal strain formulation
-        ('infinitesimal'), finite strain formulation ('finite') or finite strain
-        formulation through kinematic extension (infinitesimal constitutive formulation and
-        purely finite strain kinematic extension - 'finite-kinext').
-    _source : str, {'crate', }
-        Material constitutive model source.
-    '''
-    @abstractmethod
-    def __init__(self, problem_type, material_properties):
-        '''Constitutive model constructor.
-
-        Parameters
-        ----------
-        problem_type : int
-            Problem type: 2D plane strain (1), 2D plane stress (2), 2D axisymmetric (3) and
-            3D (4).
-        material_properties : dict
-            Constitutive model material properties (key, str) values (item, int/float/bool).
-        '''
-        pass
-    # --------------------------------------------------------------------------------------
-    @abstractmethod
-    @staticmethod
-    def get_required_properties():
-        '''Get the material constitutive model required properties.
-
-        Returns
-        -------
-        req_mat_properties : list
-            List of constitutive model required material properties (str).
-        '''
-        pass
-    # --------------------------------------------------------------------------------------
-    @abstractmethod
-    def get_strain_type(self):
-        '''Get material constitutive model strain formulation.
-
-        Returns
-        -------
-        strain_type : str, {'infinitesimal', 'finite', 'finite-kinext'}
-            Constitutive model strain formulation: infinitesimal strain formulation
-            ('infinitesimal'), finite strain formulation ('finite') or finite strain
-            formulation through kinematic extension (infinitesimal constitutive formulation
-            and purely finite strain kinematic extension - 'finite-kinext').
-        '''
-        pass
-    # --------------------------------------------------------------------------------------
-    @abstractmethod
-    def get_source(self):
-        '''Get material constitutive model source.
-
-        Returns
-        -------
-        source : str, {'crate', }
-            Material constitutive model source.
-        '''
-        pass
-    # --------------------------------------------------------------------------------------
-    @abstractmethod
-    def state_init(self):
-        '''Initialize material constitutive model state variables.
-
-        Returns
-        -------
-        state_variables_init : dict
-            Initial material constitutive model state variables.
-        '''
-        pass
-    # --------------------------------------------------------------------------------------
-    @abstractmethod
-    def state_update(self, inc_strain, state_variables_old, su_max_n_iterations=20,
-                     su_conv_tol=1e-6):
-        '''Perform material constitutive model state update.
-
-        Parameters
-        ----------
-        inc_strain : 2darray
-            Incremental strain second-order tensor.
-        state_variables_old : dict
-            Last converged material constitutive model state variables.
-        su_max_n_iterations : int, default=20
-            State update maximum number of iterations.
-        su_conv_tol : float, default=1e-6
-            State update convergence tolerance.
-
-        Returns
-        -------
-        state_variables : dict
-            Material constitutive model state variables.
-        consistent_tangent_mf : ndarray
-            Material constitutive model material consistent tangent modulus in matricial
-            form.
-        '''
-        pass
-#
 #                                                     Available material constitutive models
 # ==========================================================================================
 def get_available_material_models(model_source='crate'):
@@ -658,7 +577,7 @@ def get_available_material_models(model_source='crate'):
 
     Parameters
     ----------
-    model_source : str, {'crate', }, default='crate'
+    model_source : str, {'crate', 'links'}, default='crate'
         Material constitutive model source.
 
     Returns

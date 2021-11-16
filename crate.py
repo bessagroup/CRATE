@@ -58,8 +58,8 @@ import ioput.fileoperations as filop
 import ioput.packager as packager
 # Material interface
 import material.materialinterface as matint
-# Clustering quantities computation
-import clustering.clusteringdata as clstdata
+# Clustering data computation
+from clustering.clusteringdata import set_clustering_data
 # Online stage
 import online.sca as sca
 # VTK output
@@ -122,7 +122,7 @@ except FileNotFoundError as message:
 # Read input data according to analysis type
 info.displayinfo('5', 'Reading the input data file...')
 problem_dict, mat_dict, macload_dict, rg_dict, clst_dict, scs_dict, algpar_dict, vtk_dict, \
-    output_dict = rid.readinputdatafile(input_file, dirs_dict)
+    output_dict, material_state = rid.readinputdatafile(input_file, dirs_dict)
 # Close user input data file
 input_file.close()
 # Save copy of clustering dictionary for compatibility check procedure (loading previously
@@ -146,8 +146,23 @@ if not is_same_offstage:
     # Display starting phase information and set phase initial time
     info.displayinfo('2', 'Compute cluster analysis data matrix')
     phase_init_time = time.time()
-    # Compute the data required to perform the clustering according to the adopted strategy
-    clstdata.set_clustering_data(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict)
+    # Set DNS homogenization-based multi-scale method and associated parameters
+    dns_method_id = clst_dict['clustering_solution_method']
+    if dns_method_id == 1:
+        dns_method = 'fft_basic'
+        dns_method_data = None
+    elif dns_method_id == 2:
+        dns_method = 'fem_links'
+        dns_method_data = clst_dict['links_data']
+    else:
+        raise RuntimeError('Unknown DNS solution method.')
+    # Compute the physical-based data required to perform the RVE cluster analysis
+    clustering_data = set_clustering_data(
+        problem_dict['strain_formulation'], problem_dict['problem_type'],
+            rg_dict['rve_dims'], rg_dict['n_voxels_dims'], rg_dict['regular_grid'],
+            mat_dict['material_phases'], mat_dict['material_phases_properties'], dns_method,
+            dns_method_data, clst_dict['standardization_method'],
+            clst_dict['base_clustering_scheme'], clst_dict['adaptive_clustering_scheme'])
     # Set phase ending time and display finishing phase information
     phase_end_time = time.time()
     phase_names.append('Compute cluster analysis data matrix')
@@ -160,13 +175,13 @@ if not is_same_offstage:
 # material phases constitutive models implemented in CRATE (source conversion)
 if clst_dict['clustering_solution_method'] == 2:
     # Convert material-related objects from Links source to CRATE source
-    new_material_phase_models, new_material_properties = \
+    new_material_phases_data, new_material_phases_properties = \
         matint.material_source_conversion(mat_dict['n_material_phases'],
-                                          mat_dict['material_phases_models'],
-                                          mat_dict['material_properties'])
+                                          mat_dict['material_phases_data'],
+                                          mat_dict['material_phases_properties'])
     # Update material phases dictionary
-    mat_dict['material_phases_models'] = new_material_phase_models
-    mat_dict['material_properties'] = new_material_properties
+    mat_dict['material_phases_models'] = new_material_phases_data
+    mat_dict['material_phases_properties'] = new_material_phases_properties
 #
 #               Offline stage: Generate Cluster-Reduced Representative Volume Element (CRVE)
 # ==========================================================================================
@@ -216,7 +231,7 @@ else:
                 mat_dict['material_phases'],
                 problem_dict['strain_formulation'],
                 problem_dict['problem_type'],
-                clst_dict['global_data_matrix'],
+                clustering_data.get_global_data_matrix(),
                 clst_dict['clustering_type'],
                 clst_dict['phase_n_clusters'],
                 clst_dict['base_clustering_scheme'],
@@ -253,6 +268,9 @@ else:
         vtk_output.write_VTK_file_clustering(crve=crve)
         # Increment post-processing time
         ofs_post_process_time += time.time() - procedure_init_time
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Update CRVE material state cluster labels
+    material_state.set_phase_clusters(crve.get_phase_clusters())
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set phase ending time and display finishing phase information
     phase_end_time = time.time() - ofs_post_process_time

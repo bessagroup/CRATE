@@ -88,7 +88,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         deformation gradient.
     '''
     def __init__(self, strain_formulation, problem_type, rve_dims, n_voxels_dims,
-                 regular_grid, material_phases, material_properties):
+                 regular_grid, material_phases, material_phases_properties):
         '''FFT-based homogenization basic scheme constructor.
 
         Parameters
@@ -108,8 +108,9 @@ class FFTBasicScheme(DNSHomogenizationMethod):
             contains the material phase label (int) assigned to the corresponding voxel.
         material_phases : list
             RVE material phases labels (str).
-        material_properties : dict
-            Constitutive model material properties (key, str) values (item, int/float/bool).
+        material_phases_properties : dict
+            Constitutive model material properties (item, dict) associated to each material
+            phase (key, str).
         '''
         self._strain_formulation = strain_formulation
         self._problem_type = problem_type
@@ -117,7 +118,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         self._n_voxels_dims = n_voxels_dims
         self._regular_grid = regular_grid
         self._material_phases = material_phases
-        self._material_properties = material_properties
+        self._material_phases_properties = material_phases_properties
         # Get problem type parameters
         n_dim, comp_order_sym, comp_order_nsym = \
             mop.get_problem_type_parameters(self._problem_type)
@@ -137,7 +138,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         if self._strain_formulation == 'finite':
             self._hom_stress_strain[0, 0] = 1.0
     # --------------------------------------------------------------------------------------
-    def compute_rve_local_response(self, mac_strain, verbose=False):
+    def compute_rve_local_response(self, mac_strain_id, mac_strain, verbose=False):
         '''Compute RVE local elastic strain response.
 
         Compute the local response of the material's representative volume element (RVE)
@@ -147,6 +148,8 @@ class FFTBasicScheme(DNSHomogenizationMethod):
 
         Parameters
         ----------
+        mac_strain_id : int
+            Macroscale strain second-order tensor identifier.
         mac_strain : 2darray
             Macroscale strain second-order tensor. Infinitesimal strain tensor
             (infinitesimal strains) or deformation gradient (finite strains).
@@ -187,13 +190,13 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         # Set elastic properties-related optimized variables
         evar1 = np.zeros(tuple(self._n_voxels_dims))
         evar2 = np.zeros(tuple(self._n_voxels_dims))
-        for mat_phase in material_phases:
+        for mat_phase in self._material_phases:
             # Get material phase elastic properties
-            E = material_properties[mat_phase]['E']
-            v = material_properties[mat_phase]['v']
+            E = self._material_phases_properties[mat_phase]['E']
+            v = self._material_phases_properties[mat_phase]['v']
             # Build optimized variables
-            evar1[regular_grid == int(mat_phase)] = (E*v)/((1.0 + v)*(1.0 - 2.0*v))
-            evar2[regular_grid == int(mat_phase)] = np.multiply(2,E/(2.0*(1.0 + v)))
+            evar1[self._regular_grid == int(mat_phase)] = (E*v)/((1.0 + v)*(1.0 - 2.0*v))
+            evar2[self._regular_grid == int(mat_phase)] = np.multiply(2,E/(2.0*(1.0 + v)))
         evar3 = np.add(evar1, evar2)
         #
         #                                              Reference material elastic properties
@@ -203,11 +206,15 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         # (proposed in Moulinec, H. and Suquet, P., 1998)
         mat_prop_ref = dict()
         mat_prop_ref['E'] = \
-            0.5*(min([material_properties[phase]['E'] for phase in material_phases]) + \
-                 max([material_properties[phase]['E'] for phase in material_phases]))
+            0.5*(min([self._material_phases_properties[phase]['E']
+                 for phase in self._material_phases]) + \
+                 max([self._material_phases_properties[phase]['E']
+                 for phase in self._material_phases]))
         mat_prop_ref['v'] = \
-            0.5*(min([material_properties[phase]['v'] for phase in material_phases]) + \
-                 max([material_properties[phase]['v'] for phase in material_phases]))
+            0.5*(min([self._material_phases_properties[phase]['v']
+                 for phase in self._material_phases]) + \
+                 max([self._material_phases_properties[phase]['v']
+                 for phase in self._material_phases]))
         #
         #                                                           Frequency discretization
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -272,7 +279,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         if self._strain_formulation == 'infinitesimal':
             n_incs = 1
         else:
-            n_incs = 10
+            n_incs = 1
         # Set incremental load factors
         inc_lfacts = n_incs*[1.0/n_incs,]
         # Initialize macroscale strain incrementer
@@ -436,7 +443,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                     strain_DFT_vox[comp_i] = np.subtract(strain_DFT_vox[comp_i],
                         (1.0/mop.kelvin_factor(i, comp_order))*aux)
                     # Enforce macroscale strain DFT at the zero-frequency
-                    freq_0_idx = n_dim*(0,)
+                    freq_0_idx = self._n_dim*(0,)
                     strain_DFT_vox[comp_i][freq_0_idx] = mac_strain_DFT_0[comp_i]
                 #
                 #                           Strain Inverse Discrete Fourier Transform (IDFT)
@@ -1259,7 +1266,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
     # --------------------------------------------------------------------------------------
     @staticmethod
     def _display_greetings():
-        '''Output homogenization-based multiscale DNS method method greetings.'''
+        '''Output homogenization-based multi-scale DNS method method greetings.'''
         # Get display features
         display_features = ioutil.setdisplayfeatures()
         output_width, dashed_line, indent, _ = display_features[0:4]

@@ -31,40 +31,65 @@ from clustering.rveelasticdatabase import RVEElasticDatabase
 #
 #                                                    Compute cluster analysis features' data
 # ==========================================================================================
-def set_clustering_data(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict):
-    '''Compute the physical-based data required to perform the RVE cluster analyses.'''
-    # Get problem data
-    strain_formulation = problem_dict['strain_formulation']
-    problem_type = problem_dict['problem_type']
-    # Get regular grid data
-    rve_dims = rg_dict['rve_dims']
-    n_voxels_dims = rg_dict['n_voxels_dims']
-    regular_grid = rg_dict['regular_grid']
-    # Get material data
-    material_phases = mat_dict['material_phases']
-    material_properties = mat_dict['material_properties']
-    # Get clustering data
-    clustering_solution_method = clst_dict['clustering_solution_method']
-    if clustering_solution_method == 1:
-        dns_method = 'fft_basic'
-    elif clustering_solution_method == 2:
-        dns_method = 'fem_links'
-    else:
-        raise RuntimeError('Unknown DNS solution method.')
-    standardization_method = clst_dict['standardization_method']
-    base_clustering_scheme = clst_dict['base_clustering_scheme']
-    adaptive_clustering_scheme = clst_dict['adaptive_clustering_scheme']
-    # Compute total number of voxels
-    n_voxels = np.prod(n_voxels_dims)
+def set_clustering_data(strain_formulation, problem_type, rve_dims, n_voxels_dims,
+                        regular_grid, material_phases, material_phases_properties,
+                        dns_method, dns_method_data, standardization_method,
+                        base_clustering_scheme, adaptive_clustering_scheme):
+    '''Compute the physical-based data required to perform the RVE cluster analysis.
+
+    Parameters
+    ----------
+    strain_formulation: str, {'infinitesimal', 'finite'}
+        Problem strain formulation.
+    problem_type : int
+        Problem type: 2D plane strain (1), 2D plane stress (2), 2D axisymmetric (3) and
+        3D (4).
+    rve_dims : list
+        RVE size in each dimension.
+    n_voxels_dims : list
+        Number of voxels in each dimension of the regular grid (spatial discretization
+        of the RVE).
+    regular_grid : ndarray
+        Regular grid of voxels (spatial discretization of the RVE), where each entry
+        contains the material phase label (int) assigned to the corresponding voxel.
+    material_phases : list
+        RVE material phases labels (str).
+    material_phases_properties : dict
+        Constitutive model material properties (item, dict) associated to each material
+        phase (key, str).
+    dns_method : int
+        DNS homogenization-based multi-scale method.
+    dns_method_data : dict
+        Parameters of DNS homogenization-based multi-scale method.
+    standardization_method : int
+        Identifier of global cluster analysis data standardization algorithm.
+    base_clustering_scheme : dict
+        Prescribed base clustering scheme (item, ndarray of shape (n_clusterings, 3)) for
+        each material phase (key, str). Each row is associated with a unique clustering
+        characterized by a clustering algorithm (col 1, int), a list of features
+        (col 2, list of int) and a list of the features data matrix' indexes
+        (col 3, list of int).
+    adaptive_clustering_scheme : dict
+        Prescribed adaptive clustering scheme (item, ndarray of shape (n_clusterings, 3))
+        for each material phase (key, str). Each row is associated with a unique
+        clustering characterized by a clustering algorithm (col 1, int), a list of
+        features (col 2, list of int) and a list of the features data matrix' indexes
+        (col 3, list of int).
+
+    Returns
+    -------
+    clustering_data : ClusterAnalysisData
+        Physical-based data required to perform the RVE cluster analyses.
+    '''
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     info.displayinfo('5', 'Setting cluster analysis\' features...')
     # Get available clustering features descriptors
     feature_descriptors = get_available_clustering_features(strain_formulation,
                                                             problem_type)
     # Instatiante cluster analysis data
-    clustering_data = ClusterAnalysisData(base_clustering_scheme,
-                                          adaptive_clustering_scheme, feature_descriptors,
-                                          strain_formulation, problem_type, n_voxels)
+    clustering_data = ClusterAnalysisData(strain_formulation, problem_type, n_voxels_dims,
+                                          base_clustering_scheme,
+                                          adaptive_clustering_scheme, feature_descriptors)
     # Set prescribed clustering features
     clustering_data.set_prescribed_features()
     # Set prescribed clustering features' clustering global data matrix' indexes
@@ -77,9 +102,10 @@ def set_clustering_data(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict):
     # Instatiate RVE's local elastic response database
     rve_elastic_database = RVEElasticDatabase(strain_formulation, problem_type, rve_dims,
                                               n_voxels_dims, regular_grid, material_phases,
-                                              material_properties)
+                                              material_phases_properties)
     # Compute RVE's elastic response database
-    rve_elastic_database.compute_rve_response_database(dns_method, mac_strains)
+    rve_elastic_database.compute_rve_response_database(dns_method, dns_method_data,
+                                                       mac_strains, is_strain_sym=True)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     info.displayinfo('5', 'Computing cluster analysis global data matrix...')
     # Compute clustering global data matrix containing all clustering features
@@ -94,11 +120,11 @@ def set_clustering_data(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict):
     else:
         raise RuntimeError('Unknown standardization method.')
     # Standardize clustering global data matrix
-    clustering_data.global_data_matrix = \
-        standardizer.get_standardized_data_matrix(clustering_data.global_data_matrix)
+    clustering_data._global_data_matrix = \
+        standardizer.get_standardized_data_matrix(clustering_data._global_data_matrix)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Store clustering global data matrix
-    clst_dict['global_data_matrix'] = clustering_data.global_data_matrix
+    # Return
+    return clustering_data
 #
 #                                                              Available clustering features
 # ==========================================================================================
@@ -130,7 +156,7 @@ def get_available_clustering_features(strain_formulation, problem_type):
         Data (tuple structured as (number of feature dimensions (int), feature
         computation algorithm (function), list of macroscale strain loadings (list of
         2darrays), strain magnitude factor (float))) associated to each feature
-        (key,str). The macroscale strain loading is the infinitesimal strain tensor
+        (key, str). The macroscale strain loading is the infinitesimal strain tensor
         (infinitesimal strains) and the deformation gradient (finite strains).
     '''
     features_descriptors = {}
@@ -156,7 +182,7 @@ def get_available_clustering_features(strain_formulation, problem_type):
         if strain_formulation == 'finite':
             strain_magnitude_factor = 1.0e-6
         else:
-            strain_magnitude_factor = 1.0
+            strain_magnitude_factor = 1.0e-2
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set orthogonal infinitesimal strain tensor (infinitesimal strains) or material
         # logarithmic strain tensor (finite strains)
@@ -232,16 +258,24 @@ class ClusterAnalysisData:
         Strain/Stress components symmetric order.
     _comp_order_nsym : list
         Strain/Stress components nonsymmetric order.
-    global_data_matrix : ndarray of shape (n_voxels, n_features_dims)
+    _global_data_matrix : ndarray of shape (n_voxels, n_features_dims)
         Data matrix containing the required clustering features' data to perform all the
         prescribed RVE clusterings.
     '''
-    def __init__(self, base_clustering_scheme, adaptive_clustering_scheme,
-                 feature_descriptors, strain_formulation, problem_type, n_voxels):
+    def __init__(self, strain_formulation, problem_type, n_voxels_dims,
+                 base_clustering_scheme, adaptive_clustering_scheme, feature_descriptors):
         '''Clustering data constructor.
 
         Parameters
         ----------
+        strain_formulation: str, {'infinitesimal', 'finite'}
+            Problem strain formulation.
+        problem_type : int
+            Problem type: 2D plane strain (1), 2D plane stress (2), 2D axisymmetric (3) and
+            3D (4).
+        n_voxels_dims : list
+            Number of voxels in each dimension of the regular grid (spatial discretization
+            of the RVE).
         base_clustering_scheme : dict
             Prescribed base clustering scheme (item, ndarray of shape (n_clusterings, 3)) for
             each material phase (key, str). Each row is associated with a unique clustering
@@ -260,27 +294,25 @@ class ClusterAnalysisData:
             2darrays), strain_magnitude_factor (float))) associated to each feature
             (key,str). The macroscale strain loading is the infinitesimal strain tensor
             (infinitesimal strains) and the deformation gradient (finite strains).
-        strain_formulation: str, {'infinitesimal', 'finite'}
-            Problem strain formulation.
-        problem_type : int
-            Problem type: 2D plane strain (1), 2D plane stress (2), 2D axisymmetric (3) and
-            3D (4).
         n_voxels : int
             Total number of voxels of the regular grid (spatial discretization of the
             RVE).
         '''
+        self._strain_formulation = strain_formulation
+        self._problem_type = problem_type
         self._base_clustering_scheme = base_clustering_scheme
         self._adaptive_clustering_scheme = adaptive_clustering_scheme
         self._feature_descriptors = feature_descriptors
-        self._n_voxels = n_voxels
+        self._n_voxels = np.prod(n_voxels_dims)
         self._features = None
         self._n_features_dims = None
         self._features_idxs = None
         self._features_loads_ids = None
         self._mac_strains = None
-        self.global_data_matrix = None
+        self._global_data_matrix = None
         # Get problem type parameters
-        _, comp_order_sym, comp_order_nsym = mop.get_problem_type_parameters(problem_type)
+        _, comp_order_sym, comp_order_nsym = \
+            mop.get_problem_type_parameters(self._problem_type)
         self._comp_order_sym = comp_order_sym
         self._comp_order_nsym = comp_order_nsym
     # --------------------------------------------------------------------------------------
@@ -378,7 +410,7 @@ class ClusterAnalysisData:
                 # Loop over already prescribed macroscale strain loadings
                 for i in range(len(self._mac_strains)):
                     array = self._mac_strains[i]
-                    if np.allclose(mac_strain, array, atol=1e-10):
+                    if np.allclose(mac_strain, array, rtol=1e-10, atol=1e-10):
                         # Append macroscale strain loading identifier to clustering feature
                         self._features_loads_ids[str(feature)].append(i)
                         is_new_mac_strain = False
@@ -400,7 +432,7 @@ class ClusterAnalysisData:
             The macroscale strain loading is the infinitesimal strain tensor (infinitesimal
             strains) and the deformation gradient (finite strains).
         '''
-        return self._mac_strains
+        return copy.deepcopy(self._mac_strains)
     # --------------------------------------------------------------------------------------
     def set_global_data_matrix(self, rve_global_response):
         '''Compute clustering global data matrix containing all clustering features.
@@ -420,11 +452,12 @@ class ClusterAnalysisData:
         if self._strain_formulation == 'infinitesimal':
             comp_order = self._comp_order_sym
         elif self._strain_formulation == 'finite':
-            comp_order == self._comp_order_nsym
+            comp_order = self._comp_order_sym
         else:
             raise RuntimeError('Unknown problem strain formulation.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize clustering global data matrix
-        self.global_data_matrix = np.zeros((self._n_voxels, self._n_features_dims))
+        self._global_data_matrix = np.zeros((self._n_voxels, self._n_features_dims))
         # Loop over prescribed clustering features
         for feature in self._features:
             # Get clustering feature macroscale strain loadings identifiers
@@ -453,7 +486,18 @@ class ClusterAnalysisData:
             # Assemble clustering feature's data matrix to clustering global data matrix
             j_init = self._features_idxs[str(feature)][0]
             j_end = self._features_idxs[str(feature)][-1] + 1
-            self.global_data_matrix[:, j_init:j_end] = data_matrix
+            self._global_data_matrix[:, j_init:j_end] = data_matrix
+    # --------------------------------------------------------------------------------------
+    def get_global_data_matrix(self):
+        '''Get clustering global data matrix containing all clustering features.
+
+        Returns
+        -------
+        global_data_matrix : ndarray of shape (n_voxels, n_features_dims)
+            Data matrix containing the required clustering features' data to perform all the
+            prescribed RVE clusterings.
+        '''
+        return copy.deepcopy(self._global_data_matrix)
 #
 #                                                             Clustering features algorithms
 # ==========================================================================================

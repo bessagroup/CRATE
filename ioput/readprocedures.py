@@ -12,8 +12,6 @@
 # ==========================================================================================
 # Operating system related functions
 import os
-# Import from string
-import importlib
 # Working with arrays
 import numpy as np
 # Shallow and deep copy operations
@@ -28,12 +26,16 @@ import ntpath
 import re
 # Display errors, warnings and built-in exceptions
 import ioput.errors as errors
-# Links related procedures
-import links.material.linksmaterialmodels as LinksMat
 # Material interface
 import material.materialinterface
-# Isotropic hardening laws
+from material.materialmodeling import get_available_material_models
+# Constitutive models
+from material.models.linear_elastic import Elastic
+from material.models.von_mises import VonMises
 import material.isotropichardlaw
+# Links constitutive models
+from links.material.models.links_elastic import LinksElastic
+from links.material.models.links_von_mises import LinksVonMises
 # I/O utilities
 import ioput.ioutilities as ioutil
 # Cluster-Reduced material phases
@@ -166,169 +168,163 @@ def readtypeBkeyword(file, file_path, keyword):
 #
 #                                                                        Material properties
 # ==========================================================================================
-# Read the number of material phases and associated properties of the general heterogeneous
-# material specified as follows:
-#
-# Material_Phases < n_material_phases >
-# < phase_id > < model_name > < n_properties > [ < model_source > ]
-# < property1_name > < value >
-# < property2_name > < value >
-# < phase_id > < model_name > < n_properties > [ < model_source > ]
-# < property1_name > < value >
-# < property2_name > < value >
-#
-# In the case of a constitutive model that involves a given strain hardening law, then one
-# of the properties specifies the type of hardening law and the associated parameters. In
-# the particular case of a piecewise linear isotropic hardening law, a list of the
-# hardening curve points must be provided below the property main specification.
-#
-def readmaterialproperties(file, file_path, keyword):
+def read_material_properties(file, file_path, keyword):
+    '''Read material phases data and properties.
+
+    Expected input data file syntax:
+
+    Material_Phases < n_material_phases >
+    < phase_id > < model_name > < n_properties > [ < model_source > ]
+    < property1_name > < value >
+    < property2_name > < value >
+    < phase_id > < model_name > < n_properties > [ < model_source > ]
+    < property1_name > < value >
+    < property2_name > < value >
+
+    Parameters
+    ----------
+    file : file
+        Input data file.
+    file_path : str
+        Input data file absolute path.
+    keyword : str
+        Input data file keyword.
+
+    Returns
+    -------
+    n_material_phases : int
+        Number of material phases.
+    material_phases_data : dict
+        Material phase data (item, str) associated to each material phase (key, str).
+    material_phases_properties : dict
+        Constitutive model material properties (item, dict) associated to each material
+        phase (key, str).
+    '''
+    # Search keyword
     keyword_line_number = searchkeywordline(file, keyword)
     line = linecache.getline(file_path, keyword_line_number).split()
     if len(line) == 1:
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00052', location.filename, location.lineno + 1, keyword)
+        raise RuntimeError('Input data error: Missing number of material phases.')
     elif not ioutil.checkposint(line[1]):
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00052', location.filename, location.lineno + 1, keyword)
+        raise RuntimeError('Input data error: Invalid number of material phases.')
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set number of material phases
     n_material_phases = int(line[1])
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Initialize material phases properties and constitutive models dictionaries
-    material_properties = dict()
-    material_phases_models = dict()
+    material_phases_properties = {}
+    material_phases_data = {}
     # Loop over material phases
     line_number = keyword_line_number + 1
     for i in range(n_material_phases):
         phase_header = linecache.getline(file_path, line_number).split()
         if phase_header[0] == '':
-            location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00005', location.filename, location.lineno + 1, keyword,
-                                i + 1)
+            raise RuntimeError('Input data error: Missing specification of the ' +
+                               str(i + 1) + 'th ' +'material phase header.')
         elif len(phase_header) not in [3, 4]:
-            location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00005', location.filename, location.lineno + 1, keyword,
-                                i + 1)
+            raise RuntimeError('Input data error: Invalid specification of the' +
+                               str(i + 1) + 'th ' + 'material phase header.')
         elif not ioutil.checkposint(phase_header[0]):
-            location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00005', location.filename, location.lineno + 1, keyword,
-                                i + 1)
-        elif phase_header[0] in material_properties.keys():
-            location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00005', location.filename, location.lineno + 1, keyword,
-                                i + 1)
+            raise RuntimeError('Input data error: Invalid specification of the' +
+                               str(i + 1) + 'th ' + 'material phase header.')
+        elif phase_header[0] in material_phases_properties.keys():
+            raise RuntimeError('Input data error: Duplicated material phase number in ' +
+                               'the specification of the '+ str(i + 1) + 'th material ' +
+                               'phase header.')
         # Set material phase
         mat_phase = str(phase_header[0])
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Set material phase constitutive model source
-        material_phases_models[mat_phase] = dict()
+        material_phases_data[mat_phase] = {}
+        # Get material phase constitutive model source identifier
         if len(phase_header) == 3:
             # If the material phase constitutive model source has not been specified, then
-            # assume CRATE material procedures by default
-            model_source = 1
-            material_phases_models[mat_phase]['source'] = model_source
+            # assume CRATE by default
+            model_source_id = 1
         elif len(phase_header) == 4:
             # Set constitutive model source
             if not ioutil.checkposint(phase_header[3]):
-                location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayerror('E00053', location.filename, location.lineno + 1,
-                                    keyword, mat_phase)
-            elif int(phase_header[3]) not in [1, 2, 3]:
-                location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayerror('E00053', location.filename, location.lineno + 1,
-                                    keyword, mat_phase)
-            model_source = int(phase_header[3])
-            material_phases_models[mat_phase]['source'] = model_source
-            # Model source 3 is not implemented yet...
-            if model_source in [3,]:
-                location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayerror('E00054', location.filename, location.lineno + 1,
-                                    mat_phase)
+                raise RuntimeError('Input data error: Invalid specification of the' +
+                                   str(i + 1) + 'th ' + 'material phase source.')
+            else:
+                model_source_id = int(phase_header[3])
+        # Set material phase constitutive model source
+        if model_source_id == 1:
+            model_source = 'crate'
+        elif model_source_id == 2:
+            model_source = 'links'
+        else:
+            raise RuntimeError('Unknown constitutive model source identifier.')
+        material_phases_data[mat_phase]['source'] = model_source
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Set material phase constitutive model and associated procedures
-        available_mat_models = \
-            material.materialinterface.getavailablematmodels(model_source)
+        # Get available material constitutive models
+        available_mat_models = get_available_material_models(model_source)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set material phase constitutive model name
         if phase_header[1] not in available_mat_models:
-            location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00055', location.filename, location.lineno + 1,
-                                 mat_phase, model_source)
-        model_name = phase_header[1]
-        material_phases_models[mat_phase]['name'] = model_name
-        if model_source == 1:
-            model_module = importlib.import_module('material.models.' + str(model_name))
-            # Set material constitutive model required procedures
-            req_procedures = ['getrequiredproperties', 'init', 'suct']
-            # Check if the material constitutive model required procedures are available
-            for procedure in req_procedures:
-                if hasattr(model_module, procedure):
-                    # Get material constitutive model procedures
-                    material_phases_models[mat_phase][procedure] = getattr(model_module,
-                                                                           procedure)
-                else:
-                    location = inspect.getframeinfo(inspect.currentframe())
-                    errors.displayerror('E00056', location.filename, location.lineno + 1,
-                                        model_name,procedure)
-        elif model_source == 2:
-            # Get material constitutive model procedures
-            getrequiredproperties, init, writematproperties, linksxprops, \
-                linksxxxxva = LinksMat.getlinksmodel(model_name)
-            material_phases_models[mat_phase]['getrequiredproperties'] = \
-                getrequiredproperties
-            material_phases_models[mat_phase]['init'] = init
-            material_phases_models[mat_phase]['writematproperties'] = \
-                writematproperties
-            material_phases_models[mat_phase]['linksxprops'] = linksxprops
-            material_phases_models[mat_phase]['linksxxxxva'] = linksxxxxva
+            raise RuntimeError('Unknown material constitutive model (' + phase_header[1] +
+                               'from source \'' + model_source + '\'.')
+        else:
+            model_name = phase_header[1]
+        material_phases_data[mat_phase]['name'] = model_name
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Get material constitutive model required material properties
+        if model_source == 'crate':
+            if model_name == 'elastic':
+                required_properties = Elastic.get_required_properties()
+            elif model_name == 'von_mises':
+                required_properties = VonMises.get_required_properties()
+        elif model_source == 'links':
+            if model_name == 'ELASTIC':
+                required_properties = LinksElastic.get_required_properties()
+            elif model_name == 'VON_MISES':
+                required_properties = LinksVonMises.get_required_properties()
         # Set number of material properties
-        required_properties = material_phases_models[mat_phase]['getrequiredproperties']()
         n_required_properties = len(required_properties)
         if not ioutil.checkposint(phase_header[2]):
-            location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00005', location.filename, location.lineno + 1, keyword,
-                                i + 1)
+            raise RuntimeError('Input data error: Invalid specification of the' +
+                               str(i + 1) + 'th ' + 'material phase number of material ' +
+                               'properties.')
         elif int(phase_header[2]) != n_required_properties:
-            location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00058', location.filename, location.lineno + 1,
-                                int(phase_header[2]), mat_phase, n_required_properties)
+            raise RuntimeError('Input data error: Wrong value of the' +
+                               str(i + 1) + 'th ' + 'material phase number of material ' +
+                               'properties.')
         n_properties = int(phase_header[2])
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set material properties
-        material_properties[mat_phase] = dict()
+        material_phases_properties[mat_phase] = {}
         property_header_line = line_number
         for j in range(n_properties):
             property_header_line = property_header_line + 1
             property_line = linecache.getline(file_path, property_header_line).split()
             if property_line[0] == '':
-                location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayerror('E00006', location.filename, location.lineno + 1,
-                                    keyword, j + 1, mat_phase)
+                raise RuntimeError('Input data error: Invalid specification of the' +
+                                   str(j + 1) + 'th ' + 'material property of material ' +
+                                   'phase ' + mat_phase + '.')
             elif not ioutil.checkvalidname(property_line[0]):
-                location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayerror('E00006', location.filename, location.lineno + 1,
-                                    keyword, j + 1, mat_phase)
+                raise RuntimeError('Input data error: Invalid specification of the' +
+                                   str(j + 1) + 'th ' + 'material property of material ' +
+                                   'phase ' + mat_phase + '.')
             elif property_line[0] not in required_properties:
-                location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayerror('E00059', location.filename, location.lineno + 1,
-                                    property_line[0], mat_phase)
-            elif property_line[0] in material_properties[mat_phase].keys():
-                location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayerror('E00006', location.filename, location.lineno + 1,
-                                    keyword, j + 1, mat_phase)
+                raise RuntimeError('Input data error: Invalid specification of the' +
+                                   str(j + 1) + 'th ' + 'material property of material ' +
+                                   'phase ' + mat_phase + '.')
+            elif property_line[0] in material_phases_properties[mat_phase].keys():
+                raise RuntimeError('Input data error: Duplicated specification of the' +
+                                   str(j + 1) + 'th ' + 'material property of material ' +
+                                   'phase ' + mat_phase + '.')
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Read material property or hardening law
             if str(property_line[0]) == 'IHL':
                 # Get available isotropic hardening types
-                if model_source == 1:
+                if model_source == 'crate':
                     available_hardening_types = \
                         material.isotropichardlaw.getavailabletypes()
-                elif model_source == 2:
+                elif model_source == 'links':
                     available_hardening_types = ['piecewise_linear']
                 # Check if specified isotropic hardening type is available
                 if property_line[1] not in available_hardening_types:
-                    location = inspect.getframeinfo(inspect.currentframe())
-                    errors.displayerror('E00074', location.filename, location.lineno + 1,
-                                        property_line[1], mat_phase,
-                                        available_hardening_types)
+                    raise RuntimeError('Input data error: Unknown type of isotropic ' +
+                                       'hardening law.')
                 else:
                     hardening_type = str(property_line[1])
                 # Get parameters required by isotropic hardening type
@@ -336,21 +332,18 @@ def readmaterialproperties(file, file_path, keyword):
                     material.isotropichardlaw.setrequiredparam(hardening_type)
                 # Check if the required number of hardening parameters is specified
                 if len(property_line[2:]) != len(req_hardening_parameters):
-                    location = inspect.getframeinfo(inspect.currentframe())
-                    errors.displayerror('E00075', location.filename, location.lineno + 1,
-                                        len(property_line[2:]), mat_phase,hardening_type,
-                                        len(req_hardening_parameters),
-                                        req_hardening_parameters)
+                    raise RuntimeError('Input data error: Invalid number of hardening ' +
+                                       'type parameters.')
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Initialize material phase hardening parameters dictionary
-                hardening_parameters = dict()
+                hardening_parameters = {}
                 # Read hardening parameters
                 if hardening_type == 'piecewise_linear':
                     # Read number of hardening curve points
                     if not ioutil.checkposint(property_line[2]) and \
-                        int(property_line[2]) < 2:
-                        location = inspect.getframeinfo(inspect.currentframe())
-                        errors.displayerror('E00076', location.filename,
-                                            location.lineno + 1, mat_phase, hardening_type)
+                            int(property_line[2]) < 2:
+                        raise RuntimeError('Input data error: Invalid number of points ' +
+                                           'of piecewise linear hardening type.')
                     else:
                         n_hardening_points = int(property_line[2])
                     # Read hardening curve points
@@ -359,18 +352,15 @@ def readmaterialproperties(file, file_path, keyword):
                         hardening_point_line = linecache.getline(
                             file_path, property_header_line + 1 + k).split()
                         if hardening_point_line[0] == '':
-                            location = inspect.getframeinfo(inspect.currentframe())
-                            errors.displayerror('E00077', location.filename,
-                                                location.lineno + 1, k + 1, mat_phase)
+                            raise RuntimeError('Input data error: Invalid hardening ' +
+                                               'curve point specification.')
                         elif len(hardening_point_line) != 2:
-                            location = inspect.getframeinfo(inspect.currentframe())
-                            errors.displayerror('E00077', location.filename,
-                                                location.lineno + 1, k + 1, mat_phase)
+                            raise RuntimeError('Input data error: Invalid hardening ' +
+                                               'curve point specification.')
                         elif not ioutil.checknumber(hardening_point_line[0]) or \
                                 not ioutil.checknumber(hardening_point_line[1]):
-                            location = inspect.getframeinfo(inspect.currentframe())
-                            errors.displayerror('E00077', location.filename,
-                                                location.lineno + 1, k + 1, mat_phase)
+                            raise RuntimeError('Input data error: Invalid hardening ' +
+                                               'curve point specification.')
                         hardening_points[k, 0] = float(hardening_point_line[0])
                         hardening_points[k, 1] = float(hardening_point_line[1])
                     # Assemble hardening parameters
@@ -383,42 +373,35 @@ def readmaterialproperties(file, file_path, keyword):
                     # Loop over and assemble required hardening parameters
                     for k in range(len(req_hardening_parameters)):
                         if not ioutil.checknumber(property_line[2 + k]):
-                            location = inspect.getframeinfo(inspect.currentframe())
-                            errors.displayerror('E00078', location.filename,
-                                                location.lineno + 1, k + 1, mat_phase)
+                            raise RuntimeError('Input data error: Invalid hardening ' +
+                                               'type parameter specification.')
                         else:
                             hardening_parameters[str(req_hardening_parameters[k])] = \
                                 float(property_line[2 + k])
                 # Get material phase hardening law
-                hardeningLaw = material.isotropichardlaw.gethardeninglaw(
-                    hardening_type)
+                hardening_law = material.isotropichardlaw.gethardeninglaw(hardening_type)
                 # Store material phase hardening law and parameters
-                material_properties[mat_phase]['hardeningLaw'] = hardeningLaw
-                material_properties[mat_phase]['hardening_parameters'] = \
+                material_phases_properties[mat_phase]['hardeningLaw'] = hardening_law
+                material_phases_properties[mat_phase]['hardening_parameters'] = \
                     hardening_parameters
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             else:
                 if len(property_line) != 2:
-                    location = inspect.getframeinfo(inspect.currentframe())
-                    errors.displayerror('E00006', location.filename, location.lineno + 1,
-                                        keyword, j + 1, mat_phase)
+                    raise RuntimeError('Input data error: Invalid specification of the' +
+                                       str(j + 1) + 'th ' + 'material property of ' +
+                                       'material phase ' + mat_phase + '.')
                 elif not ioutil.checknumber(property_line[1]):
-                    location = inspect.getframeinfo(inspect.currentframe())
-                    errors.displayerror('E00006', location.filename, location.lineno + 1,
-                                        keyword, j + 1, mat_phase)
+                    raise RuntimeError('Input data error: Invalid specification of the' +
+                                       str(j + 1) + 'th ' + 'material property of ' +
+                                       'material phase ' + mat_phase + '.')
                 prop_name = str(property_line[0])
                 prop_value = float(property_line[1])
-                material_properties[mat_phase][prop_name] = prop_value
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Set Links constitutive model required integer and real material properties arrays
-        if model_source == 2:
-            iprops,rprops = linksxprops(material_properties[mat_phase])
-            material_properties[mat_phase]['iprops'] = iprops
-            material_properties[mat_phase]['rprops'] = rprops
+                material_phases_properties[mat_phase][prop_name] = prop_value
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Skip to the next material phase
         line_number = line_number + n_properties + 1
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    return [n_material_phases, material_phases_models, material_properties]
+    return [n_material_phases, material_phases_data, material_phases_properties]
 #
 #                                                             Macroscale loading constraints
 # ==========================================================================================

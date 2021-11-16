@@ -147,7 +147,8 @@ def get_tensor_mf(tensor, n_dim, comp_order):
             mf_idx = tuple(mf_indexes[i])
             fo_idx = tuple(fo_indexes[i])
             factor = 1.0
-            if is_kelvin_notation and not (fo_idx[0] == fo_idx[1] and fo_idx[2] == fo_idx[3]):
+            if is_kelvin_notation and not (fo_idx[0] == fo_idx[1] and \
+                    fo_idx[2] == fo_idx[3]):
                 factor = factor*np.sqrt(2) if fo_idx[0] != fo_idx[1] else factor
                 factor = factor*np.sqrt(2) if fo_idx[2] != fo_idx[3] else factor
             tensor_mf[mf_idx] = factor*tensor[fo_idx]

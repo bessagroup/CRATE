@@ -12,6 +12,8 @@
 # ==========================================================================================
 # Operating system related functions
 import os
+# Working with arrays
+import numpy as np
 # Operations on files and directories
 import shutil
 # Display messages
@@ -29,15 +31,15 @@ import ioput.fileoperations as filop
 # Packager
 import ioput.packager as packager
 # Links related procedures
-import links.ioput.readlinksinputdatafile as linksrlid
+from links.inputdatareader import read_links_input_parameters
 # Reading procedures
 import ioput.readprocedures as rproc
-# I/O utilities
-import ioput.ioutilities as ioutil
 # Matricial operations
 import tensor.matrixoperations as mop
 # Clustering data
-import clustering.clusteringdata as clstdat
+from clustering.clusteringdata import get_available_clustering_features
+# Material constitutive state
+from material.materialmodeling import MaterialState
 #
 #                                                                       Read input data file
 # ==========================================================================================
@@ -47,6 +49,7 @@ def readinputdatafile(input_file,dirs_dict):
     input_file_name = dirs_dict['input_file_name']
     input_file_path = dirs_dict['input_file_path']
     problem_dir = dirs_dict['problem_dir']
+    offline_stage_dir = dirs_dict['offline_stage_dir']
     postprocess_dir = dirs_dict['postprocess_dir']
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read strain formulation
@@ -73,28 +76,26 @@ def readinputdatafile(input_file,dirs_dict):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read number of material phases and the associated constitutive models and properties
     keyword = 'Material_Phases'
-    n_material_phases, material_phases_models, material_properties = \
-        rproc.readmaterialproperties(input_file, input_file_path, keyword)
+    n_material_phases, material_phases_data, material_phases_properties = \
+        rproc.read_material_properties(input_file, input_file_path, keyword)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read the Links python binary absolute path if at least one material phase has the
     # associated constitutive model source set as Links
-    is_Links_python_bin = False
-    for mat_phase in material_properties.keys():
-        if material_phases_models[mat_phase]['source'] == 2:
+    is_links_python_bin = False
+    for mat_phase in material_phases_properties.keys():
+        if material_phases_data[mat_phase]['source'] == 'links':
             # Read the Links python binary absolute path
             keyword = 'Links_Python_bin'
             line_number = rproc.searchkeywordline(input_file, keyword) + 1
             Links_python_bin_path = linecache.getline(input_file_path, line_number).strip()
             if not os.path.isabs(Links_python_bin_path):
-                location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayerror('E00087', location.filename, location.lineno + 1,
-                                    keyword, Links_python_bin_path)
+                raise RuntimeError('Input data error: Links python binary path must be ' +
+                                   'absolute.')
             elif not os.path.isfile(Links_python_bin_path):
-                location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayerror('E00087', location.filename, location.lineno + 1,
-                                    keyword, Links_python_bin_path)
+                raise RuntimeError('Input data error: Links python binary path has not ' +
+                                   'been found.')
             else:
-                is_Links_python_bin = True
+                is_links_python_bin = True
                 break
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read macroscale loading
@@ -168,14 +169,14 @@ def readinputdatafile(input_file,dirs_dict):
         scs_conv_tol = 1e-4
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Get available clustering features
-    clustering_features = list(clstdat.get_available_clustering_features(
-        strain_formulation, n_dim, comp_order_sym, comp_order_nsym).keys())
+    clustering_features = \
+        list(get_available_clustering_features(strain_formulation, problem_type).keys())
     # Read cluster analysis scheme
     keyword = 'Cluster_Analysis_Scheme'
     clustering_type, base_clustering_scheme, adaptive_clustering_scheme, \
         adapt_criterion_data, adaptivity_type, adaptivity_control_feature = \
             rproc.read_cluster_analysis_scheme(input_file, input_file_path, keyword,
-                                               material_properties.keys(),
+                                               material_phases_properties.keys(),
                                                clustering_features)
     # Get adaptive material phases
     adapt_material_phases = [x for x in clustering_type.keys()
@@ -184,7 +185,8 @@ def readinputdatafile(input_file,dirs_dict):
     # Read number of cluster associated to each material phase
     keyword = 'Number_of_Clusters'
     phase_n_clusters = rproc.readphaseclustering(input_file, input_file_path, keyword,
-                                                 n_material_phases, material_properties)
+                                                 n_material_phases,
+                                                 material_phases_properties)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read clustering adaptivity frequency (optional). If the associated keyword is not
     # found, then a default specification is assumed
@@ -207,22 +209,26 @@ def readinputdatafile(input_file,dirs_dict):
     else:
         clustering_solution_method = 1
     # Read clustering solution method parameters
-    links_dict = dict()
+    links_data = {}
     if clustering_solution_method == 2:
         # Check if all the material phases have the associated constitutive model source set
         # as Links
-        for mat_phase in material_properties.keys():
-            if material_phases_models[mat_phase]['source'] != 2:
-                location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayerror('E00067', location.filename, location.lineno + 1)
-        # Build Links dictionary
-        links_dict = linksrlid.readlinksinputdatafile(
-            input_file, input_file_path, problem_type, ioutil.checknumber,
-            ioutil.checkposint, rproc.searchkeywordline, rproc.searchoptkeywordline)
+        for mat_phase in material_phases_data.keys():
+            if material_phases_data[mat_phase]['source'] != 'links':
+                raise RuntimeError('Input data error: To perform the offline-stage DNS ' +
+                                   'computations with Links, all material constitutive ' +
+                                   'models must have the corresponding source.')
+        # Build Links parameters dictionary
+        links_data = read_links_input_parameters(input_file, input_file_path, problem_type)
+        # Set directory where Links offline-stage simulation files are stored.
+        links_offline_dir =  offline_stage_dir + 'Links' + '/'
+        if not os.path.exists(links_offline_dir):
+            filop.makedirectory(links_offline_dir)
+        links_data['links_offline_dir'] = links_offline_dir
     # If at least one material phase has the associated constitutive model source set as
-    # Links add Links python binary to Links dictionary
-    if is_Links_python_bin:
-        links_dict['Links_python_bin_path'] = Links_python_bin_path
+    # Links, add Links python binary to Links dictionary
+    if is_links_python_bin:
+        links_data['Links_python_bin_path'] = Links_python_bin_path
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read macroscale loading incrementation parameters
     keyword_1 = 'Number_of_Load_Increments'
@@ -371,6 +377,43 @@ def readinputdatafile(input_file,dirs_dict):
         is_store_final_clustering = True
     else:
         is_store_final_clustering = False
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Read the spatial discretization file (regular grid of voxels)
+    info.displayinfo('5', 'Reading discretization file...')
+    if ntpath.splitext(ntpath.basename(discret_file_path))[-1] == '.npy':
+        regular_grid = np.load(discret_file_path)
+    else:
+        regular_grid = np.loadtxt(discret_file_path)
+    # Check validity of regular grid of voxels
+    if len(regular_grid.shape) not in [2, 3]:
+        raise RuntimeError('Input data error: Number of dimensions of regular grid of ' +
+                           'voxels must be either 2 (2D problem) or 3 (3D problem).')
+    elif np.any([str(phase) not in material_phases_properties.keys() \
+            for phase in np.unique(regular_grid)]):
+        raise RuntimeError('Input data error: At least one material phase present in the ' +
+                           'regular grid of voxels has not been specified.')
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set material phases that are actually present in the microstructure
+    material_phases = [str(x) for x in list(np.unique(regular_grid))]
+    # Initialize material phases volume fractions
+    material_phases_vf = {}
+    # Loop over material phases
+    for mat_phase in material_phases:
+        # Compute material phase volume fraction
+        material_phases_vf[mat_phase] = \
+            np.sum(regular_grid == int(mat_phase))/np.prod(regular_grid.size)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Instantiate CRVE material constitutive state
+    material_state = MaterialState(strain_formulation, problem_type, material_phases,
+                                   material_phases_properties, material_phases_vf)
+    # Loop over material phases
+    for mat_phase in material_phases:
+        # Get material phase constitutive model name and source
+        model_name = material_phases_data[mat_phase]['name']
+        model_source = material_phases_data[mat_phase]['source']
+        # Initialize material phase constitutive model
+        material_state.init_constitutive_model(mat_phase, model_name, model_source)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Package problem general data
     info.displayinfo('5', 'Packaging problem general data...')
@@ -378,8 +421,8 @@ def readinputdatafile(input_file,dirs_dict):
                                         comp_order_sym, comp_order_nsym)
     # Package data associated to the material phases
     info.displayinfo('5', 'Packaging material data...')
-    mat_dict = packager.packmaterialphases(n_material_phases, material_phases_models,
-                                           material_properties)
+    mat_dict = packager.packmaterialphases(material_phases, material_phases_data,
+                                           material_phases_properties, material_phases_vf)
     # Package data associated to the macroscale loading
     info.displayinfo('5', 'Packaging macroscale loading data...')
     macload_dict = packager.packmacroscaleloading(mac_load_type, mac_load,
@@ -390,12 +433,12 @@ def readinputdatafile(input_file,dirs_dict):
                                                   max_n_rewinds)
     # Package data associated to the spatial discretization file(s)
     info.displayinfo('5', 'Packaging regular grid data...')
-    rg_dict = packager.packregulargrid(discret_file_path, rve_dims, mat_dict,
+    rg_dict = packager.packregulargrid(discret_file_path, regular_grid, rve_dims,
                                        problem_dict)
     # Package data associated to the clustering
     info.displayinfo('5', 'Packaging clustering data...')
     clst_dict = packager.packrgclustering(clustering_solution_method,
-                                          standardization_method, links_dict,
+                                          standardization_method, links_data,
                                           phase_n_clusters, rg_dict, clustering_type,
                                           base_clustering_scheme,
                                           adaptive_clustering_scheme, adapt_criterion_data,
@@ -422,4 +465,4 @@ def readinputdatafile(input_file,dirs_dict):
     output_dict = packager.packoutputfiles(is_voxels_output)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return [problem_dict, mat_dict, macload_dict, rg_dict, clst_dict, scs_dict, algpar_dict,
-            vtk_dict, output_dict]
+            vtk_dict, output_dict, material_state]
