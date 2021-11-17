@@ -318,7 +318,7 @@ def read_material_properties(file, file_path, keyword):
                 # Get available isotropic hardening types
                 if model_source == 'crate':
                     available_hardening_types = \
-                        material.isotropichardlaw.getavailabletypes()
+                        material.isotropichardlaw.get_available_types()
                 elif model_source == 'links':
                     available_hardening_types = ['piecewise_linear']
                 # Check if specified isotropic hardening type is available
@@ -329,7 +329,7 @@ def read_material_properties(file, file_path, keyword):
                     hardening_type = str(property_line[1])
                 # Get parameters required by isotropic hardening type
                 req_hardening_parameters = \
-                    material.isotropichardlaw.setrequiredparam(hardening_type)
+                    material.isotropichardlaw.set_required_parameters(hardening_type)
                 # Check if the required number of hardening parameters is specified
                 if len(property_line[2:]) != len(req_hardening_parameters):
                     raise RuntimeError('Input data error: Invalid number of hardening ' +
@@ -379,9 +379,9 @@ def read_material_properties(file, file_path, keyword):
                             hardening_parameters[str(req_hardening_parameters[k])] = \
                                 float(property_line[2 + k])
                 # Get material phase hardening law
-                hardening_law = material.isotropichardlaw.gethardeninglaw(hardening_type)
+                hardening_law = material.isotropichardlaw.get_hardening_law(hardening_type)
                 # Store material phase hardening law and parameters
-                material_phases_properties[mat_phase]['hardeningLaw'] = hardening_law
+                material_phases_properties[mat_phase]['hardening_law'] = hardening_law
                 material_phases_properties[mat_phase]['hardening_parameters'] = \
                     hardening_parameters
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

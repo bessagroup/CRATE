@@ -16,7 +16,7 @@ import numpy as np
 #
 #                                                                   Isotropic hardening laws
 # ==========================================================================================
-def getavailabletypes():
+def get_available_types():
     '''Get available isotropic hardening laws.
 
     Available isotropic hardening laws:
@@ -35,7 +35,7 @@ def getavailabletypes():
     # Return
     return available_hardening_types
 # ------------------------------------------------------------------------------------------
-def setrequiredparam(type):
+def set_required_parameters(type):
     '''Get isotropic hardening law required parameters.
 
     Returns
@@ -66,7 +66,7 @@ def setrequiredparam(type):
     # Return
     return req_hardening_parameters
 # ------------------------------------------------------------------------------------------
-def gethardeninglaw(type):
+def get_hardening_law(type):
     '''Set isotropic hardening law to evaluate hardening modulus and hardening slope.
 
     Parameters
@@ -82,7 +82,7 @@ def gethardeninglaw(type):
     # Piecewise linear isotropic hardening
     if type == 'piecewise_linear':
         # Set piecewise linear isotropic hardening law
-        def hardeningLaw(hardening_parameters, acc_p_strain):
+        def hardening_law(hardening_parameters, acc_p_strain):
             '''Piecewise linear isotropic hardening law.
 
             Provided the required isotropic hardening law parameters and a given value of
@@ -164,7 +164,7 @@ def gethardeninglaw(type):
             Material hardening slope.
         '''
         # Set linear isotropic hardening law
-        def hardeningLaw(hardening_parameters, acc_p_strain):
+        def hardening_law(hardening_parameters, acc_p_strain):
             # Get initial yield stress and hardening slope
             yield_stress_init = float(hardening_parameters['s0'])
             H = float(hardening_parameters['a'])
@@ -197,7 +197,7 @@ def gethardeninglaw(type):
             Material hardening slope.
         '''
         # Set Swift isotropic hardening law
-        def hardeningLaw(hardening_parameters, acc_p_strain):
+        def hardening_law(hardening_parameters, acc_p_strain):
             # Get initial yield stress and parameters
             yield_stress_init = float(hardening_parameters['s0'])
             a = float(hardening_parameters['a'])
@@ -239,7 +239,7 @@ def gethardeninglaw(type):
             Material hardening slope.
         '''
         # Set Ramberg-Osgood isotropic hardening law
-        def hardeningLaw(hardening_parameters, acc_p_strain):
+        def hardening_law(hardening_parameters, acc_p_strain):
             # Get initial yield stress and parameters
             yield_stress_init = float(hardening_parameters['s0'])
             a = float(hardening_parameters['a'])
@@ -258,4 +258,4 @@ def gethardeninglaw(type):
         raise RuntimeError('Unknown type of isotropic hardening law.')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Return
-    return hardeningLaw
+    return hardening_law

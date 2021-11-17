@@ -154,7 +154,7 @@ class VonMises(ConstitutiveModel):
         E = self._material_properties['E']
         v = self._material_properties['v']
         # Get material isotropic strain hardening law
-        hardeningLaw = self._material_properties['hardeningLaw']
+        hardening_law = self._material_properties['hardening_law']
         hardening_parameters = self._material_properties['hardening_parameters']
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute shear modulus
@@ -226,7 +226,7 @@ class VonMises(ConstitutiveModel):
         # Compute trial accumulated plastic strain
         acc_p_trial_strain = acc_p_strain_old
         # Compute trial yield stress
-        yield_stress, _ = hardeningLaw(hardening_parameters, acc_p_trial_strain)
+        yield_stress, _ = hardening_law(hardening_parameters, acc_p_trial_strain)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Check yield function
         yield_function = vm_trial_stress - yield_stress
@@ -252,7 +252,7 @@ class VonMises(ConstitutiveModel):
             # Start Newton-Raphson iterative loop
             while True:
                 # Compute current yield stress and hardening modulus
-                yield_stress,H = hardeningLaw(hardening_parameters,
+                yield_stress,H = hardening_law(hardening_parameters,
                                               acc_p_strain_old + inc_p_mult)
                 # Compute return-mapping residual (scalar)
                 residual = vm_trial_stress - 3.0*G*inc_p_mult - yield_stress
