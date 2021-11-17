@@ -203,6 +203,12 @@ class LinksFEMHomogenization(DNSHomogenizationMethod):
         # Generate Links finite element mesh
         coords, connectivities, element_phases = self._generate_links_fe_mesh()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Create a file containing solely the Links finite element mesh data if it does not
+        # exist yet
+        mesh_path = self._links_offline_dir + 'rgmsh_conversion' + '.femsh'
+        if not os.path.isfile(mesh_path):
+            self._write_links_mesh_data(mesh_path, coords, connectivities, element_phases)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Open Links input data file
         links_file = open(links_file_path, 'w')
         # Format file structure
@@ -222,20 +228,21 @@ class LinksFEMHomogenization(DNSHomogenizationMethod):
                      ['\n' + 'PARALLEL_SOLVER ' + str(parallel_solver) + '\n'] + \
                      ['\n' + 'VTK_OUTPUT NONE' + '\n'] + \
                      ['\n' + 'Element_Average_Output ' +
-                      str(self._element_avg_output_mode) + '\n']
+                      str(self._element_avg_output_mode) + '\n'] + \
+                     ['\n' + 'MESH_FILE ' + mesh_path + '\n'] + \
+                     ['\n' + 'MATERIALS ' + str(self._n_material_phases) + '\n']
         # Write Links input data file
         links_file.writelines(write_list)
         # Close Links input data file
         links_file.close()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Append finite element mesh to Links input data file
-        self._write_links_mesh_data(links_file_path, coords, connectivities, element_phases)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Create a file containing solely the Links finite element mesh data if it does not
-        # exist yet
-        mesh_path = self._links_offline_dir + 'rgmsh_conversion' + '.femsh'
-        if not os.path.isfile(mesh_path):
-            self._write_links_mesh_data(mesh_path, coords, connectivities, element_phases)
+        # Loop over material phases
+        for mat_phase in self._material_phases:
+            # Instantiate elastic constitutive model
+            constitutive_model = LinksElastic(self._strain_formulation, self._problem_type,
+                                              self._material_phases_properties[mat_phase])
+            # Append constitutive model elastic properties
+            constitutive_model.write_mat_properties(links_file_path, mat_phase)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return links_file_path
