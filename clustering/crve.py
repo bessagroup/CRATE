@@ -68,7 +68,7 @@ class CRVE:
         Clusters labels (item, list of int) associated to each material phase (key, str).
     _clusters_vf : dict
         Volume fraction (item, float) associated to each material cluster (key, str).
-    cit_X_mf : list
+    _cit_x_mf : list
         Cluster interaction tensors associated to the Green operator material independent
         terms. Each term is stored in a dictionary (item, dict) for each pair of material
         phases (key, str), which in turn contains the corresponding matricial form
@@ -150,7 +150,7 @@ class CRVE:
         self._voxels_clusters = None
         self._phase_clusters = None
         self._clusters_vf = None
-        self.cit_X_mf = None
+        self._cit_x_mf = None
         self.adaptivity_control_feature = copy.deepcopy(adaptivity_control_feature)
         self.adapt_criterion_data = copy.deepcopy(adapt_criterion_data)
         self.adaptive_clustering_time = 0
@@ -464,6 +464,19 @@ class CRVE:
             Volume fraction (item, float) associated to each material cluster (key, str).
         '''
         return copy.deepcopy(self._clusters_vf)
+    # --------------------------------------------------------------------------------------
+    def get_cit_x_mf(self):
+        '''Get cluster interaction tensors with Green operator material independent terms.
+
+        Returns
+        -------
+        cit_x_mf : list
+            Cluster interaction tensors associated to the Green operator material
+            independent terms. Each term is stored in a dictionary (item, dict) for each
+            pair of material phases (key, str), which in turn contains the corresponding
+            matricial form (item, ndarray) associated to each pair of clusters (key, str).
+        '''
+        return self._cit_x_mf
     # --------------------------------------------------------------------------------------
     def get_voxels_array_variables(self):
         '''Get required variables to build a clusters state based voxels array.
@@ -834,11 +847,11 @@ class CRVE:
         if mode == 'full':
             info.displayinfo('5', 'Computing CRVE cluster interaction tensors...')
             # Initialize cluster interaction tensors dictionary
-            self.cit_X_mf = [{} for i in range(3)]
+            self._cit_x_mf = [{} for i in range(3)]
             for mat_phase_B in self._material_phases:
                 for mat_phase_A in self._material_phases:
-                    for i in range(len(self.cit_X_mf)):
-                        self.cit_X_mf[i][mat_phase_A + '_' + mat_phase_B] = {}
+                    for i in range(len(self._cit_x_mf)):
+                        self._cit_x_mf[i][mat_phase_A + '_' + mat_phase_B] = {}
             # Compute Green operator material independent terms
             self._gop_X_dft_vox = \
                 citop.gop_material_independent_terms(self._strain_formulation, self._n_dim,
@@ -890,7 +903,7 @@ class CRVE:
                         sym_cluster_pair = self._switch_pair(cluster_pair)
                         sym_mat_phase_pair = self._switch_pair(mat_phase_pair)
                         is_clst_sym = sym_cluster_pair in \
-                            self.cit_X_mf[0][sym_mat_phase_pair].keys()
+                            self._cit_x_mf[0][sym_mat_phase_pair].keys()
                         # Compute cluster interaction tensor between material phase A
                         # cluster and material phase B cluster (complete computation or
                         # cluster-symmetric computation)
@@ -900,7 +913,7 @@ class CRVE:
                                 self._clusters_vf[str(cluster_I)]
                             # Compute clustering interaction tensor between material phase A
                             # cluster and material phase B cluster through cluster-symmetry
-                            for cit_mf in self.cit_X_mf:
+                            for cit_mf in self._cit_x_mf:
                                 cit_mf[mat_phase_pair][cluster_pair] = \
                                     np.multiply(clst_vf_ratio,
                                         cit_mf[sym_mat_phase_pair][sym_cluster_pair])
@@ -916,8 +929,8 @@ class CRVE:
                             # A cluster and the material phase B cluster
                             rve_vol = np.prod(self._rve_dims)
                             factor = 1.0/(self._clusters_vf[str(cluster_I)]*rve_vol)
-                            for i in range(len(self.cit_X_mf)):
-                                self.cit_X_mf[i][mat_phase_pair][cluster_pair] = \
+                            for i in range(len(self._cit_x_mf)):
+                                self._cit_x_mf[i][mat_phase_pair][cluster_pair] = \
                                     np.multiply(factor, cit_X_integral_mf[i])
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute remaining adaptive cluster interaction tensors through cluster-symmetry
@@ -939,7 +952,7 @@ class CRVE:
                             sym_cluster_pair = self._switch_pair(cluster_pair)
                             sym_mat_phase_pair = self._switch_pair(mat_phase_pair)
                             is_clst_sym = sym_cluster_pair in \
-                                self.cit_X_mf[0][sym_mat_phase_pair].keys()
+                                self._cit_x_mf[0][sym_mat_phase_pair].keys()
                             # Compute cluster interaction tensor between material phase A
                             # cluster and material phase B cluster through cluster-symmetry
                             if not is_clst_sym:
@@ -950,7 +963,7 @@ class CRVE:
                             clst_vf_ratio = self._clusters_vf[str(cluster_J)]/ \
                                 self._clusters_vf[str(cluster_I)]
                             # Compute clustering interaction tensor
-                            for cit_mf in self.cit_X_mf:
+                            for cit_mf in self._cit_x_mf:
                                 cit_mf[mat_phase_pair][cluster_pair] = \
                                     np.multiply(clst_vf_ratio,
                                         cit_mf[sym_mat_phase_pair][sym_cluster_pair])
@@ -962,7 +975,7 @@ class CRVE:
                     # Set material phase pair dictionary
                     mat_phase_pair = mat_phase_A + '_' + mat_phase_B
                     # Set existent cluster interactions
-                    cluster_pairs = [x for x in self.cit_X_mf[0][mat_phase_pair].keys()]
+                    cluster_pairs = [x for x in self._cit_x_mf[0][mat_phase_pair].keys()]
                     # Loop over cluster pairs
                     for cluster_pair in cluster_pairs:
                         cluster_I = cluster_pair.split('_')[0]
@@ -970,8 +983,8 @@ class CRVE:
                         # If any of the interacting clusters no longer exists, then remove
                         # the associated cluster interaction tensor
                         if cluster_I in pop_clusters or cluster_J in pop_clusters:
-                            for i in range(len(self.cit_X_mf)):
-                                self.cit_X_mf[i][mat_phase_pair].pop(cluster_pair)
+                            for i in range(len(self._cit_x_mf)):
+                                self._cit_x_mf[i][mat_phase_pair].pop(cluster_pair)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Update total amount of time spent in clustering adaptivity cluster interaction
             # tensors computation procedures

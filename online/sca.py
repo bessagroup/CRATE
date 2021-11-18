@@ -521,8 +521,8 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             # matrix
             global_cit_mf = citop.updassemblecit(
                 problem_dict, mat_prop_ref, Se_ref_matrix, material_phases,
-                phase_n_clusters, phase_clusters, crve.cit_X_mf[0], crve.cit_X_mf[1],
-                crve.cit_X_mf[2])
+                phase_n_clusters, phase_clusters, crve.get_cit_x_mf()[0],
+                crve.get_cit_x_mf()[1], crve.get_cit_x_mf()[2])
             #
             #                                                  Newton-Raphson iterative loop
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
