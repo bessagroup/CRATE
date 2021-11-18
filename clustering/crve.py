@@ -40,7 +40,7 @@ class CRVE:
     Attributes
     ----------
     _n_dim : int
-        Problem dimension.
+        Problem number of spatial dimensions.
     _n_voxels_dims : list
         Number of voxels in each dimension of the regular grid (spatial discretization of
         the RVE).
@@ -73,11 +73,11 @@ class CRVE:
         terms. Each term is stored in a dictionary (item, dict) for each pair of material
         phases (key, str), which in turn contains the corresponding matricial form
         (item, ndarray) associated to each pair of clusters (key, str).
-    adapt_material_phases : list
+    _adapt_material_phases : list
         RVE adaptive material phases labels (str).
-    adaptive_clustering_time : float
+    _adaptive_clustering_time : float
         Total amount of time (s) spent in clustering adaptivity.
-    adaptive_cit_time : float
+    _adaptive_cit_time : float
         Total amount of time (s) spent in clustering adaptivity cluster interaction tensors
         computation procedures.
     '''

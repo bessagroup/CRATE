@@ -70,13 +70,12 @@ class LoadingPath:
         mac_load : dict
             For each loading nature type (key, {'strain', 'stress'}), stores the macroscale
             loading constraints for each loading subpath in a ndarray, where the i-th row
-            is associated with the component mac_load[i, 0] (str) and the j-th column is
+            is associated with the i-th strain/stress component and the j-th column is
             associated with the j-th loading subpath.
         mac_load_presctype : ndarray of shape (n_comps, n_load_subpaths)
             Loading nature type (str, {'strain', 'stress'}) associated with each macroscale
-            loading constraint, where the i-th row is associated with the component
-            mac_load[i, 0] (str) and the j-th column is associated with the (j+1)-th loading
-            subpath.
+            loading constraint, where the i-th row is associated with the i-th strain/stress
+            component and the j-th column is associated with the j-th loading subpath.
         mac_load_increm : dict
             For each loading subpath id (key, str), stores a ndarray of shape
             (n_load_increments, 2) where each row is associated with a prescribed loading
