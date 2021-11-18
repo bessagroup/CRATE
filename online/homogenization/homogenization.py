@@ -23,7 +23,7 @@ import tensor.matrixoperations as mop
 #
 #                                                          Homogenized strain/stress tensors
 # ==========================================================================================
-def homstatetensors(comp_order, material_phases, phase_clusters, clusters_f,
+def homstatetensors(comp_order, material_phases, phase_clusters, clusters_vf,
                     clusters_state):
     '''Compute the homogenized strain and stress tensors.
 
@@ -35,9 +35,8 @@ def homstatetensors(comp_order, material_phases, phase_clusters, clusters_f,
         RVE material phases labels (str).
     phase_clusters : dict
         Clusters labels (item, list of int) associated to each material phase (key, str).
-    clusters_f : dict
-        Clusters volume fraction (item, float) associated to each material cluster
-        (key, str).
+    clusters_vf : dict
+        Volume fraction (item, float) associated to each material cluster (key, str).
     clusters_state : dict
         Material constitutive model state variables (item, dict) associated to each material
         cluster (key, str). Despite the several constitutive model dependent state
@@ -68,12 +67,12 @@ def homstatetensors(comp_order, material_phases, phase_clusters, clusters_f,
             stress_mf = clusters_state[str(cluster)]['stress_mf']
             # Add material cluster contribution to homogenized strain and stress tensors
             # (matricial form)
-            hom_strain_mf = np.add(hom_strain_mf, clusters_f[str(cluster)]*strain_mf)
-            hom_stress_mf = np.add(hom_stress_mf, clusters_f[str(cluster)]*stress_mf)
+            hom_strain_mf = np.add(hom_strain_mf, clusters_vf[str(cluster)]*strain_mf)
+            hom_stress_mf = np.add(hom_stress_mf, clusters_vf[str(cluster)]*stress_mf)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return [hom_strain_mf, hom_stress_mf]
 # ------------------------------------------------------------------------------------------
-def homoutofplanecomp(problem_type, material_phases, phase_clusters, clusters_f,
+def homoutofplanecomp(problem_type, material_phases, phase_clusters, clusters_vf,
                       clusters_state):
     '''Compute homogenized out-of-plane strain or stress component.
 
@@ -86,9 +85,8 @@ def homoutofplanecomp(problem_type, material_phases, phase_clusters, clusters_f,
         RVE material phases labels (str).
     phase_clusters : dict
         Clusters labels (item, list of int) associated to each material phase (key, str).
-    clusters_f : dict
-        Clusters volume fraction (item, float) associated to each material cluster
-        (key, str).
+    clusters_vf : dict
+        Volume fraction (item, float) associated to each material cluster (key, str).
     clusters_state : dict
         Material constitutive model state variables (item, dict) associated to each material
         cluster (key, str). Despite the several constitutive model dependent state
@@ -118,14 +116,14 @@ def homoutofplanecomp(problem_type, material_phases, phase_clusters, clusters_f,
             # Add material cluster contribution to the homogenized out-of-plane component
             # component
             hom_comp = hom_comp + \
-                clusters_f[str(cluster)]*clusters_state[str(cluster)][comp_name]
+                clusters_vf[str(cluster)]*clusters_state[str(cluster)][comp_name]
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return hom_comp
 #
 #                                                             CRVE effective tangent modulus
 # ==========================================================================================
 def effective_tangent_modulus(n_dim, comp_order, material_phases, phase_clusters,
-                              clusters_f, clusters_D_mf, global_cit_D_De_ref_mf,
+                              clusters_vf, clusters_D_mf, global_cit_D_De_ref_mf,
                               gbl_inc_strain_mf=None, inc_farfield_strain_mf=None):
     '''Compute CRVE effective tangent modulus and clusters strain concentration tensors.
 
@@ -139,9 +137,8 @@ def effective_tangent_modulus(n_dim, comp_order, material_phases, phase_clusters
         RVE material phases labels (str).
     phase_clusters : dict
         Clusters labels (item, list of int) associated to each material phase (key, str).
-    clusters_f : dict
-        Clusters volume fraction (item, float) associated to each material cluster
-        (key, str).
+    clusters_vf : dict
+        Volume fraction (item, float) associated to each material cluster (key, str).
     clusters_D_mf : dict
         Consistent tangent modulus (item, ndarray of shape(n_comps, n_comps)) associated to
         each material cluster (key, str).
@@ -174,7 +171,7 @@ def effective_tangent_modulus(n_dim, comp_order, material_phases, phase_clusters
     _, _, _, fosym, _, _, _ = top.get_id_operators(n_dim)
     FOSym_mf = mop.get_tensor_mf(fosym, n_dim, comp_order)
     # Get total number of clusters
-    n_total_clusters = len(clusters_f.keys())
+    n_total_clusters = len(clusters_vf.keys())
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Compute equilibrium Jacobian matrix (luster strain concentration tensors system of
     # linear equations coefficient matrix)
@@ -251,7 +248,7 @@ def effective_tangent_modulus(n_dim, comp_order, material_phases, phase_clusters
         # Loop over material phase clusters
         for cluster in phase_clusters[mat_phase]:
             # Get material cluster volume fraction
-            cluster_f = clusters_f[str(cluster)]
+            cluster_vf = clusters_vf[str(cluster)]
             # Get material cluster consistent tangent (matricial form)
             cluster_D_mf = clusters_D_mf[str(cluster)]
             # Get material cluster strain concentration tensor
@@ -260,7 +257,7 @@ def effective_tangent_modulus(n_dim, comp_order, material_phases, phase_clusters
             clusters_sct_mf[str(cluster)] = cluster_sct_mf
             # Add material cluster contribution to effective tangent modulus
             eff_tangent_mf = eff_tangent_mf + \
-                             cluster_f*np.matmul(cluster_D_mf, cluster_sct_mf)
+                             cluster_vf*np.matmul(cluster_D_mf, cluster_sct_mf)
             # Increment cluster index
             i_init = i_init + len(comp_order)
             i_end = i_init + len(comp_order)

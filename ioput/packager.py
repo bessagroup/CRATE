@@ -208,7 +208,7 @@ def packrgclustering(clustering_solution_method, standardization_method, links_d
     #                              key: material phase id (str)
     # voxels_clusters              Regular grid of pixels/voxels with the          ndarray
     #                              cluster labels
-    # clusters_f                   Clusters volume fraction                        dict
+    # clusters_vf                  Clusters volume fraction                        dict
     #                              key: material cluster label (str)
     # links_data                   Links related variables                         dict
     #                              key: links parameter (str)
@@ -236,7 +236,7 @@ def packrgclustering(clustering_solution_method, standardization_method, links_d
     # Initialize dictionary with each material phase clusters
     phase_clusters = dict()
     # Initialize dictionary with clusters volume fractions
-    clusters_f = dict()
+    clusters_vf = dict()
     # Initialize clustering dictionary
     clst_dict = dict()
     # Build clustering dictionary
@@ -247,7 +247,7 @@ def packrgclustering(clustering_solution_method, standardization_method, links_d
     clst_dict['phase_n_clusters'] = phase_n_clusters
     clst_dict['phase_clusters'] = phase_clusters
     clst_dict['voxels_clusters'] = voxels_clusters
-    clst_dict['clusters_f'] = clusters_f
+    clst_dict['clusters_vf'] = clusters_vf
     clst_dict['clustering_type'] = clustering_type
     clst_dict['base_clustering_scheme'] = base_clustering_scheme
     clst_dict['adaptive_clustering_scheme'] = adaptive_clustering_scheme

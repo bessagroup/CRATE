@@ -66,9 +66,8 @@ class CRVE:
         contains the cluster label (int) assigned to the corresponding pixel/voxel.
     phase_clusters : dict
         Clusters labels (item, list of int) associated to each material phase (key, str).
-    clusters_f : dict
-        Clusters volume fraction (item, float) associated to each material cluster
-        (key, str).
+    _clusters_vf : dict
+        Volume fraction (item, float) associated to each material cluster (key, str).
     cit_X_mf : list
         Cluster interaction tensors associated to the Green operator material independent
         terms. Each term is stored in a dictionary (item, dict) for each pair of material
@@ -150,7 +149,7 @@ class CRVE:
         self._adaptive_step = 0
         self._voxels_clusters = None
         self.phase_clusters = None
-        self.clusters_f = None
+        self._clusters_vf = None
         self.cit_X_mf = None
         self.adaptivity_control_feature = copy.deepcopy(adaptivity_control_feature)
         self.adapt_criterion_data = copy.deepcopy(adapt_criterion_data)
@@ -450,11 +449,21 @@ class CRVE:
 
         Returns
         -------
-        _cluster_phases : dict
+        cluster_phases : dict
             Cluster-Reduced material phase instance (item, CRMP) associated to each material
             phase (key, str).
         '''
         return copy.deepcopy(self._cluster_phases)
+    # --------------------------------------------------------------------------------------
+    def get_clusters_vf(self):
+        '''Get clusters volume fraction.
+
+        Returns
+        -------
+        clusters_vf : dict
+            Volume fraction (item, float) associated to each material cluster (key, str).
+        '''
+        return copy.deepcopy(self._clusters_vf)
     # --------------------------------------------------------------------------------------
     def get_voxels_array_variables(self):
         '''Get required variables to build a clusters state based voxels array.
@@ -477,7 +486,7 @@ class CRVE:
 
         Returns
         -------
-        _adaptive_step : int
+        adaptive_step : int
             Counter of adaptive clustering steps, with 0 associated with the base
             clustering.
         '''
@@ -719,10 +728,10 @@ class CRVE:
         # Compute RVE volume
         rve_vol = np.prod(self._rve_dims)
         # Compute volume fraction associated to each material cluster
-        self.clusters_f = {}
+        self._clusters_vf = {}
         for cluster in np.unique(self._voxels_clusters):
             n_voxels_cluster = np.sum(self._voxels_clusters == cluster)
-            self.clusters_f[str(cluster)] = (n_voxels_cluster*voxel_vol)/rve_vol
+            self._clusters_vf[str(cluster)] = (n_voxels_cluster*voxel_vol)/rve_vol
     # --------------------------------------------------------------------------------------
     def _get_clusters_max_label(self):
         '''Get CRVE maximum cluster label.
@@ -887,13 +896,13 @@ class CRVE:
                         # cluster-symmetric computation)
                         if is_clst_sym:
                             # Set cluster volume fractions ratio
-                            clst_f_ratio = self.clusters_f[str(cluster_J)]/ \
-                                self.clusters_f[str(cluster_I)]
+                            clst_vf_ratio = self._clusters_vf[str(cluster_J)]/ \
+                                self._clusters_vf[str(cluster_I)]
                             # Compute clustering interaction tensor between material phase A
                             # cluster and material phase B cluster through cluster-symmetry
                             for cit_mf in self.cit_X_mf:
                                 cit_mf[mat_phase_pair][cluster_pair] = \
-                                    np.multiply(clst_f_ratio,
+                                    np.multiply(clst_vf_ratio,
                                         cit_mf[sym_mat_phase_pair][sym_cluster_pair])
                         else:
                             # Set material phase A cluster characteristic function
@@ -906,7 +915,7 @@ class CRVE:
                             # Compute cluster interaction tensor between the material phase
                             # A cluster and the material phase B cluster
                             rve_vol = np.prod(self._rve_dims)
-                            factor = 1.0/(self.clusters_f[str(cluster_I)]*rve_vol)
+                            factor = 1.0/(self._clusters_vf[str(cluster_I)]*rve_vol)
                             for i in range(len(self.cit_X_mf)):
                                 self.cit_X_mf[i][mat_phase_pair][cluster_pair] = \
                                     np.multiply(factor, cit_X_integral_mf[i])
@@ -938,12 +947,12 @@ class CRVE:
                                                    'clustering interaction tensors ' +
                                                    'should be cluster-symmetric.')
                             # Set cluster volume fractions ratio
-                            clst_f_ratio = self.clusters_f[str(cluster_J)]/ \
-                                self.clusters_f[str(cluster_I)]
+                            clst_vf_ratio = self._clusters_vf[str(cluster_J)]/ \
+                                self._clusters_vf[str(cluster_I)]
                             # Compute clustering interaction tensor
                             for cit_mf in self.cit_X_mf:
                                 cit_mf[mat_phase_pair][cluster_pair] = \
-                                    np.multiply(clst_f_ratio,
+                                    np.multiply(clst_vf_ratio,
                                         cit_mf[sym_mat_phase_pair][sym_cluster_pair])
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Loop over material phases

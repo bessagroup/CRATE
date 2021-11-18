@@ -74,7 +74,7 @@ def buildresidual2(problem_dict, material_phases, phase_clusters, n_total_cluste
 # Compute Jacobian matrix of the discretized Lippmann-Schwinger system of nonlinear
 # equilibrium equations
 def buildjacobian2(problem_dict, material_phases, phase_clusters, n_total_clusters,
-                   presc_strain_idxs, global_cit_D_De_ref_mf, clusters_f, clusters_D_mf):
+                   presc_strain_idxs, global_cit_D_De_ref_mf, clusters_vf, clusters_D_mf):
     # Get problem data
     n_dim = problem_dict['n_dim']
     comp_order = problem_dict['comp_order_sym']
@@ -104,12 +104,12 @@ def buildjacobian2(problem_dict, material_phases, phase_clusters, n_total_cluste
         for mat_phase in material_phases:
             for cluster in phase_clusters[mat_phase]:
                 if k in presc_strain_idxs:
-                    f_FOSym_mf = clusters_f[str(cluster)]*fosym_mf
+                    f_FOSym_mf = clusters_vf[str(cluster)]*fosym_mf
                     j_init = jclst*len(comp_order)
                     j_end = j_init + len(comp_order)
                     jacobian[i, j_init:j_end] = f_FOSym_mf[k, :]
                 else:
-                    f_D_mf = clusters_f[str(cluster)]*clusters_D_mf[str(cluster)]
+                    f_D_mf = clusters_vf[str(cluster)]*clusters_D_mf[str(cluster)]
                     j_init = jclst*len(comp_order)
                     j_end = j_init + len(comp_order)
                     jacobian[i, j_init:j_end] = f_D_mf[k, :]

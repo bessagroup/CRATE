@@ -111,13 +111,13 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     strain_formulation = problem_dict['strain_formulation']
     # Get material data
     material_phases = mat_dict['material_phases']
-    material_phases_f = mat_dict['material_phases_f']
+    material_phases_vf = mat_dict['material_phases_vf']
     material_properties = mat_dict['material_properties']
     material_phases_models = mat_dict['material_phases_models']
     # Get clusters data
     phase_n_clusters = clst_dict['phase_n_clusters']
     phase_clusters = clst_dict['phase_clusters']
-    clusters_f = clst_dict['clusters_f']
+    clusters_vf = clst_dict['clusters_vf']
     # Get macroscale loading data
     mac_load = macload_dict['mac_load']
     mac_load_presctype = macload_dict['mac_load_presctype']
@@ -265,7 +265,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     # strain component in a 2D plane stress problem (output purpose only)
     if problem_type == 1:
         hom_stress_33 = hom.homoutofplanecomp(problem_type, material_phases, phase_clusters,
-                                              clusters_f, clusters_state)
+                                              clusters_vf, clusters_state)
     # Initialize homogenized results dictionary
     hom_results = dict()
     # Build homogenized results dictionary
@@ -343,9 +343,9 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set reference material elastic properties initial guess based on the volume averages
     # of the material phases elastic properties
-    E_ref = sum([material_phases_f[phase]*material_properties[phase]['E']
+    E_ref = sum([material_phases_vf[phase]*material_properties[phase]['E']
         for phase in material_phases])
-    v_ref = sum([material_phases_f[phase]*material_properties[phase]['v']
+    v_ref = sum([material_phases_vf[phase]*material_properties[phase]['v']
         for phase in material_phases])
     mat_prop_ref = dict()
     mat_prop_ref['E'] = E_ref
@@ -598,12 +598,12 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                 # Compute homogenized strain and stress tensors (matricial form)
                 hom_strain_mf, hom_stress_mf = \
                     hom.homstatetensors(comp_order, material_phases, phase_clusters,
-                                        clusters_f, clusters_state)
+                                        clusters_vf, clusters_state)
                 # Compute homogenized out-of-plane stress component in a 2D plane strain
                 # problem / strain component in a 2D plane stress problem
                 if problem_type == 1:
                     hom_stress_33 = hom.homoutofplanecomp(
-                        problem_type, material_phases, phase_clusters, clusters_f,
+                        problem_type, material_phases, phase_clusters, clusters_vf,
                         clusters_state)
                 # Compute incremental homogenized strain and stress tensors (matricial form)
                 inc_hom_strain_mf = hom_strain_mf - hom_strain_old_mf
@@ -713,13 +713,13 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                 if is_farfield_formulation:
                     Jacobian = eqff.buildjacobian2(
                         problem_dict, material_phases, phase_clusters, n_total_clusters,
-                        presc_strain_idxs, global_cit_D_De_ref_mf, clusters_f,
+                        presc_strain_idxs, global_cit_D_De_ref_mf, clusters_vf,
                         clusters_D_mf)
                 else:
                     Jacobian = eqms.buildjacobian(
                         problem_dict, material_phases, phase_clusters, n_total_clusters,
                         n_presc_stress, presc_stress_idxs, global_cit_D_De_ref_mf,
-                        clusters_f, clusters_D_mf)
+                        clusters_vf, clusters_D_mf)
                 # --------------------------------------------------------------------------
                 # Validation:
                 if is_Validation[15]:
@@ -786,7 +786,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
             # tensors
             eff_tangent_mf, clusters_sct_mf = \
                 hom.effective_tangent_modulus(n_dim, comp_order, material_phases,
-                                              phase_clusters, clusters_f, clusters_D_mf,
+                                              phase_clusters, clusters_vf, clusters_D_mf,
                                               global_cit_D_De_ref_mf)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Set post-processing procedure initial time
@@ -1004,11 +1004,11 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                 clst_dict['voxels_clusters'] = crve.get_voxels_clusters()
                 clst_dict['phase_n_clusters'] = crve.get_phase_n_clusters()
                 clst_dict['phase_clusters'] = copy.deepcopy(crve.phase_clusters)
-                clst_dict['clusters_f'] = copy.deepcopy(crve.clusters_f)
+                clst_dict['clusters_vf'] = copy.deepcopy(crve.get_clusters_vf())
                 # Get clusters data
                 phase_n_clusters = clst_dict['phase_n_clusters']
                 phase_clusters = clst_dict['phase_clusters']
-                clusters_f = clst_dict['clusters_f']
+                clusters_vf = clst_dict['clusters_vf']
                 # Get total number of clusters
                 n_total_clusters = crve.get_n_total_clusters()
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1091,7 +1091,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         # strain component in a 2D plane stress problem (output purpose only)
         if problem_type == 1:
             hom_stress_33 = hom.homoutofplanecomp(problem_type, material_phases,
-                                                  phase_clusters, clusters_f,
+                                                  phase_clusters, clusters_vf,
                                                   clusters_state)
         # ----------------------------------------------------------------------------------
         # Validation:
@@ -1279,11 +1279,11 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
                 clst_dict['voxels_clusters'] = crve.get_voxels_clusters()
                 clst_dict['phase_n_clusters'] = crve.get_phase_n_clusters()
                 clst_dict['phase_clusters'] = copy.deepcopy(crve.phase_clusters)
-                clst_dict['clusters_f'] = copy.deepcopy(crve.clusters_f)
+                clst_dict['clusters_vf'] = copy.deepcopy(crve.get_clusters_vf())
                 # Get clusters data
                 phase_n_clusters = clst_dict['phase_n_clusters']
                 phase_clusters = clst_dict['phase_clusters']
-                clusters_f = clst_dict['clusters_f']
+                clusters_vf = clst_dict['clusters_vf']
                 # Get total number of clusters
                 n_total_clusters = crve.get_n_total_clusters()
 #

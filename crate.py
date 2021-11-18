@@ -168,8 +168,8 @@ if not is_same_offstage:
     phase_names.append('Compute cluster analysis data matrix')
     phase_times = np.append(phase_times, [[phase_init_time, phase_end_time]], axis=0)
     info.displayinfo('3', 'Compute cluster analysis data matrix',
-                     phase_times[phase_times.shape[0]-1, 1] -
-                     phase_times[phase_times.shape[0]-1, 0])
+                     phase_times[phase_times.shape[0] - 1, 1] -
+                     phase_times[phase_times.shape[0] - 1, 0])
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Perform offline stage with Links (FEM first-order homogenization) but then consider the
 # material phases constitutive models implemented in CRATE (source conversion)
@@ -198,11 +198,14 @@ if is_same_offstage:
     with open(crve_file_path, 'rb') as crve_file:
         crve = pickle.load(crve_file)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Update CRVE material state cluster labels
+    material_state.set_phase_clusters(crve.get_phase_clusters())
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Update clustering dictionary
     clst_dict['voxels_clusters'] = crve.get_voxels_clusters()
     clst_dict['phase_n_clusters'] = crve.get_phase_n_clusters()
     clst_dict['phase_clusters'] = copy.deepcopy(crve.phase_clusters)
-    clst_dict['clusters_f'] = copy.deepcopy(crve.clusters_f)
+    clst_dict['clusters_vf'] = copy.deepcopy(crve.get_clusters_vf())
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Update CRVE clustering adaptivity attributes
     if 'adaptive' in crve.get_clustering_type().values():
@@ -243,10 +246,13 @@ else:
     # Compute Cluster-Reduced Representative Volume Element (CRVE)
     crve.perform_crve_base_clustering()
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Update CRVE material state cluster labels
+    material_state.set_phase_clusters(crve.get_phase_clusters())
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Update clustering dictionary
     clst_dict['voxels_clusters'] = crve.get_voxels_clusters()
     clst_dict['phase_clusters'] = crve.phase_clusters
-    clst_dict['clusters_f'] = crve.clusters_f
+    clst_dict['clusters_vf'] = crve.get_clusters_vf()
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Write clustering VTK file
     if vtk_dict['is_VTK_output']:
@@ -268,9 +274,6 @@ else:
         vtk_output.write_VTK_file_clustering(crve=crve)
         # Increment post-processing time
         ofs_post_process_time += time.time() - procedure_init_time
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Update CRVE material state cluster labels
-    material_state.set_phase_clusters(crve.get_phase_clusters())
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set phase ending time and display finishing phase information
     phase_end_time = time.time() - ofs_post_process_time
@@ -308,7 +311,7 @@ phase_init_time = time.time()
 # discretized Lippmann-Schwinger system of equilibrium equations
 ons_total_time, ons_effective_time = sca.sca(dirs_dict, problem_dict, mat_dict, rg_dict,
                                              clst_dict, macload_dict, scs_dict, algpar_dict,
-                                             vtk_dict, output_dict, crve)
+                                             vtk_dict, output_dict, crve, material_state)
 # Set phase ending time and display finishing phase information
 phase_end_time = phase_init_time + ons_effective_time
 phase_names.append('Solve reduced microscale equilibrium problem')
