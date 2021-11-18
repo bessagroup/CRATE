@@ -151,8 +151,8 @@ class CRVE:
         self._phase_clusters = None
         self._clusters_vf = None
         self._cit_x_mf = None
-        self.adaptivity_control_feature = copy.deepcopy(adaptivity_control_feature)
-        self.adapt_criterion_data = copy.deepcopy(adapt_criterion_data)
+        self._adaptivity_control_feature = copy.deepcopy(adaptivity_control_feature)
+        self._adapt_criterion_data = copy.deepcopy(adapt_criterion_data)
         self.adaptive_clustering_time = 0
         self.adaptive_cit_time = 0
         # Get problem type parameters
@@ -478,6 +478,29 @@ class CRVE:
         '''
         return self._cit_x_mf
     # --------------------------------------------------------------------------------------
+    def get_adaptivity_control_feature(self):
+        '''Get clustering adaptivity control feature associated with each material phase.
+
+        Returns
+        -------
+        adaptivity_control_feature : dict, default=None
+            Clustering adaptivity control feature (item, str) associated to each material
+            phase (key, str).
+        '''
+        return copy.deepcopy(self._adaptivity_control_feature)
+    # --------------------------------------------------------------------------------------
+    def get_adapt_criterion_data(self):
+        '''Get clustering adaptivity criterion data associated with each material phase.
+
+        Returns
+        -------
+        adapt_criterion_data : dict, default=None
+            Clustering adaptivity criterion (item, dict) associated to each material phase
+            (key, str). This dictionary contains the adaptivity criterion to be used and the
+            required parameters.
+        '''
+        return copy.deepcopy(self._adapt_criterion_data)
+    # --------------------------------------------------------------------------------------
     def get_voxels_array_variables(self):
         '''Get required variables to build a clusters state based voxels array.
 
@@ -603,13 +626,13 @@ class CRVE:
             phase (key, str).
         '''
         # Update prescribed adaptive clustering scheme
-        self._adaptive_clustering_scheme = adaptive_clustering_scheme
+        self._adaptive_clustering_scheme = copy.deepcopy(adaptive_clustering_scheme)
         # Update clustering adaptivity criterion data
-        self.adapt_criterion_data = adapt_criterion_data
+        self._adapt_criterion_data = copy.deepcopy(adapt_criterion_data)
         # Update clustering adaptivity type data
-        self._adaptivity_type = adaptivity_type
+        self._adaptivity_type = copy.deepcopy(adaptivity_type)
         # Update clustering adaptivity control feature data
-        self.adaptivity_control_feature = adaptivity_control_feature
+        self._adaptivity_control_feature = copy.deepcopy(adaptivity_control_feature)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over adaptive material phases
         for mat_phase in self.adapt_material_phases:
