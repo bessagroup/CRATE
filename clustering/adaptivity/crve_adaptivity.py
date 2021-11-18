@@ -576,7 +576,7 @@ class AdaptivityManager:
             return
         else:
             # Store previous clustering cluster labels and total number of clusters
-            phase_clusters_old = copy.deepcopy(crve.phase_clusters)
+            phase_clusters_old = copy.deepcopy(crve.get_phase_clusters())
             n_total_clusters_old = crve.get_n_total_clusters()
             # Perform CRVE adaptive clustering refinement
             adaptive_clustering_map = crve.perform_crve_adaptivity(target_clusters,
@@ -658,10 +658,11 @@ class AdaptivityManager:
                     # transfer the associated values to the proper position in the new
                     # global vector. If cluster has been refined, then copy the associated
                     # values to its child clusters positions in the new global vector.
-                    if cluster in crve.phase_clusters[mat_phase]:
+                    if cluster in crve.get_phase_clusters()[mat_phase]:
                         # Get new clustering cluster initial index
                         init_idx_new = mat_phase_init_idx_new + \
-                            crve.phase_clusters[mat_phase].index(cluster)*len(comp_order)
+                            crve.get_phase_clusters()[mat_phase].index(cluster)*\
+                                len(comp_order)
                         # Transfer cluster incremental strain
                         gbl_inc_strain_mf_new[init_idx_new:init_idx_new+len(comp_order)] = \
                             gbl_inc_strain_mf_old[init_idx_old:init_idx_old+len(comp_order)]
@@ -672,7 +673,7 @@ class AdaptivityManager:
                         for child_cluster in child_clusters:
                             # Get new clustering child cluster initial index
                             init_idx_new = mat_phase_init_idx_new + \
-                                crve.phase_clusters[mat_phase].index(
+                                crve.get_phase_clusters()[mat_phase].index(
                                     child_cluster)*len(comp_order)
                             # Copy parent cluster incremental strain
                             gbl_inc_strain_mf_new[init_idx_new:
@@ -683,7 +684,7 @@ class AdaptivityManager:
                 mat_phase_init_idx_old += \
                     len(phase_clusters_old[mat_phase])*len(comp_order)
                 mat_phase_init_idx_new += \
-                    len(crve.phase_clusters[mat_phase])*len(comp_order)
+                    len(crve.get_phase_clusters()[mat_phase])*len(comp_order)
             # Store improved initial iterative guess for the clusters incremental strain
             # global vector (matricial form)
             improved_init_guess[1] = gbl_inc_strain_mf_new
@@ -731,7 +732,7 @@ class AdaptivityManager:
                 for target_cluster in adaptive_clustering_map[mat_phase].keys():
                     n_new_clusters += \
                         len(adaptive_clustering_map[mat_phase][target_cluster])
-                n_total_clusters = len(crve.phase_clusters[mat_phase])
+                n_total_clusters = len(crve.get_phase_clusters()[mat_phase])
                 output_list += [mat_phase, n_new_clusters, n_total_clusters]
                 output_total[0] += n_new_clusters
                 output_total[1] += n_total_clusters

@@ -64,7 +64,7 @@ class CRVE:
     _voxels_clusters : ndarray
         Regular grid of voxels (spatial discretization of the RVE), where each entry
         contains the cluster label (int) assigned to the corresponding pixel/voxel.
-    phase_clusters : dict
+    _phase_clusters : dict
         Clusters labels (item, list of int) associated to each material phase (key, str).
     _clusters_vf : dict
         Volume fraction (item, float) associated to each material cluster (key, str).
@@ -148,7 +148,7 @@ class CRVE:
         self._cluster_phases = None
         self._adaptive_step = 0
         self._voxels_clusters = None
-        self.phase_clusters = None
+        self._phase_clusters = None
         self._clusters_vf = None
         self.cit_X_mf = None
         self.adaptivity_control_feature = copy.deepcopy(adaptivity_control_feature)
@@ -296,7 +296,7 @@ class CRVE:
         # Build adaptive material phase's target clusters lists and associated data
         for mat_phase in self.adapt_material_phases:
             phase_target_clusters[mat_phase] = \
-                list(set(target_clusters).intersection(self.phase_clusters[mat_phase]))
+                list(set(target_clusters).intersection(self._phase_clusters[mat_phase]))
             phase_target_clusters_data[mat_phase] = \
                 {str(cluster) : target_clusters_data[str(cluster)]
                  for cluster in phase_target_clusters[mat_phase]}
@@ -414,7 +414,7 @@ class CRVE:
             Clusters labels (item, list of int) associated to each material phase
             (key, str).
         '''
-        return copy.deepcopy(self.phase_clusters)
+        return copy.deepcopy(self._phase_clusters)
     # --------------------------------------------------------------------------------------
     def get_voxels_clusters(self):
         '''Get regular grid containing the cluster label of each voxel.
@@ -439,7 +439,7 @@ class CRVE:
         n_total_clusters = 0
         # Loop over material phases
         for mat_phase in self._material_phases:
-            n_total_clusters += len(self.phase_clusters[mat_phase])
+            n_total_clusters += len(self._phase_clusters[mat_phase])
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return n_total_clusters
@@ -479,7 +479,7 @@ class CRVE:
             Regular grid of voxels (spatial discretization of the RVE), where each entry
             contains the cluster label (int) assigned to the corresponding pixel/voxel.
         '''
-        return [self._material_phases, self.phase_clusters, self._voxels_clusters]
+        return [self._material_phases, self._phase_clusters, self._voxels_clusters]
     # --------------------------------------------------------------------------------------
     def get_adaptive_step(self):
         '''Get counter of adaptive clustering steps.
@@ -710,15 +710,15 @@ class CRVE:
     # --------------------------------------------------------------------------------------
     def _set_phase_clusters(self):
         '''Set CRVE cluster labels associated to each material phase.'''
-        self.phase_clusters = {}
+        self._phase_clusters = {}
         # Loop over material phases
         for mat_phase in self._material_phases:
             # Get cluster labels
-            self.phase_clusters[mat_phase] = \
+            self._phase_clusters[mat_phase] = \
                 list(np.unique(self._voxels_clusters.flatten()[
                                self._phase_voxel_flatidx[mat_phase]]))
             # Update material phase number of clusters
-            self._phase_n_clusters[mat_phase] = len(self.phase_clusters[mat_phase])
+            self._phase_n_clusters[mat_phase] = len(self._phase_clusters[mat_phase])
     # --------------------------------------------------------------------------------------
     def _set_clusters_vf(self):
         '''Set CRVE clusters' volume fractions.'''
@@ -859,14 +859,14 @@ class CRVE:
                     pop_clusters += list(adaptive_clustering_map[mat_phase].keys())
                 else:
                     phase_new_clusters[mat_phase] = []
-                phase_old_clusters[mat_phase] = list(set(self.phase_clusters[mat_phase]) -
+                phase_old_clusters[mat_phase] = list(set(self._phase_clusters[mat_phase]) -
                                                      set(phase_new_clusters[mat_phase]))
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over material phases
         for mat_phase_B in self._material_phases:
             # Set material phase B clusters to be looped over
             if mode == 'full':
-                clusters_J = self.phase_clusters[mat_phase_B]
+                clusters_J = self._phase_clusters[mat_phase_B]
             elif mode == 'adaptive':
                 clusters_J = phase_new_clusters[mat_phase_B]
             # Loop over material phase B clusters
@@ -883,7 +883,7 @@ class CRVE:
                     # Set material phase pair dictionary
                     mat_phase_pair = mat_phase_A + '_' + mat_phase_B
                     # Loop over material phase A clusters
-                    for cluster_I in self.phase_clusters[mat_phase_A]:
+                    for cluster_I in self._phase_clusters[mat_phase_A]:
                         # Set material cluster pair
                         cluster_pair = str(cluster_I) + '_' + str(cluster_J)
                         # Check if cluster-symmetric cluster interaction tensor
