@@ -214,7 +214,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
     is_crve_adaptivity = False
     adaptivity_manager = None
     adapt_output = None
-    if len(crve.adapt_material_phases) > 0:
+    if len(crve.get_adapt_material_phases()) > 0:
         # Switch on clustering adaptivity flag
         is_crve_adaptivity = True
         # Set flag that controls if the macroscale loading increment where the clustering
@@ -226,7 +226,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         is_clust_adapt_output = clst_dict['is_clust_adapt_output']
         # Initialize online CRVE clustering adaptivity manager
         adaptivity_manager = \
-            AdaptivityManager(problem_type, comp_order, crve.adapt_material_phases,
+            AdaptivityManager(problem_type, comp_order, crve.get_adapt_material_phases(),
                               crve.get_phase_clusters(),
                               crve.get_adaptivity_control_feature(),
                               crve.get_adapt_criterion_data(), clust_adapt_freq)
@@ -235,7 +235,7 @@ def sca(dirs_dict, problem_dict, mat_dict, rg_dict, clst_dict, macload_dict, scs
         procedure_init_time = time.time()
         # Instantiate clustering adaptivity output
         adapt_output = ClusteringAdaptivityOutput(adapt_file_path,
-                                                  crve.adapt_material_phases)
+                                                  crve.get_adapt_material_phases())
         # Write clustering adaptivity output file header
         adapt_output.write_adapt_file(0, adaptivity_manager, crve, mode='init')
         # Increment post-processing time

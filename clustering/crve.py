@@ -169,7 +169,7 @@ class CRVE:
         self._phase_voxel_flatidx = \
             type(self)._get_phase_idxs(regular_grid, self._material_phases)
         # Get adaptive material phases
-        self.adapt_material_phases = [x for x in self._clustering_type.keys()
+        self._adapt_material_phases = [x for x in self._clustering_type.keys()
                                       if self._clustering_type[x] == 'adaptive']
         # Set number of clusters prescribed (base clustering) for each material phase
         self._base_phase_n_clusters = copy.deepcopy(self._phase_n_clusters)
@@ -290,11 +290,11 @@ class CRVE:
         # Get CRVE current clustering
         labels = self._voxels_clusters.flatten()
         # Initialize adaptive material phase's target clusters and associated data
-        phase_target_clusters = {mat_phase: [] for mat_phase in self.adapt_material_phases}
+        phase_target_clusters = {mat_phase: [] for mat_phase in self._adapt_material_phases}
         phase_target_clusters_data = \
-            {mat_phase: [] for mat_phase in self.adapt_material_phases}
+            {mat_phase: [] for mat_phase in self._adapt_material_phases}
         # Build adaptive material phase's target clusters lists and associated data
-        for mat_phase in self.adapt_material_phases:
+        for mat_phase in self._adapt_material_phases:
             phase_target_clusters[mat_phase] = \
                 list(set(target_clusters).intersection(self._phase_clusters[mat_phase]))
             phase_target_clusters_data[mat_phase] = \
@@ -307,9 +307,9 @@ class CRVE:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize adaptive clustering map
         adaptive_clustering_map = \
-            {mat_phase: {} for mat_phase in self.adapt_material_phases}
+            {mat_phase: {} for mat_phase in self._adapt_material_phases}
         # Loop over adaptive material phases
-        for mat_phase in self.adapt_material_phases:
+        for mat_phase in self._adapt_material_phases:
             # If there are no target clusters, skip to next adaptive material phase
             if not bool(phase_target_clusters[mat_phase]):
                 continue
@@ -478,6 +478,16 @@ class CRVE:
         '''
         return self._cit_x_mf
     # --------------------------------------------------------------------------------------
+    def get_adapt_material_phases(self):
+        '''Get adaptive material phases labels.
+
+        Returns
+        -------
+        adapt_material_phases : list
+            RVE adaptive material phases labels (str).
+        '''
+        return copy.deepcopy(self._adapt_material_phases)
+    # --------------------------------------------------------------------------------------
     def get_adaptivity_control_feature(self):
         '''Get clustering adaptivity control feature associated with each material phase.
 
@@ -572,7 +582,7 @@ class CRVE:
         # Initialize adaptivity output
         adaptivity_output = {}
         # Loop over adaptive material phases
-        for mat_phase in self.adapt_material_phases:
+        for mat_phase in self._adapt_material_phases:
             # Get adaptive cluster reduced material phase
             acrmp = self._cluster_phases[mat_phase]
             # Get material phase adaptivity metrics
@@ -616,7 +626,7 @@ class CRVE:
         self._adaptive_cit_time = 0
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over adaptive material phases
-        for mat_phase in self.adapt_material_phases:
+        for mat_phase in self._adapt_material_phases:
             # Get cluster-reduced material phase
             crmp = self._cluster_phases[mat_phase]
             # Reset adaptive progress parameters
@@ -656,7 +666,7 @@ class CRVE:
         self._adaptivity_control_feature = copy.deepcopy(adaptivity_control_feature)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over adaptive material phases
-        for mat_phase in self.adapt_material_phases:
+        for mat_phase in self._adapt_material_phases:
             # Get adaptive clustering scheme features indexes from the base clustering
             # scheme
             for i in range(self._adaptive_clustering_scheme[mat_phase].shape[0]):
