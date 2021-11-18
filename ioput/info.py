@@ -402,7 +402,7 @@ def displayinfo(code, *args, **kwargs):
         n_time_phases = len(time_phases)
         # Set output phases times
         adapt_times = [adaptivity_manager.adaptive_evaluation_time,
-                       crve.adaptive_clustering_time, crve.adaptive_cit_time]
+                       crve.get_adaptive_clustering_time(), crve.get_adaptive_cit_time()]
         adapt_times.append(total_time_adapt - sum(adapt_times))
         # Set output phases relative times
         if total_time_adapt > 1e-10:

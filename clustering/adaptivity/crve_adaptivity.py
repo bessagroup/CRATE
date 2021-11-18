@@ -980,9 +980,9 @@ class ClusteringAdaptivityOutput:
                        ('{:>' + str(self._col_width) + '.8e}').format(
                             adaptivity_manager.adaptive_evaluation_time) +
                        ('{:>' + str(self._col_width) + '.8e}').format(
-                           crve.adaptive_clustering_time) +
+                           crve.get_adaptive_clustering_time()) +
                        ('{:>' + str(self._col_width) + '.8e}').format(
-                           crve.adaptive_cit_time) +
+                           crve.get_adaptive_cit_time()) +
                        ''.join([''.join([('{:>' + str(self._col_width) + 'd}').format(x)
                                 for x in output_list[3*i:3*i+2]] +
                                [('{:>' + str(self._col_width) + '.8e}').format(

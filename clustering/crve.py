@@ -153,8 +153,8 @@ class CRVE:
         self._cit_x_mf = None
         self._adaptivity_control_feature = copy.deepcopy(adaptivity_control_feature)
         self._adapt_criterion_data = copy.deepcopy(adapt_criterion_data)
-        self.adaptive_clustering_time = 0
-        self.adaptive_cit_time = 0
+        self._adaptive_clustering_time = 0
+        self._adaptive_cit_time = 0
         # Get problem type parameters
         n_dim, comp_order_sym, comp_order_nsym = \
             mop.get_problem_type_parameters(problem_type)
@@ -336,7 +336,7 @@ class CRVE:
         self._set_clusters_vf()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Update total amount of time spent in clustering adaptivity
-        self.adaptive_clustering_time += time.time() - init_time
+        self._adaptive_clustering_time += time.time() - init_time
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return adaptive_clustering_map
@@ -528,6 +528,27 @@ class CRVE:
         '''
         return self._adaptive_step
     # --------------------------------------------------------------------------------------
+    def get_adaptive_clustering_time(self):
+        '''Get total amount of time spent in clustering adaptivity.
+
+        Returns
+        -------
+        adaptive_clustering_time : float
+            Total amount of time (s) spent in clustering adaptivity.
+        '''
+        return self._adaptive_clustering_time
+    # --------------------------------------------------------------------------------------
+    def get_adaptive_cit_time(self):
+        '''Get total amount of time spent in adaptivity cluster interaction tensors.
+
+        Returns
+        -------
+        adaptive_cit_time : float
+            Total amount of time (s) spent in clustering adaptivity cluster interaction
+            tensors computation procedures.
+        '''
+        return self._adaptive_cit_time
+    # --------------------------------------------------------------------------------------
     def get_clustering_type(self):
         '''Get clustering type of each material phase.
 
@@ -591,8 +612,8 @@ class CRVE:
         self._base_phase_n_clusters = copy.deepcopy(self._phase_n_clusters)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Reset time spent in clustering adaptivity procedures
-        self.adaptive_clustering_time = 0
-        self.adaptive_cit_time = 0
+        self._adaptive_clustering_time = 0
+        self._adaptive_cit_time = 0
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over adaptive material phases
         for mat_phase in self.adapt_material_phases:
@@ -1011,7 +1032,7 @@ class CRVE:
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Update total amount of time spent in clustering adaptivity cluster interaction
             # tensors computation procedures
-            self.adaptive_cit_time += time.time() - init_time
+            self._adaptive_cit_time += time.time() - init_time
     # --------------------------------------------------------------------------------------
     def _cluster_filter(self, cluster):
         '''Compute cluster discrete characteristic function (spatial and frequency domains).
