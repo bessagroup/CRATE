@@ -26,7 +26,7 @@ import tensor.matrixoperations as mop
 #
 #                                                                       Discrete frequencies
 # ==========================================================================================
-def setdiscretefreq(n_dim, rve_dims, n_voxels_dims):
+def set_discrete_freqs(n_dim, rve_dims, n_voxels_dims):
     '''Perform frequency discretization of the spatial domain.
 
     Perform frequency discretization by setting the spatial discrete frequencies (rad/m)
@@ -35,7 +35,7 @@ def setdiscretefreq(n_dim, rve_dims, n_voxels_dims):
     Parameters
     ----------
     n_dim : int
-        Problem dimension.
+        Problem number of spatial dimensions.
     rve_dims : list
         RVE size in each dimension.
     n_voxels_dims : list
@@ -59,25 +59,22 @@ def setdiscretefreq(n_dim, rve_dims, n_voxels_dims):
 #
 #                                                                             Green operator
 # ==========================================================================================
-def gop_material_independent_terms(strain_formulation, n_dim, rve_dims, n_voxels_dims,
-                                   comp_order_sym, comp_order_nsym):
+def gop_material_independent_terms(strain_formulation, problem_type, rve_dims,
+                                   n_voxels_dims):
     '''Compute Green operator material independent terms in the frequency domain.
 
     Parameters
     ----------
     strain_formulation: str, {'infinitesimal', 'finite'}
-        Problem number of spatial dimensions.
-    n_dim : int
-        Problem dimension.
+        Problem strain formulation.
+    problem_type : int
+        Problem type: 2D plane strain (1), 2D plane stress (2), 2D axisymmetric (3) and
+        3D (4).
     rve_dims : list
         RVE size in each dimension.
     n_voxels_dims : list
         Number of voxels in each dimension of the regular grid (spatial discretization of
         the RVE).
-    comp_order_sym : list
-        Strain/Stress components symmetric order.
-    comp_order_nsym : list
-        Strain/Stress components nonsymmetric order.
 
     Returns
     -------
@@ -103,6 +100,9 @@ def gop_material_independent_terms(strain_formulation, n_dim, rve_dims, n_voxels
     perform an efficient update of the Green operator if the associated reference material
     elastic properties are updated by any means (e.g., self-consistent scheme).
     '''
+    # Get problem type parameters
+    n_dim, comp_order_sym, comp_order_nsym = \
+        mop.get_problem_type_parameters(problem_type)
     # Set strain/stress components order according to problem strain formulation
     if strain_formulation == 'infinitesimal':
         comp_order = comp_order_sym
@@ -112,7 +112,7 @@ def gop_material_independent_terms(strain_formulation, n_dim, rve_dims, n_voxels
         raise RuntimeError('Unknown problem strain formulation.')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set discrete frequencies (rad/m) for each dimension
-    freqs_dims = setdiscretefreq(n_dim, rve_dims, n_voxels_dims)
+    freqs_dims = set_discrete_freqs(n_dim, rve_dims, n_voxels_dims)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set Green operator matricial form components
     comps = list(it.product(comp_order, comp_order))
@@ -238,7 +238,7 @@ def assemble_cit(strain_formulation, problem_type, mat_prop_ref, Se_ref_matrix,
     -------
     global_cit_mf : ndarray
         Global cluster interaction matrix. Assembly positions are assigned according to the
-        order of `material_phases` (1st) and `phase_clusters` (2nd).
+        order of material_phases (1st) and phase_clusters (2nd).
 
     Notes
     -----

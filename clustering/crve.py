@@ -97,7 +97,7 @@ class CRVE:
             Regular grid of voxels (spatial discretization of the RVE), where each entry
             contains the material phase label (int) assigned to the corresponding voxel.
         material_phases : list
-            CRVE material phases labels (str).
+            RVE material phases labels (str).
         strain_formulation: str, {'infinitesimal', 'finite'}
             Problem strain formulation.
         problem_type : int
@@ -352,14 +352,14 @@ class CRVE:
         return copy.deepcopy(self._rve_dims)
     # --------------------------------------------------------------------------------------
     def get_material_phases(self):
-        '''Get CRVE material phases.
+        '''Get RVE material phases.
 
         Returns
         -------
         material_phases : list
-            CRVE material phases labels (str).
+            RVE material phases labels (str).
         '''
-        return self._material_phases
+        return copy.deepcopy(self._material_phases)
     # --------------------------------------------------------------------------------------
     def get_comp_order(self):
         '''Get strain/stress components order.
@@ -908,9 +908,8 @@ class CRVE:
                         self._cit_x_mf[i][mat_phase_A + '_' + mat_phase_B] = {}
             # Compute Green operator material independent terms
             self._gop_X_dft_vox = \
-                citop.gop_material_independent_terms(self._strain_formulation, self._n_dim,
-                    self._rve_dims, self._n_voxels_dims, self._comp_order_sym,
-                        self._comp_order_nsym)
+                citop.gop_material_independent_terms(self._strain_formulation,
+                    self._problem_type, self._rve_dims, self._n_voxels_dims)
         elif mode == 'adaptive':
             init_time = time.time()
             # Build lists with old (preexistent) clusters and new (adapted) clusters for
