@@ -21,6 +21,8 @@ import numpy.matlib
 import copy
 # Generate efficient iterators
 import itertools as it
+# Matricial operations
+import tensor.matrixoperations as mop
 #
 #                                                                       Discrete frequencies
 # ==========================================================================================
@@ -187,10 +189,11 @@ def gop_material_independent_terms(strain_formulation, n_dim, rve_dims, n_voxels
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return [gop_1_dft_vox, gop_2_dft_vox, gop_0_freq_dft_vox]
 #
-#                                            Update and assemble cluster interaction tensors
+#                                                 Global cluster interaction matrix assembly
 # ==========================================================================================
-def updassemblecit(problem_dict, mat_prop_ref, Se_ref_matrix, material_phases,
-                   phase_n_clusters, phase_clusters, cit_1_mf, cit_2_mf, cit_0_freq_mf):
+def assemble_cit(strain_formulation, problem_type, mat_prop_ref, Se_ref_matrix,
+                 material_phases, phase_n_clusters, phase_clusters, cit_1_mf, cit_2_mf,
+                 cit_0_freq_mf):
     '''Update cluster interaction tensors and assemble global cluster interaction matrix.
 
     Update the cluster interaction tensors by taking into account the material properties
@@ -199,8 +202,11 @@ def updassemblecit(problem_dict, mat_prop_ref, Se_ref_matrix, material_phases,
 
     Parameters
     ----------
-    comp_order : list
-        Strain/Stress components (str) order.
+    strain_formulation: str, {'infinitesimal', 'finite'}
+        Problem strain formulation.
+    problem_type : int
+        Problem type: 2D plane strain (1), 2D plane stress (2), 2D axisymmetric (3) and
+        3D (4).
     mat_prop_ref : dict
         Reference material properties.
     Se_ref_matrix : ndarray of shape (n_comps, n_comps)
@@ -239,8 +245,17 @@ def updassemblecit(problem_dict, mat_prop_ref, Se_ref_matrix, material_phases,
     The Green operator is here assumed to be associated with an isotropic elastic reference
     material.
     '''
-    # Get problem data
-    comp_order = problem_dict['comp_order_sym']
+    # Get problem type parameters
+    _, comp_order_sym, comp_order_nsym = \
+        mop.get_problem_type_parameters(problem_type)
+    # Set strain/stress components order according to problem strain formulation
+    if strain_formulation == 'infinitesimal':
+        comp_order = comp_order_sym
+    elif strain_formulation == 'finite':
+        comp_order = comp_order_nsym
+    else:
+        raise RuntimeError('Unknown problem strain formulation.')
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Get total number of clusters
     n_total_clusters = sum([phase_n_clusters[mat_phase] for mat_phase in material_phases])
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
