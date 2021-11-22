@@ -1123,7 +1123,7 @@ class CRVE:
         if self._strain_formulation == 'infinitesimal':
             comp_order = self._comp_order_sym
         elif self._strain_formulation == 'finite':
-            comp_order == self._comp_order_nsym
+            comp_order = self._comp_order_nsym
         else:
             raise RuntimeError('Unknown problem strain formulation.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1212,7 +1212,7 @@ class CRVE:
         if self._strain_formulation == 'infinitesimal':
             comp_order = self._comp_order_sym
         elif self._strain_formulation == 'finite':
-            comp_order == self._comp_order_nsym
+            comp_order = self._comp_order_nsym
         else:
             raise RuntimeError('Unknown problem strain formulation.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

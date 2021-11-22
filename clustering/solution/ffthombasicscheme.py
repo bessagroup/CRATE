@@ -1107,7 +1107,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
             comp_order = self._comp_order_sym
         elif self._strain_formulation == 'finite':
             # Deformation gradient and First Piola-Kirchhoff stress tensor
-            comp_order == self._comp_order_nsym
+            comp_order = self._comp_order_nsym
         else:
             raise RuntimeError('Unknown problem strain formulation.')
         # Compute total number of voxels
