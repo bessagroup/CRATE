@@ -56,13 +56,10 @@ import ioput.readinputdata as rid
 import ioput.fileoperations as filop
 # Packager
 import ioput.packager as packager
-# Material interface
-import material.materialinterface as matint
 # Clustering data computation
 from clustering.clusteringdata import set_clustering_data
 # Clustering-based Reduced-Order Models
-from online.asca import ASCA
-import online.sca as sca
+from online.crom.asca import ASCA
 # VTK output
 from ioput.vtkoutput import VTKOutput
 # CRVE generation
