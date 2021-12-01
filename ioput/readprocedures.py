@@ -259,24 +259,24 @@ def read_material_properties(file, file_path, keyword):
         # Get available material constitutive models
         available_mat_models = get_available_material_models(model_source)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Set material phase constitutive model name
+        # Set material phase constitutive model keyword
         if phase_header[1] not in available_mat_models:
             raise RuntimeError('Unknown material constitutive model (' + phase_header[1] +
                                'from source \'' + model_source + '\'.')
         else:
-            model_name = phase_header[1]
-        material_phases_data[mat_phase]['name'] = model_name
+            model_keyword = phase_header[1]
+        material_phases_data[mat_phase]['model_keyword'] = model_keyword
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get material constitutive model required material properties
         if model_source == 'crate':
-            if model_name == 'elastic':
+            if model_keyword == 'elastic':
                 required_properties = Elastic.get_required_properties()
-            elif model_name == 'von_mises':
+            elif model_keyword == 'von_mises':
                 required_properties = VonMises.get_required_properties()
         elif model_source == 'links':
-            if model_name == 'ELASTIC':
+            if model_keyword == 'ELASTIC':
                 required_properties = LinksElastic.get_required_properties()
-            elif model_name == 'VON_MISES':
+            elif model_keyword == 'VON_MISES':
                 required_properties = LinksVonMises.get_required_properties()
         # Set number of material properties
         n_required_properties = len(required_properties)

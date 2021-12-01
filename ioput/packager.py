@@ -309,11 +309,11 @@ def packalgparam(max_n_iterations, conv_tol, max_subinc_level, max_cinc_cuts,
     return algpar_dict
 # ------------------------------------------------------------------------------------------
 # Package data associated to the VTK output
-def packvtk(is_VTK_output, *args):
+def packvtk(is_vtk_output, *args):
     #
     # Object                      Meaning                                           Type
     # -------------------------------------------------------------------------------------
-    # is_VTK_output        VTK output flag                                          bool
+    # is_vtk_output        VTK output flag                                          bool
     # vtk_format           VTK file format                                          str
     # vtk_inc_div          VTK increment output divisor                             int
     # vtk_vars             VTK state variables output                               str
@@ -323,8 +323,8 @@ def packvtk(is_VTK_output, *args):
     # Initialize VTK dictionary
     vtk_dict = dict()
     # Build VTK dictionary
-    vtk_dict['is_VTK_output'] = is_VTK_output
-    if is_VTK_output:
+    vtk_dict['is_vtk_output'] = is_vtk_output
+    if is_vtk_output:
         # vtk_format = args[0]
         vtk_inc_div = args[1]
         vtk_vars = args[2]
@@ -340,15 +340,17 @@ def packvtk(is_VTK_output, *args):
     return vtk_dict
 # ------------------------------------------------------------------------------------------
 # Package data associated to general output files
-def packoutputfiles(is_voxels_output, *args):
+def packoutputfiles(is_ref_material_output, is_voxels_output):
     #
     # Object                 Meaning                                           Type
     # -------------------------------------------------------------------------------------
+    # is_ref_material_output  Reference material output                             bool
     # is_voxels_output       Voxels material-related quantities                bool
     #
     # Initialize output dictionary
     output_dict = dict()
     # Build output dictionary
+    output_dict['is_ref_material_output'] = is_ref_material_output
     output_dict['is_voxels_output'] = is_voxels_output
     # Return
     return output_dict

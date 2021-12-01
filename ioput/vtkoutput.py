@@ -12,6 +12,7 @@
 # Development history:
 # Bernardo P. Ferreira | Feb 2020 | Initial coding.
 # Bernardo P. Ferreira | Jul 2021 | OOP refactorization.
+# Bernardo P. Ferreira | Nov 2021 | Updated material constitutive models procedures.
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
@@ -19,16 +20,12 @@
 import os
 # Parse command-line options and arguments
 import sys
-# Import from string
-import importlib
 # Working with arrays
 import numpy as np
 # Shallow and deep copies
 import copy
 # Matricial operations
 import tensor.matrixoperations as mop
-# Links related procedures
-import links.material.linksmaterialmodels as LinksMat
 # Material-related computations
 from ioput.voxelsoutput import VoxelsArraysFactory
 #
@@ -156,9 +153,8 @@ class VTKOutput:
         # Close clustering VTK file
         vtk_file.close()
     # --------------------------------------------------------------------------------------
-    def write_VTK_file_time_step(self, time_step, problem_type, crve, clusters_state,
-                                 material_phases_models, vtk_dir=None, vtk_vars='all',
-                                 adaptivity_manager=None):
+    def write_VTK_file_time_step(self, time_step, problem_type, crve, material_state,
+                                 vtk_vars='all', adaptivity_manager=None):
         '''Write VTK file associated to time step (increment).
 
         Parameters
@@ -169,13 +165,8 @@ class VTKOutput:
             Problem type identifier (1 - Plain strain (2D), 4- Tridimensional)
         crve : CRVE
             Cluster-Reduced Representative Volume Element.
-        clusters_state : dict
-            Material constitutive model state variables (item, dict) associated to each
-            material cluster (key, str).
-        material_phases_models : dict
-            Constitutive model (item, dict) associated to each material phase (key, str).
-        vtk_dir : str, default=None
-            Directory of the VTK file associated to time step.
+        material_state : MaterialState
+            CRVE material constitutive state at rewind state.
         vtk_vars : str, {'all', 'common'}, default='all'
             If 'common', only state variables common to all material phases constitutive
             models are output. Otherwise, all state variables are output.
@@ -209,7 +200,8 @@ class VTKOutput:
         # Set problem number of dimensions
         n_dim = len(rve_dims)
         # Get strain/stress components order
-        _, comp_order_sym, comp_order_nsym = mop.getproblemtypeparam(problem_type)
+        _, comp_order_sym, comp_order_nsym = mop.get_problem_type_parameters(problem_type)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get regular grid of voxels
         regular_grid = crve.get_regular_grid()
         # Get number of voxels in each direction
@@ -220,10 +212,11 @@ class VTKOutput:
         phase_clusters = crve.get_phase_clusters()
         # Get cluster associated to each pixel/voxel
         voxels_clusters = crve.get_voxels_clusters()
-        # Get material constitutive models associated to existent material phases in the
-        # microstructure
-        material_models = list(np.unique([material_phases_models[mat_phase]['name'] \
-                               for mat_phase in material_phases]))
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Get material constitutive model associated to each material phase
+        material_phases_models = material_state.get_material_phases_models()
+        # Get material state variables associated to each material cluster
+        clusters_state = material_state.get_clusters_state()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Instantiate factory of voxels arrays
         voxels_array_factory = VoxelsArraysFactory(problem_type)
@@ -266,86 +259,61 @@ class VTKOutput:
             common_var_list = ['stress_mf']
         # Loop over common state variables
         for var_name in common_var_list:
-            # Loop over material constitutive models
-            for model_name in material_models:
-                # Loop over material phases
-                for mat_phase in material_phases:
-                    if material_phases_models[mat_phase]['name'] == model_name:
-                        # Get constitutive model source
-                        model_source = material_phases_models[mat_phase]['source']
-                        break
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Get constitutive model initialize procedure according to source
-                if model_source == 1:
-                    # Get constitutive model module
-                    model_module = importlib.import_module('material.models.' +
-                                                           str(model_name))
-                    # Get constitutive model initialize procedure
-                    init_procedure = getattr(model_module, 'init')
-                elif model_source == 2:
-                    # Get constitutive model initialize procedure
-                    _, init_procedure, _, _, _ = LinksMat.getlinksmodel(model_name)
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Get constitutive model state variables dictionary
-                model_state_variables = init_procedure({'n_dim': n_dim,
-                                                        'comp_order_sym': comp_order_sym,
-                                                        'problem_type': problem_type})
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Skip state variable output if it is not defined for all constitutive
-                # models
+            # Initialize common state variable flag
+            is_common_var = True
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Loop over material phases
+            for mat_phase in material_phases:
+                # Get material phase constitutive model
+                constitutive_model = material_phases_models[str(mat_phase)]
+                # Get material constitutive model state variables
+                model_state_variables = constitutive_model.state_init()
+                # Check state variable
                 if var_name not in model_state_variables.keys():
+                    # Set common state variable flag
+                    is_common_var = False
+                    # Remove state variable from common list
+                    common_var_list.remove(var_name)
+                    # Skip state variable output
                     break
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Get state variable descriptors
-            var, var_type, var_n_comp = self._set_state_var_descriptors(n_dim,
-                comp_order_sym, comp_order_nsym, var_name, source='model_state_variables',
-                model_state_variables=model_state_variables)
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Loop over state variable components
-            for comp_idx in range(var_n_comp):
-                # Build state variable cell data array
-                rg_array = self._state_var_cell_data_array(n_dim, comp_order_sym,
-                    comp_order_nsym, material_phases, material_phases_models,
-                        phase_clusters, voxels_clusters, clusters_state, var_name, var_type,
-                            comp_idx=comp_idx)
+            # Output common state variable
+            if is_common_var:
+                # Get state variable descriptors
+                var, var_type, var_n_comp = self._set_state_var_descriptors(n_dim,
+                    comp_order_sym, comp_order_nsym, var_name,
+                        source='model_state_variables',
+                        model_state_variables=model_state_variables)
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Set output variable data name
-                data_name = self._set_cell_data_name(comp_order_sym, comp_order_nsym,
-                                                     var_name, var_type, idx=comp_idx)
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Write VTK cell data array - State variable
-                data_list = list(rg_array.flatten('F'))
-                min_val = min(data_list)
-                max_val = max(data_list)
-                data_parameters = {'Name': data_name, 'format': self._format,
-                                   'RangeMin': min_val, 'RangeMax': max_val}
-                xml.write_cell_data_array(vtk_file, data_list, data_parameters)
+                # Loop over state variable components
+                for comp_idx in range(var_n_comp):
+                    # Build state variable cell data array
+                    rg_array = self._state_var_cell_data_array(n_dim, comp_order_sym,
+                        comp_order_nsym, material_phases, material_phases_models,
+                            phase_clusters, voxels_clusters, clusters_state, var_name,
+                            var_type, comp_idx=comp_idx)
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    # Set output variable data name
+                    data_name = self._set_cell_data_name(comp_order_sym, comp_order_nsym,
+                                                         var_name, var_type, idx=comp_idx)
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    # Write VTK cell data array - State variable
+                    data_list = list(rg_array.flatten('F'))
+                    min_val = min(data_list)
+                    max_val = max(data_list)
+                    data_parameters = {'Name': data_name, 'format': self._format,
+                                       'RangeMin': min_val, 'RangeMax': max_val}
+                    xml.write_cell_data_array(vtk_file, data_list, data_parameters)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         if vtk_vars == 'all':
-            # Loop over material constitutive models
-            for model_name in material_models:
-                # Loop over material phases
-                for mat_phase in material_phases:
-                    if material_phases_models[mat_phase]['name'] == model_name:
-                        # Get constitutive model source
-                        model_source = material_phases_models[mat_phase]['source']
-                        break
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Get constitutive model initialize procedure according to source
-                if model_source == 1:
-                    # Get constitutive model module
-                    model_module = importlib.import_module('material.models.' +
-                                                           str(model_name))
-                    # Get constitutive model initialize procedure
-                    init_procedure = getattr(model_module, 'init')
-                elif model_source == 2:
-                    # Get constitutive model initialize procedure
-                    _, init_procedure, _, _, _ = LinksMat.getlinksmodel(model_name)
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Get constitutive model state variables dictionary
-                model_state_variables = init_procedure({'n_dim': n_dim,
-                                                        'comp_order_sym': comp_order_sym,
-                                                        'problem_type': problem_type})
+            # Loop over material phases
+            for mat_phase in material_phases:
+                # Get material phase constitutive model
+                constitutive_model = material_phases_models[str(mat_phase)]
+                # Get material constitutive model name
+                model_name = constitutive_model.get_name()
+                # Get material constitutive model state variables
+                model_state_variables = constitutive_model.state_init()
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Loop over constitutive model state variables
                 for var_name in list(set(model_state_variables.keys()) -
@@ -354,7 +322,7 @@ class VTKOutput:
                     var, var_type, var_n_comp = self._set_state_var_descriptors(n_dim,
                         comp_order_sym, comp_order_nsym, var_name,
                             source='model_state_variables',
-                                model_state_variables=model_state_variables)
+                            model_state_variables=model_state_variables)
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     # Loop over state variable components
                     for comp_idx in range(var_n_comp):
@@ -362,12 +330,12 @@ class VTKOutput:
                         rg_array = self._state_var_cell_data_array(n_dim, comp_order_sym,
                             comp_order_nsym, material_phases, material_phases_models,
                                 phase_clusters, voxels_clusters, clusters_state, var_name,
-                                    var_type, comp_idx=comp_idx, model_name=model_name)
+                                var_type, comp_idx=comp_idx, model_name=model_name)
                         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                         # Set output variable data name
                         data_name = self._set_cell_data_name(comp_order_sym,
                             comp_order_nsym, var_name, var_type, idx=comp_idx,
-                            model_name=model_name)
+                                model_name=model_name)
                         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                         # Write VTK cell data array - State variable
                         data_list = list(rg_array.flatten('F'))
@@ -398,13 +366,13 @@ class VTKOutput:
         xml.write_cell_data_array(vtk_file, data_list, data_parameters)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Write VTK cell data array - Cluster adaptive level
-        if not adaptivity_manager is None:
+        if adaptivity_manager != None:
             rg_array = adaptivity_manager.get_adapt_vtk_array(voxels_clusters)
             data_list = list(rg_array.flatten('F'))
             min_val = min(data_list)
             max_val = max(data_list)
             data_parameters = {'Name': 'Adaptive level', 'format': self._format,
-                               'RangeMin': min_val, 'RangeMax':max_val}
+                               'RangeMin': min_val, 'RangeMax': max_val}
             xml.write_cell_data_array(vtk_file, data_list, data_parameters)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Close VTK dataset element cell data
@@ -626,7 +594,8 @@ class VTKOutput:
         material_phases : list
             CRVE material phases labels (str).
         material_phases_models : dict
-            Constitutive model (item, dict) associated to each material phase (key, str).
+            Material constitutive model (item, ConstitutiveModel) associated to each
+            material phase (key, str).
         phase_clusters : dict
             Clusters labels (item, list of int) associated to each material phase
             (key, str).
@@ -643,7 +612,7 @@ class VTKOutput:
         comp_idx : str, default=None
             Tensorial component index.
         model_name : str, default=None
-            Material constitutive model name. If provided, it is assumed that the state
+            Material constitutive model name. If not provided, it is assumed that the state
             variable is common to all material phases and associated constitutive models.
 
         Returns
@@ -659,8 +628,10 @@ class VTKOutput:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over material phases
         for mat_phase in material_phases:
-            if model_name is None or \
-                    material_phases_models[mat_phase]['name'] == model_name:
+            # Get material phase constitutive model
+            constitutive_model = material_phases_models[str(mat_phase)]
+            # Build state variable cell data array
+            if model_name is None or constitutive_model.get_name() == model_name:
                 # Loop over material phase clusters
                 for cluster in phase_clusters[mat_phase]:
                     # Get material cluster state variable
@@ -692,15 +663,13 @@ class VTKOutput:
                 for cluster in phase_clusters[mat_phase]:
                     # Assemble a default state variable value for all clusters for which
                     # the associated material phase is not governed by the provided
-                    # material constitutive model (required for valid output cell data
-                    # array)
+                    # material constitutive model
                     if var_type in ['int']:
                         rg_array = np.where(rg_array == str(cluster), int(0), rg_array)
                     elif var_type in ['bool']:
                         rg_array = np.where(rg_array == str(cluster), False, rg_array)
                     else:
-                        rg_array = np.where(rg_array == str(cluster), float(0),
-                                            rg_array)
+                        rg_array = np.where(rg_array == str(cluster), float(0), rg_array)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Check if the state variable has been specified for every pixels (2D) / voxels (3D)
         # in order to build a valid output cell data array

@@ -40,6 +40,12 @@ class LoadingPath:
 
     Attributes
     ----------
+    _n_dim : int
+        Problem number of spatial dimensions.
+    _comp_order_sym : list
+        Strain/Stress components symmetric order.
+    _comp_order_nsym : list
+        Strain/Stress components nonsymmetric order.
     _n_load_subpaths : int
         Number of loading subpaths.
     _load_subpaths : list
@@ -55,18 +61,17 @@ class LoadingPath:
         Increment state: key 'inc' contains the current increment number, key 'subpath_id'
         contains the current loading subpath index.
     '''
-    def __init__(self, strain_formulation, comp_order_sym, comp_order_nsym, mac_load,
-                 mac_load_presctype, mac_load_increm, max_subinc_level=5, max_cinc_cuts=5):
+    def __init__(self, strain_formulation, problem_type, mac_load, mac_load_presctype,
+                 mac_load_increm, max_subinc_level=5, max_cinc_cuts=5):
         '''Macroscale loading path constructor.
 
         Parameters
         ----------
         strain_formulation: str, {'infinitesimal', 'finite'}
             Problem strain formulation.
-        comp_order_sym : list
-            Symmetric strain/stress components (str) order.
-        comp_order_nsym : list
-            Nonsymmetric strain/stress components (str) order.
+        problem_type : int
+            Problem type: 2D plane strain (1), 2D plane stress (2), 2D axisymmetric (3) and
+            3D (4).
         mac_load : dict
             For each loading nature type (key, {'strain', 'stress'}), stores the macroscale
             loading constraints for each loading subpath in a ndarray, where the i-th row
@@ -87,11 +92,18 @@ class LoadingPath:
             Maximum number of consecutive macroscale load increment cuts.
         '''
         self._strain_formulation = strain_formulation
+        self._problem_type = problem_type
         self._mac_load = mac_load
         self._mac_load_presctype = mac_load_presctype
         self._mac_load_increm = mac_load_increm
         self._max_subinc_level = max_subinc_level
         self._max_cinc_cuts = max_cinc_cuts
+        # Get problem type parameters
+        n_dim, comp_order_sym, comp_order_nsym = \
+            mop.get_problem_type_parameters(problem_type)
+        self._n_dim = n_dim
+        self._comp_order_sym = comp_order_sym
+        self._comp_order_nsym = comp_order_nsym
         # Remove symmetric components under an infinitesimal strain formulation
         if strain_formulation == 'infinitesimal':
             self._remove_sym(comp_order_sym, comp_order_nsym)
@@ -108,15 +120,8 @@ class LoadingPath:
         # Initialize consecutive increment cuts counter
         self._n_cinc_cuts = 0
     # --------------------------------------------------------------------------------------
-    def new_load_increment(self, n_dim, comp_order):
+    def new_load_increment(self):
         '''Setup new macroscale loading increment and get associated data.
-
-        Parameters
-        ----------
-        n_dim : int
-            Problem dimension.
-        comp_order : list
-            Strain/Stress components (str) order.
 
         Returns
         -------
@@ -134,6 +139,14 @@ class LoadingPath:
         is_last_inc : bool
             Loading last increment flag.
         '''
+        # Set strain/stress components order according to problem strain formulation
+        if self._strain_formulation == 'infinitesimal':
+            comp_order = self._comp_order_sym
+        elif self._strain_formulation == 'finite':
+            comp_order = self._comp_order_nsym
+        else:
+            raise RuntimeError('Unknown problem strain formulation.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Reset consecutive macroscale loading increment cuts counter
         self._n_cinc_cuts = 0
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -156,7 +169,7 @@ class LoadingPath:
         inc_mac_load = self._get_increm_load()
         inc_mac_load_mf = {}
         for ltype in inc_mac_load.keys():
-            inc_mac_load_mf[ltype] = type(self)._get_load_mf(n_dim, comp_order,
+            inc_mac_load_mf[ltype] = type(self)._get_load_mf(self._n_dim, comp_order,
                                                              inc_mac_load[ltype])
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
@@ -218,20 +231,29 @@ class LoadingPath:
                 load_subpath._presc_strain_idxs, load_subpath._n_presc_stress,
                 load_subpath._presc_stress_idxs, self._is_last_inc]
     # --------------------------------------------------------------------------------------
-    def update_hom_state(self, n_dim, comp_order, hom_strain, hom_stress):
+    def update_hom_state(self, hom_strain_mf, hom_stress_mf):
         '''Update converged macroscale (homogenized) state.
 
         Parameters
         ----------
-        n_dim : int
-            Problem dimension.
-        comp_order : list
-            Strain/Stress components (str) order.
-        hom_strain : ndarray
-            Macroscale homogenized strain tensor.
-        hom_stress : ndarray
-            Macroscale homogenized stress tensor.
+        hom_strain_mf : 1darray
+            Homogenized strain tensor stored in matricial form.
+        hom_stress_mf : 1darray
+            Homogenized stress tensor stored in matricial form.
         '''
+        # Set strain/stress components order according to problem strain formulation
+        if self._strain_formulation == 'infinitesimal':
+            comp_order = self._comp_order_sym
+        elif self._strain_formulation == 'finite':
+            comp_order = self._comp_order_nsym
+        else:
+            raise RuntimeError('Unknown problem strain formulation.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Build homogenized strain tensor
+        hom_strain = mop.get_tensor_from_mf(hom_strain_mf, self._n_dim, comp_order)
+        # Build homogenized stress tensor
+        hom_stress = mop.get_tensor_from_mf(hom_stress_mf, self._n_dim, comp_order)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize converged macroscale strain and stress tensors vector form
         self._conv_hom_state['strain'] = np.zeros(len(comp_order))
         self._conv_hom_state['stress'] = np.zeros(len(comp_order))
@@ -573,20 +595,13 @@ class IncrementRewinder:
         Increment associated to the rewind state.
     _loading_path : LoadingPath
         Loading path instance rewind state.
-    _hom_strain_mf : ndarray of shape (n_comps,)
-        Homogenized strain tensor in matricial form at rewind state.
-    _hom_stress_mf : ndarray of shape (n_comps,)
-        Homogenized stress tensor in matricial form at rewind state.
-    _hom_stress_33 : float
-        Homogenized out-of-plain stress component at rewind state.
-    _clusters_state : dict
-        Material constitutive model state variables (item, dict) associated to each material
-        cluster (key, str) at rewind state.
+    _material_state : MaterialState
+        CRVE material constitutive state at rewind state.
     _clusters_sct_mf : dict
         Fourth-order strain concentration tensor (matricial form) (item, ndarray)
         associated to each material cluster (key, str).
-    _mat_prop_ref : dict
-        Isotropic elastic reference material properties.
+    _ref_material : ElasticReferenceMaterial
+        Elastic reference material at rewind state.
     '''
     def __init__(self, rewind_inc, phase_clusters):
         '''Increment rewinder constructor.
@@ -595,19 +610,20 @@ class IncrementRewinder:
         ----------
         rewind_inc : int
             Increment associated to the rewind state.
+        phase_clusters : dict
+            Clusters labels (item, list of int) associated to each material phase
+            (key, str).
         '''
         self._rewind_inc = rewind_inc
         self._phase_clusters = copy.deepcopy(phase_clusters)
-        # Initialize loading path rewind state
+        # Initialize loading path at rewind state
         self._loading_path = None
-        # Initialize homogenized strain and stress tensors
-        self._hom_strain_mf = None
-        self._hom_stress_mf = None
-        self._hom_stress_33 = None
-        # Initialize clusters state
-        self._clusters_state = None
-        # Initialize reference material properties
-        self._mat_prop_ref = None
+        # Initialize material constitutive state at rewind state
+        self._material_state = None
+        # Initialize elastic reference material at rewind state
+        self._ref_material = None
+        # Initialize clusters strain concentration tensors at rewind state
+        self._clusters_sct_mf = None
     # --------------------------------------------------------------------------------------
     def get_rewind_inc(self):
         '''Get increment associated to the rewind state.
@@ -620,14 +636,13 @@ class IncrementRewinder:
         return self._rewind_inc
     # --------------------------------------------------------------------------------------
     def save_loading_path(self, loading_path):
-        '''Save loading path state.
+        '''Save loading path rewind state.
 
         Parameters
         ----------
         loading_path : LoadingPath
             LoadingPath instance.
         '''
-        # Save loading path rewind state
         self._loading_path = copy.deepcopy(loading_path)
     # --------------------------------------------------------------------------------------
     def get_loading_path(self):
@@ -640,82 +655,48 @@ class IncrementRewinder:
         '''
         return copy.deepcopy(self._loading_path)
     # --------------------------------------------------------------------------------------
-    def save_homogenized_state(self, hom_strain_mf, hom_stress_mf, hom_stress_33=None):
-        '''Save homogenized strain and stress state.
+    def save_material_state(self, material_state):
+        '''Save material constitutive state at rewind state.
 
         Parameters
         ----------
-        hom_strain_mf : ndarray of shape (n_comps,)
-            Homogenized strain tensor in matricial form.
-        hom_stress_mf : ndarray of shape (n_comps,)
-            Homogenized stress tensor in matricial form.
-        hom_stress_33 : float
-            Homogenized out-of-plain stress component.
+        material_state : MaterialState
+            CRVE material constitutive state at rewind state.
         '''
-        # Save homogenized strain and stress tensors
-        self._hom_strain_mf = copy.deepcopy(hom_strain_mf)
-        self._hom_stress_mf = copy.deepcopy(hom_stress_mf)
-        if hom_stress_33 != None:
-            self._hom_stress_33 = hom_stress_33
+        self._material_state = copy.deepcopy(material_state)
     # --------------------------------------------------------------------------------------
-    def get_homogenized_state(self):
-        '''Get homogenized strain and stress state at rewind state.
-
-        Returns
-        -------
-        hom_strain_mf : ndarray of shape (n_comps,)
-            Homogenized strain tensor in matricial form at rewind state.
-        hom_stress_mf : ndarray of shape (n_comps,)
-            Homogenized stress tensor in matricial form at rewind state.
-        hom_stress_33 : float
-            Homogenized out-of-plain stress component at rewind state.
-        '''
-        return copy.deepcopy(self._hom_strain_mf), copy.deepcopy(self._hom_stress_mf), \
-            self._hom_stress_33
-    # --------------------------------------------------------------------------------------
-    def save_clusters_state(self, clusters_state):
-        '''Save clusters state variables.
+    def get_material_state(self, crve):
+        '''Get material constitutive state at rewind state.
 
         Parameters
         ----------
-        clusters_state : dict
-            Material constitutive model state variables (item, dict) associated to each
-            material cluster (key, str).
-        '''
-        # Save clusters state variables
-        self._clusters_state = copy.deepcopy(clusters_state)
-    # --------------------------------------------------------------------------------------
-    def get_clusters_state(self, clusters_state, crve):
-        '''Get clusters state variables at rewind state.
-
-        Parameters
-        ----------
-        clusters_state : dict
-            Material constitutive model state variables (item, dict) associated to each
-            material cluster (key, str).
         crve : CRVE
             Cluster-Reduced Representative Volume Element.
 
         Returns
         -------
-        clusters_state : dict
-            Material constitutive model state variables (item, dict) associated to each
-            material cluster (key, str).
+        material_state : MaterialState
+            CRVE material constitutive state at rewind state.
         '''
         # If the current CRVE clustering is coincident with the CRVE clustering at the
-        # rewind state, simply return the clusters state variables and strain concentration
-        # tensors stored at rewind state.
-        # Otherwise, perform a suitable transfer of state variables between the rewind state
-        # CRVE clustering and the current CRVE clustering
+        # rewind state, simply return the material constitutive state stored at rewind
+        # state. Otherwise, perform a suitable transfer of state variables between the
+        # rewind state CRVE clustering and the current CRVE clustering
         if self._phase_clusters == crve.get_cluster_phases():
-            # Return clusters state variables and strain concentration tensors stored at
-            # rewind state
-            return copy.deepcopy(self._clusters_state), copy.deepcopy(self._clusters_sct_mf)
+            # Return material constitutive state stored at rewind state
+            return copy.deepcopy(self._material_state)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         else:
-            # Initialize clusters state variables dictionaries
-            clusters_state = dict()
-            clusters_sct_mf = dict()
+            # Get clusters state variables at rewind state
+            clusters_state_rew = self._material_state.get_clusters_state()
+            # Get clusters deformation gradient at rewind state
+            clusters_def_gradient_rew_mf = \
+                self._material_state.get_clusters_def_gradient_mf()
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Initialize clusters state variables
+            clusters_state = {}
+            # Initialize clusters deformation gradient
+            clusters_def_gradient_mf = {}
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Get material phases
             material_phases = crve.get_material_phases()
@@ -723,6 +704,8 @@ class IncrementRewinder:
             cluster_phases = crve.get_cluster_phases()
             # Get clusters associated to each material phase
             phase_clusters = crve.get_phase_clusters()
+            # Get clusters volume fraction
+            clusters_vf = crve.get_clusters_vf()
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Loop over material phases
             for mat_phase in material_phases:
@@ -730,13 +713,17 @@ class IncrementRewinder:
                 crmp = cluster_phases[mat_phase]
                 # Get clustering type
                 clustering_type = crmp.get_clustering_type()
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Proceed according to clustering type
                 if clustering_type == 'static':
                     # Loop over material phase clusters
                     for cluster in phase_clusters[mat_phase]:
                         # Set cluster state variables
                         clusters_state[str(cluster)] = \
-                            copy.deepcopy(self._clusters_state[str(cluster)])
+                            copy.deepcopy(clusters_state_rew[str(cluster)])
+                        # Set cluster deformation gradient
+                        clusters_def_gradient_mf[str(cluster)] = \
+                            copy.deepcopy(clusters_def_gradient_rew_mf[str(cluster)])
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 elif clustering_type == 'adaptive':
                     # Get cluster-reduced material phase clustering tree nodes
@@ -765,19 +752,49 @@ class IncrementRewinder:
                                 parent_cluster = int(node.name)
                                 # Set cluster state variables
                                 clusters_state[str(cluster)] = \
-                                    copy.deepcopy(self._clusters_state[str(parent_cluster)])
+                                    copy.deepcopy(clusters_state_rew[str(parent_cluster)])
+                                # Set cluster deformation gradient
+                                clusters_def_gradient_mf[str(cluster)] = \
+                                    copy.deepcopy(clusters_def_gradient_rew_mf[
+                                        str(parent_cluster)])
                                 # Skip to the following cluster
                                 break
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 else:
                     raise RuntimeError('Unknown material phase clustering type.')
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Return clusters state variables and strain concentration tensors stored at
-            # rewind state
-            return clusters_state
+            # Set material constitutive state at rewind state according to the current
+            # clustering
+            self._material_state.set_rewind_state_updated_clustering(
+                phase_clusters, clusters_vf, clusters_state, clusters_def_gradient_mf)
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Return material constitutive state stored at rewind state according to the
+            # update clustering
+            return copy.deepcopy(self._material_state)
+    # --------------------------------------------------------------------------------------
+    def save_reference_material(self, ref_material):
+        '''Save elastic reference material at rewind state.
+
+        Parameters
+        ----------
+        ref_material : ElasticReferenceMaterial
+            Elastic reference material at rewind state.
+        '''
+        # Save elastic reference material
+        self._ref_material = copy.deepcopy(ref_material)
+    # --------------------------------------------------------------------------------------
+    def get_reference_material(self):
+        '''Get elastic reference material at rewind state.
+
+        Returns
+        -------
+        ref_material : ElasticReferenceMaterial
+            Elastic reference material at rewind state.
+        '''
+        return copy.deepcopy(self._mat_prop_ref)
     # --------------------------------------------------------------------------------------
     def save_clusters_sct(self, clusters_sct_mf):
-        '''Save clusters strain concentration tensors.
+        '''Save clusters strain concentration tensors at rewind state.
 
         Parameters
         ----------
@@ -788,26 +805,17 @@ class IncrementRewinder:
         # Save clusters state variables
         self._clusters_sct_mf = copy.deepcopy(clusters_sct_mf)
     # --------------------------------------------------------------------------------------
-    def save_reference_material(self, mat_prop_ref):
-        '''Save reference material properties.
+    def get_clusters_sct(self):
+        '''Get clusters strain concentration tensors at rewind state.
 
         Parameters
         ----------
-        mat_prop_ref : dict
-            Isotropic elastic reference material properties.
+        clusters_sct_mf : dict
+            Fourth-order strain concentration tensor (matricial form) (item, ndarray)
+            associated to each material cluster (key, str).
         '''
         # Save clusters state variables
-        self._mat_prop_ref = copy.deepcopy(mat_prop_ref)
-    # --------------------------------------------------------------------------------------
-    def get_reference_material(self):
-        '''Get reference material properties at rewind state.
-
-        Returns
-        -------
-        mat_prop_ref : dict
-            Isotropic elastic reference material properties.
-        '''
-        return copy.deepcopy(self._mat_prop_ref)
+        return copy.deepcopy(self._clusters_sct_mf)
     # --------------------------------------------------------------------------------------
     def rewind_output_files(self, hres_output=None, ref_mat_output=None, voxels_output=None,
                             adapt_output=None, vtk_output=None):
@@ -857,7 +865,7 @@ class RewindManager:
         ----------
         rewind_state_criterion : tuple
             Rewind state storage criterion [0] and associated parameter [1].
-        rewinding_criterion : dict
+        rewinding_criterion : tuple
             Rewinding criterion [0] and associated parameter [1].
         max_n_rewinds : int, default=1
             Maximum number of rewind operations.

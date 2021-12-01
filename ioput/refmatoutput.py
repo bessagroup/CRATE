@@ -22,13 +22,20 @@ class RefMatOutput:
 
     Attributes
     ----------
+    _n_dim : int
+        Problem number of spatial dimensions.
+    _comp_order_sym : list
+        Strain/Stress components symmetric order.
+    _comp_order_nsym : list
+        Strain/Stress components nonsymmetric order.
     _header : list
         List containing the header of each column (str).
     _col_width : int
         Output file column width.
     '''
     # --------------------------------------------------------------------------------------
-    def __init__(self, refm_file_path, self_consistent_scheme, is_farfield_formulation=True,
+    def __init__(self, refm_file_path, strain_formulation, problem_type,
+                 self_consistent_scheme, is_farfield_formulation=True,
                  ref_output_mode='converged'):
         '''Reference material output constructor.
 
@@ -36,6 +43,11 @@ class RefMatOutput:
         ----------
         refm_file_path : str
             Path of reference material output file.
+        strain_formulation: str, {'infinitesimal', 'finite'}
+            Problem strain formulation.
+        problem_type : int
+            Problem type: 2D plane strain (1), 2D plane stress (2), 2D axisymmetric (3) and
+            3D (4).
         self_consistent_scheme : int
             Self-consistent scheme (1-Regression-based)
         is_farfield_formulation : bool, default=True
@@ -46,9 +58,17 @@ class RefMatOutput:
             quantities that converged at each macroscale loading increment.
         '''
         self._refm_file_path = refm_file_path
+        self._strain_formulation = strain_formulation
+        self._problem_type = problem_type
         self._self_consistent_scheme = self_consistent_scheme
         self._is_farfield_formulation = is_farfield_formulation
         self._ref_output_mode = ref_output_mode
+        # Get problem type parameters
+        n_dim, comp_order_sym, comp_order_nsym = \
+            mop.get_problem_type_parameters(problem_type)
+        self._n_dim = n_dim
+        self._comp_order_sym = comp_order_sym
+        self._comp_order_nsym = comp_order_nsym
         # Set reference material output file header
         self._header = ['Increment', 'SCS Iteration',
                         'E_ref', 'v_ref',
@@ -75,28 +95,17 @@ class RefMatOutput:
         # Close homogenized results output file
         refm_file.close()
     # --------------------------------------------------------------------------------------
-    def write_ref_mat(self, problem_type, n_dim, comp_order, inc, scs_iter, mat_prop_ref,
-                            De_ref_mf, inc_hom_strain_mf, inc_hom_stress_mf,
-                            eff_tangent_mf=None, inc_farfield_strain_mf=None,
-                            inc_mac_load_strain_mf=None):
+    def write_ref_mat(self, inc, ref_material, inc_hom_strain_mf, inc_hom_stress_mf,
+                      eff_tangent_mf=None, inc_farfield_strain_mf=None,
+                      inc_mac_load_strain_mf=None):
         '''Write reference material output file.
 
         Parameters
         ----------
-        problem_type : int
-            Problem type (1-Plane strain, 4-Tridimensional)
-        n_dim : int
-            Problem dimension.
-        comp_order : list
-            Strain/Stress components (str) order.
         inc : int
             Macroscale loading increment.
-        scs_iter : int
-            Self-consistent scheme iteration.
-        mat_prop_ref : dict
-            Isotropic elastic reference material properties.
-        De_ref_mf : ndarray
-            Isotropic elastic reference material tangent modulus (matricial form).
+        ref_material : ElasticReferenceMaterial
+            Elastic reference material.
         inc_hom_strain_mf : ndarray
             Incremental homogenized strain tensor (matricial form).
         inc_hom_stress_mf : ndarray
@@ -115,14 +124,29 @@ class RefMatOutput:
                 raise RuntimeError('Required parameters for SCA farfield formulation '
                                    'output are missing.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set strain/stress components order according to problem strain formulation
+        if self._strain_formulation == 'infinitesimal':
+            comp_order = self._comp_order_sym
+        elif self._strain_formulation == 'finite':
+            comp_order = self._comp_order_nsym
+        else:
+            raise RuntimeError('Unknown problem strain formulation.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Get self-consistent scheme iteration counter
+        scs_iter = ref_material.get_scs_iter()
+        # Get elastic reference material properties
+        ref_material_properties = ref_material.get_material_properties()
+        # Get elastic reference material tangent modulus (matricial form)
+        ref_elastic_tangent_mf = ref_material.get_elastic_tangent_mf()
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # When the problem type corresponds to a 2D analysis, build the 3D incremental
         # farfield strain tensor considering the appropriate out-of-plane strain component
         # (output purpose only).
         if self._is_farfield_formulation:
-            inc_farfield_strain = mop.gettensorfrommf(inc_farfield_strain_mf, n_dim,
+            inc_farfield_strain = mop.gettensorfrommf(inc_farfield_strain_mf, self._n_dim,
                                                       comp_order)
             out_inc_farfield_strain = np.zeros((3, 3))
-            if problem_type == 1:
+            if self._problem_type == 1:
                 out_inc_farfield_strain[0:2, 0:2] = inc_farfield_strain
             else:
                 out_inc_farfield_strain[:, :] = inc_farfield_strain
@@ -142,7 +166,8 @@ class RefMatOutput:
         if self._self_consistent_scheme == 1:
             # Compute regression-based scheme cost function
             scs_cost = np.linalg.norm(inc_hom_stress_mf -
-                                      np.matmul(De_ref_mf, inc_hom_strain_mf))**2
+                                      np.matmul(ref_elastic_tangent_mf,
+                                                inc_hom_strain_mf))**2
             # Normalize cost function
             rel_scs_cost = scs_cost/(np.linalg.norm(inc_hom_stress_mf)**2)
         else:
@@ -153,14 +178,14 @@ class RefMatOutput:
         # Compute norm of difference between the effective tangent modulus and the reference
         # material tangent modulus and then normalize it to obtain a relative measure
         if not eff_tangent_mf is None:
-            diff_norm = np.linalg.norm(De_ref_mf - eff_tangent_mf)
+            diff_norm = np.linalg.norm(ref_elastic_tangent_mf - eff_tangent_mf)
             rel_diff_tangent = diff_norm/np.linalg.norm(eff_tangent_mf)
         else:
             rel_diff_tangent = 0.0
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set reference material format structure
         inc_data = [inc, scs_iter,
-                    mat_prop_ref['E'], mat_prop_ref['v'],
+                    ref_material_properties['E'], ref_material_properties['v'],
                     out_inc_farfield_strain[0, 0], out_inc_farfield_strain[1, 1],
                     out_inc_farfield_strain[2, 2], out_inc_farfield_strain[0, 1],
                     out_inc_farfield_strain[1, 2], out_inc_farfield_strain[0, 2],

@@ -246,9 +246,9 @@ class FFTBasicScheme(DNSHomogenizationMethod):
             c2 = (miu_ref + lam_ref)/(2.0*miu_ref*(lam_ref + 2.0*miu_ref))
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute Green operator material independent terms
-        gop_1_dft_vox, gop_2_dft_vox, _ = citop.gop_material_independent_terms(
-            self._strain_formulation, self._n_dim, self._rve_dims, self._n_voxels_dims,
-                self._comp_order_sym, self._comp_order_nsym)
+        gop_1_dft_vox, gop_2_dft_vox, _ = \
+            citop.gop_material_independent_terms(self._strain_formulation,
+                self._problem_type, self._rve_dims, self._n_voxels_dims)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set Green operator matricial form components
         comps = list(it.product(comp_order, comp_order))

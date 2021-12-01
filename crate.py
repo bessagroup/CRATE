@@ -60,7 +60,8 @@ import ioput.packager as packager
 import material.materialinterface as matint
 # Clustering data computation
 from clustering.clusteringdata import set_clustering_data
-# Online stage
+# Clustering-based Reduced-Order Models
+from online.asca import ASCA
 import online.sca as sca
 # VTK output
 from ioput.vtkoutput import VTKOutput
@@ -171,17 +172,9 @@ if not is_same_offstage:
                      phase_times[phase_times.shape[0] - 1, 1] -
                      phase_times[phase_times.shape[0] - 1, 0])
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Perform offline stage with Links (FEM first-order homogenization) but then consider the
-# material phases constitutive models implemented in CRATE (source conversion)
-if clst_dict['clustering_solution_method'] == 2:
-    # Convert material-related objects from Links source to CRATE source
-    new_material_phases_data, new_material_phases_properties = \
-        matint.material_source_conversion(mat_dict['n_material_phases'],
-                                          mat_dict['material_phases_data'],
-                                          mat_dict['material_phases_properties'])
-    # Update material phases dictionary
-    mat_dict['material_phases_models'] = new_material_phases_data
-    mat_dict['material_phases_properties'] = new_material_phases_properties
+# Convert external sources constitutive models to CRATE corresponding model whenever
+# possible
+material_state.constitutive_source_conversion()
 #
 #               Offline stage: Generate Cluster-Reduced Representative Volume Element (CRVE)
 # ==========================================================================================
@@ -198,8 +191,8 @@ if is_same_offstage:
     with open(crve_file_path, 'rb') as crve_file:
         crve = pickle.load(crve_file)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Update CRVE material state cluster labels
-    material_state.set_phase_clusters(crve.get_phase_clusters())
+    # Update CRVE material state clusters labels and volume fraction
+    material_state.set_phase_clusters(crve.get_phase_clusters(), crve.get_clusters_vf())
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Update clustering dictionary
     clst_dict['voxels_clusters'] = crve.get_voxels_clusters()
@@ -246,8 +239,8 @@ else:
     # Compute Cluster-Reduced Representative Volume Element (CRVE)
     crve.perform_crve_base_clustering()
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Update CRVE material state cluster labels
-    material_state.set_phase_clusters(crve.get_phase_clusters())
+    # Update CRVE material state clusters labels and volume fraction
+    material_state.set_phase_clusters(crve.get_phase_clusters(), crve.get_clusters_vf())
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Update clustering dictionary
     clst_dict['voxels_clusters'] = crve.get_voxels_clusters()
@@ -255,7 +248,7 @@ else:
     clst_dict['clusters_vf'] = crve.get_clusters_vf()
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Write clustering VTK file
-    if vtk_dict['is_VTK_output']:
+    if vtk_dict['is_vtk_output']:
         # Set post-processing procedure initial time
         procedure_init_time = time.time()
         # Set VTK output files parameters
@@ -302,18 +295,37 @@ else:
     crve_file_path = dirs_dict['crve_file_path']
     crve.save_crve_file(crve, crve_file_path)
 #
-#                                 Online stage: Solve reduced microscale equilibrium problem
+#                     Online stage: Solve clustering-based reduced order equilibrium problem
 # ==========================================================================================
 # Display starting phase information and set phase initial time
 info.displayinfo('2', 'Solve reduced microscale equilibrium problem')
 phase_init_time = time.time()
-# Solve the reduced microscale equilibrium problem through solution of the clusterwise
-# discretized Lippmann-Schwinger system of equilibrium equations
-ons_total_time, ons_effective_time = sca.sca(dirs_dict, problem_dict, mat_dict, rg_dict,
-                                             clst_dict, macload_dict, scs_dict, algpar_dict,
-                                             vtk_dict, output_dict, crve, material_state)
+# Adaptive Self-Consistent Clustering Analysis (ASCA)
+asca = ASCA(problem_dict['strain_formulation'],
+            problem_dict['problem_type'],
+            self_consistent_scheme=scs_dict['self_consistent_scheme'],
+            scs_max_n_iterations=scs_dict['scs_max_n_iterations'],
+            scs_conv_tol=scs_dict['scs_conv_tol'],
+            max_n_iterations=algpar_dict['max_n_iterations'],
+            conv_tol=algpar_dict['conv_tol'],
+            max_subinc_level=algpar_dict['max_subinc_level'],
+            max_cinc_cuts=algpar_dict['max_cinc_cuts'])
+# Solve clustering-based reduced-order equilibrium problem
+asca.solve_equilibrium_problem(
+    crve, material_state, macload_dict['mac_load'], macload_dict['mac_load_presctype'],
+        macload_dict['mac_load_increm'], dirs_dict['problem_dir'],
+        problem_name=dirs_dict['problem_name'],
+        clust_adapt_freq=clst_dict['clust_adapt_freq'],
+        is_solution_rewinding=macload_dict['is_solution_rewinding'],
+        rewind_state_criterion=macload_dict['rewind_state_criterion'],
+        rewinding_criterion=macload_dict['rewinding_criterion'],
+        max_n_rewinds=macload_dict['max_n_rewinds'],
+        is_clust_adapt_output=clst_dict['is_clust_adapt_output'],
+        is_ref_material_output=output_dict['is_ref_material_output'],
+        is_vtk_output=vtk_dict['is_vtk_output'], vtk_data=vtk_dict,
+        is_voxels_output=output_dict['is_voxels_output'])
 # Set phase ending time and display finishing phase information
-phase_end_time = phase_init_time + ons_effective_time
+phase_end_time = phase_init_time + asca.get_time_profile()[1]
 phase_names.append('Solve reduced microscale equilibrium problem')
 phase_times = np.append(phase_times, [[phase_init_time, phase_end_time]], axis=0)
 info.displayinfo('3', 'Solve reduced microscale equilibrium problem',
@@ -330,8 +342,8 @@ if clst_dict['is_store_final_clustering']:
 #
 #                                                Post-processing operations accumulated time
 # ==========================================================================================
-# Compute online stage post-processing time
-ons_post_process_time = ons_total_time - ons_effective_time
+# Get online-stage post-processing time
+ons_post_process_time = asca.get_time_profile()[2]
 # Set (fictitious) phase initial time
 phase_init_time = phase_times[-1, 1]
 # Set (fictitious) phase ending time

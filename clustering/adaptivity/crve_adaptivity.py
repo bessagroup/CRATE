@@ -171,7 +171,7 @@ class AdaptivityManager:
         return available_adapt_criterions
     # --------------------------------------------------------------------------------------
     def get_target_clusters(self, phase_clusters, voxels_clusters, clusters_state,
-                            clusters_state_old, clusters_sct_mf, clusters_sct_mf_old,
+                            clusters_state_old, clusters_sct_mf, clusters_sct_old_mf,
                             clusters_residuals_mf, inc=None, verbose=False):
         '''Get adaptive clustering target clusters.
 
@@ -189,7 +189,7 @@ class AdaptivityManager:
         clusters_sct_mf : dict
             Fourth-order strain concentration tensor (matricial form) (item, ndarray)
             associated to each material cluster (key, str).
-        clusters_sct_mf_old : dict
+        clusters_sct_old_mf : dict
             Last increment converged fourth-order strain concentration tensor
             (matricial form) (item, ndarray) associated to each material cluster (key, str).
         clusters_residuals_mf : dict
@@ -233,7 +233,7 @@ class AdaptivityManager:
                 self._get_adaptivity_data_matrix(mat_phase, adapt_control_feature,
                                                  phase_clusters, clusters_state,
                                                  clusters_state_old, clusters_sct_mf,
-                                                 clusters_sct_mf_old, clusters_residuals_mf)
+                                                 clusters_sct_old_mf, clusters_residuals_mf)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Get material phase clustering adaptivity criterion
             adapt_criterion = self._adapt_phase_criterions[mat_phase]
@@ -302,7 +302,7 @@ class AdaptivityManager:
     # --------------------------------------------------------------------------------------
     def _get_adaptivity_data_matrix(self, target_phase, adapt_control_feature,
                                     phase_clusters, clusters_state, clusters_state_old,
-                                    clusters_sct_mf, clusters_sct_mf_old,
+                                    clusters_sct_mf, clusters_sct_old_mf,
                                     clusters_residuals_mf):
         '''Build adaptivity feature data matrix for a given target adaptive material phase.
 
@@ -326,7 +326,7 @@ class AdaptivityManager:
         clusters_sct_mf : dict
             Fourth-order strain concentration tensor (matricial form) (item, ndarray)
             associated to each material cluster (key, str).
-        clusters_sct_mf_old : dict
+        clusters_sct_old_mf : dict
             Last increment converged fourth-order strain concentration tensor
             (matricial form) (item, ndarray) associated to each material cluster (key, str).
         clusters_residuals_mf : dict
@@ -517,7 +517,7 @@ class AdaptivityManager:
                 if is_incremental:
                     adapt_data_matrix[i, 1] = \
                         np.linalg.norm(clusters_sct_mf[str(cluster)]) - \
-                        np.linalg.norm(clusters_sct_mf_old[str(cluster)])
+                        np.linalg.norm(clusters_sct_old_mf[str(cluster)])
                 else:
                     adapt_data_matrix[i, 1] = np.linalg.norm(clusters_sct_mf[str(cluster)])
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -536,22 +536,21 @@ class AdaptivityManager:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return adapt_data_matrix
     # --------------------------------------------------------------------------------------
-    def adaptive_refinement(self, crve, target_clusters, target_clusters_data,
-                            cluster_dicts, inc, improved_init_guess=None, verbose=False):
+    def adaptive_refinement(self, crve, material_state, target_clusters, target_clusters_data,
+                            inc, improved_init_guess=None, verbose=False):
         '''Perform CRVE adaptive clustering refinement.
 
         Parameters
         ----------
         crve : CRVE
             Cluster-Reduced Representative Volume Element.
+        material_state : MaterialState
+            CRVE material constitutive state at rewind state.
         target_clusters : list
             List containing the labels (int) of clusters to be refined.
         target_clusters_data : dict
             For each target cluster (key, str), store dictionary (item, dict) containing
             cluster associated parameters required for the adaptive procedures.
-        cluster_dicts : list
-            List containing cluster-label-keyd dictionaries (key, str) that will be updated
-            as the result of the CRVE adaptive refinement.
         inc : int
             Macroscale loading increment.
         improved_init_guess : list, default=None
@@ -602,20 +601,13 @@ class AdaptivityManager:
             info.displayinfo('5', 'C - Updating cluster-related quantities...', 2)
             ref_time = time.time()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Update cluster-related variables according to clustering adaptivity step
+        material_state.clustering_adaptivity_update(crve.get_phase_clusters(),
+                                                    crve.get_clusters_vf(),
+                                                    adaptive_clustering_map)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over adaptive material phases
         for mat_phase in self._adapt_material_phases:
-            # Loop over material phase target clusters
-            for target_cluster in adaptive_clustering_map[mat_phase].keys():
-                # Get list of target's child clusters
-                child_clusters = adaptive_clustering_map[mat_phase][target_cluster]
-                # Loop over cluster-keyd dictionaries
-                for cluster_dict in cluster_dicts:
-                    # Loop over child clusters and build their items
-                    for child_cluster in child_clusters:
-                        cluster_dict[str(child_cluster)] = \
-                            copy.deepcopy(cluster_dict[target_cluster])
-                    # Remove target cluster item
-                    cluster_dict.pop(target_cluster)
             # Check material phase adaptivity lock status. If material phase adaptivity is
             # deactivated, then set the associated clustering adaptivity frequency to zero
             if crve.get_cluster_phases()[mat_phase].adaptivity_lock:
@@ -938,6 +930,44 @@ class ClusteringAdaptivityOutput:
                              'adapt_time_' + mat_phase]
         # Set column width
         self._col_width = max(16, max([len(x) for x in self._header]) + 2)
+    # --------------------------------------------------------------------------------------
+    def init_adapt_file(self, crve):
+        '''Open clustering adaptivity output file and write file header.
+
+        Parameters
+        ----------
+        crve : CRVE
+            Cluster-Reduced Representative Volume Element.
+        '''
+        # Build adaptive material phases output list
+        adaptivity_output = crve.get_adaptivity_output()
+        output_list = []
+        for mat_phase in self._adapt_material_phases:
+            output_list += adaptivity_output[mat_phase]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Open clustering adaptivity output file (write mode)
+        adapt_file = open(self._adapt_file_path, 'w')
+        # Set clustering adaptivity output file header format structure
+        write_list = ['{:>9s}'.format(self._header[0]) +
+                      ''.join([('{:>' + str(self._col_width) + 's}').format(x)
+                      for x in self._header[1:]]),]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set clustering adaptivity output file increment format structure
+        write_list += ['\n' + '{:>9d}'.format(0) +
+                       ('{:>' + str(self._col_width) + '.8e}').format(0) +
+                       ('{:>' + str(self._col_width) + '.8e}').format(0) +
+                       ('{:>' + str(self._col_width) + '.8e}').format(0) +
+                       ('{:>' + str(self._col_width) + '.8e}').format(0) +
+                       ''.join([''.join([('{:>' + str(self._col_width) + 'd}').format(x)
+                                for x in output_list[3*i:3*i+2]] +
+                               [('{:>' + str(self._col_width) + '.8e}').format(
+                               output_list[3*i+2])])
+                       for i in range(len(self._adapt_material_phases))])]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Write clustering adaptivity output file
+        adapt_file.writelines(write_list)
+        # Close clustering adaptivity output file
+        adapt_file.close()
     # --------------------------------------------------------------------------------------
     def write_adapt_file(self, inc, adaptivity_manager, crve, mode='increment'):
         '''Write clustering adaptivity output file.

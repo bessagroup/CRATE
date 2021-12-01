@@ -45,9 +45,11 @@ class MaterialState:
     _material_phases_models : dict
         Material constitutive model (item, ConstitutiveModel) associated to each material
         phase (key, str).
-    phase_clusters : dict
+    _phase_clusters : dict
         Clusters labels (item, list of int) associated to each material phase
         (key, str).
+    _clusters_vf : dict
+        Volume fraction (item, float) associated to each material cluster (key, str).
     _clusters_def_gradient_mf : dict
         Deformation gradient (item, 1darray) associated to each material cluster (key, str),
         stored in matricial form.
@@ -63,6 +65,18 @@ class MaterialState:
     _clusters_tangent_mf : dict
         Material consistent tangent modulus (item, ndarray) associated to each material
         cluster (key, str), stored in matricial form.
+    _hom_strain_mf : 1darray
+        Homogenized strain tensor stored in matricial form.
+    _hom_strain_33 : float
+        Homogenized strain tensor out-of-plane component.
+    _hom_stress_mf : 1darray
+        Homogenized stress tensor stored in matricial form.
+    _hom_stress_33 : float
+        Homogenized stress tensor out-of-plane component.
+    _hom_strain_old_mf : 1darray
+        Last converged homogenized strain tensor stored in matricial form.
+    _hom_stress_old_mf : 1darray
+        Last converged homogenized stress tensor stored in matricial form.
     '''
     def __init__(self, strain_formulation, problem_type, material_phases,
                  material_phases_properties, material_phases_vf):
@@ -85,16 +99,23 @@ class MaterialState:
         '''
         self._strain_formulation = strain_formulation
         self._problem_type = problem_type
-        self._material_phases = material_phases
-        self._material_phases_properties = material_phases_properties
-        self._material_phases_vf = material_phases_vf
+        self._material_phases = copy.deepcopy(material_phases)
+        self._material_phases_properties = copy.deepcopy(material_phases_properties)
+        self._material_phases_vf = copy.deepcopy(material_phases_vf)
         self._phase_clusters = None
+        self._clusters_vf = None
         self._material_phases_models = {mat_phase: None for mat_phase in material_phases}
         self._clusters_def_gradient_mf = None
         self._clusters_def_gradient_old_mf = None
         self._clusters_state = None
         self._clusters_state_old = None
         self._clusters_tangent_mf = None
+        self._hom_strain_mf = None
+        self._hom_strain_33 = None
+        self._hom_stress_mf = None
+        self._hom_stress_33 = None
+        self._hom_strain_old_mf = None
+        self._hom_stress_old_mf = None
         # Get problem type parameters
         n_dim, comp_order_sym, comp_order_nsym = \
             mop.get_problem_type_parameters(problem_type)
@@ -102,35 +123,35 @@ class MaterialState:
         self._comp_order_sym = comp_order_sym
         self._comp_order_nsym = comp_order_nsym
     # --------------------------------------------------------------------------------------
-    def init_constitutive_model(self, mat_phase, model_name, model_source='crate'):
+    def init_constitutive_model(self, mat_phase, model_keyword, model_source='crate'):
         '''Initialize material phase constitutive model.
 
         Parameters
         ----------
         mat_phase : str
             Material phase label.
-        model_name : str
-            Material constitutive model name.
+        model_keyword : str
+            Material constitutive model input data file keyword.
         model_source : str, {'crate', }, default='crate'
             Material constitutive model source.
         '''
         # Initialize material phase constitutive model
         if model_source == 'crate':
-            if model_name == 'elastic':
+            if model_keyword == 'elastic':
                 constitutive_model = Elastic(self._strain_formulation, self._problem_type,
                                              self._material_phases_properties[mat_phase])
-            elif model_name == 'von_mises':
+            elif model_keyword == 'von_mises':
                 constitutive_model = VonMises(self._strain_formulation, self._problem_type,
                                               self._material_phases_properties[mat_phase])
             else:
                 raise RuntimeError('Unknown constitutive model from CRATE\'s source.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         elif model_source == 'links':
-            if model_name == 'ELASTIC':
+            if model_keyword == 'ELASTIC':
                 constitutive_model = \
                     LinksElastic(self._strain_formulation, self._problem_type,
                                  self._material_phases_properties[mat_phase])
-            elif model_name == 'VON_MISES':
+            elif model_keyword == 'VON_MISES':
                 constitutive_model = \
                     LinksVonMises(self._strain_formulation, self._problem_type,
                                   self._material_phases_properties[mat_phase])
@@ -168,17 +189,25 @@ class MaterialState:
                 # Initialize clusters deformation gradient
                 self._clusters_def_gradient_mf[str(cluster)] = soid_mf
                 self._clusters_def_gradient_old_mf[str(cluster)] = soid_mf
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Compute initial state homogenized strain and stress tensors
+        self.perform_state_homogenization()
+        self.set_last_state_homogenization(copy.deepcopy(self._hom_strain_mf),
+                                           copy.deepcopy(self._hom_stress_mf))
     # --------------------------------------------------------------------------------------
-    def set_phase_clusters(self, phase_clusters):
-        '''Set CRVE cluster labels associated to each material phase.
+    def set_phase_clusters(self, phase_clusters, clusters_vf):
+        '''Set CRVE cluster labels and volume fractions associated to each material phase.
 
         Parameters
         ----------
         phase_clusters : dict
             Clusters labels (item, list of int) associated to each material phase
             (key, str).
+        clusters_vf : dict
+            Volume fraction (item, float) associated to each material cluster (key, str).
         '''
         self._phase_clusters = copy.deepcopy(phase_clusters)
+        self._clusters_vf = copy.deepcopy(clusters_vf)
     # --------------------------------------------------------------------------------------
     def get_clusters_inc_strain_mf(self, global_inc_strain_mf):
         '''Get clusters incremental strain in matricial form.
@@ -226,6 +255,11 @@ class MaterialState:
         clusters_inc_strain_mf : dict
             Incremental strain (item, ndarray) associated to each material cluster
             (key, str), stored in matricial form.
+
+        Returns
+        -------
+        su_fail_state : dict
+            State update failure state.
         '''
         # Initialize state update failure state
         su_fail_state = {'is_su_fail': False, 'mat_phase': None, 'cluster': None}
@@ -291,6 +325,245 @@ class MaterialState:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return su_fail_state
+    # --------------------------------------------------------------------------------------
+    def update_state_homogenization(self):
+        '''Update homogenized strain and stress tensors.'''
+        # Set strain components according to problem strain formulation
+        if self._strain_formulation == 'finite':
+            comp_order = self._comp_order_nsym
+        else:
+            comp_order = self._comp_order_sym
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Initialize incremental homogenized strain and stress tensors (matricial form)
+        hom_strain_mf = np.zeros(len(comp_order))
+        hom_stress_mf = np.zeros(len(comp_order))
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Loop over material phases
+        for mat_phase in self._material_phases:
+            # Loop over material phase clusters
+            for cluster in self._phase_clusters[mat_phase]:
+                # Get material cluster strain and stress tensor (matricial form)
+                strain_mf = self._clusters_state[str(cluster)]['strain_mf']
+                stress_mf = self._clusters_state[str(cluster)]['stress_mf']
+                # Add material cluster contribution to homogenized strain and stress tensors
+                # (matricial form)
+                hom_strain_mf = \
+                    np.add(hom_strain_mf, self._clusters_vf[str(cluster)]*strain_mf)
+                hom_stress_mf = \
+                    np.add(hom_stress_mf, self._clusters_vf[str(cluster)]*stress_mf)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Update homogenized strain and stress tensors
+        self._hom_strain_mf = copy.deepcopy(hom_strain_mf)
+        self._hom_stress_mf = copy.deepcopy(hom_stress_mf)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        if self._problem_type in [1, 2]:
+            # Set out-of-plane stress component (2D plane strain problem) / strain component
+            # (2D plane stress problem)
+            if self._problem_type == 1:
+                comp_name = 'stress_33'
+            elif self._problem_type == 2:
+                comp_name = 'strain_33'
+            else:
+                raise RuntimeError('Unknown plane problem type.')
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Initialize homogenized out-of-plane component
+            oop_hom_comp = 0.0
+            # Loop over material phases
+            for mat_phase in self._material_phases:
+                # Loop over material phase clusters
+                for cluster in self._phase_clusters[mat_phase]:
+                    # Add material cluster contribution to the homogenized out-of-plane
+                    # component component
+                    oop_hom_comp = oop_hom_comp + self._clusters_vf[str(cluster)]*\
+                        self._clusters_state[str(cluster)][comp_name]
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Update out-of-plane stress or strain component
+            if self._problem_type == 1:
+                self._hom_stress_33 = oop_hom_comp
+            elif self._problem_type == 2:
+                self._hom_strain_33 = oop_hom_comp
+    # --------------------------------------------------------------------------------------
+    def update_converged_state(self):
+        '''Update last converged material state variables.'''
+        self._clusters_def_gradient_old_mf = copy.deepcopy(self._clusters_def_gradient_mf)
+        self._clusters_state_old = copy.deepcopy(self._clusters_state)
+        self._hom_strain_old_mf = copy.deepcopy(self._hom_strain_mf)
+        self._hom_stress_old_mf = copy.deepcopy(self._hom_stress_mf)
+    # --------------------------------------------------------------------------------------
+    def set_rewind_state_updated_clustering(self, phase_clusters, clusters_vf,
+                                            clusters_state, clusters_def_gradient_mf):
+        '''Set rewind state clustering-related variables according to updated clustering.
+
+        Parameters
+        ----------
+        phase_clusters : dict
+            Clusters labels (item, list of int) associated to each material phase
+            (key, str).
+        clusters_vf : dict
+            Volume fraction (item, float) associated to each material cluster (key, str).
+        clusters_state : dict
+            Material constitutive model state variables (item, dict) associated to each
+            material cluster (key, str).
+        clusters_def_gradient_mf : dict
+            Deformation gradient (item, 1darray) associated to each material cluster
+            (key, str), stored in matricial form.
+        '''
+        self._phase_clusters = copy.deepcopy(phase_clusters)
+        self._clusters_vf = copy.deepcopy(clusters_vf)
+        self._clusters_state_old = copy.deepcopy(clusters_state)
+        self._clusters_def_gradient_old_mf = copy.deepcopy(clusters_def_gradient_mf)
+    # --------------------------------------------------------------------------------------
+    def get_hom_strain_mf(self):
+        '''Get homogenized strain tensor (matricial form).
+
+        Returns
+        -------
+        hom_strain_mf : 1darray
+            Homogenized strain tensor stored in matricial form.
+        '''
+        return copy.deepcopy(self._hom_strain_mf)
+    # --------------------------------------------------------------------------------------
+    def get_hom_stress_mf(self):
+        '''Get homogenized stress tensor (matricial form).
+
+        Returns
+        -------
+        hom_stress_mf : 1darray
+            Homogenized stress tensor stored in matricial form.
+        '''
+        return copy.deepcopy(self._hom_stress_mf)
+    # --------------------------------------------------------------------------------------
+    def get_oop_hom_comp(self):
+        '''Get homogenized strain or stress tensor out-of-plane component.
+
+        Returns
+        -------
+        oop_hom_comp : float
+            Homogenized strain or stress tensor out-of-plane component.
+        '''
+        if self._problem_type == 1:
+            oop_hom_comp = copy.deepcopy(self._hom_stress_33)
+        elif self._problem_type == 2:
+            oop_hom_comp = copy.deepcopy(self._hom_strain_33)
+        else:
+            oop_hom_comp = None
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return oop_hom_comp
+    # --------------------------------------------------------------------------------------
+    def get_inc_hom_strain_mf(self):
+        '''Get incremental homogenized strain tensor (matricial form).
+
+        Returns
+        -------
+        inc_hom_strain_mf : 1darray
+            Incremental homogenized strain tensor stored in matricial form.
+        '''
+        # Compute incremental homogenized strain tensor
+        inc_hom_strain_mf = self._hom_strain_mf - self._hom_strain_old_mf
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return inc_hom_strain_mf
+    # --------------------------------------------------------------------------------------
+    def get_inc_hom_stress_mf(self):
+        '''Get incremental homogenized stress tensor (matricial form).
+
+        Returns
+        -------
+        inc_hom_stress_mf : 1darray
+            Incremental homogenized stress tensor stored in matricial form.
+        '''
+        # Compute incremental homogenized stress tensor
+        inc_hom_stress_mf = self._hom_stress_mf - self._hom_stress_old_mf
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return inc_hom_stress_mf
+    # --------------------------------------------------------------------------------------
+    def get_material_phases(self):
+        '''Get RVE material phases.
+
+        Returns
+        -------
+        material_phases : list
+            RVE material phases labels (str).
+        '''
+        return copy.deepcopy(self._material_phases)
+    # --------------------------------------------------------------------------------------
+    def get_material_phases_properties(self):
+        '''Get RVE material phases constitutive properties.
+
+        Returns
+        -------
+        material_phases_properties : dict
+            Constitutive model material properties (item, dict) associated to each material
+            phase (key, str).
+        '''
+        return copy.deepcopy(self._material_phases_properties)
+    # --------------------------------------------------------------------------------------
+    def get_material_phases_models(self):
+        '''Get RVE material phases constitutive models.
+
+        Returns
+        -------
+        _material_phases_models : dict
+            Material constitutive model (item, ConstitutiveModel) associated to each
+            material phase (key, str).
+        '''
+        return copy.deepcopy(self._material_phases_models)
+    # --------------------------------------------------------------------------------------
+    def get_material_phases_vf(self):
+        '''Get RVE material phases volume fraction.
+
+        Returns
+        -------
+        material_phases_vf : dict
+            Volume fraction (item, float) associated to each material phase (key, str).
+        '''
+        return copy.deepcopy(self._material_phases_vf)
+    # --------------------------------------------------------------------------------------
+    def get_clusters_def_gradient_mf(self):
+        '''Get deformation gradient (matricial form) associated to each material cluster.
+
+        Returns
+        -------
+        clusters_def_gradient_mf : dict
+            Deformation gradient (item, 1darray) associated to each material cluster
+            (key, str), stored in matricial form.
+        '''
+        return copy.deepcopy(self._clusters_def_gradient_mf)
+    # --------------------------------------------------------------------------------------
+    def get_clusters_state(self):
+        '''Get material state variables associated to each material cluster.
+
+        Returns
+        -------
+        clusters_state : dict
+            Material constitutive model state variables (item, dict) associated to each
+            material cluster (key, str).
+        '''
+        return copy.deepcopy(self._clusters_state)
+    # --------------------------------------------------------------------------------------
+    def get_clusters_state_old(self):
+        '''Get last converged material state variables associated to each material cluster.
+
+        Returns
+        -------
+        clusters_state_old : dict
+            Last converged material constitutive model state variables (item, dict)
+            associated to each material cluster (key, str).
+        '''
+        return copy.deepcopy(self._clusters_state_old)
+    # --------------------------------------------------------------------------------------
+    def get_clusters_tangent_mf(self):
+        '''Get material consistent tangent modulus associated to each material cluster.
+
+        Returns
+        -------
+        clusters_tangent_mf : dict
+            Material consistent tangent modulus (item, ndarray) associated to each material
+            cluster (key, str), stored in matricial form.
+        '''
+        return copy.deepcopy(self._clusters_tangent_mf)
     # --------------------------------------------------------------------------------------
     @staticmethod
     def _material_su_interface(problem_type, constitutive_model, def_gradient_old,
@@ -540,16 +813,24 @@ class MaterialState:
         # Return
         return material_consistent_tangent
     # --------------------------------------------------------------------------------------
-    def clustering_adaptivity_update(self, adaptive_clustering_map):
-        '''Update cluster-related dictionaries according to clustering adaptivity step.
+    def clustering_adaptivity_update(self, phase_clusters, clusters_vf,
+                                     adaptive_clustering_map):
+        '''Update cluster-related variables according to clustering adaptivity step.
 
         Parameters
         ----------
+        phase_clusters : dict
+            Clusters labels (item, list of int) associated to each material phase
+            (key, str).
+        clusters_vf : dict
+            Volume fraction (item, float) associated to each material cluster (key, str).
         adaptive_clustering_map : dict
             Adaptive clustering map (item, dict with list of new cluster labels (item,
             list of int) resulting from the refinement of each target cluster (key, str))
             for each material phase (key, str).
         '''
+        # Update CRVE material state clusters labels and volume fraction
+        self.set_phase_clusters(phase_clusters, clusters_vf)
         # Group cluster-related dictionaries
         cluster_dicts = [self._clusters_def_gradient_mf, self._clusters_def_gradient_old_mf,
                          self._clusters_state, self._clusters_state_old,
@@ -569,6 +850,64 @@ class MaterialState:
                             copy.deepcopy(cluster_dict[target_cluster])
                     # Remove target cluster item
                     cluster_dict.pop(target_cluster)
+    # --------------------------------------------------------------------------------------
+    def constitutive_source_conversion(self):
+        '''Convert external sources constitutive models to CRATE corresponding model.'''
+        # Initialize available conversions
+        available_conversions = {}
+        # Set available Links-CRATE conversions
+        links_conversions = {'links_elastic': 'elastic', 'links_von_mises': 'von_mises'}
+        available_conversions['links'] = links_conversions
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Loop over material phases
+        for mat_phase in self._material_phases:
+            # Get material phase constitutive model
+            constitutive_model = self._material_phases_models[str(mat_phase)]
+            # Get material constitutive model source
+            model_source = constitutive_model.get_source()
+            # Skip to next material phase if not external constitutive model
+            if model_source != 'crate':
+                continue
+            # Get material constitutive material properties
+            material_properties = constitutive_model.get_material_properties()
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Get CRATE corresponding constitutive model name
+            new_model_name = available_conversions[str(model_source)]
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Get CRATE corresponding constitutive model
+            if model_source == 'links':
+                if new_model_name == 'elastic':
+                    # Get CRATE constitutive model
+                    new_model = Elastic
+                elif new_model_name == 'von_mises':
+                    # Get CRATE constitutive model
+                    new_model = VonMises
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Get CRATE constitutive model required material properties
+                new_required_properties = new_model.get_required_properties()
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Get CRATE constitutive model material properties
+                new_material_properties = {}
+                for property in new_required_properties:
+                    # Get CRATE constitutive model material property
+                    if property not in material_properties.keys():
+                        raise RuntimeError('Incompatible material properties to ' +
+                                           'convert constitutive model.')
+                    else:
+                        new_material_properties[str(property)] = \
+                            copy.deepcopy(material_properties[str(property)])
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    # Initialize CRATE constitutive model
+                    new_constitutive_model = new_model(self._strain_formulation,
+                                                       self._problem_type,
+                                                       new_material_properties)
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Update material phases constitutive models
+                self._material_phases_models[str(mat_phase)] = \
+                    new_constitutive_model
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            else:
+                raise RuntimeError('Unknown material constitutive model source.')
 #
 #                                                     Available material constitutive models
 # ==========================================================================================
@@ -588,7 +927,7 @@ def get_available_material_models(model_source='crate'):
     # Set the available material constitutive models from a given source
     if model_source == 'crate':
         # CRATE material constitutive models
-        available_mat_models = ['linear_elastic', 'von_mises']
+        available_mat_models = ['elastic', 'von_mises']
     elif model_source == 'links':
         # Links material constitutive models
         available_mat_models = ['ELASTIC', 'VON_MISES']

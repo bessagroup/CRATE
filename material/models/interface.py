@@ -11,6 +11,8 @@
 # ==========================================================================================
 # Defining abstract base classes
 from abc import ABC, abstractmethod
+# Shallow and deep copy operations
+import copy
 #
 #                                                               Constitutive model interface
 # ==========================================================================================
@@ -19,6 +21,8 @@ class ConstitutiveModel(ABC):
 
     Attributes
     ----------
+    _name : str
+        Constitutive model name.
     _strain_type : str, {'infinitesimal', 'finite', 'finite-kinext'}
         Constitutive model strain formulation: infinitesimal strain formulation
         ('infinitesimal'), finite strain formulation ('finite') or finite strain
@@ -92,6 +96,16 @@ class ConstitutiveModel(ABC):
         '''
         pass
     # --------------------------------------------------------------------------------------
+    def get_name(self):
+        '''Get constitutive model name.
+
+        Returns
+        -------
+        name : str
+            Constitutive model name.
+        '''
+        return self._name
+    # --------------------------------------------------------------------------------------
     def get_strain_type(self):
         '''Get material constitutive model strain formulation.
 
@@ -114,3 +128,13 @@ class ConstitutiveModel(ABC):
             Material constitutive model source.
         '''
         return self._source
+    # --------------------------------------------------------------------------------------
+    def get_material_properties(self):
+        '''Constitutive model material properties.
+
+        Returns
+        -------
+        material_properties : dict
+            Constitutive model material properties (key, str) values (item, int/float/bool).
+        '''
+        return copy.deepcopy(self._material_properties)

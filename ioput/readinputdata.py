@@ -136,16 +136,21 @@ def readinputdatafile(input_file,dirs_dict):
         rewinding_criterion = None
         max_n_rewinds = None
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Read self consistent scheme (optional). If the associated keyword is not found, then
+    # Read self-consistent scheme (optional). If the associated keyword is not found, then
     # a default specification is assumed
     keyword = 'Self_Consistent_Scheme'
     is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
     if is_found:
-        max_val = 2
-        self_consistent_scheme = rproc.readtypeAkeyword(input_file, input_file_path,
-                                                        keyword, max_val)
+        max_val = 1
+        self_consistent_scheme_id = rproc.readtypeAkeyword(input_file, input_file_path,
+                                                           keyword, max_val)
     else:
-        self_consistent_scheme = 1
+        self_consistent_scheme_id = 1
+    # Set self-consistent scheme
+    if self_consistent_scheme_id == 1:
+        self_consistent_scheme = 'regression'
+    else:
+        raise RuntimeError('Unknown self-consistent scheme.')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read self consistent scheme maximum number of iterations (optional). If the associated
     # keyword is not found, then a default specification is assumed
@@ -342,13 +347,13 @@ def readinputdatafile(input_file,dirs_dict):
     keyword = 'VTK_Output'
     is_found, keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
     if is_found:
-        is_VTK_output = True
+        is_vtk_output = True
         vtk_format, vtk_inc_div, vtk_vars = \
             rproc.readvtkoptions(input_file, input_file_path, keyword, keyword_line_number)
         # Create VTK folder in post processing directory
         filop.makedirectory(postprocess_dir + 'VTK/', 'overwrite')
     else:
-        is_VTK_output = False
+        is_vtk_output = False
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read voxels material-related quantities output options
     keyword = 'Voxels_Output'
@@ -369,6 +374,14 @@ def readinputdatafile(input_file,dirs_dict):
         is_clust_adapt_output = True
     else:
         is_clust_adapt_output = False
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Read reference material output
+    keyword = 'Reference_Material_Output'
+    is_found, keyword_line_number = rproc.searchoptkeywordline(input_file, keyword)
+    if is_found:
+        is_ref_material_output = True
+    else:
+        is_ref_material_output = False
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read final clustering state storage option
     keyword = 'Store_Final_Clustering_State'
@@ -409,11 +422,11 @@ def readinputdatafile(input_file,dirs_dict):
                                    material_phases_properties, material_phases_vf)
     # Loop over material phases
     for mat_phase in material_phases:
-        # Get material phase constitutive model name and source
-        model_name = material_phases_data[mat_phase]['name']
+        # Get material phase constitutive model keyword and source
+        model_keyword = material_phases_data[mat_phase]['keyword']
         model_source = material_phases_data[mat_phase]['source']
         # Initialize material phase constitutive model
-        material_state.init_constitutive_model(mat_phase, model_name, model_source)
+        material_state.init_constitutive_model(mat_phase, model_keyword, model_source)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Package problem general data
     info.displayinfo('5', 'Packaging problem general data...')
@@ -456,13 +469,13 @@ def readinputdatafile(input_file,dirs_dict):
         su_conv_tol)
     # Package data associated to the VTK output
     info.displayinfo('5', 'Packaging VTK output data...')
-    if is_VTK_output:
-        vtk_dict = packager.packvtk(is_VTK_output, vtk_format, vtk_inc_div, vtk_vars)
+    if is_vtk_output:
+        vtk_dict = packager.packvtk(is_vtk_output, vtk_format, vtk_inc_div, vtk_vars)
     else:
-        vtk_dict = packager.packvtk(is_VTK_output)
+        vtk_dict = packager.packvtk(is_vtk_output)
     # Package data associated to the output files
     info.displayinfo('5', 'Packaging general output files data...')
-    output_dict = packager.packoutputfiles(is_voxels_output)
+    output_dict = packager.packoutputfiles(is_ref_material_output, is_voxels_output)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return [problem_dict, mat_dict, macload_dict, rg_dict, clst_dict, scs_dict, algpar_dict,
             vtk_dict, output_dict, material_state]

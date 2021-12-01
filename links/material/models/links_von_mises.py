@@ -31,6 +31,8 @@ class LinksVonMises(LinksConstitutiveModel):
 
     Attributes
     ----------
+    _name : str
+        Constitutive model name.
     _strain_type : str, {'infinitesimal', 'finite', 'finite-kinext'}
         Constitutive model strain formulation: infinitesimal strain formulation
         ('infinitesimal'), finite strain formulation ('finite') or finite strain
@@ -56,6 +58,7 @@ class LinksVonMises(LinksConstitutiveModel):
         material_properties : dict
             Constitutive model material properties (key, str) values (item, int/float/bool).
         '''
+        self._name = 'links_von_mises'
         self._strain_formulation = strain_formulation
         self._problem_type = problem_type
         self._material_properties = material_properties
