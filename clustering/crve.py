@@ -138,6 +138,8 @@ class CRVE:
         self._rve_dims = copy.deepcopy(rve_dims)
         self._regular_grid = copy.deepcopy(regular_grid)
         self._material_phases = copy.deepcopy(material_phases)
+        self._strain_formulation = strain_formulation
+        self._problem_type = problem_type
         self._global_data_matrix = copy.deepcopy(global_data_matrix)
         self._clustering_type = copy.deepcopy(clustering_type)
         self._phase_n_clusters = copy.deepcopy(phase_n_clusters)
@@ -568,7 +570,7 @@ class CRVE:
             Clustering type (item, {'static', 'adaptive'}) of each material phase
             (key, str).
         '''
-        return self._clustering_type
+        return copy.deepcopy(self._clustering_type)
     # --------------------------------------------------------------------------------------
     def get_adaptivity_output(self):
         '''Get required data for clustering adaptivity output file.
