@@ -32,6 +32,7 @@ import ioput.fileoperations as filop
 import ioput.packager as packager
 # Links related procedures
 from links.inputdatareader import read_links_input_parameters
+from links.stateupdate import LinksConstitutiveModel
 # Reading procedures
 import ioput.readprocedures as rproc
 # Matricial operations
@@ -233,7 +234,7 @@ def readinputdatafile(input_file,dirs_dict):
     # If at least one material phase has the associated constitutive model source set as
     # Links, add Links python binary to Links dictionary
     if is_links_python_bin:
-        links_data['Links_python_bin_path'] = Links_python_bin_path
+        LinksConstitutiveModel.Links_python_bin_path = Links_python_bin_path
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read macroscale loading incrementation parameters
     keyword_1 = 'Number_of_Load_Increments'

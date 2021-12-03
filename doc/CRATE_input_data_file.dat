@@ -436,7 +436,7 @@
 # Syntax:    Self_Consistent_Scheme x
 #
 # x:         1 - Regression-based self-consistent scheme (default)
-#            2 - Projection-based self-consistent scheme
+#            2 - Projection-based self-consistent scheme (unavailable)
 # ------------------------------------------------------------------------------------------
 [insert here]
 

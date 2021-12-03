@@ -29,23 +29,6 @@ from links.configuration import get_links_comp_order, get_tensor_mf_links, get_l
 from links.interface.links import Links
 from links.interface.conversion import Reference
 #
-#                                                         Links material constitutive models
-# ==========================================================================================
-# Set material procedures for a given Links constitutive model
-def getlinksmodel(model_name):
-    ''' THIS DEPENDS ON THE REDEFINITION OF MATERIAL_PHASES_MODELS'''
-    # Set mapping between Links constitutive model name and associated procedures module
-    # name
-    name_dict = {'ELASTIC': 'links_elastic', 'VON_MISES': 'links_von_mises'}
-    # Get Links constitutive model module
-    model_module = importlib.import_module('links.material.models.' + name_dict[model_name])
-    # Set Links constitutive model procedures
-    getrequiredproperties, init, writematproperties, linksxprops, linksxxxxva = \
-        model_module.getlinksmodelprocedures()
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Return
-    return [getrequiredproperties, init, writematproperties, linksxprops, linksxxxxva]
-#
 #                                                         Links constitutive model interface
 # ==========================================================================================
 class LinksConstitutiveModel(ConstitutiveModel):
@@ -203,8 +186,7 @@ class LinksConstitutiveModel(ConstitutiveModel):
             eincr = np.zeros((3,3))
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get Links material properties arrays
-        iprops = self._iprops
-        rprops = self._rprops
+        iprops, rprops = self.build_xprops()
         # Build Links constitutive model variables arrays
         stres_py, rstava_py, lalgva_py, ralgva_py = self.build_xxxxva(state_variables_old)
         rstav2_py = copy.deepcopy(rstava_py)
@@ -214,8 +196,7 @@ class LinksConstitutiveModel(ConstitutiveModel):
                 get_links_dims(self._strain_formulation, self._problem_type, iprops, rprops,
                                rstava_py, lalgva_py, ralgva_py)
         # Set Links initialized consistent tangent modulii
-        dmatx_py, amatx_py = build_xmatx(self._strain_formulation, self._problem_type,
-                                         nddim_py, nadim_py)
+        dmatx_py, amatx_py = build_xmatx(nddim_py, nadim_py)
         #
         #                                                       Links state update interface
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -275,7 +256,8 @@ class LinksConstitutiveModel(ConstitutiveModel):
         #                                                                       State update
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get state variables from Links constitutive model variables arrays
-        state_variables = self.get_state_variables(self, stres, rstava, lalgva, ralgva)
+        state_variables = self.get_state_variables(stres_py, rstava_py, lalgva_py,
+                                                   ralgva_py)
         #
         #                                                         Consistent tangent modulus
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

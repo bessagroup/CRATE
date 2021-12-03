@@ -791,7 +791,7 @@ class IncrementRewinder:
         ref_material : ElasticReferenceMaterial
             Elastic reference material at rewind state.
         '''
-        return copy.deepcopy(self._mat_prop_ref)
+        return copy.deepcopy(self._ref_material)
     # --------------------------------------------------------------------------------------
     def save_clusters_sct(self, clusters_sct_mf):
         '''Save clusters strain concentration tensors at rewind state.

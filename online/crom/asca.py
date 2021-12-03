@@ -235,16 +235,16 @@ class ASCA:
                                   crve.get_phase_clusters(),
                                   crve.get_adaptivity_control_feature(),
                                   crve.get_adapt_criterion_data(), self._clust_adapt_freq)
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Initialize increment rewinder manager
+        if is_solution_rewinding:
             # Initialize increment rewinder manager
-            if is_solution_rewinding:
-                # Initialize increment rewinder manager
-                rewind_manager = \
-                    RewindManager(rewind_state_criterion=rewind_state_criterion,
-                                  rewinding_criterion=rewinding_criterion,
-                                  max_n_rewinds=max_n_rewinds)
-                # Initialize increment rewinder flag
-                is_inc_rewinder = False
+            rewind_manager = \
+                RewindManager(rewind_state_criterion=rewind_state_criterion,
+                              rewinding_criterion=rewinding_criterion,
+                              max_n_rewinds=max_n_rewinds)
+            # Initialize increment rewinder flag
+            is_inc_rewinder = False
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize clusters state variables
         material_state.init_clusters_state()
@@ -733,7 +733,7 @@ class ASCA:
                     rewind_manager.is_rewind_available():
                 # Check analysis rewind criteria
                 is_rewind = rewind_manager.is_rewinding_criteria(inc,
-                    material_state.get_material_phases(), crve._get_phase_clusters(),
+                    material_state.get_material_phases(), crve.get_phase_clusters(),
                         material_state.get_clusters_state())
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Rewind analysis if criteria are met
@@ -1658,10 +1658,10 @@ class ASCA:
         else:
             # Display reference material self-consistent scheme iteration header
             if is_lock_prop_ref:
-                info.displayinfo('13', 'init', scs_iter,
+                info.displayinfo('13', 'init', 0,
                                  material_properties['E'], material_properties['v'])
             else:
-                if ref_material.get_scs_iter() == 0:
+                if scs_iter == 0:
                     info.displayinfo('8', 'init', scs_iter,
                                      material_properties['E'], material_properties['v'])
                 else:

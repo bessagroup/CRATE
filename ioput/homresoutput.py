@@ -60,7 +60,10 @@ class HomResOutput:
         # Set homogenized results output file header format structure
         write_list = ['{:>9s}'.format(self._header[0]) +
                       ''.join([('{:>' + str(self._col_width) + 's}').format(x)
-                      for x in self._header[1:]])]
+                      for x in self._header[1:]]),
+                      '\n' + '{:>9d}'.format(0) +
+                      ''.join([('{:>' + str(self._col_width) + '.8e}').format(0)
+                                    for x in range(20)])]
         # Write homogenized results output file header
         hres_file.writelines(write_list)
         # Close homogenized results output file
@@ -100,11 +103,8 @@ class HomResOutput:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get 3D problem parameters
         n_dim, comp_order_sym, _ = mop.get_problem_type_parameters(problem_type=4)
-        # Set material-related quantities computer parameters
-        self._n_dim = n_dim
-        self._comp_order = comp_order_sym
         # Get fourth-order tensors
-        _, _, _, _, _, _, fodevprojsym = top.get_id_operators(self._n_dim)
+        _, _, _, _, _, _, fodevprojsym = top.get_id_operators(n_dim)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute the von Mises equivalent strain
         vm_strain = np.sqrt(2.0/3.0)*np.linalg.norm(top.ddot42_1(fodevprojsym,
@@ -122,10 +122,10 @@ class HomResOutput:
         hres_file = open(self._hres_file_path, 'a')
         # Set increment homogenized results format structure
         inc_data = [inc,
-                    out_hom_strain[0, 0],out_hom_strain[1, 1],out_hom_strain[2, 2],
-                    out_hom_strain[0, 1],out_hom_strain[1, 2],out_hom_strain[0, 2],
-                    out_hom_stress[0, 0],out_hom_stress[1, 1],out_hom_stress[2, 2],
-                    out_hom_stress[0, 1],out_hom_stress[1, 2],out_hom_stress[0, 2],
+                    out_hom_strain[0, 0], out_hom_strain[1, 1], out_hom_strain[2, 2],
+                    out_hom_strain[0, 1], out_hom_strain[1, 2], out_hom_strain[0, 2],
+                    out_hom_stress[0, 0], out_hom_stress[1, 1], out_hom_stress[2, 2],
+                    out_hom_stress[0, 1], out_hom_stress[1, 2], out_hom_stress[0, 2],
                     vm_strain, vm_stress,
                     eigenstrains[0], eigenstrains[1], eigenstrains[2],
                     eigenstresses[0], eigenstresses[1], eigenstresses[2]]

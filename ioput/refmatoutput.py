@@ -143,8 +143,8 @@ class RefMatOutput:
         # farfield strain tensor considering the appropriate out-of-plane strain component
         # (output purpose only).
         if self._is_farfield_formulation:
-            inc_farfield_strain = mop.gettensorfrommf(inc_farfield_strain_mf, self._n_dim,
-                                                      comp_order)
+            inc_farfield_strain = mop.get_tensor_from_mf(inc_farfield_strain_mf,
+                                                         self._n_dim, comp_order)
             out_inc_farfield_strain = np.zeros((3, 3))
             if self._problem_type == 1:
                 out_inc_farfield_strain[0:2, 0:2] = inc_farfield_strain
