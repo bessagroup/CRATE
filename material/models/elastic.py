@@ -85,7 +85,7 @@ class Elastic(ConstitutiveModel):
         return req_material_properties
     # --------------------------------------------------------------------------------------
     def state_init(self):
-        '''Initialize constitutive model material state variables.
+        '''Get initialized material constitutive model state variables.
 
         Constitutive model state variables:
             e_strain_mf | Elastic strain tensor (matricial form)
@@ -96,7 +96,7 @@ class Elastic(ConstitutiveModel):
         Returns
         -------
         state_variables_init : dict
-            Initial constitutive model material state variables.
+            Initialized constitutive model material state variables.
         '''
         # Initialize constitutive model state variables
         state_variables_init = dict()
@@ -187,7 +187,7 @@ class Elastic(ConstitutiveModel):
         #                                                             Update state variables
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize state variables dictionary
-        state_variables = type(self).state_init()
+        state_variables = self.state_init()
         # Store updated state variables in matricial form
         state_variables['e_strain_mf'] = e_strain_mf
         state_variables['strain_mf'] = e_strain_mf

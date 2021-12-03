@@ -23,7 +23,7 @@ import tensor.tensoroperations as top
 # Matricial operations
 import tensor.matrixoperations as mop
 # Constitutive models
-from material.models.linear_elastic import Elastic
+from material.models.elastic import Elastic
 from material.models.von_mises import VonMises
 # Links constitutive models
 from links.material.models.links_elastic import LinksElastic
@@ -191,9 +191,8 @@ class MaterialState:
                 self._clusters_def_gradient_old_mf[str(cluster)] = soid_mf
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute initial state homogenized strain and stress tensors
-        self.perform_state_homogenization()
-        self.set_last_state_homogenization(copy.deepcopy(self._hom_strain_mf),
-                                           copy.deepcopy(self._hom_stress_mf))
+        self.update_state_homogenization()
+        self.update_converged_state()
     # --------------------------------------------------------------------------------------
     def set_phase_clusters(self, phase_clusters, clusters_vf):
         '''Set CRVE cluster labels and volume fractions associated to each material phase.
@@ -230,7 +229,7 @@ class MaterialState:
             comp_order = self._comp_order_sym
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize dictionary of clusters incremental strain
-        global_inc_strain_mf = {}
+        clusters_inc_strain_mf = {}
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize material cluster strain range indexes
         i_init = 0
@@ -242,10 +241,14 @@ class MaterialState:
                 # Get material cluster incremental strain (matricial form)
                 inc_strain_mf = global_inc_strain_mf[i_init:i_end]
                 # Store material cluster incremental strain (matricial form)
-                global_inc_strain_mf[str(cluster)] = inc_strain_mf
+                clusters_inc_strain_mf[str(cluster)] = inc_strain_mf
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Update material cluster strain range indexes
+                i_init += len(comp_order)
+                i_end = i_init + len(comp_order)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
-        return global_inc_strain_mf
+        return clusters_inc_strain_mf
     # --------------------------------------------------------------------------------------
     def update_clusters_state(self, clusters_inc_strain_mf):
         '''Update clusters state variables and associated consistent tangent modulus.
@@ -264,6 +267,13 @@ class MaterialState:
         # Initialize state update failure state
         su_fail_state = {'is_su_fail': False, 'mat_phase': None, 'cluster': None}
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Initialize clusters deformation gradient
+        if self._strain_formulation == 'finite':
+            self._clusters_def_gradient_mf = {}
+        # Initialize clusters state variables and material consistent tangent modulus
+        self._clusters_state = {}
+        self._clusters_tangent_mf = {}
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over material phases
         for mat_phase in self._material_phases:
             # Get material phase constitutive model
@@ -281,19 +291,21 @@ class MaterialState:
                 else:
                     # Deformation gradient tensor (nonsymmetric)
                     comp_order = self._comp_order_nsym
-                inc_strain = mop.get_tensor_mf(inc_strain_mf, self._n_dim, comp_order)
+                inc_strain = mop.get_tensor_from_mf(inc_strain_mf, self._n_dim, comp_order)
                 # Get material cluster last converged state variables
                 state_variables_old = self._clusters_state_old[str(cluster)]
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Get material cluster last converged deformation gradient tensor
                 def_gradient_old_mf = self._clusters_def_gradient_old_mf[str(cluster)]
-                def_gradient_old = mop.get_tensor_mf(def_gradient_old_mf, self._n_dim,
-                                                     self._comp_order_nsym)
+                def_gradient_old = mop.get_tensor_from_mf(def_gradient_old_mf, self._n_dim,
+                                                          self._comp_order_nsym)
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Perform state update through the suitable material interface
                 if source == 'crate':
                     state_variables, consistent_tangent_mf = \
-                        self._material_su_interface(constitutive_model, def_gradient_old,
+                        self._material_su_interface(self._strain_formulation,
+                                                    self._problem_type, constitutive_model,
+                                                    def_gradient_old,
                                                     copy.deepcopy(inc_strain),
                                                     copy.deepcopy(state_variables_old))
                 else:
@@ -566,12 +578,14 @@ class MaterialState:
         return copy.deepcopy(self._clusters_tangent_mf)
     # --------------------------------------------------------------------------------------
     @staticmethod
-    def _material_su_interface(problem_type, constitutive_model, def_gradient_old,
-                               inc_strain, state_variables_old):
+    def _material_su_interface(strain_formulation, problem_type, constitutive_model,
+                               def_gradient_old, inc_strain, state_variables_old):
         '''Material constitutive state update interface.
 
         Parameters
         ----------
+        strain_formulation: str, {'infinitesimal', 'finite'}
+            Problem strain formulation.
         problem_type : int
             Problem type: 2D plane strain (1), 2D plane stress (2), 2D axisymmetric (3) and
             3D (4).
@@ -599,7 +613,7 @@ class MaterialState:
         strain_type = constitutive_model.get_strain_type()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute incremental logarithmic strain tensor
-        if strain_type == 'finite-kinext':
+        if strain_formulation == 'finite' and strain_type == 'finite-kinext':
             # Save incremental deformation gradient
             inc_def_gradient = copy.deepcopy(inc_strain)
             # Compute deformation gradient
@@ -617,7 +631,7 @@ class MaterialState:
             constitutive_model.state_update(inc_strain, state_variables_old)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute Cauchy stress tensor and material consistent tangent modulus
-        if strain_type == 'finite-kinext':
+        if strain_formulation == 'finite' and strain_type == 'finite-kinext':
             # Get Kirchhoff stress tensor
             kirchhoff_stress_mf = state_variables['stress_mf']
             kirchhoff_stress = mop.get_tensor_from_mf(kirchhoff_stress_mf, n_dim,
@@ -863,16 +877,18 @@ class MaterialState:
         for mat_phase in self._material_phases:
             # Get material phase constitutive model
             constitutive_model = self._material_phases_models[str(mat_phase)]
+            # Get material constitutive model name
+            model_name = constitutive_model.get_name()
             # Get material constitutive model source
             model_source = constitutive_model.get_source()
             # Skip to next material phase if not external constitutive model
-            if model_source != 'crate':
+            if model_source == 'crate':
                 continue
             # Get material constitutive material properties
             material_properties = constitutive_model.get_material_properties()
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Get CRATE corresponding constitutive model name
-            new_model_name = available_conversions[str(model_source)]
+            new_model_name = available_conversions[str(model_source)][str(model_name)]
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Get CRATE corresponding constitutive model
             if model_source == 'links':
@@ -890,12 +906,26 @@ class MaterialState:
                 new_material_properties = {}
                 for property in new_required_properties:
                     # Get CRATE constitutive model material property
-                    if property not in material_properties.keys():
-                        raise RuntimeError('Incompatible material properties to ' +
-                                           'convert constitutive model.')
+                    if property == 'IHL':
+                        # Set required hardening law properties
+                        required_hardening_properties = \
+                            ['hardening_law', 'hardening_parameters']
+                        # Get CRATE constitutive model hardening properties
+                        for hard_property in required_hardening_properties:
+                            if hard_property not in material_properties.keys():
+                                raise RuntimeError('Incompatible material hardening ' +
+                                                   'properties to convert constitutive ' +
+                                                   'model.')
+                            else:
+                                new_material_properties[str(hard_property)] = \
+                                    copy.deepcopy(material_properties[str(hard_property)])
                     else:
-                        new_material_properties[str(property)] = \
-                            copy.deepcopy(material_properties[str(property)])
+                        if property not in material_properties.keys():
+                            raise RuntimeError('Incompatible material properties to ' +
+                                               'convert constitutive model.')
+                        else:
+                            new_material_properties[str(property)] = \
+                                copy.deepcopy(material_properties[str(property)])
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     # Initialize CRATE constitutive model
                     new_constitutive_model = new_model(self._strain_formulation,

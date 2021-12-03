@@ -31,8 +31,7 @@ import tensor.tensoroperations as top
 # Cluster interaction tensors operations
 from clustering.citoperations import assemble_cit
 # Macroscale load incrementation
-from online.incrementation.macloadincrem import LoadingPath, IncrementRewinder, \
-                                                RewindManager
+from online.loading.macloadincrem import LoadingPath, IncrementRewinder, RewindManager
 # ACROM framework
 from clustering.adaptivity.crve_adaptivity import AdaptivityManager, \
                                                   ClusteringAdaptivityOutput
@@ -263,6 +262,7 @@ class ASCA:
         hres_output, ref_mat_output, voxels_output, adapt_output, vtk_output = \
             self._set_output_files(output_dir, crve, problem_name=problem_name,
                                    is_clust_adapt_output=is_clust_adapt_output,
+                                   is_ref_material_output=is_ref_material_output,
                                    is_vtk_output=is_vtk_output, vtk_data=vtk_data,
                                    is_voxels_output=is_voxels_output)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -327,7 +327,7 @@ class ASCA:
         # Get increment counter
         inc = mac_load_path.increm_state['inc']
         # Display increment data
-        type(self).displayincdata(mac_load_path)
+        type(self)._display_inc_data(mac_load_path)
         # Set increment initial time
         inc_init_time = time.time()
         # ----------------------------------------------------------------------------------
@@ -445,7 +445,6 @@ class ASCA:
                     clusters_tangent_mf = material_state.get_clusters_tangent_mf()
                     # Get elastic reference material tangent modulus
                     ref_elastic_tangent_mf = ref_material.get_elastic_tangent_mf()
-
                     # Build list which stores the difference between each material cluster
                     # consistent tangent (matricial form) and the reference material elastic
                     # tangent (matricial form)
@@ -559,27 +558,30 @@ class ASCA:
                 # Set post-processing procedure initial time
                 procedure_init_time = time.time()
                 # Output reference material associated quantities (.refm file)
-                if self._is_farfield_formulation:
-                    ref_mat_output.write_ref_mat(inc, ref_material,
-                                                 material_state.get_inc_hom_strain_mf(),
-                                                 material_state.get_inc_hom_stress_mf(),
-                                                 eff_tangent_mf=eff_tangent_mf,
-                                                 inc_farfield_strain_mf=
-                                                 inc_farfield_strain_mf,
-                                                 inc_mac_load_strain_mf=
-                                                 inc_mac_load_mf['strain'])
-                else:
-                    ref_mat_output.write_ref_mat(inc, ref_material,
-                                                 material_state.get_inc_hom_strain_mf(),
-                                                 material_state.get_inc_hom_stress_mf(),
-                                                 eff_tangent_mf=eff_tangent_mf)
-                # Increment post-processing time
-                self._post_process_time += time.time() - procedure_init_time
+                if is_ref_material_output:
+                    if self._is_farfield_formulation:
+                        ref_mat_output.write_ref_mat(inc, ref_material,
+                                                     material_state.get_inc_hom_strain_mf(),
+                                                     material_state.get_inc_hom_stress_mf(),
+                                                     eff_tangent_mf=eff_tangent_mf,
+                                                     inc_farfield_strain_mf=
+                                                     inc_farfield_strain_mf,
+                                                     inc_mac_load_strain_mf=
+                                                     inc_mac_load_mf['strain'])
+                    else:
+                        ref_mat_output.write_ref_mat(inc, ref_material,
+                                                     material_state.get_inc_hom_strain_mf(),
+                                                     material_state.get_inc_hom_stress_mf(),
+                                                     eff_tangent_mf=eff_tangent_mf)
+                    # Increment post-processing time
+                    self._post_process_time += time.time() - procedure_init_time
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Solve self-consistent scheme minimization problem
                 if not is_lock_prop_ref:
                     # Solve self-consistent scheme minimization problem
-                    is_scs_admissible, E_ref, v_ref = ref_material._self_consistent_scheme()
+                    is_scs_admissible, E_ref, v_ref = ref_material.self_consistent_update(
+                        material_state.get_inc_hom_strain_mf(),
+                            material_state.get_inc_hom_stress_mf())
                     # If self-consistent scheme iterative solution is not admissible, either
                     # accept the current solution (first self-consistent scheme iteration)
                     # or perform one last self-consistent scheme iteration with the last
@@ -718,7 +720,7 @@ class ASCA:
                     # Get increment counter
                     inc = mac_load_path.increm_state['inc']
                     # Display increment data
-                    type(self).displayincdata(mac_load_path)
+                    type(self)._display_inc_data(mac_load_path)
                     # Set increment initial time
                     inc_init_time = time.time()
                     # Start new loading increment solution
@@ -768,12 +770,11 @@ class ASCA:
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     # Setup new loading increment
                     inc_mac_load_mf, n_presc_strain, presc_strain_idxs, n_presc_stress, \
-                        presc_stress_idxs, is_last_inc = mac_load_path.new_load_increment(
-                            self._n_dim, comp_order)
+                        presc_stress_idxs, is_last_inc = mac_load_path.new_load_increment()
                     # Get increment counter
                     inc = mac_load_path.increm_state['inc']
                     # Display increment data
-                    type(self).displayincdata(mac_load_path)
+                    type(self)._display_inc_data(mac_load_path)
                     # Set increment initial time
                     inc_init_time = time.time()
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -863,7 +864,8 @@ class ASCA:
             #                                            Incremental macroscale loading flow
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Update converged macroscale (homogenized) state
-            mac_load_path.update_hom_state(self._n_dim, comp_order, hom_strain, hom_stress)
+            mac_load_path.update_hom_state(material_state.get_hom_strain_mf(),
+                                           material_state.get_hom_stress_mf())
             # Display converged increment data
             if self._problem_type == 1:
                 info.displayinfo('7', 'end', self._problem_type, hom_strain, hom_stress,
@@ -906,12 +908,11 @@ class ASCA:
             else:
                 # Setup new loading increment
                 inc_mac_load_mf, n_presc_strain, presc_strain_idxs, n_presc_stress, \
-                    presc_stress_idxs, is_last_inc = mac_load_path.new_load_increment(
-                        self._n_dim, comp_order)
+                    presc_stress_idxs, is_last_inc = mac_load_path.new_load_increment()
                 # Get increment counter
                 inc = mac_load_path.increm_state['inc']
                 # Display increment data
-                type(self).displayincdata(mac_load_path)
+                type(self)._display_inc_data(mac_load_path)
                 # Set increment initial time
                 inc_init_time = time.time()
     # --------------------------------------------------------------------------------------
@@ -1221,7 +1222,6 @@ class ASCA:
         n_presc_strain = len(presc_strain_idxs)
         # Compute number of prescribed loading stress components
         n_presc_stress = len(presc_stress_idxs)
-        # Get incremental homogenized strain and stress tensors (matricial form)
         # Get incremental homogenized strain and stress tensors (matricial form)
         inc_hom_strain_mf = material_state.get_inc_hom_strain_mf()
         inc_hom_stress_mf = material_state.get_inc_hom_stress_mf()
@@ -1703,8 +1703,8 @@ class ASCA:
                 info.displayinfo('10', mode)
     # --------------------------------------------------------------------------------------
     def _set_output_files(self, output_dir, crve, problem_name='problem',
-                          is_clust_adapt_output=False, is_vtk_output=False, vtk_data=None,
-                          is_voxels_output=None):
+                          is_clust_adapt_output=False, is_ref_material_output=None,
+                          is_vtk_output=False, vtk_data=None, is_voxels_output=None):
         '''Create and initialize output files.
 
         Parameters
@@ -1717,6 +1717,8 @@ class ASCA:
             Problem name.
         is_clust_adapt_output : bool, default=False
             Clustering adaptivity output flag.
+        is_ref_material_output : bool, default=False
+            Reference material output flag.
         is_vtk_output : bool, default=False
             VTK output flag.
         vtk_data : dict, default=None
@@ -1747,14 +1749,16 @@ class ASCA:
         # Write homogenized results output file header
         hres_output.init_hres_file()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Set file where reference material data is stored
-        refm_file_path = output_dir + problem_name + '.refm'
-        # Instantiate reference material output
-        ref_mat_output = RefMatOutput(refm_file_path, self._strain_formulation,
-                                      self._problem_type, self._self_consistent_scheme,
-                                      self._is_farfield_formulation)
-        # Write reference material output file header
-        ref_mat_output.init_ref_mat_file()
+        ref_mat_output = None
+        if is_ref_material_output:
+            # Set file where reference material data is stored
+            refm_file_path = output_dir + problem_name + '.refm'
+            # Instantiate reference material output
+            ref_mat_output = RefMatOutput(refm_file_path, self._strain_formulation,
+                                          self._problem_type, self._self_consistent_scheme,
+                                          self._is_farfield_formulation)
+            # Write reference material output file header
+            ref_mat_output.init_ref_mat_file()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         voxels_output = None
         if is_voxels_output:
@@ -1768,8 +1772,8 @@ class ASCA:
         vtk_output = None
         if is_vtk_output:
             # Set VTK output directories paths
-            vtk_dir = output_dir + 'VTK/'
-            pvd_dir = output_dir
+            pvd_dir = output_dir + 'Post_Process/'
+            vtk_dir = pvd_dir + 'VTK/'
             # Instantiante VTK output
             vtk_output = VTKOutput(type='ImageData', version='1.0',
                                    byte_order=vtk_data['vtk_byte_order'],
@@ -1990,7 +1994,7 @@ class ElasticReferenceMaterial:
         '''
         return self._norm_dv
     # --------------------------------------------------------------------------------------
-    def self_consistent_scheme(self, inc_strain_mf, inc_stress_mf):
+    def self_consistent_update(self, inc_strain_mf, inc_stress_mf):
         '''Solve self-consistent scheme minimization problem.
 
         Parameters
@@ -2083,7 +2087,7 @@ class ElasticReferenceMaterial:
             E = (miu*(3.0*lam + 2.0*miu))/(lam + miu)
             v = lam/(2.0*(lam + miu))
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Check admissibility of self-consistent scheme iterative solution.
+        # Check admissibility of self-consistent scheme iterative solution
         is_admissible = self._check_scs_solution(E, v)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
@@ -2163,7 +2167,10 @@ class ElasticReferenceMaterial:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Evaluate admissibility conditions:
         # Reference material Young modulus
-        condition_1 = (E/self._material_properties_init['E']) >= 0.025
+        if self._material_properties_init is None:
+            condition_1 = True
+        else:
+            condition_1 = (E/self._material_properties_init['E']) >= 0.025
         # Reference material Poisson ratio
         condition_2 = v >= 0.0 and (v/0.5) <= 1.0
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

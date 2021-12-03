@@ -61,12 +61,12 @@ class ConstitutiveModel(ABC):
     # --------------------------------------------------------------------------------------
     @abstractmethod
     def state_init(self):
-        '''Initialize material constitutive model state variables.
+        '''Get initialized material constitutive model state variables.
 
         Returns
         -------
         state_variables_init : dict
-            Initial material constitutive model state variables.
+            Initialized material constitutive model state variables.
         '''
         pass
     # --------------------------------------------------------------------------------------

@@ -90,7 +90,7 @@ class VonMises(ConstitutiveModel):
         return req_material_properties
     # --------------------------------------------------------------------------------------
     def state_init(self):
-        '''Initialize material constitutive model state variables.
+        '''Get initialized material constitutive model state variables.
 
         Constitutive model state variables:
             e_strain_mf  | Elastic strain tensor (matricial form)
@@ -103,7 +103,7 @@ class VonMises(ConstitutiveModel):
         Returns
         -------
         state_variables_init : dict
-            Initial material constitutive model state variables.
+            Initialized material constitutive model state variables.
         '''
         # Initialize constitutive model state variables
         state_variables_init = dict()
@@ -309,7 +309,7 @@ class VonMises(ConstitutiveModel):
         #                                                             Update state variables
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize state variables dictionary
-        state_variables = type(self).state_init()
+        state_variables = self.state_init()
         # Store updated state variables in matricial form
         state_variables['e_strain_mf'] = e_strain_mf
         state_variables['acc_p_strain'] = acc_p_strain

@@ -99,12 +99,12 @@ class HomResOutput:
             out_hom_stress[:, :] = hom_stress
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get 3D problem parameters
-        n_dim, comp_order_sym, _ = mop.getproblemtypeparam(problem_type=4)
+        n_dim, comp_order_sym, _ = mop.get_problem_type_parameters(problem_type=4)
         # Set material-related quantities computer parameters
         self._n_dim = n_dim
         self._comp_order = comp_order_sym
         # Get fourth-order tensors
-        _, _, _, _, _, _, fodevprojsym = top.getidoperators(self._n_dim)
+        _, _, _, _, _, _, fodevprojsym = top.get_id_operators(self._n_dim)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute the von Mises equivalent strain
         vm_strain = np.sqrt(2.0/3.0)*np.linalg.norm(top.ddot42_1(fodevprojsym,

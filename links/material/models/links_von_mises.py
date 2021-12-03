@@ -92,7 +92,7 @@ class LinksVonMises(LinksConstitutiveModel):
         return req_material_properties
     # --------------------------------------------------------------------------------------
     def state_init(self):
-        '''Initialize constitutive model material state variables.
+        '''Get initialized material constitutive model state variables.
 
         Constitutive model state variables:
             e_strain_mf | Elastic strain tensor (matricial form)
@@ -106,7 +106,7 @@ class LinksVonMises(LinksConstitutiveModel):
         Returns
         -------
         state_variables_init : dict
-            Initial constitutive model material state variables.
+            Initialized constitutive model material state variables.
         '''
         # Initialize constitutive model state variables
         state_variables_init = dict()

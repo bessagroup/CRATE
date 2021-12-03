@@ -133,10 +133,9 @@ def packmacroscaleloading(mac_load_type, mac_load, mac_load_presctype, mac_load_
     macload_dict['mac_load_presctype'] = mac_load_presctype
     macload_dict['mac_load_increm'] = mac_load_increm
     macload_dict['is_solution_rewinding'] = is_solution_rewinding
-    if is_solution_rewinding:
-        macload_dict['rewind_state_criterion'] = rewind_state_criterion
-        macload_dict['rewinding_criterion'] = rewinding_criterion
-        macload_dict['max_n_rewinds'] = max_n_rewinds
+    macload_dict['rewind_state_criterion'] = rewind_state_criterion
+    macload_dict['rewinding_criterion'] = rewinding_criterion
+    macload_dict['max_n_rewinds'] = max_n_rewinds
     # Return
     return macload_dict
 # ------------------------------------------------------------------------------------------

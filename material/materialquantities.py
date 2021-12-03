@@ -40,14 +40,14 @@ class MaterialQuantitiesComputer:
     def __init__(self):
         '''Material-related quantities computer constructor.'''
         # Get 3D problem parameters
-        n_dim, comp_order_sym, _ = mop.getproblemtypeparam(problem_type=4)
+        n_dim, comp_order_sym, _ = mop.get_problem_type_parameters(problem_type=4)
         # Set material-related quantities computer parameters
         self._n_dim = n_dim
         self._comp_order = comp_order_sym
         # Get fourth-order tensors
-        _, _, _, _, _, _, fodevprojsym = top.getidoperators(self._n_dim)
+        _, _, _, _, _, _, fodevprojsym = top.get_id_operators(self._n_dim)
         # Get fourth-order tensors matricial form
-        fodevprojsym_mf = mop.gettensormf(fodevprojsym, self._n_dim, self._comp_order)
+        fodevprojsym_mf = mop.get_tensor_mf(fodevprojsym, self._n_dim, self._comp_order)
         self._fodevprojsym_mf = fodevprojsym_mf
     # --------------------------------------------------------------------------------------
     def get_vm_stress(self, stress_mf):

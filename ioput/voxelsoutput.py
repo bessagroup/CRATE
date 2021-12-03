@@ -229,8 +229,8 @@ class VoxelsArraysFactory:
                             # Get out-of-plain stress component
                             stress_33 = clusters_state[str(cluster)]['stress_33']
                             # Build 3D stress tensor (matricial form)
-                            stress_mf = mop.getstate3Dmffrom2Dmf(self._problem_type,
-                                                                 stress_mf, stress_33)
+                            stress_mf = mop.get_state_3Dmf_from_2Dmf(self._problem_type,
+                                                                     stress_mf, stress_33)
                         # Compute von Mises equivalent stress
                         value = csbvar_computer.get_vm_stress(stress_mf)
                     elif csbvar == 'vm_strain':
@@ -241,8 +241,8 @@ class VoxelsArraysFactory:
                             # Get out-of-plain strain component
                             strain_33 = 0.0
                             # Build 3D strain tensor (matricial form)
-                            strain_mf = mop.getstate3Dmffrom2Dmf(self._problem_type,
-                                                                 strain_mf, strain_33)
+                            strain_mf = mop.get_state_3Dmf_from_2Dmf(self._problem_type,
+                                                                     strain_mf, strain_33)
                         # Compute von Mises equivalent strain
                         value = csbvar_computer.get_vm_strain(strain_mf)
                     elif csbvar in ['acc_p_strain', 'acc_p_energy_dens']:

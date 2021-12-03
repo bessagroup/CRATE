@@ -27,10 +27,9 @@ import re
 # Display errors, warnings and built-in exceptions
 import ioput.errors as errors
 # Material interface
-import material.materialinterface
 from material.materialmodeling import get_available_material_models
 # Constitutive models
-from material.models.linear_elastic import Elastic
+from material.models.elastic import Elastic
 from material.models.von_mises import VonMises
 import material.isotropichardlaw
 # Links constitutive models
@@ -45,7 +44,7 @@ from clustering.crve import CRVE
 # CRVE adaptivity
 from clustering.adaptivity.crve_adaptivity import AdaptivityManager
 # Macroscale loading
-from online.incrementation.macloadincrem import RewindManager
+from online.loading.macloadincrem import RewindManager
 #
 #                                                                           Search functions
 # ==========================================================================================
@@ -265,7 +264,7 @@ def read_material_properties(file, file_path, keyword):
                                'from source \'' + model_source + '\'.')
         else:
             model_keyword = phase_header[1]
-        material_phases_data[mat_phase]['model_keyword'] = model_keyword
+        material_phases_data[mat_phase]['keyword'] = model_keyword
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get material constitutive model required material properties
         if model_source == 'crate':
