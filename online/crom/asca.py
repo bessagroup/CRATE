@@ -1999,9 +1999,9 @@ class ElasticReferenceMaterial:
 
         Parameters
         ----------
-        inc_strain_mf : 2darray
+        inc_strain_mf : 1darray
             Incremental homogenized strain (matricial form).
-        inc_stress_mf : 2darray
+        inc_stress_mf : 1darray
             Incremental homogenized stress (matricial form).
 
         Returns
@@ -2021,6 +2021,15 @@ class ElasticReferenceMaterial:
             comp_order = self._comp_order_nsym
         else:
             raise RuntimeError('Unknown problem strain formulation.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        if np.all([abs(inc_strain_mf[i]) < 1e-10 for i in range(inc_strain_mf.shape[0])]):
+            # Set admissibility flag
+            is_admissible = True
+            # Get current elastic reference material properties
+            E = self._material_properties['E']
+            v = self._material_properties['v']
+            # Return
+            return is_admissible, E, v
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Update reference material elastic properties
         if self._self_consistent_scheme == 'regression':
