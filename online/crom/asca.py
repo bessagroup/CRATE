@@ -301,7 +301,7 @@ class ASCA:
                                        material_state.get_hom_stress_mf())
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get increment counter
-        inc = mac_load_path.increm_state['inc']
+        inc = mac_load_path.get_increm_state()['inc']
         # Save macroscale loading increment (converged) state
         if is_solution_rewinding and rewind_manager.is_rewind_available() and \
                 rewind_manager.is_save_rewind_state(inc):
@@ -325,7 +325,7 @@ class ASCA:
         inc_mac_load_mf, n_presc_strain, presc_strain_idxs, n_presc_stress, \
             presc_stress_idxs, is_last_inc = mac_load_path.new_load_increment()
         # Get increment counter
-        inc = mac_load_path.increm_state['inc']
+        inc = mac_load_path.get_increm_state()['inc']
         # Display increment data
         type(self)._display_inc_data(mac_load_path)
         # Set increment initial time
@@ -669,7 +669,7 @@ class ASCA:
                     presc_stress_idxs, is_last_inc = mac_load_path.increment_cut(
                         self._n_dim, comp_order)
                 # Get increment counter
-                inc = mac_load_path.increm_state['inc']
+                inc = mac_load_path.get_increm_state()['inc']
                 # Display increment data
                 type(self)._display_inc_data(mac_load_path)
                 # Set increment initial time
@@ -718,7 +718,7 @@ class ASCA:
                         global_inc_strain_mf = improved_init_guess[1]
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     # Get increment counter
-                    inc = mac_load_path.increm_state['inc']
+                    inc = mac_load_path.get_increm_state()['inc']
                     # Display increment data
                     type(self)._display_inc_data(mac_load_path)
                     # Set increment initial time
@@ -772,7 +772,7 @@ class ASCA:
                     inc_mac_load_mf, n_presc_strain, presc_strain_idxs, n_presc_stress, \
                         presc_stress_idxs, is_last_inc = mac_load_path.new_load_increment()
                     # Get increment counter
-                    inc = mac_load_path.increm_state['inc']
+                    inc = mac_load_path.get_increm_state()['inc']
                     # Display increment data
                     type(self)._display_inc_data(mac_load_path)
                     # Set increment initial time
@@ -910,7 +910,7 @@ class ASCA:
                 inc_mac_load_mf, n_presc_strain, presc_strain_idxs, n_presc_stress, \
                     presc_stress_idxs, is_last_inc = mac_load_path.new_load_increment()
                 # Get increment counter
-                inc = mac_load_path.increm_state['inc']
+                inc = mac_load_path.get_increm_state()['inc']
                 # Display increment data
                 type(self)._display_inc_data(mac_load_path)
                 # Set increment initial time
@@ -1621,7 +1621,7 @@ class ASCA:
             Macroscale loading path.
         '''
         # Get increment counter
-        inc = mac_load_path.increm_state['inc']
+        inc = mac_load_path.get_increm_state()['inc']
         # Get loading subpath data
         sp_id, sp_inc, sp_total_lfact, sp_inc_lfact, sp_total_time, sp_inc_time, \
             subinc_level = mac_load_path.get_subpath_state()
