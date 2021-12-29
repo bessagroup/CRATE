@@ -294,22 +294,27 @@ def kelvin_factor(idx, comp_order):
     factor : float
         Kelvin notation coefficient.
     '''
-    if isinstance(idx, int) or isinstance(idx, np.integer):
-        # Set Kelvin coefficient associated with single strain/stress component
-        if int(list(comp_order[idx])[0]) == int(list(comp_order[idx])[1]):
-            factor = 1.0
-        else:
-            factor = np.sqrt(2)
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    elif isinstance(idx, list) and len(idx) == 2:
-        # Set Kelvin coefficient associated with pair of strain/stress components
+    if len(comp_order) == 4 or len(comp_order) == 9:
+        # Set Kelvin coefficient associated to a non-symmetric tensor matricial storage
         factor = 1.0
-        for i in idx:
-            if int(list(comp_order[i])[0]) != int(list(comp_order[i])[1]):
-                factor = factor*np.sqrt(2)
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     else:
-        raise RuntimeError('Invalid strain/stress component(s) index(es).')
+        # Set Kelvin coefficient associated to symmetric tensor matricial storage
+        if isinstance(idx, int) or isinstance(idx, np.integer):
+            # Set Kelvin coefficient associated with single strain/stress component
+            if int(list(comp_order[idx])[0]) == int(list(comp_order[idx])[1]):
+                factor = 1.0
+            else:
+                factor = np.sqrt(2)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        elif isinstance(idx, list) and len(idx) == 2:
+            # Set Kelvin coefficient associated with pair of strain/stress components
+            factor = 1.0
+            for i in idx:
+                if int(list(comp_order[i])[0]) != int(list(comp_order[i])[1]):
+                    factor = factor*np.sqrt(2)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        else:
+            raise RuntimeError('Invalid strain/stress component(s) index(es).')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return factor
 #
