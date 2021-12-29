@@ -543,7 +543,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                     *mac_strain_incrementer.get_inc_output_data())
     # --------------------------------------------------------------------------------------
     def _elastic_constitutive_model(self, strain_vox, evar1, evar2, evar3,
-                                    finite_strains_model='hencky',
+                                    finite_strains_model='stvenant-kirchhoff',
                                     is_optimized=True):
         '''Material elastic or hyperelastic constitutive model.
 
@@ -1826,7 +1826,7 @@ if __name__ == '__main__':
         homogenization_method = FFTBasicScheme(strain_formulation=strain_formulation,
             problem_type=problem_type, rve_dims=rve_dims, n_voxels_dims=n_voxels_dims,
                 regular_grid=regular_grid, material_phases=material_phases,
-                    material_properties=material_properties)
+                    material_phases_properties=material_properties)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize strain concentration tensor
         sct = np.zeros((len(comp_order_sym), len(comp_order_sym)))
@@ -1845,7 +1845,7 @@ if __name__ == '__main__':
                 mac_strain_imposed = mac_strain
             # Compute local strain field
             strain_vox = \
-                homogenization_method.compute_rve_local_response(mac_strain_imposed,
+                homogenization_method.compute_rve_local_response(j, mac_strain_imposed,
                                                                  verbose=True)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Initialize local strain tensor
@@ -1888,9 +1888,9 @@ if __name__ == '__main__':
     # Set strain concentration tensor data file path
     sct_data_path = working_dir + 'sca_data.dat'
     # Set pickle flag
-    is_pickle_sct = False
+    is_pickle_sct = True
     # Set voxels under analysis
-    target_voxels = [(100, 300), (300, 300), (325, 70), (50, 125)]
+    target_voxels = [(200, 375), (375, 260), (300, 100), (50, 275)]
     # Set macroscale strain magnitude factors
     strain_magnitude_factors = [1.0e-4, 3.1628e-4, 1.0e-3, 3.1628e-3, 1.0e-2, 3.1628e-2,
                                 1.0e-1]
@@ -1975,9 +1975,9 @@ if __name__ == '__main__':
         homogenization_method = FFTBasicScheme(strain_formulation=strain_formulation,
             problem_type=problem_type, rve_dims=rve_dims, n_voxels_dims=n_voxels_dims,
                 regular_grid=regular_grid, material_phases=material_phases,
-                    material_properties=material_properties)
+                    material_phases_properties=material_properties)
         # Compute local strain field
-        strain_vox = homogenization_method.compute_rve_local_response(mac_strain,
+        strain_vox = homogenization_method.compute_rve_local_response(0, mac_strain,
                                                                       verbose=True)
         # Get homogenized stress-strain response
         hom_stress_strain = homogenization_method.get_hom_stress_strain()
@@ -1989,10 +1989,10 @@ if __name__ == '__main__':
         homogenization_method = FFTBasicScheme(strain_formulation='infinitesimal',
             problem_type=problem_type, rve_dims=rve_dims, n_voxels_dims=n_voxels_dims,
                 regular_grid=regular_grid, material_phases=material_phases,
-                    material_properties=material_properties)
+                    material_phases_properties=material_properties)
         # Compute local strain field
-        strain_vox_is = homogenization_method.compute_rve_local_response(mac_strain_is,
-                                                                          verbose=False)
+        strain_vox_is = homogenization_method.compute_rve_local_response(0, mac_strain_is,
+                                                                         verbose=False)
         # Get homogenized stress-strain response
         hom_stress_strain_is = homogenization_method.get_hom_stress_strain()
     #
@@ -2072,13 +2072,19 @@ if __name__ == '__main__':
         else:
             cycler_color = cycler.cycler('color',
                 [color_list[i] for i in use_colors[str(n_plot_lines)]])
-        #cycler_linestyle = cycler.cycler('linestyle',4*['--','-'])
-        #cycler_color = cycler.cycler('color', [color_list[i] for i in [0,0,2,2,4,4,3,3]])
+
+
+        cycler_linestyle = cycler.cycler('linestyle',4*['--','-'])
+        cycler_color = cycler.cycler('color', [color_list[i] for i in [0,0,2,2,4,4,3,3]])
+
+
         # Set default cycler
         if is_marker:
             default_cycler = cycler_marker*cycler_linestyle*cycler_color
         else:
             default_cycler = cycler_linestyle*cycler_color
+
+            default_cycler = cycler_linestyle+cycler_color
         plt.rc('axes', prop_cycle = default_cycler)
         #
         #                                                                    Figure and axes
@@ -2472,8 +2478,8 @@ if __name__ == '__main__':
         # Set axes limits
         x_min = 7.94328e-5
         x_max = 1.258925e-1
-        y_min = 2.05
-        y_max=2.35
+        y_min = 2.10
+        y_max = 2.30
         # Set data labels
         point_labels = ['A', 'A', 'B', 'B', 'C', 'C', 'D', 'D']
         data_labels = ['$\\bm{Y}_' + point_labels[x] + '$'
