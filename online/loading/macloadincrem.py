@@ -317,8 +317,9 @@ class LoadingPath:
         inc_lfacts = list(self._mac_load_increm[str(subpath_id)][:, 0])
         inc_times = list(self._mac_load_increm[str(subpath_id)][:, 1])
         # Add a new loading subpath
-        self._load_subpaths.append(LoadingSubpath(subpath_id, self._conv_hom_state, load,
-                                                  presctype, inc_lfacts, inc_times,
+        self._load_subpaths.append(LoadingSubpath(subpath_id, self._strain_formulation,
+                                                  self._problem_type, self._conv_hom_state,
+                                                  load, presctype, inc_lfacts, inc_times,
                                                   self._max_subinc_level))
     # --------------------------------------------------------------------------------------
     def _get_load_subpath(self):
@@ -451,14 +452,19 @@ class LoadingSubpath:
     _sub_inc_levels : list
         History of subincrementation levels.
     '''
-    def __init__(self, id, init_conv_hom_state, load, presctype, inc_lfacts, inc_times,
-                 max_subinc_level):
+    def __init__(self, id, strain_formulation, problem_type, init_conv_hom_state, load,
+                 presctype, inc_lfacts, inc_times, max_subinc_level):
         '''Loading subpath constructor.
 
         Parameters
         ----------
         id : int
             Loading subpath id.
+        strain_formulation: str, {'infinitesimal', 'finite'}
+            Problem strain formulation.
+        problem_type : int
+            Problem type: 2D plane strain (1), 2D plane stress (2), 2D axisymmetric (3) and
+            3D (4).
         init_conv_hom_state : dict
             Converged homogenized state (item, ndarray of shape (n_comps,)) for key in
             {'strain', 'stress'} at the beginning of loading subpath.
@@ -482,6 +488,12 @@ class LoadingSubpath:
         self._inc_lfacts = copy.deepcopy(inc_lfacts)
         self._inc_times = copy.deepcopy(inc_times)
         self._max_subinc_level = max_subinc_level
+        # Get problem type parameters
+        n_dim, comp_order_sym, comp_order_nsym = \
+            mop.get_problem_type_parameters(problem_type)
+        self._n_dim = n_dim
+        self._comp_order_sym = comp_order_sym
+        self._comp_order_nsym = comp_order_nsym
         # Initialize loading subpath increment counter
         self._inc = 0
         # Initialize loading subpath total load factor
@@ -604,13 +616,54 @@ class LoadingSubpath:
         inc_idx = self._inc - 1
         # Get current incremental load factor and associated incremental time
         inc_lfact = self._inc_lfacts[inc_idx]
-        # Update current incremental applied loading
-        for ltype in self._inc_applied_load.keys():
-            for i in range(len(self._inc_applied_load[ltype])):
-                if self._presctype[i] == ltype:
-                    self._inc_applied_load[ltype][i] = \
-                        inc_lfact*(self._load[ltype][i] -
-                                   self._init_conv_hom_state[ltype][i])
+        # Evaluate prescription type
+        is_strain_only = 'stress' not in self._inc_applied_load.keys()
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Update current incremental applied loading as follows:
+        #
+        # Infinitesimal strains: Additive decomposition (strain and/or stress)
+        #
+        # Finite strains: Multiplicative decomposition (strain only)
+        #                 Additive decomposition (stress only)
+        #                 Additive decomposition (strain (*) and stress)
+        #
+        # (*) It is not straightforward how to perform a component-wise multiplicative
+        #     decomposition of the deformation gradient in the case of a mixed
+        #     strain-stress prescription
+        #
+        if self._strain_formulation == 'finite' and is_strain_only:
+            # Initialize initial and total deformation gradient
+            def_gradient_init = np.zeros((self._n_dim, self._n_dim))
+            def_gradient_total = np.zeros((self._n_dim, self._n_dim))
+            # Build initial and total deformation gradient
+            for i in range(self._comp_order_nsym):
+                # Get component second-order index
+                so_idx = tuple([int(x) - 1 for x in list(self._comp_order_nsym[i])])
+                # Build initial and total deformation gradient
+                def_gradient_init[so_idx] = self._init_conv_hom_state['strain'][i]
+                def_gradient_total[so_idx] = self._load['strain'][i]
+            # Compute total incremental deformation gradient (multiplicative decomposition)
+            inc_def_gradient_total = np.matmul(def_gradient_total,
+                                               np.linalg.inv(def_gradient_init))
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Compute incremental deformation gradient (multiplicative decomposition)
+            inc_def_gradient = mop.matrix_root(inc_def_gradient_total, inc_lfact)
+            # Store incremental deformation gradient components
+            for i in range(self._comp_order_nsym):
+                # Get component second-order index
+                so_idx = tuple([int(x) - 1 for x in list(self._comp_order_nsym[i])])
+                # Store incremental deformation gradient component
+                self._inc_applied_load['strain'][i] = inc_def_gradient[so_idx]
+        else:
+            # Loop over prescription types
+            for ltype in self._inc_applied_load.keys():
+                # Loop over loading components
+                for i in range(len(self._inc_applied_load[ltype])):
+                    # Compute incremental loading component (additive decomposition)
+                    if self._presctype[i] == ltype:
+                        self._inc_applied_load[ltype][i] = \
+                            inc_lfact*(self._load[ltype][i] -
+                                       self._init_conv_hom_state[ltype][i])
 # ------------------------------------------------------------------------------------------
 class IncrementRewinder:
     '''Rewind analysis to initial instant (rewind state) of past macroscale loading
