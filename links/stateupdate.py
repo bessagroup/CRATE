@@ -18,8 +18,10 @@ from abc import abstractmethod
 import copy
 # Working with arrays
 import numpy as np
-# Import from string
-import importlib
+# Matricial operations
+import tensor.matrixoperations as mop
+# Material constitutive state
+from material.materialmodeling import MaterialState
 # Material constitutive modeling
 from material.models.interface import ConstitutiveModel
 # Links related procedures
@@ -157,7 +159,7 @@ class LinksConstitutiveModel(ConstitutiveModel):
             detf = 1.0
         else:
             # Compute deformation gradient
-            def_gradient = def_gradient_old + inc_strain
+            def_gradient = np.matmul(inc_strain, def_gradient_old)
             # Compute determinant of deformation gradient
             detf = np.linalg.det(def_gradient)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -258,6 +260,28 @@ class LinksConstitutiveModel(ConstitutiveModel):
         # Get state variables from Links constitutive model variables arrays
         state_variables = self.get_state_variables(stres_py, rstava_py, lalgva_py,
                                                    ralgva_py)
+        # Compute first Piola-Kirchhoff stress tensor from Cauchy stress tensor and update
+        # state variables
+        if self._strain_formulation == 'finite':
+            # Get Cauchy stress tensor (matricial form)
+            cauchy_stress_mf = state_variables['stress_mf']
+            # Build Cauchy stress tensor
+            cauchy_stress = mop.get_tensor_from_mf(cauchy_stress_mf, self._n_dim,
+                                                   self._comp_order_sym)
+            # Compute first Piola-Kirchhoff stress tensor
+            first_piola_stress = \
+                MaterialState.first_piola_from_cauchy(def_gradient, cauchy_stress)
+            # Get first Piola-Kirchhoff stress tensor (matricial form)
+            first_piola_stress_mf = mop.get_tensor_mf(first_piola_stress, self._n_dim,
+                                                      self._comp_order_nsym)
+            # Get first Piola-Kirchhoff stress tensor out-of-plane component
+            if self._problem_type == 1:
+                first_piola_stress_33 = \
+                    np.linalg.det(def_gradient)*state_variables['stress_33']
+            # Update stress tensor
+            state_variables['stress_mf'] = first_piola_stress_mf
+            if self._problem_type == 1:
+                state_variables['stress_33'] = first_piola_stress_33
         #
         #                                                         Consistent tangent modulus
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

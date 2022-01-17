@@ -45,6 +45,8 @@ class LinksElastic(LinksConstitutiveModel):
         Problem number of spatial dimensions.
     _comp_order_sym : list
         Strain/Stress components symmetric order.
+    _comp_order_nsym : list
+        Strain/Stress components nonsymmetric order.
     '''
     def __init__(self, strain_formulation, problem_type, material_properties):
         '''Constitutive model constructor.
@@ -68,9 +70,11 @@ class LinksElastic(LinksConstitutiveModel):
         # Set source
         self._source = 'links'
         # Get problem type parameters
-        n_dim, comp_order_sym, _ = mop.get_problem_type_parameters(problem_type)
+        n_dim, comp_order_sym, comp_order_nsym = \
+            mop.get_problem_type_parameters(problem_type)
         self._n_dim = n_dim
         self._comp_order_sym = comp_order_sym
+        self._comp_order_nsym = comp_order_nsym
     # --------------------------------------------------------------------------------------
     @staticmethod
     def get_required_properties():
