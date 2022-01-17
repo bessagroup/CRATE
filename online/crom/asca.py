@@ -228,9 +228,9 @@ class ASCA:
                 self._clust_adapt_freq = {mat_phase: 1
                                           for mat_phase in crve.get_adapt_material_phases()}
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Initialize clustering adaptivity manager -----> ATTENTION COMP_ORDER
+            # Initialize clustering adaptivity manager
             adaptivity_manager = \
-                AdaptivityManager(self._problem_type, self._comp_order,
+                AdaptivityManager(self._strain_formulation, self._problem_type,
                                   crve.get_adapt_material_phases(),
                                   crve.get_phase_clusters(),
                                   crve.get_adaptivity_control_feature(),
@@ -695,6 +695,8 @@ class ASCA:
                 is_trigger, target_clusters, target_clusters_data = \
                     adaptivity_manager.get_target_clusters(
                         crve.get_phase_clusters(), crve.get_voxels_clusters(),
+                            material_state.get_clusters_def_gradient_mf(),
+                            material_state.get_clusters_def_gradient_old_mf(),
                             material_state.get_clusters_state(),
                             material_state.get_clusters_state_old(),
                             clusters_sct_mf, clusters_sct_old_mf, clusters_residuals_mf,
@@ -805,7 +807,9 @@ class ASCA:
             # Set post-processing procedure initial time
             procedure_init_time = time.time()
             # Write increment homogenized results (.hres)
-            hres_output.write_hres_file(self._problem_type, inc, hom_results)
+            hres_output.write_hres_file(self._strain_formulation, self._problem_type,
+                                        mac_load_path, hom_results,
+                                        time.time()- init_time - self._post_process_time)
             # Increment post-processing time
             self._post_process_time += time.time() - procedure_init_time
             #
@@ -1747,7 +1751,7 @@ class ASCA:
         # Instantiate homogenized results output
         hres_output = HomResOutput(hres_file_path)
         # Write homogenized results output file header
-        hres_output.init_hres_file()
+        hres_output.init_hres_file(self._strain_formulation)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         ref_mat_output = None
         if is_ref_material_output:
@@ -1765,7 +1769,8 @@ class ASCA:
             # Set voxels material-related output file path
             voxout_file_path = output_dir + problem_name + '.voxout'
             # Instantiate voxels material-related output
-            voxels_output = VoxelsOutput(voxout_file_path, self._problem_type)
+            voxels_output = VoxelsOutput(voxout_file_path, self._strain_formulation,
+                                         self._problem_type)
             # Write voxels material-related output file header
             voxels_output.init_voxels_output_file(crve)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
