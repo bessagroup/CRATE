@@ -107,9 +107,11 @@ class RefMatOutput:
         ref_material : ElasticReferenceMaterial
             Elastic reference material.
         inc_hom_strain_mf : ndarray
-            Incremental homogenized strain tensor (matricial form).
+            Incremental homogenized strain tensor (matricial form): infinitesimal strain
+            tensor (infinitesimal strains) or deformation gradient (finite strains).
         inc_hom_stress_mf : ndarray
-            Incremental homogenized stress tensor (matricial form).
+            Incremental homogenized stress tensor (matricial form): Cauchy stress tensor
+            (infinitesimal strains) or first Piola-Kirchhoff stress tensor (finite strains).
         eff_tangent_mf : ndarray, default=None
             CRVE effective (homogenized) tangent modulus (matricial form).
         inc_farfield_strain_mf : ndarray, default=None
