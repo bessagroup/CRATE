@@ -56,7 +56,7 @@ class MaterialQuantitiesComputer:
         Parameters
         ----------
         stress_mf : ndarray
-            Stress tensor (matricial form).
+            Cauchy stress tensor (matricial form).
         '''
         # Compute deviatoric stress tensor (matricial form)
         dev_stress_mf = np.matmul(self._fodevprojsym_mf, stress_mf)
@@ -71,7 +71,8 @@ class MaterialQuantitiesComputer:
         Parameters
         ----------
         strain_mf : ndarray
-            Strain tensor (matricial form).
+            Strain tensor (matricial form): Infinitesimal strain tensor (infinitesimal
+            strains) or Spatial logarithmic strain tensor (finite strains).
         '''
         # Compute deviatoric strain tensor (matricial form)
         dev_strain_mf = np.matmul(self._fodevprojsym_mf, strain_mf)
