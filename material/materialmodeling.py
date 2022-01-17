@@ -66,17 +66,24 @@ class MaterialState:
         Material consistent tangent modulus (item, ndarray) associated to each material
         cluster (key, str), stored in matricial form.
     _hom_strain_mf : 1darray
-        Homogenized strain tensor stored in matricial form.
+        Homogenized strain tensor stored in matricial form: infinitesimal strain tensor
+        (infinitesimal strains) or deformation gradient (finite strains).
     _hom_strain_33 : float
-        Homogenized strain tensor out-of-plane component.
+        Homogenized strain tensor out-of-plane component: infinitesimal strain tensor
+        (infinitesimal strains) or deformation gradient (finite strains).
     _hom_stress_mf : 1darray
-        Homogenized stress tensor stored in matricial form.
+        Homogenized stress tensor stored in matricial form: Cauchy stress tensor
+        (infinitesimal strains) or first Piola-Kirchhoff stress tensor (finite strains).
     _hom_stress_33 : float
-        Homogenized stress tensor out-of-plane component.
+        Homogenized stress tensor out-of-plane component: Cauchy stress tensor
+        (infinitesimal strains) or first Piola-Kirchhoff stress tensor (finite strains).
     _hom_strain_old_mf : 1darray
-        Last converged homogenized strain tensor stored in matricial form.
+        Last converged homogenized strain tensor stored in matricial form: infinitesimal
+        strain tensor (infinitesimal strains) or deformation gradient (finite strains).
     _hom_stress_old_mf : 1darray
-        Last converged homogenized stress tensor stored in matricial form.
+        Last converged homogenized stress tensor stored in matricial form: Cauchy stress
+        tensor (infinitesimal strains) or first Piola-Kirchhoff stress tensor (finite
+        strains).
     '''
     def __init__(self, strain_formulation, problem_type, material_phases,
                  material_phases_properties, material_phases_vf):
@@ -223,10 +230,10 @@ class MaterialState:
             stored in matricial form.
         '''
         # Set strain components according to problem strain formulation
-        if self._strain_formulation == 'finite':
-            comp_order = self._comp_order_nsym
-        else:
+        if self._strain_formulation == 'infinitesimal':
             comp_order = self._comp_order_sym
+        else:
+            comp_order = self._comp_order_nsym
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize dictionary of clusters incremental strain
         clusters_inc_strain_mf = {}
@@ -339,12 +346,16 @@ class MaterialState:
         return su_fail_state
     # --------------------------------------------------------------------------------------
     def update_state_homogenization(self):
-        '''Update homogenized strain and stress tensors.'''
+        '''Update homogenized strain and stress tensors.
+
+        Infinitesimal strains: Infinitesimal strain tensor / Cauchy stress tensor
+        Finite strains: Deformation gradient / First Piola-Kirchhoff stress tensor
+        '''
         # Set strain components according to problem strain formulation
-        if self._strain_formulation == 'finite':
-            comp_order = self._comp_order_nsym
-        else:
+        if self._strain_formulation == 'infinitesimal':
             comp_order = self._comp_order_sym
+        else:
+            comp_order = self._comp_order_nsym
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize incremental homogenized strain and stress tensors (matricial form)
         hom_strain_mf = np.zeros(len(comp_order))
@@ -354,9 +365,14 @@ class MaterialState:
         for mat_phase in self._material_phases:
             # Loop over material phase clusters
             for cluster in self._phase_clusters[mat_phase]:
-                # Get material cluster strain and stress tensor (matricial form)
-                strain_mf = self._clusters_state[str(cluster)]['strain_mf']
+                # Get material cluster strain tensor (matricial form)
+                if self._strain_formulation == 'infinitesimal':
+                    strain_mf = self._clusters_state[str(cluster)]['strain_mf']
+                else:
+                    strain_mf = self._clusters_def_gradient_mf[str(cluster)]
+                # Get material cluster stress tensor (matricial form)
                 stress_mf = self._clusters_state[str(cluster)]['stress_mf']
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Add material cluster contribution to homogenized strain and stress tensors
                 # (matricial form)
                 hom_strain_mf = \
@@ -469,7 +485,8 @@ class MaterialState:
         Returns
         -------
         inc_hom_strain_mf : 1darray
-            Incremental homogenized strain tensor stored in matricial form.
+            Incremental homogenized strain tensor stored in matricial form: infinitesimal
+            strain tensor (infinitesimal strains) or deformation gradient (finite strains).
         '''
         # Compute incremental homogenized strain tensor
         inc_hom_strain_mf = self._hom_strain_mf - self._hom_strain_old_mf
@@ -483,7 +500,9 @@ class MaterialState:
         Returns
         -------
         inc_hom_stress_mf : 1darray
-            Incremental homogenized stress tensor stored in matricial form.
+            Incremental homogenized stress tensor stored in matricial form: Cauchy stress
+            tensor (infinitesimal strains) or first Piola-Kirchhoff stress tensor
+            (finite strains).
         '''
         # Compute incremental homogenized stress tensor
         inc_hom_stress_mf = self._hom_stress_mf - self._hom_stress_old_mf
@@ -543,6 +562,18 @@ class MaterialState:
             (key, str), stored in matricial form.
         '''
         return copy.deepcopy(self._clusters_def_gradient_mf)
+    # --------------------------------------------------------------------------------------
+    def get_clusters_def_gradient_old_mf(self):
+        '''Get last converged deformation gradient (matricial form) associated to each
+        material cluster.
+
+        Returns
+        -------
+        clusters_def_gradient_old_mf : dict
+            Last converged deformation gradient (item, 1darray) associated to each material
+            cluster (key, str), stored in matricial form.
+        '''
+        return copy.deepcopy(self._clusters_def_gradient_old_mf)
     # --------------------------------------------------------------------------------------
     def get_clusters_state(self):
         '''Get material state variables associated to each material cluster.
@@ -612,17 +643,17 @@ class MaterialState:
         # Get material phase constitutive model strain type
         strain_type = constitutive_model.get_strain_type()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Compute incremental logarithmic strain tensor
+        # Compute incremental spatial logarithmic strain tensor
         if strain_formulation == 'finite' and strain_type == 'finite-kinext':
             # Save incremental deformation gradient
             inc_def_gradient = copy.deepcopy(inc_strain)
             # Compute deformation gradient
-            def_gradient = def_gradient_old + inc_def_gradient
-            # Get last converged elastic logarithmic strain tensor
+            def_gradient = np.matmul(inc_def_gradient, def_gradient_old)
+            # Get last converged elastic spatial logarithmic strain tensor
             e_log_strain_old_mf = state_variables_old['e_strain_mf']
             e_log_strain_old = mop.get_tensor_from_mf(e_log_strain_old_mf, n_dim,
                                                       comp_order_sym)
-            # Compute incremental logarithmic strain tensor
+            # Compute incremental spatial logarithmic strain tensor
             inc_strain = MaterialState.compute_inc_log_strain(e_log_strain_old,
                                                               inc_def_gradient=inc_strain)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -632,21 +663,32 @@ class MaterialState:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute Cauchy stress tensor and material consistent tangent modulus
         if strain_formulation == 'finite' and strain_type == 'finite-kinext':
-            # Get Kirchhoff stress tensor
+            # Get Kirchhoff stress tensor (matricial form)
             kirchhoff_stress_mf = state_variables['stress_mf']
+            # Build Kirchhoff stress tensor
             kirchhoff_stress = mop.get_tensor_from_mf(kirchhoff_stress_mf, n_dim,
+                                                      comp_order_sym)
+            # Compute first Piola-Kirchhoff stress tensor
+            first_piola_stress = \
+                MaterialState.first_piola_from_kirchhoff(def_gradient, kirchhoff_stress)
+            # Get first Piola-Kirchhoff stress tensor (matricial form)
+            first_piola_stress_mf = \
+                mop.get_tensor_mf(first_piola_stress, n_dim, comp_order_nsym)
+            # Get first Piola-Kirchhoff stress tensor out-of-plane component
+            if problem_type == 1:
+                first_piola_stress_33 = state_variables['stress_33']
+            # Update stress tensor
+            state_variables['stress_mf'] = first_piola_stress_mf
+            if problem_type == 1:
+                state_variables['stress_33'] = first_piola_stress_33
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Get last converged elastic spatial logarithmic strain tensor
+            e_log_strain_old_mf = state_variables_old['e_strain_mf']
+            e_log_strain_old = mop.get_tensor_from_mf(e_log_strain_old_mf, n_dim,
                                                       comp_order_sym)
             # Compute Cauchy stress tensor (matricial form)
             cauchy_stress = MaterialState.cauchy_from_kirchhoff(def_gradient,
                                                                 kirchhoff_stress)
-            cauchy_stress_mf = mop.get_tensor_mf(cauchy_stress, n_dim, comp_order_sym)
-            # Update stress tensor
-            state_variables['stress_mf'] = cauchy_stress_mf
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Get last converged elastic logarithmic strain tensor
-            e_log_strain_old_mf = state_variables_old['e_strain_mf']
-            e_log_strain_old = mop.get_tensor_from_mf(e_log_strain_old_mf, n_dim,
-                                                      comp_order_sym)
             # Compute spatial consistent tangent modulus
             spatial_consistent_tangent = \
                 MaterialState.compute_spatial_tangent_modulus(e_log_strain_old,
@@ -664,20 +706,41 @@ class MaterialState:
         return state_variables, consistent_tangent_mf
     # --------------------------------------------------------------------------------------
     @staticmethod
+    def compute_spatial_log_strain(def_gradient):
+        '''Compute spatial logarithmic strain.
+
+        Parameters
+        ----------
+        def_gradient : 2darray
+            Deformation gradient.
+
+        Returns
+        -------
+        log_strain : 2darray
+            Spatial logarithmic strain.
+        '''
+        # Compute spatial logarithmic strain tensor
+        log_strain = 0.5*top.isotropic_tensor('log', np.matmul(def_gradient,
+                                                               np.transpose(def_gradient)))
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return log_strain
+    # --------------------------------------------------------------------------------------
+    @staticmethod
     def compute_inc_log_strain(e_log_strain_old, inc_def_gradient):
-        '''Compute incremental logarithmic strain.
+        '''Compute incremental spatial logarithmic strain.
 
         Parameters
         ----------
         e_log_strain_old : 2darray
-            Last converged elastic logarithmic strain tensor.
+            Last converged elastic spatial logarithmic strain tensor.
         inc_def_gradient : 2darray
             Incremental deformation gradient.
 
         Returns
         -------
         inc_log_strain : 2darray
-            Incremental logarithmic strain.
+            Incremental spatial logarithmic strain.
         '''
         # Compute last converged elastic left Cauchy-Green strain tensor
         e_cauchy_green_old = top.isotropic_tensor('exp', 2.0*e_log_strain_old)
@@ -685,10 +748,10 @@ class MaterialState:
         # Compute elastic trial left Cauchy-Green strain tensor
         e_trial_cauchy_green = np.matmul(inc_def_gradient, np.matmul(e_cauchy_green_old,
             np.transpose(inc_def_gradient)))
-        # Compute elastic trial logarithmic strain
+        # Compute elastic trial spatial logarithmic strain
         e_trial_log_strain = 0.5*top.isotropic_tensor('log', e_trial_cauchy_green)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Compute incremental logarithmic strain
+        # Compute incremental spatial logarithmic strain
         inc_log_strain = e_trial_log_strain - e_log_strain_old
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
@@ -740,6 +803,53 @@ class MaterialState:
         return first_piola_stress
     # --------------------------------------------------------------------------------------
     @staticmethod
+    def cauchy_from_first_piola(def_gradient, first_piola_stress):
+        '''Compute Cauchy stress tensor from first Piola_Kirchhoff stress tensor.
+
+        Parameters
+        ----------
+        def_gradient : 2darray
+            Deformation gradient.
+        first_piola_stress : 2darray
+            First Piola-Kirchhoff stress tensor.
+
+        Returns
+        -------
+        cauchy_stress : 2darray
+            Cauchy stress tensor.
+        '''
+        # Compute Cauchy stress tensor
+        cauchy_stress = \
+            (1.0/np.linalg.det(def_gradient))*np.matmul(first_piola_stress,
+                                                        np.transpose(def_gradient))
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return cauchy_stress
+    # --------------------------------------------------------------------------------------
+    @staticmethod
+    def first_piola_from_cauchy(def_gradient, cauchy_stress):
+        '''Compute first Piola_Kirchhoff stress tensor from Cauchy stress tensor.
+
+        Parameters
+        ----------
+        def_gradient : 2darray
+            Deformation gradient.
+        cauchy_stress : 2darray
+            Cauchy stress tensor.
+
+        Returns
+        -------
+        first_piola_stress : 2darray
+            First Piola-Kirchhoff stress tensor.
+        '''
+        # Compute first Piola_Kirchhoff stress tensor
+        first_piola_stress = np.linalg.det(def_gradient)*np.matmul(cauchy_stress,
+            np.transpose(np.linalg.inv(def_gradient)))
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return first_piola_stress
+    # --------------------------------------------------------------------------------------
+    @staticmethod
     def compute_spatial_tangent_modulus(e_log_strain_old, def_gradient_old,
                                         inc_def_gradient, cauchy_stress,
                                         inf_consistent_tangent):
@@ -751,7 +861,7 @@ class MaterialState:
         Parameters
         ----------
         e_log_strain_old : 2darray
-            Last converged elastic logarithmic strain tensor.
+            Last converged elastic spatial logarithmic strain tensor.
         def_gradient_old : 2darray
             Last converged deformation gradient.
         inc_def_gradient : 2darray
