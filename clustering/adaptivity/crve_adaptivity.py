@@ -27,6 +27,8 @@ import tensor.matrixoperations as mop
 import ioput.ioutilities as ioutil
 # Material-related computations
 from material.materialquantities import MaterialQuantitiesComputer
+# Material constitutive state
+from material.materialmodeling import MaterialState
 # Clustering adaptivity criterions
 from clustering.adaptivity.adaptivity_criterion import AdaptiveClusterGrouping, \
                                                        SpatialDiscontinuities
@@ -38,6 +40,12 @@ class AdaptivityManager:
 
     Attributes
     ----------
+    _n_dim : int
+        Problem number of spatial dimensions.
+    _comp_order_sym : list
+        Strain/Stress components symmetric order.
+    _comp_order_nsym : list
+        Strain/Stress components nonsymmetric order.
     _adapt_phase_criterions : dict
         Clustering adaptivity criterion instance (item, AdaptivityCriterion) associated to
         each material phase (key, str).
@@ -58,16 +66,17 @@ class AdaptivityManager:
     adaptive_time : float
         Total amount of time (s) spent in clustering adaptivity procedures.
     '''
-    def __init__(self, problem_type, comp_order, adapt_material_phases, phase_clusters,
-                 adaptivity_control_feature, adapt_criterion_data, clust_adapt_freq):
+    def __init__(self, strain_formulation, problem_type, adapt_material_phases,
+                 phase_clusters, adaptivity_control_feature, adapt_criterion_data,
+                 clust_adapt_freq):
         '''Online CRVE clustering adaptivity manager constructor.
 
         Parameters
         ----------
+        strain_formulation: str, {'infinitesimal', 'finite'}
+            Problem strain formulation.
         problem_type : int
             Problem type identifier (1 - Plain strain (2D), 4- Tridimensional)
-        comp_order : list
-            Strain/Stress components (str) order.
         adapt_material_phases : list
             RVE adaptive material phases labels (str).
         phase_clusters : dict
@@ -85,8 +94,8 @@ class AdaptivityManager:
             (item, int, default=1) associated with each adaptive cluster-reduced
             material phase (key, str).
         '''
+        self._strain_formulation = strain_formulation
         self._problem_type = problem_type
-        self._comp_order = copy.deepcopy(comp_order)
         self._adapt_material_phases = copy.deepcopy(adapt_material_phases)
         self._adaptivity_control_feature = copy.deepcopy(adaptivity_control_feature)
         self._adapt_criterion_data = copy.deepcopy(adapt_criterion_data)
@@ -98,6 +107,12 @@ class AdaptivityManager:
         self.max_inc_adaptive_steps = 1
         self.adaptive_evaluation_time = 0
         self.adaptive_time = 0
+        # Get problem type parameters
+        n_dim, comp_order_sym, comp_order_nsym = \
+            mop.get_problem_type_parameters(problem_type)
+        self._n_dim = n_dim
+        self._comp_order_sym = comp_order_sym
+        self._comp_order_nsym = comp_order_nsym
         # Loop over adaptive material phases
         self._adapt_phase_criterions = {}
         for mat_phase in adapt_material_phases:
@@ -171,6 +186,7 @@ class AdaptivityManager:
         return available_adapt_criterions
     # --------------------------------------------------------------------------------------
     def get_target_clusters(self, phase_clusters, voxels_clusters, clusters_state,
+                            clusters_def_gradient_mf, clusters_def_gradient_old_mf,
                             clusters_state_old, clusters_sct_mf, clusters_sct_old_mf,
                             clusters_residuals_mf, inc=None, verbose=False):
         '''Get adaptive clustering target clusters.
@@ -180,6 +196,12 @@ class AdaptivityManager:
         phase_clusters : dict
             Clusters labels (item, list of int) associated to each material phase
             (key, str).
+        clusters_def_gradient_mf : dict
+            Deformation gradient (item, 1darray) associated to each material cluster
+            (key, str), stored in matricial form.
+        clusters_def_gradient_old_mf : dict
+            Last converged deformation gradient (item, 1darray) associated to each material
+            cluster (key, str), stored in matricial form.
         clusters_state : dict
             Material constitutive model state variables (item, dict) associated to each
             material cluster (key, str).
@@ -231,9 +253,11 @@ class AdaptivityManager:
             # Build adaptivity feature data matrix
             adapt_data_matrix = \
                 self._get_adaptivity_data_matrix(mat_phase, adapt_control_feature,
-                                                 phase_clusters, clusters_state,
-                                                 clusters_state_old, clusters_sct_mf,
-                                                 clusters_sct_old_mf, clusters_residuals_mf)
+                                                 phase_clusters, clusters_def_gradient_mf,
+                                                 clusters_def_gradient_old_mf,
+                                                 clusters_state, clusters_state_old,
+                                                 clusters_sct_mf, clusters_sct_old_mf,
+                                                 clusters_residuals_mf)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Get material phase clustering adaptivity criterion
             adapt_criterion = self._adapt_phase_criterions[mat_phase]
@@ -301,9 +325,10 @@ class AdaptivityManager:
         return is_trigger, target_clusters, target_clusters_data
     # --------------------------------------------------------------------------------------
     def _get_adaptivity_data_matrix(self, target_phase, adapt_control_feature,
-                                    phase_clusters, clusters_state, clusters_state_old,
-                                    clusters_sct_mf, clusters_sct_old_mf,
-                                    clusters_residuals_mf):
+                                    phase_clusters, clusters_def_gradient_mf,
+                                    clusters_def_gradient_old_mf, clusters_state,
+                                    clusters_state_old, clusters_sct_mf,
+                                    clusters_sct_old_mf, clusters_residuals_mf):
         '''Build adaptivity feature data matrix for a given target adaptive material phase.
 
         Parameters
@@ -317,6 +342,12 @@ class AdaptivityManager:
         phase_clusters : dict
             Clusters labels (item, list of int) associated to each material phase
             (key, str).
+        clusters_def_gradient_mf : dict
+            Deformation gradient (item, 1darray) associated to each material cluster
+            (key, str), stored in matricial form.
+        clusters_def_gradient_old_mf : dict
+            Last converged deformation gradient (item, 1darray) associated to each material
+            cluster (key, str), stored in matricial form.
         clusters_state : dict
             Material constitutive model state variables (item, dict) associated to each
             material cluster (key, str).
@@ -441,28 +472,86 @@ class AdaptivityManager:
             for i in range(n_clusters):
                 # Get cluster label
                 cluster = int(adapt_data_matrix[i, 0])
-                # Get cluster stress tensor (matricial form)
-                stress_mf = clusters_state[str(cluster)]['stress_mf']
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Get Cauchy stress tensor
+                if self._strain_formulation == 'infinitesimal':
+                    # Get cluster stress tensor (matricial form)
+                    stress_mf = clusters_state[str(cluster)]['stress_mf']
+                else:
+                    # Get cluster deformation gradient (matricial form)
+                    def_gradient_mf = clusters_def_gradient_mf[str(cluster)]
+                    # Build deformation gradient
+                    def_gradient = mop.get_tensor_from_mf(def_gradient_mf, self._n_dim,
+                                                          self._comp_order_nsym)
+                    # Get first Piola-Kirchhoff stress tensor (matricial form)
+                    first_piola_stress_mf = clusters_state[str(cluster)]['stress_mf']
+                    # Build first Piola-Kirchhoff stress tensor
+                    first_piola_stress = mop.get_tensor_from_mf(first_piola_stress_mf,
+                                                                self._n_dim,
+                                                                self._comp_order_sym)
+                    # Compute Cauchy stress tensor
+                    cauchy_stress = \
+                        MaterialState.cauchy_from_first_piola(def_gradient,
+                                                              first_piola_stress)
+                    # Get Cauchy stress tensor (matricial form)
+                    stress_mf = mop.get_tensor_mf(cauchy_stress, self._n_dim,
+                                                  self._comp_order_sym)
                 # Build 3D stress tensor (matricial form)
                 if self._problem_type == 1:
-                    # Get out-of-plain stress component
-                    stress_33 = clusters_state[str(cluster)]['stress_33']
+                    # Get Cauchy stress tensor out-of-plain component
+                    if self._strain_formulation == 'infinitesimal':
+                        stress_33 = clusters_state[str(cluster)]['stress_33']
+                    else:
+                         # Get Cauchy stress tensor out-of-plain component from first
+                         # Piola-Kirchhoff counterpart
+                         stress_33 = (1.0/np.linalg.det(def_gradient))*\
+                             clusters_state[str(cluster)]['stress_33']
                     # Build 3D stress tensor (matricial form)
                     stress_mf = mop.getstate3Dmffrom2Dmf(self._problem_type,
                                                          stress_mf, stress_33)
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Compute von Mises equivalent stress
                 vm_stress = csbvar_computer.get_vm_stress(stress_mf)
                 # Assemble adaptivity feature data matrix
                 if is_incremental:
                     # Get cluster previously converged stress tensor (matricial form)
-                    stress_mf = clusters_state_old[str(cluster)]['stress_mf']
+                    if self._strain_formulation == 'infinitesimal':
+                        # Get cluster stress tensor (matricial form)
+                        stress_mf = clusters_state_old[str(cluster)]['stress_mf']
+                    else:
+                        # Get cluster deformation gradient (matricial form)
+                        def_gradient_mf = clusters_def_gradient_old_mf[str(cluster)]
+                        # Build deformation gradient
+                        def_gradient = mop.get_tensor_from_mf(def_gradient_mf, self._n_dim,
+                                                              self._comp_order_nsym)
+                        # Get first Piola-Kirchhoff stress tensor (matricial form)
+                        first_piola_stress_mf = \
+                            clusters_state_old[str(cluster)]['stress_mf']
+                        # Build first Piola-Kirchhoff stress tensor
+                        first_piola_stress = mop.get_tensor_from_mf(first_piola_stress_mf,
+                                                                    self._n_dim,
+                                                                    self._comp_order_sym)
+                        # Compute Cauchy stress tensor
+                        cauchy_stress = \
+                            MaterialState.cauchy_from_first_piola(def_gradient,
+                                                                  first_piola_stress)
+                        # Get Cauchy stress tensor (matricial form)
+                        stress_mf = mop.get_tensor_mf(cauchy_stress, self._n_dim,
+                                                      self._comp_order_sym)
                     # Build 3D stress tensor (matricial form)
                     if self._problem_type == 1:
-                        # Get out-of-plain stress component
-                        stress_33 = clusters_state_old[str(cluster)]['stress_33']
+                        # Get Cauchy stress tensor out-of-plain component
+                        if self._strain_formulation == 'infinitesimal':
+                            stress_33 = clusters_state_old[str(cluster)]['stress_33']
+                        else:
+                             # Get Cauchy stress tensor out-of-plain component from
+                             # first Piola-Kirchhoff counterpart
+                             stress_33 = (1.0/np.linalg.det(def_gradient))*\
+                                 clusters_state_old[str(cluster)]['stress_33']
                         # Build 3D stress tensor (matricial form)
                         stress_mf = mop.getstate3Dmffrom2Dmf(self._problem_type,
                                                              stress_mf, stress_33)
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     # Compute previously converged von Mises equivalent stress
                     vm_stress_old = csbvar_computer.get_vm_stress(stress_mf)
                     # Assemble incremental adaptivity feature data matrix
@@ -478,21 +567,51 @@ class AdaptivityManager:
             for i in range(n_clusters):
                 # Get cluster label
                 cluster = int(adapt_data_matrix[i, 0])
-                # Get cluster strain tensor (matricial form)
-                strain_mf = clusters_state[str(cluster)]['strain_mf']
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Get infinitesimal strain tensor (infinitesimal strains) or spatial
+                # logarithmic strain tensor (finite strains)
+                if self._strain_formulation == 'infinitesimal':
+                    # Get cluster strain tensor (matricial form)
+                    strain_mf = clusters_state[str(cluster)]['strain_mf']
+                else:
+                    # Get cluster deformation gradient (matricial form)
+                    def_gradient_mf = clusters_def_gradient_mf[str(cluster)]
+                    # Build deformation gradient
+                    def_gradient = mop.get_tensor_from_mf(def_gradient_mf, self._n_dim,
+                                                          self._comp_order_nsym)
+                    # Compute spatial logarithmic strain tensor
+                    log_strain = MaterialState.compute_spatial_log_strain(def_gradient)
+                    # Get spatial logarithmic strain tensor (matricial form)
+                    strain_mf = mop.get_tensor_mf(log_strain, self._n_dim,
+                                                  self._comp_order_sym)
                 # Build 3D strain tensor (matricial form)
                 if self._problem_type == 1:
                     # Get out-of-plain strain component
                     strain_33 = 0.0
                     # Build 3D strain tensor (matricial form)
-                    strain_mf = mop.getstate3Dmffrom2Dmf(self._problem_type,
-                                                         strain_mf, strain_33)
+                    strain_mf = mop.getstate3Dmffrom2Dmf(self._problem_type, strain_mf,
+                                                         strain_33)
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Compute von Mises equivalent strain
                 vm_strain = csbvar_computer.get_vm_strain(strain_mf)
                 # Assemble adaptivity feature data matrix
                 if is_incremental:
-                    # Get cluster previously converged strain tensor (matricial form)
-                    strain_mf = clusters_state_old[str(cluster)]['strain_mf']
+                    # Get previously converged infinitesimal strain tensor (infinitesimal
+                    # strains) or spatial logarithmic strain tensor (finite strains)
+                    if self._strain_formulation == 'infinitesimal':
+                        # Get cluster strain tensor (matricial form)
+                        strain_mf = clusters_state_old[str(cluster)]['strain_mf']
+                    else:
+                        # Get cluster deformation gradient (matricial form)
+                        def_gradient_mf = clusters_def_gradient_old_mf[str(cluster)]
+                        # Build deformation gradient
+                        def_gradient = mop.get_tensor_from_mf(def_gradient_mf, self._n_dim,
+                                                              self._comp_order_nsym)
+                        # Compute spatial logarithmic strain tensor
+                        log_strain = MaterialState.compute_spatial_log_strain(def_gradient)
+                        # Get spatial logarithmic strain tensor (matricial form)
+                        strain_mf = mop.get_tensor_mf(log_strain, self._n_dim,
+                                                      self._comp_order_sym)
                     # Build 3D strain tensor (matricial form)
                     if self._problem_type == 1:
                         # Get out-of-plain strain component
@@ -500,6 +619,7 @@ class AdaptivityManager:
                         # Build 3D strain tensor (matricial form)
                         strain_mf = mop.getstate3Dmffrom2Dmf(self._problem_type,
                                                              strain_mf, strain_33)
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     # Compute previously converged von Mises equivalent strain
                     vm_strain_old = csbvar_computer.get_vm_strain(strain_mf)
                     # Assemble incremental adaptivity feature data matrix
@@ -626,7 +746,11 @@ class AdaptivityManager:
             # Get CRVE material phases and total number of clusters
             material_phases = crve.get_material_phases()
             n_total_clusters = crve.get_n_total_clusters()
-            comp_order = crve.get_comp_order()
+            # Set cluster incremental strain component order
+            if self._strain_formulation == 'infinitesimal':
+                comp_order = self._comp_order_sym
+            else:
+                comp_order = self._comp_order_nsym
             # Get previous clustering clusters incremental strain global vector
             if len(improved_init_guess[1]) != n_total_clusters_old*len(comp_order):
                 raise RuntimeError('Unexpected size of previous clustering clusters '
