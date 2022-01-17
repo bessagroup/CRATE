@@ -217,6 +217,8 @@ class VTKOutput:
         material_phases_models = material_state.get_material_phases_models()
         # Get material state variables associated to each material cluster
         clusters_state = material_state.get_clusters_state()
+        # Get deformation gradient associated to each material cluster
+        clusters_def_gradient_mf = material_state.get_clusters_def_gradient_mf()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Instantiate factory of voxels arrays
         voxels_array_factory = VoxelsArraysFactory(problem_type)
@@ -347,7 +349,8 @@ class VTKOutput:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Write VTK cell data array - Von Mises equivalent stress
         array_vox = \
-            voxels_array_factory.build_voxels_array(crve, 'vm_stress', clusters_state)[0]
+            voxels_array_factory.build_voxels_array(crve, 'vm_stress', clusters_state,
+                                                    clusters_def_gradient_mf)[0]
         data_list = list(array_vox.flatten('F'))
         min_val = min(data_list)
         max_val = max(data_list)
@@ -357,7 +360,8 @@ class VTKOutput:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Write VTK cell data array - Von Mises equivalent strain
         array_vox = \
-            voxels_array_factory.build_voxels_array(crve, 'vm_strain', clusters_state)[0]
+            voxels_array_factory.build_voxels_array(crve, 'vm_strain', clusters_state,
+                                                    clusters_def_gradient_mf)[0]
         data_list = list(array_vox.flatten('F'))
         min_val = min(data_list)
         max_val = max(data_list)

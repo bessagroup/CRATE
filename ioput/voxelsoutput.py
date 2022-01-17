@@ -15,6 +15,8 @@ import numpy as np
 import tensor.matrixoperations as mop
 # Material-related computations
 from material.materialquantities import MaterialQuantitiesComputer
+# Material constitutive state
+from material.materialmodeling import MaterialState
 #
 #                                                  Voxels material-related output file class
 # ==========================================================================================
@@ -33,17 +35,20 @@ class VoxelsOutput:
         Total number of material-related output variables dimensions
     '''
     # --------------------------------------------------------------------------------------
-    def __init__(self, voxout_file_path, problem_type):
+    def __init__(self, voxout_file_path, strain_formulation, problem_type):
         '''Voxels material-related output constructor.
 
         Parameters
         ----------
         voxout_file_path : str
             Path of voxels material-related output file.
+        strain_formulation: str, {'infinitesimal', 'finite'}
+            Problem strain formulation.
         problem_type : int
             Problem type identifier (1 - Plain strain (2D), 4- Tridimensional)
         '''
         self._voxout_file_path = voxout_file_path
+        self._strain_formulation = strain_formulation
         self._problem_type = problem_type
         # Set material-related output variables names and number of dimensions
         self._output_variables = [('vm_stress', 1), ('acc_p_strain', 1),
@@ -95,7 +100,8 @@ class VoxelsOutput:
         '''
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Instantiate factory of voxels arrays
-        voxels_array_factory = VoxelsArraysFactory(self._problem_type)
+        voxels_array_factory = VoxelsArraysFactory(self._strain_formulation,
+                                                   self._problem_type)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get total number of voxels
         _, n_voxels = crve.get_n_voxels()
@@ -153,24 +159,40 @@ class VoxelsArraysFactory:
 
     Attributes
     ----------
+    _n_dim : int
+        Problem number of spatial dimensions.
+    _comp_order_sym : list
+        Strain/Stress components symmetric order.
+    _comp_order_nsym : list
+        Strain/Stress components nonsymmetric order.
     available_vars : dict
         Number of dimensions (item, int) of each available cluster state based variable
         (key, str).
     '''
     # --------------------------------------------------------------------------------------
-    def __init__(self, problem_type):
+    def __init__(self, strain_formulation, problem_type):
         '''Constructor.
 
         Parameters
         ----------
+        strain_formulation: str, {'infinitesimal', 'finite'}
+            Problem strain formulation.
         problem_type : int
             Problem type identifier (1 - Plain strain (2D), 4- Tridimensional)
         '''
+        self._strain_formulation = strain_formulation
         self._problem_type = problem_type
+        # Get problem type parameters
+        n_dim, comp_order_sym, comp_order_nsym = \
+            mop.get_problem_type_parameters(problem_type)
+        self._n_dim = n_dim
+        self._comp_order_sym = comp_order_sym
+        self._comp_order_nsym = comp_order_nsym
+        # Set available cluster state based variables and associated number of dimensions
         self._available_csbvars = {'vm_stress': 1, 'vm_strain': 1, 'acc_p_strain': 1,
                                    'acc_p_energy_dens': 1}
     # --------------------------------------------------------------------------------------
-    def build_voxels_array(self, crve, csbvar, clusters_state):
+    def build_voxels_array(self, crve, csbvar, clusters_state, clusters_def_gradient_mf):
         '''Build clusters state based voxel array.
 
         Parameters
@@ -182,6 +204,9 @@ class VoxelsArraysFactory:
         clusters_state : dict
             Material constitutive model state variables (item, dict) associated to each
             material cluster (key, str).
+        clusters_def_gradient_mf : dict
+            Deformation gradient (item, 1darray) associated to each material cluster
+            (key, str), stored in matricial form.
 
         Returns
         -------
@@ -222,20 +247,64 @@ class VoxelsArraysFactory:
                     flat_idxs = np.in1d(voxels_clusters.flatten('F'), [cluster, ])
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     if csbvar == 'vm_stress':
-                        # Get cluster stress tensor (matricial form)
-                        stress_mf = clusters_state[str(cluster)]['stress_mf']
-                        # Build 3D stress tensor (matricial form)
+                        # Get Cauchy stress tensor (matricial form)
+                        if self._strain_formulation == 'infinitesimal':
+                            stress_mf = clusters_state[str(cluster)]['stress_mf']
+                        else:
+                            # Get deformation gradient (matricial form)
+                            def_gradient_mf = clusters_def_gradient_mf[str(cluster)]
+                            # Build deformation gradient
+                            def_gradient = mop.get_tensor_from_mf(def_gradient_mf,
+                                                                  self._n_dim,
+                                                                  self._comp_order_nsym)
+                            # Get first Piola-Kirchhoff stress tensor (matricial form)
+                            first_piola_stress_mf = \
+                                clusters_state[str(cluster)]['stress_mf']
+                            # Build first Piola-Kirchhoff stress tensor
+                            first_piola_stress = \
+                                mop.get_tensor_from_mf(first_piola_stress_mf, self._n_dim,
+                                                       self._comp_order_sym)
+                            # Compute Cauchy stress tensor
+                            cauchy_stress = \
+                                MaterialState.cauchy_from_first_piola(def_gradient,
+                                                                      first_piola_stress)
+                            # Get Cauchy stress tensor (matricial form)
+                            stress_mf = mop.get_tensor_mf(cauchy_stress, self._n_dim,
+                                                          self._comp_order_sym)
+                        # Build 3D Cauchy stress tensor (matricial form)
                         if self._problem_type == 1:
-                            # Get out-of-plain stress component
-                            stress_33 = clusters_state[str(cluster)]['stress_33']
-                            # Build 3D stress tensor (matricial form)
+                            # Get Cauchy stress tensor out-of-plain component
+                            if self._strain_formulation == 'infinitesimal':
+                                stress_33 = clusters_state[str(cluster)]['stress_33']
+                            else:
+                                # Get Cauchy stress tensor out-of-plain component from
+                                # first Piola-Kirchhoff counterpart
+                                stress_33 = (1.0/np.linalg.det(def_gradient))*\
+                                    clusters_state[str(cluster)]['stress_33']
+                            # Build 3D Cauchy stress tensor (matricial form)
                             stress_mf = mop.get_state_3Dmf_from_2Dmf(self._problem_type,
                                                                      stress_mf, stress_33)
                         # Compute von Mises equivalent stress
                         value = csbvar_computer.get_vm_stress(stress_mf)
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     elif csbvar == 'vm_strain':
                         # Get cluster strain tensor (matricial form)
-                        strain_mf = clusters_state[str(cluster)]['strain_mf']
+                        if self._strain_formulation == 'infinitesimal':
+                            # Get infinitesimal strain tensor (matricial form)
+                            strain_mf = clusters_state[str(cluster)]['strain_mf']
+                        else:
+                            # Get deformation gradient (matricial form)
+                            def_gradient_mf = clusters_def_gradient_mf[str(cluster)]
+                            # Build deformation gradient
+                            def_gradient = mop.get_tensor_from_mf(def_gradient_mf,
+                                                                  self._n_dim,
+                                                                  self._comp_order_nsym)
+                            # Compute spatial logarithmic strain tensor
+                            log_strain = \
+                                MaterialState.compute_spatial_log_strain(def_gradient)
+                            # Get spatial logarithmic strain tensor (matricial form)
+                            strain_mf = mop.get_tensor_mf(log_strain, self._n_dim,
+                                                          self._comp_order_sym)
                         # Build 3D strain tensor (matricial form)
                         if self._problem_type == 1:
                             # Get out-of-plain strain component
@@ -245,6 +314,7 @@ class VoxelsArraysFactory:
                                                                      strain_mf, strain_33)
                         # Compute von Mises equivalent strain
                         value = csbvar_computer.get_vm_strain(strain_mf)
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     elif csbvar in ['acc_p_strain', 'acc_p_energy_dens']:
                         # Get cluster quantity directly from state variables dictionary
                         if csbvar in clusters_state[str(cluster)].keys():
