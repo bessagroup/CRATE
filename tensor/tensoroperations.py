@@ -144,9 +144,12 @@ def spectral_decomposition(x):
     # Compute eigenprojections
     if n_dim == 2:
         # Set eigenvalue normalization factor
-        eig_norm = np.max(eigenvalues)
+        eig_norm = np.max(np.abs(eigenvalues))
         # Check eigenvalues multiplicity
-        eig_mult = [(eigenvalues[0] - eigenvalues[1])/eig_norm < eig_toler,]
+        if eig_norm < eig_toler:
+            eig_mult = [(eigenvalues[0] - eigenvalues[1]) < eig_toler,]
+        else:
+            eig_mult = [(eigenvalues[0] - eigenvalues[1])/eig_norm < eig_toler,]
         # Get distinct eigenvalues
         if np.sum(eig_mult) == 0:
             n_eig_distinct = 2
@@ -173,11 +176,16 @@ def spectral_decomposition(x):
                     (eig - pinv_1)*np.eye(n_dim))))
     elif n_dim == 3:
         # Set eigenvalue normalization factor
-        eig_norm = np.max(eigenvalues)
+        eig_norm = np.max(np.abs(eigenvalues))
         # Check eigenvalues multiplicity
-        eig_mult = [(eigenvalues[0] - eigenvalues[1])/eig_norm < eig_toler,
-                    (eigenvalues[0] - eigenvalues[2])/eig_norm < eig_toler,
-                    (eigenvalues[1] - eigenvalues[2])/eig_norm < eig_toler]
+        if eig_norm < eig_toler:
+            eig_mult = [(eigenvalues[0] - eigenvalues[1]) < eig_toler,
+                        (eigenvalues[0] - eigenvalues[2]) < eig_toler,
+                        (eigenvalues[1] - eigenvalues[2]) < eig_toler]
+        else:
+            eig_mult = [(eigenvalues[0] - eigenvalues[1])/eig_norm < eig_toler,
+                        (eigenvalues[0] - eigenvalues[2])/eig_norm < eig_toler,
+                        (eigenvalues[1] - eigenvalues[2])/eig_norm < eig_toler]
         # Get distinct eigenvalues
         if np.sum(eig_mult) == 0:
             n_eig_distinct = 3
