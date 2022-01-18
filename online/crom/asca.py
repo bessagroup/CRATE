@@ -365,7 +365,7 @@ class ASCA:
             # Set additional initial iterative guesses
             if self._is_farfield_formulation:
                 # Set incremental far-field strain initial iterative guess
-                inc_farfield_strain_mf = np.zeros(len(comp_order))
+                inc_farfield_strain_mf = self._init_inc_farfield_strain_mf()
             else:
                 # Set incremental homogenized components initial iterative guess
                 inc_mix_strain_mf[presc_stress_idxs] = 0.0
@@ -943,6 +943,31 @@ class ASCA:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return global_inc_strain_mf
+    # --------------------------------------------------------------------------------------
+    def _init_inc_farfield_strain_mf(self, mode='last_converged'):
+        '''Set incremental far-field strain initial iterative guess.
+
+        Parameters
+        ----------
+        mode : str, {'last_converged',}, default='last_converged'
+            Strategy to set incremental far-field strain initial iterative guess.
+        '''
+        if mode == 'last_converged':
+            # Set incremental initial iterative guess associated with the last converged
+            # solution
+            if self._strain_formulation == 'infinitesimal':
+                # Set far-field infinitesimal strain tensor
+                inc_farfield_strain_mf = np.zeros(len(self._comp_order_sym))
+            else:
+                # Set far-field deformation gradient
+                inc_farfield_strain_mf = \
+                    np.array([1.0 if x[0] == x[1] else 0.0 for x in self._comp_order_nsym])
+        else:
+            raise RuntimeError('Unavailable strategy to set incremental far-field' + \
+                               'strain initial iterative guess.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return inc_farfield_strain_mf
     # --------------------------------------------------------------------------------------
     def _build_residual(self, crve, material_state, presc_strain_idxs, presc_stress_idxs,
                         inc_mac_load_mf, ref_material, global_cit_mf, global_inc_strain_mf,
