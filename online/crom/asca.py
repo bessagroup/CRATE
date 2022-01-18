@@ -367,8 +367,16 @@ class ASCA:
                 # Set incremental far-field strain initial iterative guess
                 inc_farfield_strain_mf = self._init_inc_farfield_strain_mf()
             else:
-                # Set incremental homogenized components initial iterative guess
-                inc_mix_strain_mf[presc_stress_idxs] = 0.0
+                # Set incremental homogenized strain components initial iterative guess
+                if self._strain_formulation == 'infinitesimal':
+                    inc_mix_strain_mf[presc_stress_idxs] = 0.0
+                else:
+                    for i in range(len(presc_stress_idxs)):
+                        if self._comp_order_nsym[i][0] == self._comp_order_nsym[i][1]:
+                            inc_mix_strain_mf[i] = 1.0
+                        else:
+                            inc_mix_strain_mf[i] = 0.0
+                # Set incremental homogenized stress components initial iterative guess
                 inc_mix_stress_mf[presc_strain_idxs] = 0.0
             #
             #                                          Self-consistent scheme iterative loop
