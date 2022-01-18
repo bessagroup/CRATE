@@ -21,9 +21,9 @@ import tensor.matrixoperations as mop
 # Tensorial operations
 import tensor.tensoroperations as top
 # Material-related computations
-from material.materialquantities import MaterialQuantitiesComputer
-# Material constitutive state
-from material.materialmodeling import MaterialState
+from material.materialoperations import compute_spatial_log_strain, \
+                                        cauchy_from_first_piola, \
+                                        MaterialQuantitiesComputer
 #
 #                                                      Homogenized results output file class
 # ==========================================================================================
@@ -157,10 +157,9 @@ class HomResOutput:
             cauchy_stress = copy.deepcopy(out_hom_stress)
         else:
             # Compute spatial logarithmic strain tensor
-            strain = MaterialState.compute_spatial_log_strain(hom_strain)
+            strain = compute_spatial_log_strain(hom_strain)
             # Get Cauchy stress tensor from first Piola-Kirchhoff stress tensor
-            cauchy_stress = \
-                MaterialState.cauchy_from_first_piola(out_hom_strain, out_hom_stress)
+            cauchy_stress = cauchy_from_first_piola(out_hom_strain, out_hom_stress)
         # Get spatial logarithmic strain tensor (matricial form)
         strain_mf = mop.get_tensor_mf(strain, n_dim, comp_order_sym)
         # Get Cauchy stress tensor (matricial form)

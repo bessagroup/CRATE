@@ -22,6 +22,9 @@ import itertools as it
 import tensor.tensoroperations as top
 # Matricial operations
 import tensor.matrixoperations as mop
+# Material operations
+from material.materialoperations import cauchy_from_kirchhoff, \
+                                        first_piola_from_kirchhoff
 # Constitutive models
 from material.models.elastic import Elastic
 from material.models.von_mises import VonMises
@@ -669,8 +672,7 @@ class MaterialState:
             kirchhoff_stress = mop.get_tensor_from_mf(kirchhoff_stress_mf, n_dim,
                                                       comp_order_sym)
             # Compute first Piola-Kirchhoff stress tensor
-            first_piola_stress = \
-                MaterialState.first_piola_from_kirchhoff(def_gradient, kirchhoff_stress)
+            first_piola_stress = first_piola_from_kirchhoff(def_gradient, kirchhoff_stress)
             # Get first Piola-Kirchhoff stress tensor (matricial form)
             first_piola_stress_mf = \
                 mop.get_tensor_mf(first_piola_stress, n_dim, comp_order_nsym)
@@ -687,8 +689,7 @@ class MaterialState:
             e_log_strain_old = mop.get_tensor_from_mf(e_log_strain_old_mf, n_dim,
                                                       comp_order_sym)
             # Compute Cauchy stress tensor (matricial form)
-            cauchy_stress = MaterialState.cauchy_from_kirchhoff(def_gradient,
-                                                                kirchhoff_stress)
+            cauchy_stress = cauchy_from_kirchhoff(def_gradient, kirchhoff_stress)
             # Compute spatial consistent tangent modulus
             spatial_consistent_tangent = \
                 MaterialState.compute_spatial_tangent_modulus(e_log_strain_old,
@@ -704,27 +705,6 @@ class MaterialState:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return state_variables, consistent_tangent_mf
-    # --------------------------------------------------------------------------------------
-    @staticmethod
-    def compute_spatial_log_strain(def_gradient):
-        '''Compute spatial logarithmic strain.
-
-        Parameters
-        ----------
-        def_gradient : 2darray
-            Deformation gradient.
-
-        Returns
-        -------
-        log_strain : 2darray
-            Spatial logarithmic strain.
-        '''
-        # Compute spatial logarithmic strain tensor
-        log_strain = 0.5*top.isotropic_tensor('log', np.matmul(def_gradient,
-                                                               np.transpose(def_gradient)))
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Return
-        return log_strain
     # --------------------------------------------------------------------------------------
     @staticmethod
     def compute_inc_log_strain(e_log_strain_old, inc_def_gradient):
@@ -756,98 +736,6 @@ class MaterialState:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return inc_log_strain
-    # --------------------------------------------------------------------------------------
-    @staticmethod
-    def cauchy_from_kirchhoff(def_gradient, kirchhoff_stress):
-        '''Compute Cauchy stress tensor from Kirchhoff stress tensor.
-
-        Parameters
-        ----------
-        def_gradient : 2darray
-            Deformation gradient.
-        kirchhoff_stress : 2darray
-            Kirchhoff stress tensor.
-
-        Returns
-        -------
-        cauchy_stress : 2darray
-            Cauchy stress tensor.
-        '''
-        # Compute Cauchy stress tensor
-        cauchy_stress = (1.0/np.linalg.det(def_gradient))*kirchhoff_stress
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Return
-        return cauchy_stress
-    # --------------------------------------------------------------------------------------
-    @staticmethod
-    def first_piola_from_kirchhoff(def_gradient, kirchhoff_stress):
-        '''Compute First Piola-Kirchhoff stress tensor from Kirchhoff stress tensor.
-
-        Parameters
-        ----------
-        def_gradient : 2darray
-            Deformation gradient.
-        kirchhoff_stress : 2darray
-            Kirchhoff stress tensor.
-
-        Returns
-        -------
-        first_piola_stress : 2darray
-            First Piola-Kirchhoff stress tensor.
-        '''
-        # Compute First Piola-Kirchhoff stress tensor
-        first_piola_stress = np.matmul(kirchhoff_stress,
-                                       np.transpose(np.linalg.inv(def_gradient)))
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Return
-        return first_piola_stress
-    # --------------------------------------------------------------------------------------
-    @staticmethod
-    def cauchy_from_first_piola(def_gradient, first_piola_stress):
-        '''Compute Cauchy stress tensor from first Piola_Kirchhoff stress tensor.
-
-        Parameters
-        ----------
-        def_gradient : 2darray
-            Deformation gradient.
-        first_piola_stress : 2darray
-            First Piola-Kirchhoff stress tensor.
-
-        Returns
-        -------
-        cauchy_stress : 2darray
-            Cauchy stress tensor.
-        '''
-        # Compute Cauchy stress tensor
-        cauchy_stress = \
-            (1.0/np.linalg.det(def_gradient))*np.matmul(first_piola_stress,
-                                                        np.transpose(def_gradient))
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Return
-        return cauchy_stress
-    # --------------------------------------------------------------------------------------
-    @staticmethod
-    def first_piola_from_cauchy(def_gradient, cauchy_stress):
-        '''Compute first Piola_Kirchhoff stress tensor from Cauchy stress tensor.
-
-        Parameters
-        ----------
-        def_gradient : 2darray
-            Deformation gradient.
-        cauchy_stress : 2darray
-            Cauchy stress tensor.
-
-        Returns
-        -------
-        first_piola_stress : 2darray
-            First Piola-Kirchhoff stress tensor.
-        '''
-        # Compute first Piola_Kirchhoff stress tensor
-        first_piola_stress = np.linalg.det(def_gradient)*np.matmul(cauchy_stress,
-            np.transpose(np.linalg.inv(def_gradient)))
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Return
-        return first_piola_stress
     # --------------------------------------------------------------------------------------
     @staticmethod
     def compute_spatial_tangent_modulus(e_log_strain_old, def_gradient_old,

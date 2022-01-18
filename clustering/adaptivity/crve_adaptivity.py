@@ -26,9 +26,9 @@ import tensor.matrixoperations as mop
 # I/O utilities
 import ioput.ioutilities as ioutil
 # Material-related computations
-from material.materialquantities import MaterialQuantitiesComputer
-# Material constitutive state
-from material.materialmodeling import MaterialState
+from material.materialoperations import compute_spatial_log_strain, \
+                                        cauchy_from_first_piola, \
+                                        MaterialQuantitiesComputer
 # Clustering adaptivity criterions
 from clustering.adaptivity.adaptivity_criterion import AdaptiveClusterGrouping, \
                                                        SpatialDiscontinuities
@@ -490,9 +490,8 @@ class AdaptivityManager:
                                                                 self._n_dim,
                                                                 self._comp_order_sym)
                     # Compute Cauchy stress tensor
-                    cauchy_stress = \
-                        MaterialState.cauchy_from_first_piola(def_gradient,
-                                                              first_piola_stress)
+                    cauchy_stress = cauchy_from_first_piola(def_gradient,
+                                                            first_piola_stress)
                     # Get Cauchy stress tensor (matricial form)
                     stress_mf = mop.get_tensor_mf(cauchy_stress, self._n_dim,
                                                   self._comp_order_sym)
@@ -532,9 +531,8 @@ class AdaptivityManager:
                                                                     self._n_dim,
                                                                     self._comp_order_sym)
                         # Compute Cauchy stress tensor
-                        cauchy_stress = \
-                            MaterialState.cauchy_from_first_piola(def_gradient,
-                                                                  first_piola_stress)
+                        cauchy_stress = cauchy_from_first_piola(def_gradient,
+                                                                first_piola_stress)
                         # Get Cauchy stress tensor (matricial form)
                         stress_mf = mop.get_tensor_mf(cauchy_stress, self._n_dim,
                                                       self._comp_order_sym)
@@ -580,7 +578,7 @@ class AdaptivityManager:
                     def_gradient = mop.get_tensor_from_mf(def_gradient_mf, self._n_dim,
                                                           self._comp_order_nsym)
                     # Compute spatial logarithmic strain tensor
-                    log_strain = MaterialState.compute_spatial_log_strain(def_gradient)
+                    log_strain = compute_spatial_log_strain(def_gradient)
                     # Get spatial logarithmic strain tensor (matricial form)
                     strain_mf = mop.get_tensor_mf(log_strain, self._n_dim,
                                                   self._comp_order_sym)
@@ -608,7 +606,7 @@ class AdaptivityManager:
                         def_gradient = mop.get_tensor_from_mf(def_gradient_mf, self._n_dim,
                                                               self._comp_order_nsym)
                         # Compute spatial logarithmic strain tensor
-                        log_strain = MaterialState.compute_spatial_log_strain(def_gradient)
+                        log_strain = compute_spatial_log_strain(def_gradient)
                         # Get spatial logarithmic strain tensor (matricial form)
                         strain_mf = mop.get_tensor_mf(log_strain, self._n_dim,
                                                       self._comp_order_sym)
