@@ -39,6 +39,8 @@ class Elastic(ConstitutiveModel):
         Problem number of spatial dimensions.
     _comp_order_sym : list
         Strain/Stress components symmetric order.
+    _comp_order_nsym : list
+        Strain/Stress components nonsymmetric order.
     '''
     def __init__(self, strain_formulation, problem_type, material_properties):
         '''Constitutive model constructor.
@@ -62,9 +64,11 @@ class Elastic(ConstitutiveModel):
         # Set source
         self._source = 'crate'
         # Get problem type parameters
-        n_dim, comp_order_sym, _ = mop.get_problem_type_parameters(problem_type)
+        n_dim, comp_order_sym, comp_order_nsym = \
+            mop.get_problem_type_parameters(problem_type)
         self._n_dim = n_dim
         self._comp_order_sym = comp_order_sym
+        self._comp_order_nsym = comp_order_nsym
     # --------------------------------------------------------------------------------------
     @staticmethod
     def get_required_properties():
@@ -88,10 +92,19 @@ class Elastic(ConstitutiveModel):
         '''Get initialized material constitutive model state variables.
 
         Constitutive model state variables:
-            e_strain_mf | Elastic strain tensor (matricial form)
-            strain_mf   | Total strain tensor (matricial form)
-            stress_mf   | Cauchy stress tensor (matricial form)
-            is_su_fail  | State update failure flag
+            e_strain_mf  | Infinitesimal strains: Elastic infinitesimal strain tensor
+                         |                        (matricial form)
+                         | Finite strains: Elastic spatial logarithmic strain tensor
+                         |                 (matricial form)
+            strain_mf    | Infinitesimal strains: Infinitesimal strain tensor
+                         |                        (matricial form)
+                         | Finite strains: Spatial logarithmic strain tensor
+                         |                 (matricial form)
+            stress_mf    | Infinitesimal strains: Cauchy stress tensor (matricial form)
+                         | Finite strains: Kirchhoff stress tensor (matricial form) within
+                         |                 state_update(), First-Piola Kirchhoff stress
+                         |                 tensor (matricial form) otherwise.
+            is_su_fail   | State update failure flag
 
         Returns
         -------
@@ -106,9 +119,16 @@ class Elastic(ConstitutiveModel):
         state_variables_init['strain_mf'] = \
             mop.get_tensor_mf(np.zeros((self._n_dim, self._n_dim)), self._n_dim,
                               self._comp_order_sym)
-        state_variables_init['stress_mf'] = \
-            mop.get_tensor_mf(np.zeros((self._n_dim, self._n_dim)), self._n_dim,
-                              self._comp_order_sym)
+        if self._strain_formulation == 'infinitesimal':
+            # Cauchy stress tensor
+            state_variables_init['stress_mf'] = \
+                mop.get_tensor_mf(np.zeros((self._n_dim, self._n_dim)), self._n_dim,
+                                  self._comp_order_sym)
+        else:
+            # First Piola-Kirchhoff stress tensor
+            state_variables_init['stress_mf'] = \
+                mop.get_tensor_mf(np.zeros((self._n_dim, self._n_dim)), self._n_dim,
+                                  self._comp_order_nsym)
         state_variables_init['is_plast'] = False
         state_variables_init['is_su_fail'] = False
         # Set additional out-of-plane strain and stress components

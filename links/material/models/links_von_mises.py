@@ -99,13 +99,23 @@ class LinksVonMises(LinksConstitutiveModel):
         '''Get initialized material constitutive model state variables.
 
         Constitutive model state variables:
-            e_strain_mf | Elastic strain tensor (matricial form)
-            strain_mf   | Total strain tensor (matricial form)
-            stress_mf   | Cauchy stress tensor (matricial form)
-            is_plast    | Plasticity flag
-            is_su_fail  | State update failure flag
-            e_strain_33 | Out-of-plain strain component (2D only)
-            stress_33   | Out-of-plain stress component (2D only)
+            e_strain_mf  | Infinitesimal strains: Elastic infinitesimal strain tensor
+                         |                        (matricial form)
+                         | Finite strains: Elastic spatial logarithmic strain tensor
+                         |                 (matricial form)
+            acc_p_strain | Accumulated plastic strain
+            strain_mf    | Infinitesimal strains: Infinitesimal strain tensor
+                         |                        (matricial form)
+                         | Finite strains: Spatial logarithmic strain tensor
+                         |                 (matricial form)
+            stress_mf    | Infinitesimal strains: Cauchy stress tensor (matricial form)
+                         | Finite strains: Kirchhoff stress tensor (matricial form) within
+                         |                 state_update(), First-Piola Kirchhoff stress
+                         |                 tensor (matricial form) otherwise.
+            is_plast     | Plasticity flag
+            is_su_fail   | State update failure flag
+            e_strain_33  | Out-of-plain strain component (2D only)
+            stress_33    | Out-of-plain stress component (2D only)
 
         Returns
         -------
@@ -121,9 +131,16 @@ class LinksVonMises(LinksConstitutiveModel):
         state_variables_init['strain_mf'] = \
             mop.get_tensor_mf(np.zeros((self._n_dim, self._n_dim)), self._n_dim,
                               self._comp_order_sym)
-        state_variables_init['stress_mf'] = \
-            mop.get_tensor_mf(np.zeros((self._n_dim, self._n_dim)), self._n_dim,
-                              self._comp_order_sym)
+        if self._strain_formulation == 'infinitesimal':
+            # Cauchy stress tensor
+            state_variables_init['stress_mf'] = \
+                mop.get_tensor_mf(np.zeros((self._n_dim, self._n_dim)), self._n_dim,
+                                  self._comp_order_sym)
+        else:
+            # First Piola-Kirchhoff stress tensor
+            state_variables_init['stress_mf'] = \
+                mop.get_tensor_mf(np.zeros((self._n_dim, self._n_dim)), self._n_dim,
+                                  self._comp_order_nsym)
         state_variables_init['is_plast'] = False
         state_variables_init['is_su_fail'] = False
         state_variables_init['inc_p_mult'] = 0.0
