@@ -315,7 +315,7 @@ class MaterialState:
                     state_variables, consistent_tangent_mf = \
                         self._material_su_interface(self._strain_formulation,
                                                     self._problem_type, constitutive_model,
-                                                    def_gradient_old,
+                                                    copy.deepcopy(def_gradient_old),
                                                     copy.deepcopy(inc_strain),
                                                     copy.deepcopy(state_variables_old))
                 else:
@@ -340,7 +340,8 @@ class MaterialState:
                 # Update cluster deformation gradient
                 if self._strain_formulation == 'finite':
                     self._clusters_def_gradient_mf[str(cluster)] = \
-                        np.matmul(inc_strain_mf, def_gradient_old_mf)
+                        mop.get_tensor_mf(np.matmul(inc_strain, def_gradient_old),
+                                          self._n_dim, self._comp_order_nsym)
                 # Update cluster state variables and material consistent tangent modulus
                 self._clusters_state[str(cluster)] = state_variables
                 self._clusters_tangent_mf[str(cluster)] = consistent_tangent_mf
