@@ -20,8 +20,6 @@ import copy
 import numpy as np
 # Matricial operations
 import tensor.matrixoperations as mop
-# Material constitutive state
-from material.materialmodeling import MaterialState
 # Material constitutive modeling
 from material.models.interface import ConstitutiveModel
 # Links related procedures
@@ -269,8 +267,8 @@ class LinksConstitutiveModel(ConstitutiveModel):
             cauchy_stress = mop.get_tensor_from_mf(cauchy_stress_mf, self._n_dim,
                                                    self._comp_order_sym)
             # Compute first Piola-Kirchhoff stress tensor
-            first_piola_stress = \
-                MaterialState.first_piola_from_cauchy(def_gradient, cauchy_stress)
+            first_piola_stress = np.linalg.det(def_gradient)*np.matmul(cauchy_stress,
+                np.transpose(np.linalg.inv(def_gradient)))
             # Get first Piola-Kirchhoff stress tensor (matricial form)
             first_piola_stress_mf = mop.get_tensor_mf(first_piola_stress, self._n_dim,
                                                       self._comp_order_nsym)
