@@ -21,7 +21,7 @@ import numpy as np
 # Matricial operations
 import tensor.matrixoperations as mop
 # Material operations
-from material.materialoperations import first_piola_from_cauchy
+from material.materialoperations import first_piola_from_cauchy, cauchy_from_first_piola
 # Material constitutive modeling
 from material.models.interface import ConstitutiveModel
 # Links related procedures
@@ -187,10 +187,35 @@ class LinksConstitutiveModel(ConstitutiveModel):
             # Set dummy incremental infinitesimal strain tensor
             eincr = np.zeros((3,3))
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Get copy of last converged material constitutive model state variables
+        state_variables_old_links = copy.deepcopy(state_variables_old)
+        # Get Cauchy stress tensor from first Piola-Kirchhoff stress tensor
+        if self._strain_formulation == 'finite':
+            # Get first Piola-Kirchhoff stress tensor
+            first_piola_stress_mf = state_variables_old_links['stress_mf']
+            # Build first Piola-Kirchhoff stress tensor
+            first_piola_stress = \
+                mop.get_tensor_from_mf(first_piola_stress_mf, self._n_dim,
+                                       self._comp_order_nsym)
+            # Compute Cauchy stress tensor
+            cauchy_stress = cauchy_from_first_piola(def_gradient_old, first_piola_stress)
+            # Get Cauchy stress tensor (matricial form)
+            stress_mf = mop.get_tensor_mf(cauchy_stress, self._n_dim,
+                                          self._comp_order_sym)
+            # Get Cauchy stress tensor out-of-plane component
+            if self._problem_type == 1:
+                cauchy_stress_33 = \
+                    (1.0/np.linalg.det(def_gradient))*state_variables_old_links['stress_33']
+            # Update stress tensor
+            state_variables_old_links['stress_mf'] = stress_mf
+            if self._problem_type == 1:
+                state_variables_old_links['stress_33'] = cauchy_stress_33
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get Links material properties arrays
         iprops, rprops = self.build_xprops()
         # Build Links constitutive model variables arrays
-        stres_py, rstava_py, lalgva_py, ralgva_py = self.build_xxxxva(state_variables_old)
+        stres_py, rstava_py, lalgva_py, ralgva_py = \
+            self.build_xxxxva(state_variables_old_links)
         rstav2_py = copy.deepcopy(rstava_py)
         # Set required Links module variables
         nlarge_py, ntype_py, ndim_py, nstre_py, nstra_py, nddim_py, nadim_py, niprop_py, \
