@@ -359,14 +359,8 @@ class ASCA:
             #                            Cluster incremental strains initial iterative guess
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Set clusters incremental strain initial iterative guess
-            if is_improved_init_guess:
-                raise RuntimeError('Unavailable clusters incremental strain initial ' +
-                                   'iterative guess.')
-            else:
-                # Set incremental initial iterative guess associated with the last converged
-                # solution
-                global_inc_strain_mf = \
-                    np.zeros((crve.get_n_total_clusters()*len(comp_order)))
+            global_inc_strain_mf = \
+                self._init_global_inc_strain_mf(crve.get_n_total_clusters())
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Set additional initial iterative guesses
             if self._is_farfield_formulation:
@@ -919,6 +913,36 @@ class ASCA:
                 type(self)._display_inc_data(mac_load_path)
                 # Set increment initial time
                 inc_init_time = time.time()
+    # --------------------------------------------------------------------------------------
+    def _init_global_inc_strain_mf(self, n_total_clusters, mode='last_converged'):
+        '''Set clusters incremental strains initial iterative guess.
+
+        Parameters
+        ----------
+        n_total_clusters : int
+            Total number of clusters.
+        mode : str, {'last_converged',}, default='last_converged'
+            Strategy to set clusters incremental strains initial iterative guess.
+        '''
+        if mode == 'last_converged':
+            # Set incremental initial iterative guess associated with the last converged
+            # solution
+            if self._strain_formulation == 'infinitesimal':
+                # Set clusters infinitesimal strain tensors
+                global_inc_strain_mf = \
+                    np.zeros((n_total_clusters*len(self._comp_order_sym)))
+            else:
+                # Set initialized deformation gradient (matricial form)
+                def_gradient_mf = \
+                    np.array([1.0 if x[0] == x[1] else 0.0 for x in self._comp_order_nsym])
+                # Build clusters deformation gradients
+                global_inc_strain_mf = np.tile(def_gradient_mf, n_total_clusters)
+        else:
+            raise RuntimeError('Unavailable strategy to set clusters incremental ' + \
+                               'strains initial iterative guess.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return global_inc_strain_mf
     # --------------------------------------------------------------------------------------
     def _build_residual(self, crve, material_state, presc_strain_idxs, presc_stress_idxs,
                         inc_mac_load_mf, ref_material, global_cit_mf, global_inc_strain_mf,
