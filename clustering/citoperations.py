@@ -266,8 +266,12 @@ def assemble_cit(strain_formulation, problem_type, mat_prop_ref, Se_ref_matrix,
     lam_ref = (E_ref*v_ref)/((1.0 + v_ref)*(1.0 - 2.0*v_ref))
     miu_ref = E_ref/(2.0*(1.0 + v_ref))
     # Compute Green operator's reference material coefficients
-    gop_factor_1 = 1.0/(4.0*miu_ref)
-    gop_factor_2 = (lam_ref + miu_ref)/(miu_ref*(lam_ref + 2.0*miu_ref))
+    if strain_formulation == 'infinitesimal':
+        gop_factor_1 = 1.0/(4.0*miu_ref)
+        gop_factor_2 = (lam_ref + miu_ref)/(miu_ref*(lam_ref + 2.0*miu_ref))
+    else:
+        gop_factor_1 = 1.0/(2.0*miu_ref)
+        gop_factor_2 = (lam_ref + miu_ref)/(2.0*miu_ref*(lam_ref + 2.0*miu_ref))
     gop_factor_0_freq = numpy.matlib.repmat(Se_ref_matrix, n_total_clusters,
                                             n_total_clusters)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
