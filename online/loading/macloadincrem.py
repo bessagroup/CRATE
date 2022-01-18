@@ -645,7 +645,7 @@ class LoadingSubpath:
             def_gradient_init = np.zeros((self._n_dim, self._n_dim))
             def_gradient_total = np.zeros((self._n_dim, self._n_dim))
             # Build initial and total deformation gradient
-            for i in range(self._comp_order_nsym):
+            for i in range(len(self._comp_order_nsym)):
                 # Get component second-order index
                 so_idx = tuple([int(x) - 1 for x in list(self._comp_order_nsym[i])])
                 # Build initial and total deformation gradient
@@ -658,7 +658,7 @@ class LoadingSubpath:
             # Compute incremental deformation gradient (multiplicative decomposition)
             inc_def_gradient = mop.matrix_root(inc_def_gradient_total, inc_lfact)
             # Store incremental deformation gradient components
-            for i in range(self._comp_order_nsym):
+            for i in range(len(self._comp_order_nsym)):
                 # Get component second-order index
                 so_idx = tuple([int(x) - 1 for x in list(self._comp_order_nsym[i])])
                 # Store incremental deformation gradient component
