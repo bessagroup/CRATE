@@ -690,11 +690,14 @@ class MaterialState:
                                                       comp_order_sym)
             # Compute Cauchy stress tensor (matricial form)
             cauchy_stress = cauchy_from_kirchhoff(def_gradient, kirchhoff_stress)
+            # Get infinitesimal strains consistent tangent modulus
+            inf_consistent_tangent = mop.get_tensor_from_mf(consistent_tangent_mf,
+                                                            n_dim, comp_order_sym)
             # Compute spatial consistent tangent modulus
             spatial_consistent_tangent = \
                 MaterialState.compute_spatial_tangent_modulus(e_log_strain_old,
                     def_gradient_old, inc_def_gradient, cauchy_stress,
-                        consistent_tangent_mf)
+                        inf_consistent_tangent)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Compute material consistent tangent modulus (matricial form)
             material_consistent_tangent = \
