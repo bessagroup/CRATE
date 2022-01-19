@@ -493,7 +493,20 @@ class MaterialState:
             strain tensor (infinitesimal strains) or deformation gradient (finite strains).
         '''
         # Compute incremental homogenized strain tensor
-        inc_hom_strain_mf = self._hom_strain_mf - self._hom_strain_old_mf
+        if self._strain_formulation == 'infinitesimal':
+            # Additive decomposition of infinitesimal strain tensor
+            inc_hom_strain_mf = self._hom_strain_mf - self._hom_strain_old_mf
+        else:
+            # Build homogenized deformation gradient
+            hom_strain = mop.get_tensor_from_mf(self._hom_strain_mf, self._n_dim,
+                                                self._comp_order_nsym)
+            hom_strain_old = mop.get_tensor_from_mf(self._hom_strain_old_mf, self._n_dim,
+                                                    self._comp_order_nsym)
+            # Multiplicative decomposition of deformation gradient
+            inc_hom_strain = np.matmul(hom_strain, np.linalg.inv(hom_strain_old))
+            # Get deformation gradient (matricial form)
+            inc_hom_strain_mf = mop.get_tensor_mf(inc_hom_strain, self._n_dim,
+                                                  self._comp_order_nsym)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return inc_hom_strain_mf
