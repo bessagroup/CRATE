@@ -138,6 +138,8 @@ class HomResOutput:
         out_hom_stress = np.zeros((3, 3))
         if problem_type == 1:
             out_hom_strain[0:2, 0:2] = hom_strain
+            if strain_formulation == 'finite':
+                out_hom_strain[2, 2] = 1.0
             out_hom_stress[0:2, 0:2] = hom_stress
             out_hom_stress[2, 2] = hom_stress_33
         else:
@@ -157,7 +159,7 @@ class HomResOutput:
             cauchy_stress = copy.deepcopy(out_hom_stress)
         else:
             # Compute spatial logarithmic strain tensor
-            strain = compute_spatial_log_strain(hom_strain)
+            strain = compute_spatial_log_strain(out_hom_strain)
             # Get Cauchy stress tensor from first Piola-Kirchhoff stress tensor
             cauchy_stress = cauchy_from_first_piola(out_hom_strain, out_hom_stress)
         # Get spatial logarithmic strain tensor (matricial form)
