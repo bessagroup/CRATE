@@ -1136,9 +1136,13 @@ class ASCA:
         else:
             raise RuntimeError('Unknown problem strain formulation.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Set fourth-order symmetric projection tensor (matricial form)
-        _, _, _, fosym, _, _, _ = top.get_id_operators(self._n_dim)
-        fosym_mf = mop.get_tensor_mf(fosym, self._n_dim, comp_order)
+        _, foid, _, fosym, _, _, _ = top.get_id_operators(self._n_dim)
+        if self._strain_formulation == 'infinitesimal':
+            # Set fourth-order symmetric projection tensor (matricial form)
+            fosym_mf = mop.get_tensor_mf(fosym, self._n_dim, comp_order)
+        else:
+            # Set fourth-order identity tensor (matricial form)
+            foid_mf = mop.get_tensor_mf(foid, self._n_dim, comp_order)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get material phases
         material_phases = material_state.get_material_phases()
@@ -1159,16 +1163,25 @@ class ASCA:
             i_end = n_total_clusters*len(comp_order)
             j_init = 0
             j_end = n_total_clusters*len(comp_order)
-            jacobian[i_init:i_end, j_init:j_end] = \
-                scipy.linalg.block_diag(*(n_total_clusters*[fosym_mf,])) + \
-                    global_cit_diff_tangent_mf
+            if self._strain_formulation == 'infinitesimal':
+                jacobian[i_init:i_end, j_init:j_end] = \
+                    scipy.linalg.block_diag(*(n_total_clusters*[fosym_mf,])) + \
+                        global_cit_diff_tangent_mf
+            else:
+                jacobian[i_init:i_end, j_init:j_end] = \
+                    scipy.linalg.block_diag(*(n_total_clusters*[foid_mf,])) + \
+                        global_cit_diff_tangent_mf
             # Compute Jacobian matrix component 12
             i_init = 0
             i_end = n_total_clusters*len(comp_order)
             j_init = n_total_clusters*len(comp_order)
             j_end = n_total_clusters*len(comp_order) + len(comp_order)
-            jacobian[i_init:i_end, j_init:j_end] = numpy.matlib.repmat(-1.0*fosym_mf,
-                                                                       n_total_clusters, 1)
+            if self._strain_formulation == 'infinitesimal':
+                jacobian[i_init:i_end, j_init:j_end] = \
+                    numpy.matlib.repmat(-1.0*fosym_mf, n_total_clusters, 1)
+            else:
+                jacobian[i_init:i_end, j_init:j_end] = \
+                    numpy.matlib.repmat(-1.0*foid_mf, n_total_clusters, 1)
             # Compute Jacobian matrix component 21
             for k in range(len(comp_order)):
                 i = n_total_clusters*len(comp_order) + k
@@ -1176,10 +1189,13 @@ class ASCA:
                 for mat_phase in material_phases:
                     for cluster in phase_clusters[mat_phase]:
                         if k in presc_strain_idxs:
-                            f_FOSym_mf = clusters_vf[str(cluster)]*fosym_mf
+                            if self._strain_formulation == 'infinitesimal':
+                                f_foid_mf = clusters_vf[str(cluster)]*fosym_mf
+                            else:
+                                f_foid_mf = clusters_vf[str(cluster)]*foid_mf
                             j_init = jclst*len(comp_order)
                             j_end = j_init + len(comp_order)
-                            jacobian[i, j_init:j_end] = f_FOSym_mf[k, :]
+                            jacobian[i, j_init:j_end] = f_foid_mf[k, :]
                         else:
                             vf_tangent_mf = \
                                 clusters_vf[str(cluster)]*clusters_tangent_mf[str(cluster)]
@@ -1200,9 +1216,14 @@ class ASCA:
             i_end = n_total_clusters*len(comp_order)
             j_init = 0
             j_end = n_total_clusters*len(comp_order)
-            jacobian[i_init:i_end, j_init:j_end] = \
-                scipy.linalg.block_diag(*(n_total_clusters*[fosym_mf,])) + \
-                    global_cit_diff_tangent_mf
+            if self._strain_formulation == 'infinitesimal':
+                jacobian[i_init:i_end, j_init:j_end] = \
+                    scipy.linalg.block_diag(*(n_total_clusters*[fosym_mf,])) + \
+                        global_cit_diff_tangent_mf
+            else:
+                jacobian[i_init:i_end, j_init:j_end] = \
+                    scipy.linalg.block_diag(*(n_total_clusters*[foid_mf,])) + \
+                        global_cit_diff_tangent_mf
             # Compute Jacobian matrix components arising due to the prescribed loading
             # stress components
             if n_presc_stress > 0:
@@ -1212,9 +1233,14 @@ class ASCA:
                 i_end = n_total_clusters*len(comp_order)
                 j_init = n_total_clusters*len(comp_order)
                 j_end = n_total_clusters*len(comp_order) + len(comp_order)
-                jacobian[i_init:i_end, j_init:j_end] = \
-                    numpy.matlib.repmat(-1.0*fosym_mf[:,presc_stress_idxs],
-                                        n_total_clusters, 1)
+                if self._strain_formulation == 'infinitesimal':
+                    jacobian[i_init:i_end, j_init:j_end] = \
+                        numpy.matlib.repmat(-1.0*fosym_mf[:,presc_stress_idxs],
+                                            n_total_clusters, 1)
+                else:
+                    jacobian[i_init:i_end, j_init:j_end] = \
+                        numpy.matlib.repmat(-1.0*foid_mf[:,presc_stress_idxs],
+                                            n_total_clusters, 1)
                 # Compute Jacobian matrix component related with the prescribed loading
                 # stress components
                 jclst = 0
