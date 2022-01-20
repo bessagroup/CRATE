@@ -388,15 +388,12 @@ class MaterialState:
         self._hom_strain_mf = copy.deepcopy(hom_strain_mf)
         self._hom_stress_mf = copy.deepcopy(hom_stress_mf)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        if self._problem_type in [1, 2]:
-            # Set out-of-plane stress component (2D plane strain problem) / strain component
-            # (2D plane stress problem)
+        if self._problem_type == 1:
+            # Set out-of-plane stress component (2D plane strain problem)
             if self._problem_type == 1:
                 comp_name = 'stress_33'
-            elif self._problem_type == 2:
-                comp_name = 'strain_33'
             else:
-                raise RuntimeError('Unknown plane problem type.')
+                raise RuntimeError('Unavailable plane problem type.')
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Initialize homogenized out-of-plane component
             oop_hom_comp = 0.0
@@ -410,10 +407,11 @@ class MaterialState:
                         self._clusters_state[str(cluster)][comp_name]
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Update out-of-plane stress or strain component
-            if self._problem_type == 1:
-                self._hom_stress_33 = oop_hom_comp
-            elif self._problem_type == 2:
-                self._hom_strain_33 = oop_hom_comp
+            if self._strain_formulation == 'infinitesimal':
+                self._hom_strain_33 = 0.0
+            else:
+                self._hom_strain_33 = 1.0
+            self._hom_stress_33 = oop_hom_comp
     # --------------------------------------------------------------------------------------
     def update_converged_state(self):
         '''Update last converged material state variables.'''
@@ -672,7 +670,7 @@ class MaterialState:
                                                       comp_order_sym)
             # Compute incremental spatial logarithmic strain tensor
             inc_strain = MaterialState.compute_inc_log_strain(e_log_strain_old,
-                                                              inc_def_gradient=inc_strain)
+                inc_def_gradient=inc_def_gradient)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Perform state update and compute material consistent tangent modulus
         state_variables, consistent_tangent_mf = \
