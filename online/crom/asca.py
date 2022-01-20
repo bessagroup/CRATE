@@ -874,12 +874,13 @@ class ASCA:
                                            material_state.get_hom_stress_mf())
             # Display converged increment data
             if self._problem_type == 1:
-                info.displayinfo('7', 'end', self._problem_type, hom_strain, hom_stress,
-                                 time.time() - inc_init_time, time.time() - init_time,
-                                 hom_stress_33)
+                info.displayinfo('7', 'end', self._strain_formulation, self._problem_type,
+                                 hom_strain, hom_stress, time.time() - inc_init_time,
+                                 time.time() - init_time, hom_stress_33)
             else:
-                info.displayinfo('7', 'end', self._problem_type, hom_strain, hom_stress,
-                                 time.time() - inc_init_time, time.time() - init_time)
+                info.displayinfo('7', 'end', self._strain_formulation, self._problem_type,
+                                 hom_strain, hom_stress, time.time() - inc_init_time,
+                                 time.time() - init_time)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Save macroscale loading increment (converged) state
             if is_solution_rewinding and rewind_manager.is_rewind_available() and \

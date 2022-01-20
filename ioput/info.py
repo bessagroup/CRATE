@@ -163,30 +163,42 @@ def displayinfo(code, *args, **kwargs):
             space1 = (output_width - 84)*' '
             space2 = (output_width - (len('Homogenized strain tensor') + 48))*' '
             space3 = (output_width - (len('Increment run time (s): ') + 44))*' '
-            problem_type = args[1]
-            hom_strain = args[2]
-            hom_stress = args[3]
+            strain_formulation = args[1]
+            problem_type = args[2]
+            hom_strain = args[3]
+            hom_stress = args[4]
             hom_strain_out = np.zeros((3, 3))
             hom_stress_out = np.zeros((3, 3))
             if problem_type == 1:
                 hom_strain_out[0:2,0:2] = hom_strain
+                if strain_formulation == 'infinitesimal':
+                    hom_strain_out[2, 2] = 0.0
+                else:
+                    hom_strain_out[2, 2] = 1.0
                 hom_stress_out[0:2,0:2] = hom_stress
-                hom_stress_out[2, 2] = args[6]
+                hom_stress_out[2, 2] = args[7]
             else:
                 hom_strain_out = copy.deepcopy(hom_strain)
                 hom_stress_out = copy.deepcopy(hom_stress)
+            if strain_formulation == 'infinitesimal':
+                strain_symbol = '\u03B5'
+                stress_symbol = '\u03C3'
+            else:
+                strain_symbol = 'F'
+                stress_symbol = 'P'
             arguments = list()
             for i in range(3):
                 for j in range(3):
                     arguments.append(hom_strain_out[i, j])
                 for j in range(3):
                     arguments.append(hom_stress_out[i, j])
-            arguments = arguments + [args[4], args[5]]
+            arguments = arguments + [args[5], args[6]]
             info = tuple(arguments)
             template = '\n\n' + \
                        indent + equal_line[:-len(indent)] + '\n' + \
-                       indent + 7*' ' + 'Homogenized strain tensor (\u03B5)' + space2 + \
-                       'Homogenized stress tensor (\u03C3)' + '\n\n' + \
+                       indent + 7*' ' + 'Homogenized strain tensor (' + strain_symbol + \
+                       ')' + space2 + \
+                       'Homogenized stress tensor (' + stress_symbol + ')' + '\n\n' + \
                        indent + ' [' + 3*'{:>12.4e}' + '  ]' + space1 + \
                        '[' + 3*'{:>12.4e}' + '  ]' + '\n' + \
                        indent + ' [' + 3*'{:>12.4e}' + '  ]' + space1 + \
