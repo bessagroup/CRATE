@@ -442,25 +442,10 @@ class ASCA:
                     #
                     #                            Global cluster interaction - tangent matrix
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                    # Get material consistent tangent modulus associated to each material
-                    # cluster
-                    clusters_tangent_mf = material_state.get_clusters_tangent_mf()
-                    # Get elastic reference material tangent modulus
-                    ref_elastic_tangent_mf = ref_material.get_elastic_tangent_mf()
-                    # Build list which stores the difference between each material cluster
-                    # consistent tangent (matricial form) and the reference material elastic
-                    # tangent (matricial form)
-                    diff_tangent_mf = list()
-                    for mat_phase in material_state.get_material_phases():
-                        for cluster in crve.get_phase_clusters()[mat_phase]:
-                            diff_tangent_mf.append(
-                                clusters_tangent_mf[str(cluster)] - ref_elastic_tangent_mf)
-                    # Build global matrix similar to the global cluster interaction matrix
-                    # but where each cluster interaction tensor is double contracted with
-                    # the difference between the associated material cluster consistent
-                    # tangent and the reference material elastic tangent
-                    global_cit_diff_tangent_mf = np.matmul(global_cit_mf,
-                        scipy.linalg.block_diag(*diff_tangent_mf))
+                    # Compute global cluster interaction - consistent tangent matrix
+                    global_cit_diff_tangent_mf = \
+                        self._build_global_cit_diff_tangent_mf(crve, global_cit_mf,
+                                                               material_state, ref_material)
                     #
                     #                               Lippmann-Schwinger equilibrium residuals
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1260,6 +1245,79 @@ class ASCA:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return jacobian
+    # --------------------------------------------------------------------------------------
+    def _build_global_cit_diff_tangent_mf(self, crve, global_cit_mf, material_state,
+                                          ref_material):
+        '''Build global cluster interaction - consistent tangent matrix.
+
+        Parameters
+        ----------
+        crve : CRVE
+            Cluster-Reduced Representative Volume Element.
+        global_cit_mf : 2darray
+            Global cluster interaction matrix. Assembly positions are assigned according to
+            the order of material_phases (1st) and phase_clusters (2nd).
+        material_state : MaterialState
+            CRVE material constitutive state.
+        ref_material : ElasticReferenceMaterial
+            Elastic reference material.
+
+        Returns
+        -------
+        global_cit_diff_tangent_mf : 2darray
+            Global matrix similar to the global cluster interaction matrix but where each
+            cluster interaction tensor is double contracted with the difference between
+            the associated material cluster consistent tangent modulus-related term and the
+            reference material elastic tangent modulus.
+        '''
+        # Get material consistent tangent modulus associated to each material cluster
+        clusters_tangent_mf = material_state.get_clusters_tangent_mf()
+        # Get elastic reference material tangent modulus
+        ref_elastic_tangent_mf = ref_material.get_elastic_tangent_mf()
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Build list which stores the difference between the material cluster consistent
+        # tangent modulus-related terms and the reference material elastic tangent modulus
+        diff_tangent_mf = list()
+        # Loop over material phases
+        for mat_phase in material_state.get_material_phases():
+            # Loop over material clusters
+            for cluster in crve.get_phase_clusters()[mat_phase]:
+                # Compute material cluster consistent tangent modulus-related term
+                if self._strain_formulation == 'infinitesimal':
+                    cluster_tangent_term_mf = \
+                        copy.deepcopy(clusters_tangent_mf[str(cluster)])
+                else:
+                    # Get cluster consistent tangent modulus
+                    cluster_tangent = \
+                        mop.get_tensor_from_mf(clusters_tangent_mf[str(cluster)],
+                                               self._n_dim, self._comp_order_nsym)
+                    # Get last converged cluster deformation gradient (matricial form)
+                    def_gradient_old_mf = \
+                        material_state.get_clusters_def_gradient_old_mf()[str(cluster)]
+                    # Build last converged cluster deformation gradient
+                    def_gradient_old = \
+                        mop.get_tensor_from_mf(def_gradient_old_mf,
+                                               self._n_dim, self._comp_order_nsym)
+                    # Compute material cluster consistent tangent modulus-related term
+                    cluster_tangent_term = top.dot42_1(cluster_tangent, def_gradient_old)
+                    # Get material cluster consistent tangent modulus-related term
+                    # (matricial form)
+                    cluster_tangent_term_mf = \
+                        mop.get_tensor_mf(cluster_tangent_term,
+                                          self._n_dim, self._comp_order_nsym)
+                # Compute difference between material cluster consistent tangent
+                # modulus-related terms and the reference material elastic tangent modulus
+                diff_tangent_mf.append(cluster_tangent_term_mf - ref_elastic_tangent_mf)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Build global matrix similar to the global cluster interaction matrix but where
+        # each cluster interaction tensor is double contracted with the difference between
+        # the associated material cluster consistent tangent modulus-related term and the
+        # reference material elastic tangent modulus
+        global_cit_diff_tangent_mf = np.matmul(global_cit_mf,
+            scipy.linalg.block_diag(*diff_tangent_mf))
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return global_cit_diff_tangent_mf
     # --------------------------------------------------------------------------------------
     def _check_convergence(self, crve, material_state, presc_strain_idxs, presc_stress_idxs,
                            inc_mac_load_mf, residual, inc_mix_strain_mf=None):
