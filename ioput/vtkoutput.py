@@ -166,7 +166,7 @@ class VTKOutput:
         crve : CRVE
             Cluster-Reduced Representative Volume Element.
         material_state : MaterialState
-            CRVE material constitutive state at rewind state.
+            CRVE material constitutive state.
         vtk_vars : str, {'all', 'common'}, default='all'
             If 'common', only state variables common to all material phases constitutive
             models are output. Otherwise, all state variables are output.
