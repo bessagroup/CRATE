@@ -268,8 +268,8 @@ class ASCA:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         if is_vtk_output:
             # Write VTK file associated to the initial state
-            vtk_output.write_VTK_file_time_step(0, self._problem_type, crve,
-                material_state, vtk_vars=vtk_data['vtk_vars'],
+            vtk_output.write_vtk_file_time_step(0, self._strain_formulation,
+                self._problem_type, crve, material_state, vtk_vars=vtk_data['vtk_vars'],
                     adaptivity_manager=adaptivity_manager)
             # Get VTK output increment divider
             vtk_inc_div = vtk_data['vtk_inc_div']
@@ -807,8 +807,8 @@ class ASCA:
                 # Set post-processing procedure initial time
                 procedure_init_time = time.time()
                 # Write VTK file associated to the converged increment
-                vtk_output.write_VTK_file_time_step(inc, self._problem_type, crve,
-                    material_state, vtk_vars=vtk_data['vtk_vars'],
+                vtk_output.write_vtk_file_time_step(inc, self._strain_formulation,
+                    self._problem_type, crve, material_state, vtk_vars=vtk_data['vtk_vars'],
                         adaptivity_manager=adaptivity_manager)
                 # Increment post-processing time
                 self._post_process_time += time.time() - procedure_init_time

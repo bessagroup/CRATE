@@ -261,7 +261,7 @@ else:
                                vtk_dir=offline_stage_dir)
         # Write clustering VTK file
         info.displayinfo('5', 'Writing clustering VTK file...')
-        vtk_output.write_VTK_file_clustering(crve=crve)
+        vtk_output.write_vtk_file_clustering(crve=crve)
         # Increment post-processing time
         ofs_post_process_time += time.time() - procedure_init_time
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

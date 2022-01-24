@@ -79,7 +79,7 @@ class VTKOutput:
             self._pvd_dir = pvd_dir
         self._vtk_collection = None
     # --------------------------------------------------------------------------------------
-    def write_VTK_file_clustering(self, crve):
+    def write_vtk_file_clustering(self, crve):
         '''Write VTK file associated to the CRVE clustering.
 
         Parameters
@@ -153,14 +153,16 @@ class VTKOutput:
         # Close clustering VTK file
         vtk_file.close()
     # --------------------------------------------------------------------------------------
-    def write_VTK_file_time_step(self, time_step, problem_type, crve, material_state,
-                                 vtk_vars='all', adaptivity_manager=None):
+    def write_vtk_file_time_step(self, time_step, strain_formulation, problem_type, crve,
+                                 material_state, vtk_vars='all', adaptivity_manager=None):
         '''Write VTK file associated to time step (increment).
 
         Parameters
         ----------
         time_step : int
             Time step.
+        strain_formulation: str, {'infinitesimal', 'finite'}
+            Problem strain formulation.
         problem_type : int
             Problem type identifier (1 - Plain strain (2D), 4- Tridimensional)
         crve : CRVE
@@ -221,7 +223,7 @@ class VTKOutput:
         clusters_def_gradient_mf = material_state.get_clusters_def_gradient_mf()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Instantiate factory of voxels arrays
-        voxels_array_factory = VoxelsArraysFactory(problem_type)
+        voxels_array_factory = VoxelsArraysFactory(strain_formulation, problem_type)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Write VTK file header
         xml.write_file_header(vtk_file)
