@@ -72,7 +72,7 @@ class HomResOutput:
         # Set strain and stress initial output
         strain_init = 9*[0.0,]
         stress_init = 9*[0.0,]
-        if strain_formulation == 'infinitesimal':
+        if strain_formulation == 'finite':
             strain_init[0] = 1.0
             strain_init[4] = 1.0
             strain_init[8] = 1.0
@@ -94,7 +94,7 @@ class HomResOutput:
                                     for x in strain_init]) + \
                       ''.join([('{:>' + str(self._col_width) + '.8e}').format(x)
                                     for x in stress_init]) + \
-                      ''.join([('{:>' + str(self._col_width) + '.8e}').format(x)
+                      ''.join([('{:>' + str(self._col_width) + '.8e}').format(0.0)
                                     for x in range(2)])]
         # Write homogenized results output file header
         hres_file.writelines(write_list)
