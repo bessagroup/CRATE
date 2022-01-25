@@ -431,3 +431,47 @@ def diso_scalars(abc, eigenvalues, fun, fund):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Return
     return s
+# ------------------------------------------------------------------------------------------
+def rotate_tensor(tensor, r):
+    '''Rotation of n-dimensional tensor.
+
+    Parameters
+    ----------
+    tensor : ndarray
+        Tensor.
+    r : 2darray
+        Rotation tensor.
+
+    Returns
+    -------
+    rtensor : ndarray
+        Rotated tensor.
+    '''
+    # Get dimensional indexes range
+    idx_range = tensor.shape[0]
+    # Get number of tensor dimensions
+    n_dim = len(tensor.shape)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Initialize rotated tensor
+    rtensor = np.zeros(n_dim*(idx_range))
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    if n_dim == 1:
+        # Compute rotation of first-order tensor
+        for i, p in it.product(range(idx_range), repeat=2):
+            rtensor[i] = rtensor[i] + r[i, p]*tensor[p]
+    elif n_dim == 2:
+        # Compute rotation of second-order tensor
+        for i, j, p, q in it.product(range(idx_range), repeat=4):
+            rtensor[i, j] = rtensor[i, j] + r[i, p]*r[j, q]*tensor[p, q]
+    elif n_dim == 3:
+        # Compute rotation of third-order tensor
+        for i, j, k, p, q, r in it.product(range(idx_range), repeat=6):
+            rtensor[i, j, k] = rtensor[i, j, k] + r[i, p]*r[j, q]*r[k, r]*tensor[p, q, r]
+    elif n_dim == 4:
+        # Compute rotation of fourth-order tensor
+        for i, j, k, l, p, q, r, s in it.product(range(idx_range), repeat=8):
+            rtensor[i, j, k, l] = \
+                rtensor[i, j, k, l] + r[i, p]*r[j, q]*r[k, r]*r[l, s]*tensor[p, q, r, s]
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Return
+    return rtensor
