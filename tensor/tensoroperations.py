@@ -124,7 +124,7 @@ def spectral_decomposition(x):
         available for 2x2 and 3x3 second-order tensors, otherwise an empty list is returned.
     '''
     # Check if second-order tensor is symmetric
-    if np.any(np.transpose(x) - x > 1e-10):
+    if not np.allclose(x, np.transpose(x), rtol=1e-5, atol=1e-10):
         raise RuntimeError('Second-order tensor must be symmetric to perform spectral '
                            'decomposition.')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
