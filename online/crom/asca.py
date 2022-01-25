@@ -564,7 +564,11 @@ class ASCA:
                     self._post_process_time += time.time() - procedure_init_time
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Solve self-consistent scheme minimization problem
-                if not is_lock_prop_ref:
+                if is_lock_prop_ref:
+                    # Skip update of reference material elastic properties
+                    E_ref = ref_material.get_material_properties()['E']
+                    v_ref = ref_material.get_material_properties()['v']
+                else:
                     # Solve self-consistent scheme minimization problem
                     is_scs_admissible, E_ref, v_ref = ref_material.self_consistent_update(
                         material_state.get_inc_hom_strain_mf(),
