@@ -64,7 +64,7 @@ def cauchy_from_kirchhoff(def_gradient, kirchhoff_stress):
     return cauchy_stress
 # ------------------------------------------------------------------------------------------
 def first_piola_from_kirchhoff(def_gradient, kirchhoff_stress):
-    '''Compute First Piola-Kirchhoff stress tensor from Kirchhoff stress tensor.
+    '''Compute first Piola-Kirchhoff stress tensor from Kirchhoff stress tensor.
 
     Parameters
     ----------
@@ -86,7 +86,7 @@ def first_piola_from_kirchhoff(def_gradient, kirchhoff_stress):
     return first_piola_stress
 # ------------------------------------------------------------------------------------------
 def cauchy_from_first_piola(def_gradient, first_piola_stress):
-    '''Compute Cauchy stress tensor from first Piola_Kirchhoff stress tensor.
+    '''Compute Cauchy stress tensor from first Piola-Kirchhoff stress tensor.
 
     Parameters
     ----------
@@ -109,7 +109,7 @@ def cauchy_from_first_piola(def_gradient, first_piola_stress):
     return cauchy_stress
 # ------------------------------------------------------------------------------------------
 def first_piola_from_cauchy(def_gradient, cauchy_stress):
-    '''Compute first Piola_Kirchhoff stress tensor from Cauchy stress tensor.
+    '''Compute first Piola-Kirchhoff stress tensor from Cauchy stress tensor.
 
     Parameters
     ----------
@@ -126,6 +126,28 @@ def first_piola_from_cauchy(def_gradient, cauchy_stress):
     # Compute first Piola_Kirchhoff stress tensor
     first_piola_stress = np.linalg.det(def_gradient)*np.matmul(cauchy_stress,
         np.transpose(np.linalg.inv(def_gradient)))
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Return
+    return first_piola_stress
+# ------------------------------------------------------------------------------------------
+def first_piola_from_second_piola(def_gradient, second_piola_stress):
+    '''Compute first Piola-Kirchhoff stress tensor from second Piola-Kirchhoff stress
+    tensor.
+
+    Parameters
+    ----------
+    def_gradient : 2darray
+        Deformation gradient.
+    second_piola_stress : 2darray
+        Second Piola-Kirchhoff stress tensor.
+
+    Returns
+    -------
+    first_piola_stress : 2darray
+        First Piola-Kirchhoff stress tensor.
+    '''
+    # Compute first Piola_Kirchhoff stress tensor
+    first_piola_stress = np.matmul(def_gradient, second_piola_stress)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Return
     return first_piola_stress
