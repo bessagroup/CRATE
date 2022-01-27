@@ -91,8 +91,7 @@ class ConstitutiveModel(ABC):
         state_variables : dict
             Material constitutive model state variables.
         consistent_tangent_mf : ndarray
-            Material constitutive model material consistent tangent modulus in matricial
-            form.
+            Material constitutive model consistent tangent modulus in matricial form.
         '''
         pass
     # --------------------------------------------------------------------------------------

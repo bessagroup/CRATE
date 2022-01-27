@@ -167,8 +167,7 @@ class VonMises(ConstitutiveModel):
         state_variables : dict
             Material constitutive model state variables.
         consistent_tangent_mf : ndarray
-            Material constitutive model material consistent tangent modulus in matricial
-            form.
+            Material constitutive model consistent tangent modulus in matricial form.
         '''
         # Build incremental strain matricial form
         inc_strain_mf = mop.get_tensor_mf(inc_strain, self._n_dim, self._comp_order_sym)
@@ -214,8 +213,7 @@ class VonMises(ConstitutiveModel):
             inc_strain_mf = mop.get_state_3Dmf_from_2Dmf(self._problem_type, inc_strain_mf,
                                                          comp_33=0.0)
             e_strain_old_mf = mop.get_state_3Dmf_from_2Dmf(self._problem_type,
-                                                           e_strain_old_mf,
-                                                           e_strain_33_old)
+                                                           e_strain_old_mf, e_strain_33_old)
         #
         #                                                                       State update
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -330,7 +328,7 @@ class VonMises(ConstitutiveModel):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize state variables dictionary
         state_variables = self.state_init()
-        # Store updated state variables in matricial form
+        # Store updated state variables
         state_variables['e_strain_mf'] = e_strain_mf
         state_variables['acc_p_strain'] = acc_p_strain
         state_variables['strain_mf'] = e_trial_strain_mf + p_strain_old_mf
