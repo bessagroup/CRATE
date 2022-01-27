@@ -5,7 +5,13 @@
 # Algebraic tensorial operations and standard tensorial operators.
 # ------------------------------------------------------------------------------------------
 # Development history:
-# Bernardo P. Ferreira | January 2020 | Initial coding.
+# Bernardo P. Ferreira | Jan 2020 | Initial coding.
+# Bernardo P. Ferreira | Oct 2021 | Spectral decomposition of second-order symmetric
+#                                 | tensors.
+#                                 | Isotropic tensor-valued functions and associated
+#                                 | derivatives.
+# Bernardo P. Ferreira | Jan 2022 | Rotation of n-dimensional tensor.
+#                                 | Rotation tensor from euler angles (Bunge convention).
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
@@ -440,38 +446,81 @@ def rotate_tensor(tensor, r):
     tensor : ndarray
         Tensor.
     r : 2darray
-        Rotation tensor.
+        Rotation tensor (for given rotation angle theta, active transformation (+ theta) and
+        passive transformation (- theta)).
 
     Returns
     -------
     rtensor : ndarray
         Rotated tensor.
     '''
-    # Get dimensional indexes range
-    idx_range = tensor.shape[0]
+    # Get number of spatial dimensions
+    n_dim = tensor.shape[0]
     # Get number of tensor dimensions
-    n_dim = len(tensor.shape)
+    tensor_dim = len(tensor.shape)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Initialize rotated tensor
-    rtensor = np.zeros(n_dim*(idx_range))
+    rtensor = np.zeros(tensor.shape)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    if n_dim == 1:
+    if tensor_dim == 1:
         # Compute rotation of first-order tensor
-        for i, p in it.product(range(idx_range), repeat=2):
+        for i, p in it.product(range(n_dim), repeat=2):
             rtensor[i] = rtensor[i] + r[i, p]*tensor[p]
-    elif n_dim == 2:
+    elif tensor_dim == 2:
         # Compute rotation of second-order tensor
-        for i, j, p, q in it.product(range(idx_range), repeat=4):
+        for i, j, p, q in it.product(range(n_dim), repeat=4):
             rtensor[i, j] = rtensor[i, j] + r[i, p]*r[j, q]*tensor[p, q]
-    elif n_dim == 3:
+    elif tensor_dim == 3:
         # Compute rotation of third-order tensor
-        for i, j, k, p, q, r in it.product(range(idx_range), repeat=6):
+        for i, j, k, p, q, r in it.product(range(n_dim), repeat=6):
             rtensor[i, j, k] = rtensor[i, j, k] + r[i, p]*r[j, q]*r[k, r]*tensor[p, q, r]
-    elif n_dim == 4:
+    elif tensor_dim == 4:
         # Compute rotation of fourth-order tensor
-        for i, j, k, l, p, q, r, s in it.product(range(idx_range), repeat=8):
+        for i, j, k, l, p, q, r, s in it.product(range(n_dim), repeat=8):
             rtensor[i, j, k, l] = \
                 rtensor[i, j, k, l] + r[i, p]*r[j, q]*r[k, r]*r[l, s]*tensor[p, q, r, s]
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Return
     return rtensor
+# ------------------------------------------------------------------------------------------
+def rotation_tensor_from_euler_angles(n_dim, euler_deg):
+    '''Set rotation tensor from euler angles (Bunge convention).
+
+    Parameters
+    ----------
+    n_dim : int
+        Number of spatial dimensions.
+    euler_deg : tuple
+        Euler angles (degrees) sorted according to Bunge convention (Z1-X2-Z3).
+
+    Returns
+    -------
+    r : 2darray
+        Rotation tensor (for given rotation angle theta, active transformation (+ theta) and
+        passive transformation (- theta)).
+    '''
+    # Convert euler angles to radians
+    euler_rad = tuple(np.radians(x) for x in euler_deg)
+    # Compute convenient sins and cosines
+    s1 = np.sin(euler_rad[0])
+    s2 = np.sin(euler_rad[1])
+    s3 = np.sin(euler_rad[2])
+    c1 = np.cos(euler_rad[0])
+    c2 = np.cos(euler_rad[1])
+    c3 = np.cos(euler_rad[2])
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Initialize rotation tensor
+    r = np.zeros((n_dim, n_dim))
+    # Build rotation tensor
+    r[0, 0] = c1*c3 - c2*s1*s3
+    r[1, 0] = c3*s1 + c1*c2*s3
+    r[2, 0] = s2*s3
+    r[0, 1] = -c1*s3 - c2*c3*s1
+    r[1, 1] = c1*c2*c3 - s1*s3
+    r[2, 1] = c3*s2
+    r[0, 2] = s1*s2
+    r[1, 2] = -c1*s2
+    r[2, 2] = c2
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Return
+    return r
