@@ -9,13 +9,12 @@
 # Bernardo P. Ferreira | Oct 2021 | Refactoring and OOP implementation.
 # Bernardo P. Ferreira | Jan 2022 | Computation of general anisotropic elasticity tensor.
 #                                 | Technical constants from elastic modulii.
+#                                 | Generalization to anisotropic elasticity.
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
 # Working with arrays
 import numpy as np
-# Tensorial operations
-import tensor.tensoroperations as top
 # Matricial operations
 import tensor.matrixoperations as mop
 # Constitutive models
@@ -196,47 +195,66 @@ class Elastic(ConstitutiveModel):
         consistent_tangent_mf : ndarray
             Material constitutive model consistent tangent modulus in matricial form.
         '''
-        # Get material properties
-        E = self._material_properties['E']
-        v = self._material_properties['v']
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Compute Lamé parameters
-        lam = (E*v)/((1.0 + v)*(1.0 - 2.0*v))
-        miu = E/(2.0*(1.0 + v))
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get last increment converged state variables
         e_strain_old_mf = state_variables_old['e_strain_mf']
+        if self._problem_type == 1:
+            e_strain_33_old = state_variables_old['e_strain_33']
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set state update failure flag
         is_su_fail = False
         #
-        #                                                         Consistent tangent modulus
+        #                                          State update & Consistent tangent modulus
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Set required fourth-order tensors
-        _, _, _, fosym, fodiagtrace, _, _ = top.get_id_operators(self._n_dim)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Compute consistent tangent modulus according to problem type
-        if self._problem_type in [1, 4]:
-            consistent_tangent = lam*fodiagtrace + 2.0*miu*fosym
-        # Build consistent tangent modulus matricial form
-        consistent_tangent_mf = mop.get_tensor_mf(consistent_tangent, self._n_dim,
-                                                  self._comp_order_sym)
-        #
-        #                                                                       State update
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Build incremental strain matricial form
+        # Build incremental strain tensor matricial form
         inc_strain_mf = mop.get_tensor_mf(inc_strain, self._n_dim, self._comp_order_sym)
+        #
+        #                                                                 2D > 3D conversion
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # When the problem type corresponds to a 2D analysis, perform the state update and
+        # consistent tangent computation as in the 3D case, considering the appropriate
+        # out-of-plain strain and stress components
+        if self._problem_type == 4:
+            n_dim = self._n_dim
+            comp_order_sym = self._comp_order_sym
+            comp_order_nsym = self._comp_order_nsym
+        else:
+            # Set 3D problem parameters
+            n_dim, comp_order_sym, comp_order_nsym = mop.get_problem_type_parameters(4)
+            # Build strain tensors (matricial form) by including the  appropriate
+            # out-of-plain components
+            inc_strain_mf = mop.get_state_3Dmf_from_2Dmf(self._problem_type, inc_strain_mf,
+                                                         comp_33=0.0)
+            e_strain_old_mf = mop.get_state_3Dmf_from_2Dmf(self._problem_type,
+                                                           e_strain_old_mf, e_strain_33_old)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Update elastic strain
         e_strain_mf = e_strain_old_mf + inc_strain_mf
+        # Compute 3D elasticity tensor (matricial form)
+        consistent_tangent_mf = Elastic.elastic_tangent_modulus(self._material_properties,
+            elastic_symmetry=self._material_properties['elastic_symmetry'])
         # Update stress
         stress_mf = np.matmul(consistent_tangent_mf, e_strain_mf)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Compute out-of-plane stress component in a 2D plane strain problem (output purpose
-        # only)
+        # Get the out-of-plane strain and stress components
         if self._problem_type == 1:
-            stress_33 = lam*(e_strain_mf[self._comp_order_sym.index('11')] + \
-                             e_strain_mf[self._comp_order_sym.index('22')])
+            e_strain_33 = e_strain_mf[comp_order_sym.index('33')]
+            stress_33 = stress_mf[comp_order_sym.index('33')]
+        #
+        #                                                                 3D > 2D Conversion
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # When the problem type corresponds to a 2D analysis, build the 2D strain and stress
+        # tensors (matricial form) once the state update has been performed
+        if self._problem_type == 1:
+            # Builds 2D strain and stress tensors (matricial form) from the associated 3D
+            # counterparts
+            e_strain_mf = mop.get_state_2Dmf_from_3Dmf(self._problem_type, e_strain_mf)
+            stress_mf = mop.get_state_2Dmf_from_3Dmf(self._problem_type, stress_mf)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # When the problem type corresponds to a 2D analysis, build the 2D consistent
+        # tangent modulus (matricial form) from the 3D counterpart
+        if self._problem_type == 1:
+            consistent_tangent_mf = mop.get_state_2Dmf_from_3Dmf(self._problem_type,
+                                                                 consistent_tangent_mf)
         #
         #                                                             Update state variables
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -248,8 +266,8 @@ class Elastic(ConstitutiveModel):
         state_variables['stress_mf'] = stress_mf
         state_variables['is_su_fail'] = is_su_fail
         if self._problem_type == 1:
+            state_variables['e_strain_33'] = e_strain_33
             state_variables['stress_33'] = stress_33
-        #
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return [state_variables, consistent_tangent_mf]
