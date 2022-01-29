@@ -8,6 +8,7 @@
 # Development history:
 # Bernardo P. Ferreira | May 2021 | Initial coding.
 # Bernardo P. Ferreira | Jan 2022 | Strain/stress tensors conversions.
+#                                 | Spatial to material consistent tangent modulus.
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
@@ -108,6 +109,29 @@ def cauchy_from_first_piola(def_gradient, first_piola_stress):
     # Return
     return cauchy_stress
 # ------------------------------------------------------------------------------------------
+def cauchy_from_second_piola(def_gradient, second_piola_stress):
+    '''Compute Cauchy stress tensor from second Piola-Kirchhoff stress tensor.
+
+    Parameters
+    ----------
+    def_gradient : 2darray
+        Deformation gradient.
+    second_piola_stress : 2darray
+        Second Piola-Kirchhoff stress tensor.
+
+    Returns
+    -------
+    cauchy_stress : 2darray
+        Cauchy stress tensor.
+    '''
+    # Compute Cauchy stress tensor
+    cauchy_stress = \
+        (1.0/np.linalg.det(def_gradient))*np.matmul(def_gradient,
+            np.matmul(second_piola_stress, np.transpose(def_gradient)))
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Return
+    return cauchy_stress
+# ------------------------------------------------------------------------------------------
 def first_piola_from_cauchy(def_gradient, cauchy_stress):
     '''Compute first Piola-Kirchhoff stress tensor from Cauchy stress tensor.
 
@@ -151,6 +175,31 @@ def first_piola_from_second_piola(def_gradient, second_piola_stress):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Return
     return first_piola_stress
+# ------------------------------------------------------------------------------------------
+def material_from_spatial_tangent_modulus(spatial_consistent_tangent, def_gradient):
+    '''Compute material consistent tangent modulus from spatial counterpart.
+
+    Parameters
+    ----------
+    spatial_consistent_tangent : 4darray
+        Spatial consistent tangent modulus.
+    def_gradient : 2darray
+        Deformation gradient.
+
+    Returns
+    -------
+    material_consistent_tangent : 4darray
+        Material consistent tangent modulus.
+    '''
+    # Compute inverse of deformation gradient
+    def_gradient_inv = np.linalg.inv(def_gradient)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Compute material consistent tangent modulus
+    material_consistent_tangent = np.linalg.det(def_gradient)*top.dot42_2(
+        top.dot42_1(spatial_consistent_tangent, def_gradient_inv), def_gradient_inv)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Return
+    return material_consistent_tangent
 #
 #                                                 Computation of material-related quantities
 # ==========================================================================================
