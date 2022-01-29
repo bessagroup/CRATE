@@ -28,6 +28,7 @@ from material.materialoperations import cauchy_from_kirchhoff, \
 # Constitutive models
 from material.models.elastic import Elastic
 from material.models.von_mises import VonMises
+from material.models.stvenant_kirchhoff import StVenantKirchhoff
 # Links constitutive models
 from links.material.models.links_elastic import LinksElastic
 from links.material.models.links_von_mises import LinksVonMises
@@ -153,6 +154,10 @@ class MaterialState:
             elif model_keyword == 'von_mises':
                 constitutive_model = VonMises(self._strain_formulation, self._problem_type,
                                               self._material_phases_properties[mat_phase])
+            elif model_keyword == 'stvenant_kirchhoff':
+                constitutive_model = \
+                    StVenantKirchhoff(self._strain_formulation, self._problem_type,
+                                      self._material_phases_properties[mat_phase])
             else:
                 raise RuntimeError('Unknown constitutive model from CRATE\'s source.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -712,9 +717,8 @@ class MaterialState:
                         inf_consistent_tangent)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Compute material consistent tangent modulus (matricial form)
-            material_consistent_tangent = \
-                MaterialState.material_from_spatial_tangent_modulus(
-                    spatial_consistent_tangent, def_gradient)
+            material_consistent_tangent = material_from_spatial_tangent_modulus(
+                spatial_consistent_tangent, def_gradient)
             consistent_tangent_mf = mop.get_tensor_mf(material_consistent_tangent, n_dim,
                                                       comp_order_nsym)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -813,32 +817,6 @@ class MaterialState:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return spatial_consistent_tangent
-    # --------------------------------------------------------------------------------------
-    @staticmethod
-    def material_from_spatial_tangent_modulus(spatial_consistent_tangent, def_gradient):
-        '''Compute material consistent tangent modulus from spatial counterpart.
-
-        Parameters
-        ----------
-        spatial_consistent_tangent : 4darray
-            Spatial consistent tangent modulus.
-        def_gradient : 2darray
-            Deformation gradient.
-
-        Returns
-        -------
-        material_consistent_tangent : 4darray
-            Material consistent tangent modulus.
-        '''
-        # Compute inverse of deformation gradient
-        def_gradient_inv = np.linalg.inv(def_gradient)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Compute material consistent tangent modulus
-        material_consistent_tangent = np.linalg.det(def_gradient)*top.dot42_2(
-            top.dot42_1(spatial_consistent_tangent, def_gradient_inv), def_gradient_inv)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Return
-        return material_consistent_tangent
     # --------------------------------------------------------------------------------------
     def clustering_adaptivity_update(self, phase_clusters, clusters_vf,
                                      adaptive_clustering_map):
@@ -970,7 +948,7 @@ def get_available_material_models(model_source='crate'):
     # Set the available material constitutive models from a given source
     if model_source == 'crate':
         # CRATE material constitutive models
-        available_mat_models = ['elastic', 'von_mises']
+        available_mat_models = ['elastic', 'von_mises', 'stvenant_kirchhoff']
     elif model_source == 'links':
         # Links material constitutive models
         available_mat_models = ['ELASTIC', 'VON_MISES']

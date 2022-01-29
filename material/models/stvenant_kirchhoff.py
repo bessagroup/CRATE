@@ -290,7 +290,7 @@ class StVenantKirchhoff(ConstitutiveModel):
         #                                                                 3D > 2D Conversion
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # When the problem type corresponds to a 2D analysis, build the 2D consistent
-        # tangent modulus (matricial form) once the 3D counterpart
+        # tangent modulus (matricial form) from the 3D counterpart
         if self._problem_type == 1:
             consistent_tangent_mf = mop.get_state_2Dmf_from_3Dmf(self._problem_type,
                                                                  consistent_tangent_mf)
