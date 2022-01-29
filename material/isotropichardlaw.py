@@ -7,6 +7,7 @@
 # Development history:
 # Bernardo P. Ferreira | Mar 2020 | Initial coding.
 # Bernardo P. Ferreira | Oct 2021 | Updated documentation.
+# Bernardo P. Ferreira | Jan 2022 | Build hardening parameters.
 #
 # ==========================================================================================
 #                                                                             Import modules
@@ -16,55 +17,103 @@ import numpy as np
 #
 #                                                                   Isotropic hardening laws
 # ==========================================================================================
-def get_available_types():
+def get_available_hardening_types():
     '''Get available isotropic hardening laws.
 
     Available isotropic hardening laws:
-    'piecewise_linear' - Piecewise linear - {ep_i, s_i}, i = 1, n_points
-    'linear'           - Linear           - s = s0 + a*ep
-    'swift'            - Swift            - s = s0 + a*ep**b
-    'ramberg_osgood'   - Ramberg-Osgood   - s = s0*(1 + a*ep)**(1/b)
+
+        1. Piecewise linear hardening ({ep_i, s_i}, i = 1, n_points)
+            isotropic_hardening | Isotropic hardening type.
+            hp_i                | Hardening point with coordinates
+                                | (accumulated plastic strain, yield stress).
+                                | Stored in a 2darray hardening_points.
+
+            Input data file syntax:
+            isotropic_hardening piecewise_linear < number of hardening points >
+                hp_1 < value > < value >
+                hp_2 < value > < value >
+                ...
+
+        2. Linear hardening (s = s0 + a*ep)
+            isotropic_hardening | Isotropic hardening type.
+            s0                  | Initial yield stress.
+            a                   | Hardening law parameter.
+
+            Input data file syntax:
+            isotropic_hardening linear 2
+                s0 < value >
+                a  < value > < value >
+
+        3. Swift hardening (s = s0 + a*ep**b)
+            isotropic_hardening | Isotropic hardening type.
+            s0                  | Initial yield stress.
+            a                   | Hardening law parameter.
+            b                   | Hardening law parameter.
+
+            Input data file syntax:
+            isotropic_hardening swift 3
+                s0 < value >
+                a  < value >
+                b  < value >
+
+        4. Ramberg-Osgood hardening (s = s0*(1 + a*ep)**(1/b))
+            isotropic_hardening | Isotropic hardening type.
+            s0                  | Initial yield stress.
+            a                   | Hardening law parameter.
+            b                   | Hardening law parameter.
+
+            Input data file syntax:
+            isotropic_hardening ramberg_osgood 3
+                s0 < value >
+                a  < value >
+                b  < value >
 
     Returns
     -------
-    available_hardening_types : list
+    available_hardening_types : tuple
         List of available isotropic hardening laws (str).
     '''
     # Set available isotropic hardening types
-    available_hardening_types = ['piecewise_linear', 'linear', 'swift', 'ramberg_osgood']
+    available_hardening_types = ('piecewise_linear', 'linear', 'swift', 'ramberg_osgood')
     # Return
     return available_hardening_types
 # ------------------------------------------------------------------------------------------
-def set_required_parameters(type):
-    '''Get isotropic hardening law required parameters.
+def build_hardening_parameters(type, material_properties):
+    '''Build hardening parameters according with isotropic hardening type.
+
+    Parameters
+    ----------
+    type : str
+        Isotropic hardening law.
+    material_properties : dict
+        Constitutive model material properties (key, str) values (item, int/float/bool).
 
     Returns
     -------
-    req_hardening_parameters : list
-        List of isotropic hardening law required parameters.
+    hardening_parameters : dict
+        Isotropic hardening law parameters (key, str) values (item, float).
     '''
-    # Piecewise linear isotropic hardening
-    if type == 'piecewise_linear':
-        req_hardening_parameters = ['n_points',]
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Linear isotropic hardening
-    elif type == 'linear':
-        req_hardening_parameters = ['s0', 'a']
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Swift isotropic hardening
-    elif type == 'swift':
-        req_hardening_parameters = ['s0', 'a', 'b']
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Ramberg-Osgood isotropic hardening
-    elif type == 'ramberg_osgood':
-        req_hardening_parameters = ['s0', 'a', 'b']
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Unknown isotropic hardening type
-    else:
-        raise RuntimeError('Unknown type of isotropic hardening law.')
+    # Initialize hardening parameters
+    hardening_parameters = {}
+    # Build hardening parameters according with isotropic hardening type
+    try:
+        if type == 'piecewise_linear':
+            hardening_parameters['hardening_points'] = \
+                material_properties['hardening_points']
+        elif type == 'linear':
+            hardening_parameters['s0'] = material_properties['s0']
+            hardening_parameters['a'] = material_properties['a']
+        elif type == 'swift' or type == 'ramberg_osgood':
+            hardening_parameters['s0'] = material_properties['s0']
+            hardening_parameters['a'] = material_properties['a']
+            hardening_parameters['b'] = material_properties['b']
+        else:
+            raise RuntimeError('Unknown isotropic hardening type.')
+    except KeyError as err:
+        raise KeyError('Missing hardening parameter: ' + str(err.args[0]))
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Return
-    return req_hardening_parameters
+    return hardening_parameters
 # ------------------------------------------------------------------------------------------
 def get_hardening_law(type):
     '''Set isotropic hardening law to evaluate hardening modulus and hardening slope.

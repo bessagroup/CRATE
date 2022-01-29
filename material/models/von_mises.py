@@ -21,6 +21,10 @@ import tensor.tensoroperations as top
 import tensor.matrixoperations as mop
 # Material constitutive state and constitutive model interface
 from material.models.interface import ConstitutiveModel
+from material.isotropichardlaw import get_available_hardening_types, \
+                                      build_hardening_parameters, get_hardening_law
+# General anisotropic elasticity
+from material.models.elastic import Elastic
 #
 #                                                               Von Mises constitutive model
 # ==========================================================================================
@@ -72,26 +76,68 @@ class VonMises(ConstitutiveModel):
         self._n_dim = n_dim
         self._comp_order_sym = comp_order_sym
         self._comp_order_nsym = comp_order_nsym
+        # Get elastic symmetry
+        elastic_symmetry = material_properties['elastic_symmetry']
+        # Check finite strains formulation
+        if self._strain_formulation == 'finite' and elastic_symmetry != 'isotropic':
+            raise RuntimeError('The VonMises constitutive model is only available ' +
+                               'under finite strains for the elastic isotropic case.')
+        # Compute technical constants of elasticity
+        if elastic_symmetry == 'isotropic':
+            # Compute technical constants of elasticity
+            technical_constants = Elastic.get_technical_from_elastic_modulii(
+                elastic_symmetry, material_properties)
+            # Assemble technical constants of elasticity
+            self._material_properties.update(technical_constants)
+        else:
+            raise RuntimeError('The VonMises constitutive model implementation is ' +
+                               'currently only available for the elastic isotropic case.')
     # --------------------------------------------------------------------------------------
     @staticmethod
     def get_required_properties():
-        '''Get the material constitutive model required properties.
+        '''Get constitutive model material properties and constitutive options.
 
-        Material properties:
-            E   | Young modulus
-            v   | Poisson's ratio
-            IHL | Isotropic hardening law (stored as hardening_law function and
-                | hardening_parameters dictionary)
+        Material properties and constitutive options:
+        elastic_symmetry    | Elastic symmetry.
+        euler_angles        | Euler angles (degrees) sorted according with Bunge convention.
+                            | Not required under elastic isotropy.
+        Eijkl               | Elastic modulii according with elastic symmetry.
+                            | Young's modulus (E) and Poisson's coefficient may be
+                            | alternatively provided under elastic isotropy.
+        isotropic_hardening | Isotropic hardening type.
+        hardening_parameter | Hardening parameters according with isotropic hardening type.
+
+        Input data file syntax:
+        elastic_symmetry < option > < number of elastic modulii >
+            euler_angles < value > < value > < value >
+            Eijkl < value >
+            Eijkl < value >
+        isotropic_hardening < option > < number of hardening parameters >
+            parameter < value >
+            parameter < value >
+            ...
 
         Returns
         -------
-        req_mat_properties : list
-            List of constitutive model required material properties (str).
+        material_properties : list
+            Constitutive model material properties names (str).
+        constitutive_options : dict
+            Constitutive options (key, str) and available specifications
+            (item, tuple of str).
         '''
-        # Set required material properties
-        req_material_properties = ['E', 'v', 'IHL']
+        # Get available elastic symmetries and required elastic modulii
+        elastic_symmetries = Elastic.get_available_elastic_symmetries()
+        # Get available hardening types
+        hardening_types = get_available_hardening_types()
+        # Set constitutive options and available specifications
+        constitutive_options = {'elastic_symmetry': tuple(elastic_symmetries.keys()),
+                                'isotropic_hardening': hardening_types}
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set material properties names
+        material_properties = ()
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
-        return req_material_properties
+        return material_properties, constitutive_options
     # --------------------------------------------------------------------------------------
     def state_init(self):
         '''Get initialized material constitutive model state variables.
@@ -176,8 +222,8 @@ class VonMises(ConstitutiveModel):
         E = self._material_properties['E']
         v = self._material_properties['v']
         # Get material isotropic strain hardening law
-        hardening_law = self._material_properties['hardening_law']
-        hardening_parameters = self._material_properties['hardening_parameters']
+        hardening_law = get_hardening_law(self._material_properties['isotropic_hardening'])
+        hardening_parameters = build_hardening_parameters(self._material_properties)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute shear modulus
         G = E/(2.0*(1.0 + v))

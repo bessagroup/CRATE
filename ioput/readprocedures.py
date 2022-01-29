@@ -31,7 +31,7 @@ from material.materialmodeling import get_available_material_models
 # Constitutive models
 from material.models.elastic import Elastic
 from material.models.von_mises import VonMises
-import material.isotropichardlaw
+from material.models.stvenant_kirchhoff import StVenantKirchhoff
 # Links constitutive models
 from links.material.models.links_elastic import LinksElastic
 from links.material.models.links_von_mises import LinksVonMises
@@ -173,11 +173,17 @@ def read_material_properties(file, file_path, keyword):
     Expected input data file syntax:
 
     Material_Phases < n_material_phases >
-    < phase_id > < model_name > < n_properties > [ < model_source > ]
+    < phase_id > < model_name > < n_prop_copt > [ < model_source > ]
+    < property_1_name > < value >
+    < property_2_name > < value >
+    < constitutive_option_1_name > < option > [ < n_coproperties > ]
+        < coproperty_1_name > < value >
+        < coproperty_2_name > < value >
+    < phase_id > < model_name > < n_prop_copt > [ < model_source > ]
     < property1_name > < value >
-    < property2_name > < value >
-    < phase_id > < model_name > < n_properties > [ < model_source > ]
-    < property1_name > < value >
+    < constitutive_option_1_name > < option > [ < n_coproperties > ]
+        < coproperty_1_name > < value >
+        < coproperty_2_name > < value >
     < property2_name > < value >
 
     Parameters
@@ -216,20 +222,19 @@ def read_material_properties(file, file_path, keyword):
     # Loop over material phases
     line_number = keyword_line_number + 1
     for i in range(n_material_phases):
+        # Read material phase header
         phase_header = linecache.getline(file_path, line_number).split()
         if phase_header[0] == '':
-            raise RuntimeError('Input data error: Missing specification of the ' +
-                               str(i + 1) + 'th ' +'material phase header.')
-        elif len(phase_header) not in [3, 4]:
-            raise RuntimeError('Input data error: Invalid specification of the' +
-                               str(i + 1) + 'th ' + 'material phase header.')
-        elif not ioutil.checkposint(phase_header[0]):
-            raise RuntimeError('Input data error: Invalid specification of the' +
-                               str(i + 1) + 'th ' + 'material phase header.')
-        elif phase_header[0] in material_phases_properties.keys():
-            raise RuntimeError('Input data error: Duplicated material phase number in ' +
-                               'the specification of the '+ str(i + 1) + 'th material ' +
+            raise RuntimeError('Input data error: Missing specification of material ' +
                                'phase header.')
+        elif len(phase_header) not in [3, 4]:
+            raise RuntimeError('Input data error: Invalid specification of material ' +
+                               'phase header.')
+        elif not ioutil.checkposint(phase_header[0]):
+            raise RuntimeError('Input data error: Invalid specification of material ' +
+                               'phase header.')
+        elif phase_header[0] in material_phases_properties.keys():
+            raise RuntimeError('Input data error: Duplicated material phase number.')
         # Set material phase
         mat_phase = str(phase_header[0])
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -242,8 +247,8 @@ def read_material_properties(file, file_path, keyword):
         elif len(phase_header) == 4:
             # Set constitutive model source
             if not ioutil.checkposint(phase_header[3]):
-                raise RuntimeError('Input data error: Invalid specification of the' +
-                                   str(i + 1) + 'th ' + 'material phase source.')
+                raise RuntimeError('Input data error: Invalid specification of material ' +
+                                   'phase ' + mat_phase + ' source.')
             else:
                 model_source_id = int(phase_header[3])
         # Set material phase constitutive model source
@@ -253,6 +258,7 @@ def read_material_properties(file, file_path, keyword):
             model_source = 'links'
         else:
             raise RuntimeError('Unknown constitutive model source identifier.')
+        # Assemble material phase constitutive model source
         material_phases_data[mat_phase]['source'] = model_source
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get available material constitutive models
@@ -261,128 +267,145 @@ def read_material_properties(file, file_path, keyword):
         # Set material phase constitutive model keyword
         if phase_header[1] not in available_mat_models:
             raise RuntimeError('Unknown material constitutive model (' + phase_header[1] +
-                               'from source \'' + model_source + '\'.')
+                               ') from source \'' + model_source + '\'.')
         else:
             model_keyword = phase_header[1]
         material_phases_data[mat_phase]['keyword'] = model_keyword
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Get material constitutive model required material properties
+        # Get material constitutive model constitutive options and material properties
         if model_source == 'crate':
             if model_keyword == 'elastic':
-                required_properties = Elastic.get_required_properties()
+                req_properties, req_constitutive_options = \
+                    Elastic.get_required_properties()
             elif model_keyword == 'von_mises':
-                required_properties = VonMises.get_required_properties()
+                req_properties, req_constitutive_options = \
+                    VonMises.get_required_properties()
+            elif model_keyword == 'stvenant_kirchhoff':
+                req_properties, req_constitutive_options = \
+                    StVenantKirchhoff.get_required_properties()
         elif model_source == 'links':
             if model_keyword == 'ELASTIC':
-                required_properties = LinksElastic.get_required_properties()
+                req_properties = LinksElastic.get_required_properties()
             elif model_keyword == 'VON_MISES':
-                required_properties = LinksVonMises.get_required_properties()
-        # Set number of material properties
-        n_required_properties = len(required_properties)
+                req_properties = LinksVonMises.get_required_properties()
+        # Set number of constitutive options and material properties
+        n_prop_copt = len(req_properties) + len(req_constitutive_options.keys())
         if not ioutil.checkposint(phase_header[2]):
-            raise RuntimeError('Input data error: Invalid specification of the' +
-                               str(i + 1) + 'th ' + 'material phase number of material ' +
-                               'properties.')
-        elif int(phase_header[2]) != n_required_properties:
-            raise RuntimeError('Input data error: Wrong value of the' +
-                               str(i + 1) + 'th ' + 'material phase number of material ' +
-                               'properties.')
-        n_properties = int(phase_header[2])
+            raise RuntimeError('Input data error: Invalid specification of the ' +
+                               'material phase ' + mat_phase + ' number of material ' +
+                               'properties and constitutive options.')
+        elif int(phase_header[2]) != n_prop_copt:
+            raise RuntimeError('Input data error: Wrong value of the material phase ' +
+                               mat_phase + 'number of material properties and ' +
+                               'constitutive options.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Set material properties
+        # Update line number
+        line_number = line_number + 1
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set constitutive options and all material properties
         material_phases_properties[mat_phase] = {}
-        property_header_line = line_number
-        for j in range(n_properties):
-            property_header_line = property_header_line + 1
+        # Loop over constitutive options and material properties
+        for j in range(n_prop_copt):
+            property_header_line = line_number
             property_line = linecache.getline(file_path, property_header_line).split()
             if property_line[0] == '':
-                raise RuntimeError('Input data error: Invalid specification of the' +
-                                   str(j + 1) + 'th ' + 'material property of material ' +
-                                   'phase ' + mat_phase + '.')
+                raise RuntimeError('Input data error: Invalid specification of ' +
+                                   'material property or constitutive option of ' +
+                                   'material phase ' + mat_phase + '.')
             elif not ioutil.checkvalidname(property_line[0]):
-                raise RuntimeError('Input data error: Invalid specification of the' +
-                                   str(j + 1) + 'th ' + 'material property of material ' +
-                                   'phase ' + mat_phase + '.')
-            elif property_line[0] not in required_properties:
-                raise RuntimeError('Input data error: Invalid specification of the' +
-                                   str(j + 1) + 'th ' + 'material property of material ' +
-                                   'phase ' + mat_phase + '.')
+                raise RuntimeError('Input data error: Invalid specification of ' +
+                                   'material property or constitutive option of ' +
+                                   'material phase ' + mat_phase + '.')
+            elif property_line[0] not in req_properties and \
+                    property_line[0] not in req_constitutive_options.keys():
+                raise RuntimeError('Input data error: Invalid specification of ' +
+                                   'material property or constitutive option of ' +
+                                   'material phase ' + mat_phase + '.')
             elif property_line[0] in material_phases_properties[mat_phase].keys():
-                raise RuntimeError('Input data error: Duplicated specification of the' +
-                                   str(j + 1) + 'th ' + 'material property of material ' +
-                                   'phase ' + mat_phase + '.')
+                raise RuntimeError('Input data error: Duplicated specification of ' +
+                                   'material property or constitutive option of ' +
+                                   'material phase ' + mat_phase + '.')
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Read material property or hardening law
-            if str(property_line[0]) == 'IHL':
-                # Get available isotropic hardening types
-                if model_source == 'crate':
-                    available_hardening_types = \
-                        material.isotropichardlaw.get_available_types()
-                elif model_source == 'links':
-                    available_hardening_types = ['piecewise_linear']
-                # Check if specified isotropic hardening type is available
-                if property_line[1] not in available_hardening_types:
-                    raise RuntimeError('Input data error: Unknown type of isotropic ' +
-                                       'hardening law.')
+            # Read material property or constitutive option (and associated material
+            # properties)
+            if str(property_line[0]) in req_constitutive_options.keys():
+                # Check if constitutive option specification is available
+                if str(property_line[1]) not in \
+                        req_constitutive_options[str(property_line[0])]:
+                    raise RuntimeError('Input data error: Unknown specification of ' + \
+                                       'constitutive option ' + str(property_line[1]) + '.')
                 else:
-                    hardening_type = str(property_line[1])
-                # Get parameters required by isotropic hardening type
-                req_hardening_parameters = \
-                    material.isotropichardlaw.set_required_parameters(hardening_type)
-                # Check if the required number of hardening parameters is specified
-                if len(property_line[2:]) != len(req_hardening_parameters):
-                    raise RuntimeError('Input data error: Invalid number of hardening ' +
-                                       'type parameters.')
+                    constitutive_option = str(property_line[1])
+                # Assemble constitutive option specification
+                material_phases_properties[mat_phase][str(property_line[0])] = \
+                    constitutive_option
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Initialize material phase hardening parameters dictionary
-                hardening_parameters = {}
-                # Read hardening parameters
-                if hardening_type == 'piecewise_linear':
-                    # Read number of hardening curve points
-                    if not ioutil.checkposint(property_line[2]) and \
-                            int(property_line[2]) < 2:
-                        raise RuntimeError('Input data error: Invalid number of points ' +
-                                           'of piecewise linear hardening type.')
+                # Read constitutive option number of associated properties
+                if len(property_line) == 3:
+                    if not ioutil.checkposint(property_line[2]):
+                        raise RuntimeError('Input data error: Invalid number of ' +
+                                           'properties associated with constitutive ' +
+                                           'option ' + constitutive_option + '.')
                     else:
-                        n_hardening_points = int(property_line[2])
-                    # Read hardening curve points
-                    hardening_points = np.zeros((n_hardening_points, 2))
-                    for k in range(n_hardening_points):
+                        n_coproperties = int(property_line[2])
+                elif len(property_line) == 2:
+                    n_coproperties = 1
+                else:
+                    raise RuntimeError('Input data error: Invalid specification of ' +
+                                       'constitutive option ' + constitutive_option + '.')
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                if str(property_line[0]) == 'isotropic_hardening' and \
+                        constitutive_option == 'piecewise_linear':
+                    # Initialize hardening points
+                    hardening_points = np.zeros((n_coproperties, 2))
+                    # Read hardening points
+                    for k in range(n_coproperties):
+                        # Read hardening point line
                         hardening_point_line = linecache.getline(
                             file_path, property_header_line + 1 + k).split()
                         if hardening_point_line[0] == '':
                             raise RuntimeError('Input data error: Invalid hardening ' +
-                                               'curve point specification.')
-                        elif len(hardening_point_line) != 2:
+                                               'point specification.')
+                        elif len(hardening_point_line) != 3:
                             raise RuntimeError('Input data error: Invalid hardening ' +
-                                               'curve point specification.')
-                        elif not ioutil.checknumber(hardening_point_line[0]) or \
-                                not ioutil.checknumber(hardening_point_line[1]):
+                                               'point specification.')
+                        elif not ioutil.checknumber(hardening_point_line[1]) or \
+                                not ioutil.checknumber(hardening_point_line[2]):
                             raise RuntimeError('Input data error: Invalid hardening ' +
-                                               'curve point specification.')
-                        hardening_points[k, 0] = float(hardening_point_line[0])
-                        hardening_points[k, 1] = float(hardening_point_line[1])
-                    # Assemble hardening parameters
-                    hardening_parameters['n_hardening_points'] = n_hardening_points
-                    hardening_parameters['hardening_points'] = hardening_points
-                    # Fix line numbers by adding the number of hardening curve points
-                    property_header_line = property_header_line + n_hardening_points
-                    line_number = line_number + n_hardening_points
+                                               'point specification.')
+                        hardening_points[k, 0] = float(hardening_point_line[1])
+                        hardening_points[k, 1] = float(hardening_point_line[2])
+                    # Assemble constitutive parameter associated property
+                    material_phases_properties[mat_phase]['hardening_points'] = \
+                        hardening_points
                 else:
-                    # Loop over and assemble required hardening parameters
-                    for k in range(len(req_hardening_parameters)):
-                        if not ioutil.checknumber(property_line[2 + k]):
-                            raise RuntimeError('Input data error: Invalid hardening ' +
-                                               'type parameter specification.')
+                    # Read constitutive option associated properties
+                    for k in range(n_coproperties):
+                        # Read constitutive option line
+                        coproperty_line = linecache.getline(
+                            file_path, property_header_line + 1 + k).split()
+                        if len(coproperty_line) < 2:
+                            raise RuntimeError('Input data error: Invalid specification ' +
+                                               'of property associated to the ' +
+                                               'constitutive option ' +
+                                               constitutive_option + '.')
+                        # Get property name
+                        prop_name = str(coproperty_line[0])
+                        # Get property value
+                        if len(coproperty_line) == 2:
+                            # Single value
+                            prop_value = get_formatted_parameter(coproperty_line[0],
+                                                                 coproperty_line[1])
                         else:
-                            hardening_parameters[str(req_hardening_parameters[k])] = \
-                                float(property_line[2 + k])
-                # Get material phase hardening law
-                hardening_law = material.isotropichardlaw.get_hardening_law(hardening_type)
-                # Store material phase hardening law and parameters
-                material_phases_properties[mat_phase]['hardening_law'] = hardening_law
-                material_phases_properties[mat_phase]['hardening_parameters'] = \
-                    hardening_parameters
+                            # Multiple values stored as tuple
+                            prop_value = tuple((get_formatted_parameter(coproperty_line[0],
+                                                                        coproperty_line[x])\
+                                                for x in range(1, len(coproperty_line))))
+                        # Assemble constitutive parameter associated property
+                        material_phases_properties[mat_phase][prop_name] = prop_value
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Update line number
+                line_number = line_number + n_coproperties
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             else:
                 if len(property_line) != 2:
@@ -396,9 +419,12 @@ def read_material_properties(file, file_path, keyword):
                 prop_name = str(property_line[0])
                 prop_value = float(property_line[1])
                 material_phases_properties[mat_phase][prop_name] = prop_value
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Skip to the next material phase
-        line_number = line_number + n_properties + 1
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Update line number
+                line_number = line_number + 1
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Update line number
+            line_number = line_number + 1
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return [n_material_phases, material_phases_data, material_phases_properties]
 #

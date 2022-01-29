@@ -7,8 +7,8 @@
 # Development history:
 # Bernardo P. Ferreira | Feb 2021 | Initial coding.
 # Bernardo P. Ferreira | Oct 2021 | Refactoring and OOP implementation.
-# Bernardo P. Ferreira | Jan 2022 | Add method to compute general anisotropic elasticity
-#                                 | tensor.
+# Bernardo P. Ferreira | Jan 2022 | Computation of general anisotropic elasticity tensor.
+#                                 | Technical constants from elastic modulii.
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
@@ -71,24 +71,57 @@ class Elastic(ConstitutiveModel):
         self._n_dim = n_dim
         self._comp_order_sym = comp_order_sym
         self._comp_order_nsym = comp_order_nsym
+        # Get elastic symmetry
+        elastic_symmetry = material_properties['elastic_symmetry']
+        # Check finite strains formulation
+        if self._strain_formulation == 'finite' and elastic_symmetry != 'isotropic':
+            raise RuntimeError('The elastic constitutive model is only available ' +
+                               'under finite strains for the elastic isotropic case.')
+        # Compute technical constants of elasticity
+        if elastic_symmetry == 'isotropic':
+            # Compute technical constants of elasticity
+            technical_constants = Elastic.get_technical_from_elastic_modulii(
+                elastic_symmetry, material_properties)
+            # Assemble technical constants of elasticity
+            self._material_properties.update(technical_constants)
     # --------------------------------------------------------------------------------------
     @staticmethod
     def get_required_properties():
-        '''Get the constitutive model required material properties.
+        '''Get constitutive model material properties and constitutive options.
 
-        Material properties:
-        E | Young modulus
-        v | Poisson's ratio
+        Material properties and constitutive options:
+        elastic_symmetry | Elastic symmetry.
+        euler_angles     | Euler angles (degrees) sorted according with Bunge convention.
+                         | Not required under elastic isotropy.
+        Eijkl            | Elastic modulii.
+                         | Young's modulus (E) and Poisson's coefficient may be
+                         | alternatively provided under elastic isotropy.
+
+        Input data file syntax:
+        elastic_symmetry < option > < number of elastic modulii >
+            euler_angles < value > < value > < value >
+            Eijkl < value >
+            Eijkl < value >
+            ...
 
         Returns
         -------
-        req_mat_properties : list
-            List of constitutive model required material properties (str).
+        material_properties : list
+            Constitutive model material properties names (str).
+        constitutive_options : dict
+            Constitutive options (key, str) and available specifications
+            (item, tuple of str).
         '''
-        # Set required material properties
-        req_material_properties = ['E', 'v']
+        # Get available elastic symmetries and required elastic modulii
+        elastic_symmetries = Elastic.get_available_elastic_symmetries()
+        # Set constitutive options and available specifications
+        constitutive_options = {'elastic_symmetry': tuple(elastic_symmetries.keys())}
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set material properties names
+        material_properties = ()
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
-        return req_material_properties
+        return material_properties, constitutive_options
     # --------------------------------------------------------------------------------------
     def state_init(self):
         '''Get initialized material constitutive model state variables.
@@ -224,6 +257,60 @@ class Elastic(ConstitutiveModel):
     @staticmethod
     def get_available_elastic_symmetries():
         '''Get available elastic symmetries under general anisotropic elasticity.
+
+        Available elastic symmetries:
+
+            Isotropic:
+                elastic_symmetry | Elastic symmetry.
+
+                Input data file syntax:
+                elastic_symmetry isotropic 2
+                    E1111 < value >
+                    E1122 < value >
+
+            Transverse isotropic (axis of symmetry 3):
+                elastic_symmetry | Elastic symmetry.
+                euler_angles     | Euler angles (degrees) sorted according with Bunge
+                                 | convention.
+
+                Input data file syntax:
+                elastic_symmetry transverse_isotropic 6
+                    euler_angles < value > < value > < value >
+                    Eijkl < value >
+                    ...
+
+            Orthotropic (planes of symmetry 12 and 13):
+                elastic_symmetry | Elastic symmetry.
+                euler_angles     | Euler angles (degrees) sorted according with Bunge
+                                 | convention.
+
+                Input data file syntax:
+                elastic_symmetry orthotropic 10
+                    euler_angles < value > < value > < value >
+                    Eijkl < value >
+                    ...
+
+            Monoclinic (plane of symmetry 12):
+                elastic_symmetry | Elastic symmetry.
+                euler_angles     | Euler angles (degrees) sorted according with Bunge
+                                 | convention.
+
+                Input data file syntax:
+                elastic_symmetry monoclinic 14
+                    euler_angles < value > < value > < value >
+                    Eijkl < value >
+                    ...
+
+            Triclinic:
+                elastic_symmetry | Elastic symmetry.
+                euler_angles     | Euler angles (degrees) sorted according with Bunge
+                                 | convention.
+
+                Input data file syntax:
+                elastic_symmetry triclinic 22
+                    euler_angles < value > < value > < value >
+                    Eijkl < value >
+                    ...
 
         Returns
         -------
@@ -376,3 +463,78 @@ class Elastic(ConstitutiveModel):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return elastic_tangent_mf
+    # --------------------------------------------------------------------------------------
+    def get_technical_from_elastic_modulii(elastic_symmetry, elastic_properties):
+        '''Get technical constants of elasticity from elastic modulii.
+
+        Parameters
+        ----------
+        elastic_symmetry : str, {'isotropic', 'transverse_isotropic', 'orthotropic',
+                                 'monoclinic', 'triclinic'}, default='isotropic'
+            Elastic symmetries: 'triclinic' assumes no elastic symmetries, 'monoclinic'
+            assumes plane of symmetry 12, 'orthotropic' assumes planes of symmetry 12 and
+            13, 'transverse_isotropic' assumes axis of symmetry 3, 'isotropic' assumes
+            complete symmetry.
+        elastic_properties : dict
+            Elastic material properties (key, str) values (item, float). Expecting
+            independent elastic modulii ('Eijkl') according to elastic symmetries.
+
+        Returns
+        -------
+        technical_constants : dict
+            Technical constants of elasticity according with elastic symmetries.
+        '''
+        # Get available elastic symmetries and required elastic modulii
+        elastic_symmetries = Elastic.get_available_elastic_symmetries()
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Check elastic symmetry and required elastic modulii
+        if elastic_symmetry not in elastic_symmetries.keys():
+            raise RuntimeError('Unavailable elastic symmetry.')
+        else:
+            # Get required elastic modulii
+            required_modulii = elastic_symmetries[elastic_symmetry]
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Initialize independent elastic modulii
+            ind_modulii = {str(modulus) : 0.0 for modulus in \
+                           elastic_symmetries['triclinic']}
+            # Check elastic modulii
+            if not(elastic_symmetry == 'isotropic' and \
+                    {'E', 'v'}.issubset(set(elastic_properties.keys()))):
+                # Loop over required elastic modulii
+                for modulus in required_modulii:
+                    # Set symmetric modulus
+                    sym_modulus = modulus[3:5] + modulus[1:3]
+                    # Check if requires elastic modulus has been provided
+                    if modulus in elastic_properties.keys():
+                        ind_modulii[modulus] = elastic_properties[modulus]
+                    elif sym_modulus in elastic_properties.keys():
+                        ind_modulii[modulus] = elastic_properties[sym_modulus]
+                    else:
+                        raise RuntimeError('Missing elastic modulii for ' +
+                                           elastic_symmetry + ' material.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Initialize technical constants of elasticity
+        technical_constants = {}
+        # Compute technical constants of elasticity according with elastic symmetries
+        if elastic_symmetry == 'isotropic':
+            if {'E', 'v'}.issubset(set(elastic_properties.keys())):
+                # Assemble technical constants of elasticity
+                technical_constants['E'] = elastic_properties['E']
+                technical_constants['v'] = elastic_properties['v']
+            else:
+                # Get required elastic modulii
+                E1111 = ind_modulii['E1111']
+                E1122 = ind_modulii['E1122']
+                # Compute Young's modulus
+                E = (1.0/(E1111 + E1122))*(E1111**2 + E1111*E1122 - 2.0*E1122**2)
+                # Compute Poisson's coefficient
+                v = E1122/(E1111 + E1122)
+                # Assemble technical constants of elasticity
+                technical_constants['E'] = E
+                technical_constants['v'] = v
+        else:
+            raise RuntimeError('Technical constants are not implemented for ' +
+                               elastic_symmetry + ' material.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return technical_constants

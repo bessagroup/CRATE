@@ -21,6 +21,10 @@ from links.configuration import get_links_comp_order, get_tensor_mf_links, \
                                 get_tensor_from_mf_links
 # Constitutive models
 from links.stateupdate import LinksConstitutiveModel
+from material.isotropichardlaw import get_available_hardening_types, \
+                                      build_hardening_parameters
+# General anisotropic elasticity
+from material.models.elastic import Elastic
 #
 #                                                               Von Mises constitutive model
 # ==========================================================================================
@@ -74,26 +78,72 @@ class LinksVonMises(LinksConstitutiveModel):
         self._n_dim = n_dim
         self._comp_order_sym = comp_order_sym
         self._comp_order_nsym = comp_order_nsym
+        # Get elastic symmetry
+        elastic_symmetry = material_properties['elastic_symmetry']
+        # Compute technical constants of elasticity
+        if elastic_symmetry == 'isotropic':
+            # Compute technical constants of elasticity
+            technical_constants = Elastic.get_technical_from_elastic_modulii(
+                elastic_symmetry, material_properties)
+            # Assemble technical constants of elasticity
+            self._material_properties.update(technical_constants)
+        else:
+            raise RuntimeError('The LinksVonMises constitutive model implementation is ' +
+                               'currently only available for the elastic isotropic case.')
+        # Check isotropic hardening law
+        isotropic_hardening = self._material_properties['isotropic_hardening']
+        if isotropic_hardening != 'piecewise_linear':
+            raise RuntimeError('The LinksVonMises constitutive model implementation is ' +
+                               'currently only available for the piecewise linear ' +
+                               'isotropic hardening case.')
     # --------------------------------------------------------------------------------------
     @staticmethod
     def get_required_properties():
-        '''Get the constitutive model required material properties.
+        '''Get constitutive model material properties and constitutive options.
 
-        Material properties:
-        density - Density
-        E - Young modulus
-        v - Poisson's ratio
-        IHL - Isotropic hardening law
+        Material properties and constitutive options:
+        density             | Density.
+        elastic_symmetry    | Elastic symmetry.
+        euler_angles        | Euler angles (degrees) sorted according with Bunge convention.
+                            | Not required under elastic isotropy.
+        Eijkl               | Elastic modulii according with elastic symmetry.
+                            | Young's modulus (E) and Poisson's coefficient may be
+                            | alternatively provided under elastic isotropy.
+        isotropic_hardening | Isotropic hardening type.
+        hardening_parameter | Hardening parameters according with isotropic hardening type.
+
+        Input data file syntax:
+        density < value >
+        elastic_symmetry < option > < number of elastic modulii >
+            euler_angles < value > < value > < value >
+            Eijkl < value >
+            Eijkl < value >
+        isotropic_hardening < option > < number of hardening parameters >
+            parameter < value >
+            parameter < value >
+            ...
 
         Returns
         -------
-        req_mat_properties : list
-            List of constitutive model required material properties (str).
+        material_properties : list
+            Constitutive model material properties names (str).
+        constitutive_options : dict
+            Constitutive options (key, str) and available specifications
+            (item, tuple of str).
         '''
-        # Set required material properties
-        req_material_properties = ['density', 'E', 'v', 'IHL']
+        # Get available elastic symmetries and required elastic modulii
+        elastic_symmetries = Elastic.get_available_elastic_symmetries()
+        # Get available hardening types
+        hardening_types = get_available_hardening_types()
+        # Set constitutive options and available specifications
+        constitutive_options = {'elastic_symmetry': tuple(elastic_symmetries.keys()),
+                                'isotropic_hardening': hardening_types}
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set material properties names
+        material_properties = ('density',)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
-        return req_material_properties
+        return material_properties, constitutive_options
     # --------------------------------------------------------------------------------------
     def state_init(self):
         '''Get initialized material constitutive model state variables.
@@ -163,9 +213,9 @@ class LinksVonMises(LinksConstitutiveModel):
             Material phase label.
         '''
         # Get hardening curve points array
-        hardening_parameters = self._material_properties['hardening_parameters']
+        hardening_parameters = build_hardening_parameters(self._material_properties)
         hardening_points = hardening_parameters['hardening_points']
-        n_hardening_points = hardening_parameters['n_hardening_points']
+        n_hardening_points = hardening_points.shape[0]
         # Open data file to append Links constitutive model properties
         data_file = open(file_path, 'a')
         # Format file structure

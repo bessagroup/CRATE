@@ -50,12 +50,15 @@ class ConstitutiveModel(ABC):
     @staticmethod
     @abstractmethod
     def get_required_properties():
-        '''Get the material constitutive model required properties.
+        '''Get constitutive model material properties and constitutive options.
 
         Returns
         -------
-        req_mat_properties : list
-            List of constitutive model required material properties (str).
+        material_properties : list
+            Constitutive model material properties names (str).
+        constitutive_options : dict
+            Constitutive options (key, str) and available specifications
+            (item, tuple of str).
         '''
         pass
     # --------------------------------------------------------------------------------------

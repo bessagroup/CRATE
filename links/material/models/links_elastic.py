@@ -21,6 +21,8 @@ from links.configuration import get_links_comp_order, get_tensor_mf_links, \
                                 get_tensor_from_mf_links
 # Constitutive models
 from links.stateupdate import LinksConstitutiveModel
+# General anisotropic elasticity
+from material.models.elastic import Elastic
 #
 #                                                                 Elastic constitutive model
 # ==========================================================================================
@@ -75,25 +77,58 @@ class LinksElastic(LinksConstitutiveModel):
         self._n_dim = n_dim
         self._comp_order_sym = comp_order_sym
         self._comp_order_nsym = comp_order_nsym
+        # Get elastic symmetry
+        elastic_symmetry = material_properties['elastic_symmetry']
+        # Compute technical constants of elasticity
+        if elastic_symmetry == 'isotropic':
+            # Compute technical constants of elasticity
+            technical_constants = Elastic.get_technical_from_elastic_modulii(
+                elastic_symmetry, material_properties)
+            # Assemble technical constants of elasticity
+            self._material_properties.update(technical_constants)
+        else:
+            raise RuntimeError('The LinksElastic constitutive model implementation is ' +
+                               'currently only available for the elastic isotropic case.')
     # --------------------------------------------------------------------------------------
     @staticmethod
     def get_required_properties():
-        '''Get the constitutive model required material properties.
+        '''Get constitutive model material properties and constitutive options.
 
-        Material properties:
-        density - Density
-        E - Young modulus
-        v - Poisson's ratio
+        Material properties and constitutive options:
+        density          | Density.
+        elastic_symmetry | Elastic symmetry.
+        euler_angles     | Euler angles (degrees) sorted according with Bunge convention.
+                         | Not required under elastic isotropy.
+        Eijkl            | Elastic modulii.
+                         | Young's modulus (E) and Poisson's coefficient may be
+                         | alternatively provided under elastic isotropy.
+
+        Input data file syntax:
+        density < value >
+        elastic_symmetry < option > < number of elastic modulii >
+            euler_angles < value > < value > < value >
+            Eijkl < value >
+            Eijkl < value >
+            ...
 
         Returns
         -------
-        req_mat_properties : list
-            List of constitutive model required material properties (str).
+        material_properties : list
+            Constitutive model material properties names (str).
+        constitutive_options : dict
+            Constitutive options (key, str) and available specifications
+            (item, tuple of str).
         '''
-        # Set required material properties
-        req_material_properties = ['density', 'E', 'v']
+        # Get available elastic symmetries and required elastic modulii
+        elastic_symmetries = Elastic.get_available_elastic_symmetries()
+        # Set constitutive options and available specifications
+        constitutive_options = {'elastic_symmetry': tuple(elastic_symmetries.keys())}
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set material properties names
+        material_properties = ('density',)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
-        return req_material_properties
+        return material_properties, constitutive_options
     # --------------------------------------------------------------------------------------
     def state_init(self):
         '''Get initialized material constitutive model state variables.
