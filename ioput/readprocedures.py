@@ -296,7 +296,7 @@ def read_material_properties(file, file_path, keyword):
                                'properties and constitutive options.')
         elif int(phase_header[2]) != n_prop_copt:
             raise RuntimeError('Input data error: Wrong value of the material phase ' +
-                               mat_phase + 'number of material properties and ' +
+                               mat_phase + ' number of material properties and ' +
                                'constitutive options.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Update line number
