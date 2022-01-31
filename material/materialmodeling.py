@@ -24,7 +24,8 @@ import tensor.tensoroperations as top
 import tensor.matrixoperations as mop
 # Material operations
 from material.materialoperations import cauchy_from_kirchhoff, \
-                                        first_piola_from_kirchhoff
+                                        first_piola_from_kirchhoff, \
+                                        material_from_spatial_tangent_modulus
 # Constitutive models
 from material.models.elastic import Elastic
 from material.models.von_mises import VonMises

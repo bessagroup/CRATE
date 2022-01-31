@@ -223,7 +223,9 @@ class VonMises(ConstitutiveModel):
         v = self._material_properties['v']
         # Get material isotropic strain hardening law
         hardening_law = get_hardening_law(self._material_properties['isotropic_hardening'])
-        hardening_parameters = build_hardening_parameters(self._material_properties)
+        hardening_parameters = \
+            build_hardening_parameters(self._material_properties['isotropic_hardening'],
+                                       self._material_properties)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute shear modulus
         G = E/(2.0*(1.0 + v))
