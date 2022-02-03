@@ -19,6 +19,30 @@ import tensor.matrixoperations as mop
 # Tensorial operations
 import tensor.tensoroperations as top
 #
+#                                                                            Rotation tensor
+# ==========================================================================================
+def compute_rotation_tensor(def_gradient):
+    '''Compute rotation tensor from the polar decomposition of the deformation gradient.
+
+    Parameters
+    ----------
+    def_gradient : 2darray
+        Deformation gradient.
+
+    Returns
+    -------
+    r : 2darray
+        Rotation tensor.
+    '''
+    # Compute right stretch tensor
+    right_stretch = \
+        mop.matrix_root(np.matmul(np.transpose(def_gradient), def_gradient), p=0.5)
+    # Compute rotation tensor
+    r = np.matmul(def_gradient, np.linalg.inv(right_stretch))
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Return
+    return r
+#
 #                                                                 Strain tensors conversions
 # ==========================================================================================
 def compute_spatial_log_strain(def_gradient):
