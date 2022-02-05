@@ -1715,6 +1715,7 @@ if __name__ == '__main__':
     #p = os.path.abspath('/home/bernardoferreira/Documents/CRATE/src')
     #sys.path.insert(1, p)
     import pickle
+    import tensor.matrixoperations as mop
     from ioput.vtkoutput import XMLGenerator, VTKOutput
     from clustering.clusteringdata import def_gradient_from_log_strain
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1818,9 +1819,10 @@ if __name__ == '__main__':
             so_idx = tuple([int(x) - 1 for x in list(comp_order_sym[i])])
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Set orthogonal infinitesimal strain tensor (infinitesimal strains) or material
-            # logarithmic strain tensor (finite strains)
+            # logarithmic strain tensor (finite strains) according with Kelvin notation
             mac_strain = np.zeros((n_dim, n_dim))
-            mac_strain[so_idx] = 1.0*strain_magnitude_factor
+            mac_strain[so_idx] = \
+                strain_magnitude_factor*(1.0/mop.kelvin_factor(i, comp_order_sym))*1.0
             if comp[0] != comp[1]:
                 mac_strain[so_idx[::-1]] = mac_strain[so_idx]
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1841,6 +1843,8 @@ if __name__ == '__main__':
         for j in range(len(mac_strains)):
             # Get macroscale strain loading
             mac_strain = mac_strains[j]
+            # Get Kelvin factor associated with macroscale strain loading strain component
+            kf_j = mop.kelvin_factor(j, comp_order_sym)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Compute deformation gradient associated to the material logarithmic strain
             # tensor
@@ -1859,31 +1863,45 @@ if __name__ == '__main__':
             for i in range(len(comp_order_sym)):
                 # Get strain component
                 comp = comp_order_sym[i]
-                # Build local strain tensor
-                local_strain[i] = strain_vox[comp][target_voxel]
-            # Store local strain tensor
+                # Get Kelvin factor associated with strain component
+                kf_i = mop.kelvin_factor(i, comp_order_sym)
+                # Assemble fourth-order elastic strain concentration tensor component
+                # (accounting for the Kelvin notation coefficients)
+                sct[i, j] = kf_i*strain_vox[comp][target_voxel]
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Remove Kelvin coefficient
+                sct[i, j] = (1.0/kf_j)*(1.0/kf_i)*sct[i, j]
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Build local strain tensor (validation purposes only) (Kelvin notation)
+                local_strain[i] = kf_i*strain_vox[comp][target_voxel]
+            # Store local strain tensor (validation purposes only)
             local_strains.append(local_strain)
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Assemble strain concentration tensor column
-            sct[:, j] = copy.deepcopy(local_strain)
         # Normalize strain concentration tensor
         sct = (1.0/strain_magnitude_factor)*sct
-
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Initialize strain concentration tensor (Kelvin notation)
+        sct_kelvin = copy.deepcopy(sct)
         # Loop over macroscale strain loadings
         for j in range(len(mac_strains)):
+            # Get Kelvin factor associated with macroscale strain loading strain component
+            kf_j = mop.kelvin_factor(j, comp_order_sym)
             # Get macroscale strain loading
             mac_strain = mac_strains[j]
             # Build macroscale strain vector
             mac_strain_vec = np.zeros(len(comp_order_sym))
             for k in range(len(comp_order_sym)):
+                # Get Kelvin factor associated with strain component
+                kf_k = mop.kelvin_factor(k, comp_order_sym)
                 # Get strain component and associated indexes
                 comp = comp_order_sym[k]
                 so_idx = tuple([int(x) - 1 for x in list(comp)])
-                # Assemble macroscale strain vector
-                mac_strain_vec[k] = mac_strain[so_idx]
-            # Compute local strain tensor from strain concentration tensor
-            local_strain = np.matmul(sct, mac_strain_vec)
+                # Assemble macroscale strain vector (Kelvin notation)
+                mac_strain_vec[k] = kf_k*mac_strain[so_idx]
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Add Kelvin coefficients to strain concentration tensor
+                sct_kelvin[k, j] = kf_j*kf_k*sct_kelvin[k, j]
+            # Compute local strain tensor from strain concentration tensor (Kelvin notation)
+            local_strain = np.matmul(sct_kelvin, mac_strain_vec)
             # Validate strain concentration tensor computation
             if not np.allclose(local_strain, local_strains[j]):
                 raise RuntimeError('Error in SCT computation.')
@@ -2483,8 +2501,8 @@ if __name__ == '__main__':
         # Set axes limits
         x_min = 7.94328e-5
         x_max = 1.258925e-1
-        y_min = 2.10
-        y_max = 2.30
+        y_min = None
+        y_max = None
         # Set data labels
         point_labels = ['A', 'A', 'B', 'B', 'C', 'C', 'D', 'D']
         data_labels = ['$\\bm{Y}_' + point_labels[x] + '$'
