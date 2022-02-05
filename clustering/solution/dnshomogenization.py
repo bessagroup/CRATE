@@ -7,6 +7,8 @@
 # ------------------------------------------------------------------------------------------
 # Development history:
 # Bernardo P. Ferreira | Oct 2021 | Initial coding.
+# Bernardo P. Ferreira | Feb 2022 | Enriched interface with method to retrieve homogenized
+#                                 | strain-stress material response.
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
@@ -46,5 +48,20 @@ class DNSHomogenizationMethod(ABC):
             discretization) for each strain component (key, str). Infinitesimal strain
             tensor (infinitesimal strains) or material logarithmic strain tensor (finite
             strains).
+        '''
+        pass
+    # --------------------------------------------------------------------------------------
+    @abstractmethod
+    def get_hom_stress_strain(self):
+        '''Get homogenized strain-stress material response.
+
+        Returns
+        -------
+        _hom_stress_strain : 2darray
+            Homogenized stress-strain material response. The homogenized strain and
+            homogenized stress tensor components of the i-th loading increment are stored
+            columnwise in the i-th row, sorted respectively. Infinitesimal strains: Cauchy
+            stress tensor - infinitesimal strains tensor. Finite strains: first
+            Piola-Kirchhoff stress tensor - deformation gradient.
         '''
         pass

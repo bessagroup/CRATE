@@ -184,6 +184,11 @@ class FFTBasicScheme(DNSHomogenizationMethod):
             comp_order = self._comp_order_nsym
         else:
             raise RuntimeError('Unknown problem strain formulation.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Initialize homogenized strain-stress response
+        self._hom_stress_strain = np.zeros((1, 2*self._n_dim**2))
+        if self._strain_formulation == 'finite':
+            self._hom_stress_strain[0, 0] = 1.0
         #
         #                                                 Material phases elasticity tensors
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

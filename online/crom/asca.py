@@ -65,9 +65,10 @@ class ASCA:
         Total time (s) associated to post-processing operations.
     '''
     def __init__(self, strain_formulation, problem_type, is_farfield_formulation=True,
-                 self_consistent_scheme='regression', scs_max_n_iterations=20,
-                 scs_conv_tol=1e-4, max_n_iterations=12, conv_tol=1e-6, max_subinc_level=5,
-                 max_cinc_cuts=5, is_adapt_repeat_inc=True):
+                 self_consistent_scheme='regression', scs_init_properties=None,
+                 scs_max_n_iterations=20, scs_conv_tol=1e-4, max_n_iterations=12,
+                 conv_tol=1e-6, max_subinc_level=5, max_cinc_cuts=5,
+                 is_adapt_repeat_inc=True):
         '''ASCA constructor.
 
         Parameters
@@ -81,6 +82,8 @@ class ASCA:
             True if far-field strain formulation is adopted, False otherwise.
         self_consistent_scheme : str, {'regression',}, default='regression'
             Self-consistent scheme to update the elastic reference material properties.
+        scs_init_properties : dict, default=None
+            Self-consistent scheme initial guess of elastic reference material properties.
         scs_max_n_iterations : int, default=20
             Self-consistent scheme maximum number of iterations.
         scs_conv_tol : float, default=1e-4
@@ -101,6 +104,7 @@ class ASCA:
         self._problem_type = problem_type
         self._is_farfield_formulation = is_farfield_formulation
         self._self_consistent_scheme = self_consistent_scheme
+        self._scs_init_properties = scs_init_properties
         self._scs_max_n_iterations = scs_max_n_iterations
         self._scs_conv_tol = scs_conv_tol
         self._max_n_iterations = max_n_iterations
@@ -285,9 +289,11 @@ class ASCA:
                                                 self._self_consistent_scheme,
                                                 self._scs_conv_tol)
         # Set initial guess of elastic reference material properties
-        ref_material.init_material_properties(material_state.get_material_phases(),
+        ref_material.init_material_properties(
+            material_state.get_material_phases(),
             material_state.get_material_phases_properties(),
-                material_state.get_material_phases_vf())
+            material_state.get_material_phases_vf(),
+            properties=self._scs_init_properties)
         #
         #                                                            Macroscale loading path
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2015,7 +2021,7 @@ class ElasticReferenceMaterial:
         self._comp_order_nsym = comp_order_nsym
     # --------------------------------------------------------------------------------------
     def init_material_properties(self, material_phases, material_phases_properties,
-                                 material_phases_vf):
+                                 material_phases_vf, properties=None):
         '''Set initial guess of elastic reference material properties.
 
         Parameters
@@ -2027,13 +2033,23 @@ class ElasticReferenceMaterial:
             phase (key, str).
         material_phases_vf : dict
             Volume fraction (item, float) associated to each material phase (key, str).
+        properties : dict, default=None
+            Initial guess (item, float) of elastic reference material properties (key, str).
+            Expecting Young's modulus ('E') and Poisson's coefficient ('v') for an isotropic
+            elastic reference material.
         '''
-        # Set initial guess of elastic reference material properties as the volume average
-        # of the actual material phases elastic properties
-        E = sum([material_phases_vf[phase]*material_phases_properties[phase]['E']
-                 for phase in material_phases])
-        v = sum([material_phases_vf[phase]*material_phases_properties[phase]['v']
-                 for phase in material_phases])
+        if properties is None:
+            # If a initial guess of the elastic reference material properties is not
+            # provided, set them from the volume average of the actual material phases
+            # elastic properties
+            E = sum([material_phases_vf[phase]*material_phases_properties[phase]['E']
+                     for phase in material_phases])
+            v = sum([material_phases_vf[phase]*material_phases_properties[phase]['v']
+                     for phase in material_phases])
+        else:
+            # Set initial guess of elastic reference material properties
+            E = properties['E']
+            v = properties['v']
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize elastic reference material properties
         self._material_properties = {'E': E, 'v': v}

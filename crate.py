@@ -155,7 +155,7 @@ if not is_same_offstage:
     else:
         raise RuntimeError('Unknown DNS solution method.')
     # Compute the physical-based data required to perform the RVE cluster analysis
-    clustering_data = set_clustering_data(
+    clustering_data, rve_elastic_database = set_clustering_data(
         problem_dict['strain_formulation'], problem_dict['problem_type'],
             rg_dict['rve_dims'], rg_dict['n_voxels_dims'], rg_dict['regular_grid'],
             mat_dict['material_phases'], mat_dict['material_phases_properties'], dns_method,
@@ -301,6 +301,7 @@ phase_init_time = time.time()
 asca = ASCA(problem_dict['strain_formulation'],
             problem_dict['problem_type'],
             self_consistent_scheme=scs_dict['self_consistent_scheme'],
+            scs_init_properties=rve_elastic_database.get_eff_isotropic_elastic_constants(),
             scs_max_n_iterations=scs_dict['scs_max_n_iterations'],
             scs_conv_tol=scs_dict['scs_conv_tol'],
             max_n_iterations=algpar_dict['max_n_iterations'],
