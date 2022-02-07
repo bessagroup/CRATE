@@ -87,7 +87,6 @@ def set_clustering_data(strain_formulation, problem_type, rve_dims, n_voxels_dim
         RVE's local elastic response database.
     '''
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    #strain_formulation = 'infinitesimal'
     info.displayinfo('5', 'Setting cluster analysis\' features...')
     # Get available clustering features descriptors
     feature_descriptors = get_available_clustering_features(strain_formulation,

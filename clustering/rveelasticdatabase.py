@@ -257,6 +257,12 @@ class RVEElasticDatabase:
         # Compute Poisson's coefficient
         v = E1122/(E1111 + E1122)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Check isotropic elastic constants
+        is_admissible = (E >= 0) and (v >= 0.0 and (v/0.5) <= 1.0)
+        if not is_admissible:
+            raise RuntimeError('Inadmissible isotropic elastic constants from RVE\'s '
+                               'elastic effective tangent modulus.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Update estimates of effective elastic properties
         self._eff_elastic_properties = {'E': E, 'v': v}
     # --------------------------------------------------------------------------------------

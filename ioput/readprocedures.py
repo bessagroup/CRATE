@@ -204,6 +204,11 @@ def read_material_properties(file, file_path, keyword):
     material_phases_properties : dict
         Constitutive model material properties (item, dict) associated to each material
         phase (key, str).
+
+    Notes
+    -----
+    The material properties associated to material constitutive options are not verified
+    during the reading procedures.
     '''
     # Search keyword
     keyword_line_number = searchkeywordline(file, keyword)
@@ -285,9 +290,11 @@ def read_material_properties(file, file_path, keyword):
                     StVenantKirchhoff.get_required_properties()
         elif model_source == 'links':
             if model_keyword == 'ELASTIC':
-                req_properties = LinksElastic.get_required_properties()
+                req_properties, req_constitutive_options = \
+                    LinksElastic.get_required_properties()
             elif model_keyword == 'VON_MISES':
-                req_properties = LinksVonMises.get_required_properties()
+                req_properties, req_constitutive_options = \
+                    LinksVonMises.get_required_properties()
         # Set number of constitutive options and material properties
         n_prop_copt = len(req_properties) + len(req_constitutive_options.keys())
         if not ioutil.checkposint(phase_header[2]):
@@ -419,9 +426,6 @@ def read_material_properties(file, file_path, keyword):
                 prop_name = str(property_line[0])
                 prop_value = float(property_line[1])
                 material_phases_properties[mat_phase][prop_name] = prop_value
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Update line number
-                line_number = line_number + 1
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Update line number
             line_number = line_number + 1

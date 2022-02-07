@@ -892,37 +892,29 @@ class MaterialState:
                     new_model = VonMises
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Get CRATE constitutive model required material properties
-                new_required_properties = new_model.get_required_properties()
+                new_required_properties, new_constitutive_options = \
+                    new_model.get_required_properties()
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Get CRATE constitutive model material properties
-                new_material_properties = {}
+                # Check CRATE constitutive model material properties
                 for property in new_required_properties:
-                    # Get CRATE constitutive model material property
-                    if property == 'IHL':
-                        # Set required hardening law properties
-                        required_hardening_properties = \
-                            ['hardening_law', 'hardening_parameters']
-                        # Get CRATE constitutive model hardening properties
-                        for hard_property in required_hardening_properties:
-                            if hard_property not in material_properties.keys():
-                                raise RuntimeError('Incompatible material hardening ' +
-                                                   'properties to convert constitutive ' +
-                                                   'model.')
-                            else:
-                                new_material_properties[str(hard_property)] = \
-                                    copy.deepcopy(material_properties[str(hard_property)])
-                    else:
-                        if property not in material_properties.keys():
-                            raise RuntimeError('Incompatible material properties to ' +
-                                               'convert constitutive model.')
-                        else:
-                            new_material_properties[str(property)] = \
-                                copy.deepcopy(material_properties[str(property)])
-                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                    # Initialize CRATE constitutive model
-                    new_constitutive_model = new_model(self._strain_formulation,
-                                                       self._problem_type,
-                                                       new_material_properties)
+                    # Check CRATE constitutive model material property
+                    if property not in material_properties.keys():
+                        raise RuntimeError('Incompatible material properties to ' +
+                                           'convert constitutive model.')
+                # Check CRATE constitutive model constitutive options
+                for option in new_constitutive_options:
+                    # Check CRATE constitutive model constitutive option
+                    if option not in material_properties.keys():
+                        raise RuntimeError('Incompatible material constitutive options ' +
+                                           'to convert constitutive model.')
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Build CRATE constitutive model material properties
+                new_material_properties = copy.deepcopy(material_properties)
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Initialize CRATE constitutive model
+                new_constitutive_model = new_model(self._strain_formulation,
+                                                   self._problem_type,
+                                                   new_material_properties)
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Update material phases constitutive models
                 self._material_phases_models[str(mat_phase)] = \

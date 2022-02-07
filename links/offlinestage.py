@@ -18,6 +18,8 @@
 import os
 # Subprocess management
 import subprocess
+# Shallow and deep copy operations
+import copy
 # Extract information from path
 import ntpath
 # Working with arrays
@@ -32,6 +34,8 @@ from clustering.solution.dnshomogenization import DNSHomogenizationMethod
 from links.configuration import get_links_analysis_type, get_links_comp_order
 # Links constitutive models
 from links.material.models.links_elastic import LinksElastic
+# Material operations
+from material.materialoperations import cauchy_from_first_piola
 #
 #                                                      Links FEM-based homogenization method
 # ==========================================================================================
@@ -120,6 +124,10 @@ class LinksFEMHomogenization(DNSHomogenizationMethod):
         self._analysis_type = get_links_analysis_type(problem_type)
         # Get number of material phases
         self._n_material_phases = len(self._material_phases)
+        # Initialize homogenized strain-stress response
+        self._hom_stress_strain = np.zeros((1, 2*n_dim**2))
+        if self._strain_formulation == 'finite':
+            self._hom_stress_strain[0, 0] = 1.0
     # --------------------------------------------------------------------------------------
     def compute_rve_local_response(self, mac_strain_id, mac_strain):
         '''Compute RVE local elastic strain response.
@@ -143,7 +151,7 @@ class LinksFEMHomogenization(DNSHomogenizationMethod):
         # Set Links input file name
         links_file_name = 'mac_strain_' + str(mac_strain_id)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Generate Links microscale  input data file
+        # Generate Links microscale input data file
         links_file_path = self._write_links_input_data_file(links_file_name, mac_strain)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Solve RVE microscale equilibrium problem
@@ -152,7 +160,91 @@ class LinksFEMHomogenization(DNSHomogenizationMethod):
         # Get RVE local elastic strain response from Links output file
         strain_vox = self._get_strain_vox(links_file_path)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Compute homogenized strain-stress material response
+        self._compute_hom_stress_strain(links_file_path)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return strain_vox
+    # --------------------------------------------------------------------------------------
+    def get_hom_stress_strain(self):
+        '''Get homogenized strain-stress material response.
+
+        Returns
+        -------
+        _hom_stress_strain : 2darray
+            Homogenized stress-strain material response. The homogenized strain and
+            homogenized stress tensor components of the i-th loading increment are stored
+            columnwise in the i-th row, sorted respectively. Infinitesimal strains: Cauchy
+            stress tensor - infinitesimal strains tensor. Finite strains: first
+            Piola-Kirchhoff stress tensor - deformation gradient.
+        '''
+        return copy.deepcopy(self._hom_stress_strain)
+    # --------------------------------------------------------------------------------------
+    def _compute_hom_stress_strain(self, links_file_path):
+        '''Compute homogenized strain-stress material response.
+
+        Parameters
+        ----------
+        links_file_path : str
+            Links input data file absolute path.
+        '''
+        # Initialize homogenized strain-stress response
+        self._hom_stress_strain = np.zeros((1, 2*self._n_dim**2))
+        if self._strain_formulation == 'finite':
+            self._hom_stress_strain[0, 0] = 1.0
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set output file path and check file existence
+        out_file_name = ntpath.splitext(ntpath.basename(links_file_path))[0]
+        out_file_path = ntpath.dirname(links_file_path) + '/' + out_file_name + '/' + \
+            out_file_name + '.out'
+        if not os.path.isfile(out_file_path):
+            raise RuntimeError('Links output file (\'.out\') has not been found.')
+        # Set output file column labels
+        out_header = ['time', 'load_factor',
+           'F_xx', 'F_yx', 'F_zx', 'F_xy', 'F_yy', 'F_zy', 'F_xz', 'F_yz', 'F_zz',
+           'P_xx', 'P_yx', 'P_zx', 'P_xy', 'P_yy', 'P_zy', 'P_xz', 'P_yz', 'P_zz',
+           'stress_xx', 'stress_yy', 'stress_zz', 'stress_xy', 'stress_yz', 'stress_xz',
+           'eq_stress', 'eq_strain']
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Load output file
+        out_array = np.genfromtxt(out_file_path, autostrip=True, skip_header=True)
+        # Get number of increments
+        n_incs = out_array.shape[0]
+        # Get index of first and last homogenized deformation gradient components
+        strain_init_idx = out_header.index('F_xx')
+        strain_last_idx = out_header.index('F_zz')
+        # Get index of first and last first Piola-Kirchhoff stress tensor components
+        stress_init_idx = out_header.index('P_xx')
+        stress_last_idx = out_header.index('P_zz')
+        # Loop over increments
+        for i in range(1, n_incs):
+            # Compute homogenized infinitesimal strain tensor (infinitesimal strains) or
+            # homogenized deformation gradient (finite strains)
+            def_gradient = np.reshape(out_array[i, strain_init_idx:strain_last_idx + 1],
+                                      (3,3), order='F')
+            if self._strain_formulation == 'infinitesimal':
+                hom_strain = 0.5*((def_gradient - np.eye(3)) +
+                                  np.transpose(def_gradient - np.eye(3)))
+            else:
+                hom_strain = copy.deepcopy(def_gradient)
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Compute homogenized Cauchy stress tensor (infinitesimal strains) or
+            # homogenized first Piola-Kirchhoff stress tensor (finite strains)
+            first_piola_stress = \
+                np.reshape(out_array[i, stress_init_idx:stress_last_idx + 1],
+                           (3,3), order='F')
+            if self._strain_formulation == 'infinitesimal':
+                hom_stress = cauchy_from_first_piola(def_gradient, first_piola_stress)
+            else:
+                hom_stress = copy.deepcopy(first_piola_stress)
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Set 2D homogenized strain and stress tensors
+            if self._problem_type == 1:
+                hom_strain = hom_strain[0:2, 0:2]
+                hom_stress = hom_stress[0:2, 0:2]
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Append to homogenized strain-stress response
+            self._hom_stress_strain = np.vstack([self._hom_stress_strain,
+                np.concatenate((hom_strain.flatten('F'), hom_stress.flatten('F')))])
     # --------------------------------------------------------------------------------------
     def _write_links_input_data_file(self, file_name, mac_strain):
         '''Generate Links microscale input data file.
@@ -532,6 +624,11 @@ class LinksFEMHomogenization(DNSHomogenizationMethod):
     # Get the elementwise average strain tensor components
     def _get_strain_vox(self, links_file_path):
         '''Get local strain response from Links output file.
+
+        Parameters
+        ----------
+        links_file_path : str
+            Links input data file absolute path.
 
         Returns
         -------
