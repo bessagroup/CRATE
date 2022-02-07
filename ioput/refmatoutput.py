@@ -35,7 +35,7 @@ class RefMatOutput:
     '''
     # --------------------------------------------------------------------------------------
     def __init__(self, refm_file_path, strain_formulation, problem_type,
-                 self_consistent_scheme, is_farfield_formulation=True,
+                 self_consistent_scheme='regression', is_farfield_formulation=True,
                  ref_output_mode='converged'):
         '''Reference material output constructor.
 
@@ -48,8 +48,8 @@ class RefMatOutput:
         problem_type : int
             Problem type: 2D plane strain (1), 2D plane stress (2), 2D axisymmetric (3) and
             3D (4).
-        self_consistent_scheme : int
-            Self-consistent scheme (1-Regression-based)
+        self_consistent_scheme : str, {'regression',}, default='regression'
+            Self-consistent scheme to update the elastic reference material properties.
         is_farfield_formulation : bool, default=True
             True if SCA farfield formulation, False otherwise.
         ref_output_mode : {'iterative', 'converged'}, default='converged'
@@ -72,14 +72,24 @@ class RefMatOutput:
         # Set reference material output file header
         self._header = ['Increment', 'SCS Iteration',
                         'E_ref', 'v_ref',
-                        'inc_strain0_11', 'inc_strain0_22', 'inc_strain0_33',
-                        'inc_strain0_12', 'inc_strain0_23', 'inc_strain0_13',
+                        'inc_strain0_11', 'inc_strain0_21', 'inc_strain0_31',
+                        'inc_strain0_12', 'inc_strain0_22', 'inc_strain0_32',
+                        'inc_strain0_13', 'inc_strain0_23', 'inc_strain0_33',
                         'strain_0_rdiff', 'rel_scs_cost', 'tangent_rdiff']
         # Set column width
         self._col_width = max(16, max([len(x) for x in self._header]) + 2)
     # --------------------------------------------------------------------------------------
     def init_ref_mat_file(self):
         '''Open reference material output file and write file header.'''
+        # Set reference material elastic properties initial output
+        properties_init = (0.0, 0.0)
+        # Set incremental far-field strain initial output
+        strain_init = 9*[0.0,]
+        if self._strain_formulation == 'finite':
+            strain_init[0] = 1.0
+            strain_init[4] = 1.0
+            strain_init[8] = 1.0
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Open reference material output file (write mode)
         refm_file = open(self._refm_file_path, 'w')
         # Set reference material output file header format structure
@@ -88,8 +98,12 @@ class RefMatOutput:
                       ''.join([('{:>' + str(self._col_width) + 's}').format(x)
                       for x in self._header[2:]]),
                       '\n' + '{:>9d}'.format(0) + '  ' + '{:>13d}'.format(0) +
+                      ''.join([('{:>' + str(self._col_width) + '.8e}').format(x)
+                      for x in properties_init]) +
+                      ''.join([('{:>' + str(self._col_width) + '.8e}').format(x)
+                      for x in strain_init]) +
                       ''.join([('{:>' + str(self._col_width) + '.8e}').format(0)
-                      for x in self._header[2:]]),]
+                      for x in self._header[13:]]),]
         # Write reference material output file header
         refm_file.writelines(write_list)
         # Close homogenized results output file
@@ -150,6 +164,8 @@ class RefMatOutput:
             out_inc_farfield_strain = np.zeros((3, 3))
             if self._problem_type == 1:
                 out_inc_farfield_strain[0:2, 0:2] = inc_farfield_strain
+                if self._strain_formulation == 'finite':
+                    out_inc_farfield_strain[2, 2] = 1.0
             else:
                 out_inc_farfield_strain[:, :] = inc_farfield_strain
         else:
@@ -165,7 +181,7 @@ class RefMatOutput:
             rel_diff_farfield = 0.0
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute self-consistent scheme normalized cost function
-        if self._self_consistent_scheme == 1:
+        if self._self_consistent_scheme == 'regression':
             # Compute regression-based scheme cost function
             scs_cost = np.linalg.norm(inc_hom_stress_mf -
                                       np.matmul(ref_elastic_tangent_mf,
@@ -188,9 +204,11 @@ class RefMatOutput:
         # Set reference material format structure
         inc_data = [inc, scs_iter,
                     ref_material_properties['E'], ref_material_properties['v'],
-                    out_inc_farfield_strain[0, 0], out_inc_farfield_strain[1, 1],
-                    out_inc_farfield_strain[2, 2], out_inc_farfield_strain[0, 1],
-                    out_inc_farfield_strain[1, 2], out_inc_farfield_strain[0, 2],
+                    out_inc_farfield_strain[0, 0], out_inc_farfield_strain[1, 0],
+                    out_inc_farfield_strain[2, 0], out_inc_farfield_strain[0, 1],
+                    out_inc_farfield_strain[1, 1], out_inc_farfield_strain[2, 1],
+                    out_inc_farfield_strain[0, 2], out_inc_farfield_strain[1, 2],
+                    out_inc_farfield_strain[2, 2],
                     rel_diff_farfield, rel_scs_cost, rel_diff_tangent]
         write_list = ['\n' + '{:>9d}'.format(inc) + '  ' + '{:>13d}'.format(scs_iter) +
                       ''.join([('{:>' + str(self._col_width) + '.8e}').format(x)
