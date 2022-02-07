@@ -84,9 +84,9 @@ class CRVE:
     # --------------------------------------------------------------------------------------
     def __init__(self, rve_dims, regular_grid, material_phases, strain_formulation,
                  problem_type, global_data_matrix, clustering_type, phase_n_clusters,
-                 base_clustering_scheme, adaptive_clustering_scheme=None,
-                 adapt_criterion_data=None, adaptivity_type=None,
-                 adaptivity_control_feature=None):
+                 base_clustering_scheme, eff_elastic_properties=None,
+                 adaptive_clustering_scheme=None, adapt_criterion_data=None,
+                 adaptivity_type=None, adaptivity_control_feature=None):
         '''Cluster-Reduced Representative Volume Element constructor.
 
         Parameters
@@ -117,7 +117,10 @@ class CRVE:
             characterized by a clustering algorithm (col 1, int), a list of features
             (col 2, list of int) and a list of the features data matrix' indexes
             (col 3, list of int).
-        adaptive_clustering_scheme : dict
+        eff_elastic_properties : dict, default=None
+            Elastic properties (key, str) and their values (item, float) estimated from the
+            RVE's elastic effective tangent modulus.
+        adaptive_clustering_scheme : dict, default=None
             Prescribed adaptive clustering scheme (item, ndarry of shape (n_clusterings, 3))
             for each material phase (key, str). Each row is associated with a unique
             clustering characterized by a clustering algorithm (col 1, int), a list of
@@ -144,6 +147,7 @@ class CRVE:
         self._clustering_type = copy.deepcopy(clustering_type)
         self._phase_n_clusters = copy.deepcopy(phase_n_clusters)
         self._base_clustering_scheme = copy.deepcopy(base_clustering_scheme)
+        self._eff_elastic_properties = copy.deepcopy(eff_elastic_properties)
         self._adaptive_clustering_scheme = copy.deepcopy(adaptive_clustering_scheme)
         self._adaptivity_type = copy.deepcopy(adaptivity_type)
         self._gop_X_dft_vox = None
@@ -479,6 +483,17 @@ class CRVE:
             matricial form (item, ndarray) associated to each pair of clusters (key, str).
         '''
         return self._cit_x_mf
+    # --------------------------------------------------------------------------------------
+    def get_eff_isotropic_elastic_constants(self):
+        '''Get isotropic elastic constants from elastic effective tangent modulus.
+
+        Returns
+        -------
+        eff_elastic_properties : dict
+            Elastic properties (key, str) and their values (item, float) estimated from the
+            RVE's elastic effective tangent modulus.
+        '''
+        return copy.deepcopy(self._eff_elastic_properties)
     # --------------------------------------------------------------------------------------
     def get_adapt_material_phases(self):
         '''Get adaptive material phases labels.
