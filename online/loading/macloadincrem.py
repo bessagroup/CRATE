@@ -727,12 +727,6 @@ class LoadingSubpath:
                 so_idx = tuple([int(x) - 1 for x in list(self._comp_order_nsym[i])])
                 # Store incremental deformation gradient component
                 self._inc_applied_load['strain'][i] = inc_def_gradient[so_idx]
-
-
-            print('\n\n inc_def_gradient_total: \n', inc_def_gradient_total)
-            print('\n\n inc_init_def_gradient: \n', inc_init_def_gradient)
-            print('\n\n self._total_lfact:', self._total_lfact)
-            print('\n\n applied_def_gradient: \n', applied_def_gradient)
         else:
             # Loop over prescription types
             for ltype in self._inc_applied_load.keys():
