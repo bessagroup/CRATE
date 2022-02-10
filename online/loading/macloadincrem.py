@@ -11,6 +11,7 @@
 # Bernardo P. Ferreira | Nov 2020 | Updated documentation.
 # Bernardo P. Ferreira | Jul 2021 | Implemented RewindManager and IncrementRewinder classes.
 # Bernardo P. Ferreira | Dec 2021 | LoadingSubpath loading incremental nature.
+# Bernardo P. Ferreira | Feb 2022 | Implemented compatibility with total strain formulation.
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
@@ -125,6 +126,9 @@ class LoadingPath:
 
         Returns
         -------
+        applied_mac_load_mf : dict
+            For each prescribed loading nature type (key, {'strain', 'stress'}), stores the
+            current applied macroscale loading constraints in a ndarray of shape (n_comps,).
         inc_mac_load_mf : dict
             For each loading nature type (key, {'strain', 'stress'}), stores the incremental
             loading constraint matricial form in a ndarray of shape (n_comps,).
@@ -165,15 +169,22 @@ class LoadingPath:
                 load_subpath._is_last_subpath_inc:
             self._is_last_inc = True
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Compute incremental loading
-        inc_mac_load = self._get_increm_load()
+        # Compute current applied loading
+        applied_mac_load = self._get_applied_mac_load()
+        applied_mac_load_mf = {}
+        for ltype in applied_mac_load.keys():
+            applied_mac_load_mf[ltype] = type(self)._get_load_mf(self._n_dim, comp_order,
+                                                                 applied_mac_load[ltype])
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Compute current incremental loading
+        inc_mac_load = self._get_inc_mac_load()
         inc_mac_load_mf = {}
         for ltype in inc_mac_load.keys():
             inc_mac_load_mf[ltype] = type(self)._get_load_mf(self._n_dim, comp_order,
                                                              inc_mac_load[ltype])
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
-        return [inc_mac_load_mf, load_subpath._n_presc_strain,
+        return [applied_mac_load_mf, inc_mac_load_mf, load_subpath._n_presc_strain,
                 load_subpath._presc_strain_idxs, load_subpath._n_presc_stress,
                 load_subpath._presc_stress_idxs, self._is_last_inc]
     # --------------------------------------------------------------------------------------
@@ -189,6 +200,9 @@ class LoadingPath:
 
         Returns
         -------
+        applied_mac_load_mf : dict
+            For each prescribed loading nature type (key, {'strain', 'stress'}), stores the
+            current applied macroscale loading constraints in a ndarray of shape (n_comps,).
         inc_mac_load_mf : dict
             For each loading nature type (key, {'strain', 'stress'}), stores the incremental
             macroscale loading constraint matricial form in a ndarray of shape (n_comps,).
@@ -218,14 +232,21 @@ class LoadingPath:
             errors.displayerror('E00096', location.filename, location.lineno + 1,
                                 self._max_cinc_cuts)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Compute current applied loading
+        applied_mac_load = self._get_applied_mac_load()
+        applied_mac_load_mf = {}
+        for ltype in applied_mac_load.keys():
+            applied_mac_load_mf[ltype] = type(self)._get_load_mf(self._n_dim, comp_order,
+                                                                 applied_mac_load[ltype])
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute incremental macroscale loading
-        inc_mac_load = self._get_increm_load()
+        inc_mac_load = self._get_inc_mac_load()
         inc_mac_load_mf = {}
         for ltype in inc_mac_load.keys():
             inc_mac_load_mf[ltype] = type(self)._get_load_mf(n_dim, comp_order,
                                                              inc_mac_load[ltype])
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        return [inc_mac_load_mf, load_subpath._n_presc_strain,
+        return [applied_mac_load_mf, inc_mac_load_mf, load_subpath._n_presc_strain,
                 load_subpath._presc_strain_idxs, load_subpath._n_presc_stress,
                 load_subpath._presc_stress_idxs, self._is_last_inc]
     # --------------------------------------------------------------------------------------
@@ -339,8 +360,22 @@ class LoadingPath:
         # Increment (+1) loading subpath increment counter
         self._get_load_subpath().update_inc()
     # --------------------------------------------------------------------------------------
-    def _get_increm_load(self):
-        '''Compute incremental macroscale loading.
+    def _get_applied_mac_load(self):
+        '''Compute current applied macroscale loading.
+
+        Returns
+        -------
+        applied_mac_load : dict
+            For each prescribed loading nature type (key, {'strain', 'stress'}), stores the
+            current applied macroscale loading constraints in a ndarray of shape (n_comps,).
+        '''
+        # Get current applied macroscale loading
+        applied_mac_load = self._get_load_subpath().get_applied_load()
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        return applied_mac_load
+    # --------------------------------------------------------------------------------------
+    def _get_inc_mac_load(self):
+        '''Compute current incremental macroscale loading.
 
         Returns
         -------
@@ -348,7 +383,7 @@ class LoadingPath:
             For each loading nature type (key, {'strain', 'stress'}), stores the incremental
             macroscale loading constraint in a ndarray of shape (n_comps,).
         '''
-        # Get current incremental applied macroscale loading
+        # Get current incremental macroscale loading
         inc_mac_load = self._get_load_subpath().get_inc_applied_load()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return inc_mac_load
@@ -450,6 +485,9 @@ class LoadingSubpath:
         Prescribed macroscale loading strain components indexes.
     _presc_stress_idxs : list
         Prescribed macroscale loading stress components indexes.
+    _applied_load : dict
+        For each prescribed loading nature type (key, {'strain', 'stress'}), stores the
+        current applied macroscale loading constraints in a ndarray of shape (n_comps,).
     _inc_applied_load : dict
         For each prescribed loading nature type (key, {'strain', 'stress'}), stores the
         current incremental applied macroscale loading constraints in a ndarray of shape
@@ -520,7 +558,8 @@ class LoadingSubpath:
                 self._presc_strain_idxs.append(i)
             else:
                 self._presc_stress_idxs.append(i)
-        # Initialize current incremental applied macroscale loading
+        # Initialize current applied and incremental applied macroscale loading
+        self._applied_load = {key: np.zeros(load[key].shape[0]) for key in load.keys()}
         self._inc_applied_load = {key: np.zeros(load[key].shape[0]) for key in load.keys()}
         # Initialize loading subpath last increment flag
         self._is_last_subpath_inc = False
@@ -607,12 +646,23 @@ class LoadingSubpath:
         # Set loading subpath last increment flag
         self._is_last_subpath_inc = False
     # --------------------------------------------------------------------------------------
+    def get_applied_load(self):
+        '''Get current applied loading.
+
+        Returns
+        -------
+        applied_load : dict
+            For each prescribed loading nature type (key, {'strain', 'stress'}), stores the
+            current applied macroscale loading constraints in a ndarray of shape (n_comps,).
+        '''
+        return copy.deepcopy(self._applied_load)
+    # --------------------------------------------------------------------------------------
     def get_inc_applied_load(self):
         '''Get current incremental applied loading.
 
         Returns
         -------
-        _inc_applied_load : dict
+        inc_applied_load : dict
             For each prescribed loading nature type (key, {'strain', 'stress'}), stores the
             current incremental applied loading constraints in a ndarray of shape
             (n_comps,).
@@ -655,21 +705,48 @@ class LoadingSubpath:
             inc_def_gradient_total = np.matmul(def_gradient_total,
                                                np.linalg.inv(def_gradient_init))
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Compute incremental deformation gradient (multiplicative decomposition)
+            # Compute incremental deformation gradient relative to initial deformation
+            # gradient (multiplicative decomposition)
+            inc_init_def_gradient = mop.matrix_root(inc_def_gradient_total,
+                                                    self._total_lfact)
+            # Compute current applied deformation gradient
+            applied_def_gradient = np.matmul(inc_init_def_gradient, def_gradient_init)
+            # Store current applied deformation gradient components
+            for i in range(len(self._comp_order_nsym)):
+                # Get component second-order index
+                so_idx = tuple([int(x) - 1 for x in list(self._comp_order_nsym[i])])
+                # Store current applied deformation gradient component
+                self._applied_load['strain'][i] = applied_def_gradient[so_idx]
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Compute current incremental deformation gradient (multiplicative
+            # decomposition)
             inc_def_gradient = mop.matrix_root(inc_def_gradient_total, inc_lfact)
-            # Store incremental deformation gradient components
+            # Store current incremental deformation gradient components
             for i in range(len(self._comp_order_nsym)):
                 # Get component second-order index
                 so_idx = tuple([int(x) - 1 for x in list(self._comp_order_nsym[i])])
                 # Store incremental deformation gradient component
                 self._inc_applied_load['strain'][i] = inc_def_gradient[so_idx]
+
+
+            print('\n\n inc_def_gradient_total: \n', inc_def_gradient_total)
+            print('\n\n inc_init_def_gradient: \n', inc_init_def_gradient)
+            print('\n\n self._total_lfact:', self._total_lfact)
+            print('\n\n applied_def_gradient: \n', applied_def_gradient)
         else:
             # Loop over prescription types
             for ltype in self._inc_applied_load.keys():
                 # Loop over loading components
                 for i in range(len(self._inc_applied_load[ltype])):
-                    # Compute incremental loading component (additive decomposition)
+                    # Compute current applied and incremental loading component (additive
+                    # decomposition)
                     if self._presctype[i] == ltype:
+                        # Compute current applied loading component
+                        self._applied_load[ltype][i] = \
+                            self._init_conv_hom_state[ltype][i] + \
+                                self._total_lfact*(self._load[ltype][i] -
+                                                   self._init_conv_hom_state[ltype][i])
+                        # Compute current incremental loading component
                         self._inc_applied_load[ltype][i] = \
                             inc_lfact*(self._load[ltype][i] -
                                        self._init_conv_hom_state[ltype][i])
@@ -691,6 +768,10 @@ class IncrementRewinder:
         associated to each material cluster (key, str).
     _ref_material : ElasticReferenceMaterial
         Elastic reference material at rewind state.
+    _global_strain_mf : 1darray
+        Global vector of clusters strain tensors (matricial form).
+    _farfield_strain_mf : 1darray
+        Far-field strain tensor (matricial form).
     '''
     def __init__(self, rewind_inc, phase_clusters):
         '''Increment rewinder constructor.
@@ -713,12 +794,15 @@ class IncrementRewinder:
         self._ref_material = None
         # Initialize clusters strain concentration tensors at rewind state
         self._clusters_sct_mf = None
+        # Initialize ASCA algorithmic variables
+        self._global_strain_mf = None
+        self._farfield_strain_mf = None
     # --------------------------------------------------------------------------------------
     def get_rewind_inc(self):
         '''Get increment associated to the rewind state.
 
-        Parameters
-        ----------
+        Returns
+        -------
         rewind_inc : int
             Increment associated to the rewind state.
         '''
@@ -897,14 +981,47 @@ class IncrementRewinder:
     def get_clusters_sct(self):
         '''Get clusters strain concentration tensors at rewind state.
 
-        Parameters
-        ----------
+        Returns
+        -------
         clusters_sct_mf : dict
             Fourth-order strain concentration tensor (matricial form) (item, ndarray)
             associated to each material cluster (key, str).
         '''
         # Save clusters state variables
         return copy.deepcopy(self._clusters_sct_mf)
+    # --------------------------------------------------------------------------------------
+    def save_asca_algorithmic_variables(self, global_strain_mf,
+                                        is_farfield_formulation=True,
+                                        farfield_strain_mf=None):
+        '''Save ASCA algorithmic variables at rewind state.
+
+        Parameters
+        ----------
+        global_strain_mf : 1darray
+            Global vector of clusters strain tensors (matricial form).
+        is_farfield_formulation : bool, default=True
+            True if far-field strain formulation is adopted, False otherwise.
+        farfield_strain_mf : 1darray, default=None
+            Far-field strain tensor (matricial form).
+        '''
+        # Save global vector of clusters strain tensors
+        self._global_strain_mf = copy.deepcopy(global_strain_mf)
+        # Save far-field strain tensor
+        if is_farfield_formulation:
+            self._farfield_strain_mf = farfield_strain_mf
+    # --------------------------------------------------------------------------------------
+    def get_asca_algorithmic_variables(self):
+        '''Get ASCA algorithmic variables at rewind state.
+
+        Returns
+        -------
+        global_strain_mf : 1darray
+            Global vector of clusters strain tensors (matricial form).
+        farfield_strain_mf : 1darray, default=None
+            Far-field strain tensor (matricial form).
+        '''
+        return copy.deepcopy(self._global_strain_mf), \
+            copy.deepcopy(self._farfield_strain_mf)
     # --------------------------------------------------------------------------------------
     def rewind_output_files(self, hres_output=None, ref_mat_output=None, voxels_output=None,
                             adapt_output=None, vtk_output=None):

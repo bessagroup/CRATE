@@ -10,6 +10,7 @@
 # Bernardo P. Ferreira | Dec 2020 | Implemented clustering adaptivity.
 # Bernardo P. Ferreira | Jul 2021 | Implemented analysis rewind operation.
 # Bernardo P. Ferreira | Nov 2021 | Refactoring and OOP implementation.
+# Bernardo P. Ferreira | Feb 2022 | Converted to total strain formulation.
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
@@ -57,6 +58,10 @@ class ASCA:
         Strain/Stress components symmetric order.
     _comp_order_nsym : list
         Strain/Stress components nonsymmetric order.
+    _global_strain_old_mf : 1darray
+        Last converged global vector of clusters strains stored in matricial form.
+    _farfield_strain_old_mf : 1darray, default=None
+        Last converged far-field strain tensor (matricial form).
     _total_time : float
         Total time (s) associated to online-stage.
     _effective_time : float
@@ -117,6 +122,10 @@ class ASCA:
         self._n_dim = n_dim
         self._comp_order_sym = comp_order_sym
         self._comp_order_nsym = comp_order_nsym
+        # Initialize last converged algorithmic variables
+        self._global_strain_old_mf = None
+        if self._is_farfield_formulation:
+            self._farfield_strain_old_mf = None
         # Initialize times
         self._total_time = 0.0
         self._effective_time = 0.0
@@ -214,6 +223,28 @@ class ASCA:
         is_lock_prop_ref = False
         # Initialize improved cluster incremental strains initial iterative guess flag
         is_improved_init_guess = False
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Initialize global vector of clusters strain tensors and far-field strain tensor
+        if self._strain_formulation == 'infinitesimal':
+            # Set clusters infinitesimal strain tensors
+            global_strain_mf = \
+                np.zeros((crve.get_n_total_clusters()*len(self._comp_order_sym)))
+            # Set far-field strain tensor
+            if self._is_farfield_formulation:
+                farfield_strain_mf = np.zeros(len(self._comp_order_sym))
+        else:
+            # Set initialized deformation gradient (matricial form)
+            def_gradient_mf = \
+                np.array([1.0 if x[0] == x[1] else 0.0 for x in self._comp_order_nsym])
+            # Build clusters deformation gradients
+            global_strain_mf = np.tile(def_gradient_mf, crve.get_n_total_clusters())
+            # Set far-field strain tensor
+            if self._is_farfield_formulation:
+                farfield_strain_mf = copy.deepcopy(def_gradient_mf)
+        # Initialize last converged algorithmic variables
+        self._global_strain_old_mf = copy.deepcopy(global_strain_mf)
+        if self._is_farfield_formulation:
+            self._farfield_strain_old_mf = copy.deepcopy(farfield_strain_mf)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize clustering adaptivity flag
         is_crve_adaptivity = False
@@ -324,12 +355,20 @@ class ASCA:
             inc_rewinder.save_reference_material(ref_material)
             # Save clusters strain concentration tensors
             inc_rewinder.save_clusters_sct(clusters_sct_mf)
+            # Save algorithmic variables
+            if self._is_farfield_formulation:
+                inc_rewinder.save_asca_algorithmic_variables(global_strain_mf,
+                    is_farfield_formulation=self._is_farfield_formulation,
+                        farfield_strain_mf=farfield_strain_mf)
+            else:
+                inc_rewinder.save_asca_algorithmic_variables(global_strain_mf)
             # Set increment rewinder flag
             is_inc_rewinder = True
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Setup first macroscale loading increment
-        inc_mac_load_mf, n_presc_strain, presc_strain_idxs, n_presc_stress, \
-            presc_stress_idxs, is_last_inc = mac_load_path.new_load_increment()
+        applied_mac_load_mf, inc_mac_load_mf, n_presc_strain, presc_strain_idxs, \
+            n_presc_stress, presc_stress_idxs, is_last_inc = \
+                mac_load_path.new_load_increment()
         # Get increment counter
         inc = mac_load_path.get_increm_state()['inc']
         # Display increment data
@@ -344,46 +383,43 @@ class ASCA:
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             if not self._is_farfield_formulation:
                 # Initialize strain tensor where each component is defined as follows:
-                # (a) Incremental macroscale strain (if prescribed macroscale strain
+                # (a) Current applied macroscale strain (if prescribed macroscale strain
                 #     component)
-                # (b) Incremental homogenized strain (if non-prescribed macroscale strain
-                #     component)
-                inc_mix_strain_mf = np.zeros(len(comp_order))
+                # (b) Current applied homogenized strain (if non-prescribed macroscale
+                #     strain component)
+                applied_mix_strain_mf = np.zeros(len(comp_order))
                 if n_presc_strain > 0:
-                    inc_mix_strain_mf[presc_strain_idxs] = \
-                        inc_mac_load_mf['strain'][presc_strain_idxs]
+                    applied_mix_strain_mf[presc_strain_idxs] = \
+                        applied_mac_load_mf['strain'][presc_strain_idxs]
                 # Initialize stress tensor where each component is defined as follows:
-                # (a) Incremental macroscale stress (if prescribed macroscale stress
+                # (a) Current applied macroscale stress (if prescribed macroscale stress
                 #     component)
-                # (b) Incremental homogenized stress (if non-prescribed macroscale stress
-                #     component)
-                inc_mix_stress_mf = np.zeros(len(comp_order))
+                # (b) Current applied homogenized stress (if non-prescribed macroscale
+                #     stress component)
+                applied_mix_stress_mf = np.zeros(len(comp_order))
                 if n_presc_stress > 0:
-                    inc_mix_stress_mf[presc_stress_idxs] = \
-                        inc_mac_load_mf['stress'][presc_stress_idxs]
+                    applied_mix_stress_mf[presc_stress_idxs] = \
+                        applied_mix_strain_mf['stress'][presc_stress_idxs]
             #
-            #                            Cluster incremental strains initial iterative guess
+            #                                        Clusters strain initial iterative guess
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Set clusters incremental strain initial iterative guess
-            global_inc_strain_mf = \
-                self._init_global_inc_strain_mf(crve.get_n_total_clusters())
+            # Set clusters strain initial iterative guess
+            global_strain_mf = self._init_global_strain_mf()
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Set additional initial iterative guesses
             if self._is_farfield_formulation:
-                # Set incremental far-field strain initial iterative guess
-                inc_farfield_strain_mf = self._init_inc_farfield_strain_mf()
+                # Set far-field strain initial iterative guess
+                farfield_strain_mf = self._init_farfield_strain_mf()
             else:
-                # Set incremental homogenized strain components initial iterative guess
-                if self._strain_formulation == 'infinitesimal':
-                    inc_mix_strain_mf[presc_stress_idxs] = 0.0
-                else:
-                    for i in range(len(presc_stress_idxs)):
-                        if self._comp_order_nsym[i][0] == self._comp_order_nsym[i][1]:
-                            inc_mix_strain_mf[i] = 1.0
-                        else:
-                            inc_mix_strain_mf[i] = 0.0
-                # Set incremental homogenized stress components initial iterative guess
-                inc_mix_stress_mf[presc_strain_idxs] = 0.0
+                # Get last converged homogenized strain and stress tensors
+                hom_strain_old_mf = material_state.get_hom_strain_old_mf()
+                hom_stress_old_mf = material_state.get_hom_stress_old_mf()
+                # Set homogenized strain components initial iterative guess
+                applied_mix_strain_mf[presc_stress_idxs] = \
+                    hom_strain_old_mf[presc_stress_idxs]
+                # Set homogenized stress components initial iterative guess
+                applied_mix_stress_mf[presc_strain_idxs] = \
+                    hom_stress_old_mf[presc_strain_idxs]
             #
             #                                          Self-consistent scheme iterative loop
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -426,7 +462,7 @@ class ASCA:
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     # Get clusters incremental strain in matricial form
                     clusters_inc_strain_mf = \
-                        material_state.get_clusters_inc_strain_mf(global_inc_strain_mf)
+                        material_state.get_clusters_inc_strain_mf(global_strain_mf)
                     # Perform clusters material state update and compute associated
                     # consistent tangent modulus
                     su_fail_state = \
@@ -458,15 +494,15 @@ class ASCA:
                     # Build Lippmann-Schwinger equilibrium residuals
                     if self._is_farfield_formulation:
                         residual = self._build_residual(crve, material_state,
-                            presc_strain_idxs, presc_stress_idxs, inc_mac_load_mf,
-                                ref_material, global_cit_mf, global_inc_strain_mf,
-                                inc_farfield_strain_mf=inc_farfield_strain_mf)
+                            presc_strain_idxs, presc_stress_idxs, applied_mac_load_mf,
+                                ref_material, global_cit_mf, global_strain_mf,
+                                farfield_strain_mf=farfield_strain_mf)
                     else:
                         residual = self._build_residual(crve, material_state,
-                            presc_strain_idxs, presc_stress_idxs, inc_mac_load_mf,
-                                ref_material, global_cit_mf, global_inc_strain_mf,
-                                inc_mix_strain_mf=inc_mix_strain_mf,
-                                inc_mix_stress_mf=inc_mix_stress_mf)
+                            presc_strain_idxs, presc_stress_idxs, applied_mac_load_mf,
+                                ref_material, global_cit_mf, global_strain_mf,
+                                applied_mix_strain_mf=applied_mix_strain_mf,
+                                applied_mix_stress_mf=applied_mix_stress_mf)
                     #
                     #                                                 Convergence evaluation
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -474,14 +510,13 @@ class ASCA:
                     if self._is_farfield_formulation:
                         is_converged, conv_errors = \
                             self._check_convergence(crve, material_state, presc_strain_idxs,
-                                                    presc_stress_idxs, inc_mac_load_mf,
+                                                    presc_stress_idxs, applied_mac_load_mf,
                                                     residual)
                     else:
                         is_converged, conv_errors = \
                             self._check_convergence(crve, material_state, presc_strain_idxs,
-                                                    presc_stress_idxs, inc_mac_load_mf,
-                                                    residual,
-                                                    inc_mix_strain_mf=inc_mix_strain_mf)
+                                presc_stress_idxs, applied_mac_load_mf, residual,
+                                    applied_mix_strain_mf=applied_mix_strain_mf)
                     # Display Newton-Raphson iteration header
                     type(self)._display_nr_iter_data(self._is_farfield_formulation,
                         mode='iter', nr_iter=nr_iter,
@@ -510,7 +545,7 @@ class ASCA:
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     # Build Lippmann-Schwinger equilibrium jacobian matrix
                     jacobian = self._build_jacobian(crve, material_state, presc_strain_idxs,
-                                                    presc_stress_idxs, inc_mac_load_mf,
+                                                    presc_stress_idxs,
                                                     global_cit_diff_tangent_mf)
                     #
                     #                                Lippmann-Schwinger equilibrium solution
@@ -519,22 +554,22 @@ class ASCA:
                     # equations
                     d_iter = numpy.linalg.solve(jacobian, -residual)
                     #
-                    #                                   Incremental strains iterative update
+                    #                                               Strains iterative update
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     # Update clusters incremental strain
-                    global_inc_strain_mf = global_inc_strain_mf + \
+                    global_strain_mf = global_strain_mf + \
                         d_iter[0:crve.get_n_total_clusters()*len(comp_order)]
                     # Update additional quantities
                     if self._is_farfield_formulation:
                         # Update far-field strain
-                        inc_farfield_strain_mf = inc_farfield_strain_mf + \
+                        farfield_strain_mf = farfield_strain_mf + \
                             d_iter[crve.get_n_total_clusters()*len(comp_order):]
                     else:
-                        # Update homogenized incremental strain components
+                        # Update homogenized strain components
                         if n_presc_stress > 0:
-                            inc_mix_strain_mf[presc_stress_idxs] = \
-                                inc_mix_strain_mf[presc_stress_idxs] +  \
-                                d_iter[crve.get_n_total_clusters()*len(comp_order):]
+                            applied_mix_strain_mf[presc_stress_idxs] = \
+                                applied_mix_strain_mf[presc_stress_idxs] +  \
+                                    d_iter[crve.get_n_total_clusters()*len(comp_order):]
                 #
                 #                                                     Self-consistent scheme
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -554,17 +589,16 @@ class ASCA:
                 if is_ref_material_output:
                     if self._is_farfield_formulation:
                         ref_mat_output.write_ref_mat(inc, ref_material,
-                                                     material_state.get_inc_hom_strain_mf(),
-                                                     material_state.get_inc_hom_stress_mf(),
+                                                     material_state.get_hom_strain_mf(),
+                                                     material_state.get_hom_stress_mf(),
                                                      eff_tangent_mf=eff_tangent_mf,
-                                                     inc_farfield_strain_mf=
-                                                     inc_farfield_strain_mf,
-                                                     inc_mac_load_strain_mf=
-                                                     inc_mac_load_mf['strain'])
+                                                     farfield_strain_mf=farfield_strain_mf,
+                                                     applied_mac_load_strain_mf=
+                                                     applied_mac_load_mf['strain'])
                     else:
                         ref_mat_output.write_ref_mat(inc, ref_material,
-                                                     material_state.get_inc_hom_strain_mf(),
-                                                     material_state.get_inc_hom_stress_mf(),
+                                                     material_state.get_hom_strain_mf(),
+                                                     material_state.get_hom_stress_mf(),
                                                      eff_tangent_mf=eff_tangent_mf)
                     # Increment post-processing time
                     self._post_process_time += time.time() - procedure_init_time
@@ -577,8 +611,8 @@ class ASCA:
                 else:
                     # Solve self-consistent scheme minimization problem
                     is_scs_admissible, E_ref, v_ref = ref_material.self_consistent_update(
-                        material_state.get_inc_hom_strain_mf(),
-                            material_state.get_inc_hom_stress_mf())
+                        material_state.get_hom_strain_mf(),
+                            material_state.get_hom_stress_mf())
                     # If self-consistent scheme iterative solution is not admissible, either
                     # accept the current solution (first self-consistent scheme iteration)
                     # or perform one last self-consistent scheme iteration with the last
@@ -662,9 +696,9 @@ class ASCA:
                 ref_material.reset_material_properties()
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Perform loading increment cut and setup new loading increment
-                inc_mac_load_mf, n_presc_strain, presc_strain_idxs, n_presc_stress, \
-                    presc_stress_idxs, is_last_inc = mac_load_path.increment_cut(
-                        self._n_dim, comp_order)
+                applied_mac_load_mf, inc_mac_load_mf, n_presc_strain, presc_strain_idxs, \
+                    n_presc_stress, presc_stress_idxs, is_last_inc = \
+                        mac_load_path.increment_cut(self._n_dim, comp_order)
                 # Get increment counter
                 inc = mac_load_path.get_increm_state()['inc']
                 # Display increment data
@@ -702,19 +736,19 @@ class ASCA:
                 if is_trigger:
                     # Display clustering adaptivity
                     info.displayinfo('16', 'repeat', inc)
-                    # Set improved initial iterative guess for the clusters incremental
-                    # strain global vector (matricial form) after the clustering adaptivity
+                    # Set improved initial iterative guess for the clusters strain global
+                    # vector (matricial form) after the clustering adaptivity
                     is_improved_init_guess = True
-                    improved_init_guess = [is_improved_init_guess, global_inc_strain_mf]
+                    improved_init_guess = [is_improved_init_guess, global_strain_mf]
                     # Perform clustering adaptivity
                     adaptivity_manager.adaptive_refinement(crve, material_state,
                         target_clusters, target_clusters_data, inc,
                             improved_init_guess=improved_init_guess,
                             verbose=is_clust_adapt_output)
-                    # Get improved initial iterative guess for the clusters incremental
-                    # strain global vector (matricial form)
+                    # Get improved initial iterative guess for the clusters strain global
+                    # vector (matricial form)
                     if is_improved_init_guess:
-                        global_inc_strain_mf = improved_init_guess[1]
+                        global_strain_mf = improved_init_guess[1]
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     # Get increment counter
                     inc = mac_load_path.get_increm_state()['inc']
@@ -751,6 +785,14 @@ class ASCA:
                     # Rewind clusters strain concentration tensors
                     clusters_sct_old_mf = inc_rewinder.get_clusters_sct()
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    # Rewind algorithmic variables
+                    if self._is_farfield_formulation:
+                        self._global_strain_old_mf, self._farfield_strain_old_mf = \
+                            inc_rewinder.get_asca_algorithmic_variables()
+                    else:
+                        self._global_strain_old_mf, _ = \
+                            inc_rewinder.get_asca_algorithmic_variables()
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     # Set post-processing procedure initial time
                     procedure_init_time = time.time()
                     # Rewind output files
@@ -768,8 +810,9 @@ class ASCA:
                     rewind_manager.update_rewind_time(mode='update')
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     # Setup new loading increment
-                    inc_mac_load_mf, n_presc_strain, presc_strain_idxs, n_presc_stress, \
-                        presc_stress_idxs, is_last_inc = mac_load_path.new_load_increment()
+                    applied_mac_load_mf, inc_mac_load_mf, n_presc_strain, \
+                        presc_strain_idxs, n_presc_stress, presc_stress_idxs, \
+                            is_last_inc = mac_load_path.new_load_increment()
                     # Get increment counter
                     inc = mac_load_path.get_increm_state()['inc']
                     # Display increment data
@@ -838,6 +881,13 @@ class ASCA:
             # Update converged elastic reference material elastic properties
             ref_material.update_converged_material_properties()
             #
+            #                                                Converged algorithmic variables
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Update last converged global vector of clusters strain tensors
+            self._global_strain_old_mf = copy.deepcopy(global_strain_mf)
+            # Update last converged far-field strain tensor
+            self._farfield_strain_old_mf = copy.deepcopy(farfield_strain_mf)
+            #
             #                                     Clustering adaptivity output (.adapt file)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Update clustering adaptivity output file with converged increment data
@@ -893,6 +943,13 @@ class ASCA:
                 inc_rewinder.save_reference_material(ref_material)
                 # Save clusters strain concentration tensors
                 inc_rewinder.save_clusters_sct(clusters_sct_mf)
+                # Save algorithmic variables
+                if self._is_farfield_formulation:
+                    inc_rewinder.save_asca_algorithmic_variables(global_strain_mf,
+                        is_farfield_formulation=self._is_farfield_formulation,
+                            farfield_strain_mf=farfield_strain_mf)
+                else:
+                    inc_rewinder.save_asca_algorithmic_variables(global_strain_mf)
                 # Set increment rewinder flag
                 is_inc_rewinder = True
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -909,14 +966,38 @@ class ASCA:
                 return
             else:
                 # Setup new loading increment
-                inc_mac_load_mf, n_presc_strain, presc_strain_idxs, n_presc_stress, \
-                    presc_stress_idxs, is_last_inc = mac_load_path.new_load_increment()
+                applied_mac_load_mf, inc_mac_load_mf, n_presc_strain, presc_strain_idxs, \
+                    n_presc_stress, presc_stress_idxs, is_last_inc = \
+                        mac_load_path.new_load_increment()
                 # Get increment counter
                 inc = mac_load_path.get_increm_state()['inc']
                 # Display increment data
                 type(self)._display_inc_data(mac_load_path)
                 # Set increment initial time
                 inc_init_time = time.time()
+    # --------------------------------------------------------------------------------------
+    def _init_global_strain_mf(self, mode='last_converged'):
+        '''Set clusters strains initial iterative guess.
+
+        Parameters
+        ----------
+        mode : str, {'last_converged',}, default='last_converged'
+            Strategy to set clusters incremental strains initial iterative guess.
+
+        Returns
+        -------
+        global_strain_mf : 1darray
+            Global vector of clusters strains stored in matricial form.
+        '''
+        if mode == 'last_converged':
+            # Set initial iterative guess associated with the last converged solution
+            global_strain_mf = copy.deepcopy(self._global_strain_old_mf)
+        else:
+            raise RuntimeError('Unavailable strategy to set clusters strains initial ' + \
+                               'iterative guess.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return global_strain_mf
     # --------------------------------------------------------------------------------------
     def _init_global_inc_strain_mf(self, n_total_clusters, mode='last_converged'):
         '''Set clusters incremental strains initial iterative guess.
@@ -927,6 +1008,11 @@ class ASCA:
             Total number of clusters.
         mode : str, {'last_converged',}, default='last_converged'
             Strategy to set clusters incremental strains initial iterative guess.
+
+        Returns
+        -------
+        global_inc_strain_mf : 1darray
+            Global vector of clusters incremental strains stored in matricial form.
         '''
         if mode == 'last_converged':
             # Set incremental initial iterative guess associated with the last converged
@@ -948,6 +1034,29 @@ class ASCA:
         # Return
         return global_inc_strain_mf
     # --------------------------------------------------------------------------------------
+    def _init_farfield_strain_mf(self, mode='last_converged'):
+        '''Set far-field strain initial iterative guess.
+
+        Parameters
+        ----------
+        mode : str, {'last_converged',}, default='last_converged'
+            Strategy to set incremental far-field strain initial iterative guess.
+
+        Returns
+        -------
+        farfield_strain_mf : 1darray, default=None
+            Incremental far-field strain tensor (matricial form).
+        '''
+        if mode == 'last_converged':
+            # Set initial iterative guess associated with the last converged solution
+            farfield_strain_mf = copy.deepcopy(self._farfield_strain_old_mf)
+        else:
+            raise RuntimeError('Unavailable strategy to set far-field strain initial ' + \
+                               'iterative guess.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return farfield_strain_mf
+    # --------------------------------------------------------------------------------------
     def _init_inc_farfield_strain_mf(self, mode='last_converged'):
         '''Set incremental far-field strain initial iterative guess.
 
@@ -955,6 +1064,11 @@ class ASCA:
         ----------
         mode : str, {'last_converged',}, default='last_converged'
             Strategy to set incremental far-field strain initial iterative guess.
+
+        Returns
+        -------
+        inc_farfield_strain_mf : 1darray, default=None
+            Incremental far-field strain tensor (matricial form).
         '''
         if mode == 'last_converged':
             # Set incremental initial iterative guess associated with the last converged
@@ -974,9 +1088,9 @@ class ASCA:
         return inc_farfield_strain_mf
     # --------------------------------------------------------------------------------------
     def _build_residual(self, crve, material_state, presc_strain_idxs, presc_stress_idxs,
-                        inc_mac_load_mf, ref_material, global_cit_mf, global_inc_strain_mf,
-                        inc_farfield_strain_mf=None, inc_mix_strain_mf=None,
-                        inc_mix_stress_mf=None):
+                        applied_mac_load_mf, ref_material, global_cit_mf, global_strain_mf,
+                        farfield_strain_mf=None, applied_mix_strain_mf=None,
+                        applied_mix_stress_mf=None):
         '''Build Lippmann-Schwinger equilibrium residuals.
 
         Parameters
@@ -989,22 +1103,22 @@ class ASCA:
             Prescribed macroscale loading strain components indexes.
         presc_stress_idxs : list
             Prescribed macroscale loading stress components indexes.
-        inc_mac_load_mf : dict
-            For each loading nature type (key, {'strain', 'stress'}), stores the incremental
-            macroscale loading constraint matricial form in a ndarray of shape (n_comps,).
+        applied_mac_load_mf : dict
+            For each prescribed loading nature type (key, {'strain', 'stress'}), stores the
+            current applied macroscale loading constraints in a ndarray of shape (n_comps,).
         ref_material : ElasticReferenceMaterial
             Elastic reference material.
         global_cit_mf : 2darray
             Global cluster interaction matrix. Assembly positions are assigned according to
             the order of material_phases (1st) and phase_clusters (2nd).
-        global_inc_strain_mf : 1darray
-            Global vector of cluster incremental strain tensors (matricial form).
-        inc_farfield_strain_mf : 1darray, default=None
-            Incremental farfield strain tensor (matricial form).
-        inc_mix_strain_mf : 1darray, default=None
-            Incremental strain tensor (matricial form) that contains prescribed strain
-            components and (non-prescribed) homogenized strain components.
-        inc_mix_stress_mf : 1darray, default=None
+        global_strain_mf : 1darray
+            Global vector of clusters strain tensors (matricial form).
+        farfield_strain_mf : 1darray, default=None
+            Far-field strain tensor (matricial form).
+        applied_mix_strain_mf : 1darray, default=None
+            Strain tensor (matricial form) that contains prescribed strain components and
+            (non-prescribed) homogenized strain components.
+        applied_mix_stress_mf : 1darray, default=None
             Incremental stress tensor (matricial form) that contains prescribed stress
             components and (non-prescribed) homogenized stress components.
 
@@ -1029,15 +1143,14 @@ class ASCA:
         n_total_clusters = crve.get_n_total_clusters()
         # Get clusters state variables
         clusters_state = material_state.get_clusters_state()
-        clusters_state_old = material_state.get_clusters_state_old()
         # Get elastic reference material tangent modulus (matricial form)
         ref_elastic_tangent_mf = ref_material.get_elastic_tangent_mf()
         # Get incremental homogenized strain and stress tensors (matricial form)
-        inc_hom_strain_mf = material_state.get_inc_hom_strain_mf()
-        inc_hom_stress_mf = material_state.get_inc_hom_stress_mf()
+        hom_strain_mf = material_state.get_hom_strain_mf()
+        hom_stress_mf = material_state.get_hom_stress_mf()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Initialize clusters incremental polarization stress
-        global_inc_pol_stress_mf = np.zeros_like(global_inc_strain_mf)
+        # Initialize clusters polarization stress
+        global_pol_stress_mf = np.zeros_like(global_strain_mf)
         # Initialize material cluster strain range indexes
         i_init = 0
         i_end = i_init + len(comp_order)
@@ -1045,14 +1158,13 @@ class ASCA:
         for mat_phase in material_phases:
             # Loop over material phase clusters
             for cluster in phase_clusters[mat_phase]:
-                # Compute material cluster incremental stress (matricial form)
-                inc_stress_mf = clusters_state[str(cluster)]['stress_mf'] - \
-                    clusters_state_old[str(cluster)]['stress_mf']
-                # Get material cluster incremental strain (matricial form)
-                inc_strain_mf = global_inc_strain_mf[i_init:i_end]
-                # Add cluster incremental polarization stress to global array
-                global_inc_pol_stress_mf[i_init:i_end] = inc_stress_mf - \
-                    np.matmul(ref_elastic_tangent_mf, inc_strain_mf)
+                # Compute material cluster stress (matricial form)
+                stress_mf = clusters_state[str(cluster)]['stress_mf']
+                # Get material cluster strain (matricial form)
+                strain_mf = global_strain_mf[i_init:i_end]
+                # Add cluster polarization stress to global array
+                global_pol_stress_mf[i_init:i_end] = stress_mf - \
+                    np.matmul(ref_elastic_tangent_mf, strain_mf)
                 # Update cluster strain range indexes
                 i_init = i_init + len(comp_order)
                 i_end = i_init + len(comp_order)
@@ -1062,18 +1174,18 @@ class ASCA:
             residual = np.zeros(n_total_clusters*len(comp_order) + len(comp_order))
             # Compute clusters equilibrium residuals
             residual[0:n_total_clusters*len(comp_order)] = \
-                np.subtract(np.add(global_inc_strain_mf,
-                                   np.matmul(global_cit_mf, global_inc_pol_stress_mf)), \
-                            numpy.matlib.repmat(inc_farfield_strain_mf,
+                np.subtract(np.add(global_strain_mf,
+                                   np.matmul(global_cit_mf, global_pol_stress_mf)), \
+                            numpy.matlib.repmat(farfield_strain_mf,
                                                 1, n_total_clusters))
             # Compute homogenization constraints residuals
             for i in range(len(comp_order)):
                 if i in presc_strain_idxs:
                     residual[n_total_clusters*len(comp_order) + i ] = \
-                        inc_hom_strain_mf[i] - inc_mac_load_mf['strain'][i]
+                        hom_strain_mf[i] - applied_mac_load_mf['strain'][i]
                 else:
                     residual[n_total_clusters*len(comp_order) + i ] = \
-                        inc_hom_stress_mf[i] - inc_mac_load_mf['stress'][i]
+                        hom_stress_mf[i] - applied_mac_load_mf['stress'][i]
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         else:
             # Compute number of prescribed loading stress components
@@ -1082,22 +1194,22 @@ class ASCA:
             residual = np.zeros(n_total_clusters*len(comp_order) + n_presc_stress)
             # Compute clusters equilibrium residuals
             residual[0:n_total_clusters*len(comp_order)] = \
-                np.subtract(np.add(global_inc_strain_mf,
-                                   np.matmul(global_cit_mf, global_inc_pol_stress_mf)),
-                            numpy.matlib.repmat(inc_mix_strain_mf,
+                np.subtract(np.add(global_strain_mf,
+                                   np.matmul(global_cit_mf, global_pol_stress_mf)),
+                            numpy.matlib.repmat(applied_mix_strain_mf,
                                                 1, n_total_clusters))
             # Compute additional residual if there are prescribed loading stress components
             if n_presc_stress > 0:
                 # Compute prescribed macroscale stress components residual
                 residual[n_total_clusters*len(comp_order):] = \
-                    inc_hom_stress_mf[presc_stress_idxs] - \
-                        inc_mix_stress_mf[presc_stress_idxs]
+                    hom_stress_mf[presc_stress_idxs] - \
+                        applied_mix_stress_mf[presc_stress_idxs]
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return residual
     # --------------------------------------------------------------------------------------
     def _build_jacobian(self, crve, material_state, presc_strain_idxs, presc_stress_idxs,
-                        inc_mac_load_mf, global_cit_diff_tangent_mf):
+                        global_cit_diff_tangent_mf):
         '''Build Lippmann-Schwinger equilibrium jacobian matrix.
 
         Parameters
@@ -1110,9 +1222,6 @@ class ASCA:
             Prescribed macroscale loading strain components indexes.
         presc_stress_idxs : list
             Prescribed macroscale loading stress components indexes.
-        inc_mac_load_mf : dict
-            For each loading nature type (key, {'strain', 'stress'}), stores the incremental
-            macroscale loading constraint matricial form in a ndarray of shape (n_comps,).
         global_cit_diff_tangent_mf : 2darray
             Global matrix similar to global cluster interaction matrix but where each
             cluster interaction tensor is double contracted with the difference between the
@@ -1277,8 +1386,8 @@ class ASCA:
         global_cit_diff_tangent_mf : 2darray
             Global matrix similar to the global cluster interaction matrix but where each
             cluster interaction tensor is double contracted with the difference between
-            the associated material cluster consistent tangent modulus-related term and the
-            reference material elastic tangent modulus.
+            the associated material cluster consistent tangent modulus and the reference
+            material elastic tangent modulus.
         '''
         # Get material consistent tangent modulus associated to each material cluster
         clusters_tangent_mf = material_state.get_clusters_tangent_mf()
@@ -1286,43 +1395,20 @@ class ASCA:
         ref_elastic_tangent_mf = ref_material.get_elastic_tangent_mf()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Build list which stores the difference between the material cluster consistent
-        # tangent modulus-related terms and the reference material elastic tangent modulus
+        # tangent modulus (matricial form) and the reference material elastic tangent
+        # modulus (matricial form)
         diff_tangent_mf = list()
         # Loop over material phases
         for mat_phase in material_state.get_material_phases():
             # Loop over material clusters
             for cluster in crve.get_phase_clusters()[mat_phase]:
-                # Compute material cluster consistent tangent modulus-related term
-                if self._strain_formulation == 'infinitesimal':
-                    cluster_tangent_term_mf = \
-                        copy.deepcopy(clusters_tangent_mf[str(cluster)])
-                else:
-                    # Get cluster consistent tangent modulus
-                    cluster_tangent = \
-                        mop.get_tensor_from_mf(clusters_tangent_mf[str(cluster)],
-                                               self._n_dim, self._comp_order_nsym)
-                    # Get last converged cluster deformation gradient (matricial form)
-                    def_gradient_old_mf = \
-                        material_state.get_clusters_def_gradient_old_mf()[str(cluster)]
-                    # Build last converged cluster deformation gradient
-                    def_gradient_old = \
-                        mop.get_tensor_from_mf(def_gradient_old_mf,
-                                               self._n_dim, self._comp_order_nsym)
-                    # Compute material cluster consistent tangent modulus-related term
-                    cluster_tangent_term = top.dot42_1(cluster_tangent, def_gradient_old)
-                    # Get material cluster consistent tangent modulus-related term
-                    # (matricial form)
-                    cluster_tangent_term_mf = \
-                        mop.get_tensor_mf(cluster_tangent_term,
-                                          self._n_dim, self._comp_order_nsym)
-                # Compute difference between material cluster consistent tangent
-                # modulus-related terms and the reference material elastic tangent modulus
-                diff_tangent_mf.append(cluster_tangent_term_mf - ref_elastic_tangent_mf)
+                diff_tangent_mf.append(clusters_tangent_mf[str(cluster)] -
+                                       ref_elastic_tangent_mf)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Build global matrix similar to the global cluster interaction matrix but where
         # each cluster interaction tensor is double contracted with the difference between
-        # the associated material cluster consistent tangent modulus-related term and the
-        # reference material elastic tangent modulus
+        # the associated material cluster consistent tangent modulus and the reference
+        # material elastic tangent modulus
         global_cit_diff_tangent_mf = np.matmul(global_cit_mf,
             scipy.linalg.block_diag(*diff_tangent_mf))
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1330,7 +1416,7 @@ class ASCA:
         return global_cit_diff_tangent_mf
     # --------------------------------------------------------------------------------------
     def _check_convergence(self, crve, material_state, presc_strain_idxs, presc_stress_idxs,
-                           inc_mac_load_mf, residual, inc_mix_strain_mf=None):
+                           applied_mac_load_mf, residual, applied_mix_strain_mf=None):
         '''Check Lippmann-Schwinger equilibrium convergence.
 
         Parameters
@@ -1343,14 +1429,14 @@ class ASCA:
             Prescribed macroscale loading strain components indexes.
         presc_stress_idxs : list
             Prescribed macroscale loading stress components indexes.
-        inc_mac_load_mf : dict
-            For each loading nature type (key, {'strain', 'stress'}), stores the incremental
-            macroscale loading constraint matricial form in a ndarray of shape (n_comps,).
+        applied_mac_load_mf : dict
+            For each prescribed loading nature type (key, {'strain', 'stress'}), stores the
+            current applied macroscale loading constraints in a ndarray of shape (n_comps,).
         residual : 1darray
             Lippmann-Schwinger equilibrium residual vector.
-        inc_mix_strain_mf : 1darray, default=None
-            Incremental strain tensor (matricial form) that contains prescribed strain
-            components and (non-prescribed) homogenized strain components.
+        applied_mix_strain_mf : 1darray, default=None
+            Strain tensor (matricial form) that contains prescribed strain components and
+            (non-prescribed) homogenized strain components.
 
         Returns
         -------
@@ -1378,32 +1464,32 @@ class ASCA:
         n_presc_strain = len(presc_strain_idxs)
         # Compute number of prescribed loading stress components
         n_presc_stress = len(presc_stress_idxs)
-        # Get incremental homogenized strain and stress tensors (matricial form)
-        inc_hom_strain_mf = material_state.get_inc_hom_strain_mf()
-        inc_hom_stress_mf = material_state.get_inc_hom_stress_mf()
+        # Get homogenized strain and stress tensors (matricial form)
+        hom_strain_mf = material_state.get_hom_strain_mf()
+        hom_stress_mf = material_state.get_hom_stress_mf()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         if self._is_farfield_formulation:
             # Set strain and stress normalization factors
-            if n_presc_strain > 0 and \
-                    not np.allclose(inc_mac_load_mf['strain'][tuple([presc_strain_idxs])],
-                                    np.zeros(inc_mac_load_mf['strain'][tuple([
-                                    presc_strain_idxs])].shape), atol=1e-10):
+            if n_presc_strain > 0 and not np.allclose(
+                applied_mac_load_mf['strain'][tuple([presc_strain_idxs])],
+                    np.zeros(applied_mac_load_mf['strain'][tuple([
+                        presc_strain_idxs])].shape), atol=1e-10):
                 strain_norm_factor = np.linalg.norm(
-                    inc_mac_load_mf['strain'][tuple([presc_strain_idxs])])
-            elif not np.allclose(inc_hom_strain_mf, np.zeros(inc_hom_strain_mf.shape),
+                    applied_mac_load_mf['strain'][tuple([presc_strain_idxs])])
+            elif not np.allclose(hom_strain_mf, np.zeros(hom_strain_mf.shape),
                                  atol=1e-10):
-                strain_norm_factor = np.linalg.norm(inc_hom_strain_mf)
+                strain_norm_factor = np.linalg.norm(hom_strain_mf)
             else:
                 strain_norm_factor = 1.0
-            if n_presc_stress > 0 and \
-                    not np.allclose(inc_mac_load_mf['stress'][tuple([presc_stress_idxs])],
-                                    np.zeros(inc_mac_load_mf['stress'][tuple([
-                                    presc_stress_idxs])].shape), atol=1e-10):
-                stress_norm_factor = \
-                    np.linalg.norm(inc_mac_load_mf['stress'][tuple([presc_stress_idxs])])
-            elif not np.allclose(inc_hom_stress_mf, np.zeros(inc_hom_stress_mf.shape),
+            if n_presc_stress > 0 and not np.allclose(
+                applied_mac_load_mf['stress'][tuple([presc_stress_idxs])],
+                    np.zeros(applied_mac_load_mf['stress'][tuple([
+                        presc_stress_idxs])].shape), atol=1e-10):
+                stress_norm_factor = np.linalg.norm(
+                    applied_mac_load_mf['stress'][tuple([presc_stress_idxs])])
+            elif not np.allclose(hom_stress_mf, np.zeros(hom_stress_mf.shape),
                                  atol=1e-10):
-                stress_norm_factor = np.linalg.norm(inc_hom_stress_mf)
+                stress_norm_factor = np.linalg.norm(hom_stress_mf)
             else:
                 stress_norm_factor = 1.0
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1433,26 +1519,26 @@ class ASCA:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         else:
             # Set strain and stress normalization factors
-            if n_presc_strain > 0 and \
-                    not np.allclose(inc_mac_load_mf['strain'][tuple([presc_strain_idxs])],
-                                    np.zeros(inc_mac_load_mf['strain'][tuple([
-                                    presc_strain_idxs])].shape), atol=1e-10):
-                strain_norm_factor = \
-                    np.linalg.norm(inc_mac_load_mf['strain'][tuple([presc_strain_idxs])])
-            elif not np.allclose(inc_hom_strain_mf, np.zeros(inc_hom_strain_mf.shape),
+            if n_presc_strain > 0 and not np.allclose(
+                applied_mac_load_mf['strain'][tuple([presc_strain_idxs])],
+                    np.zeros(applied_mac_load_mf['strain'][tuple([
+                        presc_strain_idxs])].shape), atol=1e-10):
+                strain_norm_factor = np.linalg.norm(
+                    applied_mac_load_mf['strain'][tuple([presc_strain_idxs])])
+            elif not np.allclose(hom_strain_mf, np.zeros(hom_strain_mf.shape),
                                  atol=1e-10):
-                strain_norm_factor = np.linalg.norm(inc_hom_strain_mf)
+                strain_norm_factor = np.linalg.norm(hom_strain_mf)
             else:
                 strain_norm_factor = 1.0
-            if n_presc_stress > 0 and \
-                    not np.allclose(inc_mac_load_mf['stress'][tuple([presc_stress_idxs])],
-                                    np.zeros(inc_mac_load_mf['stress'][tuple([
-                                    presc_stress_idxs])].shape), atol=1e-10):
-                stress_norm_factor = \
-                    np.linalg.norm(inc_mac_load_mf['stress'][tuple([presc_stress_idxs])])
-            elif not np.allclose(inc_hom_stress_mf, np.zeros(inc_hom_stress_mf.shape),
+            if n_presc_stress > 0 and not np.allclose(
+                applied_mac_load_mf['stress'][tuple([presc_stress_idxs])],
+                    np.zeros(applied_mac_load_mf['stress'][tuple([
+                        presc_stress_idxs])].shape), atol=1e-10):
+                stress_norm_factor = np.linalg.norm(
+                    applied_mac_load_mf['stress'][tuple([presc_stress_idxs])])
+            elif not np.allclose(hom_stress_mf, np.zeros(hom_stress_mf.shape),
                                  atol=1e-10):
-                stress_norm_factor = np.linalg.norm(inc_hom_stress_mf)
+                stress_norm_factor = np.linalg.norm(hom_stress_mf)
             else:
                 stress_norm_factor = 1.0
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1472,19 +1558,18 @@ class ASCA:
                 is_converged = (error_1 < self._conv_tol) and (error_2 < self._conv_tol)
             # Compute the normalized error associated to the homogenized strain tensor
             # (relative to the prescribed loading strain tensor) for output purposes only
-            error_inc_hom_strain = abs((np.linalg.norm(inc_hom_strain_mf) -
-                np.linalg.norm(inc_mix_strain_mf))) / strain_norm_factor
+            error_hom_strain = abs((np.linalg.norm(hom_strain_mf) -
+                np.linalg.norm(applied_mix_strain_mf)))/strain_norm_factor
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Build convergence evaluation errors list
-            errors = [error_1, error_2, error_inc_hom_strain]
+            errors = [error_1, error_2, error_hom_strain]
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return is_converged, errors
     # --------------------------------------------------------------------------------------
     def _crve_effective_tangent_modulus(self, crve, material_state,
                                         global_cit_diff_tangent_mf,
-                                        global_inc_strain_mf=None,
-                                        inc_farfield_strain_mf=None):
+                                        global_strain_mf=None, farfield_strain_mf=None):
         '''Compute CRVE effective tangent modulus and clusters strain concentration tensors.
 
         Parameters
@@ -1498,12 +1583,12 @@ class ASCA:
             cluster interaction tensor is double contracted with the difference between the
             associated material cluster consistent tangent modulus and the elastic reference
             material tangent modulus.
-        global_inc_strain_mf : ndarray, default=None
-            Global cluster incremental strain vector (matricial form). Only required for
+        global_strain_mf : ndarray, default=None
+            Global vector of clusters strains stored in matricial form. Only required for
             validation of cluster strain concentration tensors computation.
-        inc_farfield_strain_mf : ndarray, default=None
-            Incremental farfield strain tensor (matricial form). Only required for
-            validation of cluster strain concentration tensors computation.
+        farfield_strain_mf : ndarray, default=None
+            Far-field strain tensor (matricial form). Only required for validation of
+            cluster strain concentration tensors computation.
 
         Returns
         -------
@@ -1522,8 +1607,9 @@ class ASCA:
             raise RuntimeError('Unknown problem strain formulation.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set second-order identity tensor
-        _, _, _, fosym, _, _, _ = top.get_id_operators(self._n_dim)
+        _, foid, _, fosym, _, _, _ = top.get_id_operators(self._n_dim)
         fosym_mf = mop.get_tensor_mf(fosym, self._n_dim, comp_order)
+        foid_mf = mop.get_tensor_mf(foid, self._n_dim, comp_order)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get material phases
         material_phases = material_state.get_material_phases()
@@ -1538,8 +1624,12 @@ class ASCA:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute equilibrium jacobian matrix (cluster strain concentration tensors system
         # of linear equations coefficient matrix)
-        csct_matrix = np.add(scipy.linalg.block_diag(*(n_total_clusters*[fosym_mf,])),
-                             global_cit_diff_tangent_mf)
+        if self._strain_formulation == 'infinitesimal':
+            csct_matrix = scipy.linalg.block_diag(*(n_total_clusters*[fosym_mf,])) + \
+                global_cit_diff_tangent_mf
+        else:
+            csct_matrix = scipy.linalg.block_diag(*(n_total_clusters*[foid_mf,])) + \
+                global_cit_diff_tangent_mf
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Select clusters strain concentration tensors computation option:
         #
@@ -1552,7 +1642,10 @@ class ASCA:
         if option == 1:
             # Compute cluster strain concentration tensors system of linear equations
             # right-hand side
-            csct_rhs = numpy.matlib.repmat(fosym_mf, n_total_clusters, 1)
+            if self._strain_formulation == 'infinitesimal':
+                csct_rhs = numpy.matlib.repmat(fosym_mf, n_total_clusters, 1)
+            else:
+                csct_rhs = numpy.matlib.repmat(foid_mf, n_total_clusters, 1)
             # Initialize system solution matrix (containing clusters strain concentration
             # tensors)
             global_csct_mf = np.zeros((n_total_clusters*len(comp_order), len(comp_order)))
@@ -1596,7 +1689,7 @@ class ASCA:
         is_csct_validation = False
         if is_csct_validation:
             self._validate_csct(material_phases, phase_clusters, global_csct_mf,
-                                global_inc_strain_mf, inc_farfield_strain_mf)
+                                global_strain_mf, farfield_strain_mf)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize effective tangent modulus
         eff_tangent_mf = np.zeros((len(comp_order), len(comp_order)))
@@ -1612,14 +1705,14 @@ class ASCA:
                 # Get material cluster volume fraction
                 cluster_vf = clusters_vf[str(cluster)]
                 # Get material cluster consistent tangent (matricial form)
-                cluster_D_mf = clusters_tangent_mf[str(cluster)]
+                cluster_tangent_mf = clusters_tangent_mf[str(cluster)]
                 # Get material cluster strain concentration tensor
                 cluster_sct_mf = global_csct_mf[i_init:i_end, :]
                 # Store material cluster strain concentration tensor (matricial form)
                 clusters_sct_mf[str(cluster)] = cluster_sct_mf
                 # Add material cluster contribution to effective tangent modulus
                 eff_tangent_mf = eff_tangent_mf + \
-                                 cluster_vf*np.matmul(cluster_D_mf, cluster_sct_mf)
+                                 cluster_vf*np.matmul(cluster_tangent_mf, cluster_sct_mf)
                 # Increment cluster index
                 i_init = i_init + len(comp_order)
                 i_end = i_init + len(comp_order)
@@ -1627,7 +1720,7 @@ class ASCA:
         return eff_tangent_mf, clusters_sct_mf
     # --------------------------------------------------------------------------------------
     def _validate_csct(self, material_phases, phase_clusters, global_csct_mf,
-                       global_inc_strain_mf, inc_farfield_strain_mf):
+                       global_strain_mf, farfield_strain_mf):
         '''Validate clusters strain concentration tensors computation.
 
         Parameters
@@ -1639,16 +1732,15 @@ class ASCA:
             (key, str).
         global_csct_mf : 2darray
             Global matrix of cluster strain concentration tensors (matricial form).
-        global_inc_strain_mf : 1darray
-            Global vector of cluster incremental strain tensors (matricial form).
-        inc_farfield_strain_mf : 1darray
-            Incremental farfield strain tensor (matricial form).
+        global_strain_mf : ndarray
+            Global vector of clusters strains stored in matricial form.
+        farfield_strain_mf : ndarray
+            Far-field strain tensor (matricial form).
 
         Notes
         -----
-        This validation procedure requires the incremental homogenized strain tensor instead
-        of the incremental farfield strain tensor in the SCA formulation without the
-        farfield strain tensor.
+        This validation procedure requires the homogenized strain tensor instead of the
+        farfield strain tensor in the SCA formulation without the farfield strain tensor.
         '''
         # Set strain/stress components order according to problem strain formulation
         if self._strain_formulation == 'infinitesimal':
@@ -1667,12 +1759,11 @@ class ASCA:
             for cluster in phase_clusters[mat_phase]:
                 # Get material cluster strain concentration tensor
                 cluster_sct_mf = global_csct_mf[i_init:i_end, :]
-                # Compute cluster incremental strain from strain concentration tensor
-                inc_strain_mf = np.matmul(cluster_sct_mf, inc_farfield_strain_mf)
-                # Compare cluster incremental strain computed from strain concentration
-                # tensor with actual cluster incremental strain. Raise error if equality
-                # comparison fails
-                if not np.allclose(inc_strain_mf, global_inc_strain_mf[i_init:i_end],
+                # Compute cluster strain from strain concentration tensor
+                strain_mf = np.matmul(cluster_sct_mf, farfield_strain_mf)
+                # Compare cluster strain computed from strain concentration tensor with
+                # actual cluster strain. Raise error if equality comparison fails
+                if not np.allclose(strain_mf, global_strain_mf[i_init:i_end],
                                    rtol=1e-05, atol=1e-08):
                     raise RuntimeError('Wrong computation of cluster strain ' +
                                        'concentration tensor.')
@@ -2161,15 +2252,15 @@ class ElasticReferenceMaterial:
         '''
         return self._norm_dv
     # --------------------------------------------------------------------------------------
-    def self_consistent_update(self, inc_strain_mf, inc_stress_mf):
+    def self_consistent_update(self, strain_mf, stress_mf):
         '''Solve self-consistent scheme minimization problem.
 
         Parameters
         ----------
-        inc_strain_mf : 1darray
-            Incremental homogenized strain (matricial form).
-        inc_stress_mf : 1darray
-            Incremental homogenized stress (matricial form).
+        strain_mf : 1darray
+            Homogenized strain (matricial form).
+        stress_mf : 1darray
+            Homogenized stress (matricial form).
 
         Returns
         -------
@@ -2189,7 +2280,7 @@ class ElasticReferenceMaterial:
         else:
             raise RuntimeError('Unknown problem strain formulation.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        if np.all([abs(inc_strain_mf[i]) < 1e-10 for i in range(inc_strain_mf.shape[0])]):
+        if np.all([abs(strain_mf[i]) < 1e-10 for i in range(strain_mf.shape[0])]):
             # Set admissibility flag
             is_admissible = True
             # Get current elastic reference material properties
@@ -2207,24 +2298,24 @@ class ElasticReferenceMaterial:
             # matrix and right-hand side
             scs_matrix = np.zeros((2, 2))
             scs_rhs = np.zeros(2)
-            # Get incremental strain and stress tensors
-            inc_strain = mop.get_tensor_from_mf(inc_strain_mf, self._n_dim, comp_order)
-            inc_stress = mop.get_tensor_from_mf(inc_stress_mf, self._n_dim, comp_order)
+            # Get strain and stress tensors
+            strain = mop.get_tensor_from_mf(strain_mf, self._n_dim, comp_order)
+            stress = mop.get_tensor_from_mf(stress_mf, self._n_dim, comp_order)
             # Compute self-consistent scheme system of linear equations right-hand side
-            scs_rhs[0] = np.trace(inc_stress)
-            scs_rhs[1] = top.ddot22_1(inc_stress, inc_strain)
+            scs_rhs[0] = np.trace(stress)
+            scs_rhs[1] = top.ddot22_1(stress, strain)
             # Compute self-consistent scheme system of linear equations coefficient matrix
-            scs_matrix[0, 0] = np.trace(inc_strain)*np.trace(soid)
-            scs_matrix[0, 1] = 2.0*np.trace(inc_strain)
-            scs_matrix[1, 0] = np.trace(inc_strain)**2
-            scs_matrix[1, 1] = 2.0*top.ddot22_1(inc_strain, inc_strain)
+            scs_matrix[0, 0] = np.trace(strain)*np.trace(soid)
+            scs_matrix[0, 1] = 2.0*np.trace(strain)
+            scs_matrix[1, 0] = np.trace(strain)**2
+            scs_matrix[1, 1] = 2.0*top.ddot22_1(strain, strain)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Limitation 1: Under isochoric loading conditions the first equation of the
             # self-consistent scheme system of linear equations vanishes (derivative with
             # respect to lambda). In this case, adopt the previous converged lambda and
             # compute miu from the second equation of the the self-consistent scheme system
             # of linear equations
-            if (abs(np.trace(inc_strain))/np.linalg.norm(inc_strain)) < 1e-10 or \
+            if (abs(np.trace(strain))/np.linalg.norm(strain)) < 1e-10 or \
                     np.linalg.solve(scs_matrix, scs_rhs)[0] < 0:
                 # Get previous converged reference material elastic properties
                 E_old = self._material_properties['E']
@@ -2239,9 +2330,9 @@ class ElasticReferenceMaterial:
             # In this case, assume that the ratio between lambda and miu is the same as in
             # the previous converged values and solve the first equation of self-consistent
             # scheme system of linear equations
-            elif np.all([abs(inc_strain[0, 0] - inc_strain[i, i])/np.linalg.norm(inc_strain)
-                    < 1e-10 for i in range(self._n_dim)]) and \
-                    np.allclose(inc_strain, np.diag(np.diag(inc_strain)), atol=1e-10):
+            elif np.all([abs(strain[0, 0] - strain[i, i])/np.linalg.norm(strain) < 1e-10
+                for i in range(self._n_dim)]) and \
+                    np.allclose(strain, np.diag(np.diag(strain)), atol=1e-10):
                 # Get previous converged reference material elastic properties
                 E_old = self._material_properties['E']
                 v_old = self._material_properties['v']

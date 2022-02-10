@@ -234,8 +234,10 @@ class MaterialQuantitiesComputer:
     ----------
     _n_dim : int
         Problem dimension.
-    _comp_order : list
-        Strain/Stress components (str) order.
+    _comp_order_sym : list
+        Strain/Stress components symmetric order.
+    _comp_order_nsym : list
+        Strain/Stress components nonsymmetric order.
     _fodevprojsym_mf : ndarray
         Fourth-order deviatoric projection tensor (second order symmetric tensors)
         (matricial form).
@@ -249,14 +251,16 @@ class MaterialQuantitiesComputer:
     def __init__(self):
         '''Material-related quantities computer constructor.'''
         # Get 3D problem parameters
-        n_dim, comp_order_sym, _ = mop.get_problem_type_parameters(problem_type=4)
+        n_dim, comp_order_sym, comp_order_nsym = \
+            mop.get_problem_type_parameters(problem_type=4)
         # Set material-related quantities computer parameters
         self._n_dim = n_dim
-        self._comp_order = comp_order_sym
+        self._comp_order_sym = comp_order_sym
+        self._comp_order_nsym = comp_order_nsym
         # Get fourth-order tensors
         _, _, _, _, _, _, fodevprojsym = top.get_id_operators(self._n_dim)
         # Get fourth-order tensors matricial form
-        fodevprojsym_mf = mop.get_tensor_mf(fodevprojsym, self._n_dim, self._comp_order)
+        fodevprojsym_mf = mop.get_tensor_mf(fodevprojsym, self._n_dim, self._comp_order_sym)
         self._fodevprojsym_mf = fodevprojsym_mf
     # --------------------------------------------------------------------------------------
     def get_vm_stress(self, stress_mf):
