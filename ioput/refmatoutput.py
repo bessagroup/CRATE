@@ -186,7 +186,7 @@ class RefMatOutput:
             scs_cost = np.linalg.norm(hom_stress_mf -
                                       np.matmul(ref_elastic_tangent_mf, hom_strain_mf))**2
             # Normalize cost function
-            rel_scs_cost = scs_cost/(np.linalg.norm(hom_strain_mf)**2)
+            rel_scs_cost = scs_cost/(np.linalg.norm(hom_stress_mf)**2)
         else:
             # If self-consistent scheme cost function computation is not implemented, output
             # normalized cost function value as infinite
