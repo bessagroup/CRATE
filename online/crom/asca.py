@@ -2272,13 +2272,46 @@ class ElasticReferenceMaterial:
         v : float
             Poisson ratio of elastic reference material.
         '''
-        # Set strain/stress components order according to problem strain formulation
-        if self._strain_formulation == 'infinitesimal':
+        # Set stress-strain conjugate pair and strain/stress components order according to
+        # problem strain formulation and self-consistent scheme
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Regression-based self-consistent scheme
+        # Infinitesimal strains: infinitesimal strain tensor, Cauchy stress tensor
+        # Finite strains: deformation gradient, first Piola-Kirchhoff stress tensor
+        if self._self_consistent_scheme == 'regression':
+            # Set strain/stress components order
+            if self._strain_formulation == 'infinitesimal':
+                comp_order = self._comp_order_sym
+            elif self._strain_formulation == 'finite':
+                comp_order = self._comp_order_nsym
+            else:
+                raise RuntimeError('Unknown problem strain formulation.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Regression-based material symmetric self-consistent scheme
+        # Infinitesimal strains: infinitesimal strain tensor, Cauchy stress tensor
+        # Finite strains: material logarithmic strain tensor, stress conjugate tensor
+        elif self._self_consistent_scheme == 'regression_material_sym':
+            # Get alternative (symmetric) stress-strain conjugate pair under finite strains
+            if self._strain_formulation == 'finite':
+                # Build deformation gradient
+                def_gradient = \
+                    mop.get_tensor_from_mf(strain_mf, self._n_dim, self._comp_order_nsym)
+                # Build first Piola-Kirchhoff stress tensor
+                first_piola_stress = \
+                    mop.get_tensor_from_mf(stress_mf, self._n_dim, self._comp_order_nsym)
+                # Compute alternative (symmetric) stress-strain conjugate pair
+                material_log_strain, stress_conjugate = \
+                    conjugate_material_log_strain(def_gradient, first_piola_stress)
+                # Set alternative (symmetric) stress-strain conjugate pair (matricial form)
+                strain_mf = \
+                    mop.get_tensor_mf(material_log_strain, self._n_dim, self._comp_order_sym)
+                stress_mf = \
+                    mop.get_tensor_mf(stress_conjugate, self._n_dim, self._comp_order_sym)
+            # Set strain/stress components order
             comp_order = self._comp_order_sym
-        elif self._strain_formulation == 'finite':
-            comp_order = self._comp_order_nsym
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         else:
-            raise RuntimeError('Unknown problem strain formulation.')
+            raise RuntimeError('Unknown self-consistent scheme.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         if np.all([abs(strain_mf[i]) < 1e-10 for i in range(strain_mf.shape[0])]):
             # Set admissibility flag
@@ -2290,7 +2323,7 @@ class ElasticReferenceMaterial:
             return is_admissible, E, v
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Update reference material elastic properties
-        if self._self_consistent_scheme == 'regression':
+        if self._self_consistent_scheme in ('regression', 'regression_material_sym'):
             # Set second-order identity tensor
             soid, _, _, _, _, _, _ = top.get_id_operators(self._n_dim)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
