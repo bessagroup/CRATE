@@ -142,7 +142,7 @@ def readinputdatafile(input_file,dirs_dict):
     keyword = 'Self_Consistent_Scheme'
     is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
     if is_found:
-        max_val = 1
+        max_val = 3
         self_consistent_scheme_id = rproc.readtypeAkeyword(input_file, input_file_path,
                                                            keyword, max_val)
     else:
@@ -150,8 +150,10 @@ def readinputdatafile(input_file,dirs_dict):
     # Set self-consistent scheme
     if self_consistent_scheme_id == 1:
         self_consistent_scheme = 'regression'
+    elif self_consistent_scheme_id == 3:
+        self_consistent_scheme = 'self_consistent_optimization'
     else:
-        raise RuntimeError('Unknown self-consistent scheme.')
+        raise RuntimeError('Unknown or unavailable self-consistent scheme.')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read self consistent scheme maximum number of iterations (optional). If the associated
     # keyword is not found, then a default specification is assumed
