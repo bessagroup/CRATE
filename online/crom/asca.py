@@ -11,12 +11,15 @@
 # Bernardo P. Ferreira | Jul 2021 | Implemented analysis rewind operation.
 # Bernardo P. Ferreira | Nov 2021 | Refactoring and OOP implementation.
 # Bernardo P. Ferreira | Feb 2022 | Converted to total strain formulation.
+# Bernardo P. Ferreira | Mar 2022 | Implemented reference material optimizers.
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
 # Working with arrays
 import numpy as np
 import numpy.matlib
+# Defining abstract base classes
+from abc import ABC, abstractmethod
 # Date and time
 import time
 # Shallow and deep copy operations
@@ -33,6 +36,13 @@ import tensor.tensoroperations as top
 from clustering.citoperations import assemble_cit
 # Macroscale load incrementation
 from online.loading.macloadincrem import LoadingPath, IncrementRewinder, RewindManager
+# Material-related computations
+from material.materialoperations import conjugate_material_log_strain, \
+                                        compute_material_log_strain
+# Optimization
+from optimization.optimizationfunction import OptimizationFunction, \
+                                              RelativeRootMeanSquaredError
+from optimization.optimizer import SciPyMinimizer
 # ACROM framework
 from clustering.adaptivity.crve_adaptivity import AdaptivityManager, \
                                                   ClusteringAdaptivityOutput
@@ -603,16 +613,21 @@ class ASCA:
                     # Increment post-processing time
                     self._post_process_time += time.time() - procedure_init_time
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Solve self-consistent scheme minimization problem
+                # Solve self-consistent minimization problem
                 if is_lock_prop_ref:
                     # Skip update of reference material elastic properties
                     E_ref = ref_material.get_material_properties()['E']
                     v_ref = ref_material.get_material_properties()['v']
                 else:
-                    # Solve self-consistent scheme minimization problem
-                    is_scs_admissible, E_ref, v_ref = ref_material.self_consistent_update(
-                        material_state.get_hom_strain_mf(),
-                            material_state.get_hom_stress_mf())
+                    # Compute reference material elastic properties through the solution of
+                    # a self-consistent minimization problem
+                    is_scs_admissible, E_ref, v_ref = \
+                        ref_material.self_consistent_update(
+                            material_state.get_hom_strain_mf(),
+                            material_state.get_hom_strain_old_mf(),
+                            material_state.get_hom_stress_mf(),
+                            material_state.get_hom_stress_old_mf(),
+                            eff_tangent_mf)
                     # If self-consistent scheme iterative solution is not admissible, either
                     # accept the current solution (first self-consistent scheme iteration)
                     # or perform one last self-consistent scheme iteration with the last
@@ -620,8 +635,7 @@ class ASCA:
                     if inc > 1 and not is_scs_admissible:
                         # Display reference material self-consistent scheme iteration footer
                         type(self)._display_scs_iter_data(ref_material, is_lock_prop_ref,
-                                                          mode='end', scs_iter_time=
-                                                          time.time()-scs_iter_init_time)
+                            mode='end', scs_iter_time=time.time() - scs_iter_init_time)
                         # Elastic reference material properties locking
                         if ref_material.get_scs_iter() == 0:
                             # Display locking of reference material elastic properties
@@ -2252,15 +2266,26 @@ class ElasticReferenceMaterial:
         '''
         return self._norm_dv
     # --------------------------------------------------------------------------------------
-    def self_consistent_update(self, strain_mf, stress_mf):
-        '''Solve self-consistent scheme minimization problem.
+    def self_consistent_update(self, strain_mf, strain_old_mf, stress_mf, stress_old_mf,
+                               eff_tangent_mf):
+        '''Compute reference material elastic properties following self-consistent approach.
 
         Parameters
         ----------
         strain_mf : 1darray
-            Homogenized strain (matricial form).
+            Homogenized strain (matricial form): infinitesimal strain tensor (infinitesimal
+            strains) or deformation gradient (finite strains)
+        strain_old_mf : 1darray
+            Last converged homogenized strain (matricial form): infinitesimal strain tensor
+            (infinitesimal strains) or deformation gradient (finite strains)
         stress_mf : 1darray
-            Homogenized stress (matricial form).
+            Homogenized stress (matricial form): Cauchy stress tensor (infinitesimal
+            strains) or first Piola-Kirchhoff stress tensor (finite strains).
+        stress_old_mf : 1darray
+            Last converged homogenized stress (matricial form): Cauchy stress tensor
+            (infinitesimal strains) or first Piola-Kirchhoff stress tensor (finite strains).
+        eff_tangent_mf : 2darray
+            CRVE effective material tangent modulus (matricial form).
 
         Returns
         -------
@@ -2272,122 +2297,120 @@ class ElasticReferenceMaterial:
         v : float
             Poisson ratio of elastic reference material.
         '''
-        # Set stress-strain conjugate pair and strain/stress components order according to
-        # problem strain formulation and self-consistent scheme
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Regression-based self-consistent scheme
-        # Infinitesimal strains: infinitesimal strain tensor, Cauchy stress tensor
-        # Finite strains: deformation gradient, first Piola-Kirchhoff stress tensor
-        if self._self_consistent_scheme == 'regression':
-            # Set strain/stress components order
-            if self._strain_formulation == 'infinitesimal':
-                comp_order = self._comp_order_sym
-            elif self._strain_formulation == 'finite':
-                comp_order = self._comp_order_nsym
-            else:
-                raise RuntimeError('Unknown problem strain formulation.')
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Regression-based material symmetric self-consistent scheme
-        # Infinitesimal strains: infinitesimal strain tensor, Cauchy stress tensor
-        # Finite strains: material logarithmic strain tensor, stress conjugate tensor
-        elif self._self_consistent_scheme == 'regression_material_sym':
-            # Get alternative (symmetric) stress-strain conjugate pair under finite strains
-            if self._strain_formulation == 'finite':
-                # Build deformation gradient
-                def_gradient = \
-                    mop.get_tensor_from_mf(strain_mf, self._n_dim, self._comp_order_nsym)
-                # Build first Piola-Kirchhoff stress tensor
-                first_piola_stress = \
-                    mop.get_tensor_from_mf(stress_mf, self._n_dim, self._comp_order_nsym)
-                # Compute alternative (symmetric) stress-strain conjugate pair
-                material_log_strain, stress_conjugate = \
-                    conjugate_material_log_strain(def_gradient, first_piola_stress)
-                # Set alternative (symmetric) stress-strain conjugate pair (matricial form)
-                strain_mf = \
-                    mop.get_tensor_mf(material_log_strain, self._n_dim, self._comp_order_sym)
-                stress_mf = \
-                    mop.get_tensor_mf(stress_conjugate, self._n_dim, self._comp_order_sym)
-            # Set strain/stress components order
-            comp_order = self._comp_order_sym
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Compute incremental homogenized strain and stress tensors according to problem
+        # strain formulation and self-consistent scheme
+        if self._strain_formulation == 'infinitesimal':
+            # Compute incremental homogenized infinitesimal strain tensor
+            inc_strain_mf = strain_mf - strain_old_mf
+            # Compute incremental homogenized Cauchy stress tensor
+            inc_stress_mf = stress_mf - stress_old_mf
         else:
-            raise RuntimeError('Unknown self-consistent scheme.')
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        if np.all([abs(strain_mf[i]) < 1e-10 for i in range(strain_mf.shape[0])]):
-            # Set admissibility flag
-            is_admissible = True
-            # Get current elastic reference material properties
-            E = self._material_properties['E']
-            v = self._material_properties['v']
-            # Return
-            return is_admissible, E, v
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Update reference material elastic properties
-        if self._self_consistent_scheme in ('regression', 'regression_material_sym'):
-            # Set second-order identity tensor
-            soid, _, _, _, _, _, _ = top.get_id_operators(self._n_dim)
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Initialize self-consistent scheme system of linear equations coefficient
-            # matrix and right-hand side
-            scs_matrix = np.zeros((2, 2))
-            scs_rhs = np.zeros(2)
-            # Get strain and stress tensors
-            strain = mop.get_tensor_from_mf(strain_mf, self._n_dim, comp_order)
-            stress = mop.get_tensor_from_mf(stress_mf, self._n_dim, comp_order)
-            # Compute self-consistent scheme system of linear equations right-hand side
-            scs_rhs[0] = np.trace(stress)
-            scs_rhs[1] = top.ddot22_1(stress, strain)
-            # Compute self-consistent scheme system of linear equations coefficient matrix
-            scs_matrix[0, 0] = np.trace(strain)*np.trace(soid)
-            scs_matrix[0, 1] = 2.0*np.trace(strain)
-            scs_matrix[1, 0] = np.trace(strain)**2
-            scs_matrix[1, 1] = 2.0*top.ddot22_1(strain, strain)
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Limitation 1: Under isochoric loading conditions the first equation of the
-            # self-consistent scheme system of linear equations vanishes (derivative with
-            # respect to lambda). In this case, adopt the previous converged lambda and
-            # compute miu from the second equation of the the self-consistent scheme system
-            # of linear equations
-            if (abs(np.trace(strain))/np.linalg.norm(strain)) < 1e-10 or \
-                    np.linalg.solve(scs_matrix, scs_rhs)[0] < 0:
-                # Get previous converged reference material elastic properties
-                E_old = self._material_properties['E']
-                v_old = self._material_properties['v']
-                # Compute previous converged lambda
-                lam = (E_old*v_old)/((1.0 + v_old)*(1.0 - 2.0*v_old))
-                # Compute miu
-                miu = scs_rhs[1]/scs_matrix[1, 1]
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Limitation 2: Under hydrostatic loading conditions both equations of the
-            # self-consistent scheme system of linear equations become linearly dependent.
-            # In this case, assume that the ratio between lambda and miu is the same as in
-            # the previous converged values and solve the first equation of self-consistent
-            # scheme system of linear equations
-            elif np.all([abs(strain[0, 0] - strain[i, i])/np.linalg.norm(strain) < 1e-10
-                for i in range(self._n_dim)]) and \
-                    np.allclose(strain, np.diag(np.diag(strain)), atol=1e-10):
-                # Get previous converged reference material elastic properties
-                E_old = self._material_properties['E']
-                v_old = self._material_properties['v']
-                # Compute previous converged reference material Lamé parameters
-                lam_old = (E_old*v_old)/((1.0 + v_old)*(1.0 - 2.0*v_old))
-                miu_old = E_old/(2.0*(1.0 + v_old))
-                # Compute reference material Lamé parameters
-                lam = (scs_rhs[0]/scs_matrix[0, 0])*(lam_old/(lam_old + miu_old))
-                miu = (scs_rhs[0]/scs_matrix[0, 0])*(miu_old/(lam_old + miu_old))
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Solve self-consistent scheme system of linear equations
+            # Build homogenized deformation gradient
+            def_gradient = \
+                mop.get_tensor_from_mf(strain_mf, self._n_dim, self._comp_order_nsym)
+            # Build last converged homogenized deformation gradient tensor
+            def_gradient_old = \
+                mop.get_tensor_from_mf(strain_old_mf, self._n_dim, self._comp_order_nsym)
+            if self._self_consistent_scheme == 'regression_material_sym':
+                # Build homogenized first Piola-Kirchhoff stress tensor
+                first_piola_stress = mop.get_tensor_from_mf(stress_mf, self._n_dim,
+                                                            self._comp_order_nsym)
+                # Compute homogenized alternative (symmetric) stress-strain conjugate pair
+                mat_log_strain, stress_conjugate = \
+                    conjugate_material_log_strain(def_gradient, first_piola_stress)
+                # Set homogenized alternative (symmetric) stress-strain conjugate pair
+                # (matricial form)
+                strain_mf = mop.get_tensor_mf(mat_log_strain, self._n_dim,
+                                              self._comp_order_sym)
+                stress_mf = mop.get_tensor_mf(stress_conjugate, self._n_dim,
+                                              self._comp_order_sym)
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Build last converged homogenized first Piola-Kirchhoff stress tensor
+                first_piola_stress_old = mop.get_tensor_from_mf(stress_old_mf, self._n_dim,
+                                                                self._comp_order_nsym)
+                # Compute last converged homogenized alternative (symmetric) stress-strain
+                # conjugate pair
+                mat_log_strain_old, stress_conjugate_old = \
+                    conjugate_material_log_strain(def_gradient_old, first_piola_stress_old)
+                # Set last converged homogenized alternative (symmetric) stress-strain
+                # conjugate pair (matricial form)
+                strain_old_mf = mop.get_tensor_mf(mat_log_strain_old, self._n_dim,
+                                                  self._comp_order_sym)
+                stress_old_mf = mop.get_tensor_mf(stress_conjugate_old, self._n_dim,
+                                                  self._comp_order_sym)
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Compute incremental homogenized material logarithmic strain tensor
+                inc_strain_mf = strain_mf - strain_old_mf
+                # Compute incremental homogenized stress conjugate to material logarithmic
+                # strain tensor
+                inc_stress_mf = stress_mf - stress_old_mf
             else:
-                scs_solution = np.linalg.solve(scs_matrix, scs_rhs)
-                # Get reference material Lamé parameters
-                lam = scs_solution[0]
-                miu = scs_solution[1]
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Compute reference material Young modulus and Poisson ratio
-            E = (miu*(3.0*lam + 2.0*miu))/(lam + miu)
-            v = lam/(2.0*(lam + miu))
+                # Compute incremental homogenized deformation gradient tensor
+                inc_def_gradient = np.matmul(def_gradient, np.linalg.inv(def_gradient_old))
+                # Build incremental homogenized deformation gradient tensor (matricial form)
+                inc_strain_mf = mop.get_tensor_mf(inc_def_gradient, self._n_dim,
+                                                  self._comp_order_nsym)
+                # Compute incremental homogenized first Piola-Kirchhoff stress tensor
+                inc_stress_mf = stress_mf - stress_old_mf
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Check admissibility of self-consistent scheme iterative solution
+        # Compute elastic reference material properties based on the regression-based
+        # self-consistent scheme
+        if self._self_consistent_scheme in ('regression', 'regression_material_sym'):
+            # Initialize elastic reference material properties regression-based
+            # self-consistent scheme optimizer
+            if self._strain_formulation == 'infinitesimal':
+                # Initialize elastic reference material properties optimizer
+                ref_optimizer = InfinitesimalRegressionSCS(self._strain_formulation,
+                    self._problem_type, copy.deepcopy(self._material_properties_old),
+                        inc_strain_mf, inc_stress_mf)
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            elif self._strain_formulation == 'finite':
+                if self._self_consistent_scheme == 'regression_material_sym':
+                    # Initialize elastic reference material properties optimizer
+                    ref_optimizer = InfinitesimalRegressionSCS(self._strain_formulation,
+                        self._problem_type, copy.deepcopy(self._material_properties_old),
+                            inc_strain_mf, inc_stress_mf)
+                else:
+                    # Set finite strains formulation option:
+                    # '1' - The CRVE incremental effective tangent modulus, which accounts
+                    #       for a single contraction between the CRVE effective tangent
+                    #       modulus and the last converged incremental homogenized strain
+                    #       tensor, is replaced by the single contraction between the
+                    #       reference material elastic tangent modulus and the last
+                    #       converged incremental homogenized strain tensor.
+                    # '2' - The CRVE incremental effective tangent modulus, which accounts
+                    #       for a single contraction between the CRVE effective tangent
+                    #       modulus and the last converged incremental homogenized strain
+                    #       tensor, is replaced by the reference material elastic tangent
+                    #       modulus (disregarding or embedding the last converged
+                    #       incremental homogenized strain tensor).
+                    option = '1'
+                    if option == '1':
+                        # Initialize elastic reference material properties optimizer
+                        ref_optimizer = FiniteRegressionSCS(self._strain_formulation,
+                            self._problem_type,
+                                copy.deepcopy(self._material_properties_old),
+                                strain_old_mf, inc_strain_mf, inc_stress_mf)
+                    else:
+                        # Initialize elastic reference material properties optimizer
+                        ref_optimizer = InfinitesimalRegressionSCS(self._strain_formulation,
+                            self._problem_type,
+                                copy.deepcopy(self._material_properties_old),
+                                inc_strain_mf, inc_stress_mf)
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Compute elastic reference material properties
+            E, v = ref_optimizer.compute_reference_properties()
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Compute elastic reference material properties based on the parametric optimization
+        # of a loss function compatible with a self-consistent scheme
+        elif self._self_consistent_scheme == 'self_consistent_optimization':
+            # Initialize elastic reference material properties optimizer
+            ref_optimizer = SelfConsistentOptimization(self._strain_formulation,
+                self._problem_type, copy.deepcopy(self._material_properties_old),
+                    strain_old_mf, copy.deepcopy(strain_mf), inc_strain_mf, inc_stress_mf,
+                        eff_tangent_mf=copy.deepcopy(eff_tangent_mf))
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Check admissibility of self-consistent scheme solution
         is_admissible = self._check_scs_solution(E, v)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
@@ -2400,8 +2423,7 @@ class ElasticReferenceMaterial:
         v = self._material_properties['v']
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute Lamé parameters
-        lam = (E*v)/((1.0 + v)*(1.0 - 2.0*v))
-        miu = E/(2.0*(1.0 + v))
+        lam, miu = type(self).lame_from_technical(E, v)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set required fourth-order tensors
         _, foid, _, fosym, fodiagtrace, _, _ = top.get_id_operators(self._n_dim)
@@ -2468,7 +2490,7 @@ class ElasticReferenceMaterial:
         # Evaluate admissibility conditions:
         # Reference material Young modulus
         if self._material_properties_init is None:
-            condition_1 = True
+            condition_1 = E >= 0.0
         else:
             condition_1 = (E/self._material_properties_init['E']) >= 0.025
         # Reference material Poisson ratio
@@ -2512,3 +2534,905 @@ class ElasticReferenceMaterial:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return is_converged
+   # --------------------------------------------------------------------------------------
+    @staticmethod
+    def lame_from_technical(E, v):
+        '''Get Lamé parameters from Young modulus and Poisson ratio.
+
+        Parameters
+        ----------
+        E : float
+            Young modulus.
+        v : float
+            Poisson ratio.
+
+        Returns
+        -------
+        lam : float
+            Lamé parameter.
+        miu : float
+            Lamé parameter.
+        '''
+        # Compute Lamé parameters
+        lam = (E*v)/((1.0 + v)*(1.0 - 2.0*v))
+        miu = E/(2.0*(1.0 + v))
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return lam, miu
+    # --------------------------------------------------------------------------------------
+    @staticmethod
+    def technical_from_lame(lam, miu):
+        '''Get Young modulus and Poisson ratio from Lamé parameters.
+
+        Parameters
+        ----------
+        lam : float
+            Lamé parameter.
+        miu : float
+            Lamé parameter.
+
+        Returns
+        -------
+        E : float
+            Young modulus.
+        v : float
+            Poisson ratio.
+        '''
+        # Compute Young modulus and Poisson ratio
+        E = (miu*(3.0*lam + 2.0*miu))/(lam + miu)
+        v = lam/(2.0*(lam + miu))
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return E, v
+# ------------------------------------------------------------------------------------------
+class ReferenceMaterialOptimizer(ABC):
+    '''Elastic reference material properties optimizer interface.
+
+    Attributes
+    ----------
+    _n_dim : int
+        Problem number of spatial dimensions.
+    _comp_order_sym : list
+        Strain/Stress components symmetric order.
+    _comp_order_nsym : list
+        Strain/Stress components nonsymmetric order.
+    '''
+    @abstractmethod
+    def __init__(self, strain_formulation, problem_type):
+        '''Elastic reference material properties optimizer constructor.
+
+        Parameters
+        ----------
+        strain_formulation: str, {'infinitesimal', 'finite'}
+            Problem strain formulation.
+        problem_type : int
+            Problem type: 2D plane strain (1), 2D plane stress (2), 2D axisymmetric (3) and
+            3D (4).
+        '''
+        pass
+    # --------------------------------------------------------------------------------------
+    @abstractmethod
+    def compute_reference_properties(self):
+        '''Compute elastic reference material properties.
+
+        Returns
+        -------
+        young : float
+            Young modulus of elastic reference material.
+        poiss : float
+            Poisson ratio of elastic reference material.
+        '''
+        pass
+# ------------------------------------------------------------------------------------------
+class InfinitesimalRegressionSCS(ReferenceMaterialOptimizer):
+    '''Infinitesimal strains functional format regression-based self-consistent scheme.
+
+    Infinitesimal strains: The reference material incremental elastic tangent modulus is
+                           coincident with the reference material elastic tangent modulus.
+                           The CRVE incremental effective tangent modulus is therefore
+                           replaced by the reference material elastic tangent modulus.
+
+    Finite strains: The CRVE incremental effective tangent modulus, which accounts for a
+                    single contraction between the CRVE effective tangent modulus and the
+                    last converged incremental homogenized strain tensor, is replaced by
+                    the reference material elastic tangent modulus (disregarding or
+                    embedding the last converged incremental homogenized strain tensor).
+
+    Attributes
+    ----------
+    _n_dim : int
+        Problem number of spatial dimensions.
+    _comp_order_sym : list
+        Strain/Stress components symmetric order.
+    _comp_order_nsym : list
+        Strain/Stress components nonsymmetric order.
+    '''
+    def __init__(self, strain_formulation, problem_type, material_properties_old,
+                 inc_strain_mf, inc_stress_mf):
+        '''Elastic reference material properties optimizer constructor.
+
+        Parameters
+        ----------
+        strain_formulation: str, {'infinitesimal', 'finite'}
+            Problem strain formulation.
+        problem_type : int
+            Problem type: 2D plane strain (1), 2D plane stress (2), 2D axisymmetric (3) and
+            3D (4).
+        material_properties_old : dict
+            Last loading increment converged elastic reference material properties
+            (key, str) values (item, int/float/bool).
+        inc_strain_mf : 1darray
+            Incremental homogenized strain (matricial form).
+        inc_stress_mf : 1darray
+            Incremental homogenized stress (matricial form).
+        '''
+        self._strain_formulation = strain_formulation
+        self._problem_type = problem_type
+        self._material_properties_old = copy.deepcopy(material_properties_old)
+        self._inc_strain_mf = copy.deepcopy(inc_strain_mf)
+        self._inc_stress_mf = copy.deepcopy(inc_stress_mf)
+        # Get problem type parameters
+        n_dim, comp_order_sym, comp_order_nsym = \
+            mop.get_problem_type_parameters(problem_type)
+        self._n_dim = n_dim
+        self._comp_order_sym = comp_order_sym
+        self._comp_order_nsym = comp_order_nsym
+    # --------------------------------------------------------------------------------------
+    def compute_reference_properties(self):
+        '''Compute elastic reference material properties.
+
+        Returns
+        -------
+        E : float
+            Young modulus of elastic reference material.
+        v : float
+            Poisson ratio of elastic reference material.
+        '''
+        # Set strain/stress components order
+        if self._strain_formulation == 'infinitesimal':
+            comp_order = self._comp_order_sym
+        elif self._strain_formulation == 'finite':
+            comp_order = self._comp_order_nsym
+        else:
+            raise RuntimeError('Unknown problem strain formulation.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        if np.all([abs(self._inc_strain_mf[i]) < 1e-10
+                   for i in range(self._inc_strain_mf.shape[0])]):
+            # Get last loading increment converged elastic reference material properties
+            E = self._material_properties_old['E']
+            v = self._material_properties_old['v']
+            # Return
+            return E, v
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set second-order identity tensor
+        soid, _, _, _, _, _, _ = top.get_id_operators(self._n_dim)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Initialize self-consistent scheme system of linear equations coefficient
+        # matrix and right-hand side
+        scs_matrix = np.zeros((2, 2))
+        scs_rhs = np.zeros(2)
+        # Get incremental strain and stress tensors
+        inc_strain = mop.get_tensor_from_mf(self._inc_strain_mf, self._n_dim, comp_order)
+        inc_stress = mop.get_tensor_from_mf(self._inc_stress_mf, self._n_dim, comp_order)
+        # Compute self-consistent scheme system of linear equations right-hand side
+        scs_rhs[0] = np.trace(inc_stress)
+        scs_rhs[1] = top.ddot22_1(inc_stress, inc_strain)
+        # Compute self-consistent scheme system of linear equations coefficient matrix
+        scs_matrix[0, 0] = np.trace(inc_strain)*np.trace(soid)
+        scs_matrix[0, 1] = 2.0*np.trace(inc_strain)
+        scs_matrix[1, 0] = np.trace(inc_strain)**2
+        scs_matrix[1, 1] = 2.0*top.ddot22_1(inc_strain, inc_strain)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Limitation 1: Under isochoric loading conditions the first equation of the
+        # self-consistent scheme system of linear equations vanishes (derivative with
+        # respect to lambda). In this case, adopt the previous converged lambda and
+        # compute miu from the second equation of the the self-consistent scheme system
+        # of linear equations
+        if (abs(np.trace(inc_strain))/np.linalg.norm(inc_strain)) < 1e-10 or \
+                np.linalg.solve(scs_matrix, scs_rhs)[0] < 0:
+            # Get previous converged reference material elastic properties
+            E_old = self._material_properties_old['E']
+            v_old = self._material_properties_old['v']
+            # Compute previous converged lambda
+            lam = (E_old*v_old)/((1.0 + v_old)*(1.0 - 2.0*v_old))
+            # Compute miu
+            miu = scs_rhs[1]/scs_matrix[1, 1]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Limitation 2: Under hydrostatic loading conditions both equations of the
+        # self-consistent scheme system of linear equations become linearly dependent.
+        # In this case, assume that the ratio between lambda and miu is the same as in
+        # the previous converged values and solve the first equation of self-consistent
+        # scheme system of linear equations
+        elif np.all([abs(inc_strain[0, 0] - inc_strain[i, i])/np.linalg.norm(inc_strain)
+            < 1e-10 for i in range(self._n_dim)]) and \
+                np.allclose(inc_strain, np.diag(np.diag(inc_strain)), atol=1e-10):
+            # Get previous converged reference material elastic properties
+            E_old = self._material_properties_old['E']
+            v_old = self._material_properties_old['v']
+            # Compute previous converged reference material Lamé parameters
+            lam_old = (E_old*v_old)/((1.0 + v_old)*(1.0 - 2.0*v_old))
+            miu_old = E_old/(2.0*(1.0 + v_old))
+            # Compute reference material Lamé parameters
+            lam = (scs_rhs[0]/scs_matrix[0, 0])*(lam_old/(lam_old + miu_old))
+            miu = (scs_rhs[0]/scs_matrix[0, 0])*(miu_old/(lam_old + miu_old))
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Solve self-consistent scheme system of linear equations
+        else:
+            scs_solution = np.linalg.solve(scs_matrix, scs_rhs)
+            # Get reference material Lamé parameters
+            lam = scs_solution[0]
+            miu = scs_solution[1]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Compute reference material Young modulus and Poisson ratio
+        E, v = ElasticReferenceMaterial.technical_from_lame(lam, miu)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return E, v
+# ------------------------------------------------------------------------------------------
+class FiniteRegressionSCS(ReferenceMaterialOptimizer):
+    '''Finite strains regression-based self-consistent scheme.
+
+    Finite strains: The CRVE incremental effective tangent modulus, which accounts for a
+                    single contraction between the CRVE effective tangent modulus and the
+                    last converged incremental homogenized strain tensor, is replaced by
+                    the single contraction between the reference material elastic tangent
+                    modulus and the last converged incremental homogenized strain tensor.
+
+    Attributes
+    ----------
+    _n_dim : int
+        Problem number of spatial dimensions.
+    _comp_order_sym : list
+        Strain/Stress components symmetric order.
+    _comp_order_nsym : list
+        Strain/Stress components nonsymmetric order.
+    '''
+    def __init__(self, strain_formulation, problem_type, material_properties_old,
+                 strain_old_mf, inc_strain_mf, inc_stress_mf):
+        '''Elastic reference material properties optimizer constructor.
+
+        Parameters
+        ----------
+        strain_formulation: str, {'infinitesimal', 'finite'}
+            Problem strain formulation.
+        problem_type : int
+            Problem type: 2D plane strain (1), 2D plane stress (2), 2D axisymmetric (3) and
+            3D (4).
+        material_properties_old : dict
+            Last loading increment converged elastic reference material properties
+            (key, str) values (item, int/float/bool).
+        strain_old_mf : 1darray
+            Last converged homogenized strain (matricial form).
+        inc_strain_mf : 1darray
+            Incremental homogenized strain (matricial form).
+        inc_stress_mf : 1darray
+            Incremental homogenized stress (matricial form).
+        '''
+        self._strain_formulation = strain_formulation
+        self._problem_type = problem_type
+        self._material_properties_old = copy.deepcopy(material_properties_old)
+        self._strain_old_mf = copy.deepcopy(strain_old_mf)
+        self._inc_strain_mf = copy.deepcopy(inc_strain_mf)
+        self._inc_stress_mf = copy.deepcopy(inc_stress_mf)
+        # Get problem type parameters
+        n_dim, comp_order_sym, comp_order_nsym = \
+            mop.get_problem_type_parameters(problem_type)
+        self._n_dim = n_dim
+        self._comp_order_sym = comp_order_sym
+        self._comp_order_nsym = comp_order_nsym
+    # --------------------------------------------------------------------------------------
+    def compute_reference_properties(self):
+        '''Compute elastic reference material properties.
+
+        Returns
+        -------
+        E : float
+            Young modulus of elastic reference material.
+        v : float
+            Poisson ratio of elastic reference material.
+        '''
+        # Set strain/stress components order
+        comp_order = self._comp_order_nsym
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        if np.all([abs(self._inc_strain_mf[i]) < 1e-10
+                   for i in range(self._inc_strain_mf.shape[0])]):
+            # Get last loading increment converged elastic reference material properties
+            E = self._material_properties_old['E']
+            v = self._material_properties_old['v']
+            # Return
+            return E, v
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set second-order identity tensor
+        soid, foid, _, _, fodiagtrace, _, _ = top.get_id_operators(self._n_dim)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Initialize self-consistent scheme system of linear equations coefficient matrix
+        # and right-hand side
+        scs_matrix = np.zeros((2, 2))
+        scs_rhs = np.zeros(2)
+        # Get incremental strain and stress tensors
+        inc_strain = mop.get_tensor_from_mf(self._inc_strain_mf, self._n_dim, comp_order)
+        inc_stress = mop.get_tensor_from_mf(self._inc_stress_mf, self._n_dim, comp_order)
+        # Get last converged strain tensor
+        strain_old = mop.get_tensor_from_mf(self._strain_old_mf, self._n_dim, comp_order)
+        # Compute self-consistent scheme system of linear equations right-hand side
+        scs_rhs[0] = np.trace(inc_stress)
+        scs_rhs[1] = top.ddot22_1(inc_stress, np.matmul(inc_strain, strain_old))
+        # Compute self-consistent scheme system of linear equations coefficient matrix
+        scs_matrix[0, 0] = np.trace(top.ddot42_1(top.dot42_1(fodiagtrace, strain_old),
+                                                 inc_strain))
+        scs_matrix[0, 1] = 2.0*np.trace(top.ddot42_1(top.dot42_1(foid, strain_old),
+                                                     inc_strain))
+        scs_matrix[1, 0] = top.ddot22_1(top.ddot42_1(top.dot42_1(fodiagtrace, strain_old),
+                                                     inc_strain),
+                                        np.matmul(inc_strain, strain_old))
+        scs_matrix[1, 1] = 2.0*top.ddot22_1(top.ddot42_1(top.dot42_1(foid, strain_old),
+                                                         inc_strain),
+                                            np.matmul(inc_strain, strain_old))
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Solve self-consistent scheme system of linear equations
+        scs_solution = np.linalg.solve(scs_matrix, scs_rhs)
+        # Get reference material Lamé parameters
+        lam = scs_solution[0]
+        miu = scs_solution[1]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Compute reference material Young modulus and Poisson ratio
+        E, v = ElasticReferenceMaterial.technical_from_lame(lam, miu)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return E, v
+# ------------------------------------------------------------------------------------------
+class SelfConsistentOptimization(ReferenceMaterialOptimizer):
+    '''Parametric optimization of a loss function compatible with a self-consistent scheme.
+
+    Two types of self-consistent loss functions are available:
+    'componentwise_regression' - Loss function essentially defined as the componentwise
+                                 counterpart of the regression-based self-consistent scheme.
+                                 The loss if built from the difference between the reference
+                                 material incremental homogenized stress tensor and the
+                                 actual material incremental homogenized stress tensor.
+    'consistent_tangent'       - Loss function essentially defined as the componentwise
+                                 difference between the CRVE effective tangent modulus and
+                                 the reference material elastic tangent modulus.
+
+    Attributes
+    ----------
+    _n_dim : int
+        Problem number of spatial dimensions.
+    _comp_order_sym : list
+        Strain/Stress components symmetric order.
+    _comp_order_nsym : list
+        Strain/Stress components nonsymmetric order.
+    '''
+    def __init__(self, strain_formulation, problem_type, material_properties_old,
+                 strain_old_mf, strain_mf, inc_strain_mf, inc_stress_mf,
+                 eff_tangent_mf=None):
+        '''Elastic reference material properties optimizer constructor.
+
+        Parameters
+        ----------
+        strain_formulation: str, {'infinitesimal', 'finite'}
+            Problem strain formulation.
+        problem_type : int
+            Problem type: 2D plane strain (1), 2D plane stress (2), 2D axisymmetric (3) and
+            3D (4).
+        material_properties_old : dict
+            Last loading increment converged elastic reference material properties
+            (key, str) values (item, int/float/bool).
+        strain_old_mf : 1darray
+            Last converged homogenized strain (matricial form).
+        strain_mf : 1darray
+            Homogenized strain (matricial form).
+        inc_strain_mf : 1darray
+            Incremental homogenized strain (matricial form).
+        inc_stress_mf : 1darray
+            Incremental homogenized stress (matricial form).
+        eff_tangent_mf : 2darray, default=None
+            CRVE effective (homogenized) tangent modulus (matricial form). Only required
+            for 'consistent_tangent' self-consistent loss function.
+        '''
+        self._strain_formulation = strain_formulation
+        self._problem_type = problem_type
+        self._material_properties_old = copy.deepcopy(material_properties_old)
+        self._strain_old_mf = copy.deepcopy(strain_old_mf)
+        self._inc_strain_mf = copy.deepcopy(inc_strain_mf)
+        self._inc_stress_mf = copy.deepcopy(inc_stress_mf)
+        self._eff_tangent_mf = copy.deepcopy(eff_tangent_mf)
+        # Get problem type parameters
+        n_dim, comp_order_sym, comp_order_nsym = \
+            mop.get_problem_type_parameters(problem_type)
+        self._n_dim = n_dim
+        self._comp_order_sym = comp_order_sym
+        self._comp_order_nsym = comp_order_nsym
+    # --------------------------------------------------------------------------------------
+    def compute_reference_properties(self, loss_type='componentwise_regression',
+                                     is_weights=False):
+        '''Compute elastic reference material properties.
+
+        Parameters
+        ----------
+        loss_type : str, {'componentwise_regression', 'consistent_tangent'},
+                    default='componentwise_regression'
+            Type of self-consistent loss function.
+        is_weights : bool, default=False
+            True if weights are to be considered in the self-consistent loss function,
+            False otherwise.
+
+        Returns
+        -------
+        E : float
+            Young modulus of elastic reference material.
+        v : float
+            Poisson ratio of elastic reference material.
+        '''
+        # Set Young modulus and Poisson ratio lower and upper bounds (to be defined)
+        E_min = 0.0
+        E_max = 300
+        v_min = 0.26
+        v_max = 0.29
+        # Set optimization parameters lower and upper bounds
+        lower_bounds = {'E': E_min, 'v': v_min}
+        upper_bounds = {'E': E_max, 'v': v_max}
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Get last loading increment converged elastic material properties
+        E_old = self._material_properties_old['E']
+        v_old = self._material_properties_old['v']
+        # Set optimization parameters initial guess as the last loading increment converged
+        # values
+        init_shot = {'E': E_old, 'v': v_old}
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set optimization weights
+        if is_weights:
+            if loss_type == 'componentwise_regression':
+                # Build homogenized strain tensor to compute optimization weights
+                if self._strain_formulation == 'infinitesimal':
+                    # Build incremental homogenized infinitesimal strain tensor
+                    weights_strain = mop.get_tensor_from_mf(self._inc_strain_mf,
+                                                            self._n_dim,
+                                                            self._comp_order_sym)
+                else:
+                    # Build homogenized deformation gradient tensor
+                    def_gradient = mop.get_tensor_from_mf(self._strain_mf, self._n_dim,
+                                                          self._comp_order_nsym)
+                    # Compute material logarithmic strain tensor
+                    mat_log_strain = compute_material_log_strain(def_gradient)
+                    # Build last converged homogenized deformation grandient tensor
+                    def_gradient_old = mop.get_tensor_from_mf(self._strain_old_mf,
+                                                              self._n_dim,
+                                                              self._comp_order_nsym)
+                    # Compute last converged material logarithmic strain tensor
+                    mat_log_strain_old = compute_material_log_strain(def_gradient_old)
+                    # Compute incremental material logarithmic strain tensor
+                    weights_strain = mat_log_strain - mat_log_strain_old
+                # Compute optimization weights
+                weights = self.get_opt_strain_weights(self._strain_formulation,
+                                                      self._problem_type,
+                                                      weights_strain)
+            elif loss_type == 'consistent_tangent':
+                weights = None
+            else:
+                raise RuntimeError('Unknown type of self-consistent loss function.')
+        else:
+            weights = None
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Instantiate self-consistent loss optimization function
+        if loss_type == 'componentwise_regression':
+            optimization_function = SelfConsistentCompRegressionLoss(
+                self._strain_formulation, self._problem_type,
+                    copy.deepcopy(self._inc_strain_mf), copy.deepcopy(self._inc_stress_mf),
+                        lower_bounds, upper_bounds, init_shot, weights=weights)
+        elif loss_type == 'consistent_tangent':
+            optimization_function = SelfConsistentTangentLoss(self._strain_formulation,
+                self._problem_type, copy.deepcopy(self._eff_tangent_mf), lower_bounds,
+                    upper_bounds, init_shot, weights=weights)
+        else:
+            raise RuntimeError('Unknown type of self-consistent loss function.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Instantiate optimization algorithm optimizer
+        optimizer = SciPyMinimizer()
+        # Solve optimization problem
+        norm_parameters = optimizer.solve_optimization(optimization_function,
+                                                       max_n_iter=200)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Recover optimization parameters from normalized values
+        parameters = optimization_function.denormalize(norm_parameters)
+        # Get optimized Young modulus and Poisson ratio
+        E = parameters['E']
+        v = parameters['v']
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return E, v
+    # --------------------------------------------------------------------------------------
+    def get_opt_strain_weights(strain_formulation, problem_type, strain):
+        '''Get strain components weights based on the magnitude of normal and shear
+        components.
+
+        Parameters
+        ----------
+        strain_formulation: str, {'infinitesimal', 'finite'}
+            Problem strain formulation.
+        problem_type : int
+            Problem type: 2D plane strain (1), 2D plane stress (2), 2D axisymmetric (3) and
+            3D (4).
+        strain : 2darray
+            Strain tensor: Infinitesimal strain tensor (infinitesimal strains) or Material
+            logarithmic strain tensor (finite strains).
+
+        Returns
+        -------
+        weights : tuple
+            Strain components weights.
+        '''
+        # Get problem type parameters
+        n_dim, comp_order_sym, comp_order_nsym = \
+            mop.get_problem_type_parameters(problem_type)
+        # Set strain/stress components order according to problem strain formulation
+        if strain_formulation == 'infinitesimal':
+            comp_order = comp_order_sym
+        elif strain_formulation == 'finite':
+            comp_order = comp_order_nsym
+        else:
+            raise RuntimeError('Unknown problem strain formulation.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Build absolute values of normal and shear strain components
+        normal_comps = tuple(abs(strain[tuple(int(x) - 1 for x in comp)])
+                             for comp in comp_order if comp[0] == comp[1])
+        shear_comps = tuple(abs(strain[tuple(int(x) - 1 for x in comp)])
+                            for comp in comp_order if comp[0] != comp[1])
+        # Compute average of normal and shear strain components
+        normal_avg = np.average(normal_comps)
+        shear_avg = np.average(shear_comps)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Build optimization weights
+        norm_factor = max(normal_avg, shear_avg)
+        weights = [normal_avg/norm_factor if comp[0] == comp[1] else shear_avg/norm_factor
+                   for comp in comp_order]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return weights
+# ------------------------------------------------------------------------------------------
+class SelfConsistentTangentLoss(OptimizationFunction):
+    '''Loss function based on direct self-consistent optimization of reference material
+    elastic consistent tangent.
+
+    Optimization loss function is built from the difference between the CRVE effective
+    tangent modulus and the reference material elastic tangent modulus.
+
+    Attributes
+    ----------
+    _n_dim : int
+        Problem number of spatial dimensions.
+    _comp_order_sym : list
+        Strain/Stress components symmetric order.
+    _comp_order_nsym : list
+        Strain/Stress components nonsymmetric order.
+    _parameters_names : tuple
+        Optimization parameters names (str).
+    _opt_comps : tuple
+        Components of the reference material elastic tangent modulus to be optimized.
+    _norm_bounds : tuple
+        Normalization bounds (lower, upper) used to perform the normalization of the
+        optimization parameters.
+    '''
+    def __init__(self, strain_formulation, problem_type, eff_tangent_mf, lower_bounds,
+                 upper_bounds, init_shot=None, weights=None):
+        '''Optimization function constructor.
+
+        Parameters
+        ----------
+        strain_formulation: str, {'infinitesimal', 'finite'}
+            Problem strain formulation.
+        problem_type : int
+            Problem type: 2D plane strain (1), 2D plane stress (2), 2D axisymmetric (3) and
+            3D (4).
+        eff_tangent_mf : 2darray
+            CRVE effective material tangent modulus (matricial form).
+        lower_bounds : dict
+            Optimization parameters (key, str) lower bounds (item, float).
+        upper_bounds : dict
+            Optimization parameters (key, str) upper bounds (item, float).
+        init_shot : dict, default=None
+            Optimization parameters (key, str) initial guess (item, float).
+        weights : tuple, default=None
+            Weights attributed to each data point.
+        '''
+        self._strain_formulation = strain_formulation
+        self._problem_type = problem_type
+        self._eff_tangent_mf = copy.deepcopy(eff_tangent_mf)
+        self._lower_bounds = copy.deepcopy(lower_bounds)
+        self._upper_bounds = copy.deepcopy(upper_bounds)
+        self._init_shot = copy.deepcopy(init_shot)
+        self._weights = copy.deepcopy(weights)
+        # Get problem type parameters
+        n_dim, comp_order_sym, comp_order_nsym = \
+            mop.get_problem_type_parameters(problem_type)
+        self._n_dim = n_dim
+        self._comp_order_sym = comp_order_sym
+        self._comp_order_nsym = comp_order_nsym
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set optimization parameters
+        # 'E' : Young modulus
+        # 'v' : Poisson ratio
+        self._parameters_names = ('E', 'v')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set optimization data points associated to the components of the reference
+        # material elastic tangent modulus
+        if self._strain_formulation == 'infinitesimal':
+            if self._problem_type == 1:
+                self._opt_comps = ('1111', '2222', '1212', '1122')
+            else:
+                self._opt_comps = ('1111', '2222', '3333', '1212', '2323', '1313',
+                                   '1122', '2233', '1133')
+        else:
+            if self._problem_type == 1:
+                self._opt_comps = ('1111', '2121', '1212', '2222', '1122')
+            else:
+                self._opt_comps = ('1111', '2121', '3131', '1212', '2222', '3232', '1313',
+                                   '2323', '3333', '1122', '2233', '1133')
+        # Check weights attributed to each data point
+        if not self._weights is None:
+            if len(weights) != len(self._opt_comps):
+                raise RuntimeError('Number of weights must be equal to number of data ' +
+                                   'points (reference material elastic tangent modulus '
+                                   'components).')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Initialize optimization parameters normalization bounds
+        self.set_norm_bounds()
+    # --------------------------------------------------------------------------------------
+    def opt_function(self, parameters):
+        '''Optimization function.
+
+        Parameters
+        ----------
+        parameters : dict
+            Optimization parameters:
+            'E' : Young modulus
+            'v' : Poisson ratio
+
+        Returns
+        -------
+        value : float
+            Optimization function value.
+        '''
+        # Get optimization function parameters
+        try:
+            E = parameters['E']
+            v = parameters['v']
+        except KeyError as err:
+            raise KeyError('Missing optimization function parameter: ' + str(err.args[0]))
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Compute Lamé parameters
+        lam, miu = ElasticReferenceMaterial.lame_from_technical(E, v)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set required fourth-order tensors
+        _, foid, _, fosym, fodiagtrace, _, _ = top.get_id_operators(self._n_dim)
+        # Compute reference material elastic tangent modulus
+        if self._strain_formulation == 'infinitesimal':
+            # Set symmetric strain/stress component order
+            comp_order = self._comp_order_sym
+            # Compute elastic tangent modulus according to problem type
+            if self._problem_type in [1, 4]:
+                # Compute elastic tangent modulus
+                elastic_tangent = lam*fodiagtrace + 2.0*miu*fosym
+        else:
+            # Set nonsymmetric strain/stress component order
+            comp_order = self._comp_order_nsym
+            # Compute elastic tangent modulus according to problem type
+            if self._problem_type in [1, 4]:
+                # Compute elastic tangent modulus - 2D problem (plane strain) / 3D problem
+                elastic_tangent = lam*fodiagtrace + 2.0*miu*foid
+        # Build reference material elastic tangent modulus (matricial form)
+        elastic_tangent_mf = mop.get_tensor_mf(elastic_tangent, self._n_dim, comp_order)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Initialize parametric and reference solution
+        y = np.zeros(len(self._opt_comps))
+        y_ref = np.zeros(len(self._opt_comps))
+        # Loop over optimization data points
+        for i, opt_comp in enumerate(self._opt_comps):
+            # Get second-order indexes
+            so_idx = (comp_order.index(opt_comp[:2]), comp_order.index(opt_comp[2:]))
+            # Append parametric solution data point
+            y[i] = elastic_tangent_mf[so_idx]
+            # Append reference solution data point
+            y_ref[i] = self._eff_tangent_mf[so_idx]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Apply weights to parametric and reference solutions
+        if not self._weights is None:
+            y = tuple(map(lambda w, v: w*v, self._weights, y))
+            y_ref = tuple(map(lambda w, v: w*v, self._weights, y_ref))
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Instantiate loss function
+        rrmse = RelativeRootMeanSquaredError()
+        # Compute loss
+        loss = rrmse.loss(y, y_ref)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return loss
+# ------------------------------------------------------------------------------------------
+class SelfConsistentCompRegressionLoss(OptimizationFunction):
+    '''Self-consistent loss function based on componentwise regression-based scheme.
+
+    Optimization loss function is built from the difference between the reference material
+    incremental homogenized stress tensor and the actual material incremental homogenized
+    stress tensor.
+
+    Attributes
+    ----------
+    _n_dim : int
+        Problem number of spatial dimensions.
+    _comp_order_sym : list
+        Strain/Stress components symmetric order.
+    _comp_order_nsym : list
+        Strain/Stress components nonsymmetric order.
+    _parameters_names : tuple
+        Optimization parameters names (str).
+    _opt_comps : tuple
+        Components of the reference material incremental homogenized stress tensor
+        to be optimized.
+    _norm_bounds : tuple
+        Normalization bounds (lower, upper) used to perform the normalization of the
+        optimization parameters.
+    '''
+    def __init__(self, strain_formulation, problem_type, strain_old_mf, inc_strain_mf,
+                 inc_stress_mf, lower_bounds, upper_bounds, init_shot=None, weights=None):
+        '''Optimization function constructor.
+
+        Parameters
+        ----------
+        strain_formulation: str, {'infinitesimal', 'finite'}
+            Problem strain formulation.
+        problem_type : int
+            Problem type: 2D plane strain (1), 2D plane stress (2), 2D axisymmetric (3) and
+            3D (4).
+        strain_old_mf : 1darray
+            Last converged homogenized strain (matricial form).
+        inc_strain_mf : 1darray
+            Incremental homogenized strain tensor stored in matricial form: infinitesimal
+            strain tensor (infinitesimal strains) or deformation gradient (finite strains).
+        inc_stress_mf : 1darray
+            Incremental homogenized stress tensor stored in matricial form: Cauchy stress
+            tensor (infinitesimal strains) or first Piola-Kirchhoff stress tensor (finite
+            strains).
+        lower_bounds : dict
+            Optimization parameters (key, str) lower bounds (item, float).
+        upper_bounds : dict
+            Optimization parameters (key, str) upper bounds (item, float).
+        init_shot : dict, default=None
+            Optimization parameters (key, str) initial guess (item, float).
+        weights : tuple, default=None
+            Weights attributed to each data point.
+        '''
+        self._strain_formulation = strain_formulation
+        self._problem_type = problem_type
+        self._strain_old_mf = copy.deepcopy(strain_old_mf)
+        self._inc_strain_mf = copy.deepcopy(inc_strain_mf)
+        self._inc_stress_mf = copy.deepcopy(inc_stress_mf)
+        self._lower_bounds = copy.deepcopy(lower_bounds)
+        self._upper_bounds = copy.deepcopy(upper_bounds)
+        self._init_shot = copy.deepcopy(init_shot)
+        self._weights = copy.deepcopy(weights)
+        # Get problem type parameters
+        n_dim, comp_order_sym, comp_order_nsym = \
+            mop.get_problem_type_parameters(problem_type)
+        self._n_dim = n_dim
+        self._comp_order_sym = comp_order_sym
+        self._comp_order_nsym = comp_order_nsym
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set optimization parameters
+        # 'E' : Young modulus
+        # 'v' : Poisson ratio
+        self._parameters_names = ('E', 'v')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set optimization data points associated to the components of the reference
+        # material incremental homogenized stress tensor
+        if self._strain_formulation == 'infinitesimal':
+            self._opt_comps = tuple(comp_order_sym)
+        else:
+            self._opt_comps = tuple(comp_order_nsym)
+        # Check weights attributed to each data point
+        if not self._weights is None:
+            if len(weights) != len(self._opt_comps):
+                raise RuntimeError('Number of weights must be equal to number of data ' +
+                                   'points (reference material elastic incremental '
+                                   'homogenized stress tensor components).')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Initialize optimization parameters normalization bounds
+        self.set_norm_bounds()
+    # --------------------------------------------------------------------------------------
+    def opt_function(self, parameters):
+        '''Optimization function.
+
+        Parameters
+        ----------
+        parameters : dict
+            Optimization parameters:
+            'E' : Young modulus
+            'v' : Poisson ratio
+
+        Returns
+        -------
+        value : float
+            Optimization function value.
+        '''
+        # Get optimization function parameters
+        try:
+            E = parameters['E']
+            v = parameters['v']
+        except KeyError as err:
+            raise KeyError('Missing optimization function parameter: ' + str(err.args[0]))
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Compute Lamé parameters
+        lam, miu = ElasticReferenceMaterial.lame_from_technical(E, v)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set required fourth-order tensors
+        _, foid, _, fosym, fodiagtrace, _, _ = top.get_id_operators(self._n_dim)
+        # Compute reference material elastic tangent modulus
+        if self._strain_formulation == 'infinitesimal':
+            # Set symmetric strain/stress component order
+            comp_order = self._comp_order_sym
+            # Compute elastic tangent modulus according to problem type
+            if self._problem_type in [1, 4]:
+                # Compute elastic tangent modulus
+                elastic_tangent = lam*fodiagtrace + 2.0*miu*fosym
+        else:
+            # Set nonsymmetric strain/stress component order
+            comp_order = self._comp_order_nsym
+            # Compute elastic tangent modulus according to problem type
+            if self._problem_type in [1, 4]:
+                # Compute elastic tangent modulus - 2D problem (plane strain) / 3D problem
+                elastic_tangent = lam*fodiagtrace + 2.0*miu*foid
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set reference material incremental tangent modulus (matricial form)
+        if self._strain_formulation == 'finite':
+            # Set finite strains formulation option:
+            # '1' - The CRVE incremental effective tangent modulus, which accounts for a
+            #       single contraction between the CRVE effective tangent modulus and the
+            #       last converged incremental homogenized strain tensor, is replaced by
+            #       the single contraction between the reference material elastic tangent
+            #       modulus and the last converged incremental homogenized strain tensor.
+            # '2' - The CRVE incremental effective tangent modulus, which accounts for a
+            #       single contraction between the CRVE effective tangent modulus and the
+            #       last converged incremental homogenized strain tensor, is replaced by
+            #       the reference material elastic tangent modulus (disregarding or
+            #       embedding the last converged incremental homogenized strain tensor).
+            option = '1'
+            if option == '1':
+                # Get last converged strain tensor
+                strain_old = mop.get_tensor_from_mf(self._strain_old_mf, self._n_dim,
+                                                    comp_order)
+                # Set reference material incremental tangent modulus (matricial form)
+                inc_elastic_tangent_mf = \
+                    mop.get_tensor_mf(top.dot42_1(elastic_tangent, strain_old))
+            else:
+                # Set reference material incremental tangent modulus (matricial form)
+                inc_elastic_tangent_mf = \
+                    mop.get_tensor_mf(elastic_tangent, self._n_dim, comp_order)
+        else:
+            # Set reference material incremental tangent modulus (matricial form)
+            inc_elastic_tangent_mf = \
+                mop.get_tensor_mf(elastic_tangent, self._n_dim, comp_order)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Compute reference material incremental homogenized stress tensor
+        inc_stress_0_mf = np.matmul(inc_elastic_tangent_mf, self._inc_strain_mf)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Initialize parametric and reference solution
+        y = np.zeros(len(self._opt_comps))
+        y_ref = np.zeros(len(self._opt_comps))
+        # Loop over optimization data points
+        for i in range(len(self._opt_comps)):
+            # Append parametric solution data point
+            y[i] = inc_stress_0_mf[i]
+            # Append reference solution data point
+            y_ref[i] = self._inc_stress_mf[i]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Apply weights to parametric and reference solutions
+        if not self._weights is None:
+            y = tuple(map(lambda w, v: w*v, self._weights, y))
+            y_ref = tuple(map(lambda w, v: w*v, self._weights, y_ref))
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Instantiate loss function
+        rrmse = RelativeRootMeanSquaredError()
+        # Compute loss
+        loss = rrmse.loss(y, y_ref)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return loss
