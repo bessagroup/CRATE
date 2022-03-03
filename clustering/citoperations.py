@@ -191,9 +191,8 @@ def gop_material_independent_terms(strain_formulation, problem_type, rve_dims,
 #
 #                                                 Global cluster interaction matrix assembly
 # ==========================================================================================
-def assemble_cit(strain_formulation, problem_type, mat_prop_ref, Se_ref_matrix,
-                 material_phases, phase_n_clusters, phase_clusters, cit_1_mf, cit_2_mf,
-                 cit_0_freq_mf):
+def assemble_cit(strain_formulation, problem_type, mat_prop_ref, material_phases,
+                 phase_n_clusters, phase_clusters, cit_1_mf, cit_2_mf, cit_0_freq_mf):
     '''Update cluster interaction tensors and assemble global cluster interaction matrix.
 
     Update the cluster interaction tensors by taking into account the material properties
@@ -209,9 +208,6 @@ def assemble_cit(strain_formulation, problem_type, mat_prop_ref, Se_ref_matrix,
         3D (4).
     mat_prop_ref : dict
         Reference material properties.
-    Se_ref_matrix : ndarray of shape (n_comps, n_comps)
-        Reference material compliance tensor. This fourth-order tensor should be stored in a
-        matrix but without any coefficients related to the adopted matricial storage method.
     material_phases : list
         RVE material phases labels (str).
     phase_n_clusters : dict
@@ -272,8 +268,8 @@ def assemble_cit(strain_formulation, problem_type, mat_prop_ref, Se_ref_matrix,
     else:
         gop_factor_1 = 1.0/(2.0*miu_ref)
         gop_factor_2 = (lam_ref + miu_ref)/(2.0*miu_ref*(lam_ref + 2.0*miu_ref))
-    gop_factor_0_freq = numpy.matlib.repmat(Se_ref_matrix, n_total_clusters,
-                                            n_total_clusters)
+    gop_factor_0_freq = numpy.matlib.repmat(np.zeros((len(comp_order), len(comp_order))),
+                                            n_total_clusters, n_total_clusters)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Initialize global clustering interaction matrices
     dims = (n_total_clusters*len(comp_order), n_total_clusters*len(comp_order))

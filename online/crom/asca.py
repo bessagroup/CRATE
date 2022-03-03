@@ -449,7 +449,6 @@ class ASCA:
                 # properties and assemble global cluster interaction matrix
                 global_cit_mf = assemble_cit(self._strain_formulation, self._problem_type,
                                              ref_material.get_material_properties(),
-                                             ref_material.get_elastic_compliance_matrix(),
                                              material_state.get_material_phases(),
                                              crve.get_phase_n_clusters(),
                                              crve.get_phase_clusters(),
