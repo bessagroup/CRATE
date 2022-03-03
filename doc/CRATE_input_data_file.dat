@@ -437,6 +437,7 @@
 #
 # x:         1 - Regression-based self-consistent scheme (default)
 #            2 - Projection-based self-consistent scheme (unavailable)
+#            3 - Optimization of loss function compatible with a self-consistent scheme
 # ------------------------------------------------------------------------------------------
 [insert here]
 

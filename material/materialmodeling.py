@@ -224,13 +224,13 @@ class MaterialState:
         self._phase_clusters = copy.deepcopy(phase_clusters)
         self._clusters_vf = copy.deepcopy(clusters_vf)
     # --------------------------------------------------------------------------------------
-    def get_clusters_inc_strain_mf(self, global_inc_strain_mf):
+    def get_clusters_inc_strain_mf(self, global_strain_mf):
         '''Get clusters incremental strain in matricial form.
 
         Parameters
         ----------
-        global_inc_strain_mf : 1darray
-            Global vector of clusters incremental strains stored in matricial form.
+        global_strain_mf : 1darray
+            Global vector of clusters strains stored in matricial form.
 
         Returns
         -------
@@ -254,10 +254,38 @@ class MaterialState:
         for mat_phase in self._material_phases:
             # Loop over material phase clusters
             for cluster in self._phase_clusters[mat_phase]:
-                # Get material cluster incremental strain (matricial form)
-                inc_strain_mf = global_inc_strain_mf[i_init:i_end]
+                # Get material cluster last converged infinitesimal strain tensor
+                # (infinitesimal strains) or deformation gradient tensor (finite strains)
+                if self._strain_formulation == 'infinitesimal':
+                    strain_old_mf = self._clusters_state_old[str(cluster)]['strain_mf']
+                else:
+                    def_gradient_old_mf = self._clusters_def_gradient_old_mf[str(cluster)]
+                # Get material cluster infinitesimal strain tensor (infinitesimal strains)
+                # or deformation gradient tensor (finite strains) from global vector
+                # of clusters strains
+                strain_mf = global_strain_mf[i_init:i_end]
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Compute material cluster incremental infinitesimal strain tensor
+                # (infinitesimal strains) or deformation gradient tensor (finite strains)
+                if self._strain_formulation == 'infinitesimal':
+                    inc_strain_mf = strain_mf - strain_old_mf
+                else:
+                    # Build last converged deformation gradient tensor
+                    def_gradient_old = mop.get_tensor_from_mf(def_gradient_old_mf,
+                                                              self._n_dim, comp_order)
+                    # Build deformation gradient tensor
+                    def_gradient = mop.get_tensor_from_mf(strain_mf, self._n_dim,
+                                                          comp_order)
+                    # Compute material cluster incremental deformation gradient tensor
+                    inc_def_gradient = np.matmul(def_gradient,
+                                                 np.linalg.inv(def_gradient_old))
+                    # Build material cluster incremental deformation gradient tensor
+                    # (matricial form)
+                    inc_strain_mf = mop.get_tensor_mf(inc_def_gradient, self._n_dim,
+                                                      comp_order)
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Store material cluster incremental strain (matricial form)
-                clusters_inc_strain_mf[str(cluster)] = inc_strain_mf
+                clusters_inc_strain_mf[str(cluster)] = copy.deepcopy(inc_strain_mf)
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Update material cluster strain range indexes
                 i_init += len(comp_order)
@@ -530,6 +558,29 @@ class MaterialState:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return inc_hom_stress_mf
+    # --------------------------------------------------------------------------------------
+    def get_hom_strain_old_mf(self):
+        '''Get last converged homogenized strain tensor (matricial form).
+
+        Returns
+        -------
+        hom_strain_old_mf : 1darray
+            Last converged homogenized strain tensor stored in matricial form: infinitesimal
+            strain tensor (infinitesimal strains) or deformation gradient (finite strains).
+        '''
+        return copy.deepcopy(self._hom_strain_old_mf)
+    # --------------------------------------------------------------------------------------
+    def get_hom_stress_old_mf(self):
+        '''Get last converged homogenized stress tensor (matricial form).
+
+        Returns
+        -------
+        hom_stress_old_mf : 1darray
+            Last converged homogenized stress tensor stored in matricial form: Cauchy stress
+            tensor (infinitesimal strains) or first Piola-Kirchhoff stress tensor (finite
+            strains).
+        '''
+        return copy.deepcopy(self._hom_stress_old_mf)
     # --------------------------------------------------------------------------------------
     def get_material_phases(self):
         '''Get RVE material phases.

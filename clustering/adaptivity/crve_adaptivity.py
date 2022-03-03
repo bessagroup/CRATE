@@ -394,7 +394,6 @@ class AdaptivityManager:
             is_component = True
             # Get second order tensor component and matricial form index
             feature_comp = adapt_control_feature[-2:]
-            index = self._comp_order.index(feature_comp)
             # Trim adaptivity feature
             adapt_control_feature = adapt_control_feature[:-3]
         if re.search('_norm$', adapt_control_feature):
@@ -455,6 +454,24 @@ class AdaptivityManager:
             for i in range(n_clusters):
                 # Get cluster label
                 cluster = int(adapt_data_matrix[i, 0])
+                # Get second order tensor matricial form index
+                if len(clusters_state[str(cluster)][adapt_control_feature]) == \
+                        self._comp_order_nsym:
+                    index = self._comp_order_nsym.index(feature_comp)
+                elif len(clusters_state[str(cluster)][adapt_control_feature]) == \
+                        self._comp_order_sym:
+                    if feature_comp in self._comp_order_sym:
+                        index = self._comp_order_sym.index(feature_comp)
+                    elif feature_comp[::-1] in self._comp_order_sym:
+                        index = self._comp_order_sym.index(feature_comp)
+                    else:
+                        raise RuntimeError('Invalid component specified for the ' +
+                                           'clustering adaptivity feature ' +
+                                           adapt_control_feature + '.')
+                else:
+                    raise RuntimeError('Clustering adaptivity feature ' +
+                                       'is not a second-order tensor stored in ' +
+                                       'matricial form as expected.')
                 # Collect adaptivity feature data
                 if is_incremental:
                     adapt_data_matrix[i, 1] = \
@@ -654,8 +671,9 @@ class AdaptivityManager:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return adapt_data_matrix
     # --------------------------------------------------------------------------------------
-    def adaptive_refinement(self, crve, material_state, target_clusters, target_clusters_data,
-                            inc, improved_init_guess=None, verbose=False):
+    def adaptive_refinement(self, crve, material_state, target_clusters,
+                            target_clusters_data, inc, improved_init_guess=None,
+                            verbose=False):
         '''Perform CRVE adaptive clustering refinement.
 
         Parameters
@@ -738,25 +756,25 @@ class AdaptivityManager:
             is_improved_init_guess = improved_init_guess[0]
             if not is_improved_init_guess:
                 improved_init_guess[1] = None
-        # Compute improved initial iterative guess for the clusters incremental strain
-        # global vector (matricial form)
+        # Compute improved initial iterative guess for the global vector of clusters strain
+        # tensors (matricial form)
         if is_improved_init_guess:
             # Get CRVE material phases and total number of clusters
             material_phases = crve.get_material_phases()
             n_total_clusters = crve.get_n_total_clusters()
-            # Set cluster incremental strain component order
+            # Set cluster strain component order
             if self._strain_formulation == 'infinitesimal':
                 comp_order = self._comp_order_sym
             else:
                 comp_order = self._comp_order_nsym
-            # Get previous clustering clusters incremental strain global vector
+            # Get previous clustering global vector of clusters strain tensors
             if len(improved_init_guess[1]) != n_total_clusters_old*len(comp_order):
-                raise RuntimeError('Unexpected size of previous clustering clusters '
-                                   'incremental strain global vector.')
+                raise RuntimeError('Unexpected size of previous clustering global vector ' +
+                                   'of clusters strain tensors.')
             else:
-                gbl_inc_strain_mf_old = copy.deepcopy(improved_init_guess[1])
-            # Initialize new clusters incremental strain global vector
-            gbl_inc_strain_mf_new = np.zeros((n_total_clusters*len(comp_order)))
+                global_strain_mf_old = copy.deepcopy(improved_init_guess[1])
+            # Initialize new clustering global vector of clusters strain tensors
+            global_strain_mf_new = np.zeros((n_total_clusters*len(comp_order)))
             # Initialize material phase initial index in global vector
             mat_phase_init_idx_old = 0
             mat_phase_init_idx_new = 0
@@ -767,19 +785,21 @@ class AdaptivityManager:
                     # Get previous clustering cluster initial index
                     init_idx_old = mat_phase_init_idx_old + \
                         phase_clusters_old[mat_phase].index(cluster)*len(comp_order)
-                    # Build new clusters incremental strain global vector. If cluster
-                    # remained unchanged after the clustering adaptive step, then simply
-                    # transfer the associated values to the proper position in the new
-                    # global vector. If cluster has been refined, then copy the associated
-                    # values to its child clusters positions in the new global vector.
+                    # Build new clustering global vector of clusters strain tensors. If
+                    # cluster remained unchanged after the clustering adaptive step, then
+                    # simply transfer the associated values to the proper position in the
+                    # new global vector. If cluster has been refined, then copy the
+                    # associated values to its child clusters positions in the new global
+                    # vector.
                     if cluster in crve.get_phase_clusters()[mat_phase]:
                         # Get new clustering cluster initial index
                         init_idx_new = mat_phase_init_idx_new + \
                             crve.get_phase_clusters()[mat_phase].index(cluster)*\
                                 len(comp_order)
-                        # Transfer cluster incremental strain
-                        gbl_inc_strain_mf_new[init_idx_new:init_idx_new+len(comp_order)] = \
-                            gbl_inc_strain_mf_old[init_idx_old:init_idx_old+len(comp_order)]
+                        # Transfer cluster strain
+                        global_strain_mf_new[init_idx_new:init_idx_new +
+                            len(comp_order)] = global_strain_mf_old[
+                                init_idx_old:init_idx_old+len(comp_order)]
                     else:
                         # Get list of target's child clusters
                         child_clusters = adaptive_clustering_map[mat_phase][str(cluster)]
@@ -789,19 +809,19 @@ class AdaptivityManager:
                             init_idx_new = mat_phase_init_idx_new + \
                                 crve.get_phase_clusters()[mat_phase].index(
                                     child_cluster)*len(comp_order)
-                            # Copy parent cluster incremental strain
-                            gbl_inc_strain_mf_new[init_idx_new:
-                                                  init_idx_new+len(comp_order)] = \
-                                gbl_inc_strain_mf_old[init_idx_old:
-                                                      init_idx_old+len(comp_order)]
+                            # Copy parent cluster strain
+                            global_strain_mf_new[init_idx_new:
+                                                 init_idx_new + len(comp_order)] = \
+                                global_strain_mf_old[init_idx_old:
+                                                     init_idx_old+len(comp_order)]
                 # Update material phase initial index in global vector
                 mat_phase_init_idx_old += \
                     len(phase_clusters_old[mat_phase])*len(comp_order)
                 mat_phase_init_idx_new += \
                     len(crve.get_phase_clusters()[mat_phase])*len(comp_order)
-            # Store improved initial iterative guess for the clusters incremental strain
-            # global vector (matricial form)
-            improved_init_guess[1] = gbl_inc_strain_mf_new
+            # Store improved initial iterative guess for the global vector of clusters
+            # strain tensors (matricial form)
+            improved_init_guess[1] = global_strain_mf_new
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Output execution data
         if verbose:

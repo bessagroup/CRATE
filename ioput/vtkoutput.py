@@ -310,12 +310,22 @@ class VTKOutput:
                     xml.write_cell_data_array(vtk_file, data_list, data_parameters)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         if vtk_vars == 'all':
+            # Initialize list of constitutive models whose state variables have already been
+            # output
+            output_model_names = []
             # Loop over material phases
             for mat_phase in material_phases:
                 # Get material phase constitutive model
                 constitutive_model = material_phases_models[str(mat_phase)]
                 # Get material constitutive model name
                 model_name = constitutive_model.get_name()
+                # Skip to next material phase if constitutive model state variables have
+                # already been output. Otherwise, add material constitutive model name to
+                # output list
+                if model_name in output_model_names:
+                    continue
+                else:
+                    output_model_names.append(model_name)
                 # Get material constitutive model state variables
                 model_state_variables = constitutive_model.state_init()
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

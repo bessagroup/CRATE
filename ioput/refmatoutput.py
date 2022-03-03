@@ -6,7 +6,8 @@
 # stored, namely properties and the far-field strain tensor.
 # ------------------------------------------------------------------------------------------
 # Development history:
-# Bernardo P. Ferreira | April 2021 | Initial coding.
+# Bernardo P. Ferreira | Apr 2021 | Initial coding.
+# Bernardo P. Ferreira | Feb 2022 | Converted to total strain formulation.
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
@@ -72,9 +73,9 @@ class RefMatOutput:
         # Set reference material output file header
         self._header = ['Increment', 'SCS Iteration',
                         'E_ref', 'v_ref',
-                        'inc_strain0_11', 'inc_strain0_21', 'inc_strain0_31',
-                        'inc_strain0_12', 'inc_strain0_22', 'inc_strain0_32',
-                        'inc_strain0_13', 'inc_strain0_23', 'inc_strain0_33',
+                        'strain0_11', 'strain0_21', 'strain0_31',
+                        'strain0_12', 'strain0_22', 'strain0_32',
+                        'strain0_13', 'strain0_23', 'strain0_33',
                         'strain_0_rdiff', 'rel_scs_cost', 'tangent_rdiff']
         # Set column width
         self._col_width = max(16, max([len(x) for x in self._header]) + 2)
@@ -83,7 +84,7 @@ class RefMatOutput:
         '''Open reference material output file and write file header.'''
         # Set reference material elastic properties initial output
         properties_init = (0.0, 0.0)
-        # Set incremental far-field strain initial output
+        # Set far-field strain initial output
         strain_init = 9*[0.0,]
         if self._strain_formulation == 'finite':
             strain_init[0] = 1.0
@@ -109,9 +110,9 @@ class RefMatOutput:
         # Close homogenized results output file
         refm_file.close()
     # --------------------------------------------------------------------------------------
-    def write_ref_mat(self, inc, ref_material, inc_hom_strain_mf, inc_hom_stress_mf,
-                      eff_tangent_mf=None, inc_farfield_strain_mf=None,
-                      inc_mac_load_strain_mf=None):
+    def write_ref_mat(self, inc, ref_material, hom_strain_mf, hom_stress_mf,
+                      eff_tangent_mf=None, farfield_strain_mf=None,
+                      applied_mac_load_strain_mf=None):
         '''Write reference material output file.
 
         Parameters
@@ -120,24 +121,24 @@ class RefMatOutput:
             Macroscale loading increment.
         ref_material : ElasticReferenceMaterial
             Elastic reference material.
-        inc_hom_strain_mf : ndarray
-            Incremental homogenized strain tensor (matricial form): infinitesimal strain
-            tensor (infinitesimal strains) or deformation gradient (finite strains).
-        inc_hom_stress_mf : ndarray
-            Incremental homogenized stress tensor (matricial form): Cauchy stress tensor
+        hom_strain_mf : ndarray
+            Homogenized strain tensor (matricial form): infinitesimal strain tensor
+            (infinitesimal strains) or deformation gradient (finite strains).
+        hom_stress_mf : ndarray
+            Homogenized stress tensor (matricial form): Cauchy stress tensor
             (infinitesimal strains) or first Piola-Kirchhoff stress tensor (finite strains).
         eff_tangent_mf : ndarray, default=None
             CRVE effective (homogenized) tangent modulus (matricial form).
-        inc_farfield_strain_mf : ndarray, default=None
-            Incremental farfield strain tensor (matricial form).
-        inc_mac_load_strain_mf : ndarray, default=None
-            Incremental prescribed macroscale loading strain tensor (matricial form).
+        farfield_strain_mf : ndarray, default=None
+            Far-field strain tensor (matricial form).
+        applied_mac_load_strain_mf : ndarray, default=None
+            Prescribed macroscale loading strain tensor (matricial form).
         '''
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Check required parameters if SCA farfield formulation is being used
+        # Check required parameters if SCA far-field formulation is being used
         if self._is_farfield_formulation:
-            if inc_farfield_strain_mf is None or inc_mac_load_strain_mf is None:
-                raise RuntimeError('Required parameters for SCA farfield formulation '
+            if farfield_strain_mf is None or applied_mac_load_strain_mf is None:
+                raise RuntimeError('Required parameters for SCA far-field formulation '
                                    'output are missing.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set strain/stress components order according to problem strain formulation
@@ -155,39 +156,37 @@ class RefMatOutput:
         # Get elastic reference material tangent modulus (matricial form)
         ref_elastic_tangent_mf = ref_material.get_elastic_tangent_mf()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # When the problem type corresponds to a 2D analysis, build the 3D incremental
-        # farfield strain tensor considering the appropriate out-of-plane strain component
-        # (output purpose only).
+        # When the problem type corresponds to a 2D analysis, build the 3D far-field strain
+        # tensor considering the appropriate out-of-plane strain component (output purpose
+        # only).
         if self._is_farfield_formulation:
-            inc_farfield_strain = mop.get_tensor_from_mf(inc_farfield_strain_mf,
-                                                         self._n_dim, comp_order)
-            out_inc_farfield_strain = np.zeros((3, 3))
+            farfield_strain = mop.get_tensor_from_mf(farfield_strain_mf, self._n_dim,
+                                                     comp_order)
+            out_farfield_strain = np.zeros((3, 3))
             if self._problem_type == 1:
-                out_inc_farfield_strain[0:2, 0:2] = inc_farfield_strain
+                out_farfield_strain[0:2, 0:2] = farfield_strain
                 if self._strain_formulation == 'finite':
-                    out_inc_farfield_strain[2, 2] = 1.0
+                    out_farfield_strain[2, 2] = 1.0
             else:
-                out_inc_farfield_strain[:, :] = inc_farfield_strain
+                out_farfield_strain[:, :] = farfield_strain
         else:
-            out_inc_farfield_strain = np.zeros((3, 3))
+            out_farfield_strain = np.zeros((3, 3))
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Compute norm of difference between the incremental farfield strain tensor and
-        # prescribed macroscale loading strain tensor and then normalize it to obtain
-        # relative measure
+        # Compute norm of difference between the far-field strain tensor and prescribed
+        # macroscale loading strain tensor and then normalize it to obtain relative measure
         if self._is_farfield_formulation:
-            diff_norm = np.linalg.norm(inc_farfield_strain_mf - inc_mac_load_strain_mf)
-            rel_diff_farfield = diff_norm/np.linalg.norm(inc_mac_load_strain_mf)
+            diff_norm = np.linalg.norm(farfield_strain_mf - applied_mac_load_strain_mf)
+            rel_diff_farfield = diff_norm/np.linalg.norm(applied_mac_load_strain_mf)
         else:
             rel_diff_farfield = 0.0
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute self-consistent scheme normalized cost function
         if self._self_consistent_scheme == 'regression':
             # Compute regression-based scheme cost function
-            scs_cost = np.linalg.norm(inc_hom_stress_mf -
-                                      np.matmul(ref_elastic_tangent_mf,
-                                                inc_hom_strain_mf))**2
+            scs_cost = np.linalg.norm(hom_stress_mf -
+                                      np.matmul(ref_elastic_tangent_mf, hom_strain_mf))**2
             # Normalize cost function
-            rel_scs_cost = scs_cost/(np.linalg.norm(inc_hom_stress_mf)**2)
+            rel_scs_cost = scs_cost/(np.linalg.norm(hom_stress_mf)**2)
         else:
             # If self-consistent scheme cost function computation is not implemented, output
             # normalized cost function value as infinite
@@ -204,11 +203,11 @@ class RefMatOutput:
         # Set reference material format structure
         inc_data = [inc, scs_iter,
                     ref_material_properties['E'], ref_material_properties['v'],
-                    out_inc_farfield_strain[0, 0], out_inc_farfield_strain[1, 0],
-                    out_inc_farfield_strain[2, 0], out_inc_farfield_strain[0, 1],
-                    out_inc_farfield_strain[1, 1], out_inc_farfield_strain[2, 1],
-                    out_inc_farfield_strain[0, 2], out_inc_farfield_strain[1, 2],
-                    out_inc_farfield_strain[2, 2],
+                    out_farfield_strain[0, 0], out_farfield_strain[1, 0],
+                    out_farfield_strain[2, 0], out_farfield_strain[0, 1],
+                    out_farfield_strain[1, 1], out_farfield_strain[2, 1],
+                    out_farfield_strain[0, 2], out_farfield_strain[1, 2],
+                    out_farfield_strain[2, 2],
                     rel_diff_farfield, rel_scs_cost, rel_diff_tangent]
         write_list = ['\n' + '{:>9d}'.format(inc) + '  ' + '{:>13d}'.format(scs_iter) +
                       ''.join([('{:>' + str(self._col_width) + '.8e}').format(x)

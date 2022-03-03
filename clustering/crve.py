@@ -41,6 +41,10 @@ class CRVE:
     ----------
     _n_dim : int
         Problem number of spatial dimensions.
+    _comp_order_sym : list
+        Strain/Stress components symmetric order.
+    _comp_order_nsym : list
+        Strain/Stress components nonsymmetric order.
     _n_voxels_dims : list
         Number of voxels in each dimension of the regular grid (spatial discretization of
         the RVE).
@@ -366,16 +370,6 @@ class CRVE:
             RVE material phases labels (str).
         '''
         return copy.deepcopy(self._material_phases)
-    # --------------------------------------------------------------------------------------
-    def get_comp_order(self):
-        '''Get strain/stress components order.
-
-        Returns
-        -------
-        comp_order : list
-            Strain/Stress components (str) order.
-        '''
-        return self._comp_order
     # --------------------------------------------------------------------------------------
     def get_n_voxels(self):
         '''Get number of voxels in each dimension and total number of voxels.

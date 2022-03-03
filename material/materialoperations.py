@@ -9,6 +9,7 @@
 # Bernardo P. Ferreira | May 2021 | Initial coding.
 # Bernardo P. Ferreira | Jan 2022 | Strain/stress tensors conversions.
 #                                 | Spatial to material consistent tangent modulus.
+# Bernardo P. Ferreira | Feb 2022 | Stress-strain conjugate pairs.
 # ==========================================================================================
 #                                                                             Import modules
 # ==========================================================================================
@@ -45,6 +46,26 @@ def compute_rotation_tensor(def_gradient):
 #
 #                                                                 Strain tensors conversions
 # ==========================================================================================
+def compute_material_log_strain(def_gradient):
+    '''Compute material logarithmic strain.
+
+    Parameters
+    ----------
+    def_gradient : 2darray
+        Deformation gradient.
+
+    Returns
+    -------
+    material_log_strain : 2darray
+        Material logarithmic strain.
+    '''
+    # Compute material logarithmic strain tensor
+    material_log_strain = 0.5*top.isotropic_tensor('log',
+        np.matmul(np.transpose(def_gradient), def_gradient))
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Return
+    return material_log_strain
+# ------------------------------------------------------------------------------------------
 def compute_spatial_log_strain(def_gradient):
     '''Compute spatial logarithmic strain.
 
@@ -55,15 +76,15 @@ def compute_spatial_log_strain(def_gradient):
 
     Returns
     -------
-    log_strain : 2darray
+    spatial_log_strain : 2darray
         Spatial logarithmic strain.
     '''
     # Compute spatial logarithmic strain tensor
-    log_strain = 0.5*top.isotropic_tensor('log', np.matmul(def_gradient,
+    spatial_log_strain = 0.5*top.isotropic_tensor('log', np.matmul(def_gradient,
                                                            np.transpose(def_gradient)))
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Return
-    return log_strain
+    return spatial_log_strain
 #
 #                                                                 Stress tensors conversions
 # ==========================================================================================
@@ -200,6 +221,27 @@ def first_piola_from_second_piola(def_gradient, second_piola_stress):
     # Return
     return first_piola_stress
 # ------------------------------------------------------------------------------------------
+def kirchhoff_from_first_piola(def_gradient, first_piola_stress):
+    '''Compute Kirchhoff stress tensor from first Piola-Kirchhoff stress tensor.
+
+    Parameters
+    ----------
+    def_gradient : 2darray
+        Deformation gradient.
+    first_piola_stress : 2darray
+        First Piola-Kirchhoff stress tensor.
+
+    Returns
+    -------
+    kirchhoff_stress : 2darray
+        Kirchhoff stress tensor.
+    '''
+    # Compute Kirchhoff stress tensor
+    kirchhoff_stress = np.matmul(first_piola_stress, np.transpose(def_gradient))
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Return
+    return kirchhoff_stress
+# ------------------------------------------------------------------------------------------
 def material_from_spatial_tangent_modulus(spatial_consistent_tangent, def_gradient):
     '''Compute material consistent tangent modulus from spatial counterpart.
 
@@ -221,9 +263,65 @@ def material_from_spatial_tangent_modulus(spatial_consistent_tangent, def_gradie
     # Compute material consistent tangent modulus
     material_consistent_tangent = np.linalg.det(def_gradient)*top.dot42_2(
         top.dot42_1(spatial_consistent_tangent, def_gradient_inv), def_gradient_inv)
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Return
     return material_consistent_tangent
+#
+#                                                              Stress-strain conjugate pairs
+# ==========================================================================================
+def conjugate_material_log_strain(def_gradient, first_piola_stress):
+    '''Compute stress conjugate of material logarithmic strain tensor.
+
+    Parameters
+    ----------
+    def_gradient : 2darray
+        Deformation gradient.
+    first_piola_stress : 2darray
+        First Piola-Kirchhoff stress tensor.
+
+    Returns
+    -------
+    material_log_strain : 2darray
+        Material logarithmic strain.
+    stress_conjugate : 2darray
+        Stress conjugate to material logarithmic strain.
+    '''
+    # Compute material logarithmic strain tensor
+    material_log_strain = compute_material_log_strain(def_gradient)
+    # Compute rotation tensor (polar decomposition of deformation gradient)
+    rotation = compute_rotation_tensor(def_gradient)
+    # Compute stress conjugate to material logarithmic strain tensor
+    stress_conjugate = np.matmul(np.transpose(rotation),
+                                 np.matmul(first_piola_stress,
+                                           np.matmul(np.transpose(def_gradient), rotation)))
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Return
+    return material_log_strain, stress_conjugate
+# ------------------------------------------------------------------------------------------
+def conjugate_spatial_log_strain(def_gradient, first_piola_stress):
+    '''Compute stress conjugate of spatial logarithmic strain tensor.
+
+    Parameters
+    ----------
+    def_gradient : 2darray
+        Deformation gradient.
+    first_piola_stress : 2darray
+        First Piola-Kirchhoff stress tensor.
+
+    Returns
+    -------
+    spatial_log_strain : 2darray
+        Spatial logarithmic strain.
+    stress_conjugate : 2darray
+        Stress conjugate to spatial logarithmic strain.
+    '''
+    # Compute spatial logarithmic strain tensor
+    spatial_log_strain = compute_spatial_log_strain(def_gradient)
+    # Compute stress conjugate to spatial logarithmic strain tensor
+    stress_conjugate = kirchhoff_from_first_piola(def_gradient, first_piola_stress)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Return
+    return spatial_log_strain, stress_conjugate
 #
 #                                                 Computation of material-related quantities
 # ==========================================================================================
@@ -234,8 +332,10 @@ class MaterialQuantitiesComputer:
     ----------
     _n_dim : int
         Problem dimension.
-    _comp_order : list
-        Strain/Stress components (str) order.
+    _comp_order_sym : list
+        Strain/Stress components symmetric order.
+    _comp_order_nsym : list
+        Strain/Stress components nonsymmetric order.
     _fodevprojsym_mf : ndarray
         Fourth-order deviatoric projection tensor (second order symmetric tensors)
         (matricial form).
@@ -249,14 +349,16 @@ class MaterialQuantitiesComputer:
     def __init__(self):
         '''Material-related quantities computer constructor.'''
         # Get 3D problem parameters
-        n_dim, comp_order_sym, _ = mop.get_problem_type_parameters(problem_type=4)
+        n_dim, comp_order_sym, comp_order_nsym = \
+            mop.get_problem_type_parameters(problem_type=4)
         # Set material-related quantities computer parameters
         self._n_dim = n_dim
-        self._comp_order = comp_order_sym
+        self._comp_order_sym = comp_order_sym
+        self._comp_order_nsym = comp_order_nsym
         # Get fourth-order tensors
         _, _, _, _, _, _, fodevprojsym = top.get_id_operators(self._n_dim)
         # Get fourth-order tensors matricial form
-        fodevprojsym_mf = mop.get_tensor_mf(fodevprojsym, self._n_dim, self._comp_order)
+        fodevprojsym_mf = mop.get_tensor_mf(fodevprojsym, self._n_dim, self._comp_order_sym)
         self._fodevprojsym_mf = fodevprojsym_mf
     # --------------------------------------------------------------------------------------
     def get_vm_stress(self, stress_mf):
