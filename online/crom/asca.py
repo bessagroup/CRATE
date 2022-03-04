@@ -3027,12 +3027,13 @@ class SelfConsistentOptimization(ReferenceMaterialOptimizer):
         if loss_type == 'componentwise_regression':
             optimization_function = SelfConsistentCompRegressionLoss(
                 self._strain_formulation, self._problem_type,
-                    copy.deepcopy(self._inc_strain_mf), copy.deepcopy(self._inc_stress_mf),
-                        lower_bounds, upper_bounds, init_shot, weights=weights)
+                    copy.deepcopy(self._strain_old_mf), copy.deepcopy(self._inc_strain_mf),
+                    copy.deepcopy(self._inc_stress_mf), lower_bounds, upper_bounds,
+                    init_shot=init_shot, weights=weights)
         elif loss_type == 'consistent_tangent':
             optimization_function = SelfConsistentTangentLoss(self._strain_formulation,
                 self._problem_type, copy.deepcopy(self._eff_tangent_mf), lower_bounds,
-                    upper_bounds, init_shot, weights=weights)
+                    upper_bounds, init_shot=init_shot, weights=weights)
         else:
             raise RuntimeError('Unknown type of self-consistent loss function.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -3410,7 +3411,8 @@ class SelfConsistentCompRegressionLoss(OptimizationFunction):
                                                     comp_order)
                 # Set reference material incremental tangent modulus (matricial form)
                 inc_elastic_tangent_mf = \
-                    mop.get_tensor_mf(top.dot42_1(elastic_tangent, strain_old))
+                    mop.get_tensor_mf(top.dot42_1(elastic_tangent, strain_old),
+                                      self._n_dim, comp_order)
             else:
                 # Set reference material incremental tangent modulus (matricial form)
                 inc_elastic_tangent_mf = \
