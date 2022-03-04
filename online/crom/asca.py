@@ -631,7 +631,7 @@ class ASCA:
                     # accept the current solution (first self-consistent scheme iteration)
                     # or perform one last self-consistent scheme iteration with the last
                     # converged increment reference material elastic properties
-                    if inc > 1 and not is_scs_admissible:
+                    if not is_scs_admissible:
                         # Display reference material self-consistent scheme iteration footer
                         type(self)._display_scs_iter_data(ref_material, is_lock_prop_ref,
                             mode='end', scs_iter_time=time.time() - scs_iter_init_time)
