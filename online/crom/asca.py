@@ -888,9 +888,9 @@ class ASCA:
             #
             #                        Converged elastic reference material elastic properties
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Set reference material properties associated to the initial effective tangent
+            # Set reference material properties converged in the first loading increment
             if inc == 1:
-                ref_material.set_material_properties_init()
+                ref_material.set_material_properties_scs_init()
             # Update converged elastic reference material elastic properties
             ref_material.update_converged_material_properties()
             #
@@ -2076,8 +2076,10 @@ class ElasticReferenceMaterial:
         Last loading increment converged elastic material properties (key, str) values
         (item, int/float/bool).
     _material_properties_init : dict
-        Elastic material properties (key, str) values (item, int/float/bool) associated to
-        the initial elastic effective tangent modulus.
+        Elastic material properties (key, str) values (item, int/float/bool) initial guess.
+    _material_properties_scs_init : dict
+        Elastic material properties (key, str) values (item, int/float/bool) converged in
+        the first loading increment.
     _elastic_tangent_mf : 2darray
         Elastic tangent modulus in matricial form.
     _elastic_compliance_matrix : 2darray
@@ -2114,6 +2116,7 @@ class ElasticReferenceMaterial:
         self._material_properties = None
         self._material_properties_old = None
         self._material_properties_init = None
+        self._material_properties_scs_init = None
         self._elastic_tangent_mf = None
         self._scs_iter = 0
         self._elastic_compliance_matrix = None
@@ -2156,8 +2159,9 @@ class ElasticReferenceMaterial:
             v = properties['v']
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize elastic reference material properties
-        self._material_properties = {'E': E, 'v': v}
-        self._material_properties_old = copy.deepcopy(self._material_properties)
+        self._material_properties_init = {'E': E, 'v': v}
+        self._material_properties = copy.deepcopy(self._material_properties_init)
+        self._material_properties_old = copy.deepcopy(self._material_properties_init)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Update elastic tangent modulus and elastic compliance matrix
         self._update_elastic_tangent()
@@ -2191,9 +2195,9 @@ class ElasticReferenceMaterial:
         # Update elastic tangent modulus and elastic compliance matrix
         self._update_elastic_tangent()
     # --------------------------------------------------------------------------------------
-    def set_material_properties_init(self):
-        '''Set reference material properties associated to the initial effective tangent.'''
-        self._material_properties_init = copy.deepcopy(self._material_properties)
+    def set_material_properties_scs_init(self):
+        '''Set reference material properties converged in the first loading increment.'''
+        self._material_properties_scs_init = copy.deepcopy(self._material_properties)
     # --------------------------------------------------------------------------------------
     def get_material_properties(self):
         '''Get elastic reference material properties.
@@ -2406,8 +2410,10 @@ class ElasticReferenceMaterial:
             # Initialize elastic reference material properties optimizer
             ref_optimizer = SelfConsistentOptimization(self._strain_formulation,
                 self._problem_type, copy.deepcopy(self._material_properties_old),
+                    copy.deepcopy(self._material_properties_init),
+                    copy.deepcopy(self._material_properties_scs_init),
                     strain_old_mf, copy.deepcopy(strain_mf), inc_strain_mf, inc_stress_mf,
-                        eff_tangent_mf=copy.deepcopy(eff_tangent_mf))
+                    eff_tangent_mf=copy.deepcopy(eff_tangent_mf))
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Compute elastic reference material properties
             E, v = ref_optimizer.compute_reference_properties()
@@ -2913,8 +2919,8 @@ class SelfConsistentOptimization(ReferenceMaterialOptimizer):
         Strain/Stress components nonsymmetric order.
     '''
     def __init__(self, strain_formulation, problem_type, material_properties_old,
-                 strain_old_mf, strain_mf, inc_strain_mf, inc_stress_mf,
-                 eff_tangent_mf=None):
+                 material_properties_init, material_properties_scs_init, strain_old_mf,
+                 strain_mf, inc_strain_mf, inc_stress_mf, eff_tangent_mf=None):
         '''Elastic reference material properties optimizer constructor.
 
         Parameters
@@ -2927,6 +2933,12 @@ class SelfConsistentOptimization(ReferenceMaterialOptimizer):
         material_properties_old : dict
             Last loading increment converged elastic reference material properties
             (key, str) values (item, int/float/bool).
+        material_properties_init : dict
+            Elastic material properties (key, str) values (item, int/float/bool) initial
+            guess.
+        material_properties_scs_init : dict
+            Elastic material properties (key, str) values (item, int/float/bool) converged
+            in the first loading increment.
         strain_old_mf : 1darray
             Last converged homogenized strain (matricial form).
         strain_mf : 1darray
@@ -2942,6 +2954,8 @@ class SelfConsistentOptimization(ReferenceMaterialOptimizer):
         self._strain_formulation = strain_formulation
         self._problem_type = problem_type
         self._material_properties_old = copy.deepcopy(material_properties_old)
+        self._material_properties_init = copy.deepcopy(material_properties_init)
+        self._material_properties_scs_init = copy.deepcopy(material_properties_scs_init)
         self._strain_old_mf = copy.deepcopy(strain_old_mf)
         self._inc_strain_mf = copy.deepcopy(inc_strain_mf)
         self._inc_stress_mf = copy.deepcopy(inc_stress_mf)
@@ -2973,11 +2987,13 @@ class SelfConsistentOptimization(ReferenceMaterialOptimizer):
         v : float
             Poisson ratio of elastic reference material.
         '''
-        # Set Young modulus and Poisson ratio lower and upper bounds (to be defined)
+        # Set Young modulus upper bound multiplier
+        upper_bound_mult = 1.5
+        # Set Young modulus and Poisson ratio lower and upper bounds
         E_min = 0.0
-        E_max = 300
-        v_min = 0.26
-        v_max = 0.29
+        E_max = upper_bound_mult*self._material_properties_init['E']
+        v_min = 0.0
+        v_max = 0.5
         # Set optimization parameters lower and upper bounds
         lower_bounds = {'E': E_min, 'v': v_min}
         upper_bounds = {'E': E_max, 'v': v_max}
