@@ -2368,7 +2368,7 @@ class ElasticReferenceMaterial:
                     # Initialize elastic reference material properties optimizer
                     ref_optimizer = InfinitesimalRegressionSCS(self._strain_formulation,
                         self._problem_type, copy.deepcopy(self._material_properties_old),
-                            inc_strain_mf, inc_stress_mf)
+                            inc_strain_mf, inc_stress_mf, is_symmetrized=True)
                 else:
                     # Set finite strains formulation option:
                     # '1' - The CRVE incremental effective tangent modulus, which accounts
@@ -2647,7 +2647,7 @@ class InfinitesimalRegressionSCS(ReferenceMaterialOptimizer):
         Strain/Stress components nonsymmetric order.
     '''
     def __init__(self, strain_formulation, problem_type, material_properties_old,
-                 inc_strain_mf, inc_stress_mf):
+                 inc_strain_mf, inc_stress_mf, is_symmetrized=False):
         '''Elastic reference material properties optimizer constructor.
 
         Parameters
@@ -2664,12 +2664,16 @@ class InfinitesimalRegressionSCS(ReferenceMaterialOptimizer):
             Incremental homogenized strain (matricial form).
         inc_stress_mf : 1darray
             Incremental homogenized stress (matricial form).
+        is_symmetrized : bool, default=False
+            True if a symmetric alternative stress-strain conjugate pair is adopted in the
+            finite strains regression-based self-consistent scheme, False otherwise.
         '''
         self._strain_formulation = strain_formulation
         self._problem_type = problem_type
         self._material_properties_old = copy.deepcopy(material_properties_old)
         self._inc_strain_mf = copy.deepcopy(inc_strain_mf)
         self._inc_stress_mf = copy.deepcopy(inc_stress_mf)
+        self._is_symmetrized = is_symmetrized
         # Get problem type parameters
         n_dim, comp_order_sym, comp_order_nsym = \
             mop.get_problem_type_parameters(problem_type)
@@ -2691,7 +2695,10 @@ class InfinitesimalRegressionSCS(ReferenceMaterialOptimizer):
         if self._strain_formulation == 'infinitesimal':
             comp_order = self._comp_order_sym
         elif self._strain_formulation == 'finite':
-            comp_order = self._comp_order_nsym
+            if self._is_symmetrized:
+                comp_order = self._comp_order_sym
+            else:
+                comp_order = self._comp_order_nsym
         else:
             raise RuntimeError('Unknown problem strain formulation.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
