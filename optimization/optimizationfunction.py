@@ -108,7 +108,7 @@ class OptimizationFunction(ABC):
         '''
         # Check if optimization parameters initial guess is defined
         if self._init_shot is None:
-            raise RuntimeError('Optimization parameters initial guess if not defined.')
+            raise RuntimeError('Optimization parameters initial guess is not defined.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get optimization parameters initial guess
         if is_normalized:
