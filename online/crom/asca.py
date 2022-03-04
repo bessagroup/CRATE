@@ -2957,6 +2957,7 @@ class SelfConsistentOptimization(ReferenceMaterialOptimizer):
         self._material_properties_init = copy.deepcopy(material_properties_init)
         self._material_properties_scs_init = copy.deepcopy(material_properties_scs_init)
         self._strain_old_mf = copy.deepcopy(strain_old_mf)
+        self._strain_mf = copy.deepcopy(strain_mf)
         self._inc_strain_mf = copy.deepcopy(inc_strain_mf)
         self._inc_stress_mf = copy.deepcopy(inc_stress_mf)
         self._eff_tangent_mf = copy.deepcopy(eff_tangent_mf)
@@ -3029,9 +3030,7 @@ class SelfConsistentOptimization(ReferenceMaterialOptimizer):
                     # Compute incremental material logarithmic strain tensor
                     weights_strain = mat_log_strain - mat_log_strain_old
                 # Compute optimization weights
-                weights = self.get_opt_strain_weights(self._strain_formulation,
-                                                      self._problem_type,
-                                                      weights_strain)
+                weights = self.get_opt_strain_weights(weights_strain)
             elif loss_type == 'consistent_tangent':
                 weights = None
             else:
@@ -3068,17 +3067,12 @@ class SelfConsistentOptimization(ReferenceMaterialOptimizer):
         # Return
         return E, v
     # --------------------------------------------------------------------------------------
-    def get_opt_strain_weights(strain_formulation, problem_type, strain):
+    def get_opt_strain_weights(self, strain):
         '''Get strain components weights based on the magnitude of normal and shear
         components.
 
         Parameters
         ----------
-        strain_formulation: str, {'infinitesimal', 'finite'}
-            Problem strain formulation.
-        problem_type : int
-            Problem type: 2D plane strain (1), 2D plane stress (2), 2D axisymmetric (3) and
-            3D (4).
         strain : 2darray
             Strain tensor: Infinitesimal strain tensor (infinitesimal strains) or Material
             logarithmic strain tensor (finite strains).
@@ -3088,14 +3082,11 @@ class SelfConsistentOptimization(ReferenceMaterialOptimizer):
         weights : tuple
             Strain components weights.
         '''
-        # Get problem type parameters
-        n_dim, comp_order_sym, comp_order_nsym = \
-            mop.get_problem_type_parameters(problem_type)
         # Set strain/stress components order according to problem strain formulation
-        if strain_formulation == 'infinitesimal':
-            comp_order = comp_order_sym
-        elif strain_formulation == 'finite':
-            comp_order = comp_order_nsym
+        if self._strain_formulation == 'infinitesimal':
+            comp_order = self._comp_order_sym
+        elif self._strain_formulation == 'finite':
+            comp_order = self._comp_order_nsym
         else:
             raise RuntimeError('Unknown problem strain formulation.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
