@@ -2498,11 +2498,11 @@ class ElasticReferenceMaterial:
         # Evaluate admissibility conditions:
         # Reference material Young modulus
         if self._material_properties_init is None:
-            condition_1 = E >= 0.0
+            condition_1 = E > 0.0
         else:
             condition_1 = (E/self._material_properties_init['E']) >= 0.025
         # Reference material Poisson ratio
-        condition_2 = v >= 0.0 and (v/0.5) <= 1.0
+        condition_2 = v > 0.0 and (v/0.5) < 1.0
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set admissibility of self-consistent scheme iterative solution
         is_admissible = condition_1 and condition_2
