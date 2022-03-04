@@ -2408,6 +2408,9 @@ class ElasticReferenceMaterial:
                 self._problem_type, copy.deepcopy(self._material_properties_old),
                     strain_old_mf, copy.deepcopy(strain_mf), inc_strain_mf, inc_stress_mf,
                         eff_tangent_mf=copy.deepcopy(eff_tangent_mf))
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Compute elastic reference material properties
+            E, v = ref_optimizer.compute_reference_properties()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Check admissibility of self-consistent scheme solution
         is_admissible = self._check_scs_solution(E, v)
