@@ -345,7 +345,7 @@ class RelativeRootMeanSquaredError(Loss):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute required summations
         sum_1 = sum([(y[i] - y_ref[i])**2 for i in range(n)])
-        sum_2 = sum([y[i]**2 for i in range(n)])
+        sum_2 = sum([y_ref[i]**2 for i in range(n)])
         # Compute relative root mean squared error
         loss = np.sqrt(((1.0/n)*sum_1)/sum_2)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
