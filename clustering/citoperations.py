@@ -267,7 +267,7 @@ def assemble_cit(strain_formulation, problem_type, mat_prop_ref, material_phases
         gop_factor_2 = (lam_ref + miu_ref)/(miu_ref*(lam_ref + 2.0*miu_ref))
     else:
         gop_factor_1 = 1.0/(2.0*miu_ref)
-        gop_factor_2 = (lam_ref + miu_ref)/(2.0*miu_ref*(lam_ref + 2.0*miu_ref))
+        gop_factor_2 = lam_ref/(2.0*miu_ref*(lam_ref + 2.0*miu_ref))
     gop_factor_0_freq = numpy.matlib.repmat(np.zeros((len(comp_order), len(comp_order))),
                                             n_total_clusters, n_total_clusters)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

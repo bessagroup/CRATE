@@ -248,7 +248,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         else:
             # Non-symmetrized isotropic reference material elasticity tensor
             c1 = 1.0/(2.0*miu_ref)
-            c2 = (miu_ref + lam_ref)/(2.0*miu_ref*(lam_ref + 2.0*miu_ref))
+            c2 = lam_ref/(2.0*miu_ref*(lam_ref + 2.0*miu_ref))
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute Green operator material independent terms
         gop_1_dft_vox, gop_2_dft_vox, _ = \
