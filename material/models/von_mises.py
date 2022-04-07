@@ -303,7 +303,7 @@ class VonMises(ConstitutiveModel):
         # update is purely elastic and coincident with the elastic trial state. Otherwise,
         # the state update is elastoplastic and the return-mapping system of nonlinear
         # equations must be solved in order to update the state variables
-        if yield_function <= 0:
+        if yield_function/yield_stress <= su_conv_tol:
             # Update elastic strain
             e_strain_mf = e_trial_strain_mf
             # Update stress
