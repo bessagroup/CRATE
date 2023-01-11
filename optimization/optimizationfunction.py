@@ -40,7 +40,33 @@ __status__ = 'Stable'
 #                                              Interface: Optimization function
 # =============================================================================
 class OptimizationFunction(ABC):
-    """Optimization function interface."""
+    """Optimization function interface.
+
+    Methods
+    -------
+    opt_function(self, parameters)
+        *abstract*: Optimization function.
+    get_parameters_names(self)
+        Get optimization parameters names.
+    get_bounds(self, is_normalized=False)
+        Get optimization parameters lower and upper bounds.
+    get_init_shot(self, is_normalized=False)
+        Get optimization parameters initial guess.
+    set_norm_bounds(self, norm_min=-1.0, norm_max=1.0)
+        Set optimization parameters normalization bounds.
+    get_norm_bounds(self)
+        Get optimization parameters normalization bounds.
+    normalize(self, parameters)
+        Normalize optimization parameters between min and max values.
+    denormalize(self, norm_parameters)
+        Recover optimization parameters from normalized values.
+    norm_opt_function(self, norm_parameters)
+        Wrapper of optimization function with normalized parameters.
+    opt_function_seq(self, parameters_seq)
+        Wrapper of optimization function with sequential parameters.
+    norm_opt_function_seq(self, parameters_seq)
+        Wrapper of optimization function with norm. sequential parameters.
+    """
     @abstractmethod
     def __init__(self, lower_bounds, upper_bounds, init_shot=None,
                  weights=None):
@@ -313,7 +339,13 @@ class OptimizationFunction(ABC):
 #                                                      Interface: Loss function
 # =============================================================================
 class Loss(ABC):
-    """Loss function interface."""
+    """Loss function interface.
+
+    Methods
+    -------
+    loss(self, y, y_ref, type='minimization')
+        *abstract*: Loss function.
+    """
     @abstractmethod
     def __init__(self):
         """Constructor."""
@@ -343,7 +375,13 @@ class Loss(ABC):
 #                                                                Loss functions
 # =============================================================================
 class RelativeRootMeanSquaredError(Loss):
-    """Relative Root Mean Squared Error (RRMSE)."""
+    """Relative Root Mean Squared Error (RRMSE).
+
+    Methods
+    -------
+    loss(self, y, y_ref, type='minimization')
+        Loss function.
+    """
     def __init__(self):
         """Loss function constructor."""
         pass
