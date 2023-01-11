@@ -1,122 +1,213 @@
+"""Constitutive modeling of CRVE material clusters and homogenization.
+
+This module includes the class that contains the data associated with the
+CRVE's material clusters constitutive state and homogenized strain and stress
+tensors, as well as the required methods to perform the material clusters
+constitutive state update, the computation of the material clusters consistent
+tangent modulus, and the computational homogenization of the material clusters
+strain and stress tensors.
+
+Classes
+-------
+MaterialState
+    CRVE material constitutive state.
+
+Functions
+---------
+get_available_material_models
+    Get available material constitutive models.
+"""
 #
-# Material State (CRATE Program)
-# ==========================================================================================
-# Summary:
-# Module containing the required procedures to perform the state update of the material
-# clusters constitutive models.
-# ------------------------------------------------------------------------------------------
-# Development history:
-# Bernardo P. Ferreira | Feb 2020 | Initial coding.
-# Bernardo P. Ferreira | Oct 2021 | Refactoring and OOP implementation.
-#                                 | Finite strain extension.
-# ==========================================================================================
-#                                                                             Import modules
-# ==========================================================================================
-# Working with arrays
-import numpy as np
-# Shallow and deep copy operations
+#                                                                       Modules
+# =============================================================================
+# Standard
 import copy
-# Generate efficient iterators
 import itertools as it
-# Tensorial operations
+# Third-party
+import numpy as np
+# Local
 import tensor.tensoroperations as top
-# Matricial operations
 import tensor.matrixoperations as mop
-# Material operations
 from material.materialoperations import cauchy_from_kirchhoff, \
                                         first_piola_from_kirchhoff, \
                                         material_from_spatial_tangent_modulus
-# Constitutive models
 from material.models.elastic import Elastic
 from material.models.von_mises import VonMises
 from material.models.stvenant_kirchhoff import StVenantKirchhoff
-# Links constitutive models
 from links.material.models.links_elastic import LinksElastic
 from links.material.models.links_von_mises import LinksVonMises
 #
-#                                                                             Material state
-# ==========================================================================================
+#                                                          Authorship & Credits
+# =============================================================================
+__author__ = 'Bernardo Ferreira (bernardo_ferreira@brown.edu)'
+__credits__ = ['Bernardo Ferreira',]
+__status__ = 'Stable'
+# =============================================================================
+#
+# =============================================================================
+#
+#                                                                Material state
+# =============================================================================
 class MaterialState:
-    '''CRVE material constitutive state.
+    """CRVE material constitutive state.
 
     Attributes
     ----------
     _n_dim : int
         Problem number of spatial dimensions.
-    _comp_order_sym : list
+    _comp_order_sym : list[str]
         Strain/Stress components symmetric order.
-    _comp_order_nsym : list
+    _comp_order_nsym : list[str]
         Strain/Stress components nonsymmetric order.
     _material_phases_models : dict
-        Material constitutive model (item, ConstitutiveModel) associated to each material
-        phase (key, str).
+        Material constitutive model (item, ConstitutiveModel) associated to
+        each material phase (key, str).
     _phase_clusters : dict
         Clusters labels (item, list of int) associated to each material phase
         (key, str).
     _clusters_vf : dict
-        Volume fraction (item, float) associated to each material cluster (key, str).
+        Volume fraction (item, float) associated to each material cluster
+        (key, str).
     _clusters_def_gradient_mf : dict
-        Deformation gradient (item, 1darray) associated to each material cluster (key, str),
-        stored in matricial form.
+        Deformation gradient (item, numpy.darray (1d)) associated to each
+        material cluster (key, str), stored in matricial form.
     _clusters_def_gradient_old_mf : dict
-        Last converged deformation gradient (item, 1darray) associated to each material
-        cluster (key, str), stored in matricial form.
+        Last converged deformation gradient (item, numpy.darray (1d))
+        associated to each material cluster (key, str), stored in matricial
+        form.
     _clusters_state : dict
-        Material constitutive model state variables (item, dict) associated to each
-        material cluster (key, str).
+        Material constitutive model state variables (item, dict) associated to
+        each material cluster (key, str).
     _clusters_state_old : dict
-        Last converged material constitutive model state variables (item, dict) associated
-        to each material cluster (key, str).
+        Last converged material constitutive model state variables (item, dict)
+        associated to each material cluster (key, str).
     _clusters_tangent_mf : dict
-        Material consistent tangent modulus (item, ndarray) associated to each material
-        cluster (key, str), stored in matricial form.
-    _hom_strain_mf : 1darray
-        Homogenized strain tensor stored in matricial form: infinitesimal strain tensor
-        (infinitesimal strains) or deformation gradient (finite strains).
+        Material consistent tangent modulus (item, numpy.ndarray) associated to
+        each material cluster (key, str), stored in matricial form.
+    _hom_strain_mf : numpy.ndarray (1d)
+        Homogenized strain tensor stored in matricial form: infinitesimal
+        strain tensor (infinitesimal strains) or deformation gradient (finite
+        strains).
     _hom_strain_33 : float
-        Homogenized strain tensor out-of-plane component: infinitesimal strain tensor
-        (infinitesimal strains) or deformation gradient (finite strains).
-    _hom_stress_mf : 1darray
-        Homogenized stress tensor stored in matricial form: Cauchy stress tensor
-        (infinitesimal strains) or first Piola-Kirchhoff stress tensor (finite strains).
+        Homogenized strain tensor out-of-plane component: infinitesimal strain
+        tensor (infinitesimal strains) or deformation gradient (finite
+        strains).
+    _hom_stress_mf : numpy.ndarray (1d)
+        Homogenized stress tensor stored in matricial form: Cauchy stress
+        tensor (infinitesimal strains) or first Piola-Kirchhoff stress tensor
+        (finite strains).
     _hom_stress_33 : float
         Homogenized stress tensor out-of-plane component: Cauchy stress tensor
-        (infinitesimal strains) or first Piola-Kirchhoff stress tensor (finite strains).
-    _hom_strain_old_mf : 1darray
-        Last converged homogenized strain tensor stored in matricial form: infinitesimal
-        strain tensor (infinitesimal strains) or deformation gradient (finite strains).
-    _hom_stress_old_mf : 1darray
-        Last converged homogenized stress tensor stored in matricial form: Cauchy stress
-        tensor (infinitesimal strains) or first Piola-Kirchhoff stress tensor (finite
+        (infinitesimal strains) or first Piola-Kirchhoff stress tensor (finite
         strains).
-    '''
+    _hom_strain_old_mf : numpy.ndarray (1d)
+        Last converged homogenized strain tensor stored in matricial form:
+        infinitesimal strain tensor (infinitesimal strains) or deformation
+        gradient (finite strains).
+    _hom_stress_old_mf : numpy.ndarray (1d)
+        Last converged homogenized stress tensor stored in matricial form:
+        Cauchy stress tensor (infinitesimal strains) or first Piola-Kirchhoff
+        stress tensor (finite strains).
+
+    Methods
+    -------
+    init_constitutive_model(self, mat_phase, model_keyword,
+                            model_source='crate')
+        Initialize material phase constitutive model.
+    init_clusters_state(self)
+        Initialize clusters state variables.
+    set_phase_clusters(self, phase_clusters, clusters_vf)
+        Set CRVE cluster labels and volume fractions of each material phase.
+    get_clusters_inc_strain_mf(self, global_strain_mf)
+        Get clusters incremental strain in matricial form.
+    update_clusters_state(self, clusters_inc_strain_mf)
+        Update clusters state variables and consistent tangent modulus.
+    update_state_homogenization(self)
+        Update homogenized strain and stress tensors.
+    update_converged_state(self)
+        Update last converged material state variables.
+    set_rewind_state_updated_clustering(self, phase_clusters, clusters_vf,
+                                        clusters_state,
+                                        clusters_def_gradient_mf):
+        Set rewind state variables according to updated clustering.
+    get_hom_strain_mf(self)
+        Get homogenized strain tensor (matricial form).
+    get_hom_stress_mf(self)
+        Get homogenized stress tensor (matricial form).
+    get_oop_hom_comp(self)
+        Get homogenized strain or stress tensor out-of-plane component.
+    get_inc_hom_strain_mf(self)
+        Get incremental homogenized strain tensor (matricial form).
+    get_inc_hom_stress_mf(self)
+        Get incremental homogenized stress tensor (matricial form).
+    get_hom_strain_old_mf(self)
+        Get last converged homogenized strain tensor (matricial form).
+    get_hom_stress_old_mf(self)
+        Get last converged homogenized stress tensor (matricial form).
+    get_material_phases(self)
+        Get RVE material phases.
+    get_material_phases_properties(self)
+        Get RVE material phases constitutive properties.
+    get_material_phases_models(self)
+        Get RVE material phases constitutive models.
+    get_material_phases_vf(self)
+        Get RVE material phases volume fraction.
+    get_clusters_def_gradient_mf(self):
+        Get deformation gradient of each material cluster.
+    get_clusters_def_gradient_old_mf(self):
+        Get last converged deformation gradient of each material cluster.
+    get_clusters_state(self):
+        Get material state variables of each material cluster.
+    get_clusters_state_old(self):
+        Get last converged material state variables of each material cluster.
+    get_clusters_tangent_mf(self):
+        Get material consistent tangent modulus of each material cluster.
+    _material_su_interface(strain_formulation, problem_type,
+                           constitutive_model, def_gradient_old, inc_strain,
+                           state_variables_old)
+        Material constitutive state update interface.
+    compute_inc_log_strain(e_log_strain_old, inc_def_gradient)
+        Compute incremental spatial logarithmic strain.
+    compute_spatial_tangent_modulus(e_log_strain_old, def_gradient_old,
+                                    inc_def_gradient, cauchy_stress,
+                                    inf_consistent_tangent)
+        Compute finite strain spatial consistent tangent modulus.
+    clustering_adaptivity_update(self, phase_clusters, clusters_vf,
+                                 adaptive_clustering_map)
+        Update cluster variables according to clustering adaptivity step.
+    constitutive_source_conversion(self)
+        Convert external sources constitutive models to CRATE model.
+    """
     def __init__(self, strain_formulation, problem_type, material_phases,
                  material_phases_properties, material_phases_vf):
-        '''CRVE material constitutive state constructor.
+        """Constructor.
 
         Parameters
         ----------
-        strain_formulation: str, {'infinitesimal', 'finite'}
+        strain_formulation: {'infinitesimal', 'finite'}
             Problem strain formulation.
         problem_type : int
-            Problem type: 2D plane strain (1), 2D plane stress (2), 2D axisymmetric (3) and
-            3D (4).
-        material_phases : list
+            Problem type: 2D plane strain (1), 2D plane stress (2),
+            2D axisymmetric (3) and 3D (4).
+        material_phases : list[str]
             RVE material phases labels (str).
         material_phases_properties : dict
-            Constitutive model material properties (item, dict) associated to each material
-            phase (key, str).
+            Constitutive model material properties (item, dict) associated to
+            each material phase (key, str).
         material_phases_vf : dict
-            Volume fraction (item, float) associated to each material phase (key, str).
-        '''
+            Volume fraction (item, float) associated to each material phase
+            (key, str).
+        """
         self._strain_formulation = strain_formulation
         self._problem_type = problem_type
         self._material_phases = copy.deepcopy(material_phases)
-        self._material_phases_properties = copy.deepcopy(material_phases_properties)
+        self._material_phases_properties = \
+            copy.deepcopy(material_phases_properties)
         self._material_phases_vf = copy.deepcopy(material_phases_vf)
         self._phase_clusters = None
         self._clusters_vf = None
-        self._material_phases_models = {mat_phase: None for mat_phase in material_phases}
+        self._material_phases_models = {mat_phase: None
+                                        for mat_phase in material_phases}
         self._clusters_def_gradient_mf = None
         self._clusters_def_gradient_old_mf = None
         self._clusters_state = None
@@ -134,9 +225,10 @@ class MaterialState:
         self._n_dim = n_dim
         self._comp_order_sym = comp_order_sym
         self._comp_order_nsym = comp_order_nsym
-    # --------------------------------------------------------------------------------------
-    def init_constitutive_model(self, mat_phase, model_keyword, model_source='crate'):
-        '''Initialize material phase constitutive model.
+    # -------------------------------------------------------------------------
+    def init_constitutive_model(self, mat_phase, model_keyword,
+                                model_source='crate'):
+        """Initialize material phase constitutive model.
 
         Parameters
         ----------
@@ -144,52 +236,56 @@ class MaterialState:
             Material phase label.
         model_keyword : str
             Material constitutive model input data file keyword.
-        model_source : str, {'crate', }, default='crate'
+        model_source : {'crate',}, default='crate'
             Material constitutive model source.
-        '''
+        """
         # Initialize material phase constitutive model
         if model_source == 'crate':
             if model_keyword == 'elastic':
-                constitutive_model = Elastic(self._strain_formulation, self._problem_type,
-                                             self._material_phases_properties[mat_phase])
+                constitutive_model = Elastic(
+                    self._strain_formulation, self._problem_type,
+                    self._material_phases_properties[mat_phase])
             elif model_keyword == 'von_mises':
-                constitutive_model = VonMises(self._strain_formulation, self._problem_type,
-                                              self._material_phases_properties[mat_phase])
+                constitutive_model = VonMises(
+                    self._strain_formulation, self._problem_type,
+                    self._material_phases_properties[mat_phase])
             elif model_keyword == 'stvenant_kirchhoff':
-                constitutive_model = \
-                    StVenantKirchhoff(self._strain_formulation, self._problem_type,
-                                      self._material_phases_properties[mat_phase])
+                constitutive_model = StVenantKirchhoff(
+                    self._strain_formulation, self._problem_type,
+                    self._material_phases_properties[mat_phase])
             else:
-                raise RuntimeError('Unknown constitutive model from CRATE\'s source.')
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                raise RuntimeError('Unknown constitutive model from CRATE\'s '
+                                   'source.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         elif model_source == 'links':
             if model_keyword == 'ELASTIC':
-                constitutive_model = \
-                    LinksElastic(self._strain_formulation, self._problem_type,
-                                 self._material_phases_properties[mat_phase])
+                constitutive_model = LinksElastic(
+                    self._strain_formulation, self._problem_type,
+                    self._material_phases_properties[mat_phase])
             elif model_keyword == 'VON_MISES':
-                constitutive_model = \
-                    LinksVonMises(self._strain_formulation, self._problem_type,
-                                  self._material_phases_properties[mat_phase])
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                constitutive_model = LinksVonMises(
+                    self._strain_formulation, self._problem_type,
+                    self._material_phases_properties[mat_phase])
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         else:
             raise RuntimeError('Unknown material constitutive model source.')
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Update material phases constitutive models
         self._material_phases_models[mat_phase] = constitutive_model
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     def init_clusters_state(self):
-        '''Initialize clusters state variables.'''
+        """Initialize clusters state variables."""
         # Initialize clusters state variables
         self._clusters_state = {}
         self._clusters_state_old = {}
         # Initialize clusters deformation gradient
         self._clusters_def_gradient_mf = {}
         self._clusters_def_gradient_old_mf = {}
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set second-order identity tensor matricial form
-        soid_mf = mop.get_tensor_mf(np.eye(self._n_dim), self._n_dim, self._comp_order_nsym)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        soid_mf = mop.get_tensor_mf(np.eye(self._n_dim), self._n_dim,
+                                    self._comp_order_nsym)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over material phases
         for mat_phase in self._material_phases:
             # Get material phase constitutive model
@@ -205,48 +301,49 @@ class MaterialState:
                 # Initialize clusters deformation gradient
                 self._clusters_def_gradient_mf[str(cluster)] = soid_mf
                 self._clusters_def_gradient_old_mf[str(cluster)] = soid_mf
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute initial state homogenized strain and stress tensors
         self.update_state_homogenization()
         self.update_converged_state()
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     def set_phase_clusters(self, phase_clusters, clusters_vf):
-        '''Set CRVE cluster labels and volume fractions associated to each material phase.
+        """Set CRVE cluster labels and volume fractions of each material phase.
 
         Parameters
         ----------
         phase_clusters : dict
-            Clusters labels (item, list of int) associated to each material phase
-            (key, str).
+            Clusters labels (item, list[int]) associated to each material
+            phase (key, str).
         clusters_vf : dict
-            Volume fraction (item, float) associated to each material cluster (key, str).
-        '''
+            Volume fraction (item, float) associated to each material cluster
+            (key, str).
+        """
         self._phase_clusters = copy.deepcopy(phase_clusters)
         self._clusters_vf = copy.deepcopy(clusters_vf)
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     def get_clusters_inc_strain_mf(self, global_strain_mf):
-        '''Get clusters incremental strain in matricial form.
+        """Get clusters incremental strain in matricial form.
 
         Parameters
         ----------
-        global_strain_mf : 1darray
+        global_strain_mf : numpy.ndarray (1d)
             Global vector of clusters strains stored in matricial form.
 
         Returns
         -------
         clusters_inc_strain_mf : dict
-            Incremental strain (item, dict) associated to each material cluster (key, str),
-            stored in matricial form.
-        '''
+            Incremental strain (item, dict) associated to each material cluster
+            (key, str), stored in matricial form.
+        """
         # Set strain components according to problem strain formulation
         if self._strain_formulation == 'infinitesimal':
             comp_order = self._comp_order_sym
         else:
             comp_order = self._comp_order_nsym
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize dictionary of clusters incremental strain
         clusters_inc_strain_mf = {}
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize material cluster strain range indexes
         i_init = 0
         i_end = i_init + len(comp_order)
@@ -254,80 +351,89 @@ class MaterialState:
         for mat_phase in self._material_phases:
             # Loop over material phase clusters
             for cluster in self._phase_clusters[mat_phase]:
-                # Get material cluster last converged infinitesimal strain tensor
-                # (infinitesimal strains) or deformation gradient tensor (finite strains)
+                # Get material cluster last converged infinitesimal strain
+                # tensor (infinitesimal strains) or deformation gradient tensor
+                # (finite strains)
                 if self._strain_formulation == 'infinitesimal':
-                    strain_old_mf = self._clusters_state_old[str(cluster)]['strain_mf']
+                    strain_old_mf = \
+                        self._clusters_state_old[str(cluster)]['strain_mf']
                 else:
-                    def_gradient_old_mf = self._clusters_def_gradient_old_mf[str(cluster)]
-                # Get material cluster infinitesimal strain tensor (infinitesimal strains)
-                # or deformation gradient tensor (finite strains) from global vector
-                # of clusters strains
+                    def_gradient_old_mf = \
+                        self._clusters_def_gradient_old_mf[str(cluster)]
+                # Get material cluster infinitesimal strain tensor
+                # (infinitesimal strains) or deformation gradient tensor
+                # (finite strains) from global vector of clusters strains
                 strain_mf = global_strain_mf[i_init:i_end]
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Compute material cluster incremental infinitesimal strain tensor
-                # (infinitesimal strains) or deformation gradient tensor (finite strains)
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Compute material cluster incremental infinitesimal strain
+                # tensor (infinitesimal strains) or deformation gradient tensor
+                # (finite strains)
                 if self._strain_formulation == 'infinitesimal':
                     inc_strain_mf = strain_mf - strain_old_mf
                 else:
                     # Build last converged deformation gradient tensor
-                    def_gradient_old = mop.get_tensor_from_mf(def_gradient_old_mf,
-                                                              self._n_dim, comp_order)
+                    def_gradient_old = mop.get_tensor_from_mf(
+                        def_gradient_old_mf, self._n_dim, comp_order)
                     # Build deformation gradient tensor
-                    def_gradient = mop.get_tensor_from_mf(strain_mf, self._n_dim,
-                                                          comp_order)
-                    # Compute material cluster incremental deformation gradient tensor
-                    inc_def_gradient = np.matmul(def_gradient,
-                                                 np.linalg.inv(def_gradient_old))
-                    # Build material cluster incremental deformation gradient tensor
-                    # (matricial form)
-                    inc_strain_mf = mop.get_tensor_mf(inc_def_gradient, self._n_dim,
-                                                      comp_order)
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    def_gradient = mop.get_tensor_from_mf(
+                        strain_mf, self._n_dim, comp_order)
+                    # Compute material cluster incremental deformation gradient
+                    # tensor
+                    inc_def_gradient = np.matmul(
+                        def_gradient, np.linalg.inv(def_gradient_old))
+                    # Build material cluster incremental deformation gradient
+                    # tensor (matricial form)
+                    inc_strain_mf = mop.get_tensor_mf(inc_def_gradient,
+                                                      self._n_dim, comp_order)
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Store material cluster incremental strain (matricial form)
-                clusters_inc_strain_mf[str(cluster)] = copy.deepcopy(inc_strain_mf)
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                clusters_inc_strain_mf[str(cluster)] = \
+                    copy.deepcopy(inc_strain_mf)
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Update material cluster strain range indexes
                 i_init += len(comp_order)
                 i_end = i_init + len(comp_order)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return clusters_inc_strain_mf
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     def update_clusters_state(self, clusters_inc_strain_mf):
-        '''Update clusters state variables and associated consistent tangent modulus.
+        """Update clusters state variables and consistent tangent modulus.
 
         Parameters
         ----------
         clusters_inc_strain_mf : dict
-            Incremental strain (item, ndarray) associated to each material cluster
-            (key, str), stored in matricial form.
+            Incremental strain (item, numpy.ndarray) associated to each
+            material cluster (key, str), stored in matricial form.
 
         Returns
         -------
         su_fail_state : dict
             State update failure state.
-        '''
+        """
         # Initialize state update failure state
-        su_fail_state = {'is_su_fail': False, 'mat_phase': None, 'cluster': None}
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        su_fail_state = {'is_su_fail': False, 'mat_phase': None,
+                         'cluster': None}
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize clusters deformation gradient
         if self._strain_formulation == 'finite':
             self._clusters_def_gradient_mf = {}
-        # Initialize clusters state variables and material consistent tangent modulus
+        # Initialize clusters state variables and material consistent tangent
+        # modulus
         self._clusters_state = {}
         self._clusters_tangent_mf = {}
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over material phases
         for mat_phase in self._material_phases:
             # Get material phase constitutive model
             constitutive_model = self._material_phases_models[mat_phase]
             # Get material constitutive model source
             source = constitutive_model.get_source()
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Loop over material phase clusters
             for cluster in self._phase_clusters[mat_phase]:
-                # Get material cluster incremental strain tensor (matricial form)
+                # Get material cluster incremental strain tensor (matricial
+                # form)
                 inc_strain_mf = clusters_inc_strain_mf[str(cluster)]
                 if self._strain_formulation == 'infinitesimal':
                     # Infinitesimal strain tensor (symmetric)
@@ -335,70 +441,85 @@ class MaterialState:
                 else:
                     # Deformation gradient tensor (nonsymmetric)
                     comp_order = self._comp_order_nsym
-                inc_strain = mop.get_tensor_from_mf(inc_strain_mf, self._n_dim, comp_order)
+                inc_strain = mop.get_tensor_from_mf(inc_strain_mf, self._n_dim,
+                                                    comp_order)
                 # Get material cluster last converged state variables
                 state_variables_old = self._clusters_state_old[str(cluster)]
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Get material cluster last converged deformation gradient tensor
-                def_gradient_old_mf = self._clusters_def_gradient_old_mf[str(cluster)]
-                def_gradient_old = mop.get_tensor_from_mf(def_gradient_old_mf, self._n_dim,
-                                                          self._comp_order_nsym)
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Get material cluster last converged deformation gradient
+                # tensor
+                def_gradient_old_mf = \
+                    self._clusters_def_gradient_old_mf[str(cluster)]
+                def_gradient_old = mop.get_tensor_from_mf(
+                    def_gradient_old_mf, self._n_dim, self._comp_order_nsym)
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Perform state update through the suitable material interface
                 if source == 'crate':
                     state_variables, consistent_tangent_mf = \
-                        self._material_su_interface(self._strain_formulation,
-                                                    self._problem_type, constitutive_model,
-                                                    copy.deepcopy(def_gradient_old),
-                                                    copy.deepcopy(inc_strain),
-                                                    copy.deepcopy(state_variables_old))
+                        self._material_su_interface(
+                            self._strain_formulation, self._problem_type,
+                            constitutive_model,
+                            copy.deepcopy(def_gradient_old),
+                            copy.deepcopy(inc_strain),
+                            copy.deepcopy(state_variables_old))
                 else:
                     state_variables, consistent_tangent_mf = \
-                        constitutive_model.state_update(copy.deepcopy(inc_strain),
-                                                        copy.deepcopy(state_variables_old),
-                                                        copy.deepcopy(def_gradient_old))
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                        constitutive_model.state_update(
+                            copy.deepcopy(inc_strain),
+                            copy.deepcopy(state_variables_old),
+                            copy.deepcopy(def_gradient_old))
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Check state update failure status
                 try:
                     if state_variables['is_su_fail']:
                         # Update state update failure status
-                        su_fail_state = \
-                            {'is_su_fail': True, 'mat_phase': mat_phase, 'cluster': cluster}
+                        su_fail_state = {'is_su_fail': True,
+                                         'mat_phase': mat_phase,
+                                         'cluster': cluster}
                         # Return
                         return su_fail_state
                 except KeyError:
-                    raise RuntimeError('Material constitutive model state variables must '
-                                       'include the state update failure flag '
-                                       '(\'is_su_fail\': bool)')
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    raise RuntimeError('Material constitutive model state '
+                                       'variables must include the state '
+                                       'update failure flag '
+                                       '(\'is_su_fail\': bool).')
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Update cluster deformation gradient
                 if self._strain_formulation == 'finite':
                     self._clusters_def_gradient_mf[str(cluster)] = \
-                        mop.get_tensor_mf(np.matmul(inc_strain, def_gradient_old),
+                        mop.get_tensor_mf(np.matmul(inc_strain,
+                                                    def_gradient_old),
                                           self._n_dim, self._comp_order_nsym)
-                # Update cluster state variables and material consistent tangent modulus
+                # Update cluster state variables and material consistent
+                # tangent modulus
                 self._clusters_state[str(cluster)] = state_variables
                 self._clusters_tangent_mf[str(cluster)] = consistent_tangent_mf
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return su_fail_state
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     def update_state_homogenization(self):
-        '''Update homogenized strain and stress tensors.
+        """Update homogenized strain and stress tensors.
 
-        Infinitesimal strains: Infinitesimal strain tensor / Cauchy stress tensor
-        Finite strains: Deformation gradient / First Piola-Kirchhoff stress tensor
-        '''
+        Infinitesimal strains:
+
+            Infinitesimal strain tensor / Cauchy stress tensor
+
+        Finite strains:
+
+            Deformation gradient / First Piola-Kirchhoff stress tensor
+        """
         # Set strain components according to problem strain formulation
         if self._strain_formulation == 'infinitesimal':
             comp_order = self._comp_order_sym
         else:
             comp_order = self._comp_order_nsym
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Initialize incremental homogenized strain and stress tensors (matricial form)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Initialize incremental homogenized strain and stress tensors
+        # (matricial form)
         hom_strain_mf = np.zeros(len(comp_order))
         hom_stress_mf = np.zeros(len(comp_order))
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over material phases
         for mat_phase in self._material_phases:
             # Loop over material phase clusters
@@ -410,293 +531,319 @@ class MaterialState:
                     strain_mf = self._clusters_def_gradient_mf[str(cluster)]
                 # Get material cluster stress tensor (matricial form)
                 stress_mf = self._clusters_state[str(cluster)]['stress_mf']
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Add material cluster contribution to homogenized strain and stress tensors
-                # (matricial form)
-                hom_strain_mf = \
-                    np.add(hom_strain_mf, self._clusters_vf[str(cluster)]*strain_mf)
-                hom_stress_mf = \
-                    np.add(hom_stress_mf, self._clusters_vf[str(cluster)]*stress_mf)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Add material cluster contribution to homogenized strain and
+                # stress tensors (matricial form)
+                hom_strain_mf = np.add(
+                    hom_strain_mf, self._clusters_vf[str(cluster)]*strain_mf)
+                hom_stress_mf = np.add(
+                    hom_stress_mf, self._clusters_vf[str(cluster)]*stress_mf)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Update homogenized strain and stress tensors
         self._hom_strain_mf = copy.deepcopy(hom_strain_mf)
         self._hom_stress_mf = copy.deepcopy(hom_stress_mf)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         if self._problem_type == 1:
             # Set out-of-plane stress component (2D plane strain problem)
             if self._problem_type == 1:
                 comp_name = 'stress_33'
             else:
                 raise RuntimeError('Unavailable plane problem type.')
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Initialize homogenized out-of-plane component
             oop_hom_comp = 0.0
             # Loop over material phases
             for mat_phase in self._material_phases:
                 # Loop over material phase clusters
                 for cluster in self._phase_clusters[mat_phase]:
-                    # Add material cluster contribution to the homogenized out-of-plane
-                    # component component
-                    oop_hom_comp = oop_hom_comp + self._clusters_vf[str(cluster)]*\
-                        self._clusters_state[str(cluster)][comp_name]
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    # Add material cluster contribution to the homogenized
+                    # out-of-plane component component
+                    oop_hom_comp = oop_hom_comp \
+                        + self._clusters_vf[str(cluster)] \
+                        *self._clusters_state[str(cluster)][comp_name]
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Update out-of-plane stress or strain component
             if self._strain_formulation == 'infinitesimal':
                 self._hom_strain_33 = 0.0
             else:
                 self._hom_strain_33 = 1.0
             self._hom_stress_33 = oop_hom_comp
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     def update_converged_state(self):
-        '''Update last converged material state variables.'''
-        self._clusters_def_gradient_old_mf = copy.deepcopy(self._clusters_def_gradient_mf)
+        """Update last converged material state variables."""
+        self._clusters_def_gradient_old_mf = \
+            copy.deepcopy(self._clusters_def_gradient_mf)
         self._clusters_state_old = copy.deepcopy(self._clusters_state)
         self._hom_strain_old_mf = copy.deepcopy(self._hom_strain_mf)
         self._hom_stress_old_mf = copy.deepcopy(self._hom_stress_mf)
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     def set_rewind_state_updated_clustering(self, phase_clusters, clusters_vf,
-                                            clusters_state, clusters_def_gradient_mf):
-        '''Set rewind state clustering-related variables according to updated clustering.
+                                            clusters_state,
+                                            clusters_def_gradient_mf):
+        """Set rewind state variables according to updated clustering.
 
         Parameters
         ----------
         phase_clusters : dict
-            Clusters labels (item, list of int) associated to each material phase
-            (key, str).
+            Clusters labels (item, list[int]) associated to each material
+            phase (key, str).
         clusters_vf : dict
-            Volume fraction (item, float) associated to each material cluster (key, str).
+            Volume fraction (item, float) associated to each material cluster
+            (key, str).
         clusters_state : dict
-            Material constitutive model state variables (item, dict) associated to each
-            material cluster (key, str).
+            Material constitutive model state variables (item, dict) associated
+            to each material cluster (key, str).
         clusters_def_gradient_mf : dict
-            Deformation gradient (item, 1darray) associated to each material cluster
-            (key, str), stored in matricial form.
-        '''
+            Deformation gradient (item, numpy.darray (1d)) associated to each
+            material cluster (key, str), stored in matricial form.
+        """
         self._phase_clusters = copy.deepcopy(phase_clusters)
         self._clusters_vf = copy.deepcopy(clusters_vf)
         self._clusters_state_old = copy.deepcopy(clusters_state)
-        self._clusters_def_gradient_old_mf = copy.deepcopy(clusters_def_gradient_mf)
-    # --------------------------------------------------------------------------------------
+        self._clusters_def_gradient_old_mf = \
+            copy.deepcopy(clusters_def_gradient_mf)
+    # -------------------------------------------------------------------------
     def get_hom_strain_mf(self):
-        '''Get homogenized strain tensor (matricial form).
+        """Get homogenized strain tensor (matricial form).
 
         Returns
         -------
-        hom_strain_mf : 1darray
+        hom_strain_mf : numpy.ndarray (1d)
             Homogenized strain tensor stored in matricial form.
-        '''
+        """
         return copy.deepcopy(self._hom_strain_mf)
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     def get_hom_stress_mf(self):
-        '''Get homogenized stress tensor (matricial form).
+        """Get homogenized stress tensor (matricial form).
 
         Returns
         -------
-        hom_stress_mf : 1darray
+        hom_stress_mf : numpy.ndarray (1d)
             Homogenized stress tensor stored in matricial form.
-        '''
+        """
         return copy.deepcopy(self._hom_stress_mf)
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     def get_oop_hom_comp(self):
-        '''Get homogenized strain or stress tensor out-of-plane component.
+        """Get homogenized strain or stress tensor out-of-plane component.
 
         Returns
         -------
         oop_hom_comp : float
             Homogenized strain or stress tensor out-of-plane component.
-        '''
+        """
         if self._problem_type == 1:
             oop_hom_comp = copy.deepcopy(self._hom_stress_33)
         elif self._problem_type == 2:
             oop_hom_comp = copy.deepcopy(self._hom_strain_33)
         else:
             oop_hom_comp = None
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return oop_hom_comp
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     def get_inc_hom_strain_mf(self):
-        '''Get incremental homogenized strain tensor (matricial form).
+        """Get incremental homogenized strain tensor (matricial form).
 
         Returns
         -------
-        inc_hom_strain_mf : 1darray
-            Incremental homogenized strain tensor stored in matricial form: infinitesimal
-            strain tensor (infinitesimal strains) or deformation gradient (finite strains).
-        '''
+        inc_hom_strain_mf : numpy.ndarray (1d)
+            Incremental homogenized strain tensor stored in matricial form:
+            infinitesimal strain tensor (infinitesimal strains) or deformation
+            gradient (finite strains).
+        """
         # Compute incremental homogenized strain tensor
         if self._strain_formulation == 'infinitesimal':
             # Additive decomposition of infinitesimal strain tensor
             inc_hom_strain_mf = self._hom_strain_mf - self._hom_strain_old_mf
         else:
             # Build homogenized deformation gradient
-            hom_strain = mop.get_tensor_from_mf(self._hom_strain_mf, self._n_dim,
+            hom_strain = mop.get_tensor_from_mf(self._hom_strain_mf,
+                                                self._n_dim,
                                                 self._comp_order_nsym)
-            hom_strain_old = mop.get_tensor_from_mf(self._hom_strain_old_mf, self._n_dim,
+            hom_strain_old = mop.get_tensor_from_mf(self._hom_strain_old_mf,
+                                                    self._n_dim,
                                                     self._comp_order_nsym)
             # Multiplicative decomposition of deformation gradient
-            inc_hom_strain = np.matmul(hom_strain, np.linalg.inv(hom_strain_old))
+            inc_hom_strain = np.matmul(hom_strain,
+                                       np.linalg.inv(hom_strain_old))
             # Get deformation gradient (matricial form)
             inc_hom_strain_mf = mop.get_tensor_mf(inc_hom_strain, self._n_dim,
                                                   self._comp_order_nsym)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return inc_hom_strain_mf
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     def get_inc_hom_stress_mf(self):
-        '''Get incremental homogenized stress tensor (matricial form).
+        """Get incremental homogenized stress tensor (matricial form).
 
         Returns
         -------
-        inc_hom_stress_mf : 1darray
-            Incremental homogenized stress tensor stored in matricial form: Cauchy stress
-            tensor (infinitesimal strains) or first Piola-Kirchhoff stress tensor
-            (finite strains).
-        '''
+        inc_hom_stress_mf : numpy.ndarray (1d)
+            Incremental homogenized stress tensor stored in matricial form:
+            Cauchy stress tensor (infinitesimal strains) or first
+            Piola-Kirchhoff stress tensor (finite strains).
+        """
         # Compute incremental homogenized stress tensor
         inc_hom_stress_mf = self._hom_stress_mf - self._hom_stress_old_mf
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return inc_hom_stress_mf
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     def get_hom_strain_old_mf(self):
-        '''Get last converged homogenized strain tensor (matricial form).
+        """Get last converged homogenized strain tensor (matricial form).
 
         Returns
         -------
-        hom_strain_old_mf : 1darray
-            Last converged homogenized strain tensor stored in matricial form: infinitesimal
-            strain tensor (infinitesimal strains) or deformation gradient (finite strains).
-        '''
+        hom_strain_old_mf : numpy.ndarray (1d)
+            Last converged homogenized strain tensor stored in matricial form:
+            infinitesimal strain tensor (infinitesimal strains) or deformation
+            gradient (finite strains).
+        """
         return copy.deepcopy(self._hom_strain_old_mf)
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     def get_hom_stress_old_mf(self):
-        '''Get last converged homogenized stress tensor (matricial form).
+        """Get last converged homogenized stress tensor (matricial form).
 
         Returns
         -------
-        hom_stress_old_mf : 1darray
-            Last converged homogenized stress tensor stored in matricial form: Cauchy stress
-            tensor (infinitesimal strains) or first Piola-Kirchhoff stress tensor (finite
-            strains).
-        '''
+        hom_stress_old_mf : numpy.ndarray (1d)
+            Last converged homogenized stress tensor stored in matricial form:
+            Cauchy stress tensor (infinitesimal strains) or first
+            Piola-Kirchhoff stress tensor (finite strains).
+        """
         return copy.deepcopy(self._hom_stress_old_mf)
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     def get_material_phases(self):
-        '''Get RVE material phases.
+        """Get RVE material phases.
 
         Returns
         -------
-        material_phases : list
+        material_phases : list[str]
             RVE material phases labels (str).
-        '''
+        """
         return copy.deepcopy(self._material_phases)
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     def get_material_phases_properties(self):
-        '''Get RVE material phases constitutive properties.
+        """Get RVE material phases constitutive properties.
 
         Returns
         -------
         material_phases_properties : dict
-            Constitutive model material properties (item, dict) associated to each material
-            phase (key, str).
-        '''
+            Constitutive model material properties (item, dict) associated to
+            each material phase (key, str).
+        """
         return copy.deepcopy(self._material_phases_properties)
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     def get_material_phases_models(self):
-        '''Get RVE material phases constitutive models.
+        """Get RVE material phases constitutive models.
 
         Returns
         -------
         _material_phases_models : dict
-            Material constitutive model (item, ConstitutiveModel) associated to each
-            material phase (key, str).
-        '''
+            Material constitutive model (item, ConstitutiveModel) associated to
+            each material phase (key, str).
+        """
         return copy.deepcopy(self._material_phases_models)
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     def get_material_phases_vf(self):
-        '''Get RVE material phases volume fraction.
+        """Get RVE material phases volume fraction.
 
         Returns
         -------
         material_phases_vf : dict
-            Volume fraction (item, float) associated to each material phase (key, str).
-        '''
+            Volume fraction (item, float) associated to each material phase
+            (key, str).
+        """
         return copy.deepcopy(self._material_phases_vf)
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     def get_clusters_def_gradient_mf(self):
-        '''Get deformation gradient (matricial form) associated to each material cluster.
+        """Get deformation gradient of each material cluster.
 
         Returns
         -------
         clusters_def_gradient_mf : dict
-            Deformation gradient (item, 1darray) associated to each material cluster
-            (key, str), stored in matricial form.
-        '''
+            Deformation gradient (item, numpy.ndarray (1d)) associated to each
+            material cluster (key, str), stored in matricial form.
+        """
         return copy.deepcopy(self._clusters_def_gradient_mf)
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     def get_clusters_def_gradient_old_mf(self):
-        '''Get last converged deformation gradient (matricial form) associated to each
-        material cluster.
+        """Get last converged deformation gradient of each material cluster.
 
         Returns
         -------
         clusters_def_gradient_old_mf : dict
-            Last converged deformation gradient (item, 1darray) associated to each material
-            cluster (key, str), stored in matricial form.
-        '''
+            Last converged deformation gradient (item, numpy.ndarray (1d))
+            associated to each material cluster (key, str), stored in matricial
+            form.
+        """
         return copy.deepcopy(self._clusters_def_gradient_old_mf)
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     def get_clusters_state(self):
-        '''Get material state variables associated to each material cluster.
+        """Get material state variables of each material cluster.
 
         Returns
         -------
         clusters_state : dict
-            Material constitutive model state variables (item, dict) associated to each
-            material cluster (key, str).
-        '''
+            Material constitutive model state variables (item, dict) associated
+            to each material cluster (key, str).
+        """
         return copy.deepcopy(self._clusters_state)
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     def get_clusters_state_old(self):
-        '''Get last converged material state variables associated to each material cluster.
+        """Get last converged material state variables of each mat. cluster.
 
         Returns
         -------
         clusters_state_old : dict
-            Last converged material constitutive model state variables (item, dict)
-            associated to each material cluster (key, str).
-        '''
+            Last converged material constitutive model state variables
+            (item, dict) associated to each material cluster (key, str).
+        """
         return copy.deepcopy(self._clusters_state_old)
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     def get_clusters_tangent_mf(self):
-        '''Get material consistent tangent modulus associated to each material cluster.
+        """Get material consistent tangent modulus of each material cluster.
 
         Returns
         -------
         clusters_tangent_mf : dict
-            Material consistent tangent modulus (item, ndarray) associated to each material
-            cluster (key, str), stored in matricial form.
-        '''
+            Material consistent tangent modulus (item, numpy.ndarray)
+            associated to each material cluster (key, str), stored in matricial
+            form.
+        """
         return copy.deepcopy(self._clusters_tangent_mf)
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     @staticmethod
-    def _material_su_interface(strain_formulation, problem_type, constitutive_model,
-                               def_gradient_old, inc_strain, state_variables_old):
-        '''Material constitutive state update interface.
+    def _material_su_interface(strain_formulation, problem_type,
+                               constitutive_model, def_gradient_old,
+                               inc_strain, state_variables_old):
+        """Material constitutive state update interface.
+
+        This material constitutive state update interface contemplates three
+        different families of constitutive models: (1) infinitesimal strains
+        constitutive models, (2) finite strains constitutive models, and
+        (3) isotropic hyperelastic-based finite strain constitutive models
+        whose finite strain extension (from infinitesimal counterpart) is
+        purely kinematical. This interface is schematically illustrated in
+        Figure 5.3 of Ferreira (2022) [#]_.
+
+        .. [#] Ferreira, B.P. (2022). *Towards Data-driven Multi-scale
+               Optimization of Thermoplastic Blends: Microstructural
+               Generation, Constitutive Development and Clustering-based
+               Reduced-Order Modeling.* PhD Thesis, University of Porto.
 
         Parameters
         ----------
-        strain_formulation: str, {'infinitesimal', 'finite'}
+        strain_formulation: {'infinitesimal', 'finite'}
             Problem strain formulation.
         problem_type : int
-            Problem type: 2D plane strain (1), 2D plane stress (2), 2D axisymmetric (3) and
-            3D (4).
+            Problem type: 2D plane strain (1), 2D plane stress (2),
+            2D axisymmetric (3) and 3D (4).
         constitutive_model : ConstitutiveModel
             Material constitutive model.
-        def_gradient_old : 2darray
+        def_gradient_old : numpy.ndarray (2d)
             Last converged deformation gradient.
-        inc_strain : 2darray,
+        inc_strain : numpy.ndarray (2d)
             Incremental strain second-order tensor.
         state_variables_old : dict
             Last converged material constitutive model state variables.
@@ -706,15 +853,15 @@ class MaterialState:
         state_variables : dict
             Material constitutive model state variables.
         consistent_tangent_mf : ndarray
-            Material constitutive model material consistent tangent modulus in matricial
-            form.
-        '''
+            Material constitutive model material consistent tangent modulus in
+            matricial form.
+        """
         # Get problem type parameters
         n_dim, comp_order_sym, comp_order_nsym = \
             mop.get_problem_type_parameters(problem_type)
         # Get material phase constitutive model strain type
         strain_type = constitutive_model.get_strain_type()
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute incremental spatial logarithmic strain tensor
         if strain_formulation == 'finite' and strain_type == 'finite-kinext':
             # Save incremental deformation gradient
@@ -723,28 +870,29 @@ class MaterialState:
             def_gradient = np.matmul(inc_def_gradient, def_gradient_old)
             # Get last converged elastic spatial logarithmic strain tensor
             e_log_strain_old_mf = state_variables_old['e_strain_mf']
-            e_log_strain_old = mop.get_tensor_from_mf(e_log_strain_old_mf, n_dim,
-                                                      comp_order_sym)
+            e_log_strain_old = mop.get_tensor_from_mf(e_log_strain_old_mf,
+                                                      n_dim, comp_order_sym)
             # Compute incremental spatial logarithmic strain tensor
-            inc_strain = MaterialState.compute_inc_log_strain(e_log_strain_old,
-                inc_def_gradient=inc_def_gradient)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            inc_strain = MaterialState.compute_inc_log_strain(
+                e_log_strain_old, inc_def_gradient=inc_def_gradient)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Perform state update and compute material consistent tangent modulus
         state_variables, consistent_tangent_mf = \
             constitutive_model.state_update(inc_strain, state_variables_old)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute Cauchy stress tensor and material consistent tangent modulus
         if strain_formulation == 'finite' and strain_type == 'finite-kinext':
             # Get Kirchhoff stress tensor (matricial form)
             kirchhoff_stress_mf = state_variables['stress_mf']
             # Build Kirchhoff stress tensor
-            kirchhoff_stress = mop.get_tensor_from_mf(kirchhoff_stress_mf, n_dim,
-                                                      comp_order_sym)
+            kirchhoff_stress = mop.get_tensor_from_mf(kirchhoff_stress_mf,
+                                                      n_dim, comp_order_sym)
             # Compute first Piola-Kirchhoff stress tensor
-            first_piola_stress = first_piola_from_kirchhoff(def_gradient, kirchhoff_stress)
+            first_piola_stress = first_piola_from_kirchhoff(def_gradient,
+                                                            kirchhoff_stress)
             # Get first Piola-Kirchhoff stress tensor (matricial form)
-            first_piola_stress_mf = \
-                mop.get_tensor_mf(first_piola_stress, n_dim, comp_order_nsym)
+            first_piola_stress_mf = mop.get_tensor_mf(first_piola_stress,
+                                                      n_dim, comp_order_nsym)
             # Get first Piola-Kirchhoff stress tensor out-of-plane component
             if problem_type == 1:
                 first_piola_stress_33 = state_variables['stress_33']
@@ -752,153 +900,181 @@ class MaterialState:
             state_variables['stress_mf'] = first_piola_stress_mf
             if problem_type == 1:
                 state_variables['stress_33'] = first_piola_stress_33
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Get last converged elastic spatial logarithmic strain tensor
             e_log_strain_old_mf = state_variables_old['e_strain_mf']
-            e_log_strain_old = mop.get_tensor_from_mf(e_log_strain_old_mf, n_dim,
-                                                      comp_order_sym)
+            e_log_strain_old = mop.get_tensor_from_mf(e_log_strain_old_mf,
+                                                      n_dim, comp_order_sym)
             # Compute Cauchy stress tensor (matricial form)
-            cauchy_stress = cauchy_from_kirchhoff(def_gradient, kirchhoff_stress)
+            cauchy_stress = cauchy_from_kirchhoff(def_gradient,
+                                                  kirchhoff_stress)
             # Get infinitesimal strains consistent tangent modulus
-            inf_consistent_tangent = mop.get_tensor_from_mf(consistent_tangent_mf,
-                                                            n_dim, comp_order_sym)
+            inf_consistent_tangent = mop.get_tensor_from_mf(
+                consistent_tangent_mf, n_dim, comp_order_sym)
             # Compute spatial consistent tangent modulus
             spatial_consistent_tangent = \
-                MaterialState.compute_spatial_tangent_modulus(e_log_strain_old,
-                    def_gradient_old, inc_def_gradient, cauchy_stress,
-                        inf_consistent_tangent)
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                MaterialState.compute_spatial_tangent_modulus(
+                    e_log_strain_old, def_gradient_old, inc_def_gradient,
+                    cauchy_stress, inf_consistent_tangent)
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Compute material consistent tangent modulus (matricial form)
-            material_consistent_tangent = material_from_spatial_tangent_modulus(
-                spatial_consistent_tangent, def_gradient)
-            consistent_tangent_mf = mop.get_tensor_mf(material_consistent_tangent, n_dim,
-                                                      comp_order_nsym)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            material_consistent_tangent = \
+                material_from_spatial_tangent_modulus(
+                    spatial_consistent_tangent, def_gradient)
+            consistent_tangent_mf = mop.get_tensor_mf(
+                material_consistent_tangent, n_dim, comp_order_nsym)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return state_variables, consistent_tangent_mf
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     @staticmethod
     def compute_inc_log_strain(e_log_strain_old, inc_def_gradient):
-        '''Compute incremental spatial logarithmic strain.
+        """Compute incremental spatial logarithmic strain.
+
+        The definition of the elastic trial spatial logarithmic strain tensor
+        can be found in Appendix F.4 of Ferreira (2022) [#]_ (see Equations
+        (F.14) and (F.15)).
+
+        .. [#] Ferreira, B.P. (2022). *Towards Data-driven Multi-scale
+               Optimization of Thermoplastic Blends: Microstructural
+               Generation, Constitutive Development and Clustering-based
+               Reduced-Order Modeling.* PhD Thesis, University of Porto.
 
         Parameters
         ----------
-        e_log_strain_old : 2darray
+        e_log_strain_old : numpy.ndarray (2d)
             Last converged elastic spatial logarithmic strain tensor.
-        inc_def_gradient : 2darray
+        inc_def_gradient : numpy.ndarray (2d)
             Incremental deformation gradient.
 
         Returns
         -------
-        inc_log_strain : 2darray
+        inc_log_strain : numpy.ndarray (2d)
             Incremental spatial logarithmic strain.
-        '''
+        """
         # Compute last converged elastic left Cauchy-Green strain tensor
         e_cauchy_green_old = top.isotropic_tensor('exp', 2.0*e_log_strain_old)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute elastic trial left Cauchy-Green strain tensor
-        e_trial_cauchy_green = np.matmul(inc_def_gradient, np.matmul(e_cauchy_green_old,
-            np.transpose(inc_def_gradient)))
+        e_trial_cauchy_green = np.matmul(
+            inc_def_gradient, np.matmul(e_cauchy_green_old,
+                                        np.transpose(inc_def_gradient)))
         # Compute elastic trial spatial logarithmic strain
-        e_trial_log_strain = 0.5*top.isotropic_tensor('log', e_trial_cauchy_green)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        e_trial_log_strain = 0.5*top.isotropic_tensor('log',
+                                                      e_trial_cauchy_green)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute incremental spatial logarithmic strain
         inc_log_strain = e_trial_log_strain - e_log_strain_old
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return inc_log_strain
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     @staticmethod
     def compute_spatial_tangent_modulus(e_log_strain_old, def_gradient_old,
                                         inc_def_gradient, cauchy_stress,
                                         inf_consistent_tangent):
-        '''Compute finite strains spatial consistent tangent modulus.
+        """Compute finite strain spatial consistent tangent modulus.
 
-        Isotropic hyperelastic-based finite strain elastoplastic constitutive models whose
-        finite strain formalism is purely kinematical.
+        The definition of the finite strain spatial consistent tangent
+        modulus of isotropic hyperelastic-based finite strain elastoplastic
+        constitutive models whose finite strain formalism is purely kinematical
+        can be found in Appendix F.4 of Ferreira (2022) [#]_ (see Equation
+        (F.18)).
+
+        .. [#] Ferreira, B.P. (2022). *Towards Data-driven Multi-scale
+               Optimization of Thermoplastic Blends: Microstructural
+               Generation, Constitutive Development and Clustering-based
+               Reduced-Order Modeling.* PhD Thesis, University of Porto.
 
         Parameters
         ----------
-        e_log_strain_old : 2darray
+        e_log_strain_old : numpy.ndarray (2d)
             Last converged elastic spatial logarithmic strain tensor.
-        def_gradient_old : 2darray
+        def_gradient_old : numpy.ndarray (2d)
             Last converged deformation gradient.
-        inc_def_gradient : 2darray
+        inc_def_gradient : numpy.ndarray (2d)
             Incremental deformation gradient.
-        cauchy_stress : 2darray
+        cauchy_stress : numpy.ndarray (2d)
             Cauchy stress tensor.
-        inf_consistent_tangent : 4darray
+        inf_consistent_tangent : numpy.ndarray (4d)
             Infinitesimal consistent tangent modulus.
 
         Returns
         -------
-        spatial_consistent_tangent : 4darray
+        spatial_consistent_tangent : numpy.ndarray (4d)
             Spatial consistent tangent modulus.
-        '''
+        """
         # Get problem number of spatial dimensions
         n_dim = inc_def_gradient.shape[0]
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute deformation gradient
         def_gradient = np.matmul(inc_def_gradient, def_gradient_old)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute last converged elastic left Cauchy-Green strain tensor
         e_cauchy_green_old = top.isotropic_tensor('exp', 2.0*e_log_strain_old)
         # Compute elastic trial left Cauchy-Green strain tensor
-        e_trial_cauchy_green = np.matmul(inc_def_gradient, np.matmul(e_cauchy_green_old,
-            np.transpose(inc_def_gradient)))
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        e_trial_cauchy_green = np.matmul(
+            inc_def_gradient, np.matmul(e_cauchy_green_old,
+                                        np.transpose(inc_def_gradient)))
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize Cauchy-Green-related fourth-order tensor
         fo_cauchy_green = np.zeros(4*(n_dim,))
         # Compute Cauchy-Green-related fourth-order tensor
         for i, j, k, l in it.product(range(n_dim), repeat=4):
-            fo_cauchy_green[i, j, k, l] = top.dd(i, k)*e_trial_cauchy_green[j, l] + \
-                                          top.dd(j, k)*e_trial_cauchy_green[i, l]
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Compute derivative of tensor logarithm evaluated at elastic trial left
-        # Cauchy-Green strain tensor
-        fo_log_derivative = top.derivative_isotropic_tensor('log', e_trial_cauchy_green)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            fo_cauchy_green[i, j, k, l] = \
+                top.dd(i, k)*e_trial_cauchy_green[j, l] \
+                + top.dd(j, k)*e_trial_cauchy_green[i, l]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Compute derivative of tensor logarithm evaluated at elastic trial
+        # left Cauchy-Green strain tensor
+        fo_log_derivative = \
+            top.derivative_isotropic_tensor('log', e_trial_cauchy_green)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize spatial consistent tangent modulus
         spatial_consistent_tangent = np.zeros(4*(n_dim,))
         # Compute spatial consistent tangent modulus
-        spatial_consistent_tangent = \
-            (1.0/(2.0*np.linalg.det(def_gradient)))*(top.ddot44_1(inf_consistent_tangent,
-                top.ddot44_1(fo_log_derivative, fo_cauchy_green)))
+        spatial_consistent_tangent = (1.0/(2.0*np.linalg.det(def_gradient))) \
+            *(top.ddot44_1(inf_consistent_tangent,
+                           top.ddot44_1(fo_log_derivative, fo_cauchy_green)))
         for i, j, k, l in it.product(range(n_dim), repeat=4):
-            spatial_consistent_tangent[i, j, k, l] += -1.0*cauchy_stress[i, l]*top.dd(j, k)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            spatial_consistent_tangent[i, j, k, l] += \
+                -1.0*cauchy_stress[i, l]*top.dd(j, k)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return spatial_consistent_tangent
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     def clustering_adaptivity_update(self, phase_clusters, clusters_vf,
                                      adaptive_clustering_map):
-        '''Update cluster-related variables according to clustering adaptivity step.
+        """Update cluster variables according to clustering adaptivity step.
 
         Parameters
         ----------
         phase_clusters : dict
-            Clusters labels (item, list of int) associated to each material phase
-            (key, str).
+            Clusters labels (item, list of int) associated to each material
+            phase (key, str).
         clusters_vf : dict
-            Volume fraction (item, float) associated to each material cluster (key, str).
+            Volume fraction (item, float) associated to each material cluster
+            (key, str).
         adaptive_clustering_map : dict
-            Adaptive clustering map (item, dict with list of new cluster labels (item,
-            list of int) resulting from the refinement of each target cluster (key, str))
-            for each material phase (key, str).
-        '''
+            Adaptive clustering map (item, dict with list of new cluster labels
+            (item, list[int]) resulting from the refinement of each target
+            cluster (key, str)) for each material phase (key, str).
+        """
         # Update CRVE material state clusters labels and volume fraction
         self.set_phase_clusters(phase_clusters, clusters_vf)
         # Group cluster-related dictionaries
-        cluster_dicts = [self._clusters_def_gradient_mf, self._clusters_def_gradient_old_mf,
+        cluster_dicts = [self._clusters_def_gradient_mf,
+                         self._clusters_def_gradient_old_mf,
                          self._clusters_state, self._clusters_state_old,
                          self._clusters_tangent_mf]
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over adaptive material phases
         for mat_phase in adaptive_clustering_map.keys():
             # Loop over material phase target clusters
             for target_cluster in adaptive_clustering_map[mat_phase].keys():
                 # Get list of target's child clusters
-                child_clusters = adaptive_clustering_map[mat_phase][target_cluster]
+                child_clusters = \
+                    adaptive_clustering_map[mat_phase][target_cluster]
                 # Loop over cluster-keyd dictionaries
                 for cluster_dict in cluster_dicts:
                     # Loop over child clusters and build their items
@@ -907,15 +1083,16 @@ class MaterialState:
                             copy.deepcopy(cluster_dict[target_cluster])
                     # Remove target cluster item
                     cluster_dict.pop(target_cluster)
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     def constitutive_source_conversion(self):
-        '''Convert external sources constitutive models to CRATE corresponding model.'''
+        """Convert external sources constitutive models to CRATE model."""
         # Initialize available conversions
         available_conversions = {}
         # Set available Links-CRATE conversions
-        links_conversions = {'links_elastic': 'elastic', 'links_von_mises': 'von_mises'}
+        links_conversions = {'links_elastic': 'elastic',
+                             'links_von_mises': 'von_mises'}
         available_conversions['links'] = links_conversions
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over material phases
         for mat_phase in self._material_phases:
             # Get material phase constitutive model
@@ -929,10 +1106,11 @@ class MaterialState:
                 continue
             # Get material constitutive material properties
             material_properties = constitutive_model.get_material_properties()
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Get CRATE corresponding constitutive model name
-            new_model_name = available_conversions[str(model_source)][str(model_name)]
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            new_model_name = \
+                available_conversions[str(model_source)][str(model_name)]
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Get CRATE corresponding constitutive model
             if model_source == 'links':
                 if new_model_name == 'elastic':
@@ -941,54 +1119,56 @@ class MaterialState:
                 elif new_model_name == 'von_mises':
                     # Get CRATE constitutive model
                     new_model = VonMises
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Get CRATE constitutive model required material properties
                 new_required_properties, new_constitutive_options = \
                     new_model.get_required_properties()
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Check CRATE constitutive model material properties
                 for property in new_required_properties:
                     # Check CRATE constitutive model material property
                     if property not in material_properties.keys():
-                        raise RuntimeError('Incompatible material properties to ' +
-                                           'convert constitutive model.')
+                        raise RuntimeError('Incompatible material properties '
+                                           'to convert constitutive model.')
                 # Check CRATE constitutive model constitutive options
                 for option in new_constitutive_options:
                     # Check CRATE constitutive model constitutive option
                     if option not in material_properties.keys():
-                        raise RuntimeError('Incompatible material constitutive options ' +
-                                           'to convert constitutive model.')
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                        raise RuntimeError('Incompatible material '
+                                           'constitutive options to convert '
+                                           'constitutive model.')
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Build CRATE constitutive model material properties
                 new_material_properties = copy.deepcopy(material_properties)
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Initialize CRATE constitutive model
                 new_constitutive_model = new_model(self._strain_formulation,
                                                    self._problem_type,
                                                    new_material_properties)
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Update material phases constitutive models
                 self._material_phases_models[str(mat_phase)] = \
                     new_constitutive_model
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             else:
-                raise RuntimeError('Unknown material constitutive model source.')
+                raise RuntimeError('Unknown material constitutive model '
+                                   'source.')
 #
-#                                                     Available material constitutive models
-# ==========================================================================================
+#                                        Available material constitutive models
+# =============================================================================
 def get_available_material_models(model_source='crate'):
-    '''Get available material constitutive models.
+    """Get available material constitutive models.
 
     Parameters
     ----------
-    model_source : str, {'crate', 'links'}, default='crate'
+    model_source : {'crate', 'links'}, default='crate'
         Material constitutive model source.
 
     Returns
     -------
-    available_mat_models : list
-        Available material constitutive models (list of str).
-    '''
+    available_mat_models : list[str]
+        Available material constitutive models.
+    """
     # Set the available material constitutive models from a given source
     if model_source == 'crate':
         # CRATE material constitutive models
@@ -998,6 +1178,6 @@ def get_available_material_models(model_source='crate'):
         available_mat_models = ['ELASTIC', 'VON_MISES']
     else:
         raise RuntimeError('Unknown material constitutive model source.')
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Return
     return available_mat_models
