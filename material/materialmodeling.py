@@ -111,7 +111,7 @@ class MaterialState:
 
     Methods
     -------
-    init_constitutive_model(self, mat_phase, model_keyword,
+    init_constitutive_model(self, mat_phase, model_keyword, \
                             model_source='crate')
         Initialize material phase constitutive model.
     init_clusters_state(self)
@@ -126,8 +126,8 @@ class MaterialState:
         Update homogenized strain and stress tensors.
     update_converged_state(self)
         Update last converged material state variables.
-    set_rewind_state_updated_clustering(self, phase_clusters, clusters_vf,
-                                        clusters_state,
+    set_rewind_state_updated_clustering(self, phase_clusters, clusters_vf, \
+                                        clusters_state, \
                                         clusters_def_gradient_mf):
         Set rewind state variables according to updated clustering.
     get_hom_strain_mf(self)
@@ -162,17 +162,17 @@ class MaterialState:
         Get last converged material state variables of each material cluster.
     get_clusters_tangent_mf(self):
         Get material consistent tangent modulus of each material cluster.
-    _material_su_interface(strain_formulation, problem_type,
-                           constitutive_model, def_gradient_old, inc_strain,
+    _material_su_interface(strain_formulation, problem_type, \
+                           constitutive_model, def_gradient_old, inc_strain, \
                            state_variables_old)
         Material constitutive state update interface.
     compute_inc_log_strain(e_log_strain_old, inc_def_gradient)
         Compute incremental spatial logarithmic strain.
-    compute_spatial_tangent_modulus(e_log_strain_old, def_gradient_old,
-                                    inc_def_gradient, cauchy_stress,
+    compute_spatial_tangent_modulus(e_log_strain_old, def_gradient_old, \
+                                    inc_def_gradient, cauchy_stress, \
                                     inf_consistent_tangent)
         Compute finite strain spatial consistent tangent modulus.
-    clustering_adaptivity_update(self, phase_clusters, clusters_vf,
+    clustering_adaptivity_update(self, phase_clusters, clusters_vf, \
                                  adaptive_clustering_map)
         Update cluster variables according to clustering adaptivity step.
     constitutive_source_conversion(self)
@@ -323,6 +323,39 @@ class MaterialState:
     # -------------------------------------------------------------------------
     def get_clusters_inc_strain_mf(self, global_strain_mf):
         """Get clusters incremental strain in matricial form.
+
+        *Infinitesimal strains*:
+
+        .. math::
+
+           \\Delta \\boldsymbol{\\varepsilon}_{\\mu, n + 1}^{(I)} =
+               \\boldsymbol{\\varepsilon}_{\\mu, n + 1}^{(I)} -
+               \\boldsymbol{\\varepsilon}_{\\mu, n}^{(I)} \\, ,
+               \\quad I=1,\\dots, n_{c}
+
+        where :math:`\\Delta \\boldsymbol{\\varepsilon}_{\\mu}^{(I)}` is the
+        :math:`I` th material cluster incremental infinitesimal strain tensor,
+        :math:`\\boldsymbol{\\varepsilon}_{\\mu}^{(I)}` is the
+        :math:`I` th material cluster infinitesimal strain tensor,
+        :math:`n_{c}` is the number of material clusters, :math:`n+1` denotes
+        the current increment, and :math:`n` denotes the last converged
+        increment.
+
+        *Finite strains*:
+
+        .. math::
+
+           (\\boldsymbol{F}_{\\Delta})_{\\mu, n + 1}^{(I)} =
+               \\boldsymbol{F}_{\\mu, n + 1}^{(I)}
+               ( \\boldsymbol{F}_{\\mu, n}^{(I)})^{-1} \\, ,
+               \\quad I=1,\\dots, n_{c}
+
+        where :math:`\\Delta \\boldsymbol{F}_{\\mu}^{(I)}` is the
+        :math:`I` th material cluster incremental deformation gradient
+        :math:`\\boldsymbol{F}_{\\mu}^{(I)}` is the :math:`I` th material
+        cluster deformation gradient, :math:`n_{c}` is the number of material
+        clusters, :math:`n+1` denotes the current increment, and :math:`n`
+        denotes the last converged increment.
 
         Parameters
         ----------
@@ -501,13 +534,61 @@ class MaterialState:
     def update_state_homogenization(self):
         """Update homogenized strain and stress tensors.
 
-        Infinitesimal strains:
+        *Infinitesimal strains*:
 
-            Infinitesimal strain tensor / Cauchy stress tensor
+        .. math::
 
-        Finite strains:
+           \\boldsymbol{\\varepsilon}_{n + 1} =
+               \\sum_{I=1}^{n_{c}} f^{(I)}
+               \\boldsymbol{\\varepsilon}_{\\mu, n + 1}^{(I)}
 
-            Deformation gradient / First Piola-Kirchhoff stress tensor
+        where :math:`\\boldsymbol{\\varepsilon}` is the homogenized
+        infinitesimal strain tensor, :math:`f^{(I)}` is the :math:`I` th
+        material cluster volume fraction,
+        :math:`\\boldsymbol{\\varepsilon}_{\\mu}^{(I)}` is the :math:`I` th
+        material cluster infinitesimal strain tensor, :math:`n_{c}` is the
+        number of material clusters, and :math:`n+1` denotes the current
+        increment.
+
+        .. math::
+
+           \\boldsymbol{\\sigma}_{n + 1} =
+               \\sum_{I=1}^{n_{c}} f^{(I)}
+               \\boldsymbol{\\sigma}_{\\mu, n + 1}^{(I)}
+
+        where :math:`\\boldsymbol{\\sigma}` is the homogenized Cauchy stress
+        tensor, :math:`f^{(I)}` is the :math:`I` th material cluster volume
+        fraction, :math:`\\boldsymbol{\\sigma}_{\\mu}^{(I)}` is the
+        :math:`I` th material cluster Cauchy stress tensor, :math:`n_{c}` is
+        the number of material clusters, and :math:`n+1` denotes the current
+        increment.
+
+        *Finite strains*:
+
+        .. math::
+
+           \\boldsymbol{F}_{n + 1} =
+               \\sum_{I=1}^{n_{c}} f^{(I)}
+               \\boldsymbol{F}_{\\mu, n + 1}^{(I)}
+
+        where :math:`\\boldsymbol{F}` is the homogenized deformation gradient,
+        :math:`f^{(I)}` is the :math:`I` th material cluster volume fraction,
+        :math:`\\boldsymbol{F}_{\\mu}^{(I)}` is the :math:`I` th material
+        cluster deformation gradient, :math:`n_{c}` is the number of material
+        clusters, and :math:`n+1` denotes the current increment.
+
+        .. math::
+
+           \\boldsymbol{P}_{n + 1} =
+               \\sum_{I=1}^{n_{c}} f^{(I)}
+               \\boldsymbol{P}_{\\mu, n + 1}^{(I)}
+
+        where :math:`\\boldsymbol{P}` is the homogenized first Piola-Kirchhoff
+        stress tensor, :math:`f^{(I)}` is the :math:`I` th material cluster
+        volume fraction, :math:`\\boldsymbol{P}_{\\mu}^{(I)}` is the
+        :math:`I` th material cluster first Piola-Kirchhoff stress tensor,
+        :math:`n_{c}` is the number of material clusters, and :math:`n+1`
+        denotes the current increment.
         """
         # Set strain components according to problem strain formulation
         if self._strain_formulation == 'infinitesimal':
@@ -644,6 +725,33 @@ class MaterialState:
     def get_inc_hom_strain_mf(self):
         """Get incremental homogenized strain tensor (matricial form).
 
+        *Infinitesimal strains*:
+
+        .. math::
+
+           \\Delta \\boldsymbol{\\varepsilon}_{n + 1} =
+               \\boldsymbol{\\varepsilon}_{n + 1} -
+               \\boldsymbol{\\varepsilon}_{n}
+
+        where :math:`\\Delta \\boldsymbol{\\varepsilon}` is the incremental
+        homogenized infinitesimal strain tensor,
+        :math:`\\boldsymbol{\\varepsilon}` is the homogenized infinitesimal
+        strain tensor, :math:`n+1` denotes the current increment, and
+        :math:`n` denotes the last converged increment.
+
+        *Finite strains*:
+
+        .. math::
+
+           (\\boldsymbol{F}_{\\Delta})_{n + 1} =
+               \\boldsymbol{F}_{n + 1}
+               (\\boldsymbol{F}_{n})^{-1}
+
+        where :math:`\\boldsymbol{F}_{\\Delta}` is the homogenized incremental
+        deformation gradient, :math:`\\boldsymbol{F}` is the homogenized
+        deformation gradient, :math:`n+1` denotes the current increment,
+        and :math:`n` denotes the last converged increment.
+
         Returns
         -------
         inc_hom_strain_mf : numpy.ndarray (1d)
@@ -675,6 +783,33 @@ class MaterialState:
     # -------------------------------------------------------------------------
     def get_inc_hom_stress_mf(self):
         """Get incremental homogenized stress tensor (matricial form).
+
+        *Infinitesimal strains*:
+
+        .. math::
+
+           \\Delta \\boldsymbol{\\sigma}_{n + 1} =
+               \\boldsymbol{\\sigma}_{n + 1} -
+               \\boldsymbol{\\sigma}_{n}
+
+        where :math:`\\Delta \\boldsymbol{\\sigma}` is the incremental
+        homogenized Cauchy stress tensor, :math:`\\boldsymbol{\\sigma}` is the
+        homogenized Cauchy stress tensor, :math:`n+1` denotes the current
+        increment, and :math:`n` denotes the last converged increment.
+
+        *Finite strains*:
+
+        .. math::
+
+           \\Delta \\boldsymbol{P}_{n + 1} =
+               \\boldsymbol{P}_{n + 1} -
+               \\boldsymbol{P}_{n}
+
+        where :math:`\\Delta \\boldsymbol{P}` is the incremental homogenized
+        first Piola-Kirchhoff stress tensor, :math:`\\boldsymbol{P}` is the
+        homogenized first Piola-Kirchhoff stress tensor, :math:`n+1` denotes
+        the current increment, and :math:`n` denotes the last converged
+        increment.
 
         Returns
         -------
@@ -824,10 +959,13 @@ class MaterialState:
         constitutive models, (2) finite strains constitutive models, and
         (3) isotropic hyperelastic-based finite strain constitutive models
         whose finite strain extension (from infinitesimal counterpart) is
-        purely kinematical. This interface is schematically illustrated in
-        Figure 5.3 of Ferreira (2022) [#]_.
+        purely kinematical.
 
-        .. [#] Ferreira, B.P. (2022). *Towards Data-driven Multi-scale
+        This interface is schematically illustrated in Figure 5.3 of
+        Ferreira (2022) [1]_, and the last family of constitutive models is
+        described on Appendix F.
+
+        .. [1] Ferreira, B.P. (2022). *Towards Data-driven Multi-scale
                Optimization of Thermoplastic Blends: Microstructural
                Generation, Constitutive Development and Clustering-based
                Reduced-Order Modeling.* PhD Thesis, University of Porto.
@@ -931,6 +1069,43 @@ class MaterialState:
     def compute_inc_log_strain(e_log_strain_old, inc_def_gradient):
         """Compute incremental spatial logarithmic strain.
 
+        *Incremental spatial logarithmic strain*:
+
+        .. math::
+
+           \\Delta \\boldsymbol{\\varepsilon}_{n + 1} =
+               \\boldsymbol{\\varepsilon}_{n + 1}^{e, \\, \\text{trial}} -
+               \\boldsymbol{\\varepsilon}_{n}^{e}
+
+        where :math:`\\Delta \\boldsymbol{\\varepsilon}` is the incremental
+        spatial logarithmic strain tensor,
+        :math:`\\boldsymbol{\\varepsilon}^{e, \\, \\text{trial}}` is the
+        elastic trial spatial logarithmic strain tensor,
+        :math:`\\boldsymbol{\\varepsilon}^{e}` is the elastic spatial
+        logarithmic strain tensor, :math:`n+1` denotes
+        the current increment, and :math:`n` denotes the last converged
+        increment.
+
+        *Elastic trial left Cauchy-Green strain tensor*:
+
+        .. math::
+
+           \\boldsymbol{\\varepsilon}_{n + 1}^{e, \\, \\text{trial}} =
+               \\dfrac{1}{2} \\ln ( \\boldsymbol{B}^{e, \\,
+               \\text{trial}}_{n+1} )
+               = \\dfrac{1}{2} \\ln \\Big( (\\boldsymbol{F}_{\\Delta})_{n+1}
+               \\boldsymbol{B}^{e}_{n} (\\boldsymbol{F}_{\\Delta})_{n+1}^{T}
+               \\Big)
+
+        where :math:`\\boldsymbol{\\varepsilon}^{e, \\, \\text{trial}}` is the
+        elastic trial spatial logarithmic strain tensor,
+        :math:`\\boldsymbol{B}^{e, \\, \\text{trial}}` is the elastic trial
+        left Cauchy-Green strain tensor,
+        :math:`\\boldsymbol{F}_{\\Delta}` is the incremental deformation
+        gradient, :math:`\\boldsymbol{B}^{e}` is the elastic left Cauchy-Green
+        strain tensor, :math:`n+1` denotes the current increment, and :math:`n`
+        denotes the last converged increment.
+
         The definition of the elastic trial spatial logarithmic strain tensor
         can be found in Appendix F.4 of Ferreira (2022) [#]_ (see Equations
         (F.14) and (F.15)).
@@ -975,7 +1150,23 @@ class MaterialState:
                                         inf_consistent_tangent):
         """Compute finite strain spatial consistent tangent modulus.
 
-        The definition of the finite strain spatial consistent tangent
+        .. math::
+
+           \\mathsf{a}_{ijkl} = \\dfrac{1}{2 \\det (\\boldsymbol{F})} \\,
+                                \\left[ \\mathsf{D} : \\mathsf{L} : \\mathsf{B}
+                                \\right]_{ijkl} - \\sigma_{il} \\delta_{jk}
+
+        where :math:`\\mathbf{\\mathsf{a}}` is the spatial consistent tangent
+        modulus, :math:`\\mathbf{\\mathsf{D}}` is the derivative of the
+        Kirchhoff stress tensor with respect to the spatial logarithmic strain
+        tensor, :math:`\\mathbf{\\mathsf{L}}` is the derivative of the tensor
+        logarithm function evaluated at the elastic trial left Cauchy-Green
+        strain tensor, :math:`\\mathbf{\\mathsf{B}}` is computed from the
+        elastic trial left Cauchy-Green strain tensor components,
+        :math:`\\boldsymbol{\\sigma}` is the Cauchy stress tensor, and
+        :math:`\\delta_{ij}` is the Kronecker delta.
+
+        The detailed definition of the finite strain spatial consistent tangent
         modulus of isotropic hyperelastic-based finite strain elastoplastic
         constitutive models whose finite strain formalism is purely kinematical
         can be found in Appendix F.4 of Ferreira (2022) [#]_ (see Equation
