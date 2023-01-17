@@ -172,10 +172,10 @@ class Elastic(ConstitutiveModel):
         * ``strain_mf``
 
             * *Infinitesimal strains*: Infinitesimal strain tensor
-              (matricial form). *Symbol*: :math:`\\boldsymbol{\\varepsilon}`.
+              (matricial form).
 
             * *Finite strains*: Spatial logarithmic strain tensor
-              (matricial form). *Symbol*: :math:`\\boldsymbol{\\varepsilon}`.
+              (matricial form).
 
             * *Symbol*: :math:`\\boldsymbol{\\varepsilon}` /
               :math:`\\boldsymbol{\\varepsilon}`
