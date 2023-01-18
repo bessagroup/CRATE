@@ -26,6 +26,8 @@ __author__ = 'Bernardo Ferreira (bernardo_ferreira@brown.edu)'
 __credits__ = ['Bernardo Ferreira',]
 __status__ = 'Stable'
 # =============================================================================
+#
+# =============================================================================
 class Elastic(ConstitutiveModel):
     """Linear elastic constitutive model.
 

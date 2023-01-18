@@ -37,6 +37,8 @@ __author__ = 'Bernardo Ferreira (bernardo_ferreira@brown.edu)'
 __credits__ = ['Bernardo Ferreira',]
 __status__ = 'Stable'
 # =============================================================================
+#
+# =============================================================================
 class VonMises(ConstitutiveModel):
     """Von Mises constitutive model with isotropic strain hardening.
 

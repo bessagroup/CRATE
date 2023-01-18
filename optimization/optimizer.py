@@ -47,7 +47,7 @@ class Optimizer(ABC):
 
     Methods
     -------
-    solve_optimization(self, optimization_function, max_n_iter=None,
+    solve_optimization(self, optimization_function, max_n_iter=None, \
                        verbose=False):
         *abstract*: Solve optimization problem.
     """
@@ -86,7 +86,7 @@ class LIPO(Optimizer):
 
     Methods
     -------
-    solve_optimization(self, optimization_function, max_n_iter=None,
+    solve_optimization(self, optimization_function, max_n_iter=None, \
                        verbose=False):
         Solve optimization problem.
     """
@@ -154,7 +154,7 @@ class GeneticAlgorithm(Optimizer):
 
     Methods
     -------
-    solve_optimization(self, optimization_function, max_n_iter=None,
+    solve_optimization(self, optimization_function, max_n_iter=None, \
                        verbose=False):
         Solve optimization problem.
     """
@@ -235,7 +235,7 @@ class SciPyMinimizer(Optimizer):
 
     Methods
     -------
-    solve_optimization(self, optimization_function, max_n_iter=None,
+    solve_optimization(self, optimization_function, max_n_iter=None, \
                        verbose=False):
         Solve optimization problem.
     """
@@ -313,7 +313,7 @@ class ScikitOptimizer(Optimizer):
 
     Methods
     -------
-    solve_optimization(self, optimization_function, max_n_iter=None,
+    solve_optimization(self, optimization_function, max_n_iter=None, \
                        verbose=False):
         Solve optimization problem.
     """
