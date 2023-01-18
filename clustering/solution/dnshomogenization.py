@@ -1,67 +1,85 @@
-#
-# Homogenization-based Multi-scale Methods Interface (CRATE Program)
-# ==========================================================================================
-# Summary:
-# Interface of Direct Numerical Simulation homogenization-based multi-scale methods required
-# to solve RVE elastic microscale equilibrium problems.
-# ------------------------------------------------------------------------------------------
-# Development history:
-# Bernardo P. Ferreira | Oct 2021 | Initial coding.
-# Bernardo P. Ferreira | Feb 2022 | Enriched interface with method to retrieve homogenized
-#                                 | strain-stress material response.
-# ==========================================================================================
-#                                                                             Import modules
-# ==========================================================================================
-# Defining abstract base classes
+"""DNS Homogenization-based multi-scale method interface.
+
+This module includes the interface to implement any direct numerical simulation
+(DNS) homogenization-based multi-scale method suitable to solve a microscale
+equilibrium problem where the RVE is spatially discretized in a regular grid of
+voxels.
+
+Classes
+-------
+DNSHomogenizationMethod
+    DNS homogenization-based multi-scale DNS method interface.
+"""
+#                                                                       Modules
+# =============================================================================
+# Standard
 from abc import ABC, abstractmethod
 #
-#                                               Homogenization-based multi-scale DNS methods
-# ==========================================================================================
+#                                                          Authorship & Credits
+# =============================================================================
+__author__ = 'Bernardo Ferreira (bernardo_ferreira@brown.edu)'
+__credits__ = ['Bernardo Ferreira',]
+__status__ = 'Stable'
+# =============================================================================
+#
+# =============================================================================
 class DNSHomogenizationMethod(ABC):
-    '''Homogenization-based multi-scale DNS method interface.'''
+    """DNS homogenization-based multi-scale method interface.
+
+    Methods
+    -------
+    compute_rve_local_response(self, mac_strain_id, mac_strain)
+        *abstract*: Compute RVE local strain response.
+    get_hom_stress_strain(self)
+        *abstract*: Get the homogenized strain-stress material response.
+    """
     @abstractmethod
     def __init__(self):
-        '''Homogenization-based multi-scale DNS method constructor.'''
+        """Constructor."""
         pass
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     @abstractmethod
     def compute_rve_local_response(self, mac_strain_id, mac_strain):
-        '''Compute RVE local elastic strain response.
+        """Compute RVE local strain response.
 
-        Compute the local response of the material's representative volume element (RVE)
-        subjected to a given macroscale strain loading: infinitesimal strain tensor
-        (infinitesimal strains) or deformation gradient (finite strains). It is assumed that
-        the RVE is spatially discretized in a regular grid of voxels.
+        Compute the RVE local strain response (solution of microscale
+        equilibrium problem) when subjected to a given macroscale strain
+        loading, namely a macroscale infinitesimal strain tensor (infinitesimal
+        strains) or a macroscale deformation gradient (finite strains). It is
+        assumed that the RVE is spatially discretized in a regular grid of
+        voxels.
 
         Parameters
         ----------
         mac_strain_id : int
             Macroscale strain second-order tensor identifier.
-        mac_strain : 2darray
+        mac_strain : numpy.ndarray (2d)
             Macroscale strain second-order tensor. Infinitesimal strain tensor
             (infinitesimal strains) or deformation gradient (finite strains).
 
         Returns
         -------
         strain_vox: dict
-            Local strain response (item, ndarray of shape equal to RVE regular grid
-            discretization) for each strain component (key, str). Infinitesimal strain
-            tensor (infinitesimal strains) or material logarithmic strain tensor (finite
-            strains).
-        '''
+            RVE local strain response (item, numpy.ndarray of shape equal to
+            RVE regular grid discretization) for each strain component
+            (key, str). Infinitesimal strain tensor (infinitesimal strains) or
+            material logarithmic strain tensor (finite strains).
+        """
         pass
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     @abstractmethod
     def get_hom_stress_strain(self):
-        '''Get homogenized strain-stress material response.
+        """Get the homogenized strain-stress material response.
 
         Returns
         -------
-        _hom_stress_strain : 2darray
-            Homogenized stress-strain material response. The homogenized strain and
-            homogenized stress tensor components of the i-th loading increment are stored
-            columnwise in the i-th row, sorted respectively. Infinitesimal strains: Cauchy
-            stress tensor - infinitesimal strains tensor. Finite strains: first
-            Piola-Kirchhoff stress tensor - deformation gradient.
-        '''
+        _hom_stress_strain : numpy.ndarray (2d)
+            RVE homogenized stress-strain response (item, numpy.ndarray (2d))
+            for each macroscale strain loading identifier (key, int). The
+            homogenized strain and homogenized stress tensor components of the
+            i-th loading increment are stored columnwise in the i-th row,
+            sorted respectively. Infinitesimal strain tensor and Cauchy stress
+            tensor (infinitesimal strains) or Deformation gradient and first
+            Piola-Kirchhoff stress tensor (finite strains).
+        """
         pass
