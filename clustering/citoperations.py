@@ -175,6 +175,15 @@ def gop_material_independent_terms(strain_formulation, problem_type, rve_dims,
     :math:`\\delta_{ij}` is the Kronecker delta, and :math:`n_{\\text{dim}}`
     is the number of spatial dimensions.
 
+    A detailed description of the computational implementation based on
+    Hadamard (element-wise) operations can be found in Section 4.6 of
+    Ferreira (2022) [#]_.
+
+    .. [#] Ferreira, B.P. (2022). *Towards Data-driven Multi-scale
+           Optimization of Thermoplastic Blends: Microstructural
+           Generation, Constitutive Development and Clustering-based
+           Reduced-Order Modeling.* PhD Thesis, University of Porto.
+
     Parameters
     ----------
     strain_formulation: {'infinitesimal', 'finite'}
