@@ -212,8 +212,8 @@ class ACRMP(CRMP):
         Returns
         -------
         adaptivity_output : list[int or float]
-            List containing the adaptivity metrics associated to the clustering
-            adaptivity output file.
+            List containing the adaptivity metrics associated with the
+            clustering adaptivity output file.
         """
         pass
     # -------------------------------------------------------------------------
@@ -280,7 +280,7 @@ class ACRMP(CRMP):
             upper bound (1) performs the maximum number splits of each cluster
             (leading to single-voxel clusters).
         adapt_trigger_ratio : float
-            Threshold associated to the adaptivity trigger condition.
+            Threshold associated with the adaptivity trigger condition.
         magnitude : float
             Difference between cluster ratio and adaptive trigger ratio. Given
             that the cluster ratio ranges between 0 and 1 and only clusters
@@ -296,7 +296,7 @@ class ACRMP(CRMP):
             Adaptive clustering split factor. The adaptive clustering split
             factor must be contained between 0 and 1 (included). The lower
             bound (0) enforces a single split, i.e., 2 new clusters, while the
-            upper bound (1) is associated to a maximum defined number of new
+            upper bound (1) is associated with a maximum defined number of new
             voxels.
         """
         # Check provided parameters
@@ -505,7 +505,7 @@ class GACRMP(ACRMP):
         Adaptive clustering split factor. The adaptive clustering split factor
         must be contained between 0 and 1 (included). The lower bound (0)
         enforces a single split, i.e., 2 new clusters, while the upper bound
-        (1) is associated to a maximum defined number of new voxels.
+        (1) is associated with a maximum defined number of new voxels.
     _threshold_n_clusters : int
         Threshold number of adaptive material phase number of clusters. Once
         this threshold is surpassed, the adaptive procedures of the adaptive
@@ -515,7 +515,7 @@ class GACRMP(ACRMP):
         Otherwise, the adaptive clustering split factor is always set equal to
         `_adapt_split_factor`.
     _clustering_tree_nodes : dict
-        Clustering tree node (item, anytree.Node) associated to each material
+        Clustering tree node (item, anytree.Node) associated with each material
         cluster (key, str).
     _root_cluster_node : anytree.Node
         Clustering tree root node.
@@ -757,7 +757,7 @@ class GACRMP(ACRMP):
         for i in range(len(target_clusters)):
             # Get target cluster label
             target_cluster = target_clusters[i]
-            # Get total number of voxels associated to target cluster.
+            # Get total number of voxels associated with target cluster.
             # If target cluster is already single-voxeled, skip to the next
             # target cluster. Otherwise compute the number of child clusters.
             # If the target cluster number of voxels is lower or equal than the
@@ -918,7 +918,7 @@ class GACRMP(ACRMP):
         Returns
         -------
         clustering_tree_nodes : dict
-            Clustering tree node (item, anytree.Node) associated to each
+            Clustering tree node (item, anytree.Node) associated with each
             material cluster (key, str).
         root_cluster_node : anytree.Node
             Clustering tree root node.
@@ -985,8 +985,8 @@ class GACRMP(ACRMP):
         Returns
         -------
         adaptivity_output : list
-            List containing the adaptivity metrics associated to the clustering
-            adaptivity output file.
+            List containing the adaptivity metrics associated with the
+            clustering adaptivity output file.
         """
         # Build adaptivity output
         adaptivity_output = [self._n_clusters, self._adaptive_step,
@@ -1025,7 +1025,7 @@ class HAACRMP(ACRMP):
         Linkage matrix associated with the hierarchical agglomerative
         clustering (numpy.ndarray of shape (n_phase_voxels - 1, 4)).
     _cluster_node_map : dict
-        Tree node id (item, int) associated to each cluster label (key, str).
+        Tree node id (item, int) associated with each cluster label (key, str).
     _adaptive_step : int
         Counter of adaptive clustering steps, with 0 associated with the base
         clustering.
@@ -1033,7 +1033,7 @@ class HAACRMP(ACRMP):
         Adaptive clustering split factor. The adaptive clustering split factor
         must be contained between 0 and 1 (included). The lower bound (0)
         enforces a single split, i.e., 2 new clusters, while the upper bound
-        (1) is associated to a maximum defined number of new voxels.
+        (1) is associated with a maximum defined number of new voxels.
     _threshold_n_clusters : int
         Threshold number of adaptive material phase number of clusters. Once
         this threshold is surpassed, the adaptive procedures of the adaptive
@@ -1258,7 +1258,7 @@ class HAACRMP(ACRMP):
             target_cluster = target_clusters[i]
             # Get target cluster tree node instance
             target_node = nodelist[self._cluster_node_map[str(target_cluster)]]
-            # Get total number of leaf nodes associated to target node. If
+            # Get total number of leaf nodes associated with target node. If
             # target node is a leaf itself (not splitable), skip to the next
             # target cluster
             if target_node.is_leaf():
@@ -1509,8 +1509,8 @@ class HAACRMP(ACRMP):
         Returns
         -------
         adaptivity_output : list
-            List containing the adaptivity metrics associated to the clustering
-            adaptivity output file.
+            List containing the adaptivity metrics associated with the
+            clustering adaptivity output file.
         """
         # Build adaptivity output
         adaptivity_output = [self._n_clusters, self._adaptive_step,
