@@ -116,7 +116,7 @@ class LoadingPath:
             numpy.ndarray (2d), where the i-th row is associated with the i-th
             strain/stress component and the j-th column is associated with the
             j-th loading subpath.
-        mac_load_presctype : ndarray of shape (n_comps, n_load_subpaths)
+        mac_load_presctype : numpy.ndarray (2d)
             Loading nature type ({'strain', 'stress'}) associated with each
             loading constraint (ndarray of shape (n_comps, n_load_subpaths)),
             where the i-th row is associated with the i-th strain/stress

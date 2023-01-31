@@ -635,7 +635,8 @@ class GACRMP(ACRMP):
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Perform cluster analysis
             cluster_labels, _, is_n_clusters_satisfied = \
-                ClusterAnalysis().get_fitted_estimator(data_matrix, clust_alg_id,
+                ClusterAnalysis().get_fitted_estimator(data_matrix,
+                                                       clust_alg_id,
                                                        self._n_clusters)
             # Check if prescribed number of clusters is satisfied
             if not is_n_clusters_satisfied:
