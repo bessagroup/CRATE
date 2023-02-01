@@ -38,6 +38,16 @@ class HomResOutput:
         List containing the header of each column (str).
     _col_width : int
         Output file column width.
+
+    Methods
+    -------
+    init_hres_file(self, strain_formulation)
+        Open output file and write file header.
+    write_hres_file(self, strain_formulation, problem_type, mac_load_path, \
+                    hom_results, effective_time)
+        Write output file.
+    rewind_file(self, rewind_inc)
+        Rewind output file.
     """
     def __init__(self, hres_file_path):
         """Constructor.
