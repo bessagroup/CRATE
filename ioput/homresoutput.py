@@ -1,4 +1,4 @@
-"""Output file: Homogenized strain/stress results
+"""Output file: Homogenized strain/stress results.
 
 This module includes the class associated with the output file where the
 homogenized strain/stress results are stored.
@@ -12,8 +12,9 @@ HomResOutput
 #                                                                       Modules
 # =============================================================================
 # Standard
-import numpy as np
 import copy
+# Third-party
+import numpy as np
 # Local
 import tensor.matrixoperations as mop
 import tensor.tensoroperations as top
@@ -137,7 +138,7 @@ class HomResOutput:
             strains) or Deformation gradient and first Piola-Kirchhoff stress
             tensor (finite strains).
         effective_time : float
-            Current time (s) associated to the solution of the equilibrium
+            Current time (s) associated with the solution of the equilibrium
             problem.
         """
         # Get loading path data
@@ -227,12 +228,12 @@ class HomResOutput:
         Parameters
         ----------
         rewind_inc : int
-            Increment associated to the rewind state.
+            Increment associated with the rewind state.
         """
         # Open output file and read lines (read)
         file_lines = open(self._hres_file_path, 'r').readlines()
         # Set output file last line
         last_line = 1 + rewind_inc
         file_lines[last_line] = file_lines[last_line][:-1]
-        # Open output file (write mode)
+        # Open output file (write mode) and write data
         open(self._hres_file_path, 'w').writelines(file_lines[: last_line + 1])

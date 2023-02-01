@@ -1,4 +1,4 @@
-"""Output file: Homogeneous (fictitious) reference material
+"""Output file: Homogeneous (fictitious) reference material.
 
 This module includes the class associated with the output file where data
 associated with the homogeneous (fictitious) reference material is stored.
@@ -11,7 +11,7 @@ RefMatOutput
 #
 #                                                                       Modules
 # =============================================================================
-# Standard
+# Third-party
 import numpy as np
 # Local
 import tensor.matrixoperations as mop
@@ -273,12 +273,12 @@ class RefMatOutput:
         open(self._refm_file_path, 'w').writelines(file_lines)
     # -------------------------------------------------------------------------
     def rewind_file(self, rewind_inc):
-        """Rewind reference material output file.
+        """Rewind output file.
 
         Parameters
         ----------
         rewind_inc : int
-            Increment associated to the rewind state.
+            Increment associated with the rewind state.
         """
         # Open reference material output file and read lines (read)
         file_lines = open(self._refm_file_path, 'r').readlines()
@@ -288,7 +288,7 @@ class RefMatOutput:
             for i in range(1, len(file_lines)):
                 # Get file line
                 line = file_lines[i]
-                # Check for increment after increment associated to rewind
+                # Check for increment after increment associated with rewind
                 # state
                 if int(line.split()[0]) == rewind_inc + 1:
                     # Set output file last line
