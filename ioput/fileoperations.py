@@ -1,6 +1,8 @@
 """File and directory operations.
 
-This module...
+This module includes several functions to handle files and directories, as well
+as the functions that process the problem input data file and set the problem
+output directory.
 
 Functions
 ---------

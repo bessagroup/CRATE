@@ -1,54 +1,56 @@
+"""Output file: Homogenized strain/stress results
+
+This module includes the class associated with the output file where the
+homogenized strain/stress results are stored.
+
+Classes
+-------
+HomResOutput
+    Output file: Homogenized strain/stress results.
+"""
 #
-# Homogenized Results Output Module (CRATE Program)
-# ==========================================================================================
-# Summary:
-# Procedures related to the output file where the homogenized results are stored. Some
-# post-process computations are also performed here, essentially derived from the
-# homogenized strain and stress tensors.
-# ------------------------------------------------------------------------------------------
-# Development history:
-# Bernardo P. Ferreira | Mar 2020 | Initial coding.
-# Bernardo P. Ferreira | Jul 2020 | OOP refactorization.
-# ==========================================================================================
-#                                                                             Import modules
-# ==========================================================================================
-# Working with arrays
+#                                                                       Modules
+# =============================================================================
+# Standard
 import numpy as np
-# Shallow and deep copy operations
 import copy
-# Matricial operations
+# Local
 import tensor.matrixoperations as mop
-# Tensorial operations
 import tensor.tensoroperations as top
-# Material-related computations
 from material.materialoperations import compute_spatial_log_strain, \
                                         cauchy_from_first_piola, \
                                         MaterialQuantitiesComputer
 #
-#                                                      Homogenized results output file class
-# ==========================================================================================
+#                                                          Authorship & Credits
+# =============================================================================
+__author__ = 'Bernardo Ferreira (bernardo_ferreira@brown.edu)'
+__credits__ = ['Bernardo Ferreira',]
+__status__ = 'Stable'
+# =============================================================================
+#
+# =============================================================================
 class HomResOutput:
-    '''Homogenized results output.
+    """Output file: Homogenized strain/stress results.
 
     Attributes
     ----------
-    _header : list
+    _header : list[str]
         List containing the header of each column (str).
     _col_width : int
         Output file column width.
-    '''
+    """
     def __init__(self, hres_file_path):
-        '''Homogenized results output constructor.
+        """Constructor.
 
         Parameters
         ----------
         hres_file_path : str
-            Path of homogenized results output file.
-        '''
+            Problem '.hres' output file path.
+        """
         self._hres_file_path = hres_file_path
-        # Set homogenized results output file header
-        self._header = ['Increment', 'RunEffectTime', 'LoadSubpath', 'LoadFactor', 'Time',
-                        'SubincLevel',
+        # Set output file header
+        self._header = ['Increment', 'RunEffectTime', 'LoadSubpath',
+                        'LoadFactor', 'Time', 'SubincLevel',
                         'strain_11', 'strain_21', 'strain_31',
                         'strain_12', 'strain_22', 'strain_32',
                         'strain_13', 'strain_23', 'strain_33',
@@ -58,15 +60,15 @@ class HomResOutput:
                         'vm_strain', 'vm_stress']
         # Set column width
         self._col_width = max(16, max([len(x) for x in self._header]) + 2)
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     def init_hres_file(self, strain_formulation):
-        '''Open homogenized results output file and write file header.
+        """Open output file and write file header.
 
         Parameters
         ----------
-        strain_formulation: str, {'infinitesimal', 'finite'}
+        strain_formulation: {'infinitesimal', 'finite'}
             Problem strain formulation.
-        '''
+        """
         # Set loading initial output
         load_init = (0, 0.0, 0, 0.0, 0.0, 0)
         # Set strain and stress initial output
@@ -76,64 +78,70 @@ class HomResOutput:
             strain_init[0] = 1.0
             strain_init[4] = 1.0
             strain_init[8] = 1.0
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Open homogenized results output file (write mode)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Open output file (write mode)
         hres_file = open(self._hres_file_path, 'w')
-        # Set homogenized results output file header format structure
-        write_list = ['{:>9s}'.format(self._header[0]) + \
-                      ''.join([('{:>' + str(self._col_width) + 's}').format(x)
-                      for x in self._header[1:]]),
-                      '\n' + \
-                      '{:>9d}'.format(load_init[0]) + \
-                      ('{:>' + str(self._col_width) + '.8e}').format(load_init[1]) + \
-                      ('{:>' + str(self._col_width) + 'd}').format(load_init[2]) + \
-                      ''.join([('{:>' + str(self._col_width) + '.8e}').format(x)
-                                    for x in load_init[3:5]]) + \
-                      ('{:>' + str(self._col_width) + 'd}').format(load_init[5]) + \
-                      ''.join([('{:>' + str(self._col_width) + '.8e}').format(x)
-                                    for x in strain_init]) + \
-                      ''.join([('{:>' + str(self._col_width) + '.8e}').format(x)
-                                    for x in stress_init]) + \
-                      ''.join([('{:>' + str(self._col_width) + '.8e}').format(0.0)
-                                    for x in range(2)])]
-        # Write homogenized results output file header
+        # Set output file header format structure
+        write_list = [
+            '{:>9s}'.format(self._header[0])
+            + ''.join([('{:>' + str(self._col_width) + 's}').format(x)
+                       for x in self._header[1:]]),
+            '\n' + '{:>9d}'.format(load_init[0])
+            + ('{:>' + str(self._col_width) + '.8e}').format(load_init[1])
+            + ('{:>' + str(self._col_width) + 'd}').format(load_init[2])
+            + ''.join([('{:>' + str(self._col_width) + '.8e}').format(x)
+                       for x in load_init[3:5]])
+            + ('{:>' + str(self._col_width) + 'd}').format(load_init[5])
+            + ''.join([('{:>' + str(self._col_width) + '.8e}').format(x)
+                       for x in strain_init])
+            + ''.join([('{:>' + str(self._col_width) + '.8e}').format(x)
+                       for x in stress_init])
+            + ''.join([('{:>' + str(self._col_width) + '.8e}').format(0.0)
+                       for x in range(2)])]
+        # Write output file header
         hres_file.writelines(write_list)
-        # Close homogenized results output file
+        # Close output file
         hres_file.close()
-    # --------------------------------------------------------------------------------------
-    def write_hres_file(self, strain_formulation, problem_type, mac_load_path, hom_results,
-                        effective_time):
-        '''Write homogenized results output file.
+    # -------------------------------------------------------------------------
+    def write_hres_file(self, strain_formulation, problem_type, mac_load_path,
+                        hom_results, effective_time):
+        """Write output file.
 
         Parameters
         ----------
-        strain_formulation: str, {'infinitesimal', 'finite'}
+        strain_formulation: {'infinitesimal', 'finite'}
             Problem strain formulation.
         problem_type : int
-            Problem type identifier (1 - Plain strain (2D), 4- Tridimensional)
+            Problem type: 2D plane strain (1), 2D plane stress (2),
+            2D axisymmetric (3) and 3D (4).
         mac_load_path : LoadingPath
             Macroscale loading path.
         hom_results : dict
-            Homogenized results: homogenized strain tensor (key = 'strain'), homogenized
-            stress tensor (key = 'stress'), homogenized out-of-plain stress component
-            (key = 'hom_stress_33'). Infinitesimal strain tensor / Cauchy stress tensor
-            (infinitesimal strains) and Deformation gradient / First Piola-Kirchhoff stress
+            Homogenized strain/stress results stored as:
+
+            * 'strain' : homogenized strain tensor (numpy.ndarray (2d))
+            * 'stress' : homogenized stress tensor (numpy.ndarray (2d))
+            * 'hom_stress_33' : homogenized out-of-plain stress (float)
+
+            Infinitesimal strain tensor and Cauchy stress tensor (infinitesimal
+            strains) or Deformation gradient and first Piola-Kirchhoff stress
             tensor (finite strains).
         effective_time : float
-            Current time (s) associated to the solution of the equilibrium problem.
-        '''
+            Current time (s) associated to the solution of the equilibrium
+            problem.
+        """
         # Get loading path data
         sp_id, sp_inc, sp_total_lfact, _, sp_total_time, _, subinc_level = \
             mac_load_path.get_subpath_state()
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Get homogenized data
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Get homogenized strain/stress data
         hom_strain = hom_results['hom_strain']
         hom_stress = hom_results['hom_stress']
         if problem_type == 1:
             hom_stress_33 = hom_results['hom_stress_33']
-        # When the problem type corresponds to a 2D analysis, build the 3D homogenized
-        # strain and stress tensors by considering the appropriate out-of-plane strain and
-        # stress components
+        # When the problem type corresponds to a 2D analysis, build the 3D
+        # homogenized strain and stress tensors by considering the appropriate
+        # out-of-plane strain and stress components
         out_hom_strain = np.zeros((3, 3))
         out_hom_stress = np.zeros((3, 3))
         if problem_type == 1:
@@ -145,12 +153,13 @@ class HomResOutput:
         else:
             out_hom_strain[:, :] = hom_strain
             out_hom_stress[:, :] = hom_stress
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get 3D problem parameters
-        n_dim, comp_order_sym, _ = mop.get_problem_type_parameters(problem_type=4)
+        n_dim, comp_order_sym, _ = \
+            mop.get_problem_type_parameters(problem_type=4)
         # Get fourth-order tensors
         _, _, _, _, _, _, fodevprojsym = top.get_id_operators(n_dim)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Instantiate material state computations
         csbvar_computer = MaterialQuantitiesComputer()
         # Compute spatial logarithmic strain tensor and Cauchy stress tensor
@@ -161,54 +170,59 @@ class HomResOutput:
             # Compute spatial logarithmic strain tensor
             strain = compute_spatial_log_strain(out_hom_strain)
             # Get Cauchy stress tensor from first Piola-Kirchhoff stress tensor
-            cauchy_stress = cauchy_from_first_piola(out_hom_strain, out_hom_stress)
+            cauchy_stress = cauchy_from_first_piola(out_hom_strain,
+                                                    out_hom_stress)
         # Get spatial logarithmic strain tensor (matricial form)
         strain_mf = mop.get_tensor_mf(strain, n_dim, comp_order_sym)
         # Get Cauchy stress tensor (matricial form)
-        cauchy_stress_mf = mop.get_tensor_mf(cauchy_stress, n_dim, comp_order_sym)
+        cauchy_stress_mf = mop.get_tensor_mf(cauchy_stress, n_dim,
+                                             comp_order_sym)
         # Compute von Mises equivalent strain
         vm_strain = csbvar_computer.get_vm_strain(strain_mf)
         # Compute von Mises equivalent stress
         vm_stress = csbvar_computer.get_vm_stress(cauchy_stress_mf)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Open homogenized results output file (append mode)
         hres_file = open(self._hres_file_path, 'a')
         # Set increment homogenized results format structure
-        inc_data = [sp_inc, effective_time, sp_id, sp_total_lfact, sp_total_time,
-                    subinc_level,
-                    out_hom_strain[0, 0], out_hom_strain[1, 0], out_hom_strain[2, 0],
-                    out_hom_strain[0, 1], out_hom_strain[1, 1], out_hom_strain[2, 1],
-                    out_hom_strain[0, 2], out_hom_strain[1, 2], out_hom_strain[2, 2],
-                    out_hom_stress[0, 0], out_hom_stress[1, 0], out_hom_stress[2, 0],
-                    out_hom_stress[0, 1], out_hom_stress[1, 1], out_hom_stress[2, 1],
-                    out_hom_stress[0, 2], out_hom_stress[1, 2], out_hom_stress[2, 2],
+        inc_data = [sp_inc, effective_time, sp_id, sp_total_lfact,
+                    sp_total_time, subinc_level,
+                    out_hom_strain[0, 0], out_hom_strain[1, 0],
+                    out_hom_strain[2, 0], out_hom_strain[0, 1],
+                    out_hom_strain[1, 1], out_hom_strain[2, 1],
+                    out_hom_strain[0, 2], out_hom_strain[1, 2],
+                    out_hom_strain[2, 2], out_hom_stress[0, 0],
+                    out_hom_stress[1, 0], out_hom_stress[2, 0],
+                    out_hom_stress[0, 1], out_hom_stress[1, 1],
+                    out_hom_stress[2, 1], out_hom_stress[0, 2],
+                    out_hom_stress[1, 2], out_hom_stress[2, 2],
                     vm_strain, vm_stress]
-        write_list = ['\n' + \
-                     ('{:>9d}').format(inc_data[0]) + \
-                     ('{:>' + str(self._col_width) + '.8e}').format(inc_data[1]) + \
-                     ('{:>' + str(self._col_width) + 'd}').format(inc_data[2]) + \
-                     ''.join([('{:>' + str(self._col_width) + '.8e}').format(x)
-                                   for x in inc_data[3:5]]) + \
-                     ('{:>' + str(self._col_width) + 'd}').format(inc_data[5]) + \
-                     ''.join([('{:>' + str(self._col_width) + '.8e}').format(x)
-                                   for x in inc_data[6:]])]
+        write_list = \
+            ['\n' + ('{:>9d}').format(inc_data[0])
+             + ('{:>' + str(self._col_width) + '.8e}').format(inc_data[1])
+             + ('{:>' + str(self._col_width) + 'd}').format(inc_data[2])
+             + ''.join([('{:>' + str(self._col_width) + '.8e}').format(x)
+                        for x in inc_data[3:5]])
+             + ('{:>' + str(self._col_width) + 'd}').format(inc_data[5])
+             + ''.join([('{:>' + str(self._col_width) + '.8e}').format(x)
+                        for x in inc_data[6:]])]
         # Write increment homogenized results
         hres_file.writelines(write_list)
-        # Close homogenized results output file
+        # Close output file
         hres_file.close()
-    # --------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     def rewind_file(self, rewind_inc):
-        '''Rewind homogenized results output file.
+        """Rewind output file.
 
         Parameters
         ----------
         rewind_inc : int
             Increment associated to the rewind state.
-        '''
-        # Open homogenized results output file and read lines (read)
+        """
+        # Open output file and read lines (read)
         file_lines = open(self._hres_file_path, 'r').readlines()
         # Set output file last line
         last_line = 1 + rewind_inc
         file_lines[last_line] = file_lines[last_line][:-1]
-        # Open homogenized results output file (write mode)
+        # Open output file (write mode)
         open(self._hres_file_path, 'w').writelines(file_lines[: last_line + 1])
