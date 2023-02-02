@@ -51,7 +51,6 @@ class RefMatOutput:
     rewind_file(self, rewind_inc)
         Rewind reference material output file.
     """
-    # -------------------------------------------------------------------------
     def __init__(self, refm_file_path, strain_formulation, problem_type,
                  self_consistent_scheme='regression',
                  is_farfield_formulation=True, ref_output_mode='converged'):

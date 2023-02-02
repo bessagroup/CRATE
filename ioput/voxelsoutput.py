@@ -51,7 +51,6 @@ class VoxelsOutput:
     rewind_file(self, rewind_inc)
         Rewind output file.
     """
-    # -------------------------------------------------------------------------
     def __init__(self, voxout_file_path, strain_formulation, problem_type):
         """Constructor.
 
