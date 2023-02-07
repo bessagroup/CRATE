@@ -120,7 +120,7 @@ except FileNotFoundError as message:
 # Read input data according to analysis type
 info.displayinfo('5', 'Reading the input data file...')
 problem_dict, mat_dict, macload_dict, rg_dict, clst_dict, scs_dict, algpar_dict, vtk_dict, \
-    output_dict, material_state = rid.readinputdatafile(input_file, dirs_dict)
+    output_dict, material_state = rid.read_input_data_file(input_file, dirs_dict)
 # Close user input data file
 input_file.close()
 # Save copy of clustering dictionary for compatibility check procedure (loading previously
