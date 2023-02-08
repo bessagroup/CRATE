@@ -105,7 +105,7 @@ def read_input_data_file(input_file, dirs_dict):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read RVE dimensions (mandatory)
     keyword = 'RVE_Dimensions'
-    rve_dims = rproc.readrvedimensions(
+    rve_dims = rproc.read_rve_dimensions(
         input_file, input_file_path, keyword, n_dim)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read number of material phases, constitutive models and associated
@@ -139,7 +139,7 @@ def read_input_data_file(input_file, dirs_dict):
     max_val = 3
     mac_load_type = rproc.readtypeAkeyword(
         input_file, input_file_path, keyword, max_val)
-    mac_load, mac_load_presctype = rproc.readmacroscaleloading(
+    mac_load, mac_load_presctype = rproc.read_macroscale_loading(
         input_file, input_file_path, mac_load_type, strain_formulation, n_dim,
         comp_order_nsym)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -230,7 +230,7 @@ def read_input_data_file(input_file, dirs_dict):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read number of cluster associated with each material phase (mandatory)
     keyword = 'Number_of_Clusters'
-    phase_n_clusters = rproc.readphaseclustering(
+    phase_n_clusters = rproc.read_phase_clustering(
         input_file, input_file_path, keyword, n_material_phases,
         material_phases_properties)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -295,7 +295,7 @@ def read_input_data_file(input_file, dirs_dict):
         n_load_subpaths = mac_load_presctype.shape[1]
         # Read macroscale loading incrementation
         keyword = keyword_1 if is_found_1 else keyword_2
-        mac_load_increm = rproc.readmacloadincrem(
+        mac_load_increm = rproc.read_mac_load_increm(
             input_file, input_file_path, keyword, n_load_subpaths)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read maximum number of iterations to solve each load increment (optional)
@@ -365,7 +365,7 @@ def read_input_data_file(input_file, dirs_dict):
     # Read the spatial discretization file absolute path (mandatory)
     keyword = 'Discretization_File'
     valid_exts = ['.rgmsh']
-    discret_file_path = rproc.readdiscretizationfilepath(
+    discret_file_path = rproc.read_discretization_file_path(
         input_file, input_file_path, keyword, valid_exts)
     # Copy the spatial discretization file to the problem directory and update
     # the absolute path to the copied file
@@ -397,7 +397,7 @@ def read_input_data_file(input_file, dirs_dict):
         input_file, keyword)
     if is_found:
         is_vtk_output = True
-        vtk_format, vtk_inc_div, vtk_vars = rproc.readvtkoptions(
+        vtk_format, vtk_inc_div, vtk_vars = rproc.read_vtk_options(
             input_file, input_file_path, keyword, keyword_line_number)
         # Create VTK folder in post processing directory
         filop.makedirectory(postprocess_dir + 'VTK/', 'overwrite')
