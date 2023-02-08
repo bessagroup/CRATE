@@ -1,46 +1,84 @@
+"""Store data in suitable containers.
+
+This module includes a set of functions that store data in suitable
+category-related containers.
+
+Functions
+---------
+store_paths_data
+    Store problem directories and files paths.
+store_problem_data
+    Store data associated with the problem formulation and type.
+store_material_data
+    Store data associated with the material phases.
+store_loading_path_data
+    Store data associated with the macroscale loading path.
+store_regular_grid_data
+    Store data associated with the RVE spatial discretization.
+store_clustering_data
+    Store data associated with the clustering-based domain decomposition.
+store_scs_data
+    Store data associated with the self-consistent scheme.
+store_algorithmic_data
+    Store data associated with the problem solution algorithmic parameters.
+store_vtk_data
+    Store data associated with the VTK output.
+store_output_data
+    Store data associated with general output files.
+"""
 #
-# Packager Module (CRATE Program)
-# ==========================================================================================
-# Summary:
-# Procedures related to the packaging of objects in specific dictionaries.
-# ------------------------------------------------------------------------------------------
-# Development history:
-# Bernardo P. Ferreira | February 2020 | Initial coding.
-# ==========================================================================================
-#                                                                             Import modules
-# ==========================================================================================
-# Parse command-line options and arguments
+#                                                                       Modules
+# =============================================================================
+# Standard
 import sys
-# Working with arrays
-import numpy as np
-# Generate efficient iterators
 import itertools as it
+# Third-party
+import numpy as np
 #
-#                                                                          Package functions
-# ==========================================================================================
-# Package directories and paths
-def packdirpaths(input_file_name, input_file_path, input_file_dir, problem_name,
-                 problem_dir, offline_stage_dir, postprocess_dir, crve_file_path,
-                 hres_file_path, refm_file_path, adapt_file_path):
-    #
-    # Object                      Meaning                                           Type
-    # -------------------------------------------------------------------------------------
-    # input_file_name             Name of the user input data file                  str
-    # input_file_path             Path of the user input data file                  str
-    # input_file_dir              Directory of the user input data file             str
-    # problem_name                Name of problem under analysis                    str
-    # problem_dir                 Directory of the problem results                  str
-    # offline_stage_dir           Directory of the offline stage associated files   str
-    # crve_file_path              Path of the .crve file                            str
-    # hres_file_path              Path of the .hres file                            str
-    # refm_file_path              Path of the .refm file                            str
-    # adapt_file_path             Path of the .adapt file                           str
-    # postprocess_dir             Directory of the post-processing files            str
-    # cbsvar_file_path            Path of the .voxout file                          str
-    #
-    # Note: The meaning of the previous directories and files is detailed in the module
-    #       fileoperations (see function setproblemdirs documentation)
-    #
+#                                                          Authorship & Credits
+# =============================================================================
+__author__ = 'Bernardo Ferreira (bernardo_ferreira@brown.edu)'
+__credits__ = ['Bernardo Ferreira',]
+__status__ = 'Stable'
+# =============================================================================
+#
+# =============================================================================
+def store_paths_data(input_file_name, input_file_path, input_file_dir,
+                     problem_name, problem_dir, offline_stage_dir,
+                     postprocess_dir, crve_file_path, hres_file_path,
+                     refm_file_path, adapt_file_path):
+    """Store problem directories and files paths.
+
+    Parameters
+    ----------
+    input_file_name : str
+        Input data file name.
+    input_file_path : str
+        Input data file path.
+    input_file_dir : str
+        Input data file directory path.
+    problem_name : str
+        Problem name.
+    problem_dir : str
+        Problem output directory path.
+    offline_stage_dir : str
+        Problem output offline-stage subdirectory path.
+    postprocess_dir : str
+        Problem output post-processing subdirectory path.
+    crve_file_path : str
+        Problem '.crve' output file path.
+    hres_file_path : str
+        Problem '.hres' output file path.
+    refm_file_path : str
+        Problem '.refm' output file path.
+    adapt_file_path : str
+        Problem '.adapt' output file path.
+
+    Returns
+    -------
+    dirs_dict : dict
+        Container.
+    """
     # Initialize directories and paths dictionary
     dirs_dict = dict()
     # Build directories and paths dictionary
@@ -58,18 +96,30 @@ def packdirpaths(input_file_name, input_file_path, input_file_dir, problem_name,
     dirs_dict['voxout_file_path'] = None
     # Return
     return dirs_dict
-# ------------------------------------------------------------------------------------------
-# Package problem general data
-def packproblem(strain_formulation, problem_type, n_dim, comp_order_sym, comp_order_nsym):
-    #
-    # Object                      Meaning                                           Type
-    # -------------------------------------------------------------------------------------
-    # strain_formulation          Strain formulation                                str
-    # problem_type                Problem type                                      int
-    # n_dim                       Number of problem dimensions                      int
-    # comp_order_sym              Symmetric strain/stress components order          list
-    # comp_order_nsym             Nonsymmetric strain/stress components order       list
-    #
+# =============================================================================
+def store_problem_data(strain_formulation, problem_type, n_dim, comp_order_sym,
+                       comp_order_nsym):
+    """Store data associated with the problem formulation and type.
+
+    Parameters
+    ----------
+    strain_formulation: {'infinitesimal', 'finite'}
+        Problem strain formulation.
+    problem_type : int
+        Problem type: 2D plane strain (1), 2D plane stress (2),
+        2D axisymmetric (3) and 3D (4).
+    n_dim : int
+        Problem number of spatial dimensions.
+    comp_order_sym : list[str]
+        Strain/Stress components symmetric order.
+    comp_order_nsym : list[str]
+        Strain/Stress components nonsymmetric order.
+
+    Returns
+    -------
+    problem_dict : dict
+        Container.
+    """
     # Initialize problem dictionary
     problem_dict = dict()
     # Build problem dictionary
@@ -80,22 +130,30 @@ def packproblem(strain_formulation, problem_type, n_dim, comp_order_sym, comp_or
     problem_dict['comp_order_nsym'] = comp_order_nsym
     # Return
     return problem_dict
-# ------------------------------------------------------------------------------------------
-# Package data associated to the material phases
-def packmaterialphases(material_phases, material_phases_data, material_phases_properties,
-                       material_phases_vf):
-    #
-    # Object                      Meaning                                           Type
-    # -------------------------------------------------------------------------------------
-    # n_material_phases           Number of material phases                         int
-    # material_phases             Material phases ids                               list
-    # material_phases_data        Material phases constitutive models data          dict
-    #                             key: material phase id (str)
-    # material_phases_properties  Material phases properties                        dict
-    #                             key: material phase id (str)
-    # material_phases_vf          Material phases volume fractions                  dict
-    #                             key: material phase id (str)
-    #
+# =============================================================================
+def store_material_data(material_phases, material_phases_data,
+                        material_phases_properties, material_phases_vf):
+    """Store data associated with the material phases.
+
+    Parameters
+    ----------
+    material_phases : list[str]
+        RVE material phases labels (str).
+    material_phases_data : dict
+        Material phase data (item, dict) associated with each material phase
+        (key, str).
+    material_phases_properties : dict
+        Constitutive model material properties (item, dict) associated with
+        each material phase (key, str).
+    material_phases_vf : dict
+        Volume fraction (item, float) associated to each material phase
+        (key, str).
+
+    Returns
+    -------
+    mat_dict : dict
+        Container.
+    """
     # Initialize material phases dictionary
     mat_dict = dict()
     # Build material phases dictionary
@@ -106,25 +164,52 @@ def packmaterialphases(material_phases, material_phases_data, material_phases_pr
     mat_dict['material_phases_vf'] = material_phases_vf
     # Return
     return mat_dict
-# ------------------------------------------------------------------------------------------
-# Package data associated to the macroscale loading
-def packmacroscaleloading(mac_load_type, mac_load, mac_load_presctype, mac_load_increm,
-                          is_solution_rewinding, rewind_state_criterion=None,
-                          rewinding_criterion=None, max_n_rewinds=None):
-    #
-    # Object                      Meaning                                           Type
-    # -------------------------------------------------------------------------------------
-    # mac_load_type               Macroscale loading constraint type                int
-    # mac_load                    Macroscale loading constraint values              dict
-    #                             key: 'strain' and/or 'stress'
-    # mac_load_presctype          Macroscale loading component type                 ndarray
-    # mac_load_increm             Macroscale loading subpaths incrementation        dict
-    #                             key: loading subpath (str)
-    # is_solution_rewinding       Analysis rewinding flag                           bool
-    # rewind_state_criterion      Rewind state criterion and parameter              tuple
-    # rewinding_criterion         Rewinding criterion and parameter                 tuple
-    # max_n_rewinds               Maximum number of solution rewinds                int
-    #
+# =============================================================================
+def store_loading_path_data(mac_load_type, mac_load, mac_load_presctype,
+                            mac_load_increm, is_solution_rewinding,
+                            rewind_state_criterion=None,
+                            rewinding_criterion=None, max_n_rewinds=None):
+    """Store data associated with the macroscale loading path.
+
+    Parameters
+    ----------
+    mac_load_type : {1, 2, 3}
+        Loading type:
+
+        * 1 : Macroscale strain constraint
+        * 2 : Macroscale stress constraint
+        * 3 : Macroscale strain and stress constraint
+    mac_load : dict
+        For each loading nature type (key, {'strain', 'stress'}), stores
+        the loading constraints for each loading subpath in a
+        numpy.ndarray (2d), where the i-th row is associated with the i-th
+        strain/stress component and the j-th column is associated with the
+        j-th loading subpath.
+    mac_load_presctype : numpy.ndarray (2d)
+        Loading nature type ({'strain', 'stress'}) associated with each
+        loading constraint (ndarray of shape (n_comps, n_load_subpaths)),
+        where the i-th row is associated with the i-th strain/stress
+        component and the j-th column is associated with the j-th loading
+        subpath.
+    mac_load_increm : dict
+        For each loading subpath id (key, str), stores a numpy.ndarray of shape
+        (n_load_increments, 2) where each row is associated with a prescribed
+        loading increment, and the columns 0 and 1 contain the corresponding
+        incremental load factor and incremental time, respectively.
+    is_solution_rewinding : bool, default=False
+        Problem solution rewinding flag.
+    rewind_state_criterion : tuple, default=None
+        Rewind state storage criterion [0] and associated parameter [1].
+    rewinding_criterion : tuple, default=None
+        Rewinding criterion [0] and associated parameter [1].
+    max_n_rewinds : int, default=None
+        Maximum number of rewind operations.
+
+    Returns
+    -------
+    macload_dict : dict
+        Container.
+    """
     # Initialize macroscale loading dictionary
     macload_dict = dict()
     # Build macroscale loading dictionary
@@ -138,39 +223,51 @@ def packmacroscaleloading(mac_load_type, mac_load, mac_load_presctype, mac_load_
     macload_dict['max_n_rewinds'] = max_n_rewinds
     # Return
     return macload_dict
-# ------------------------------------------------------------------------------------------
-# Package data associated to a regular grid of pixels/voxels
-def packregulargrid(discret_file_path, regular_grid, rve_dims, problem_dict):
-    #
-    # Object                      Meaning                                           Type
-    # -------------------------------------------------------------------------------------
-    # rve_dims                    Dimensions of the RVE                             list
-    # regular_grid                Regular grid of pixels/voxels                     ndarray
-    # n_voxels_dims               Number of voxels on each dimension                list
-    # regular_grid_flat           Flattened regular grid of pixels/voxels           ndarray
-    # voxels_idx_flat             Flattened voxels indexes                          ndarray
-    # phase_voxel_flatidx         Flattened voxels indexes associated to each
-    #                             material phase                                    dict
-    #                             key: material phase id (str)
-    #
+# =============================================================================
+def store_regular_grid_data(discret_file_path, regular_grid, rve_dims,
+                            problem_dict):
+    """Store data associated with the RVE spatial discretization.
+
+    Parameters
+    ----------
+    discret_file_path : str
+        Spatial discretization file path.
+    regular_grid : numpy.ndarray (2d or 3d)
+        Regular grid of voxels (spatial discretization of the RVE), where
+        each entry contains the material phase label (int) assigned to the
+        corresponding voxel.
+    rve_dims : list
+        RVE size in each dimension.
+    problem_dict : dict
+        Container.
+
+    Returns
+    -------
+    rg_dict : dict
+        Container.
+    """
     # Get problem data
     n_dim = problem_dict['n_dim']
     # Set number of pixels/voxels in each dimension
-    n_voxels_dims = [regular_grid.shape[i] for i in range(len(regular_grid.shape))]
+    n_voxels_dims = [regular_grid.shape[i]
+                     for i in range(len(regular_grid.shape))]
     n_voxels = np.prod(n_voxels_dims)
     # Get material phases present in the microstructure
     material_phases = [str(x) for x in list(np.unique(regular_grid))]
     # Flatten the regular grid array such that:
     #
-    # 2D Problem (swipe 2-1)   - voxel(i,j) is stored in index = i*d2 + j, where d2 is the
-    #                                       the number of voxels along dimension 2
+    # 2D Problem (swipe 2-1):
+    #   voxel(i,j) is stored in index = i*d2 + j, where d2 is the
+    #   the number of voxels along dimension 2
     #
-    # 3D Problem (swipe 3-2-1) - voxel(i,j,k) is stored in index = i*(d2*d3) + j*d3 + k,
-    #                                         where d2 and d3 are the number of voxels along
-    #                                         dimensions 2 and 3 respectively
+    # 3D Problem (swipe 3-2-1):
+    #   voxel(i,j,k) is stored in index = i*(d2*d3) + j*d3 + k,
+    #   where d2 and d3 are the number of voxels along dimensions 2 and 3
+    #   respectively
     #
     regular_grid_flat = list(regular_grid.flatten())
-    # Build flattened list with the voxels indexes (consistent with the flat regular grid)
+    # Build flattened list with the voxels indexes (consistent with the flat
+    # regular grid)
     voxels_idx_flat = list()
     shape = tuple([n_voxels_dims[i] for i in range(n_dim)])
     voxels_idx_flat = [np.unravel_index(i, shape) for i in range(n_voxels)]
@@ -191,43 +288,70 @@ def packregulargrid(discret_file_path, regular_grid, rve_dims, problem_dict):
     rg_dict['phase_voxel_flatidx'] = phase_voxel_flatidx
     # Return
     return rg_dict
-# ------------------------------------------------------------------------------------------
-# Package data associated to the clustering on a regular grid of pixels/voxels
-def packrgclustering(clustering_solution_method, standardization_method, links_data,
-                     phase_n_clusters, rg_dict, clustering_type, base_clustering_scheme,
-                     adaptive_clustering_scheme, adapt_criterion_data, adaptivity_type,
-                     adaptivity_control_feature, clust_adapt_freq, is_clust_adapt_output,
-                     is_store_final_clustering):
-    #
-    # Object                       Meaning                                         Type
-    # ------------------------------------------------------------------------------------
-    # phase_n_clusters             Number of clusters of each material phase       dict
-    #                              key: material phase id (str)
-    # phase_clusters               Clusters associated to each material phase      dict
-    #                              key: material phase id (str)
-    # voxels_clusters              Regular grid of pixels/voxels with the          ndarray
-    #                              cluster labels
-    # clusters_vf                  Clusters volume fraction                        dict
-    #                              key: material cluster label (str)
-    # links_data                   Links related variables                         dict
-    #                              key: links parameter (str)
-    # clustering_type              Clustering type, {'static', 'adaptive'}         dict
-    #                              key: material phase id (str)
-    # base_clustering_scheme       Base clustering scheme                          dict
-    #                              key: material phase id (str)
-    # adaptive_clustering_scheme   Adaptive clustering scheme                      dict
-    #                              key: material phase id (str)
-    # adapt_criterion_data         Adaptivity criterion parameters                 dict
-    #                              key: material phase id (str)
-    # adaptivity_type              Adaptivity type parameters                      dict
-    #                              key: material phase id (str)
-    # adaptivity_control_feature   Adaptivity control feature                      dict
-    #                              key: material phase id (str)
-    # clust_adapt_freq             Clustering adaptivity frequency                 dict
-    #                              key: material phase id (str)
-    # is_clust_adapt_output        Adaptivity output                               bool
-    # is_store_final_clustering    Final clustering state storage                  bool
-    #
+# =============================================================================
+def store_clustering_data(clustering_solution_method, standardization_method,
+                          links_data, phase_n_clusters, rg_dict,
+                          clustering_type, base_clustering_scheme,
+                          adaptive_clustering_scheme, adapt_criterion_data,
+                          adaptivity_type, adaptivity_control_feature,
+                          clust_adapt_freq, is_clust_adapt_output,
+                          is_store_final_clustering):
+    """Store data associated with the clustering-based domain decomposition.
+
+    Parameters
+    ----------
+    clustering_solution_method : int
+        Identifier of DNS homogenization-based multi-scale DNS method to
+        compute the clustering features data.
+    standardization_method : int
+        Identifier of global cluster analysis data standardization algorithm.
+    links_data : dict
+        Dictionary containing Links parameters.
+    phase_n_clusters : dict
+        Number of clusters (item, int) prescribed for each material phase
+        (key, str).
+    rg_dict : dict
+        Container.
+    clustering_type : str
+        Type of cluster-reduced material phase.
+    base_clustering_scheme : dict
+        Prescribed base clustering scheme (item, numpy.ndarray of shape
+        (n_clusterings, 3)) for each material phase (key, str). Each row is
+        associated with a unique clustering characterized by a clustering
+        algorithm (col 1, int), a list of features (col 2, list[int]) and a
+        list of the features data matrix' indexes (col 3, list[int]).
+    adaptive_clustering_scheme : dict
+        Prescribed adaptive clustering scheme (item, numpy.ndarray of shape
+        (n_clusterings, 3)) for each material phase (key, str). Each row is
+        associated with a unique clustering characterized by a clustering
+        algorithm (col 1, int), a list of features (col 2, list[int]) and a
+        list of the features data matrix' indexes (col 3, list[int]).
+    adapt_criterion_data : dict
+        Clustering adaptivity criterion (item, dict) associated with each
+        material phase (key, str). This dictionary contains the adaptivity
+        criterion to be used and the required parameters.
+    adaptivity_type : dict
+        Clustering adaptivity type (item, dict) associated with each material
+        phase (key, str). This dictionary contains the adaptivity type to be
+        used and the required parameters.
+    adaptivity_control_feature : dict
+        Clustering adaptivity control feature (item, str) associated with each
+        material phase (key, str).
+    clust_adapt_freq : dict
+        Clustering adaptivity frequency (relative to the macroscale
+        loading) (item, int, default=1) associated with each adaptive
+        cluster-reduced material phase (key, str).
+    is_clust_adapt_output : bool
+        Clustering adaptivity output flag.
+    is_store_final_clustering : bool
+        `True` to store CRVE final clustering state into file, `False`
+        otherwise.
+
+    Returns
+    -------
+    clst_dict : dict
+        Container.
+    """
     # Get regular grid data
     n_voxels_dims = rg_dict['n_voxels_dims']
     # Initialize array with voxels cluster labels
@@ -258,18 +382,25 @@ def packrgclustering(clustering_solution_method, standardization_method, links_d
     clst_dict['is_store_final_clustering'] = is_store_final_clustering
     # Return
     return clst_dict
-# ------------------------------------------------------------------------------------------
-# Package data associated to the self-consistent scheme
-def packagescs(self_consistent_scheme, scs_max_n_iterations, scs_conv_tol):
-    #
-    # Object                      Meaning                                           Type
-    # -------------------------------------------------------------------------------------
-    # self_consistent_scheme  Self-consistent scheme                                int
-    # scs_max_n_iterations    Maximum number of self-consistent
-    #                         scheme iterations to convergence                      int
-    # scs_conv_tol            Self-consistent scheme convergence
-    #                         tolerance                                             float
-    #
+# =============================================================================
+def store_scs_data(self_consistent_scheme, scs_max_n_iterations, scs_conv_tol):
+    """Store data associated with the self-consistent scheme.
+
+    Parameters
+    ----------
+    self_consistent_scheme : {'regression',}
+        Self-consistent scheme to update the elastic reference material
+        properties.
+    scs_max_n_iterations : int
+        Self-consistent scheme maximum number of iterations.
+    scs_conv_tol : float
+        Self-consistent scheme convergence tolerance.
+
+    Returns
+    -------
+    scs_dict : dict
+        Container.
+    """
     # Initialize self-consistent scheme dictionary
     scs_dict = dict()
     # Build self-consistent scheme dictionary
@@ -278,23 +409,31 @@ def packagescs(self_consistent_scheme, scs_max_n_iterations, scs_conv_tol):
     scs_dict['scs_conv_tol'] = scs_conv_tol
     # Return
     return scs_dict
-# ------------------------------------------------------------------------------------------
-# Package data associated to algorithmic parameters related to the solution procedure
-def packalgparam(max_n_iterations, conv_tol, max_subinc_level, max_cinc_cuts,
-                 su_max_n_iterations, su_conv_tol):
-    #
-    # Object                      Meaning                                           Type
-    # -------------------------------------------------------------------------------------
-    # max_n_iterations     Maximum number of iterations to achieve
-    #                      equilibrium convergence                                  int
-    # conv_tol             Equilibrium convergence tolerance                        float
-    # max_subinc_level     Maximum macroscale loading subincrementation level       int
-    # max_cinc_cuts        Maximum number of consecutive macroscale load
-    #                      increment cuts                                           int
-    # su_max_n_iterations  Maximum number of iterations to achieve
-    #                      the state update convergence                             int
-    # su_conv_tol          State update convergence tolerance                       float
-    #
+# =============================================================================
+def store_algorithmic_data(max_n_iterations, conv_tol, max_subinc_level,
+                           max_cinc_cuts, su_max_n_iterations, su_conv_tol):
+    """Store data associated with the problem solution algorithmic parameters.
+
+    Parameters
+    ----------
+    max_n_iterations : int
+        Newton-Raphson maximum number of iterations.
+    conv_tol : float
+        Newton-Raphson convergence tolerance.
+    max_subinc_level : int
+        Maximum level of loading subincrementation.
+    max_cinc_cuts : int
+        Maximum number of consecutive increment cuts.
+    su_max_n_iterations : int
+        State update maximum number of iterations.
+    su_conv_tol : float
+        State update convergence tolerance.
+
+    Returns
+    -------
+    algpar_dict : dict
+        Container.
+    """
     # Initialize algorithmic parameters dictionary
     algpar_dict = dict()
     # Build algorithmic parameters dictionary
@@ -306,19 +445,23 @@ def packalgparam(max_n_iterations, conv_tol, max_subinc_level, max_cinc_cuts,
     algpar_dict['su_conv_tol'] = su_conv_tol
     # Return
     return algpar_dict
-# ------------------------------------------------------------------------------------------
-# Package data associated to the VTK output
-def packvtk(is_vtk_output, *args):
-    #
-    # Object                      Meaning                                           Type
-    # -------------------------------------------------------------------------------------
-    # is_vtk_output        VTK output flag                                          bool
-    # vtk_format           VTK file format                                          str
-    # vtk_inc_div          VTK increment output divisor                             int
-    # vtk_vars             VTK state variables output                               str
-    # vtk_precision        VTK file precision                                       str
-    # vtk_byte_order       VTK file byte order                                      str
-    #
+# =============================================================================
+def store_vtk_data(is_vtk_output, *args):
+    """Store data associated with the VTK output.
+
+    Parameters
+    ----------
+    is_vtk_output : bool
+        VTK output flag.
+    *args :
+        * vtk_inc_div (int): VTK output increment divider.
+        * vtk_vars {'all', 'common'}: VTK output constitutive state variables.
+
+    Returns
+    -------
+    vtk_dict : dict
+        Container.
+    """
     # Initialize VTK dictionary
     vtk_dict = dict()
     # Build VTK dictionary
@@ -327,7 +470,7 @@ def packvtk(is_vtk_output, *args):
         # vtk_format = args[0]
         vtk_inc_div = args[1]
         vtk_vars = args[2]
-        vtk_dict['vtk_format'] = 'ascii'   # Change to vtk_format when binary is implemented
+        vtk_dict['vtk_format'] = 'ascii'
         vtk_dict['vtk_inc_div'] = vtk_inc_div
         vtk_dict['vtk_vars'] = vtk_vars
         vtk_dict['vtk_precision'] = 'SinglePrecision'
@@ -337,15 +480,22 @@ def packvtk(is_vtk_output, *args):
             vtk_dict['vtk_byte_order'] = 'BigEndian'
     # Return
     return vtk_dict
-# ------------------------------------------------------------------------------------------
-# Package data associated to general output files
-def packoutputfiles(is_ref_material_output, is_voxels_output):
-    #
-    # Object                 Meaning                                           Type
-    # -------------------------------------------------------------------------------------
-    # is_ref_material_output  Reference material output                             bool
-    # is_voxels_output       Voxels material-related quantities                bool
-    #
+# =============================================================================
+def store_output_data(is_ref_material_output, is_voxels_output):
+    """Store data associated with general output files.
+
+    Parameters
+    ----------
+    is_ref_material_output : bool, default=False
+        Reference material output flag.
+    is_voxels_output : bool
+        Voxels output file flag.
+
+    Returns
+    -------
+    output_dict : dict
+        Container.
+    """
     # Initialize output dictionary
     output_dict = dict()
     # Build output dictionary

@@ -82,7 +82,7 @@ problem_name, problem_dir, offline_stage_dir, postprocess_dir, is_same_offstage,
     crve_file_path, hres_file_path, refm_file_path, adapt_file_path = \
         filop.setproblemdirs(input_file_name, input_file_dir)
 # Package data associated to directories and paths
-dirs_dict = packager.packdirpaths(input_file_name, input_file_path, input_file_dir,
+dirs_dict = packager.store_paths_data(input_file_name, input_file_path, input_file_dir,
                                   problem_name, problem_dir, offline_stage_dir,
                                   postprocess_dir, crve_file_path, hres_file_path,
                                   refm_file_path, adapt_file_path)

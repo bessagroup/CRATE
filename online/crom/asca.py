@@ -341,7 +341,7 @@ class ASCA:
         vtk_data : dict, default=None
             VTK output file parameters.
         is_voxels_output : bool
-            Voxels output flag.
+            Voxels output file flag.
         """
         #
         #                                                       Initializations

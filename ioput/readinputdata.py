@@ -487,27 +487,27 @@ def read_input_data_file(input_file, dirs_dict):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Store problem general data
     info.displayinfo('5', 'Storing problem general data...')
-    problem_dict = packager.packproblem(
+    problem_dict = packager.store_problem_data(
         strain_formulation, problem_type, n_dim, comp_order_sym,
         comp_order_nsym)
     # Store data associated with the material phases
     info.displayinfo('5', 'Storing material data...')
-    mat_dict = packager.packmaterialphases(
+    mat_dict = packager.store_material_data(
         material_phases, material_phases_data, material_phases_properties,
         material_phases_vf)
     # Store data associated with the macroscale loading
     info.displayinfo('5', 'Storing macroscale loading data...')
-    macload_dict = packager.packmacroscaleloading(
+    macload_dict = packager.store_loading_path_data(
         mac_load_type, mac_load, mac_load_presctype, mac_load_increm,
         is_solution_rewinding, rewind_state_criterion, rewinding_criterion,
         max_n_rewinds)
     # Store data associated with the spatial discretization file(s)
     info.displayinfo('5', 'Storing regular grid data...')
-    rg_dict = packager.packregulargrid(
+    rg_dict = packager.store_regular_grid_data(
         discret_file_path, regular_grid, rve_dims, problem_dict)
     # Store data associated with the clustering
     info.displayinfo('5', 'Storing clustering data...')
-    clst_dict = packager.packrgclustering(
+    clst_dict = packager.store_clustering_data(
         clustering_solution_method, standardization_method, links_data,
         phase_n_clusters, rg_dict, clustering_type, base_clustering_scheme,
         adaptive_clustering_scheme, adapt_criterion_data, adaptivity_type,
@@ -515,23 +515,23 @@ def read_input_data_file(input_file, dirs_dict):
         is_store_final_clustering)
     # Store data associated with the self-consistent scheme
     info.displayinfo('5', 'Storing self-consistent scheme data...')
-    scs_dict = packager.packagescs(
+    scs_dict = packager.store_scs_data(
         self_consistent_scheme, scs_max_n_iterations, scs_conv_tol)
     # Store data associated with the self-consistent scheme
     info.displayinfo('5', 'Storing algorithmic data...')
-    algpar_dict = packager.packalgparam(
+    algpar_dict = packager.store_algorithmic_data(
         max_n_iterations, conv_tol, max_subinc_level, max_cinc_cuts,
         su_max_n_iterations, su_conv_tol)
     # Store data associated with the VTK output
     info.displayinfo('5', 'Storing VTK output data...')
     if is_vtk_output:
-        vtk_dict = packager.packvtk(
+        vtk_dict = packager.store_vtk_data(
             is_vtk_output, vtk_format, vtk_inc_div, vtk_vars)
     else:
-        vtk_dict = packager.packvtk(is_vtk_output)
+        vtk_dict = packager.store_vtk_data(is_vtk_output)
     # Store data associated with the output files
     info.displayinfo('5', 'Storing general output files data...')
-    output_dict = packager.packoutputfiles(
+    output_dict = packager.store_output_data(
         is_ref_material_output, is_voxels_output)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return problem_dict, mat_dict, macload_dict, rg_dict, clst_dict, \
