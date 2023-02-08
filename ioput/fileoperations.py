@@ -8,11 +8,11 @@ Functions
 ---------
 make_directory
     Create new directory.
-rmunreqdirs
+remove_dirs
     Remove unrequired directories and files in target directory.
-setinputdatafilepath
+set_input_datafile_path
     Process input data file path.
-setproblemdirs
+set_problem_dirs
     Set output directory structure and output files paths.
 """
 #
@@ -65,8 +65,7 @@ def make_directory(dir, option='no_overwrite'):
         errors.displayexception(location.filename, location.lineno + 1,
                                 message)
 # =============================================================================
-# Remove all the unrequired directories and files in a target directory
-def rmunreqdirs(target_dir, required_dirnames):
+def remove_dirs(target_dir, required_dirnames):
     """Remove unrequired directories and files in target directory.
 
     Parameters
@@ -87,7 +86,7 @@ def rmunreqdirs(target_dir, required_dirnames):
 #
 #                                                               Input data file
 # =============================================================================
-def setinputdatafilepath(path):
+def set_input_datafile_path(path):
     """Process input data file path.
 
     Parameters
@@ -123,7 +122,7 @@ def setinputdatafilepath(path):
 #
 #                                                             Results directory
 # =============================================================================
-def setproblemdirs(input_file_name, input_file_dir):
+def set_problem_dirs(input_file_name, input_file_dir):
     """Set output directory structure and output files paths.
 
     *Output directory structure:*
@@ -283,7 +282,7 @@ def setproblemdirs(input_file_name, input_file_dir):
             # Remove all the existent subdirectories and files except the
             # offline-stage subdirectory and the '.screen' output file
             required_dirnames = [input_file_name + '.screen', 'Offline_Stage']
-            rmunreqdirs(problem_dir, required_dirnames)
+            remove_dirs(problem_dir, required_dirnames)
             # Create post-processing subdirectory
             make_directory(postprocess_dir, 'overwrite')
             # Warn user to potential compatibility issues between the problem
@@ -308,7 +307,7 @@ def setproblemdirs(input_file_name, input_file_dir):
                 # Remove all existent subdirectories and files except the
                 # '.screen' output file
                 required_dirnames = [input_file_name + '.screen']
-                rmunreqdirs(problem_dir, required_dirnames)
+                remove_dirs(problem_dir, required_dirnames)
                 # Create problem output directory subdirectories
                 for dir in [offline_stage_dir, postprocess_dir]:
                     make_directory(dir, 'overwrite')

@@ -76,11 +76,11 @@ elif not os.path.isfile(str(sys.argv[1])):
     errors.displayerror('E00001', location.filename, location.lineno + 1)
 # Set input data file name, path and directory
 input_file_name, input_file_path, input_file_dir = \
-    filop.setinputdatafilepath(str(sys.argv[1]))
+    filop.set_input_datafile_path(str(sys.argv[1]))
 # Set problem name, directory and main subdirectories
 problem_name, problem_dir, offline_stage_dir, postprocess_dir, is_same_offstage, \
     crve_file_path, hres_file_path, refm_file_path, adapt_file_path = \
-        filop.setproblemdirs(input_file_name, input_file_dir)
+        filop.set_problem_dirs(input_file_name, input_file_dir)
 # Package data associated to directories and paths
 dirs_dict = packager.store_paths_data(input_file_name, input_file_path, input_file_dir,
                                   problem_name, problem_dir, offline_stage_dir,
