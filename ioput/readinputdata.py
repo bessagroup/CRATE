@@ -272,7 +272,7 @@ def read_input_data_file(input_file, dirs_dict):
         # Set directory where Links offline-stage simulation files are stored.
         links_offline_dir =  offline_stage_dir + 'Links' + '/'
         if not os.path.exists(links_offline_dir):
-            filop.makedirectory(links_offline_dir)
+            filop.make_directory(links_offline_dir)
         links_data['links_offline_dir'] = links_offline_dir
     # If at least one material phase has the associated constitutive model
     # source set as Links, add Links python binary to Links dictionary
@@ -400,7 +400,7 @@ def read_input_data_file(input_file, dirs_dict):
         vtk_format, vtk_inc_div, vtk_vars = rproc.read_vtk_options(
             input_file, input_file_path, keyword, keyword_line_number)
         # Create VTK folder in post processing directory
-        filop.makedirectory(postprocess_dir + 'VTK/', 'overwrite')
+        filop.make_directory(postprocess_dir + 'VTK/', 'overwrite')
     else:
         is_vtk_output = False
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

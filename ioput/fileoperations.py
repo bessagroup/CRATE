@@ -6,7 +6,7 @@ output directory.
 
 Functions
 ---------
-makedirectory
+make_directory
     Create new directory.
 rmunreqdirs
     Remove unrequired directories and files in target directory.
@@ -39,7 +39,7 @@ __status__ = 'Stable'
 #
 #                                                          Directory operations
 # =============================================================================
-def makedirectory(dir, option='no_overwrite'):
+def make_directory(dir, option='no_overwrite'):
     """Create new directory.
 
     Parameters
@@ -259,9 +259,9 @@ def setproblemdirs(input_file_name, input_file_dir):
     if not os.path.exists(problem_dir):
         status = 0
         # Create problem output directory and subdirectories
-        makedirectory(problem_dir)
+        make_directory(problem_dir)
         for dir in [offline_stage_dir, postprocess_dir]:
-            makedirectory(dir)
+            make_directory(dir)
         # No previously computed offline-stage data available
         is_same_offstage = False
     else:
@@ -285,7 +285,7 @@ def setproblemdirs(input_file_name, input_file_dir):
             required_dirnames = [input_file_name + '.screen', 'Offline_Stage']
             rmunreqdirs(problem_dir, required_dirnames)
             # Create post-processing subdirectory
-            makedirectory(postprocess_dir, 'overwrite')
+            make_directory(postprocess_dir, 'overwrite')
             # Warn user to potential compatibility issues between the problem
             # input data file and the existent offline-stage '.crve' data file
             ioutil.useraction('\n\nWarning: Please make sure that the problem '
@@ -311,7 +311,7 @@ def setproblemdirs(input_file_name, input_file_dir):
                 rmunreqdirs(problem_dir, required_dirnames)
                 # Create problem output directory subdirectories
                 for dir in [offline_stage_dir, postprocess_dir]:
-                    makedirectory(dir, 'overwrite')
+                    make_directory(dir, 'overwrite')
             else:
                 status = 3
         # Display information about the problem directory and status

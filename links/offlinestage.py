@@ -265,7 +265,7 @@ class LinksFEMHomogenization(DNSHomogenizationMethod):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set and create Links offline-stage directory if it does not exist
         if not os.path.exists(self._links_offline_dir):
-            filop.makedirectory(self._links_offline_dir)
+            filop.make_directory(self._links_offline_dir)
         # Set Links input data file path
         links_file_path = self._links_offline_dir + file_name + '.rve'
         # Abort if attempting to overwrite an existing Links input data file

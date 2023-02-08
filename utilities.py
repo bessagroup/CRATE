@@ -110,7 +110,7 @@ def utility1():
         output_dir = '/media/bernardoferreira/HDD/FEUP PhD/Studies/seminar/' + \
                      'offline_stage/main/3D/FFT_NEW/'
     output_dir = output_dir + discret_file_basename + '_' + loading + '/'
-    filop.makedirectory(output_dir,option='overwrite')
+    filop.make_directory(output_dir,option='overwrite')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set absolute path of the file where the error for the diferent convergence criteria
     # is written at every iteration
