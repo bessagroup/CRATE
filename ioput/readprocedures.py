@@ -2010,7 +2010,7 @@ def read_vtk_options(file, file_path, keyword, keyword_line_number):
     line = linecache.getline(file_path, keyword_line_number).split()
     line = [x.lower() if not ioutil.checknumber(x) else x for x in line]
     if 'binary' in line:
-        vtk_format = 'binary'
+        raise RuntimeError('This VTK format has not been implemented yet.')
     else:
         vtk_format = 'ascii'
     if 'every' in line:

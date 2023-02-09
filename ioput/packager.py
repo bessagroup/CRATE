@@ -467,10 +467,10 @@ def store_vtk_data(is_vtk_output, *args):
     # Build VTK dictionary
     vtk_dict['is_vtk_output'] = is_vtk_output
     if is_vtk_output:
-        # vtk_format = args[0]
+        vtk_format = args[0]
         vtk_inc_div = args[1]
         vtk_vars = args[2]
-        vtk_dict['vtk_format'] = 'ascii'
+        vtk_dict['vtk_format'] = vtk_format
         vtk_dict['vtk_inc_div'] = vtk_inc_div
         vtk_dict['vtk_vars'] = vtk_vars
         vtk_dict['vtk_precision'] = 'SinglePrecision'
