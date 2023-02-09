@@ -658,8 +658,8 @@ class AgglomerativeSP(AgglomerativeAlgorithm):
             clustering. Threshold (float) with criterion in {'inconsistent',
             'distance', 'monocrit'} or maximum number of clusters with
             criterion in {'maxclust', 'maxclust_monocrit'}.
-        method : str, {'single', 'complete', 'average', 'weighted', \
-                       'centroid', 'median', 'ward'}, default='ward'
+        method : {'single', 'complete', 'average', 'weighted', 'centroid', \
+                  'median', 'ward'}, default='ward'
             Linkage criterion.
         metric : {str, function}, default='euclidean'
             Distance metric to use when the input data matrix is a

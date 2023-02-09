@@ -76,7 +76,7 @@ class ConstitutiveModel(ABC):
             2D axisymmetric (3) and 3D (4).
         material_properties : dict
             Constitutive model material properties (key, str) values
-            (item, int/float/bool).
+            (item, {int, float, bool}).
         """
         pass
     # -------------------------------------------------------------------------
@@ -147,7 +147,7 @@ class ConstitutiveModel(ABC):
 
         Returns
         -------
-        strain_type : str, {'infinitesimal', 'finite', 'finite-kinext'}
+        strain_type : {'infinitesimal', 'finite', 'finite-kinext'}
             Constitutive model strain formulation: infinitesimal strain
             formulation ('infinitesimal'), finite strain formulation ('finite')
             or finite strain formulation through kinematic extension
@@ -173,6 +173,6 @@ class ConstitutiveModel(ABC):
         -------
         material_properties : dict
             Constitutive model material properties (key, str) values
-            (item, int/float/bool).
+            (item, {int, float, bool}).
         """
         return copy.deepcopy(self._material_properties)

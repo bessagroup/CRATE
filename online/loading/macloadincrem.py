@@ -589,7 +589,7 @@ class LoadingSubpath:
             (key, {'strain', 'stress'}), stores the loading constraints in a
             numpy.ndarray of shape (n_comps,).
         presctype : numpy.ndarray (1d)
-            Loading nature type (str, {'strain', 'stress'}) associated with
+            Loading nature type ({'strain', 'stress'}) associated with
             each macroscale loading constraint (numpy.ndarray of shape
             (n_comps,)).
         inc_lfacts : numpy.ndarray (1d)

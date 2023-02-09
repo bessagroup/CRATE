@@ -557,7 +557,7 @@ def diso_scalars(abc, eigenvalues, fun, fund):
 
     Parameters
     ----------
-    abc : str, {'012', '210', '102', '021', '102', '120', '201'}
+    abc : {'012', '210', '102', '021', '102', '120', '201'}
         Triplet containing the eigenvalues evaluation order. The first and last
         are assumed to be the distinct eigenvalues.
     eigenvals : numpy.ndarray (1d)

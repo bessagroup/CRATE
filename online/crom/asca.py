@@ -2931,16 +2931,17 @@ class ElasticReferenceMaterial:
     _comp_order_nsym : list[str]
         Strain/Stress components nonsymmetric order.
     _material_properties : dict
-        Elastic material properties (key, str) values (item, int/float/bool).
+        Elastic material properties (key, str) values
+        (item, {int, float, bool}).
     _material_properties_old : dict
         Last loading increment converged elastic material properties (key, str)
-        values (item, int/float/bool).
+        values (item, {int, float, bool}).
     _material_properties_init : dict
-        Elastic material properties (key, str) values (item, int/float/bool)
-        initial guess.
+        Elastic material properties (key, str) values
+        (item, {int, float, bool}) initial guess.
     _material_properties_scs_init : dict
-        Elastic material properties (key, str) values (item, int/float/bool)
-        converged in the first loading increment.
+        Elastic material properties (key, str) values
+        (item, {int, float, bool}) converged in the first loading increment.
     _elastic_tangent_mf : numpy.ndarray (2d)
         Elastic tangent modulus in matricial form.
     _elastic_compliance_matrix : numpy.ndarray (2d)
@@ -3079,7 +3080,7 @@ class ElasticReferenceMaterial:
         -------
         material_properties : dict
             Elastic material properties (key, str) values
-            (item, int/float/bool).
+            (item, {int, float, bool}).
         """
         return copy.deepcopy(self._material_properties)
     # -------------------------------------------------------------------------
@@ -3673,7 +3674,7 @@ class InfinitesimalRegressionSCS(ReferenceMaterialOptimizer):
             2D axisymmetric (3) and 3D (4).
         material_properties_old : dict
             Last loading increment converged elastic reference material
-            properties (key, str) values (item, int/float/bool).
+            properties (key, str) values (item, {int, float, bool}).
         inc_strain_mf : numpy.ndarray (1d)
             Incremental homogenized strain (matricial form).
         inc_stress_mf : numpy.ndarray (1d)
@@ -3837,7 +3838,7 @@ class FiniteRegressionSCS(ReferenceMaterialOptimizer):
             2D axisymmetric (3) and 3D (4).
         material_properties_old : dict
             Last loading increment converged elastic reference material
-            properties (key, str) values (item, int/float/bool).
+            properties (key, str) values (item, {int, float, bool}).
         strain_old_mf : numpy.ndarray (1d)
             Last converged homogenized strain (matricial form).
         inc_strain_mf : numpy.ndarray (1d)
@@ -3969,13 +3970,14 @@ class SelfConsistentOptimization(ReferenceMaterialOptimizer):
             2D axisymmetric (3) and 3D (4).
         material_properties_old : dict
             Last loading increment converged elastic reference material
-            properties (key, str) values (item, int/float/bool).
+            properties (key, str) values (item, {int, float, bool}).
         material_properties_init : dict
             Elastic material properties (key, str) values
-            (item, int/float/bool) initial guess.
+            (item, {int, float, bool}) initial guess.
         material_properties_scs_init : dict
             Elastic material properties (key, str) values
-            (item, int/float/bool) converged in the first loading increment.
+            (item, {int, float, bool}) converged in the first loading
+            increment.
         strain_old_mf : numpy.ndarray (1d)
             Last converged homogenized strain (matricial form).
         strain_mf : numpy.ndarray (1d)

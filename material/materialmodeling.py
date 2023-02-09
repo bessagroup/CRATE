@@ -63,7 +63,7 @@ class MaterialState:
         Material constitutive model (item, ConstitutiveModel) associated to
         each material phase (key, str).
     _phase_clusters : dict
-        Clusters labels (item, list of int) associated to each material phase
+        Clusters labels (item, list[int]) associated to each material phase
         (key, str).
     _clusters_vf : dict
         Volume fraction (item, float) associated to each material cluster
@@ -1241,7 +1241,7 @@ class MaterialState:
         Parameters
         ----------
         phase_clusters : dict
-            Clusters labels (item, list of int) associated to each material
+            Clusters labels (item, list[int]) associated to each material
             phase (key, str).
         clusters_vf : dict
             Volume fraction (item, float) associated to each material cluster

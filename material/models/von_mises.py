@@ -52,7 +52,7 @@ class VonMises(ConstitutiveModel):
         strain formulation through kinematic extension (infinitesimal
         constitutive formulation and purely finite strain kinematic extension -
         'finite-kinext').
-    _source : str, {'crate', }
+    _source : {'crate', }
         Material constitutive model source.
     _ndim : int
         Problem number of spatial dimensions.
@@ -76,14 +76,14 @@ class VonMises(ConstitutiveModel):
 
         Parameters
         ----------
-        strain_formulation: str, {'infinitesimal', 'finite'}
+        strain_formulation: {'infinitesimal', 'finite'}
             Problem strain formulation.
         problem_type : int
             Problem type: 2D plane strain (1), 2D plane stress (2),
             2D axisymmetric (3) and 3D (4).
         material_properties : dict
             Constitutive model material properties (key, str) values
-            (item, int/float/bool).
+            (item, {int, float, bool}).
         """
         self._name = 'von_mises'
         self._strain_formulation = strain_formulation
@@ -157,7 +157,7 @@ class VonMises(ConstitutiveModel):
             Constitutive model material properties names (str).
         constitutive_options : dict
             Constitutive options (key, str) and available specifications
-            (item, tuple of str).
+            (item, tuple[str]).
         """
         # Get available elastic symmetries and required elastic moduli
         elastic_symmetries = Elastic.get_available_elastic_symmetries()

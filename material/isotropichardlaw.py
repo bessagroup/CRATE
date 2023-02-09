@@ -153,7 +153,7 @@ def build_hardening_parameters(type, material_properties):
         Isotropic hardening law.
     material_properties : dict
         Constitutive model material properties (key, str) values
-        (item, int/float/bool).
+        (item, {int, float, bool}).
 
     Returns
     -------

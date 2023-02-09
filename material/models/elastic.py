@@ -78,7 +78,7 @@ class Elastic(ConstitutiveModel):
             2D axisymmetric (3) and 3D (4).
         material_properties : dict
             Constitutive model material properties (key, str) values
-            (item, int/float/bool).
+            (item, {int, float, bool}).
         """
         self._name = 'elastic'
         self._strain_formulation = strain_formulation
@@ -141,7 +141,7 @@ class Elastic(ConstitutiveModel):
             Constitutive model material properties names (str).
         constitutive_options : dict
             Constitutive options (key, str) and available specifications
-            (item, tuple of str).
+            (item, tuple[str]).
         """
         # Get available elastic symmetries and required elastic moduli
         elastic_symmetries = Elastic.get_available_elastic_symmetries()
@@ -458,8 +458,8 @@ class Elastic(ConstitutiveModel):
         Returns
         -------
         elastic_symmetries : dict
-            Elastic moduli (tuple of str, item) required for each available
-            elastic symmetry (str, key).
+            Elastic moduli (item, tuple[str]) required for each available
+            elastic symmetry (key, str).
         """
         # Set available elastic symmetries and required elastic moduli
         elastic_symmetries = {
