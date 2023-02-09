@@ -118,10 +118,10 @@ class LoadingPath:
             j-th loading subpath.
         mac_load_presctype : numpy.ndarray (2d)
             Loading nature type ({'strain', 'stress'}) associated with each
-            loading constraint (ndarray of shape (n_comps, n_load_subpaths)),
-            where the i-th row is associated with the i-th strain/stress
-            component and the j-th column is associated with the j-th loading
-            subpath.
+            loading constraint (numpy.ndarrayndarray of shape
+            (n_comps, n_load_subpaths)), where the i-th row is associated with
+            the i-th strain/stress component and the j-th column is associated
+            with the j-th loading subpath.
         mac_load_increm : dict
             For each loading subpath id (key, str), stores a numpy.ndarray of
             shape (n_load_increments, 2) where each row is associated with a
@@ -249,7 +249,7 @@ class LoadingPath:
         applied_mac_load_mf : dict
             For each prescribed loading nature type
             (key, {'strain', 'stress'}), stores the current applied loading
-            constraints in a ndarray of shape (n_comps,).
+            constraints in a numpy.ndarray of shape (n_comps,).
         inc_mac_load_mf : dict
             For each loading nature type (key, {'strain', 'stress'}), stores
             the incremental loading constraint matricial form in a
@@ -488,12 +488,12 @@ class LoadingPath:
         comp_order : list[str]
             Strain/Stress components (str) order.
         load_vector : numpy.ndarray (1d)
-            Loading tensor in vector form (ndarray of shape (n_comps,)).
+            Loading tensor in vector form (numpy.ndarray of shape (n_comps,)).
 
         Returns
         -------
         load_mf : numpy.ndarray (1d)
-            Loading tensor matricial form (ndarray of shape (n_comps,)).
+            Loading tensor matricial form (numpy.ndarray of shape (n_comps,)).
         """
         # Initialize incremental macroscale load tensor
         load_matrix = np.zeros((n_dim, n_dim))

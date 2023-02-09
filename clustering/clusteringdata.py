@@ -856,13 +856,14 @@ class Standardizer(ABC):
         Parameters
         ----------
         data_matrix : numpy.ndarray (2d)
-            Data matrix to be standardized (ndarray of shape
+            Data matrix to be standardized (numpy.ndarray of shape
             (n_items, n_features)).
 
         Returns
         -------
         data_matrix : numpy.ndarray (2d)
-            Transformed data matrix (ndarray of shape (n_items, n_features)).
+            Transformed data matrix (numpy.ndarrayndarray of shape
+            (n_items, n_features)).
         """
         pass
 #
@@ -903,13 +904,14 @@ class MinMaxScaler(Standardizer):
         Parameters
         ----------
         data_matrix : numpy.ndarray (2d)
-            Data matrix to be standardized (ndarray of shape
+            Data matrix to be standardized (numpy.ndarray of shape
             (n_items, n_features)).
 
         Returns
         -------
         data_matrix : numpy.ndarray (2d)
-            Transformed data matrix (ndarray of shape (n_items, n_features)).
+            Transformed data matrix (numpy.ndarray of shape
+            (n_items, n_features)).
         """
         # Instatiante standardizer
         standardizer = skpp.MinMaxScaler(feature_range=self._feature_range,
@@ -943,13 +945,14 @@ class StandardScaler(Standardizer):
         Parameters
         ----------
         data_matrix : numpy.ndarray (2d)
-            Data matrix to be standardized (ndarray of shape
+            Data matrix to be standardized (numpy.ndarray of shape
             (n_items, n_features)).
 
         Returns
         -------
         data_matrix : numpy.ndarray (2d)
-            Transformed data matrix (ndarray of shape (n_items, n_features)).
+            Transformed data matrix (numpy.ndarray of shape
+            (n_items, n_features)).
         """
         # Instatiante standardizer
         standardizer = skpp.StandardScaler(with_mean=True, with_std=True,

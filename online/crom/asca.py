@@ -306,13 +306,13 @@ class ASCA:
             j-th loading subpath.
         mac_load_presctype : numpy.ndarray (2d)
             Loading nature type ({'strain', 'stress'}) associated with each
-            loading constraint (ndarray of shape (n_comps, n_load_subpaths)),
-            where the i-th row is associated with the i-th strain/stress
-            component and the j-th column is associated with the j-th loading
-            subpath.
+            loading constraint (numpy.ndarray of shape
+            (n_comps, n_load_subpaths)), where the i-th row is associated with
+            the i-th strain/stress component and the j-th column is associated
+            with the j-th loading subpath.
         mac_load_increm : dict
-            For each loading subpath id (key, str), stores a ndarray of shape
-            (n_load_increments, 2) where each row is associated with a
+            For each loading subpath id (key, str), stores a numpy.ndarray of
+            shape (n_load_increments, 2) where each row is associated with a
             prescribed loading increment, and the columns 0 and 1 contain the
             corresponding incremental load factor and incremental time,
             respectively.

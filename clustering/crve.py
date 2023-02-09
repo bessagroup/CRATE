@@ -609,8 +609,9 @@ class CRVE:
             Cluster interaction tensors associated with the Green operator
             material independent terms. Each term is stored in a dictionary
             (item, dict) for each pair of material phases (key, str), which in
-            turn contains the corresponding matricial form (item, ndarray)
-            associated with each pair of clusters (key, str).
+            turn contains the corresponding matricial form (item,
+            numpy.ndarray (2d)) associated with each pair of clusters
+            (key, str).
         """
         return self._cit_x_mf
     # -------------------------------------------------------------------------

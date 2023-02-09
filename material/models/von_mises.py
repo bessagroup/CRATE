@@ -279,7 +279,7 @@ class VonMises(ConstitutiveModel):
         -------
         state_variables : dict
             Material constitutive model state variables.
-        consistent_tangent_mf : ndarray
+        consistent_tangent_mf : numpy.ndarray (2d)
             Material constitutive model consistent tangent modulus in
             matricial form.
         """

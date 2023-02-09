@@ -404,7 +404,7 @@ def get_condensed_matrix(matrix, rows, cols):
 
     Parameters
     ----------
-    matrix : numpy.ndarray
+    matrix : numpy.ndarray (2d)
         Matrix to be condensed.
     rows : numpy.ndarray (1d)
         Indexes of rows to keep in condensed matrix.
@@ -413,7 +413,7 @@ def get_condensed_matrix(matrix, rows, cols):
 
     Returns
     -------
-    matrix_condensed : numpy.ndarray
+    matrix_condensed : numpy.ndarray (2d)
         Condensed matrix.
     """
     # Check validity of rows and columns indexes to perform the condensation

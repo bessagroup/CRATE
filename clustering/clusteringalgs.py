@@ -388,7 +388,8 @@ class MiniBatchKMeansSK(ClusteringAlgorithm):
         ----------
         n_clusters : int, default=None
             Number of clusters to find.
-        init: {‘k-means++’, ‘random’, ndarray, callable}, default=’k-means++’
+        init: {‘k-means++’, ‘random’, numpy.ndarray, callable}, \
+              default=’k-means++’
             Method for centroid initialization.
         n_init : int, default=10
             Number of times K-Means is run with different centroid seeds.
@@ -1046,12 +1047,13 @@ class AgglomerativeFC(ClusteringAlgorithm):
 
     Attributes
     ----------
-    Z : ndarray of shape (n-1, 4)
-        Linkage matrix associated with the hierarchical clustering. At the
-        i-th iteration the clusterings with indices Z[i, 0] and Z[i, 1], with
-        distance Z[i, 2], are merged, forming a new cluster that contains
-        Z[i, 3] original dataset items. All cluster indices j >= n refer to the
-        cluster formed in Z[j-n, :].
+    Z : numpy.ndarray (2d)
+        Linkage matrix associated with the hierarchical clustering
+        (numpy.ndarray of shape (n-1, 4)). At the i-th iteration the
+        clusterings with indices Z[i, 0] and Z[i, 1], with distance Z[i, 2],
+        are merged, forming a new cluster that contains Z[i, 3] original
+        dataset items. All cluster indices j >= n refer to the cluster formed
+        in Z[j-n, :].
     """
     def __init__(self, t, method='ward', metric='euclidean',
                  criterion='maxclust', n_clusters=None):

@@ -1,11 +1,8 @@
-"""VTK (XML format) output files.
+"""Display information during program execution.
 
-This module includes a complete toolkit to generate VTK files (XML format)
-containing data defined at the microstructure level, assumed to be spatially
-discretized in a regular grid of voxels. Such data may include information
-about the material phases, clusters and state variables local fields, allowing
-the spatial visualization through suitable VTK-reading software
-(e.g., Paraview).
+This module includes a function that allows the output of information to both
+default standard output device (e.g., terminal) and to the '.screen' output
+file in a formatted and consistent manner.
 
 Functions
 ---------
