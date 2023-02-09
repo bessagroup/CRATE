@@ -229,10 +229,10 @@ class LoadingPath:
                 self._n_dim, comp_order, inc_mac_load[ltype])
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
-        return [applied_mac_load_mf, inc_mac_load_mf,
-                load_subpath._n_presc_strain, load_subpath._presc_strain_idxs,
-                load_subpath._n_presc_stress, load_subpath._presc_stress_idxs,
-                self._is_last_inc]
+        return applied_mac_load_mf, inc_mac_load_mf, \
+            load_subpath._n_presc_strain, load_subpath._presc_strain_idxs, \
+            load_subpath._n_presc_stress, load_subpath._presc_stress_idxs, \
+            self._is_last_inc
     # -------------------------------------------------------------------------
     def increment_cut(self, n_dim, comp_order):
         """Perform loading increment cut and setup new increment.
@@ -295,10 +295,10 @@ class LoadingPath:
             inc_mac_load_mf[ltype] = type(self)._get_load_mf(
                 n_dim, comp_order, inc_mac_load[ltype])
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        return [applied_mac_load_mf, inc_mac_load_mf,
-                load_subpath._n_presc_strain, load_subpath._presc_strain_idxs,
-                load_subpath._n_presc_stress, load_subpath._presc_stress_idxs,
-                self._is_last_inc]
+        return applied_mac_load_mf, inc_mac_load_mf, \
+            load_subpath._n_presc_strain, load_subpath._presc_strain_idxs, \
+            load_subpath._n_presc_stress, load_subpath._presc_stress_idxs, \
+            self._is_last_inc
     # -------------------------------------------------------------------------
     def update_hom_state(self, hom_strain_mf, hom_stress_mf):
         """Update converged homogenized state.
@@ -666,9 +666,9 @@ class LoadingSubpath:
         # Get loading subpath current increment index
         inc_idx = self._inc - 1
         # Return
-        return [self._id, self._inc, self._total_lfact,
-                self._inc_lfacts[inc_idx], self._total_time,
-                self._inc_times[inc_idx], self._sub_inc_levels[inc_idx]]
+        return self._id, self._inc, self._total_lfact, \
+            self._inc_lfacts[inc_idx], self._total_time, \
+            self._inc_times[inc_idx], self._sub_inc_levels[inc_idx]]
     # -------------------------------------------------------------------------
     def update_inc(self):
         """Update increment counter, total load factor and applied loading."""

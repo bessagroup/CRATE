@@ -205,7 +205,7 @@ def get_id_operators(n_dim):
     # tensors)
     fodevprojsym = fosym - (1.0/3.0)*fodiagtrace
     # Return
-    return [soid, foid, fotransp, fosym, fodiagtrace, fodevproj, fodevprojsym]
+    return soid, foid, fotransp, fosym, fodiagtrace, fodevproj, fodevprojsym
 #
 #                                                        Spectral decomposition
 # =============================================================================

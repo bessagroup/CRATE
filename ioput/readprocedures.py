@@ -128,8 +128,8 @@ def searchoptkeywordline(file, keyword):
         line_number = line_number + 1
         if keyword in line.split() and line.strip()[0] != '#':
             is_found = True
-            return [is_found,line_number]
-    return [is_found,line_number]
+            return is_found, line_number
+    return is_found, line_number
 #
 #                                                           Parameter formatter
 # =============================================================================

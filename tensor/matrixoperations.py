@@ -84,7 +84,7 @@ def get_problem_type_parameters(problem_type):
         raise RuntimeError('Unavailable problem type.')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Return
-    return [n_dim, comp_order_sym, comp_order_nsym]
+    return n_dim, comp_order_sym, comp_order_nsym
 #
 #                                        Tensorial - Matricial forms conversion
 # =============================================================================

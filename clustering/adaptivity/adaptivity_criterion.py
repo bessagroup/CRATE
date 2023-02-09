@@ -247,7 +247,7 @@ class AdaptiveClusterGrouping(AdaptivityCriterion):
                                'min_adapt_feature_val': 0.0}
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
-        return [mandatory_parameters, optional_parameters]
+        return mandatory_parameters, optional_parameters
     # -------------------------------------------------------------------------
     def get_target_clusters(self, adapt_data_matrix, voxels_clusters):
         """Get clustering adaptivity target clusters.
@@ -672,7 +672,7 @@ class SpatialDiscontinuities(AdaptivityCriterion):
                                'magnitude_lower_factor': 1.0}
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
-        return [mandatory_parameters, optional_parameters]
+        return mandatory_parameters, optional_parameters
     # -------------------------------------------------------------------------
     def get_target_clusters(self, adapt_data_matrix, voxels_clusters):
         """Get clustering adaptivity target clusters.

@@ -219,7 +219,7 @@ class ClusterAnalysis:
         else:
             is_n_clusters_satisfied = True
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        return [cluster_labels, clust_alg, is_n_clusters_satisfied]
+        return cluster_labels, clust_alg, is_n_clusters_satisfied
 #
 #                                               Interface: Clustering algorithm
 # =============================================================================

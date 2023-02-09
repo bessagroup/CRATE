@@ -311,7 +311,7 @@ def gop_material_independent_terms(strain_formulation, problem_type, rve_dims,
         # Compute Green operator zero-frequency term
         gop_0_freq_dft_vox[comp][tuple(n_dim*(0,))] = 1.0
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    return [gop_1_dft_vox, gop_2_dft_vox, gop_0_freq_dft_vox]
+    return gop_1_dft_vox, gop_2_dft_vox, gop_0_freq_dft_vox
 #
 #                                    Global cluster interaction matrix assembly
 # =============================================================================

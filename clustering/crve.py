@@ -513,7 +513,7 @@ class CRVE:
             Total number of voxels of the regular grid (spatial discretization
             of the RVE).
         """
-        return [self._n_voxels_dims, self._n_voxels]
+        return self._n_voxels_dims, self._n_voxels
     # -------------------------------------------------------------------------
     def get_regular_grid(self):
         """Get regular grid of voxels with material phase labels.
@@ -673,8 +673,8 @@ class CRVE:
             each entry contains the cluster label (int) assigned to the
             corresponding voxel.
         """
-        return [self._material_phases, self._phase_clusters,
-                self._voxels_clusters]
+        return self._material_phases, self._phase_clusters, \
+            self._voxels_clusters
     # -------------------------------------------------------------------------
     def get_adaptive_step(self):
         """Get counter of adaptive clustering steps.
@@ -1316,7 +1316,7 @@ class CRVE:
         # Transform (FFT)
         cluster_filter_dft = np.fft.fftn(cluster_filter)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        return [cluster_filter, cluster_filter_dft]
+        return cluster_filter, cluster_filter_dft
     # -------------------------------------------------------------------------
     def _gop_convolution(self, cluster_filter_dft, gop_1_dft_vox,
                          gop_2_dft_vox, gop_0_freq_dft_vox):
@@ -1440,7 +1440,7 @@ class CRVE:
                 gop_0_freq_filt_vox[compi + compj] = np.real(np.fft.ifftn(
                     gop_0_freq_filt_dft_vox[compi + compj]))
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        return [gop_1_filt_vox, gop_2_filt_vox, gop_0_freq_filt_vox]
+        return gop_1_filt_vox, gop_2_filt_vox, gop_0_freq_filt_vox
     # -------------------------------------------------------------------------
     def _discrete_cit_integral(self, cluster_filter, gop_1_filt_vox,
                                gop_2_filt_vox, gop_0_freq_filt_vox):
@@ -1547,7 +1547,7 @@ class CRVE:
                     *np.sum(np.multiply(cluster_filter,
                                         gop_0_freq_filt_vox[compi + compj]))
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        return [cit_1_integral_mf, cit_2_integral_mf, cit_0_freq_integral_mf]
+        return cit_1_integral_mf, cit_2_integral_mf, cit_0_freq_integral_mf
     # -------------------------------------------------------------------------
     @staticmethod
     def _switch_pair(x, delimiter='_'):

@@ -656,7 +656,7 @@ class VTKOutput:
             var = stored_var
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
-        return [var, var_type, var_n_comp]
+        return var, var_type, var_n_comp
     # -------------------------------------------------------------------------
     def _state_var_cell_data_array(
             self, n_dim, comp_order_sym, comp_order_nsym, material_phases,

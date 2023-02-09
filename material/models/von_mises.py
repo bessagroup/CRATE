@@ -415,7 +415,7 @@ class VonMises(ConstitutiveModel):
                     # and return
                     state_variables = copy.deepcopy(state_variables_old)
                     state_variables['is_su_fail'] = True
-                    return [state_variables, None]
+                    return state_variables, None
                 else:
                     # Increment iteration counter
                     nr_iter = nr_iter + 1

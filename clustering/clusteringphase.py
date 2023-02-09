@@ -161,7 +161,7 @@ class CRMP(ABC):
                                'and updated labels.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
-        return [new_labels, max_label]
+        return new_labels, max_label
 # =============================================================================
 class ACRMP(CRMP):
     """Adaptive Cluster-Reduced Material Phase interface.
@@ -955,7 +955,7 @@ class GACRMP(ACRMP):
                                'threshold_n_clusters': 10**6}
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
-        return [mandatory_parameters, optional_parameters]
+        return mandatory_parameters, optional_parameters
     # -------------------------------------------------------------------------
     def _set_adaptivity_type_parameters(self, adaptivity_type):
         """Set clustering adaptivity parameters.
@@ -1484,7 +1484,7 @@ class HAACRMP(ACRMP):
                                'threshold_n_clusters': 10**6}
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
-        return [mandatory_parameters, optional_parameters]
+        return mandatory_parameters, optional_parameters
     # -------------------------------------------------------------------------
     def _set_adaptivity_type_parameters(self, adaptivity_type):
         """Set clustering adaptivity parameters.

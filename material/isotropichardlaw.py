@@ -260,7 +260,7 @@ def get_hardening_law(type):
                 H = (y1 - y0)/(x1 - x0)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Return
-            return [yield_stress, H]
+            return yield_stress, H
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Linear isotropic hardening
     elif type == 'linear':
@@ -296,7 +296,7 @@ def get_hardening_law(type):
             yield_stress = yield_stress_init + H*acc_p_strain
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Return
-            return [yield_stress, H]
+            return yield_stress, H
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Swift isotropic hardening
     elif type == 'swift':
@@ -343,7 +343,7 @@ def get_hardening_law(type):
                 H = a*b*(acc_p_strain**(b - 1))
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Return
-            return [yield_stress, H]
+            return yield_stress, H
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Ramberg-Osgood isotropic hardening
     elif type == 'ramberg_osgood':
@@ -384,7 +384,7 @@ def get_hardening_law(type):
             H = yield_stress_init*(a/b)*(1.0 + a*acc_p_strain)**((1 - b)/b)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Return
-            return [yield_stress, H]
+            return yield_stress, H
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Unknown isotropic hardening type
     else:
