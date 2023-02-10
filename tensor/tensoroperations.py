@@ -10,7 +10,7 @@ Functions
 ---------
 dyad11
     Dyadic product: :math:`i \\otimes j \rightarrow ij`.
-dyad22
+dyad22_1
     Dyadic product: :math:`ij \\otimes kl \rightarrow ijkl`.
 dyad22_2
     Dyadic product: :math:`ik \\otimes jl \rightarrow ijkl`.
@@ -79,7 +79,7 @@ __status__ = 'Stable'
 # =============================================================================
 # Tensorial products
 dyad11 = lambda a1, b1 : np.einsum('i,j -> ij', a1, b1)
-dyad22 = lambda a2, b2 : np.einsum('ij,kl -> ijkl', a2, b2)
+dyad22_1 = lambda a2, b2 : np.einsum('ij,kl -> ijkl', a2, b2)
 dyad22_2 = lambda a2, b2 : np.einsum('ik,jl -> ijkl', a2, b2)
 dyad22_3 = lambda a2, b2 : np.einsum('il,jk -> ijkl', a2, b2)
 # Tensorial single contractions
@@ -198,7 +198,7 @@ def get_id_operators(n_dim):
     # Set fourth-order symmetric projection tensor
     fosym = 0.5*(foid + fotransp)
     # Set fourth-order 'diagonal trace' tensor
-    fodiagtrace = dyad22(soid,soid)
+    fodiagtrace = dyad22_1(soid,soid)
     # Set fourth-order deviatoric projection tensor
     fodevproj = foid - (1.0/3.0)*fodiagtrace
     # Set fourth-order deviatoric projection tensor (second order symmetric
@@ -484,10 +484,10 @@ def derivative_isotropic_tensor(mode, x):
             fund2 = fund(eig2)
             # Compute derivative of isotropic symmetric tensor-valued function
             y = ((fun1 - fun2)/(eig1 - eig2))*(
-                fosym - dyad22(eigproj1, eigproj1)
-                - dyad22(eigproj2, eigproj2)) \
-                + fund1*dyad22(eigproj1, eigproj1) \
-                + fund2*dyad22(eigproj2, eigproj2)
+                fosym - dyad22_1(eigproj1, eigproj1)
+                - dyad22_1(eigproj2, eigproj2)) \
+                + fund1*dyad22_1(eigproj1, eigproj1) \
+                + fund2*dyad22_1(eigproj2, eigproj2)
         elif n_dim == 3:
             # Compute derivative of square symmetric tensor
             dx2dx = np.zeros(4*(n_dim,))
@@ -509,9 +509,9 @@ def derivative_isotropic_tensor(mode, x):
                                                       fun, fund)
                 # Compute derivative of isotropic symmetric tensor-valued
                 # function
-                y = s1*dx2dx - s2*fosym - s3*dyad22(x, x) \
-                    + s4*dyad22(x, soid) + s5*dyad22(soid, x) \
-                    - s6*dyad22(soid, soid)
+                y = s1*dx2dx - s2*fosym - s3*dyad22_1(x, x) \
+                    + s4*dyad22_1(x, soid) + s5*dyad22_1(soid, x) \
+                    - s6*dyad22_1(soid, soid)
             else:
                 # Initialize derivative of isotropic symmetric tensor-valued
                 # function
@@ -535,10 +535,10 @@ def derivative_isotropic_tensor(mode, x):
                     # function
                     y += (funa/((eiga - eigb)*(eiga - eigc)))*(dx2dx
                          - (eigb + eigc)*fosym - ((eiga - eigb)
-                         + (eiga - eigc))*dyad22(eigproja, eigproja)
-                         - (eigb - eigc)*(dyad22(eigprojb, eigprojb)
-                         - dyad22(eigprojc, eigprojc))) \
-                         + funda*dyad22(eigproja, eigproja)
+                         + (eiga - eigc))*dyad22_1(eigproja, eigproja)
+                         - (eigb - eigc)*(dyad22_1(eigprojb, eigprojb)
+                         - dyad22_1(eigprojc, eigprojc))) \
+                         + funda*dyad22_1(eigproja, eigproja)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Return
     return y

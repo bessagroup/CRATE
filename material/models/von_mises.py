@@ -481,8 +481,8 @@ class VonMises(ConstitutiveModel):
                 np.sqrt(2.0/3.0)*mop.get_tensor_from_mf(flow_vector_mf, n_dim,
                                                         comp_order_sym)
             consistent_tangent = e_consistent_tangent \
-                - factor_1*fodevprojsym + factor_2*top.dyad22(unit_flow_vector,
-                                                              unit_flow_vector)
+                - factor_1*fodevprojsym + factor_2*top.dyad22_1(
+                unit_flow_vector, unit_flow_vector)
         else:
             consistent_tangent = e_consistent_tangent
         # Build consistent tangent modulus matricial form
