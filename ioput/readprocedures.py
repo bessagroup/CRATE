@@ -54,7 +54,7 @@ import re
 # Third-party
 import numpy as np
 # Local
-import ioput.errors as errors
+import ioput.info as info
 import ioput.ioutilities as ioutil
 from clustering.crve import CRVE
 from clustering.clusteringphase import SCRMP
@@ -99,9 +99,11 @@ def searchkeywordline(file, keyword):
         line_number = line_number + 1
         if keyword in line.split() and line.strip()[0] != '#':
             return line_number
-    location = inspect.getframeinfo(inspect.currentframe())
-    errors.displayerror('E00003', location.filename, location.lineno + 1,
-                        keyword)
+    # Keyword not found
+    summary = 'Missing keyword'
+    description = 'The keyword - {} - has not been found in the input ' \
+        + 'data file.'
+    info.displayinfo('4', summary, description, keyword)
 # =============================================================================
 def searchoptkeywordline(file, keyword):
     """Search optional keyword in data file and get corresponding line number.
@@ -213,18 +215,21 @@ def readtypeAkeyword(file, file_path, keyword, max_val):
     keyword_line_number = searchkeywordline(file, keyword)
     line = linecache.getline(file_path, keyword_line_number).split()
     if len(line) == 1:
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00007', location.filename, location.lineno + 1,
-                            keyword)
+        summary = 'Invalid keyword specification'
+        description = 'The keyword - {} - is not properly defined in the ' \
+            + 'input data file.'
+        info.displayinfo('4', summary, description, keyword)
     elif not ioutil.checkposint(line[1]):
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00007', location.filename, location.lineno + 1,
-                            keyword)
+        summary = 'Invalid keyword specification'
+        description = 'The keyword - {} - is not properly defined in the ' \
+            + 'input data file.'
+        info.displayinfo('4', summary, description, keyword)
     elif isinstance(max_val, int) or isinstance(max_val, np.integer):
         if int(line[1]) > max_val:
-            location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00007',location.filename,location.lineno + 1,
-                                keyword)
+            summary = 'Invalid keyword specification'
+            description = 'The keyword - {} - is not properly defined in ' \
+                + 'the input data file.'
+            info.displayinfo('4', summary, description, keyword)
     return int(line[1])
 # =============================================================================
 def readtypeBkeyword(file, file_path, keyword):
@@ -255,17 +260,20 @@ def readtypeBkeyword(file, file_path, keyword):
     keyword_line_number = searchkeywordline(file,keyword)
     line = linecache.getline(file_path,keyword_line_number+1).split()
     if line == '':
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00004', location.filename, location.lineno + 1,
-                            keyword)
+        summary = 'Invalid keyword specification'
+        description = 'The keyword - {} - is not properly defined in the ' \
+            + 'input data file.'
+        info.displayinfo('4', summary, description, keyword)
     elif len(line) != 1:
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00004', location.filename, location.lineno + 1,
-                            keyword)
+        summary = 'Invalid keyword specification'
+        description = 'The keyword - {} - is not properly defined in the ' \
+            + 'input data file.'
+        info.displayinfo('4', summary, description, keyword)
     elif not ioutil.checknumber(line[0]) or float(line[0]) <= 0:
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00004', location.filename, location.lineno + 1,
-                            keyword)
+        summary = 'Invalid keyword specification'
+        description = 'The keyword - {} - is not properly defined in the ' \
+            + 'input data file.'
+        info.displayinfo('4', summary, description, keyword)
     return float(line[0])
 #
 #                                                             Specific keywords
@@ -327,11 +335,17 @@ def read_material_properties(file, file_path, keyword):
     keyword_line_number = searchkeywordline(file, keyword)
     line = linecache.getline(file_path, keyword_line_number).split()
     if len(line) == 1:
-        raise RuntimeError('Input data error: Missing number of material '
-                           'phases.')
+        summary = 'Missing number of material phases'
+        description = 'The keyword - {} - is not properly defined in ' \
+            + 'the input data file.' + '\n' \
+            + indent + 'Missing number of material phases.'
+        info.displayinfo('4', summary, description, keyword)
     elif not ioutil.checkposint(line[1]):
-        raise RuntimeError('Input data error: Invalid number of material '
-                           'phases.')
+        summary = 'Invalid number of material phases'
+        description = 'The keyword - {} - is not properly defined in ' \
+            + 'the input data file.' + '\n' \
+            + indent + 'Invalid number of material phases.'
+        info.displayinfo('4', summary, description, keyword)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set number of material phases
     n_material_phases = int(line[1])
@@ -346,17 +360,30 @@ def read_material_properties(file, file_path, keyword):
         # Read material phase header
         phase_header = linecache.getline(file_path, line_number).split()
         if phase_header[0] == '':
-            raise RuntimeError('Input data error: Missing specification of '
-                               'material phase header.')
+            summary = 'Missing material phase header'
+            description = 'The keyword - {} - is not properly defined in ' \
+                + 'the input data file.' + '\n' \
+                + indent + 'Missing specification of a material phase header.'
+            info.displayinfo('4', summary, description, keyword)
         elif len(phase_header) not in [3, 4]:
-            raise RuntimeError('Input data error: Invalid specification of '
-                               'material phase header.')
+            summary = 'Missing material phase header'
+            description = 'The keyword - {} - is not properly defined in ' \
+                + 'the input data file.' + '\n' \
+                + indent + 'Missing specification of a material phase header.'
+            info.displayinfo('4', summary, description, keyword)
         elif not ioutil.checkposint(phase_header[0]):
-            raise RuntimeError('Input data error: Invalid specification of '
-                               'material phase header.')
+            summary = 'Invalid material phase header'
+            description = 'The keyword - {} - is not properly defined in ' \
+                + 'the input data file.' + '\n' \
+                + indent + 'Invalid specification of a material phase header.'
+            info.displayinfo('4', summary, description, keyword)
         elif phase_header[0] in material_phases_properties.keys():
-            raise RuntimeError('Input data error: Duplicated material phase '
-                               'number.')
+            summary = 'Duplicated material phase header'
+            description = 'The keyword - {} - is not properly defined in ' \
+                + 'the input data file.' + '\n' \
+                + indent + 'Duplicated specification of a material phase ' \
+                + 'header.'
+            info.displayinfo('4', summary, description, keyword)
         # Set material phase
         mat_phase = str(phase_header[0])
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -369,9 +396,12 @@ def read_material_properties(file, file_path, keyword):
         elif len(phase_header) == 4:
             # Set constitutive model source
             if not ioutil.checkposint(phase_header[3]):
-                raise RuntimeError('Input data error: Invalid specification '
-                                   'of material phase ' + mat_phase
-                                   + ' source.')
+                summary = 'Invalid constitutive model source'
+                description = 'The keyword - {} - is not properly defined in '\
+                    + 'the input data file.' + '\n' \
+                    + indent + 'Invalid constitutive model source of ' \
+                    + 'material phase {}.'
+                info.displayinfo('4', summary, description, keyword, mat_phase)
             else:
                 model_source_id = int(phase_header[3])
         # Set material phase constitutive model source
@@ -380,7 +410,12 @@ def read_material_properties(file, file_path, keyword):
         elif model_source_id == 2:
             model_source = 'links'
         else:
-            raise RuntimeError('Unknown constitutive model source identifier.')
+            summary = 'Unknown constitutive model source'
+            description = 'The keyword - {} - is not properly defined in '\
+                + 'the input data file.' + '\n' \
+                + indent + 'Unknown constitutive model source of ' \
+                + 'material phase {}.'
+            info.displayinfo('4', summary, description, keyword, mat_phase)
         # Assemble material phase constitutive model source
         material_phases_data[mat_phase]['source'] = model_source
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -389,9 +424,13 @@ def read_material_properties(file, file_path, keyword):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set material phase constitutive model keyword
         if phase_header[1] not in available_mat_models:
-            raise RuntimeError('Unknown material constitutive model ('
-                               + phase_header[1] + ') from source \''
-                               + model_source + '\'.')
+            summary = 'Unknown material constitutive model'
+            description = 'The keyword - {} - is not properly defined in '\
+                + 'the input data file.' + '\n' \
+                + indent + 'Unknown material constitutive model of ' \
+                + 'material phase {}.'
+            info.displayinfo('4', summary, description, keyword,
+                             phase_header[1])
         else:
             model_keyword = phase_header[1]
         material_phases_data[mat_phase]['keyword'] = model_keyword
@@ -419,14 +458,19 @@ def read_material_properties(file, file_path, keyword):
         n_prop_copt = len(req_properties) \
             + len(req_constitutive_options.keys())
         if not ioutil.checkposint(phase_header[2]):
-            raise RuntimeError('Input data error: Invalid specification of '
-                               'the material phase ' + mat_phase
-                               + ' number of material properties and '
-                               'constitutive options.')
+            summary = 'Invalid number of material properties'
+            description = 'The keyword - {} - is not properly defined in '\
+                + 'the input data file.' + '\n' \
+                + indent + 'Invalid number of material properties and ' \
+                + 'constitutive options of material phase {}.'
+            info.displayinfo('4', summary, description, keyword, mat_phase)
         elif int(phase_header[2]) != n_prop_copt:
-            raise RuntimeError('Input data error: Wrong value of the material '
-                               'phase ' + mat_phase + ' number of material '
-                               'properties and constitutive options.')
+            summary = 'Wrong number of material properties'
+            description = 'The keyword - {} - is not properly defined in '\
+                + 'the input data file.' + '\n' \
+                + indent + 'Wrong number of material properties and ' \
+                + 'constitutive options of material phase {}.'
+            info.displayinfo('4', summary, description, keyword, mat_phase)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Update line number
         line_number = line_number + 1
@@ -439,27 +483,35 @@ def read_material_properties(file, file_path, keyword):
             property_line = \
                 linecache.getline(file_path, property_header_line).split()
             if property_line[0] == '':
-                raise RuntimeError('Input data error: Invalid specification '
-                                   'of material property or constitutive '
-                                   'option of material phase ' + mat_phase
-                                   + '.')
+                summary = 'Invalid material property or constitutive option'
+                description = 'The keyword - {} - is not properly defined in '\
+                    + 'the input data file.' + '\n' \
+                    + indent + 'Invalid material property or constitutive ' \
+                    + 'option of material phase {}.'
+                info.displayinfo('4', summary, description, keyword, mat_phase)
             elif not ioutil.checkvalidname(property_line[0]):
-                raise RuntimeError('Input data error: Invalid specification '
-                                   'of material property or constitutive '
-                                   'option of material phase ' + mat_phase
-                                   + '.')
+                summary = 'Invalid material property or constitutive option'
+                description = 'The keyword - {} - is not properly defined in '\
+                    + 'the input data file.' + '\n' \
+                    + indent + 'Invalid material property or constitutive ' \
+                    + 'option of material phase {}.'
+                info.displayinfo('4', summary, description, keyword, mat_phase)
             elif property_line[0] not in req_properties and \
                     property_line[0] not in req_constitutive_options.keys():
-                raise RuntimeError('Input data error: Invalid specification '
-                                   'of material property or constitutive '
-                                   'option of material phase ' + mat_phase
-                                   + '.')
+                summary = 'Invalid material property or constitutive option'
+                description = 'The keyword - {} - is not properly defined in '\
+                    + 'the input data file.' + '\n' \
+                    + indent + 'Invalid material property or constitutive ' \
+                    + 'option of material phase {}.'
+                info.displayinfo('4', summary, description, keyword, mat_phase)
             elif property_line[0] in \
                     material_phases_properties[mat_phase].keys():
-                raise RuntimeError('Input data error: Duplicated '
-                                   'specification of material property or '
-                                   'constitutive option of material phase '
-                                   + mat_phase + '.')
+                summary = 'Duplicated material property or constitutive option'
+                description = 'The keyword - {} - is not properly defined in '\
+                    + 'the input data file.' + '\n' \
+                    + indent + 'Duplicated material property or constitutive '\
+                    + 'option of material phase {}.'
+                info.displayinfo('4', summary, description, keyword, mat_phase)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Read material property or constitutive option (and associated
             # material properties)
@@ -467,9 +519,13 @@ def read_material_properties(file, file_path, keyword):
                 # Check if constitutive option specification is available
                 if str(property_line[1]) not in \
                         req_constitutive_options[str(property_line[0])]:
-                    raise RuntimeError('Input data error: Unknown '
-                                       'specification of constitutive option '
-                                       + str(property_line[1]) + '.')
+                    summary = 'Unknown constitutive option'
+                    description = 'The keyword - {} - is not properly ' \
+                        + 'defined in the input data file.' + '\n' \
+                        + indent + 'Unknown constitutive option of material '\
+                        + 'phase {}.'
+                    info.displayinfo('4', summary, description, keyword,
+                                     mat_phase)
                 else:
                     constitutive_option = str(property_line[1])
                 # Assemble constitutive option specification
@@ -479,18 +535,26 @@ def read_material_properties(file, file_path, keyword):
                 # Read constitutive option number of associated properties
                 if len(property_line) == 3:
                     if not ioutil.checkposint(property_line[2]):
-                        raise RuntimeError('Input data error: Invalid number '
-                                           'of properties associated with '
-                                           'constitutive option '
-                                           + constitutive_option + '.')
+                        summary = 'Invalid number of properties of ' \
+                            + 'constitutive option'
+                        description = 'The keyword - {} - is not properly ' \
+                            + 'defined in the input data file.' + '\n' \
+                            + indent + 'Invalid number of constitutive ' \
+                            + 'options of material phase {}.'
+                        info.displayinfo('4', summary, description, keyword,
+                                         mat_phase)
                     else:
                         n_coproperties = int(property_line[2])
                 elif len(property_line) == 2:
                     n_coproperties = 1
                 else:
-                    raise RuntimeError('Input data error: Invalid '
-                                       'specification of constitutive '
-                                       'option ' + constitutive_option + '.')
+                    summary = 'Invalid constitutive option'
+                    description = 'The keyword - {} - is not properly ' \
+                        + 'defined in the input data file.' + '\n' \
+                        + indent + 'Invalid constitutive option of material ' \
+                        + 'phase {}.'
+                    info.displayinfo('4', summary, description, keyword,
+                                     mat_phase)
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 if str(property_line[0]) == 'isotropic_hardening' and \
                         constitutive_option == 'piecewise_linear':
@@ -502,19 +566,31 @@ def read_material_properties(file, file_path, keyword):
                         hardening_point_line = linecache.getline(
                             file_path, property_header_line + 1 + k).split()
                         if hardening_point_line[0] == '':
-                            raise RuntimeError('Input data error: Invalid '
-                                               'hardening point specification'
-                                               '.')
+                            summary = 'Invalid hardening point'
+                            description = 'The specification of a strain ' \
+                                + 'hardening point of material phase {} in ' \
+                                + 'the input data' + '\n' \
+                                + indent + 'file is invalid.'
+                            info.displayinfo('4', summary, description,
+                                             mat_phase))
                         elif len(hardening_point_line) != 3:
-                            raise RuntimeError('Input data error: Invalid '
-                                               'hardening point specification'
-                                               '.')
+                            summary = 'Invalid hardening point'
+                            description = 'The specification of a strain ' \
+                                + 'hardening point of material phase {} in ' \
+                                + 'the input data' + '\n' \
+                                + indent + 'file is invalid.'
+                            info.displayinfo('4', summary, description,
+                                             mat_phase))
                         elif not ioutil.checknumber(hardening_point_line[1]) \
                                 or not ioutil.checknumber(
                                     hardening_point_line[2]):
-                            raise RuntimeError('Input data error: Invalid '
-                                               'hardening point specification'
-                                               '.')
+                            summary = 'Invalid hardening point'
+                            description = 'The specification of a strain ' \
+                                + 'hardening point of material phase {} in ' \
+                                + 'the input data' + '\n' \
+                                + indent + 'file is invalid.'
+                            info.displayinfo('4', summary, description,
+                                             mat_phase))
                         hardening_points[k, 0] = float(hardening_point_line[1])
                         hardening_points[k, 1] = float(hardening_point_line[2])
                     # Assemble constitutive parameter associated property
@@ -527,10 +603,14 @@ def read_material_properties(file, file_path, keyword):
                         coproperty_line = linecache.getline(
                             file_path, property_header_line + 1 + k).split()
                         if len(coproperty_line) < 2:
-                            raise RuntimeError(
-                                'Input data error: Invalid specification of '
-                                'property associated with the constitutive '
-                                'option ' + constitutive_option + '.')
+                            summary = 'Invalid constitutive option'
+                            description = 'The keyword - {} - is not ' \
+                                + 'properly defined in the input data file.' \
+                                + '\n' \
+                                + indent + 'Invalid constitutive option of ' \
+                                + 'material phase {}.'
+                            info.displayinfo('4', summary, description,
+                                             keyword, mat_phase)
                         # Get property name
                         prop_name = str(coproperty_line[0])
                         # Get property value
@@ -553,15 +633,21 @@ def read_material_properties(file, file_path, keyword):
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             else:
                 if len(property_line) != 2:
-                    raise RuntimeError(
-                        'Input data error: Invalid specification of the'
-                        + str(j + 1) + 'th ' + 'material property of '
-                        + 'material phase ' + mat_phase + '.')
+                    summary = 'Invalid material property'
+                    description = 'The keyword - {} - is not properly ' \
+                        + 'defined in the input data file.' + '\n' \
+                        + indent + 'Invalid material property of material ' \
+                        + 'phase {}.'
+                    info.displayinfo('4', summary, description, keyword,
+                                     mat_phase)
                 elif not ioutil.checknumber(property_line[1]):
-                    raise RuntimeError(
-                        'Input data error: Invalid specification of the'
-                        + str(j + 1) + 'th ' + 'material property of '
-                        + 'material phase ' + mat_phase + '.')
+                    summary = 'Invalid material property'
+                    description = 'The keyword - {} - is not properly ' \
+                        + 'defined in the input data file.' + '\n' \
+                        + indent + 'Invalid material property of material ' \
+                        + 'phase {}.'
+                    info.displayinfo('4', summary, description, keyword,
+                                     mat_phase)
                 prop_name = str(property_line[0])
                 prop_value = float(property_line[1])
                 material_phases_properties[mat_phase][prop_name] = prop_value
@@ -792,16 +878,20 @@ def read_macroscale_loading(file, file_path, mac_load_type, strain_formulation,
         keyword_line = \
             linecache.getline(file_path, load_keyword_line_number).split()
         if len(keyword_line) > 2:
-            location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00088', location.filename,
-                                location.lineno + 1, load_key)
+            summary = 'Invalid number of loading subpaths'
+            description = 'The specification of the number of macroscale ' \
+                + 'loading subpaths in the input data file ' + '\n' \
+                + indent + 'is invalid.'
+            info.displayinfo('4', summary, description)
         elif len(keyword_line) == 2:
             if ioutil.checkposint(keyword_line[1]):
                 n_load_subpaths[ltype] = int(keyword_line[1])
             else:
-                location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayerror('E00088', location.filename,
-                                    location.lineno + 1, load_key)
+                summary = 'Invalid number of loading subpaths'
+                description = 'The specification of the number of macroscale '\
+                    + 'loading subpaths in the input data file ' + '\n' \
+                    + indent + 'is invalid.'
+                info.displayinfo('4', summary, description)
         else:
             n_load_subpaths[ltype] = 1
         # Initialize macroscale loading array
@@ -818,27 +908,38 @@ def read_macroscale_loading(file, file_path, mac_load_type, strain_formulation,
             component_line = linecache.getline(
                 file_path, load_keyword_line_number + i_comp + 1).split()
             if not component_line:
-                location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayerror('E00008', location.filename,
-                                    location.lineno + 1, load_key, i_comp + 1)
+                summary = 'Invalid keyword specification'
+                description = 'The keyword - {} - is not properly defined ' \
+                    + 'in the input data file.' + '\n' \
+                    + 'Check {} th component.'
+                info.displayinfo('4', summary, description, load_key,
+                                 i_comp + 1)
             elif len(component_line) != 1 + n_load_subpaths[ltype]:
-                location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayerror('E00008', location.filename,
-                                    location.lineno + 1, load_key, i_comp + 1)
+                summary = 'Invalid keyword specification'
+                description = 'The keyword - {} - is not properly defined ' \
+                    + 'in the input data file.' + '\n' \
+                    + 'Check {} th component.'
+                info.displayinfo('4', summary, description, load_key,
+                                 i_comp + 1)
             elif not ioutil.checkvalidname(component_line[0]):
-                location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayerror('E00008', location.filename,
-                                    location.lineno + 1, load_key, i_comp + 1)
+                summary = 'Invalid keyword specification'
+                description = 'The keyword - {} - is not properly defined ' \
+                    + 'in the input data file.' + '\n' \
+                    + 'Check {} th component.'
+                info.displayinfo('4', summary, description, load_key,
+                                 i_comp + 1)
             # Set component name
             mac_load[ltype][i_comp, 0] = component_line[0]
             # Set component values for each loading subpath
             for j in range(n_load_subpaths[ltype]):
                 presc_val = component_line[1 + j]
                 if not ioutil.checknumber(presc_val):
-                    location = inspect.getframeinfo(inspect.currentframe())
-                    errors.displayerror('E00008', location.filename,
-                                        location.lineno + 1, load_key,
-                                        i_comp + 1)
+                    summary = 'Invalid keyword specification'
+                    description = 'The keyword - {} - is not properly ' \
+                        + 'defined in the input data file.' + '\n' \
+                        + 'Check {} th component.'
+                    info.displayinfo('4', summary, description, load_key,
+                                     i_comp + 1)
                 else:
                     mac_load[ltype][i_comp, 1 + j] = float(presc_val)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -861,25 +962,31 @@ def read_macroscale_loading(file, file_path, mac_load_type, strain_formulation,
             component_line = linecache.getline(
                 file_path, presc_keyword_line_number + i_comp + 1).split()
             if not component_line:
-                location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayerror('E00011', location.filename,
-                                    location.lineno + 1, presc_keyword,
-                                    i_comp + 1)
+                summary = 'Invalid keyword specification'
+                description = 'The keyword - {} - is not properly defined ' \
+                    + 'in the input data file.' + '\n' \
+                    + 'Check {} th component.'
+                info.displayinfo('4', summary, description, load_key,
+                                 i_comp + 1)
             # Set prescription nature indexes for each loading subpath
             for j in range(max(n_load_subpaths.values())):
                 presc_val = int(component_line[j])
                 if presc_val not in [0, 1]:
-                    location = inspect.getframeinfo(inspect.currentframe())
-                    errors.displayerror('E00011', location.filename,
-                                        location.lineno + 1, presc_keyword,
-                                        i_comp + 1)
+                    summary = 'Invalid keyword specification'
+                    description = 'The keyword - {} - is not properly ' \
+                        + 'defined in the input data file.' + '\n' \
+                        + 'Check {} th component.'
+                    info.displayinfo('4', summary, description, load_key,
+                                     i_comp + 1)
                 else:
                     ltype = 'strain' if presc_val == 0 else 'stress'
                     if j >= n_load_subpaths[ltype]:
-                        location = inspect.getframeinfo(inspect.currentframe())
-                        errors.displayerror('E00011', location.filename,
-                                            location.lineno + 1, presc_keyword,
-                                            i_comp + 1)
+                        summary = 'Invalid keyword specification'
+                        description = 'The keyword - {} - is not properly ' \
+                            + 'defined in the input data file.' + '\n' \
+                            + 'Check {} th component.'
+                        info.displayinfo('4', summary, description, load_key,
+                                         i_comp + 1)
                     else:
                         mac_load_presctype[i_comp, j] = ltype
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -899,18 +1006,25 @@ def read_macroscale_loading(file, file_path, mac_load_type, strain_formulation,
                 if mac_load_type == 3 \
                         and mac_load_presctype[symmetric_indexes[0, i] , j] \
                         != mac_load_presctype[symmetric_indexes[1, i], j]:
-                    location = inspect.getframeinfo(inspect.currentframe())
-                    errors.displayerror('E00012', location.filename,
-                                        location.lineno + 1, i)
+                    summary = 'Symmetric components prescribed with different '
+                        + 'nature under infinitesimal strains'
+                    description = 'The keyword - {} - is not properly ' \
+                        + 'defined in the input data file.' + '\n' \
+                        + indent + 'Symmetric components must have the same ' \
+                        + 'nature (strain or stress). Check {} th component.'
+                    info.displayinfo('4', summary, description,
+                                     'Mixed_Prescription_Index', i_comp + 1)
                 # Check symmetry
                 isEqual = np.allclose(
                     mac_load[ltype][symmetric_indexes[0, i], j + 1],
                     mac_load[ltype][symmetric_indexes[1, i], j + 1],
                     atol=1e-10)
                 if not isEqual:
-                    location = inspect.getframeinfo(inspect.currentframe())
-                    errors.displaywarning('W00001', location.filename,
-                                          location.lineno + 1, ltype)
+                    summary = 'Nonsymmetric strain or stress components '
+                        + 'prescribed under infinitesimal strains'
+                    description = 'A nonsymmetric {} tensor is prescribed ' \
+                        + 'in the input data file under infinitesimal strains.'
+                    info.displayinfo('4', summary, description, ltype)
                     # Adopt symmetric component with the lowest first index
                     mac_load[ltype][symmetric_indexes[1, i], j + 1] = \
                         mac_load[ltype][symmetric_indexes[0, i], j + 1]
@@ -1043,9 +1157,13 @@ def read_mac_load_increm(file, file_path, keyword, n_load_subpaths):
         # macroscale loading subpath
         is_empty_line = not bool(line.split())
         if is_empty_line or len(increm_line) != n_load_subpaths:
-            location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00092', location.filename,
-                                location.lineno + 1)
+            summary = 'Invalid loading increment list'
+            description = 'The keyword - {} - is not properly defined' \
+                + ' in the input data file.' + '\n' \
+                + indent + 'The first line of the increment list must ' \
+                + 'contain only one macroscale loading increment' + '\n' + \
+                + indent + 'specification for each macroscale loading subpath.'
+            info.displayinfo('4', summary, description, keyword)
         i = 0
         # Build macroscale loading increment array
         while not is_empty_line:
@@ -1081,8 +1199,10 @@ def read_mac_load_increm(file, file_path, keyword, n_load_subpaths):
             mac_load_increm[str(j)] = load_subpath
     else:
         # Unknown macroscale loading keyword
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00093', location.filename, location.lineno + 1)
+        summary = 'Unknown loading incrementation keyword'
+        description = 'A unknown macroscale loading incrementation keyword ' \
+            + 'has been specified in the input data file.'
+        info.displayinfo('4', summary, description)
     # Return
     return mac_load_increm
 # =============================================================================
@@ -1118,8 +1238,10 @@ def decode_increm_spec(spec, load_time_factor):
     has_rep = ':' in re.findall('[:_]', spec)
     has_time = '_' in re.findall('[:_]', spec)
     if not code or len(code) > 3:
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00091', location.filename, location.lineno + 1)
+        summary = 'Invalid loading increment'
+        description = 'A macroscale loading increment specification in ' \
+            + 'the input data file is invalid.'
+        info.displayinfo('4', summary, description)
     # Set macroscale loading increment parameters
     try:
         n_rep = int(code[0]) if has_rep else 1
@@ -1127,13 +1249,17 @@ def decode_increm_spec(spec, load_time_factor):
         inc_time = abs(float(code[-1])) \
             if has_time else load_time_factor*abs(inc_lfact)
     except:
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00091', location.filename, location.lineno + 1)
+        summary = 'Invalid loading increment'
+        description = 'A macroscale loading increment specification in ' \
+            + 'the input data file is invalid.'
+        info.displayinfo('4', summary, description)
     else:
         if any([x < 0 for x in [n_rep, inc_time]]):
-            location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00094', location.filename,
-                                location.lineno + 1)
+            summary = 'Invalid loading increment optinal parameters'
+            description = 'The number of repetitions or incremental time ' \
+                + 'prescribed for a given macroscale loading' + '\n' \
+                + indent + 'increment in the input data file is invalid.'
+            info.displayinfo('4', summary, description)
     # Return
     return n_rep, inc_lfact, inc_time
 # =============================================================================
@@ -1179,27 +1305,36 @@ def read_phase_clustering(file, file_path, keyword, n_material_phases,
     for iphase in range(n_material_phases):
         line = linecache.getline(file_path, line_number + iphase).split()
         if line[0] == '':
-            location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00013', location.filename,
-                                location.lineno + 1, keyword, iphase + 1)
+            summary = 'Invalid keyword specification'
+            description = 'The keyword - {} - is not properly defined in ' \
+                + 'the input data file.' + '\n' \
+                + 'Check {}th material phase.'
+            info.displayinfo('4', summary, description, keyword, iphase + 1)
         elif len(line) != 2:
-            location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00013', location.filename,
-                                location.lineno + 1, keyword, iphase + 1)
+            summary = 'Invalid keyword specification'
+            description = 'The keyword - {} - is not properly defined in ' \
+                + 'the input data file.' + '\n' \
+                + 'Check {}th material phase.'
+            info.displayinfo('4', summary, description, keyword, iphase + 1)
         elif not ioutil.checkposint(line[0]) \
                 or not ioutil.checkposint(line[1]):
-            location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00013', location.filename,
-                                location.lineno + 1, keyword, iphase + 1)
+            summary = 'Invalid keyword specification'
+            description = 'The keyword - {} - is not properly defined in ' \
+                + 'the input data file.' + '\n' \
+                + 'Check {}th material phase.'
+            info.displayinfo('4', summary, description, keyword, iphase + 1)
         elif str(int(line[0])) not in material_properties.keys():
-            location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00049', location.filename,
-                                location.lineno + 1, keyword, int(line[0]),
-                                material_properties.keys())
+            summary = 'Invalid keyword specification'
+            description = 'The keyword - {} - is not properly defined in ' \
+                + 'the input data file.' + '\n' \
+                + 'Check {}th material phase.'
+            info.displayinfo('4', summary, description, keyword, iphase + 1)
         elif str(int(line[0])) in phase_n_clusters.keys():
-            location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00050', location.filename,
-                                location.lineno + 1, keyword, int(line[0]))
+            summary = 'Invalid keyword specification'
+            description = 'The keyword - {} - is not properly defined in ' \
+                + 'the input data file.' + '\n' \
+                + 'Check {}th material phase.'
+            info.displayinfo('4', summary, description, keyword, iphase + 1)
         phase_n_clusters[str(int(line[0]))] = int(line[1])
     return phase_n_clusters
 # =============================================================================
@@ -1300,21 +1435,30 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
         is_empty_line = not bool(line.split())
         # Read material phase and clustering type
         if is_empty_line:
-            raise RuntimeError('The cluster analysis scheme must be specified '
-                               'for all material phases.')
+            summary = 'Missing clustering scheme for material phase'
+            description = 'The keyword - {} - is not properly defined in the ' \
+                + 'input data file.' + '\n' \
+                + indent + 'The clustering scheme must be specified for all ' \
+                + 'material phases.'
+            info.displayinfo('4', summary, description, keyword)
         else:
             line = line.split()
         if line[0] not in material_phases:
-            raise RuntimeError('Unexistent material phase or adaptivity '
-                               'parameter has been found while reading the '
-                               'cluster analysis scheme (' + line[0] + ').')
+            summary = 'Unknown material phase'
+            description = 'The keyword - {} - is not properly defined in ' \
+                + 'the input data file.' + '\n' \
+                + indent + 'Unknown material phase.'
+            info.displayinfo('4', summary, description, keyword)
         else:
             if len(line) == 1:
                 mat_phase = line[0]
                 ctype = 'static'
             elif line[1] not in ['static', 'adaptive']:
-                raise RuntimeError('Unknown clustering type while reading '
-                                   'cluster analysis scheme.')
+                summary = 'Unknown clustering type'
+                description = 'The keyword - {} - is not properly defined ' \
+                    + 'in the input data file.' + '\n' \
+                    + indent + 'Unknown clustering type.'
+                info.displayinfo('4', summary, description, keyword)
             else:
                 mat_phase = line[0]
                 ctype = line[1]
@@ -1330,9 +1474,12 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Read base clustering scheme
         if is_empty_line or line.split()[0] != 'base_clustering':
-            raise RuntimeError('The keyword \'base_clustering\' has not been '
-                               'found in the cluster analysis scheme of '
-                               'material phase ' + mat_phase + '.')
+            summary = 'Missing base clustering scheme'
+            description = 'The keyword - {} - is not properly defined ' \
+                + 'in the input data file.' + '\n' \
+                + indent + 'Missing base clustering scheme of material ' \
+                + 'phase {}.'
+            info.displayinfo('4', summary, description, keyword, mat_phase)
         else:
             # Read base clustering scheme
             base_clustering_scheme[mat_phase], line_number = \
@@ -1361,9 +1508,12 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Read adaptive clustering scheme
         if is_empty_line or line.split()[0] != 'adaptive_clustering':
-            raise RuntimeError('The keyword \'adaptive_clustering\' has not '
-                               'been found in the cluster analysis scheme of '
-                               'material phase ' + mat_phase + '.')
+            summary = 'Missing adaptive clustering scheme'
+            description = 'The keyword - {} - is not properly defined ' \
+                + 'in the input data file.' + '\n' \
+                + indent + 'Missing adaptive clustering scheme of adaptive ' \
+                + 'material phase {}.'
+            info.displayinfo('4', summary, description, keyword, mat_phase)
         else:
             # Read adaptive clustering scheme
             adaptive_clustering_scheme[mat_phase], line_number = \
@@ -1376,21 +1526,31 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Read adaptivity parameters
         if is_empty_line or line.split()[0] != 'adaptivity_parameters':
-            raise RuntimeError('The keyword \'adaptivity_parameters\' has not '
-                               'been found in the cluster analysis scheme of '
-                               'material phase ' + mat_phase + '.')
+            summary = 'Missing adaptivity parameters of clustering scheme'
+            description = 'The keyword - {} - is not properly defined ' \
+                + 'in the input data file.' + '\n' \
+                + indent + 'Missing adaptivity parameters of clustering ' \
+                + 'scheme of adaptive material phase {}.'
+            info.displayinfo('4', summary, description, keyword, mat_phase)
+
         else:
             # Read adaptivity criterion and adaptivity type
             line = line.split()
             if line[1] not in \
                     AdaptivityManager.get_adaptivity_criterions().keys():
-                raise RuntimeError('Unexistent adaptivity criterion while '
-                                   'reading adaptivity parameters of material '
-                                   'phase ' + mat_phase + '.')
+                summary = 'Unknown adaptivity criterion'
+                description = 'The keyword - {} - is not properly defined ' \
+                    + 'in the input data file.' + '\n' \
+                    + indent + 'Unknown adaptivity criterion on clustering ' \
+                    + 'scheme of adaptive material phase {}.'
+                info.displayinfo('4', summary, description, keyword, mat_phase)
             elif line[2] not in CRVE.get_crmp_types().keys():
-                raise RuntimeError('Unexistent adaptivity type while reading '
-                                   'adaptivity parameters of material phase '
-                                   + mat_phase + '.')
+                summary = 'Unknown adaptivity type'
+                description = 'The keyword - {} - is not properly defined ' \
+                    + 'in the input data file.' + '\n' \
+                    + indent + 'Unknown adaptivity type on clustering ' \
+                    + 'scheme of adaptive material phase {}.'
+                info.displayinfo('4', summary, description, keyword, mat_phase)
             else:
                 # Read adaptivity criterion
                 adapt_criterion_id = line[1]
@@ -1450,9 +1610,12 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Check parameter specification
             if len(line) < 2:
-                raise RuntimeError('Missing adaptivity parameter \''
-                                   + parameter + '\' specification in '
-                                   'material phase ' + mat_phase + '.')
+                summary = 'Missing adaptivity parameter value'
+                description = 'The keyword - {} - is not properly defined ' \
+                    + 'in the input data file.' + '\n' \
+                    + indent + 'Missing value of adaptivity parameter on ' \
+                    + 'clustering scheme of adaptive material phase {}.'
+                info.displayinfo('4', summary, description, keyword, mat_phase)
             # Get adaptivity parameter
             if parameter in macp.keys():
                 # Store adaptivity criterion parameter
@@ -1473,9 +1636,13 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
                         get_formatted_parameter(parameter,
                                                 type(oacp[parameter])(line[1]))
                 else:
-                    raise TypeError('The adaptivity parameter \''
-                                    + str(parameter) + '\' hasn\'t been '
-                                    'properly specified.')
+                    summary = 'Invalid adaptivity parameter specification'
+                    description = 'The keyword - {} - is not properly ' \
+                        + 'defined in the input data file.' + '\n' \
+                        + indent + 'Check adaptivity parameter {} on ' \
+                        + 'clustering scheme of adaptive material phase {}.'
+                    info.displayinfo('4', summary, description, keyword,
+                                     parameter, mat_phase)
             elif parameter in oatp.keys():
                 # Get parameter value
                 value = get_formatted_parameter(parameter, line[1])
@@ -1485,15 +1652,25 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
                         get_formatted_parameter(parameter,
                                                 type(oatp[parameter])(line[1]))
                 else:
-                    raise TypeError('The adaptivity parameter \''
-                                    + str(parameter) + '\' hasn\'t been '
-                                    'properly specified.')
+                    summary = 'Invalid adaptivity parameter specification'
+                    description = 'The keyword - {} - is not properly ' \
+                        + 'defined in the input data file.' + '\n' \
+                        + indent + 'Check adaptivity parameter {} on ' \
+                        + 'clustering scheme of adaptive material phase {}.'
+                    info.displayinfo('4', summary, description, keyword,
+                                     parameter, mat_phase)
             elif parameter == 'adaptivity_control_feature':
                 # Store adaptivity control feature
                 if mat_phase in adaptivity_control_feature.keys():
-                    raise RuntimeError('Only one adaptivity control feature '
-                                       'can be prescribed for each material '
-                                       'phase.')
+                    summary = 'Multiple adaptivity control features'
+                    description = 'The keyword - {} - is not properly ' \
+                        + 'defined in the input data file.' + '\n' \
+                        + indent + 'Only one adaptivity control feature ' \
+                        + 'can be prescribed in the clustering scheme ' \
+                        + 'of adaptive' + '\n' \
+                        + indent + 'material phase {}.'
+                    info.displayinfo('4', summary, description, keyword,
+                                     mat_phase)
                 else:
                     adaptivity_control_feature[mat_phase] = line[1]
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1506,8 +1683,12 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
             is_adapt_parameter = False
             if is_empty_line:
                 if i != range(len(material_phases))[-1]:
-                    raise RuntimeError('The cluster analysis scheme must be '
-                                       'specified for all material phases.')
+                    summary = 'Missing clustering scheme'
+                    description = 'The keyword - {} - is not properly ' \
+                        + 'defined in the input data file.' + '\n' \
+                        + indent + 'The clustering scheme must be specified ' \
+                        + 'for all material phases.'
+                    info.displayinfo('4', summary, description, keyword)
             elif line.split()[0] in [*madapt_parameters.keys(),
                                      *oadapt_parameters.keys(),
                                      'adaptivity_control_feature']:
@@ -1518,23 +1699,32 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
         # prescribed
         for parameter in macp.keys():
             if parameter not in adapt_criterion_data[mat_phase].keys():
-                raise RuntimeError('The mandatory adaptivity criterion '
-                                   'parameter \'' + str(parameter)
-                                   + '\' has not been prescribed for '
-                                   'material phase ' + mat_phase + '.')
+                summary = 'Missing mandatory adaptivity criterion parameter'
+                description = 'The keyword - {} - is not properly ' \
+                    + 'defined in the input data file.' + '\n' \
+                    + indent + 'Missing mandatory parameter - {} - of ' \
+                    + 'adaptive material phase {}.'
+                info.displayinfo('4', summary, description, keyword,
+                                 parameter, mat_phase)
         # Check if all the mandatory adaptivity type parameters have been
         # prescribed
         for parameter in matp.keys():
             if parameter not in adaptivity_type[mat_phase].keys():
-                raise RuntimeError('The mandatory adaptivity type parameter \''
-                                   + str(parameter) + '\' has not been '
-                                   'prescribed for material phase '
-                                   + mat_phase + '.')
+                summary = 'Missing mandatory adaptivity type parameter'
+                description = 'The keyword - {} - is not properly ' \
+                    + 'defined in the input data file.' + '\n' \
+                    + indent + 'Missing mandatory parameter - {} - of ' \
+                    + 'adaptive material phase {}.'
+                info.displayinfo('4', summary, description, keyword,
+                                 parameter, mat_phase)
         # Check if adaptivity control feature has been prescribed
         if mat_phase not in adaptivity_control_feature.keys():
-            raise RuntimeError('The adaptivity control feature has not been '
-                               'prescribed for material phase '
-                               + mat_phase + '.')
+            summary = 'Missing adaptivity control feature'
+            description = 'The keyword - {} - is not properly ' \
+                + 'defined in the input data file.' + '\n' \
+                + indent + 'Missing adaptivity control feature of ' \
+                + 'adaptive material phase {}.'
+            info.displayinfo('4', summary, description, keyword, mat_phase)
         # Set default values for all the optional adaptivity criterion
         # parameters that have not been prescribed
         for parameter in oacp.keys():
@@ -1549,8 +1739,12 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
     # Check if the cluster analysis scheme has been prescribed for all material
     # phases
     if set(base_clustering_scheme.keys()) != set(material_phases):
-        raise RuntimeError('The cluster analysis scheme must be specified has '
-                           'not been prescribed for all material phases.')
+        summary = 'Missing clustering scheme'
+        description = 'The keyword - {} - is not properly defined in the ' \
+            + 'input data file.' + '\n' \
+            + indent + 'The clustering scheme must be specified for all ' \
+            + 'material phases.'
+        info.displayinfo('4', summary, description, keyword)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return clustering_type, base_clustering_scheme, adaptive_clustering_scheme,
         adapt_criterion_data, adaptivity_type, adaptivity_control_feature
@@ -1589,9 +1783,11 @@ def read_clustering_scheme(file, file_path, line_number):
     # single clustering solution
     if len(line) > 1:
         if not ioutil.checkposint(line[1]):
-            raise RuntimeError('Invalid number of prescribed clustering '
-                               'solutions in the prescription of cluster '
-                               'analysis scheme.')
+            summary = 'Invalid number of clusterings'
+            description = 'The number of clusterings of a given clustering ' \
+                + 'scheme specified in the input data file' + '\n' \
+                + indent + 'is invalid.'
+            info.displayinfo('4', summary, description)
         else:
             n_clusterings = int(line[1])
     else:
@@ -1604,9 +1800,10 @@ def read_clustering_scheme(file, file_path, line_number):
         line = linecache.getline(file_path, line_number).split()
         # Check clustering solution
         if any([not ioutil.checkposint(x) for x in line]):
-            raise TypeError('Both clustering algorithm and clustering feature '
-                            'identifiers must be specified as positive '
-                            'integers.')
+            summary = 'Invalid clustering algorithm or feature identifier'
+            description = 'A clustering algorithm or feature specified in ' \
+                + 'the input data file is invalid.'
+            info.displayinfo('4', summary, description)
         # Append clustering solution to clustering scheme
         clustering_scheme = np.append(
             clustering_scheme, np.full((1, 3), '', dtype=object), axis=0)
@@ -1638,15 +1835,20 @@ def check_clustering_scheme(mat_phase, clustering_scheme, valid_algorithms,
     """
     # Check validity of prescribed clustering algorithms
     if any([str(x) not in valid_algorithms for x in clustering_scheme[:, 0]]):
-        raise RuntimeError('An invalid clustering algorithm has been '
-                           'prescribed for material phase ' + mat_phase + '.')
+        summary = 'Invalid clustering algorithm'
+        description = 'A clustering algorithm prescribed in the clustering ' \
+            + 'scheme of material phase {} in the' + '\n' \
+            + indent + 'input data file is invalid.'
+        info.displayinfo('4', summary, description, mat_phase)
     # Check validity of prescribed clustering features
     for j in range(clustering_scheme.shape[0]):
         if any([str(x) not in valid_features
                 for x in clustering_scheme[j, 1]]):
-            raise RuntimeError('An invalid clustering feature has been '
-                               'prescribed for material phase '
-                               + mat_phase + '.')
+            summary = 'Invalid clustering feature'
+            description = 'A clustering feature prescribed in the clustering '\
+                + 'scheme of material phase {} in the' + '\n' \
+                + indent + 'input data file is invalid.'
+            info.displayinfo('4', summary, description, mat_phase)
 # =============================================================================
 def read_adaptivity_frequency(file, file_path, keyword, adapt_material_phases):
     """Read clustering adaptivity frequency.
@@ -1706,13 +1908,23 @@ def read_adaptivity_frequency(file, file_path, keyword, adapt_material_phases):
         line = linecache.getline(file_path, line_number).split()
         # Check adaptivity frequency specification
         if len(line) < 2:
-            raise RuntimeError('Invalid adaptivity frequency specification.')
+            summary = 'Invalid keyword specification'
+            description = 'The keyword - {} - is not properly defined ' \
+                + 'in the input data file.' + '\n' \
+                + indent + 'Missing adaptivity frequency specification.'
+            info.displayinfo('4', summary, description, keyword)
         elif line[0] not in adapt_material_phases:
-            raise RuntimeError('Unknown adaptive material phase while reading '
-                               'adaptivity frequency specification.')
+            summary = 'Invalid keyword specification'
+            description = 'The keyword - {} - is not properly defined ' \
+                + 'in the input data file.' + '\n' \
+                + indent + 'Unknown adaptive material phase.'
+            info.displayinfo('4', summary, description, keyword)
         elif line[1] not in ['all', 'none', 'every']:
-            raise RuntimeError('Unknown adaptivity frequency specification '
-                               'option.')
+            summary = 'Invalid keyword specification'
+            description = 'The keyword - {} - is not properly defined ' \
+                + 'in the input data file.' + '\n' \
+                + indent + 'Unknown adaptivity frequency option.'
+            info.displayinfo('4', summary, description, keyword)
         # Get material phase and adaptivity frequency option
         mat_phase = line[0]
         option = line[1]
@@ -1722,8 +1934,11 @@ def read_adaptivity_frequency(file, file_path, keyword, adapt_material_phases):
         elif option == 'every':
             # Check option specification
             if len(line) < 3 or not ioutil.checkposint(line[2]):
-                raise RuntimeError('Invalid adaptivity frequency '
-                                   'specification option.')
+                summary = 'Invalid keyword specification'
+                description = 'The keyword - {} - is not properly defined ' \
+                    + 'in the input data file.' + '\n' \
+                    + indent + 'Invalid adaptivity frequency option.'
+                info.displayinfo('4', summary, description, keyword)
             else:
                 clust_adapt_freq[mat_phase] = int(line[2])
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1775,8 +1990,11 @@ def read_rewind_state_parameters(file, file_path, keyword):
     line = linecache.getline(file_path, keyword_line_number).split()
     line = [x.lower() if not ioutil.checknumber(x) else x for x in line]
     if len(line) == 1:
-        raise RuntimeError('Rewind state storage criterion has not been '
-                           'specified.')
+        summary = 'Invalid keyword specification'
+        description = 'The keyword - {} - is not properly defined ' \
+            + 'in the input data file.' + '\n' \
+            + indent + 'Missing rewind state storage criterion specification.'
+        info.displayinfo('4', summary, description, keyword)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Get available rewind state storage criteria and associated default
     # parameters
@@ -1786,8 +2004,11 @@ def read_rewind_state_parameters(file, file_path, keyword):
     if line[1] in available_criteria.keys():
         criterion = line[1]
     else:
-        raise RuntimeError('Unknown rewind state storage criterion '
-                           'specification.')
+        summary = 'Invalid keyword specification'
+        description = 'The keyword - {} - is not properly defined ' \
+            + 'in the input data file.' + '\n' \
+            + indent + 'Unknown rewind state storage criterion.'
+        info.displayinfo('4', summary, description, keyword)
     # Get rewind state storage criterion parameter
     if len(line) > 2:
         # Get specified parameter
@@ -1796,8 +2017,11 @@ def read_rewind_state_parameters(file, file_path, keyword):
         # Set rewind state storage criterion
         rewind_state_criterion = (criterion, parameter)
     else:
-        raise RuntimeError('Rewind state storage criterion parameter has not '
-                           'been specified.')
+        summary = 'Invalid keyword specification'
+        description = 'The keyword - {} - is not properly defined ' \
+            + 'in the input data file.' + '\n' \
+            + indent + 'Missing rewind state storage criterion parameter.'
+        info.displayinfo('4', summary, description, keyword)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return rewind_state_criterion
 # =============================================================================
@@ -1839,7 +2063,11 @@ def read_rewinding_criterion_parameters(file, file_path, keyword):
     line = linecache.getline(file_path, keyword_line_number).split()
     line = [x.lower() if not ioutil.checknumber(x) else x for x in line]
     if len(line) == 1:
-        raise RuntimeError('Rewinding criterion has not been specified.')
+        summary = 'Invalid keyword specification'
+        description = 'The keyword - {} - is not properly defined ' \
+            + 'in the input data file.' + '\n' \
+            + indent + 'Missing rewinding criterion specification.'
+        info.displayinfo('4', summary, description, keyword)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Get available rewinding criteria and associated default parameters
     available_criteria = RewindManager.get_rewinding_criteria()
@@ -1848,7 +2076,11 @@ def read_rewinding_criterion_parameters(file, file_path, keyword):
     if line[1] in available_criteria.keys():
         criterion = line[1]
     else:
-        raise RuntimeError('Unknown rewinding criterion specification.')
+        summary = 'Invalid keyword specification'
+        description = 'The keyword - {} - is not properly defined ' \
+            + 'in the input data file.' + '\n' \
+            + indent + 'Unknown rewinding criterion.'
+        info.displayinfo('4', summary, description, keyword)
     # Get rewinding criterion parameter
     if len(line) > 2:
         # Get specified parameter
@@ -1857,8 +2089,11 @@ def read_rewinding_criterion_parameters(file, file_path, keyword):
         # Set rewinding criterion
         rewinding_criterion = (criterion, parameter)
     else:
-        raise RuntimeError('Rewinding criterion parameter has not been '
-                           'specified.')
+        summary = 'Invalid keyword specification'
+        description = 'The keyword - {} - is not properly defined ' \
+            + 'in the input data file.' + '\n' \
+            + indent + 'Missing rewinding criterion parameter.'
+        info.displayinfo('4', summary, description, keyword)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return rewinding_criterion
 # =============================================================================
@@ -1894,22 +2129,29 @@ def read_discretization_file_path(file, file_path, keyword, valid_exts):
     line_number = searchkeywordline(file, keyword) + 1
     discret_file_path = linecache.getline(file_path, line_number).strip()
     if not os.path.isfile(discret_file_path):
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00014', location.filename, location.lineno + 1,
-                            keyword, discret_file_path)
+            summary = 'Missing spatial discretization file'
+            description = 'The spatial discretization file specified under ' \
+                + 'the keyword - {} - could not be found:' + '\n\n' \
+                + indent + '{}'
+            info.displayinfo('4', summary, description, keyword,
+                             discret_file_path)
     format_exts = ['.npy']
     if ntpath.splitext(ntpath.basename(discret_file_path))[-1] in format_exts:
         if not ntpath.splitext(ntpath.splitext(ntpath.basename(
                 discret_file_path))[0])[-1] in valid_exts:
-            location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00015', location.filename,
-                                location.lineno + 1, keyword, valid_exts)
+            summary = 'Invalid spatial discretization file extension'
+            description = 'The spatial discretization file specified under ' \
+                + 'the keyword - {} - does not have' + '\n' \
+                + indent + 'a valid extension.'
+            info.displayinfo('4', summary, description, keyword)
     else:
         if not ntpath.splitext(ntpath.basename(
                 discret_file_path))[-1] in valid_exts:
-            location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00015', location.filename,
-                                location.lineno + 1, keyword, valid_exts)
+            summary = 'Invalid spatial discretization file extension'
+            description = 'The spatial discretization file specified under ' \
+                + 'the keyword - {} - does not have' + '\n' \
+                + indent + 'a valid extension.'
+            info.displayinfo('4', summary, description, keyword)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return os.path.abspath(discret_file_path)
 # =============================================================================
@@ -1956,18 +2198,21 @@ def read_rve_dimensions(file, file_path, keyword, n_dim):
     keyword_line_number = searchkeywordline(file, keyword)
     line = linecache.getline(file_path, keyword_line_number + 1).split()
     if line == '':
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00031', location.filename, location.lineno + 1,
-                            keyword)
+        summary = 'Invalid keyword specification'
+        description = 'The keyword - {} - is not properly defined in the ' \
+            + 'input data file.'
+        info.displayinfo('4', summary, description, keyword)
     elif len(line) != n_dim:
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00031', location.filename, location.lineno + 1,
-                            keyword)
+        summary = 'Invalid keyword specification'
+        description = 'The keyword - {} - is not properly defined in the ' \
+            + 'input data file.'
+        info.displayinfo('4', summary, description, keyword)
     for i in range(n_dim):
         if not ioutil.checknumber(line[i]) or float(line[i]) <= 0:
-            location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00031', location.filename,
-                                location.lineno + 1, keyword)
+            summary = 'Invalid keyword specification'
+            description = 'The keyword - {} - is not properly defined in ' \
+                + 'the input data file.'
+            info.displayinfo('4', summary, description, keyword)
     rve_dims = list()
     for i in range(n_dim):
         rve_dims.append(float(line[i]))
@@ -2015,9 +2260,10 @@ def read_vtk_options(file, file_path, keyword, keyword_line_number):
         vtk_format = 'ascii'
     if 'every' in line:
         if not ioutil.checkposint(line[line.index('every') + 1]):
-            location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00057', location.filename,
-                                location.lineno + 1, keyword)
+            summary = 'Invalid keyword specification'
+            description = 'The keyword - {} - is not properly defined in ' \
+                + 'the input data file.'
+            info.displayinfo('4', summary, description, keyword)
         vtk_inc_div = int(line[line.index('every') + 1])
     else:
         vtk_inc_div = 1

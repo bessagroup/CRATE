@@ -2,7 +2,8 @@
 
 This module includes a function that allows the output of information to both
 default standard output device (e.g., terminal) and to the '.screen' output
-file in a formatted and consistent manner.
+file in a formatted and consistent manner. Some output codes may precede a
+program abortion.
 
 Functions
 ---------
@@ -45,6 +46,7 @@ def displayinfo(code, *args, **kwargs):
         *  1 : Program execution completed
         *  2 : Execution phase started
         *  3 : Execution phase completed
+        *  4 : Program aborted
         *  5 : Execution phase task
         *  6 : Clustering analysis and completion
         *  7 : Loading increment header and footer
@@ -85,6 +87,7 @@ def displayinfo(code, *args, **kwargs):
             ioutil.print2('Please rerun the program and provide a different '
                           'problem name.' + '\n')
             sys.exit(1)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     elif code == '0':
         arguments = \
             ['CRATE - Clustering-based Nonlinear Analysis of Materials',
@@ -104,6 +107,7 @@ def displayinfo(code, *args, **kwargs):
                    + colorama.Fore.WHITE + tilde_line \
                    + colorama.Style.RESET_ALL + '\n\n' + colorama.Fore.WHITE \
                    + dashed_line + colorama.Style.RESET_ALL
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     elif code == '1':
         phase_names = args[3]
         phase_times = args[4]
@@ -137,18 +141,36 @@ def displayinfo(code, *args, **kwargs):
             + 2*indent + 75*'-' + '\n' \
             + (2*indent + '{:50}{:^20.2e}{:>5.2f} \n')*(number_of_phases - 1) \
             + 2*indent + 75*'-' + '\n\n\n' + '{:^{width}}' + '\n'
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     elif code == '2':
         arguments = [args[0],]
         info = tuple(arguments)
         template = colorama.Fore.GREEN + 'Start phase: ' \
             + colorama.Fore.WHITE \
             + '{} \n' + colorama.Style.RESET_ALL
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     elif code == '3':
         arguments = args[0:2]
         info = tuple(arguments)
         template = colorama.Fore.GREEN + '\n\nEnd phase: ' \
             + colorama.Fore.WHITE + '{} (phase duration time = {:.2e}s)\n' \
             + dashed_line + colorama.Style.RESET_ALL
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    elif code == '4':
+        summary = args[0]
+        description = args[1]
+        arguments = args[2:]
+        arguments.append('Program Aborted')
+        info = tuple(arguments)
+        template = '\n\n' + colorama.Fore.RED \
+            + indent + asterisk_line[:-len(indent)] + '\n' \
+            + indent + summary \
+            + '\n\n' + colorama.Style.RESET_ALL \
+            + indent + description \
+            + '\n' + colorama.Fore.RED \
+            + indent + asterisk_line[:-len(indent)] + '\n\n' \
+            + '{:^{width}}' + colorama.Style.RESET_ALL + '\n'
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     elif code == '5':
         if len(args) == 2:
             n_indents = args[1]
@@ -157,6 +179,7 @@ def displayinfo(code, *args, **kwargs):
         arguments = [args[0],]
         info = tuple(arguments)
         template = '\n' + n_indents*indent + '> {}'
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     elif code == '6':
         mode = args[0]
         if mode == 'progress':
@@ -173,6 +196,7 @@ def displayinfo(code, *args, **kwargs):
             arguments = ['',]
             info = tuple(arguments)
             template = '\n' + indent + '> Completed all clustering processes!'
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     elif code == '7':
         mode = args[0]
         if mode == 'init':
@@ -254,6 +278,7 @@ def displayinfo(code, *args, **kwargs):
                 + '\n' + indent + equal_line[:-len(indent)] + '\n' \
                 + indent + 'Increment run time (s): {:>11.4e}' + space3 \
                 + 'Total run time (s): {:>11.4e}' + '\n\n'
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     elif code == '8':
         mode = args[0]
         if mode == 'init':
@@ -280,6 +305,7 @@ def displayinfo(code, *args, **kwargs):
             template = indent + dashed_line[:-len(indent)] + '\n\n' \
                 + indent + tilde_line[:-len(indent)] + '\n' \
                 + indent + 'Iteration run time (s): {:>11.4e}'
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     elif code == '9':
         mode = args[0]
         space1 = (output_width - 48)*' '
@@ -308,6 +334,7 @@ def displayinfo(code, *args, **kwargs):
                 info = tuple(arguments)
                 template = indent + ' {:^6d}    {:^12.4e}' + space2 \
                     + '{:>11.4e}     {:^11.4e}    {:^11.4e}'
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     elif code == '10':
         mode = args[0]
         space1 = (output_width - 55)*' '
@@ -331,6 +358,7 @@ def displayinfo(code, *args, **kwargs):
                 info = tuple(arguments)
                 template = indent + ' {:^6d}    {:^12.4e}' + space2 \
                     + '{:>11.4e}     {:^11.4e}    {:^11.4e}'
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     elif code == '11':
         mode = args[0]
         if mode == 'max_iter':
@@ -354,12 +382,14 @@ def displayinfo(code, *args, **kwargs):
             + '\n' + colorama.Fore.RED \
             + indent + asterisk_line[:-len(indent)] \
             + colorama.Style.RESET_ALL + '\n'
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     elif code == '12':
         arguments = [args[0],]
         info = tuple(arguments)
         template = '\n\n' \
             + indent + 'Adaptive clustering step: {:3d}' + '\n' \
             + indent + tilde_line[:-len(indent)]
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     elif code == '13':
         mode = args[0]
         if mode == 'init':
@@ -386,6 +416,7 @@ def displayinfo(code, *args, **kwargs):
             template = indent + dashed_line[:-len(indent)] \
                 + '\n\n' + indent + tilde_line[:-len(indent)] + '\n' \
                 + indent + 'Iteration run time (s): {:>11.4e}' + ' \U0001F512'
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     elif code == '14':
         mode = args[0]
         if mode == 'max_scs_iter':
@@ -429,6 +460,7 @@ def displayinfo(code, *args, **kwargs):
             + colorama.Style.RESET_ALL + lock_msg + '\n' \
             + colorama.Fore.YELLOW + indent + asterisk_line[:-len(indent)] \
             + colorama.Style.RESET_ALL + '\n'
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     elif code == '15':
         # Get adaptivity manager and CRVE
         adaptivity_manager = args[0]
@@ -504,6 +536,7 @@ def displayinfo(code, *args, **kwargs):
                + '\n')*n_time_phases \
             + 2*indent + dashed_line[:-2*len(indent)] + '\n' \
             + 2*indent + '{:50s}{:^20.2e}'
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     elif code == '16':
         mode = args[0]
         inc = args[1]
@@ -529,6 +562,7 @@ def displayinfo(code, *args, **kwargs):
             + indent + 'Clustering adaptivity: ' + colorama.Style.RESET_ALL \
             + msg + '\n' + colorama.Fore.CYAN + indent \
             + asterisk_line[:-len(indent)] + colorama.Style.RESET_ALL + '\n'
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     elif code == '17':
         rewind_inc = args[0]
         spacing = indent + len('Analysis rewind: ')*' '
@@ -550,3 +584,6 @@ def displayinfo(code, *args, **kwargs):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display information
     ioutil.print2(template.format(*info, width=output_width))
+    # Program abortion codes
+    if code in ('4',):
+        sys.exit(1)

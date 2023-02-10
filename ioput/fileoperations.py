@@ -21,11 +21,9 @@ set_problem_dirs
 # Standard
 import os
 import shutil
-import inspect
 import ntpath
 # Local
 import ioput.info as info
-import ioput.errors as errors
 import ioput.ioutilities as ioutil
 #
 #                                                          Authorship & Credits
@@ -49,21 +47,16 @@ def make_directory(dir, option='no_overwrite'):
     option : {'no_overwrite', 'overwrite'}, default='no_overwrite'
         Either to overwrite or not an existing path.
     """
-    try:
-        if option == 'no_overwrite':
+    if option == 'no_overwrite':
+        os.mkdir(dir)
+    elif option == 'overwrite':
+        if not os.path.exists(dir):
             os.mkdir(dir)
-        elif option == 'overwrite':
-            if not os.path.exists(dir):
-                os.mkdir(dir)
-            else:
-                shutil.rmtree(dir)
-                os.mkdir(dir)
         else:
-            raise RuntimeError('Unknown option.')
-    except OSError as message:
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayexception(location.filename, location.lineno + 1,
-                                message)
+            shutil.rmtree(dir)
+            os.mkdir(dir)
+    else:
+        raise RuntimeError('Unknown option.')
 # =============================================================================
 def remove_dirs(target_dir, required_dirnames):
     """Remove unrequired directories and files in target directory.
@@ -110,13 +103,17 @@ def set_input_datafile_path(path):
     input_file_ext = ntpath.splitext(ntpath.basename(input_file_path))[-1]
     # Check if the input data file has the required '.dat' extension
     if input_file_ext != '.dat':
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00010', location.filename, location.lineno + 1)
+        summary = 'Input data file extension'
+        description = 'The input data file must have \'.dat\' extension.'
+        info.displayinfo('4', summary, description)
     # Check if the input data file name only contains numbers, letters or
     # underscores
     if not ioutil.checkvalidname(input_file_name):
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00002', location.filename, location.lineno + 1)
+        summary = 'Input data file name'
+        description = 'The input data file name can only contain letters, ' \
+            + 'numbers or underscores.'
+        info.displayinfo('4', summary, description)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Return
     return input_file_name, input_file_path, input_file_dir
 #
@@ -275,10 +272,11 @@ def set_problem_dirs(input_file_name, input_file_dir):
             status = 1
             # Raise error if offline-stage subdirectory does not exist
             if not os.path.exists(offline_stage_dir):
-                location = inspect.getframeinfo(inspect.currentframe())
-                errors.displayerror('E00009', location.filename,
-                                    location.lineno + 1, problem_name,
-                                    offline_stage_dir)
+                summary = 'Missing offline-stage subdirectory'
+                description = 'The subdirectory with the previously computed '\
+                	+ 'offline-stage data files could not be found:' + '\n\n' \
+                	+ indent + '{}'
+                info.displayinfo('4', summary, description, offline_stage_dir)
             # Remove all the existent subdirectories and files except the
             # offline-stage subdirectory and the '.screen' output file
             required_dirnames = [input_file_name + '.screen', 'Offline_Stage']

@@ -18,8 +18,6 @@ import subprocess
 import ntpath
 # Inspect file name and line
 import inspect
-# Display errors, warnings and built-in exceptions
-import ioput.errors as errors
 #
 #                                                                    Links execution process
 # ==========================================================================================
@@ -33,9 +31,10 @@ def runlinks(links_bin_path, links_file_path):
     screen_file_path = ntpath.dirname(links_file_path) + '/' + \
                                       screen_file_name + '/' + screen_file_name + '.screen'
     if not os.path.isfile(screen_file_path):
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00071', location.filename, location.lineno + 1,
-                            screen_file_path)
+        raise RuntimeError('The following Links screen output file has '
+                           'not been found. Most probably the file has '
+                           'not been written by the Links program.' \
+                           '\n\n' + screen_file_path)
     else:
         is_solved = False
         screen_file = open(screen_file_path, 'r')
@@ -47,6 +46,6 @@ def runlinks(links_bin_path, links_file_path):
                 is_solved = True
                 break
         if not is_solved:
-            location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00072', location.filename, location.lineno + 1,
-                                ntpath.basename(links_file_path))
+            raise RuntimeError('The program Links could not successfully '
+                               'solve the following microscale equilibrium '
+                               'problem:' + '\n\n' + screen_file_path)

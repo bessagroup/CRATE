@@ -15,13 +15,11 @@ read_input_data_file
 import os
 import shutil
 import linecache
-import inspect
 import ntpath
 # Third-party
 import numpy as np
 # Local
 import ioput.info as info
-import ioput.errors as errors
 import ioput.fileoperations as filop
 import ioput.packager as packager
 import ioput.readprocedures as rproc
@@ -285,11 +283,17 @@ def read_input_data_file(input_file, dirs_dict):
     keyword_2 = 'Increment_List'
     is_found_2, _ = rproc.searchoptkeywordline(input_file, keyword_2)
     if not (is_found_1 or is_found_2):
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00089', location.filename, location.lineno + 1)
+        summary = 'Missing macroscale loading incrementation keyword'
+        description = 'One of the keywords associated with the macroscale ' \
+        	+ 'loading incrementation must be' + '\n' \
+        	+ indent + 'specified in the input data file.'
+        info.displayinfo('4', summary, description)
     elif is_found_1 and is_found_2:
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayerror('E00090', location.filename, location.lineno + 1)
+        summary = 'Multiple macroscale loading incrementation keywords'
+        description = 'Only one of the keywords associated with the ' \
+        	+ 'macroscale loading incrementation can be' + '\n' \
+        	+ indent + 'specified in the input data file.'
+        info.displayinfo('4', summary, description)
     else:
         # Get number of loading subpaths
         n_load_subpaths = mac_load_presctype.shape[1]
@@ -369,14 +373,9 @@ def read_input_data_file(input_file, dirs_dict):
         input_file, input_file_path, keyword, valid_exts)
     # Copy the spatial discretization file to the problem directory and update
     # the absolute path to the copied file
-    try:
-        shutil.copy2(discret_file_path,
-                     problem_dir + ntpath.basename(discret_file_path))
-        discret_file_path = problem_dir + ntpath.basename(discret_file_path)
-    except IOError as message:
-        location = inspect.getframeinfo(inspect.currentframe())
-        errors.displayexception(location.filename, location.lineno + 1,
-                                message)
+    shutil.copy2(discret_file_path,
+                 problem_dir + ntpath.basename(discret_file_path))
+    discret_file_path = problem_dir + ntpath.basename(discret_file_path)
     # Store spatial discretization file absolute path
     dirs_dict['discret_file_path'] = discret_file_path
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

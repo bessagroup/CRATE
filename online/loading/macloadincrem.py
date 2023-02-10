@@ -20,7 +20,6 @@ RewindManager
 #                                                                       Modules
 # =============================================================================
 # Standard
-import inspect
 import copy
 import time
 # Third-party
@@ -28,7 +27,7 @@ import numpy as np
 from anytree.walker import Walker
 from anytree.exporter import DotExporter
 # Local
-import ioput.errors as errors
+import ioput.info as info
 import tensor.matrixoperations as mop
 #
 #                                                          Authorship & Credits
@@ -277,9 +276,11 @@ class LoadingPath:
         # Check if maximum number of consecutive loading increment cuts is
         # surpassed
         if self._n_cinc_cuts > self._max_cinc_cuts:
-            location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00096', location.filename,
-                                location.lineno + 1, self._max_cinc_cuts)
+            summary = 'Maximum number of consecutive loading increment cuts'
+            description = 'Maximum number of macroscale loading consecutive ' \
+                + 'increment cuts ({}) has been reached' + '\n' \
+                + indent + 'without solution convergence.'
+            info.displayinfo('4', summary, description, self._max_cinc_cuts)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute current applied loading
         applied_mac_load = self._get_applied_mac_load()
@@ -707,9 +708,11 @@ class LoadingSubpath:
         self._sub_inc_levels.insert(inc_idx + 1, self._sub_inc_levels[inc_idx])
         # Check if maximum subincrementation level is surpassed
         if self._sub_inc_levels[inc_idx] > self._max_subinc_level:
-            location = inspect.getframeinfo(inspect.currentframe())
-            errors.displayerror('E00095', location.filename,
-                                location.lineno + 1, self._max_subinc_level)
+            summary = 'Maximum loading subincrementation level'
+            description = 'The maximum macroscale loading subincrementation ' \
+                + 'level ({}) has been reached without' + '\n' \
+            	+ indent + 'solution convergence.'
+            info.displayinfo('4', summary, description, self._max_subinc_level)
         # Get current incremental load factor and associated incremental time
         inc_lfact = self._inc_lfacts[inc_idx]
         inc_time = self._inc_times[inc_idx]

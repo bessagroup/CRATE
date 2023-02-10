@@ -53,7 +53,6 @@ import copy
 import numpy as np
 # Local
 import ioput.info as info
-import ioput.errors as errors
 import ioput.readinputdata as rid
 import ioput.fileoperations as filop
 import ioput.packager as packager
@@ -76,11 +75,13 @@ __status__ = 'Stable'
 # =============================================================================
 # Check if the input data file path was provided
 if len(sys.argv[1:]) == 0:
-    location = inspect.getframeinfo(inspect.currentframe())
-    errors.displayerror('E00001', location.filename, location.lineno + 1)
+    summary = 'Missing input data file'
+    description = 'The input data file was not provided.'
+    info.displayinfo('4', summary, description)
 elif not os.path.isfile(str(sys.argv[1])):
-    location = inspect.getframeinfo(inspect.currentframe())
-    errors.displayerror('E00001', location.filename, location.lineno + 1)
+    summary = 'Missing input data file'
+    description = 'The input data file could not be found.'
+    info.displayinfo('4', summary, description)
 # Process input data file path
 input_file_name, input_file_path, input_file_dir = \
     filop.set_input_datafile_path(str(sys.argv[1]))
@@ -94,11 +95,7 @@ dirs_dict = packager.store_paths_data(
     problem_dir, offline_stage_dir, postprocess_dir, crve_file_path,
     hres_file_path, refm_file_path, adapt_file_path)
 # Open user input data file
-try:
-    input_file = open(input_file_path, 'r')
-except FileNotFoundError as message:
-    location = inspect.getframeinfo(inspect.currentframe())
-    errors.displayexception(location.filename, location.lineno + 1, message)
+input_file = open(input_file_path, 'r')
 #
 #                                                                 Start program
 # =============================================================================
@@ -120,11 +117,7 @@ info.displayinfo('2', 'Read input data file')
 phase_init_time = time.time()
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Open user input data file
-try:
-    input_file = open(input_file_path, 'r')
-except FileNotFoundError as message:
-    location = inspect.getframeinfo(inspect.currentframe())
-    errors.displayexception(location.filename, location.lineno + 1, message)
+input_file = open(input_file_path, 'r')
 # Read input data file and store data in convenient containers
 info.displayinfo('5', 'Reading the input data file...')
 problem_dict, mat_dict, macload_dict, rg_dict, clst_dict, scs_dict, \
