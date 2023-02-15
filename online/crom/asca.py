@@ -648,13 +648,17 @@ class ASCA:
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     # Build Lippmann-Schwinger equilibrium residuals
                     if self._is_farfield_formulation:
-                        residual = self._build_residual(crve, material_state,
+                        residual = self._build_residual(
+                            crve, material_state,
                             presc_strain_idxs, presc_stress_idxs,
                             applied_mac_load_mf, ref_material, global_cit_mf,
                             global_strain_mf,
-                            farfield_strain_mf=farfield_strain_mf)
+                            farfield_strain_mf=farfield_strain_mf,
+                            farfield_strain_old_mf=
+                                self._farfield_strain_old_mf)
                     else:
-                        residual = self._build_residual(crve, material_state,
+                        residual = self._build_residual(
+                            crve, material_state,
                             presc_strain_idxs, presc_stress_idxs,
                             applied_mac_load_mf, ref_material, global_cit_mf,
                             global_strain_mf,
@@ -1178,8 +1182,8 @@ class ASCA:
                 return
             else:
                 # Setup new loading increment
-                applied_mac_load_mf, inc_mac_load_mf, n_presc_strain,
-                    presc_strain_idxs, n_presc_stress, presc_stress_idxs,
+                applied_mac_load_mf, inc_mac_load_mf, n_presc_strain, \
+                    presc_strain_idxs, n_presc_stress, presc_stress_idxs, \
                     is_last_inc = mac_load_path.new_load_increment()
                 # Get increment counter
                 inc = mac_load_path.get_increm_state()['inc']
@@ -1312,8 +1316,8 @@ class ASCA:
     def _build_residual(self, crve, material_state, presc_strain_idxs,
                         presc_stress_idxs, applied_mac_load_mf, ref_material,
                         global_cit_mf, global_strain_mf,
-                        farfield_strain_mf=None, applied_mix_strain_mf=None,
-                        applied_mix_stress_mf=None):
+                        farfield_strain_mf=None, farfield_strain_old_mf=None,
+                        applied_mix_strain_mf=None, applied_mix_stress_mf=None):
         """Build Lippmann-Schwinger equilibrium residuals.
 
         **Global residual function:**
@@ -1613,6 +1617,8 @@ class ASCA:
             Global vector of clusters strain tensors (matricial form).
         farfield_strain_mf : numpy.ndarray (1d), default=None
             Far-field strain tensor (matricial form).
+        farfield_strain_old_mf : numpy.ndarray (1d), default=None
+            Last converged far-field strain tensor (matricial form).
         applied_mix_strain_mf : numpy.ndarray (1d), default=None
             Strain tensor (matricial form) that contains prescribed strain
             components and (non-prescribed) homogenized strain components.
@@ -1645,10 +1651,19 @@ class ASCA:
         clusters_state = material_state.get_clusters_state()
         # Get elastic reference material tangent modulus (matricial form)
         ref_elastic_tangent_mf = ref_material.get_elastic_tangent_mf()
-        # Get incremental homogenized strain and stress tensors (matricial
-        # form)
+        # Get homogenized strain and stress tensors (matricial form)
         hom_strain_mf = material_state.get_hom_strain_mf()
         hom_stress_mf = material_state.get_hom_stress_mf()
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Initialiatize and get last converged variables
+        if self._strain_formulation == 'infinitesimal':
+            # Initialize last converged global vector of clusters strain
+            # tensors
+            global_strain_old_mf = np.zeros_like(global_strain_mf)
+            # Initialize last converged clusters polarization stress
+            global_pol_stress_old_mf = np.zeros_like(global_strain_mf)
+            # Get last converged clusters state variables
+            clusters_state_old = material_state.get_clusters_state_old()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize clusters polarization stress
         global_pol_stress_mf = np.zeros_like(global_strain_mf)
@@ -1666,6 +1681,23 @@ class ASCA:
                 # Add cluster polarization stress to global array
                 global_pol_stress_mf[i_init:i_end] = stress_mf - \
                     np.matmul(ref_elastic_tangent_mf, strain_mf)
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                # Compute last converged polarization stress
+                if self._strain_formulation == 'infinitesimal':
+                    # Compute material cluster last converged stress
+                    # (matricial form)
+                    stress_old_mf = \
+                        clusters_state_old[str(cluster)]['stress_mf']
+                    # Get last converged material cluster strain
+                    # (matricial form)
+                    strain_old_mf = \
+                        clusters_state_old[str(cluster)]['strain_mf']
+                    global_strain_old_mf[i_init:i_end] = strain_old_mf
+                    # Add last converged cluster polarization stress to global
+                    # array
+                    global_pol_stress_old_mf[i_init:i_end] = stress_old_mf \
+                        - np.matmul(ref_elastic_tangent_mf, strain_old_mf)
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Update cluster strain range indexes
                 i_init = i_init + len(comp_order)
                 i_end = i_init + len(comp_order)
@@ -1675,10 +1707,25 @@ class ASCA:
             residual = np.zeros(n_total_clusters*len(comp_order)
                                 + len(comp_order))
             # Compute clusters equilibrium residuals
-            residual[0:n_total_clusters*len(comp_order)] = np.subtract(
-                np.add(global_strain_mf,
-                       np.matmul(global_cit_mf, global_pol_stress_mf)),
-                numpy.matlib.repmat(farfield_strain_mf, 1, n_total_clusters))
+            residual[0:n_total_clusters*len(comp_order)] = \
+                np.subtract(
+                    np.add(global_strain_mf,
+                           np.matmul(global_cit_mf, global_pol_stress_mf)),
+                    numpy.matlib.repmat(farfield_strain_mf, 1,
+                                        n_total_clusters))
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            if self._strain_formulation == 'infinitesimal':
+                # Add residual term to recover incremental formulation under
+                # infinitesimal strains
+                residual[0:n_total_clusters*len(comp_order)] += np.reshape(
+                    -np.subtract(
+                        np.add(global_strain_old_mf,
+                               np.matmul(global_cit_mf,
+                                         global_pol_stress_old_mf)),
+                        numpy.matlib.repmat(farfield_strain_old_mf, 1,
+                                            n_total_clusters)),
+                    (n_total_clusters*len(comp_order),))
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Compute homogenization constraints residuals
             for i in range(len(comp_order)):
                 if i in presc_strain_idxs:
@@ -2733,7 +2780,7 @@ class ASCA:
         # Get increment counter
         inc = mac_load_path.get_increm_state()['inc']
         # Get loading subpath data
-        sp_id, sp_inc, sp_total_lfact, sp_inc_lfact, sp_total_time,
+        sp_id, sp_inc, sp_total_lfact, sp_inc_lfact, sp_total_time, \
             sp_inc_time, subinc_level = mac_load_path.get_subpath_state()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Display loading increment data
