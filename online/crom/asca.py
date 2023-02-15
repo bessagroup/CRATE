@@ -653,6 +653,7 @@ class ASCA:
                             presc_strain_idxs, presc_stress_idxs,
                             applied_mac_load_mf, ref_material, global_cit_mf,
                             global_strain_mf,
+                            inc_mac_load_mf=inc_mac_load_mf,
                             farfield_strain_mf=farfield_strain_mf,
                             farfield_strain_old_mf=
                                 self._farfield_strain_old_mf)
@@ -1315,9 +1316,10 @@ class ASCA:
     # -------------------------------------------------------------------------
     def _build_residual(self, crve, material_state, presc_strain_idxs,
                         presc_stress_idxs, applied_mac_load_mf, ref_material,
-                        global_cit_mf, global_strain_mf,
+                        global_cit_mf, global_strain_mf, inc_mac_load_mf=None,
                         farfield_strain_mf=None, farfield_strain_old_mf=None,
-                        applied_mix_strain_mf=None, applied_mix_stress_mf=None):
+                        applied_mix_strain_mf=None,
+                        applied_mix_stress_mf=None):
         """Build Lippmann-Schwinger equilibrium residuals.
 
         **Global residual function:**
@@ -1615,6 +1617,10 @@ class ASCA:
             (2nd).
         global_strain_mf : numpy.ndarray (1d)
             Global vector of clusters strain tensors (matricial form).
+        inc_mac_load_mf : dict, default=None
+            For each loading nature type (key, {'strain', 'stress'}), stores
+            the incremental loading constraint matricial form in a
+            numpy.ndarray of shape (n_comps,).
         farfield_strain_mf : numpy.ndarray (1d), default=None
             Far-field strain tensor (matricial form).
         farfield_strain_old_mf : numpy.ndarray (1d), default=None
@@ -1657,6 +1663,10 @@ class ASCA:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialiatize and get last converged variables
         if self._strain_formulation == 'infinitesimal':
+            # Get incremental homogenized strain and stress tensors
+            # (matricial form)
+            inc_hom_strain_mf = material_state.get_inc_hom_strain_mf()
+            inc_hom_stress_mf = material_state.get_inc_hom_stress_mf()
             # Initialize last converged global vector of clusters strain
             # tensors
             global_strain_old_mf = np.zeros_like(global_strain_mf)
@@ -1714,9 +1724,9 @@ class ASCA:
                     numpy.matlib.repmat(farfield_strain_mf, 1,
                                         n_total_clusters))
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Add residual term for compatibility with incremental formulation
+            # under infinitesimal strains
             if self._strain_formulation == 'infinitesimal':
-                # Add residual term to recover incremental formulation under
-                # infinitesimal strains
                 residual[0:n_total_clusters*len(comp_order)] += np.reshape(
                     -np.subtract(
                         np.add(global_strain_old_mf,
@@ -1729,11 +1739,23 @@ class ASCA:
             # Compute homogenization constraints residuals
             for i in range(len(comp_order)):
                 if i in presc_strain_idxs:
-                    residual[n_total_clusters*len(comp_order) + i] = \
-                        hom_strain_mf[i] - applied_mac_load_mf['strain'][i]
+                    if self._strain_formulation == 'infinitesimal':
+                        # Constraint compatible with incremental formulation
+                        # under infinitesimal strains
+                        residual[n_total_clusters*len(comp_order) + i] = \
+                            inc_hom_strain_mf[i] - inc_mac_load_mf['strain'][i]
+                    else:
+                        residual[n_total_clusters*len(comp_order) + i] = \
+                            hom_strain_mf[i] - applied_mac_load_mf['strain'][i]
                 else:
-                    residual[n_total_clusters*len(comp_order) + i] = \
-                        hom_stress_mf[i] - applied_mac_load_mf['stress'][i]
+                    if self._strain_formulation == 'infinitesimal':
+                        # Constraint compatible with incremental formulation
+                        # under infinitesimal strains
+                        residual[n_total_clusters*len(comp_order) + i] = \
+                            inc_hom_stress_mf[i] - inc_mac_load_mf['stress'][i]
+                    else:
+                        residual[n_total_clusters*len(comp_order) + i] = \
+                            hom_stress_mf[i] - applied_mac_load_mf['stress'][i]
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         else:
             # Compute number of prescribed loading stress components
