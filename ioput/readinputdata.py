@@ -20,6 +20,7 @@ import ntpath
 import numpy as np
 # Local
 import ioput.info as info
+import ioput.ioutilities as ioutil
 import ioput.fileoperations as filop
 import ioput.packager as packager
 import ioput.readprocedures as rproc
@@ -73,6 +74,9 @@ def read_input_data_file(input_file, dirs_dict):
     material_state : MaterialState
         CRVE material constitutive state.
     """
+    # Get display features
+    indent = ioutil.setdisplayfeatures()[2]
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Get input data file path and output directories paths
     input_file_name = dirs_dict['input_file_name']
     input_file_path = dirs_dict['input_file_path']

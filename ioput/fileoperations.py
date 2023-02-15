@@ -233,6 +233,9 @@ def set_problem_dirs(input_file_name, input_file_dir):
     adapt_file_path : str
         Problem '.adapt' output file path.
     """
+    # Get display features
+    indent = ioutil.setdisplayfeatures()[2]
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set problem name and output directory
     problem_name = input_file_name
     problem_dir = input_file_dir + problem_name + '/'

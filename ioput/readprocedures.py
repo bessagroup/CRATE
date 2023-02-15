@@ -331,6 +331,9 @@ def read_material_properties(file, file_path, keyword):
         Constitutive model material properties (item, dict) associated with
         each material phase (key, str).
     """
+    # Get display features
+    indent = ioutil.setdisplayfeatures()[2]
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Search keyword
     keyword_line_number = searchkeywordline(file, keyword)
     line = linecache.getline(file_path, keyword_line_number).split()
@@ -572,7 +575,7 @@ def read_material_properties(file, file_path, keyword):
                                 + 'the input data' + '\n' \
                                 + indent + 'file is invalid.'
                             info.displayinfo('4', summary, description,
-                                             mat_phase))
+                                             mat_phase)
                         elif len(hardening_point_line) != 3:
                             summary = 'Invalid hardening point'
                             description = 'The specification of a strain ' \
@@ -580,7 +583,7 @@ def read_material_properties(file, file_path, keyword):
                                 + 'the input data' + '\n' \
                                 + indent + 'file is invalid.'
                             info.displayinfo('4', summary, description,
-                                             mat_phase))
+                                             mat_phase)
                         elif not ioutil.checknumber(hardening_point_line[1]) \
                                 or not ioutil.checknumber(
                                     hardening_point_line[2]):
@@ -590,7 +593,7 @@ def read_material_properties(file, file_path, keyword):
                                 + 'the input data' + '\n' \
                                 + indent + 'file is invalid.'
                             info.displayinfo('4', summary, description,
-                                             mat_phase))
+                                             mat_phase)
                         hardening_points[k, 0] = float(hardening_point_line[1])
                         hardening_points[k, 1] = float(hardening_point_line[2])
                     # Assemble constitutive parameter associated property
@@ -854,6 +857,9 @@ def read_macroscale_loading(file, file_path, mac_load_type, strain_formulation,
         component and the j-th column is associated with the j-th loading
         subpath.
     """
+    # Get display features
+    indent = ioutil.setdisplayfeatures()[2]
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set macroscale loading keywords according to loading type
     if mac_load_type == 1:
         loading_keywords = {'Macroscale_Strain': 'strain'}
@@ -1006,8 +1012,8 @@ def read_macroscale_loading(file, file_path, mac_load_type, strain_formulation,
                 if mac_load_type == 3 \
                         and mac_load_presctype[symmetric_indexes[0, i] , j] \
                         != mac_load_presctype[symmetric_indexes[1, i], j]:
-                    summary = 'Symmetric components prescribed with different '
-                        + 'nature under infinitesimal strains'
+                    summary = 'Symmetric components prescribed with ' \
+                        + 'different nature under infinitesimal strains'
                     description = 'The keyword - {} - is not properly ' \
                         + 'defined in the input data file.' + '\n' \
                         + indent + 'Symmetric components must have the same ' \
@@ -1020,7 +1026,7 @@ def read_macroscale_loading(file, file_path, mac_load_type, strain_formulation,
                     mac_load[ltype][symmetric_indexes[1, i], j + 1],
                     atol=1e-10)
                 if not isEqual:
-                    summary = 'Nonsymmetric strain or stress components '
+                    summary = 'Nonsymmetric strain or stress components ' \
                         + 'prescribed under infinitesimal strains'
                     description = 'A nonsymmetric {} tensor is prescribed ' \
                         + 'in the input data file under infinitesimal strains.'
@@ -1122,6 +1128,9 @@ def read_mac_load_increm(file, file_path, keyword, n_load_subpaths):
         loading increment, and the columns 0 and 1 contain the corresponding
         incremental load factor and incremental time, respectively.
     """
+    # Get display features
+    indent = ioutil.setdisplayfeatures()[2]
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Initialize macroscale loading incrementation dictionary
     mac_load_increm = dict()
     # Set loading time factor
@@ -1232,6 +1241,9 @@ def decode_increm_spec(spec, load_time_factor):
     inc_time : float
         Incremental time.
     """
+    # Get display features
+    indent = ioutil.setdisplayfeatures()[2]
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Split specifications based on multiple delimiters
     code = re.split('[:_]', spec)
     # Check if the repetition and incremental time have been specified
@@ -1412,6 +1424,9 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
         Clustering adaptivity control feature (item, str) associated with each
         material phase (key, str).
     """
+    # Get display features
+    indent = ioutil.setdisplayfeatures()[2]
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Find keyword line number
     keyword_line_number = searchkeywordline(file, keyword)
     # Initialize line number
@@ -1746,8 +1761,9 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
             + 'material phases.'
         info.displayinfo('4', summary, description, keyword)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    return clustering_type, base_clustering_scheme, adaptive_clustering_scheme,
-        adapt_criterion_data, adaptivity_type, adaptivity_control_feature
+    return clustering_type, base_clustering_scheme, \
+        adaptive_clustering_scheme, adapt_criterion_data, adaptivity_type, \
+        adaptivity_control_feature
 # =============================================================================
 def read_clustering_scheme(file, file_path, line_number):
     """Read material phase's prescribed clustering scheme.
@@ -1774,6 +1790,9 @@ def read_clustering_scheme(file, file_path, line_number):
         Data file line where the material phase's clustering scheme
         prescription ends.
     """
+    # Get display features
+    indent = ioutil.setdisplayfeatures()[2]
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Initialize clustering scheme
     clustering_scheme = np.full((0, 3), '', dtype=object)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1833,6 +1852,9 @@ def check_clustering_scheme(mat_phase, clustering_scheme, valid_algorithms,
     valid_features : list[str]
         Valid clustering features identifiers (str).
     """
+    # Get display features
+    indent = ioutil.setdisplayfeatures()[2]
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Check validity of prescribed clustering algorithms
     if any([str(x) not in valid_algorithms for x in clustering_scheme[:, 0]]):
         summary = 'Invalid clustering algorithm'
@@ -1884,6 +1906,9 @@ def read_adaptivity_frequency(file, file_path, keyword, adapt_material_phases):
         (item, int) associated with each adaptive cluster-reduced material
         phase (key, str).
     """
+    # Get display features
+    indent = ioutil.setdisplayfeatures()[2]
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Find keyword line number
     keyword_line_number = searchkeywordline(file, keyword)
     # Initialize line number
@@ -1984,6 +2009,9 @@ def read_rewind_state_parameters(file, file_path, keyword):
     rewind_state_criterion : tuple
         Rewind state storage criterion [0] and associated parameter [1].
     """
+    # Get display features
+    indent = ioutil.setdisplayfeatures()[2]
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Find keyword line number
     keyword_line_number = searchkeywordline(file, keyword)
     # Get keyword lowercased line
@@ -2057,6 +2085,9 @@ def read_rewinding_criterion_parameters(file, file_path, keyword):
     rewinding_criterion : tuple, default=None
         Rewinding criterion [0] and associated parameter [1].
     """
+    # Get display features
+    indent = ioutil.setdisplayfeatures()[2]
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Find keyword line number
     keyword_line_number = searchkeywordline(file, keyword)
     # Get keyword lowercased line
@@ -2126,31 +2157,35 @@ def read_discretization_file_path(file, file_path, keyword, valid_exts):
     discret_file_path : str
         Spatial discretization file path.
     """
+    # Get display features
+    indent = ioutil.setdisplayfeatures()[2]
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     line_number = searchkeywordline(file, keyword) + 1
     discret_file_path = linecache.getline(file_path, line_number).strip()
     if not os.path.isfile(discret_file_path):
-            summary = 'Missing spatial discretization file'
-            description = 'The spatial discretization file specified under ' \
-                + 'the keyword - {} - could not be found:' + '\n\n' \
-                + indent + '{}'
-            info.displayinfo('4', summary, description, keyword,
-                             discret_file_path)
+        summary = 'Missing spatial discretization file'
+        description = 'The spatial discretization file specified under ' \
+            + 'the keyword - {} - could' + '\n' \
+            + indent + 'not be found:' + '\n\n' \
+            + indent + '{}'
+        info.displayinfo('4', summary, description, keyword,
+                         discret_file_path)
     format_exts = ['.npy']
     if ntpath.splitext(ntpath.basename(discret_file_path))[-1] in format_exts:
         if not ntpath.splitext(ntpath.splitext(ntpath.basename(
                 discret_file_path))[0])[-1] in valid_exts:
             summary = 'Invalid spatial discretization file extension'
             description = 'The spatial discretization file specified under ' \
-                + 'the keyword - {} - does not have' + '\n' \
-                + indent + 'a valid extension.'
+                + 'the keyword - {} - does' + '\n' \
+                + indent + 'not have a valid extension.'
             info.displayinfo('4', summary, description, keyword)
     else:
         if not ntpath.splitext(ntpath.basename(
                 discret_file_path))[-1] in valid_exts:
             summary = 'Invalid spatial discretization file extension'
             description = 'The spatial discretization file specified under ' \
-                + 'the keyword - {} - does not have' + '\n' \
-                + indent + 'a valid extension.'
+                + 'the keyword - {} - does' + '\n' \
+                + indent + 'not have a valid extension.'
             info.displayinfo('4', summary, description, keyword)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return os.path.abspath(discret_file_path)

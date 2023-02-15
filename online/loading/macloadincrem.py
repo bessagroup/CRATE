@@ -28,6 +28,7 @@ from anytree.walker import Walker
 from anytree.exporter import DotExporter
 # Local
 import ioput.info as info
+import ioput.ioutilities as ioutil
 import tensor.matrixoperations as mop
 #
 #                                                          Authorship & Credits
@@ -264,6 +265,9 @@ class LoadingPath:
         is_last_inc : bool
             Loading last increment flag.
         """
+        # Get display features
+        indent = ioutil.setdisplayfeatures()[2]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get current loading subpath
         load_subpath = self._get_load_subpath()
         # Perform loading increment
@@ -669,7 +673,7 @@ class LoadingSubpath:
         # Return
         return self._id, self._inc, self._total_lfact, \
             self._inc_lfacts[inc_idx], self._total_time, \
-            self._inc_times[inc_idx], self._sub_inc_levels[inc_idx]]
+            self._inc_times[inc_idx], self._sub_inc_levels[inc_idx]
     # -------------------------------------------------------------------------
     def update_inc(self):
         """Update increment counter, total load factor and applied loading."""
@@ -701,6 +705,9 @@ class LoadingSubpath:
     # -------------------------------------------------------------------------
     def increment_cut(self):
         """Perform loading increment cut."""
+        # Get display features
+        indent = ioutil.setdisplayfeatures()[2]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get loading subpath current increment index
         inc_idx = self._inc - 1
         # Update subincrementation level

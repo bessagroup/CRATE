@@ -74,7 +74,7 @@ def displayinfo(code, *args, **kwargs):
         arguments = [args[0],]
         info = tuple(arguments)
         if status == 0:
-            template = 4*'\n' + 'Problem directory: {}' + '\n\n'
+            template = 4*'\n' + 'Problem directory: {}' + '\n\n' \
                 + 'Status: New problem'
         elif status == 1:
             template = 4*'\n' + 'Problem directory: {}' + '\n\n' \
@@ -159,7 +159,7 @@ def displayinfo(code, *args, **kwargs):
     elif code == '4':
         summary = args[0]
         description = args[1]
-        arguments = args[2:]
+        arguments = list(args[2:])
         arguments.append('Program Aborted')
         info = tuple(arguments)
         template = '\n\n' + colorama.Fore.RED \
@@ -421,7 +421,7 @@ def displayinfo(code, *args, **kwargs):
         mode = args[0]
         if mode == 'max_scs_iter':
             arguments = [args[1],]
-            lock_msg = 'Maximum number of self-consistent iterations ({}) '
+            lock_msg = 'Maximum number of self-consistent iterations ({}) ' \
                 + 'reached' + '\n' \
                 + indent + len('Locking reference properties: ')*' ' \
                 + 'without convergence.' + '\n' \
@@ -542,15 +542,15 @@ def displayinfo(code, *args, **kwargs):
         inc = args[1]
         spacing = indent + len('Clustering adaptivity: ')*' '
         if mode == 'repeat':
-            msg = 'Adaptivity condition(s) have been triggered and '
+            msg = 'Adaptivity condition(s) have been triggered and ' \
                 'clustering' + '\n' \
                 + spacing + 'adaptivity will be performed.' + '\n' \
                 + spacing + 'Current macroscale loading increment ({}) ' \
                 + 'will be repeated' + '\n' \
                 + spacing + 'considering the new clustering.'
         elif mode == 'new':
-            msg = 'Adaptivity condition(s) have been triggered and '
-                'clustering' + '\n' \
+            msg = 'Adaptivity condition(s) have been triggered and ' \
+                + 'clustering' + '\n' \
                 + spacing + 'adaptivity will be performed.' + '\n' \
                 + spacing + 'Performing the new macroscale loading ' \
                 + 'increment ({})' + '\n' + spacing \

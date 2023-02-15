@@ -1235,8 +1235,9 @@ class CRVE:
                                     'interaction tensors should be '
                                     'cluster-symmetric.')
                             # Set cluster volume fractions ratio
-                            clst_vf_ratio = (self._clusters_vf[str(cluster_J)]
-                                             /self._clusters_vf[str(cluster_I)]
+                            clst_vf_ratio = (
+                                self._clusters_vf[str(cluster_J)]
+                                /self._clusters_vf[str(cluster_I)])
                             # Compute clustering interaction tensor
                             for cit_mf in self._cit_x_mf:
                                 cit_mf[mat_phase_pair][cluster_pair] = \
