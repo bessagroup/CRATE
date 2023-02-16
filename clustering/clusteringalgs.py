@@ -130,8 +130,8 @@ class ClusterAnalysis:
             n_init = 10
             # Instantiate K-Means
             clust_alg = KMeansSK(init='k-means++', n_init=n_init, max_iter=300,
-                                 tol=1e-4, random_state=None, algorithm='auto',
-                                 n_clusters=n_clusters)
+                                 tol=1e-4, random_state=None,
+                                 algorithm='lloyd', n_clusters=n_clusters)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         elif clust_alg_id == '2':
             # Instatiante K-Means
@@ -300,7 +300,7 @@ class KMeansSK(ClusteringAlgorithm):
         Perform cluster analysis and get cluster label of each dataset item.
     """
     def __init__(self, init='k-means++', n_init=10, max_iter=300, tol=1e-4,
-                 random_state=None, algorithm='auto', n_clusters=None):
+                 random_state=None, algorithm='lloyd', n_clusters=None):
         """Constructor.
 
         Parameters
@@ -319,11 +319,10 @@ class KMeansSK(ClusteringAlgorithm):
         random_state : {int, RandomState}, default=None
             Determines random number generation for centroid initialization.
             Use an int to make the randomness deterministic.
-        algorithm : {'auto', 'full', 'elkan'}, default='auto'
-            K-Means algorithm to use. 'full' is the classical EM-style
+        algorithm : {'lloyd', 'elkan'}, default='lloyd'
+            K-Means algorithm to use. 'lloyd' is the classical EM-style
             algorithm, 'elkan' uses the triangle inequality to speed up
-            convergence. 'auto' currently chooses 'elkan'
-            (scikit-learn 0.23.2).
+            convergence.
         """
         self.n_clusters = n_clusters
         self._init = init
