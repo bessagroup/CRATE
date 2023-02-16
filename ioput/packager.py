@@ -45,8 +45,7 @@ __status__ = 'Stable'
 # =============================================================================
 def store_paths_data(input_file_name, input_file_path, input_file_dir,
                      problem_name, problem_dir, offline_stage_dir,
-                     postprocess_dir, crve_file_path, hres_file_path,
-                     refm_file_path, adapt_file_path):
+                     postprocess_dir, crve_file_path):
     """Store problem directories and files paths.
 
     Parameters
@@ -67,12 +66,6 @@ def store_paths_data(input_file_name, input_file_path, input_file_dir,
         Problem output post-processing subdirectory path.
     crve_file_path : str
         Problem '.crve' output file path.
-    hres_file_path : str
-        Problem '.hres' output file path.
-    refm_file_path : str
-        Problem '.refm' output file path.
-    adapt_file_path : str
-        Problem '.adapt' output file path.
 
     Returns
     -------
@@ -89,11 +82,7 @@ def store_paths_data(input_file_name, input_file_path, input_file_dir,
     dirs_dict['problem_dir'] = problem_dir
     dirs_dict['offline_stage_dir'] = offline_stage_dir
     dirs_dict['crve_file_path'] = crve_file_path
-    dirs_dict['hres_file_path'] = hres_file_path
-    dirs_dict['refm_file_path'] = refm_file_path
-    dirs_dict['adapt_file_path'] = adapt_file_path
     dirs_dict['postprocess_dir'] = postprocess_dir
-    dirs_dict['voxout_file_path'] = None
     # Return
     return dirs_dict
 # =============================================================================

@@ -87,13 +87,12 @@ input_file_name, input_file_path, input_file_dir = \
     filop.set_input_datafile_path(str(sys.argv[1]))
 # Set output directory structure and output files paths
 problem_name, problem_dir, offline_stage_dir, postprocess_dir, \
-    is_same_offstage, crve_file_path, hres_file_path, refm_file_path, \
-    adapt_file_path = filop.set_problem_dirs(input_file_name, input_file_dir)
+    is_same_offstage, crve_file_path = filop.set_problem_dirs(input_file_name,
+                                                              input_file_dir)
 # Store problem directories and files paths
 dirs_dict = packager.store_paths_data(
     input_file_name, input_file_path, input_file_dir, problem_name,
-    problem_dir, offline_stage_dir, postprocess_dir, crve_file_path,
-    hres_file_path, refm_file_path, adapt_file_path)
+    problem_dir, offline_stage_dir, postprocess_dir, crve_file_path)
 # Open user input data file
 input_file = open(input_file_path, 'r')
 #

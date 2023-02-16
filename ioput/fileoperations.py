@@ -119,7 +119,7 @@ def set_input_datafile_path(path):
 #                                                             Results directory
 # =============================================================================
 def set_problem_dirs(input_file_name, input_file_dir):
-    """Set output directory structure and output files paths.
+    """Set output directory structure.
 
     *Output directory structure:*
 
@@ -225,12 +225,6 @@ def set_problem_dirs(input_file_name, input_file_dir):
         considered, `False` otherwise.
     crve_file_path : str
         Problem '.crve' output file path.
-    hres_file_path : str
-        Problem '.hres' output file path.
-    refm_file_path : str
-        Problem '.refm' output file path.
-    adapt_file_path : str
-        Problem '.adapt' output file path.
     """
     # Get display features
     indent = ioutil.setdisplayfeatures()[2]
@@ -247,12 +241,6 @@ def set_problem_dirs(input_file_name, input_file_dir):
         os.remove(ioutil.screen_file_path)
     # Set '.crve' output file path
     crve_file_path = offline_stage_dir + input_file_name + '.crve'
-    # Set '.hres' output file path
-    hres_file_path = problem_dir + input_file_name + '.hres'
-    # Set '.refm' output file path
-    refm_file_path = problem_dir + input_file_name + '.refm'
-    # Set '.adapt' output file path
-    adapt_file_path = problem_dir + input_file_name + '.adapt'
     # Check if the problem output directory exists
     if not os.path.exists(problem_dir):
         status = 0
@@ -317,5 +305,4 @@ def set_problem_dirs(input_file_name, input_file_dir):
         info.displayinfo('-1', problem_dir, status)
     # Return
     return problem_name, problem_dir, offline_stage_dir, postprocess_dir, \
-           is_same_offstage, crve_file_path, hres_file_path, refm_file_path, \
-           adapt_file_path
+           is_same_offstage, crve_file_path
