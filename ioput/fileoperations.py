@@ -21,7 +21,6 @@ set_problem_dirs
 # Standard
 import os
 import shutil
-import ntpath
 # Local
 import ioput.info as info
 import ioput.ioutilities as ioutil
@@ -98,9 +97,9 @@ def set_input_datafile_path(path):
     """
     # Set input data file path, directory, name and extension
     input_file_path = os.path.abspath(path)
-    input_file_dir = ntpath.dirname(input_file_path) + '/'
-    input_file_name = ntpath.splitext(ntpath.basename(input_file_path))[-2]
-    input_file_ext = ntpath.splitext(ntpath.basename(input_file_path))[-1]
+    input_file_dir = os.path.dirname(input_file_path) + '/'
+    input_file_name = os.path.splitext(os.path.basename(input_file_path))[-2]
+    input_file_ext = os.path.splitext(os.path.basename(input_file_path))[-1]
     # Check if the input data file has the required '.dat' extension
     if input_file_ext != '.dat':
         summary = 'Input data file extension'

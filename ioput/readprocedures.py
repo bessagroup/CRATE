@@ -51,7 +51,6 @@ import os
 import copy
 import linecache
 import inspect
-import ntpath
 import re
 # Third-party
 import numpy as np
@@ -2174,8 +2173,9 @@ def read_discretization_file_path(file, file_path, keyword, valid_exts):
         info.displayinfo('4', summary, description, keyword,
                          discret_file_path)
     format_exts = ['.npy']
-    if ntpath.splitext(ntpath.basename(discret_file_path))[-1] in format_exts:
-        if not ntpath.splitext(ntpath.splitext(ntpath.basename(
+    if os.path.splitext(os.path.basename(discret_file_path))[-1] \
+            in format_exts:
+        if not os.path.splitext(os.path.splitext(os.path.basename(
                 discret_file_path))[0])[-1] in valid_exts:
             summary = 'Invalid spatial discretization file extension'
             description = 'The spatial discretization file specified under ' \
@@ -2183,7 +2183,7 @@ def read_discretization_file_path(file, file_path, keyword, valid_exts):
                 + indent + 'not have a valid extension.'
             info.displayinfo('4', summary, description, keyword)
     else:
-        if not ntpath.splitext(ntpath.basename(
+        if not os.path.splitext(os.path.basename(
                 discret_file_path))[-1] in valid_exts:
             summary = 'Invalid spatial discretization file extension'
             description = 'The spatial discretization file specified under ' \

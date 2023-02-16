@@ -15,7 +15,6 @@ read_input_data_file
 import os
 import shutil
 import linecache
-import ntpath
 # Third-party
 import numpy as np
 # Local
@@ -382,8 +381,8 @@ def read_input_data_file(input_file, dirs_dict):
     # Copy the spatial discretization file to the problem directory and update
     # the absolute path to the copied file
     shutil.copy2(discret_file_path,
-                 problem_dir + ntpath.basename(discret_file_path))
-    discret_file_path = problem_dir + ntpath.basename(discret_file_path)
+                 problem_dir + os.path.basename(discret_file_path))
+    discret_file_path = problem_dir + os.path.basename(discret_file_path)
     # Store spatial discretization file absolute path
     dirs_dict['discret_file_path'] = discret_file_path
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -454,7 +453,7 @@ def read_input_data_file(input_file, dirs_dict):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read the spatial discretization file (regular grid of voxels)
     info.displayinfo('5', 'Reading discretization file...')
-    if ntpath.splitext(ntpath.basename(discret_file_path))[-1] == '.npy':
+    if os.path.splitext(os.path.basename(discret_file_path))[-1] == '.npy':
         regular_grid = np.load(discret_file_path)
     else:
         regular_grid = np.loadtxt(discret_file_path)
