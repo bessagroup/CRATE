@@ -383,14 +383,17 @@ def store_clustering_data(clustering_solution_method, standardization_method,
     # Return
     return clst_dict
 # =============================================================================
-def store_scs_data(self_consistent_scheme, scs_max_n_iterations, scs_conv_tol):
+def store_scs_data(self_consistent_scheme, scs_parameters,
+                   scs_max_n_iterations, scs_conv_tol):
     """Store data associated with the self-consistent scheme.
 
     Parameters
     ----------
-    self_consistent_scheme : {'regression',}
+    self_consistent_scheme : {'none', 'regression',}
         Self-consistent scheme to update the elastic reference material
         properties.
+    scs_parameters : {dict, None}
+        Self-consistent scheme parameters (key, str; item, {int, float, bool}).
     scs_max_n_iterations : int
         Self-consistent scheme maximum number of iterations.
     scs_conv_tol : float
@@ -405,6 +408,7 @@ def store_scs_data(self_consistent_scheme, scs_max_n_iterations, scs_conv_tol):
     scs_dict = dict()
     # Build self-consistent scheme dictionary
     scs_dict['self_consistent_scheme'] = self_consistent_scheme
+    scs_dict['scs_parameters'] = scs_parameters
     scs_dict['scs_max_n_iterations'] = scs_max_n_iterations
     scs_dict['scs_conv_tol'] = scs_conv_tol
     # Return

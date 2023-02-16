@@ -172,7 +172,7 @@ class ASCA:
         Build clusters equilibrium residuals dictionary.
     _display_inc_data(mac_load_path)
         Display loading increment data.
-    _display_scs_iter_data(ref_material, is_lock_prop_ref, mode='init',
+    _display_scs_iter_data(ref_material, is_lock_prop_ref, mode='init', \
                            scs_iter_time=None):
         Display reference material self-consistent scheme iteration data.
     _display_nr_iter_data(is_farfield_formulation, mode='init', nr_iter=None, \
@@ -187,7 +187,7 @@ class ASCA:
     """
     def __init__(self, strain_formulation, problem_type,
                  is_farfield_formulation=True,
-                 self_consistent_scheme='regression', scs_init_properties=None,
+                 self_consistent_scheme='regression', scs_parameters=None,
                  scs_max_n_iterations=20, scs_conv_tol=1e-4,
                  max_n_iterations=12, conv_tol=1e-6, max_subinc_level=5,
                  max_cinc_cuts=5, is_adapt_repeat_inc=True):
@@ -205,9 +205,9 @@ class ASCA:
         self_consistent_scheme : {'regression',}, default='regression'
             Self-consistent scheme to update the elastic reference material
             properties.
-        scs_init_properties : dict, default=None
-            Self-consistent scheme initial guess of elastic reference material
-            properties.
+        scs_parameters : {dict, None}, default=None
+            Self-consistent scheme parameters (key, str; item,
+            {int, float, bool}).
         scs_max_n_iterations : int, default=20
             Self-consistent scheme maximum number of iterations.
         scs_conv_tol : float, default=1e-4
@@ -228,7 +228,7 @@ class ASCA:
         self._problem_type = problem_type
         self._is_farfield_formulation = is_farfield_formulation
         self._self_consistent_scheme = self_consistent_scheme
-        self._scs_init_properties = scs_init_properties
+        self._scs_parameters = scs_parameters
         self._scs_max_n_iterations = scs_max_n_iterations
         self._scs_conv_tol = scs_conv_tol
         self._max_n_iterations = max_n_iterations
@@ -362,8 +362,6 @@ class ASCA:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize loading increment cut flag
         is_inc_cut = False
-        # Initialize reference material elastic properties locking flag
-        is_lock_prop_ref = False
         # Initialize improved cluster incremental strains initial iterative
         # guess flag
         is_improved_init_guess = False
@@ -466,12 +464,33 @@ class ASCA:
                                                 self._problem_type,
                                                 self._self_consistent_scheme,
                                                 self._scs_conv_tol)
-        # Set initial guess of elastic reference material properties
+        # Initialize initial value of elastic reference material properties
+        scs_init_properties = None
+        # Get initial value of elastic reference material properties
+        if (self._scs_parameters is not None) \
+                and {'E_init', 'v_init'}.issubset(self._scs_parameters.keys()):
+            # Get properties specifications
+            spec_1 = self._scs_parameters['E_init']
+            spec_2 = self._scs_parameters['v_init']
+            # Get properties
+            if (spec_1 == 'init_eff_tangent' and spec_2 == 'init_eff_tangent'):
+                scs_init_properties = \
+                    crve.get_eff_isotropic_elastic_constants()
+            else:
+                scs_init_properties = {}
+                scs_init_properties['E'] = self._scs_parameters['E_init']
+                scs_init_properties['v'] = self._scs_parameters['v_init']
+        # Set initial value of elastic reference material properties
         ref_material.init_material_properties(
             material_state.get_material_phases(),
             material_state.get_material_phases_properties(),
             material_state.get_material_phases_vf(),
-            properties=self._scs_init_properties)
+            properties=scs_init_properties)
+        # Initialize reference material elastic properties locking flag
+        if self._self_consistent_scheme == 'none':
+            is_lock_prop_ref = True
+        else:
+            is_lock_prop_ref = False
         #
         #                                                          Loading path
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -843,7 +862,8 @@ class ASCA:
                 if is_scs_converged:
                     # Reset flag that locks reference material elastic
                     # properties
-                    is_lock_prop_ref = False
+                    if self._self_consistent_scheme != 'none':
+                        is_lock_prop_ref = False
                     # Leave self-consistent scheme iterative loop (converged
                     # solution)
                     break
@@ -3023,6 +3043,52 @@ class ElasticReferenceMaterial:
     _norm_dv : float
         Normalized iterative change of Poisson ratio associated with the last
         self-consistent iteration convergence evaluation.
+
+    Methods
+    -------
+    init_material_properties(self, material_phases, \
+                             material_phases_properties, material_phases_vf, \
+                             properties=None)
+        Set initial guess of elastic reference material properties.
+    update_material_properties(self, E, v)
+        Update elastic reference material properties.
+    update_converged_material_properties(self)
+        Update converged elastic reference material properties.
+    reset_material_properties(self)
+        Reset material properties to last loading increment values.
+    set_material_properties_scs_init(self)
+        Set material properties converged in the first loading increment.
+    get_material_properties(self)
+        Get elastic reference material properties.
+    get_elastic_tangent_mf(self)
+        Get elastic tangent modulus in matricial form.
+    get_elastic_compliance_matrix(self)
+        Get elastic compliance in matrix form.
+    init_scs_iter(self)
+        Initialize self-consistent scheme iteration counter.
+    update_scs_iter(self)
+        Update self-consistent scheme iteration counter.
+    get_scs_iter(self)
+        Get self-consistent scheme iteration counter.
+    get_norm_dE(self)
+        Get normalized iterative change of Young modulus.
+    get_norm_dv(self)
+        Get normalized iterative change of Poisson ratio.
+    self_consistent_update(self, strain_mf, strain_old_mf, stress_mf, \
+                           stress_old_mf, eff_tangent_mf)
+        Compute reference elastic properties through self-consistent scheme.
+    _update_elastic_tangent(self)
+        Update reference material elastic tangent modulus and compliance.
+    _check_scs_solution(self, E, v)
+        Check admissibility of self-consistent scheme iterative solution.
+    check_scs_convergence(self, E, v)
+        Check self-consistent scheme iterative solution convergence.
+    get_available_scs(strain_formulation)
+        Get available self-consistent schemes.
+    lame_from_technical(E, v)
+        Get Lamé parameters from Young modulus and Poisson ratio.
+    technical_from_lame(lam, miu)
+        Get Young modulus and Poisson ratio from Lamé parameters.
     """
     def __init__(self, strain_formulation, problem_type,
                  self_consistent_scheme, conv_tol=1e-4):
@@ -3579,6 +3645,29 @@ class ElasticReferenceMaterial:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return is_converged
+   # -------------------------------------------------------------------------
+    @staticmethod
+    def get_available_scs(strain_formulation):
+        """Get available self-consistent schemes.
+
+        Parameters
+        ----------
+        strain_formulation: {'infinitesimal', 'finite'}
+            Problem strain formulation.
+
+        Returns
+        -------
+        available_scs : tuple[str]
+            Available self-consistent schemes.
+        """
+        if strain_formulation == 'infinitesimal':
+            available_scs = ('none', 'regression')
+        elif strain_formulation == 'finite':
+            available_scs = ('none',)
+        else:
+            raise RuntimeError('Unknown problem strain formulation.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        return available_scs
    # -------------------------------------------------------------------------
     @staticmethod
     def lame_from_technical(E, v):

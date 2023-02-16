@@ -181,18 +181,22 @@ def read_input_data_file(input_file, dirs_dict):
     keyword = 'Self_Consistent_Scheme'
     is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
     if is_found:
-        max_val = 3
-        self_consistent_scheme_id = rproc.readtypeAkeyword(
-            input_file, input_file_path, keyword, max_val)
+        # Read self-consistent scheme and associated parameters
+        self_consistent_scheme, scs_parameters = \
+            rproc.read_self_consistent_scheme(input_file, input_file_path,
+                                              keyword, strain_formulation)
     else:
-        self_consistent_scheme_id = 1
-    # Set self-consistent scheme according to the identifier
-    if self_consistent_scheme_id == 1:
-        self_consistent_scheme = 'regression'
-    elif self_consistent_scheme_id == 3:
-        self_consistent_scheme = 'self_consistent_optimization'
-    else:
-        raise RuntimeError('Unknown self-consistent scheme.')
+        # Set default self-consistent scheme and associated parameters
+        if strain_formulation == 'infinitesimal':
+            self_consistent_scheme = 'regression'
+            scs_parameters = {'E_init': 'init_eff_tangent',
+                              'v_init': 'init_eff_tangent'}
+        elif strain_formulation == 'finite':
+            self_consistent_scheme = 'none'
+            scs_parameters = {'E_init': 'init_eff_tangent',
+                              'v_init': 'init_eff_tangent'}
+        else:
+            raise RuntimeError('Unknown problem strain formulation.')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read self consistent scheme maximum number of iterations (optional)
     # If the associated keyword is not found, then a default option is adopted
@@ -519,7 +523,8 @@ def read_input_data_file(input_file, dirs_dict):
     # Store data associated with the self-consistent scheme
     info.displayinfo('5', 'Storing self-consistent scheme data...')
     scs_dict = packager.store_scs_data(
-        self_consistent_scheme, scs_max_n_iterations, scs_conv_tol)
+        self_consistent_scheme, scs_parameters, scs_max_n_iterations,
+        scs_conv_tol)
     # Store data associated with the self-consistent scheme
     info.displayinfo('5', 'Storing algorithmic data...')
     algpar_dict = packager.store_algorithmic_data(

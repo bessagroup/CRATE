@@ -38,6 +38,8 @@ read_discretization_file_path
     Read spatial discretization file path.
 read_rve_dimensions
     Read RVE dimensions (size length along each spatial dimension).
+read_self_consistent_scheme
+    Read self-consistent scheme and associated parameters.
 read_vtk_options
     Read VTK output options.
 """
@@ -64,6 +66,7 @@ from material.materialmodeling import get_available_material_models
 from material.models.elastic import Elastic
 from material.models.von_mises import VonMises
 from material.models.stvenant_kirchhoff import StVenantKirchhoff
+from online.crom.asca import ElasticReferenceMaterial
 from links.material.models.links_elastic import LinksElastic
 from links.material.models.links_von_mises import LinksVonMises
 #
@@ -2253,6 +2256,133 @@ def read_rve_dimensions(file, file_path, keyword, n_dim):
         rve_dims.append(float(line[i]))
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return rve_dims
+# =============================================================================
+def read_self_consistent_scheme(file, file_path, keyword, strain_formulation):
+    """Read self-consistent scheme and associated parameters.
+
+    The specification of the data associated with the self-consistent scheme
+    has the following input data file syntax:
+
+    .. code-block:: text
+
+       Self_Consistent_Scheme < method > [ < n_parameters > ]
+       [ < parameter_1_name > < value > ]
+       [ < parameter_2_name > < value > ]
+       ...
+
+    where `method` (str) is the self-consistent scheme strategy to update the
+    reference material properties, `n_parameters` (int) is the number of
+    self-consistent scheme parameters, and `parameter_X_name` (str) is the
+    self-consistent scheme parameter name.
+
+    Parameters
+    ----------
+    file : file
+        Data file.
+    file_path : str
+        Data file path.
+    keyword: str
+        Keyword.
+    strain_formulation: {'infinitesimal', 'finite'}
+        Problem strain formulation.
+
+    Returns
+    -------
+    self_consistent_scheme : {'none', 'regression'}
+        Self-consistent scheme to update the elastic reference material
+        properties.
+    scs_parameters : {dict, None}
+        Self-consistent scheme parameters (key, str; item, {int, float, bool}).
+    """
+    # Get display features
+    indent = ioutil.setdisplayfeatures()[2]
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Read keyword line
+    keyword_line_number = searchkeywordline(file, keyword)
+    line = linecache.getline(file_path, keyword_line_number).split()
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Get available self-consistent schemes
+    available_scs = \
+        ElasticReferenceMaterial.get_available_scs(strain_formulation)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    if len(line) == 1 or len(line) > 3:
+        summary = 'Invalid keyword specification'
+        description = 'The keyword - {} - is not properly defined in the ' \
+            + 'input data file.'
+        info.displayinfo('4', summary, description, keyword)
+    elif str(line[1]) not in available_scs:
+        summary = 'Invalid keyword specification'
+        description = 'The keyword - {} - is not properly defined ' \
+            + 'in the input data file.' + '\n' \
+            + indent + 'Unknown self-consistent scheme.'
+        info.displayinfo('4', summary, description, keyword)
+    else:
+        self_consistent_scheme = str(line[1])
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Read self-consistent scheme parameters
+    if len(line) == 3:
+        if not ioutil.checkposint(line[2]):
+            summary = 'Invalid keyword specification'
+            description = 'The keyword - {} - is not properly defined in the '\
+                + 'input data file.' + '\n' \
+                + indent + 'Invalid number of self-consistent scheme ' \
+                + 'parameters.'
+            info.displayinfo('4', summary, description, keyword)
+        else:
+            # Get number of self-consistent parameters
+            n_parameters = int(line[2])
+            # Initialize self-consistent scheme parameters
+            scs_parameters = {}
+            # Loop over self-consistent scheme parameters
+            line_number = keyword_line_number + 1
+            for i in range(n_parameters):
+                # Get self-consistent scheme parameter specification line
+                parameter_line = \
+                    linecache.getline(file_path, line_number + i).split()
+                # Get self-consistent scheme parameter
+                if not parameter_line:
+                    summary = 'Missing self-consistent scheme parameter'
+                    description = 'The keyword - {} - is not properly '\
+                        + 'defined in the input data file.' + '\n' \
+                        + indent + 'Missing specification of self-consistent '\
+                        + 'scheme parameter.'
+                    info.displayinfo('4', summary, description, keyword)
+                elif len(parameter_line) != 2:
+                    summary = 'Invalid self-consistent scheme parameter'
+                    description = 'The keyword - {} - is not properly '\
+                        + 'defined in the input data file.' + '\n' \
+                        + indent + 'Invalid specification of self-consistent '\
+                        + 'scheme parameter.'
+                    info.displayinfo('4', summary, description, keyword)
+                elif not ioutil.checkvalidname(parameter_line[0]):
+                    summary = 'Invalid self-consistent scheme parameter'
+                    description = 'The keyword - {} - is not properly '\
+                        + 'defined in the input data file.' + '\n' \
+                        + indent + 'Invalid self-consistent scheme parameter '\
+                        + 'name.'
+                    info.displayinfo('4', summary, description, keyword)
+                else:
+                    scs_parameters[str(parameter_line[0])] = \
+                        get_formatted_parameter(str(parameter_line[0]),
+                                                parameter_line[1])
+    else:
+        scs_parameters = {'E_init': 'init_eff_tangent',
+                          'v_init': 'init_eff_tangent'}
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Check if all reference material isotropic elastic properties were
+    # prescribed
+    if scs_parameters is not None:
+        param_names = scs_parameters.keys()
+        if ('E_init' in param_names and 'v_init' not in param_names) \
+                or ('E_init' not in param_names and 'v_init' in param_names):
+            summary = 'Missing reference material elastic property'
+            description = 'The keyword - {} - is not properly '\
+                + 'defined in the input data file.' + '\n' \
+                + indent + 'Both elastic properties of the elastic ' \
+                + 'reference material must be prescribed.'
+            info.displayinfo('4', summary, description, keyword)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    return self_consistent_scheme, scs_parameters
 # =============================================================================
 def read_vtk_options(file, file_path, keyword, keyword_line_number):
     """Read VTK output options.

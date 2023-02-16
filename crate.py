@@ -310,7 +310,7 @@ phase_init_time = time.time()
 asca = ASCA(problem_dict['strain_formulation'],
             problem_dict['problem_type'],
             self_consistent_scheme=scs_dict['self_consistent_scheme'],
-            scs_init_properties=crve.get_eff_isotropic_elastic_constants(),
+            scs_parameters=scs_dict['scs_parameters'],
             scs_max_n_iterations=scs_dict['scs_max_n_iterations'],
             scs_conv_tol=scs_dict['scs_conv_tol'],
             max_n_iterations=algpar_dict['max_n_iterations'],
