@@ -45,7 +45,7 @@ __status__ = 'Stable'
 # =============================================================================
 def store_paths_data(input_file_name, input_file_path, input_file_dir,
                      problem_name, problem_dir, offline_stage_dir,
-                     postprocess_dir, crve_file_path):
+                     postprocess_dir, crve_file_path, discret_file_dir=None):
     """Store problem directories and files paths.
 
     Parameters
@@ -66,6 +66,8 @@ def store_paths_data(input_file_name, input_file_path, input_file_dir,
         Problem output post-processing subdirectory path.
     crve_file_path : str
         Problem '.crve' output file path.
+    discret_file_dir : str, default=None
+        Spatial discretization file directory path.
 
     Returns
     -------
@@ -78,6 +80,7 @@ def store_paths_data(input_file_name, input_file_path, input_file_dir,
     dirs_dict['input_file_name'] = input_file_name
     dirs_dict['input_file_path'] = input_file_path
     dirs_dict['input_file_dir'] = input_file_dir
+    dirs_dict['discret_file_dir'] = discret_file_dir
     dirs_dict['problem_name'] = problem_name
     dirs_dict['problem_dir'] = problem_dir
     dirs_dict['offline_stage_dir'] = offline_stage_dir

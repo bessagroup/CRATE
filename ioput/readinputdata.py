@@ -79,6 +79,7 @@ def read_input_data_file(input_file, dirs_dict):
     # Get input data file path and output directories paths
     input_file_name = dirs_dict['input_file_name']
     input_file_path = dirs_dict['input_file_path']
+    discret_file_dir = dirs_dict['discret_file_dir']
     problem_dir = dirs_dict['problem_dir']
     offline_stage_dir = dirs_dict['offline_stage_dir']
     postprocess_dir = dirs_dict['postprocess_dir']
@@ -377,7 +378,8 @@ def read_input_data_file(input_file, dirs_dict):
     keyword = 'Discretization_File'
     valid_exts = ['.rgmsh']
     discret_file_path = rproc.read_discretization_file_path(
-        input_file, input_file_path, keyword, valid_exts)
+        input_file, input_file_path, keyword, valid_exts,
+        discret_file_dir=discret_file_dir)
     # Copy the spatial discretization file to the problem directory and update
     # the absolute path to the copied file
     shutil.copy2(discret_file_path,

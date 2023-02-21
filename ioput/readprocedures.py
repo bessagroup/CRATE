@@ -2131,7 +2131,8 @@ def read_rewinding_criterion_parameters(file, file_path, keyword):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return rewinding_criterion
 # =============================================================================
-def read_discretization_file_path(file, file_path, keyword, valid_exts):
+def read_discretization_file_path(file, file_path, keyword, valid_exts,
+                                  discret_file_dir=None):
     """Read spatial discretization file path.
 
     The specification of the spatial discretization file path has the following
@@ -2154,6 +2155,8 @@ def read_discretization_file_path(file, file_path, keyword, valid_exts):
         Keyword.
     valid_exts : tuple[str]
         Valid extensions of spatial discretization file.
+    discret_file_dir : str, default=None
+        Spatial discretization file directory path.
 
     Returns
     -------
@@ -2165,6 +2168,16 @@ def read_discretization_file_path(file, file_path, keyword, valid_exts):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     line_number = searchkeywordline(file, keyword) + 1
     discret_file_path = linecache.getline(file_path, line_number).strip()
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Check if spatial discretization file directory path was provided
+    if discret_file_dir is not None:
+        # If spatial discretization file absolute path is not provided, then
+        # build it from provided relative path
+        if not os.path.isfile(discret_file_path):
+            discret_file_path = discret_file_dir + discret_file_path
+            # Get spatial discretization file absolute path
+            discret_file_path = os.path.abspath(discret_file_path)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     if not os.path.isfile(discret_file_path):
         summary = 'Missing spatial discretization file'
         description = 'The spatial discretization file specified under ' \
@@ -2173,6 +2186,7 @@ def read_discretization_file_path(file, file_path, keyword, valid_exts):
             + indent + '{}'
         info.displayinfo('4', summary, description, keyword,
                          discret_file_path)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     format_exts = ['.npy']
     if os.path.splitext(os.path.basename(discret_file_path))[-1] \
             in format_exts:

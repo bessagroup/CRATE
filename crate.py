@@ -82,9 +82,22 @@ elif not os.path.isfile(str(sys.argv[1])):
     summary = 'Missing input data file'
     description = 'The input data file could not be found.'
     info.displayinfo('4', summary, description)
+else:
+    arg_input_file_path = str(sys.argv[1])
+# Check if spatial discretization file directory was provided
+discret_file_dir = None
+if len(sys.argv[1:]) == 2:
+    if not os.path.exists(str(sys.argv[2])):
+        summary = 'Missing spatial discretization file directory'
+        description = 'The spatial discretization file directory could not ' \
+            + 'be found.'
+        info.displayinfo('4', summary, description)
+    else:
+        discret_file_dir = str(sys.argv[2])
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Process input data file path
 input_file_name, input_file_path, input_file_dir = \
-    filop.set_input_datafile_path(str(sys.argv[1]))
+    filop.set_input_datafile_path(arg_input_file_path)
 # Set output directory structure and output files paths
 problem_name, problem_dir, offline_stage_dir, postprocess_dir, \
     is_same_offstage, crve_file_path = filop.set_problem_dirs(input_file_name,
@@ -92,7 +105,8 @@ problem_name, problem_dir, offline_stage_dir, postprocess_dir, \
 # Store problem directories and files paths
 dirs_dict = packager.store_paths_data(
     input_file_name, input_file_path, input_file_dir, problem_name,
-    problem_dir, offline_stage_dir, postprocess_dir, crve_file_path)
+    problem_dir, offline_stage_dir, postprocess_dir, crve_file_path,
+    discret_file_dir=discret_file_dir)
 # Open user input data file
 input_file = open(input_file_path, 'r')
 #
