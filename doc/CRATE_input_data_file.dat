@@ -1,87 +1,104 @@
 #
 # CRATE (Clustering-based Nonlinear Analysis of Materials) - Input data file
-# ==========================================================================================
+# =============================================================================
 # Description:
-# This file provides a complete input data file of the CRATE program, where each parameter
-# specification (either mandatory or optional) is fully documented (meaning, syntax,
-# available options). Note that it can be readily used by replacing the '[insert here]'
-# boxes with the suitable specification!
+# This file provides a complete input data file of CRATE, where each parameter
+# specification (either mandatory or optional) is fully documented (meaning,
+# syntax, available options). Note that this file can be readily used by
+# replacing the '[insert here]' boxes with the suitable specification!
 #
-# Note: Mandatory and optional specifications are denoted by [M] and [O], respectively,
-#       being the former presented first for practical use. A [M,O] specification indicates
-#       that the parameter is mandatory under certain circumstances (e.g., depending on
-#       other parameters).
-# ==========================================================================================
+# Note: Mandatory and optional specifications are denoted by [M] and [O],
+#       respectively, being the former presented first for practical use.
+#       A [M,O] specification indicates that the parameter is mandatory under
+#       certain conditions (e.g., depending on other parameters).
+# =============================================================================
 # Development history:
-# Bernardo P. Ferreira | Jun 2020 | Initial version.
-# ==========================================================================================
+# Bernardo P. Ferreira | Jun 2023 | Initial version (CRATE v1.0.0).
+# =============================================================================
 
 
-#                                                                     Strain formulation [M]
-# ==========================================================================================
+#                                                        Strain formulation [M]
+# =============================================================================
 # Meaning:   Strain formulation (infinitesimal or finite strains).
 #
 # Syntax:    Strain_Formulation x
 #
-# x:         1 - Infinitesimal strain formulation
-#            2 - Finite strain formulation
-# ------------------------------------------------------------------------------------------
+# x (int):   1 - Infinitesimal strains
+#            2 - Finite strains
+# -----------------------------------------------------------------------------
 [insert here]
 
 
-
-
-#                                                                           Problem type [M]
-# ==========================================================================================
+#                                                              Problem type [M]
+# =============================================================================
 # Meaning:   Problem type formulation.
 #
 # Syntax:    Problem_Type x
 #
-# x:         1 - Plane Strain (2D)
+# x (int):   1 - Plane Strain (2D)
 #            4 - Tridimensional (3D)
-# ------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 [insert here]
 
 
-
-
-#                                                                         RVE dimensions [M]
-# ==========================================================================================
+#                                                            RVE dimensions [M]
+# =============================================================================
 # Meaning:   Dimensions of the quadrilateral (2D) / hexahedral (3D) RVE.
 #
-# Syntax:    RVE_Dimensions
-#            x1 x2 (2D) / x1 x2 x3
+# Syntax (2D):    RVE_Dimensions
+#                 x1 x2
 #
-# xi:        float
-# ------------------------------------------------------------------------------------------
+# Syntax (3D):    RVE_Dimensions
+#                 x1 x2 x3
+#
+# xi (float):     Size length along dimension i.
+# -----------------------------------------------------------------------------
 [insert here]
 
 
-
-
-#                                                                        Material phases [M]
-# ==========================================================================================
-# Meaning:   Description of the microstructure in terms of material phases, including the
-#            number of material phases and the constitutive model (model, properties and
-#            source) associated to each of them.
+#                                                           Material phases [M]
+# =============================================================================
+# Meaning:   Description of the microstructure in terms of material phases,
+#            including the number of material phases and the constitutive model
+#            (model, properties and source) associated with each of them.
 #
 # Syntax:    Material_Phases x
-#            phase_ID model_name n_properties model_source
+#            phase_id model_name n_properties [model_source]
 #                property_1_name y
 #                property_2_name y
-#            phase_ID model_name n_properties model_source
+#                coption_1_name coption n_coproperties
+#                   coproperty_1_name z
+#                   coproperty_2_name z
+#            phase_id model_name n_properties [model_source]
 #                property_1_name y
 #                property_2_name y
+#            ...
 #
-# x:                       integer
-# phase_ID:                integer
-# model_name:              string (e.g. linear_elastic, von_mises)
-# n_properties:            integer (number of required material properties)
-# property_X_name:         string (e.g E, v)
-# y:                       integer or float
+# x (int):                 Number of material phases.
 #
-# model_source (optional): 1 - CRATE material database model (default)
-#                          2 - Links material database model
+# phase_id (int):          Material phase identifier.
+#
+# model_name (str):        Constitutive model name.
+#
+# n_properties (int):      Number of required material properties and
+#                          constitutive options.
+#
+# property_X_name (str):   Material property name.
+#
+# y (int, float):          Material property value.
+#
+# coption_X_name (str):    Constitutive option name.
+#
+# coption (str):           Constitutive option.
+#
+# n_coproperties (int):    Number of constitutive option properties.
+#
+# z (int, float):          Constitutive option property value.
+#
+# model_source (int, optional): 1 - CRATE material database model (default)
+#                               2 - Links material database model
+#
+#
 #
 # Option 2 (Links material database model):
 #
@@ -89,400 +106,443 @@
 #            x
 #
 # x:         string (Links python binary, '.so')
-#
-# Strain hardening law: The syntax of an isotropic strain hardening law associated to a
-#                       given elastoplastic constitutive model is slightly different and
-#                       depends on the type of strain hardening law
-#
-#                       Syntax (piecewise_linear): IHL piecewise_linear x
-#                                                  x0 y0
-#                                                  x1 y1
-#                                                  x2 y2
-#
-#                       xi, yi:                    float, float (hardening curve point)
-#
-#                       Syntax (other, e.g. linear): IHL linear s0 a [b, c, ...]
-#
-#                       s0:                          float (initial yield stress)
-#                       a:                           float (hardening modulus)
-# ------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 [insert here]
 
 
-
-
-#                                                                     Macroscale loading [M]
-# ==========================================================================================
-# Meaning:   Definition of the type of macroscale loading constraints (strain, stress or
-#            strain-stress), the number of loading subpaths and associated values.
+#                                                        Macroscale loading [M]
+# =============================================================================
+# Meaning:   Definition of the type of macroscale loading constraints (strain,
+#            stress or strain-stress), the number of loading subpaths and the
+#            prescribed strain/stress values.
 #
 # Syntax:    Macroscale_Loading x
 #
-# x:         1 - Macroscale strain constraint
-#            2 - Macroscale stress constraint
-#            3 - Macroscale strain and stress constraint
+# x (int):   1 - Macroscale strain constraints
+#            2 - Macroscale stress constraints
+#            3 - Macroscale strain and stress constraints
 #
 #
-# Option 1 (macroscale strain constraint):
+# Option 1 (macroscale strain constraints):
+# -----------------------------------------
 #
-# Syntax:    Macroscale_Strain [n]
-#            comp_name y y ...
-#            comp_name y y ...
-#               ...    . . ...
+# Syntax (2D):    Macroscale_Strain [n_subpaths]
+#                 comp_name_11 y y ...
+#                 comp_name_21 y y ...
+#                 comp_name_12 y y ...
+#                 comp_name_22 y y ...
 #
+# Syntax (3D):    Macroscale_Strain [n_subpaths]
+#                 comp_name_11 y y ...
+#                 comp_name_21 y y ...
+#                 comp_name_31 y y ...
+#                 comp_name_12 y y ...
+#                 comp_name_22 y y ...
+#                 comp_name_32 y y ...
+#                 comp_name_13 y y ...
+#                 comp_name_23 y y ...
+#                 comp_name_33 y y ...
 #
-# Option 2 (macroscale stress constraint):
+# Option 2 (macroscale stress constraints):
+# -----------------------------------------
 #
-# Syntax:    Macroscale_Stress [n]
-#            comp_name y y ...
-#            comp_name y y ...
-#               ...    . . ...
+# Syntax (2D):    Macroscale_Stress [n_subpaths]
+#                 comp_name_11 y y ...
+#                 comp_name_21 y y ...
+#                 comp_name_12 y y ...
+#                 comp_name_22 y y ...
 #
+# Syntax (3D):    Macroscale_Stress [n_subpaths]
+#                 comp_name_11 y y ...
+#                 comp_name_21 y y ...
+#                 comp_name_31 y y ...
+#                 comp_name_12 y y ...
+#                 comp_name_22 y y ...
+#                 comp_name_32 y y ...
+#                 comp_name_13 y y ...
+#                 comp_name_23 y y ...
+#                 comp_name_33 y y ...
 #
-# Option 3 (macroscale strain and stress constraint):
+# Option 3 (macroscale strain and stress constraints):
+# ----------------------------------------------------
 #
-# Syntax:    Macroscale_Strain [n]
-#            comp_name y y ...
-#            comp_name y y ...
-#               ...    . . ...
+# Syntax (2D):    Option 1 (see above)
 #
-#            Macroscale_Stress [m]
-#            comp_name y y ...
-#            comp_name y y ...
-#               ...    . . ...
+#                 Option 2 (see above)
 #
-#            Mixed_Prescription_Index
-#            z z z ...
-#            z z z ...
-#            . . . ...
+#                 Mixed_Prescription_Index
+#                 z z ...
+#                 z z ...
+#                 z z ...
+#                 z z ...
 #
-# n, m:      integer (number of loading subpaths, default to 1)
-# comp_name: string (e.g. E11, SXX)
-# y:         float
-# z:         integer (0 - strain component, 1 - stress component)
+# Syntax (3D):    Option 1 (see above)
 #
-# Note: The macroscale strain or stress tensor is always assumed to be nonsymmetric and all
-#       components (4 in 2D problem, 9 in 3D problem) must be specified in columnwise order
-# ------------------------------------------------------------------------------------------
+#                 Option 2 (see above)
+#
+#                 Mixed_Prescription_Index
+#                 z z ...
+#                 z z ...
+#                 z z ...
+#                 z z ...
+#                 z z ...
+#                 z z ...
+#                 z z ...
+#                 z z ...
+#                 z z ...
+#
+# n_subpaths (int):    Number of loading subpaths. Default is 1.
+#
+# comp_name_11 (str):  Strain/Stress component name.
+#
+# y (float):           Strain/Stress component value.
+#
+# z (0, 1):            Strain (0) or stress (1) component identifier.
+# -----------------------------------------------------------------------------
 [insert here]
 
 
-
-
-#                                                                Cluster analysis scheme [M]
-# ==========================================================================================
-# Meaning:   Cluster analysis scheme prescribed to generate all cluster-reduced material
-#            phases that ultimately compose the Cluster-Reduced Representative Volume
-#            Element (CRVE).
+#                                                   Cluster analysis scheme [M]
+# =============================================================================
+# Meaning:   Cluster analysis scheme prescribed to generate all cluster-reduced
+#            material phases that compose the Cluster-Reduced Representative
+#            Volume Element (CRVE).
 #
 # Syntax:    Cluster_Analysis_Scheme
-#            phase_ID [clustering_type]
-#                base_clustering [n_clusterings, ensemble_method_id]
-#                clustering_algorithm_ID feature_ID [feature_ID]
-#                clustering_algorithm_ID feature_ID [feature_ID]
-#                adaptive_clustering [n_clusterings, ensemble_method_id]
-#                clustering_algorithm_ID feature_ID [feature_ID]
-#                clustering_algorithm_ID feature_ID [feature_ID]
-#                adaptivity_parameters adaptivity_criterion_ID adaptivity_type_ID
-#                parameter x
-#                parameter x
+#            phase_id [clustering_type]
+#                base_clustering
+#                clustering_algorithm_id feature_id [feature_id]
+#                clustering_algorithm_id feature_id [feature_id]
+#                adaptive_clustering
+#                clustering_algorithm_id feature_id [feature_id]
+#                clustering_algorithm_id feature_id [feature_id]
+#                adaptivity_parameters adapt_criterion_id adapt_type_id
+#                adapt_parameter_name x
+#                adapt_parameter_name x
+#            phase_id [clustering_type]
 #                ...
-#            phase_ID [clustering_type]
-#                ...
 #
-# phase_ID:                  integer
-# clustering_type:           string (static or adaptive, optional, defaults to static)
-# n_clusterings:             integer (optional, defaults to 1)
-# ensemble_method_id:        Not available
+# phase_id (int):                   Material phase identifier.
 #
-# clustering_algorithm_id:   1 - K-Means (source: scikit-learn)
-#                            2 - K-Means (source: pyclustering)
-#                            3 - Mini-Batch K-Means (source: scikit-learn)
-#                            4 - Agglomerative (source: scikit-learn)
-#                            5 - Agglomerative (source: scipy)
-#                            6 - Agglomerative (source: fastcluster)
-#                            7 - Birch (source: scikit-learn)
-#                            8 - Birch (source: pyclustering)
-#                            9 - Cure (source: pyclustering)
-#                           10 - X-Means (source: pyclustering)
+# clustering_type (str, optional):  Clustering type (static or adaptive).
+#                                   Default is static.
 #
-# feature_ID:                1 - Fourth-order local elastic strain concentration tensor
+# clustering_algorithm_id (int):    Clustering algorithm identifier.
+#                                   1 - K-Means (scikit-learn)
+#                                   2 - K-Means (pyclustering)
+#                                   3 - Mini-Batch K-Means (scikit-learn)
+#                                   ...
 #
-# adaptivity_criterion_ID:   1 - Adaptive Cluster Grouping
-#                            2 - Spatial Discontinuities
+# feature_id (int):                 Clustering feature identifier.
+#                                   1 - Fourth-order local elastic strain
+#                                       concentration tensor
 #
-# adaptivity_type_ID:        1 - Generalize Adaptive (GACRMP)
-#                            2 - Hierarchical Agglomerative Adaptive (HAACRMP)
+# adapt_criterion_id (int):         Clustering adaptivity criterion identifier.
+#                                   1 - Adaptive Cluster Grouping
+#                                   2 - Spatial Discontinuities
 #
-# parameter:                 string (adaptivity criterion parameter, adaptivity type
-#                                    parameter or adaptivity control feature)
-# x:                         integer, float, string, on/off (depends on parameter)
+# adapt_type_id (int):              Adaptive Cluster-Reduced Material Phase
+#                                   (CRMP) type identifier.
+#                                   1 - Generalize Adaptive (GACRMP)
+#                                   2 - Hierarchical Agglomerative Adaptive
+#                                       (HAACRMP)
 #
+# adapt_parameter_name (str):       Adaptivity parameter name.
 #
-#  Adaptivity criterion parameters
-#  -----------------------------------------------------------------------------------
-#   Criterion            Parameter [M/O]                 Parameter type
-#  -----------------------------------------------------------------------------------
-#   Adaptive Cluster     adapt_trigger_ratio [O]         float (defaults to 0.1)
-#       Grouping         adapt_split_threshold [O]       float (defaults to 0.5)
-#                        adapt_max_level [O]             integer (defaults to 15)
-#                        adapt_min_voxels [O]            integer (defaults to 1)
-#                        is_merge_adapt_groups [O]       bool (0 or 1, defaults to 1)
-#                        min_adapt_feature_val [O]       float (default to 0.0)
-#       Spatial          adapt_trigger_ratio [O]         float (defaults to 0.1)
-#    Discontinuities     adapt_max_level [O]             integer (defaults to 15)
-#                        adapt_min_voxels [O]            integer (defaults to 1)
-#                        adapt_level_max_diff [O]        integer (defaults to 2)
-#                        swipe_dim_1_every [O]           integer (defaults to 1)
-#                        swipe_dim_2_every [O]           integer (defaults to 1)
-#                        swipe_dim_3_every [O]           integer (defaults to 1)
-#                        min_adapt_feature_val [O]       float (default to 0.0)
-#                        magnitude_lower_factor [O]      float (default to 1.0)
-#  -----------------------------------------------------------------------------------
+# x (int, float, str, bool)         Adaptivity parameter value.
 #
 #
-#  Adaptivity type parameters
-#  -----------------------------------------------------------------------------------
+#  Adaptivity parameters (adaptivity criterion)
+#  ---------------------------------------------------------------------------
+#   Criterion           Parameter [M/O]                 Parameter type
+#  ---------------------------------------------------------------------------
+#   Adaptive Cluster    adapt_trigger_ratio [O]         float (default is 0.1)
+#   Grouping            adapt_split_threshold [O]       float (default is 0.5)
+#                       adapt_max_level [O]             int (default is 15)
+#                       adapt_min_voxels [O]            int (default is 1)
+#                       is_merge_adapt_groups [O]       bool (0 or 1,
+#                                                       default is 1)
+#                       min_adapt_feature_val [O]       float (default to 0.0)
+#
+#    Spatial            adapt_trigger_ratio [O]         float (default is 0.1)
+#    Discontinuities    adapt_max_level [O]             int (default is 15)
+#                       adapt_min_voxels [O]            int (default is 1)
+#                       adapt_level_max_diff [O]        int (default is 2)
+#                       swipe_dim_1_every [O]           int (default is 1)
+#                       swipe_dim_2_every [O]           int (default is 1)
+#                       swipe_dim_3_every [O]           int (default is 1)
+#                       min_adapt_feature_val [O]       float (default to 0.0)
+#                       magnitude_lower_factor [O]      float (default to 1.0)
+#  ----------------------------------------------------------------------------
+#
+#
+#  Adaptivity parameters (adaptive cluster-reduced material phase type)
+#  ----------------------------------------------------------------------------
 #   Type             Parameter [M/O]                   Parameter type
-#  -----------------------------------------------------------------------------------
+#  ----------------------------------------------------------------------------
 #   GACRMP           adapt_split_factor [O]            float (defaults to 0.01)
 #                    child_cluster_vol_fraction [O]    float (defaults to 0.5)
 #                    dynamic_split_factor_amp [O]      float (defaults to 0.0)
-#                    threshold_n_clusters [O]          integer (defaults to 1M)
+#                    threshold_n_clusters [O]          int (defaults to 1M)
+#
 #   HAACRMP          adapt_split_factor [O]            float (defaults to 0.01)
 #                    child_cluster_vol_fraction [O]    float (defaults to 0.5)
 #                    dynamic_split_factor_amp [O]      float (defaults to 0.0)
-#                    threshold_n_clusters [O]          integer (defaults to 1M)
-#  -----------------------------------------------------------------------------------
+#                    threshold_n_clusters [O]          int (defaults to 1M)
+#  ----------------------------------------------------------------------------
 #
 #
-#  Adaptivity control features
-#  -----------------------------------------------------------------------------------
-#   Feature (mandatory one for each adaptive material phase)
-#  -----------------------------------------------------------------------------------
-#   scalar state variable (e.g., acc_p_strain)
-#   norm of tensorial state variable (e.g., e_strain_mf_norm)
-#   component of strain/stress related second order state variable (e.g. strain_mf_11)
-#   Von Mises equivalent stress (vm_stress)
-#   Von Mises equivalent strain (vm_strain)
-#   norm of cluster strain concentration tensor (strain_concentration_tensor_norm)
-#   norm of cluster equilibrium residual tensor (equilibrium_residual_norm)
-#  -----------------------------------------------------------------------------------
-#  (*) The prefix 'inc_' can be added to the adaptivity control feature in order to
-#      consider the associated incremental value instead.
-#  (*) The suffix '_norm' can be added to the adaptivity control feature in order to
-#      consider the associated norm instead.
+#  Adaptivity parameters (adaptivity control feature [M])
+#  ----------------------------------------------------------------------------
+#  Meaning: Clustering adaptivity feature associated with each adaptive
+#           material phase.
 #
-# ------------------------------------------------------------------------------------------
+#  Syntax:  adaptivity_control_feature feature
+#
+#  feature (str):   Clustering adaptivity feature.
+#  ----------------------------------------------------------------------------
+#  Available features:
+#  - scalar state variable (e.g., acc_p_strain)
+#  - norm of tensorial state variable (e.g., e_strain_mf_norm)
+#  - component of strain/stress related second order state variable
+#    (e.g. strain_mf_11)
+#  - Von Mises equivalent stress (vm_stress)
+#  - Von Mises equivalent strain (vm_strain)
+#  - norm of cluster strain concentration tensor
+#    (strain_concentration_tensor_norm)
+#  - norm of cluster equilibrium residual tensor (equilibrium_residual_norm)
+#  ----------------------------------------------------------------------------
+#  (*) The prefix 'inc_' can be added to the adaptivity control feature in
+#      order to consider the associated incremental value instead.
+#  (*) The suffix '_norm' can be added to the adaptivity control feature in
+#      order to consider the associated norm instead.
+# -----------------------------------------------------------------------------
 [insert here]
 
 
-
-
-#                                                                     Number of clusters [M]
-# ==========================================================================================
-# Meaning:   Number of clusters associated to each cluster-reduced material phase.
+#                                                        Number of clusters [M]
+# =============================================================================
+# Meaning:   Number of clusters associated with each cluster-reduced material
+#            phase.
 #
 # Syntax:    Number_of_Clusters
-#            phase_ID x
-#            phase_ID x
+#            phase_id x
+#            phase_id x
 #            ...
 #
-# phase_ID:  integer
-# x:         integer
+# phase_id (int):  Material phase identifier.
 #
-# Note: If phase_ID is an adaptive cluster-reduced material phase, then x is the initial
-#       (base clustering) number of clusters.
-# ------------------------------------------------------------------------------------------
+# x (int):         Number of clusters.
+#
+# Note: If phase_id is an adaptive cluster-reduced material phase, then x is
+#       the initial number of clusters (base clustering).
+# -----------------------------------------------------------------------------
 [insert here]
 
 
-
-
-#                                                                    Load incrementation [M]
-# ==========================================================================================
-# Meaning:   Definition of the macroscale loading incrementation (choose ONE of the options
-#            below).
+#                                                    Loading incrementation [M]
+# =============================================================================
+# Meaning:   Definition of the macroscale loading incrementation.
 #
-# Option 1 (equal-magnitude increments applied to each loading subpath):
+# Option 1:
+# ---------
+# Meaning:   Equal-magnitude loading increments applied to each loading
+#            subpath.
 #
 # Syntax:    Number_of_Load_Increments x
 #
-# x:         integer
+# x (int):   Number of loading increments applied to each loading subpath.
 #
 #
-# Option 2 (general incrementation):
+# Option 2:
+# ---------
+# Meaning:   General loading incrementation scheme.
 #
 # Syntax:    Increment_List
 #            [x:] y[_z] | [x:] y[_z] | [x:] y[_z] |  ...
 #            [x:] y[_z] | [x:] y[_z] | [x:] y[_z] |  ...
 #            [x:] y[_z] | [x:] y[_z] | [x:] y[_z] |  ...
 #
-# x:         integer (number of increment repetitions, optional, default to 1)
-# y:         float (incremental load factor)
-# z:         float (incremental time, optional, default to Loading_Time_Factor*abs(y))
-# ------------------------------------------------------------------------------------------
+# x (int, optional):    Number of increment repetitions. Default is 1.
+#
+# y (float):            Incremental load factor.
+#
+# z (float, optional):  Incremental time. Default is loading time factor times
+#                       the absolute value of the incremental load factor.
+#
+# Note: The delimiter `|` separates different loading subpaths.
+# -----------------------------------------------------------------------------
 [insert here]
 
 
-
-
-#                                                                    Discretization file [M]
-# ==========================================================================================
-# Meaning:   Path of the discretization file where the microstructure discretization in a
-#            regular grid of pixels (2D) / voxels (3D) is specified. This file must be
-#            generated with the Python library Numpy's function save in binary format and
-#            have extension '.rgmsh(.npy)'.
+#                                               Spatial discretization file [M]
+# =============================================================================
+# Meaning:   Path of the discretization file where the microstructure
+#            spatial discretization in a regular grid of voxels is stored.
+#            This file must be generated with the numpy.save() (binary format)
+#            and have extension '.rgmsh(.npy)'.
 #
 # Syntax:    Discretization_File
 #            x
 #
-# x:         string (discretization file path)
-# ------------------------------------------------------------------------------------------
+# x (str):   Spatial discretization file path.
+# -----------------------------------------------------------------------------
 [insert here]
 
 
-
-
-#                                                                     Analysis rewinding [O]
-# ==========================================================================================
-# Meaning:   Analysis rewinding procedure, allowing that the solution is rewound back to
-#            previous stored state when given rewinding condition is met.
+#                                                        Analysis rewinding [O]
+# =============================================================================
+# Meaning:   Analysis rewinding procedure, allowing that the solution is
+#            rewound back to previous stored state when given rewinding
+#            condition is met.
 #
 # Syntax:    Analysis_Rewinding
 #            Analysis_Rewind_State_Criterion criterion parameter_value
 #            Analysis_Rewinding_Criterion criterion parameter_value
 #            [Max_Number_of_Rewinds x]
 #
-# criterion:         string
-# parameter_value:   integer, float, string, on/off (depends on parameter)
-# x:                 integer (optional, defaults to 1)
+# criterion (str):                     Analysis rewind state or rewinding
+#                                      criterion.
+#
+# parameter_value (int, float, str):   Analysis rewind state or rewinding
+#                                      criterion parameter value.
+#
+# x (int):                             Maximum number of solution rewinding
+#                                      procedures.
 #
 #
 #  Analysis rewind state criterion
-#  -----------------------------------------------------------------------------------
+#  ----------------------------------------------------------------------------
 #   Criterion            Parameter [M/O]                 Parameter type
-#  -----------------------------------------------------------------------------------
-#   increment_number     increment [M]                   integer
-#  -----------------------------------------------------------------------------------
+#  ----------------------------------------------------------------------------
+#   increment_number     increment [M]                   int
+#  ----------------------------------------------------------------------------
 #
 #
 #  Analysis rewinding criterion
-#  -----------------------------------------------------------------------------------
+#  ----------------------------------------------------------------------------
 #   Criterion            Parameter [M/O]                 Parameter type
-#  -----------------------------------------------------------------------------------
-#   increment_number     increment [M]                   integer
+#  ----------------------------------------------------------------------------
+#   increment_number     increment [M]                   int
 #   max_acc_p_strain     accumulated plastic strain [M]  float
-#  -----------------------------------------------------------------------------------
+#  ----------------------------------------------------------------------------
 #
 #
-# ------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 [insert here]
 
 
-
-
-#                                                                           Loading time [O]
-# ==========================================================================================
-# Meaning:   Time associated to the macroscale loading incrementation. For a given
-#            macroscale loading increment, unless the associated incremental time is
-#            explicitly specified, the incremental time is obtained by multiplying the
-#            loading time factor by the incremental loading factor.
+#                                                              Loading time [O]
+# =============================================================================
+# Meaning:   Time associated with the macroscale loading incrementation.
+#            For a given macroscale loading increment, unless the associated
+#            incremental time is explicitly specified, the incremental time is
+#            obtained by multiplying the loading time factor by the absolute
+#            value of the incremental loading factor.
 #
 # Syntax:    Loading_Time_Factor
 #            x
 #
-# x:         float (default to 1.0)
-# ------------------------------------------------------------------------------------------
+# x (float):    Loading time factor. Default is 1.
+# -----------------------------------------------------------------------------
 [insert here]
 
 
-
-
-#                                                Maximum loading subincrementation level [O]
-# ==========================================================================================
-# Meaning:   Maximum macroscale loading subincrementation level. The level 0 is associated
-#            with the actual prescribed increment magnitude. For instance, if the maximum
-#            loading subincrementation level is set to 1, then the prescribed increment's
-#            magnitude can only be cut in half once.
+#                                   Maximum loading subincrementation level [O]
+# =============================================================================
+# Meaning:   Maximum macroscale loading subincrementation level. The level 0 is
+#            associated with the actual prescribed increment magnitude. For
+#            instance, if the maximum loading subincrementation level is set
+#            to 1, then the prescribed increment magnitude can only be cut in
+#            half once.
 #
 # Syntax:    Max_SubInc_Level x
 #
-# x:         integer (default to 5)
-# ------------------------------------------------------------------------------------------
+# x (int):   Maximum macroscale loading subincrementation level. Default is 5.
+# -----------------------------------------------------------------------------
 [insert here]
 
 
-
-
-#                                             Maximum loading consecutive increment cuts [O]
-# ==========================================================================================
+#                                Maximum loading consecutive increment cuts [O]
+# =============================================================================
 # Meaning:   Maximum number of consecutive macroscale loading increment cuts.
 #
 # Syntax:    Max_Consecutive_Inc_Cuts x
 #
-# x:         integer (default to 5)
-# ------------------------------------------------------------------------------------------
+# x (int):   Maximum number of consecutive macroscale loading increment cuts.
+#            Default is 5.
+# -----------------------------------------------------------------------------
 [insert here]
 
 
-
-
-#                                                                 Self-Consistent scheme [O]
-# ==========================================================================================
-# Meaning:   Self-consistent scheme employed to perform the update of the reference material
-#            properties.
+#                                                    Self-Consistent scheme [O]
+# =============================================================================
+# Meaning:   Self-consistent scheme employed to perform the update of the
+#            reference material properties.
 #
-# Syntax:    Self_Consistent_Scheme x
+# Syntax:    Self_Consistent_Scheme method [n_parameters]
+#            parameter_1_name x
+#            parameter_2_name x
 #
-# x:         1 - Regression-based self-consistent scheme (default)
-#            2 - Projection-based self-consistent scheme (unavailable)
-#            3 - Optimization of loss function compatible with a self-consistent scheme
-# ------------------------------------------------------------------------------------------
+# method (str):                   Self-consistent scheme strategy to update the
+#                                 reference material properties. Default is
+#                                 'regression' (infinitesimal strains) and
+#                                 'none' (finite strains).
+#
+# n_parameters (int, optional):   Number of self-consistent scheme parameters.
+#
+# parameter_X_name (int):         Self-consistent scheme parameter name.
+#
+# x (int, float, str, bool)       Self-consistent scheme parameter value.
+#
+# Note: The initial values of the reference material elastic properties
+#       (E_init and v_init) can be prescribed as self-consistent scheme
+#       parameters. Default is 'init_eff_tangent', being the elastic properties
+#       estimated from the effective tangent modulus computed on the
+#       offline-stage (required set of orthogonal macroscale strain loadings).
+# -----------------------------------------------------------------------------
 [insert here]
 
 
-
-
-#                                    Self-Consistent scheme maximum number of iterations [O]
-# ==========================================================================================
-# Meaning:   Maximum number of iterations allowed for the convergence of the self-consistent
-#            iterative scheme.
+#                       Self-Consistent scheme maximum number of iterations [O]
+# =============================================================================
+# Meaning:   Maximum number of iterations allowed for the convergence of the
+#            self-consistent iterative scheme.
 #
 # Syntax:    SCS_Max_Number_of_Iterations x
 #
-# x:         integer (default to 20)
-# ------------------------------------------------------------------------------------------
+# x (int):   Maximum number of iterations of self-consistent scheme.
+#            Default is 20.
+# -----------------------------------------------------------------------------
 [insert here]
 
 
-
-
-#                                           Self-Consistent scheme convergence tolerance [O]
-# ==========================================================================================
-# Meaning:   Convergence tolerance adopted for the convergence of the self-consistent
-#            iterative scheme.
+#                              Self-Consistent scheme convergence tolerance [O]
+# =============================================================================
+# Meaning:   Convergence tolerance of the self-consistent iterative scheme.
 #
 # Syntax:    SCS_Convergence_Tolerance
 #            x
 #
-# x:         float (default to 1e-4)
-# ------------------------------------------------------------------------------------------
+# x (float): Convergence tolerance of self-consistent scheme. Default is 1e-4.
+# -----------------------------------------------------------------------------
 [insert here]
 
 
-
-
-#                                                    Clustering data DNS solution method [O]
-# ==========================================================================================
-# Meaning:   DNS method employed to obtain the required data to perform the clustering-based
-#            domain decomposition.
+#                                       Clustering data DNS solution method [O]
+# =============================================================================
+# Meaning:   DNS homogenization-based method employed to solve microscale
+#            equilibrium problems and obtain the clustering features data
+#            required to perform the RVE clustering-based domain decomposition.
 #
 # Syntax:    Clustering_Solution_Method x
 #
-# x:         1 - FFT-based homogenization basic scheme of H. Moulinec and P. Suquet (1994)
-#                (default)
-#            2 - Finite Element Method from multi-scale finite element code Links
+# x (int):   1 - FFT-based homogenization basic scheme (default)
+#            2 - Finite Element Method from multi-scale finite element code
+#                Links
+#
+#
+#
 #
 # Option 2 (Finite Element Method from multi-scale finite element code Links):
 #
@@ -498,181 +558,170 @@
 # y:         linear - QUAD4 (2D) / HEXA8 (3D) finite element mesh
 #            quadratic - QUAD8 (2D) / HEXA20 (3D) finite element mesh
 # z:         string (Links python binary, '.so')
-# ------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 [insert here]
 
 
-
-
-#                                Equilibrium Newton-Raphson maximum number of iterations [O]
-# ==========================================================================================
-# Meaning:   Maximum number of iterations allowed for the convergence of the Newton-Raphson
-#            iterative scheme associated to the microscale equilibrium problem.
+#                   Equilibrium Newton-Raphson maximum number of iterations [O]
+# =============================================================================
+# Meaning:   Maximum number of iterations allowed for the convergence of the
+#            Newton-Raphson iterative scheme in the solution of the microscale
+#            equilibrium problem.
 #
 # Syntax:    Max_Number_of_Iterations x
 #
-# x:         integer (default to 12)
-# ------------------------------------------------------------------------------------------
+# x (int):   Maximum number of iterations. Default is 12.
+# -----------------------------------------------------------------------------
 [insert here]
 
 
-
-
-#                                       Equilibrium Newton-Raphson convergence tolerance [O]
-# ==========================================================================================
-# Meaning:   Convergence tolerance adopted for the convergence of the Newton-Raphson
-#            iterative scheme associated to the microscale equilibrium problem.
+#                          Equilibrium Newton-Raphson convergence tolerance [O]
+# =============================================================================
+# Meaning:   Convergence tolerance adopted for the convergence of the
+#            Newton-Raphson iterative scheme in the solution of the microscale
+#            equilibrium problem.
 #
 # Syntax:    Convergence_Tolerance
 #            x
 #
-# x:         float (default to 1e-6)
-# ------------------------------------------------------------------------------------------
+# x (float):    Convergence tolerance. Default is 1e-6.
+# -----------------------------------------------------------------------------
 [insert here]
 
 
-
-
-#                                     Material state update maximum number of iterations [O]
-# ==========================================================================================
-# Meaning:   Maximum number of iterations allowed for for the convergence of the
-#            Newton-Raphson iterative scheme associated to state update of a nonlinear
-#            material constitutive model from CRATE.
+#                        Material state update maximum number of iterations [O]
+# =============================================================================
+# Meaning:   Maximum number of iterations allowed for the convergence of the
+#            Newton-Raphson iterative scheme in the solution of the state
+#            update of a nonlinear material constitutive model.
 #
 # Syntax:    SU_Max_Number_of_Iterations x
 #
-# x:         float (default to 20)
-# ------------------------------------------------------------------------------------------
+# x (float):    Maximum number of iterations. Default is 20.
+# -----------------------------------------------------------------------------
 [insert here]
 
 
-
-
-#                                            Material state update convergence tolerance [O]
-# ==========================================================================================
-# Meaning:   Convergence tolerance adopted for the convergence of the Newton-Raphson
-#            iterative scheme associated to state update of a nonlinear material
-#            constitutive model from CRATE.
+#                               Material state update convergence tolerance [O]
+# =============================================================================
+# Meaning:   Convergence tolerance adopted for the convergence of the
+#            Newton-Raphson iterative scheme in the solution of the state
+#            update of a nonlinear material constitutive model.
 #
 # Syntax:    SU_Convergence_Tolerance
 #            x
 #
-# x:         float (default to 1e-6)
-# ------------------------------------------------------------------------------------------
+# x (float):    Convergence tolerance. Default is 1e-6.
+# -----------------------------------------------------------------------------
 [insert here]
 
 
-
-
-#                                                        Clustering data standardization [O]
-# ==========================================================================================
+#                                           Clustering data standardization [O]
+# =============================================================================
 # Meaning:   Method employed to standardize the global clustering data matrix.
 #
 # Syntax:    Standardization_Method x
 #
-# x:         1 - Min-Max Scaler (default)
+# x (int):   1 - Min-Max Scaler (default)
 #            2 - Standard Normal Distribution Scaler
-# ------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 [insert here]
 
 
-
-
-#                                                        Clustering adaptivity frequency [O]
-# ==========================================================================================
-# Meaning:   Frequency of clustering adaptivity analysis (relative to the macroscale loading
-#            increments) for each adaptive cluster-reduced material phase.
+#                                           Clustering adaptivity frequency [O]
+# =============================================================================
+# Meaning:   Frequency of clustering adaptivity analysis (relative to the
+#            macroscale loading incrementation) for each adaptive
+#            cluster-reduced material phase.
 #
 # Syntax:    Clustering_Adaptivity_Frequency
-#            phase_ID x
-#            phase_ID x
+#            phase_id x
+#            phase_id x
 #            ...
 #
-# phase_ID:  integer (must be an adaptive material phase)
-# x:         all     - All macroscale loading increments (default)
-#            every x - Every x (x: integer) macroscale loading increments
-#            none    - Clustering adaptivity analysis is switched off
-# ------------------------------------------------------------------------------------------
+# phase_id (int):  Material phase identifier.
+#
+# x (str):         all     - All macroscale loading increments (default)
+#                  every x - Every x macroscale loading increments, where
+#                            x (int) is the number of increments.
+#                  none    - Turn off clustering adaptivity.
+# -----------------------------------------------------------------------------
 [insert here]
 
 
-
-
-#                                                           Clustering adaptivity output [O]
-# ==========================================================================================
-# Meaning:   Output of data associated with the clustering adaptivity (.adapt file). Also
-#            outputs execution data to the '.screen' file, namely the adaptivity procedures
-#            execution summary and time table.
+#                                              Clustering adaptivity output [O]
+# =============================================================================
+# Meaning:   Output of data associated with the clustering adaptivity
+#            (.adapt file). Also outputs execution data to the '.screen' file,
+#            namely the adaptivity procedures execution summary and time table.
 #
 # Syntax:    Clustering_Adaptivity_Output
-#
-# ------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 [insert here]
 
 
-
-
-#                                                         Final clustering state storage [O]
-# ==========================================================================================
-# Meaning:   Store CRVE final clustering state in '.crve' file. This option is only relevant
-#            when considering clustering adaptivity, allowing that the CRVE final clustering
-#            state is considered as the base clustering in the next analysis.
+#                                            Final clustering state storage [O]
+# =============================================================================
+# Meaning:   Store CRVE final clustering state in '.crve' file. This option is
+#            only relevant when considering clustering adaptivity, namely by
+#            allowing that the CRVE final clustering state is later considered
+#            as the base clustering of a future analysis.
 #
 # Syntax:    Store_Final_Clustering_State
 #
-# Note: As stated in the warning message displayed when attempting to consider an already
-#       existent offline stage, make sure that the problem input data file is consistent
-#       with the previously stored '.crve' file. In what concerns the clustering adaptivity,
-#       all the adaptive parameters can be changed and are properly updated, except the
-#       clustering adaptivity type of each adaptive material phase. In order to lock the
-#       adaptive procedures of a given phase in the next analysis, the associated
-#       clustering adaptivity frequency can be set to None.
-# ------------------------------------------------------------------------------------------
+# Note: Always be sure that the problem input data file is consistent with the
+#       previously stored '.crve' file. In what concerns the clustering
+#       adaptivity, all the adaptive parameters can be changed and are properly
+#       updated, except the clustering adaptivity type of each adaptive
+#       material phase.
+# -----------------------------------------------------------------------------
 [insert here]
 
 
-
-
-#                                                              Reference material output [O]
-# ==========================================================================================
-# Meaning:   Output of data associated with the reference material (.refm file).
+#                                                 Reference material output [O]
+# =============================================================================
+# Meaning:   Output of data associated with the reference material
+#            (.refm file).
 #
 # Syntax:    Reference_Material_Output
-#
-# ------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 [insert here]
 
 
-
-
-#                                                          Voxel material-related output [O]
-# ==========================================================================================
+#                                             Voxel material-related output [O]
+# =============================================================================
 # Meaning:   Output of data associated with voxel material-related quantities
-#            (.voxout file). Quantities are written for every converged macroscale loading
-#            increment. In the current version there are no options concerning this output
-#            and three material-related quantities are written for each voxel on each
-#            increment: (1) Von Mises equivalent stress, (2) accumulated plastic strain and
-#            (3) accumulated plastic strain energy density.
+#            (.voxout file). Quantities are written for every converged
+#            macroscale loading increment. In the current version there are no
+#            options concerning this output and three material-related
+#            quantities are written for each voxel:
+#            (1) Von Mises equivalent stress;
+#            (2) Accumulated plastic strain;
+#            (3) Accumulated plastic strain energy density.
 #
 # Syntax:    Voxels_Output
 #
-# Note: This option should be used with caution as the output file can easily scale to
-#       several GB depending on the number of voxels and number of increments.
-# ------------------------------------------------------------------------------------------
+# Note: This option should be used with caution as the output file can easily
+#       scale to several GB depending on the number of voxels and the number of
+#       increments.
+# -----------------------------------------------------------------------------
 [insert here]
 
 
-
-
-#                                                                VTK (XML format) output [O]
-# ==========================================================================================
-# Meaning:   Output of data associated to snapshots (macroscale loading increments) of the
-#            microscale equilibrium problem solution into VTK files (XML format).
+#                                                   VTK (XML format) output [O]
+# =============================================================================
+# Meaning:   Output of data associated with snapshots (macroscale loading
+#            increments) of the microscale equilibrium problem solution into
+#            VTK files (XML format).
 #
 # Syntax:    VTK_Output [a, b, c, ...]
 #
-# a:         all (default) or every x (where x: integer (output every x increments))
-# b:         all_variables (output all state variables, default) or common_variables (output
-#            only the state variables common to all constitutive models)
-# ------------------------------------------------------------------------------------------
+# a (str):   all     - All macroscale loading increments (default)
+#            every x - Every x macroscale loading increments, where x (int) is
+#                      the number of increments
+#
+# b (str):   all_variables    - Output all state variables (default)
+#            common_variables - Output only state variables common to all
+#                               constitutive models
+# -----------------------------------------------------------------------------
 [insert here]
