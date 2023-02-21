@@ -1363,15 +1363,15 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
 
        Clustering_Analysis_Scheme
        < phase_id > < clustering_type >
-       base_clustering [< n_clusterings > < ensemble_method_id >]
-       < clustering_algorithm_id > < feature_id > [< feature_id >]
-       < clustering_algorithm_id > < feature_id > [< feature_id >]
-       adaptive_clustering [< n_clusterings > < ensemble_method_id >]
-       < clustering_algorithm_id > < feature_id > [< feature_id >]
-       < clustering_algorithm_id > < feature_id > [< feature_id >]
-       adaptivity_parameters < adaptivity_criterion_id > < adaptivity_type_id >
-       < parameter > < value >
-       < parameter > < value >
+           base_clustering [< n_clusterings > < ensemble_method_id >]
+           < clustering_algorithm_id > < feature_id > [< feature_id >]
+           < clustering_algorithm_id > < feature_id > [< feature_id >]
+           adaptive_clustering [< n_clusterings > < ensemble_method_id >]
+           < clustering_algorithm_id > < feature_id > [< feature_id >]
+           < clustering_algorithm_id > < feature_id > [< feature_id >]
+           adaptivity_parameters < adapt_criterion_id > < adapt_type_id >
+           < adapt_parameter_name > < value >
+           < adapt_parameter_name > < value >
        < phase_id > < clustering_type >
        ...
 
@@ -1380,9 +1380,10 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
     the number of clustering analyses, `ensemble_method_id` (int, optional) is
     the clustering ensemble identifier, `clustering_algorithm_id` (int) is
     the clustering algorithm identifier, `feature_id` (int) is the clustering
-    feature identifier, `adaptivity_criterion_id`(int) is the clustering
-    adaptivity criterion identifier, `adaptivity_type_id` (int) is the adaptive
-    cluster-reduced material phase type identifier
+    feature identifier, `adapt_criterion_id`(int) is the clustering
+    adaptivity criterion identifier, `adapt_type_id` (int) is the adaptive
+    cluster-reduced material phase type identifier, and `adapt_parameter_name`
+    is the adaptive parameter name.
 
     Parameters
     ----------

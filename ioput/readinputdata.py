@@ -197,7 +197,7 @@ def read_input_data_file(input_file, dirs_dict):
         else:
             raise RuntimeError('Unknown problem strain formulation.')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Read self consistent scheme maximum number of iterations (optional)
+    # Read self-consistent scheme maximum number of iterations (optional)
     # If the associated keyword is not found, then a default option is adopted
     keyword = 'SCS_Max_Number_of_Iterations'
     is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
@@ -208,7 +208,7 @@ def read_input_data_file(input_file, dirs_dict):
     else:
         scs_max_n_iterations = 20
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Read self consistent scheme convergence tolerance (optional)
+    # Read self-consistent scheme convergence tolerance (optional)
     # If the associated keyword is not found, then a default option is adopted
     keyword = 'SCS_Convergence_Tolerance'
     is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
@@ -449,7 +449,6 @@ def read_input_data_file(input_file, dirs_dict):
         is_store_final_clustering = True
     else:
         is_store_final_clustering = False
-
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read the spatial discretization file (regular grid of voxels)
     info.displayinfo('5', 'Reading discretization file...')
