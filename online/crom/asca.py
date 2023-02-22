@@ -175,8 +175,8 @@ class ASCA:
     _display_scs_iter_data(ref_material, is_lock_prop_ref, mode='init', \
                            scs_iter_time=None):
         Display reference material self-consistent scheme iteration data.
-    _display_nr_iter_data(is_farfield_formulation, mode='init', nr_iter=None, \
-                          nr_iter_time=None, errors=[]):
+    _display_nr_iter_data(mode='init', nr_iter=None, nr_iter_time=None, \
+                          errors=[]):
         Display Newton-Raphson iteration data.
     _set_output_files(self, output_dir, crve, problem_name='problem', \
                       is_clust_adapt_output=False, \
@@ -186,7 +186,6 @@ class ASCA:
         Create and initialize output files.
     """
     def __init__(self, strain_formulation, problem_type,
-                 is_farfield_formulation=True,
                  self_consistent_scheme='regression', scs_parameters=None,
                  scs_max_n_iterations=20, scs_conv_tol=1e-4,
                  max_n_iterations=12, conv_tol=1e-6, max_subinc_level=5,
@@ -200,8 +199,6 @@ class ASCA:
         problem_type : int
             Problem type: 2D plane strain (1), 2D plane stress (2),
             2D axisymmetric (3) and 3D (4).
-        is_farfield_formulation : bool, default=True
-            True if far-field strain formulation is adopted, False otherwise.
         self_consistent_scheme : {'regression',}, default='regression'
             Self-consistent scheme to update the elastic reference material
             properties.
@@ -226,7 +223,6 @@ class ASCA:
         """
         self._strain_formulation = strain_formulation
         self._problem_type = problem_type
-        self._is_farfield_formulation = is_farfield_formulation
         self._self_consistent_scheme = self_consistent_scheme
         self._scs_parameters = scs_parameters
         self._scs_max_n_iterations = scs_max_n_iterations
@@ -243,8 +239,7 @@ class ASCA:
         self._comp_order_nsym = comp_order_nsym
         # Initialize last converged algorithmic variables
         self._global_strain_old_mf = None
-        if self._is_farfield_formulation:
-            self._farfield_strain_old_mf = None
+        self._farfield_strain_old_mf = None
         # Initialize times
         self._total_time = 0.0
         self._effective_time = 0.0
@@ -373,8 +368,7 @@ class ASCA:
             global_strain_mf = np.zeros(
                 (crve.get_n_total_clusters()*len(self._comp_order_sym)))
             # Set far-field strain tensor
-            if self._is_farfield_formulation:
-                farfield_strain_mf = np.zeros(len(self._comp_order_sym))
+            farfield_strain_mf = np.zeros(len(self._comp_order_sym))
         else:
             # Set initialized deformation gradient (matricial form)
             def_gradient_mf = np.array([1.0 if x[0] == x[1] else 0.0
@@ -383,12 +377,10 @@ class ASCA:
             global_strain_mf = np.tile(def_gradient_mf,
                                        crve.get_n_total_clusters())
             # Set far-field strain tensor
-            if self._is_farfield_formulation:
-                farfield_strain_mf = copy.deepcopy(def_gradient_mf)
+            farfield_strain_mf = copy.deepcopy(def_gradient_mf)
         # Initialize last converged algorithmic variables
         self._global_strain_old_mf = copy.deepcopy(global_strain_mf)
-        if self._is_farfield_formulation:
-            self._farfield_strain_old_mf = copy.deepcopy(farfield_strain_mf)
+        self._farfield_strain_old_mf = copy.deepcopy(farfield_strain_mf)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize clustering adaptivity flag
         is_crve_adaptivity = False
@@ -523,13 +515,8 @@ class ASCA:
             # Save clusters strain concentration tensors
             inc_rewinder.save_clusters_sct(clusters_sct_mf)
             # Save algorithmic variables
-            if self._is_farfield_formulation:
-                inc_rewinder.save_asca_algorithmic_variables(
-                    global_strain_mf,
-                    is_farfield_formulation=self._is_farfield_formulation,
-                    farfield_strain_mf=farfield_strain_mf)
-            else:
-                inc_rewinder.save_asca_algorithmic_variables(global_strain_mf)
+            inc_rewinder.save_asca_algorithmic_variables(global_strain_mf,
+                                                         farfield_strain_mf)
             # Set increment rewinder flag
             is_inc_rewinder = True
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -547,47 +534,13 @@ class ASCA:
         # Start incremental loading loop
         while True:
             #
-            #                                               Incremental loading
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            if not self._is_farfield_formulation:
-                # Initialize strain tensor where each component is defined as:
-                # (a) Current applied macroscale strain (if prescribed
-                #     macroscale strain component)
-                # (b) Current applied homogenized strain (if non-prescribed
-                #     macroscale strain component)
-                applied_mix_strain_mf = np.zeros(len(comp_order))
-                if n_presc_strain > 0:
-                    applied_mix_strain_mf[presc_strain_idxs] = \
-                        applied_mac_load_mf['strain'][presc_strain_idxs]
-                # Initialize stress tensor where each component is defined as:
-                # (a) Current applied macroscale stress (if prescribed
-                #     macroscale stress component)
-                # (b) Current applied homogenized stress (if non-prescribed
-                #     macroscale stress component)
-                applied_mix_stress_mf = np.zeros(len(comp_order))
-                if n_presc_stress > 0:
-                    applied_mix_stress_mf[presc_stress_idxs] = \
-                        applied_mix_strain_mf['stress'][presc_stress_idxs]
-            #
             #                           Clusters strain initial iterative guess
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Set clusters strain initial iterative guess
             global_strain_mf = self._init_global_strain_mf()
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Set additional initial iterative guesses
-            if self._is_farfield_formulation:
-                # Set far-field strain initial iterative guess
-                farfield_strain_mf = self._init_farfield_strain_mf()
-            else:
-                # Get last converged homogenized strain and stress tensors
-                hom_strain_old_mf = material_state.get_hom_strain_old_mf()
-                hom_stress_old_mf = material_state.get_hom_stress_old_mf()
-                # Set homogenized strain components initial iterative guess
-                applied_mix_strain_mf[presc_stress_idxs] = \
-                    hom_strain_old_mf[presc_stress_idxs]
-                # Set homogenized stress components initial iterative guess
-                applied_mix_stress_mf[presc_strain_idxs] = \
-                    hom_stress_old_mf[presc_strain_idxs]
+            # Set far-field strain initial iterative guess
+            farfield_strain_mf = self._init_farfield_strain_mf()
             #
             #                             Self-consistent scheme iterative loop
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -620,8 +573,7 @@ class ASCA:
                 # Initialize Newton-Raphson iteration counter
                 nr_iter = 0
                 # Display Newton-Raphson iteration header
-                type(self)._display_nr_iter_data(self._is_farfield_formulation,
-                                                 mode='init')
+                type(self)._display_nr_iter_data(mode='init')
                 # Set Newton-Raphson iteration initial time
                 nr_iter_init_time = time.time()
                 # -------------------------------------------------------------
@@ -666,42 +618,26 @@ class ASCA:
                     #                  Lippmann-Schwinger equilibrium residuals
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     # Build Lippmann-Schwinger equilibrium residuals
-                    if self._is_farfield_formulation:
-                        residual = self._build_residual(
-                            crve, material_state,
-                            presc_strain_idxs, presc_stress_idxs,
-                            applied_mac_load_mf, ref_material, global_cit_mf,
-                            global_strain_mf,
-                            inc_mac_load_mf=inc_mac_load_mf,
-                            farfield_strain_mf=farfield_strain_mf,
-                            farfield_strain_old_mf=
-                                self._farfield_strain_old_mf)
-                    else:
-                        residual = self._build_residual(
-                            crve, material_state,
-                            presc_strain_idxs, presc_stress_idxs,
-                            applied_mac_load_mf, ref_material, global_cit_mf,
-                            global_strain_mf,
-                            applied_mix_strain_mf=applied_mix_strain_mf,
-                            applied_mix_stress_mf=applied_mix_stress_mf)
+                    residual = self._build_residual(
+                        crve, material_state,
+                        presc_strain_idxs, presc_stress_idxs,
+                        applied_mac_load_mf, ref_material, global_cit_mf,
+                        global_strain_mf,
+                        inc_mac_load_mf=inc_mac_load_mf,
+                        farfield_strain_mf=farfield_strain_mf,
+                        farfield_strain_old_mf=
+                            self._farfield_strain_old_mf)
                     #
                     #                                    Convergence evaluation
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     # Evaluate Lippmann-Schwinger equilibrium solution
                     # convergence
-                    if self._is_farfield_formulation:
-                        is_converged, conv_errors = self._check_convergence(
-                            crve, material_state, presc_strain_idxs,
-                            presc_stress_idxs, applied_mac_load_mf, residual)
-                    else:
-                        is_converged, conv_errors = self._check_convergence(
-                            crve, material_state, presc_strain_idxs,
-                            presc_stress_idxs, applied_mac_load_mf, residual,
-                            applied_mix_strain_mf=applied_mix_strain_mf)
+                    is_converged, conv_errors = self._check_convergence(
+                        crve, material_state, presc_strain_idxs,
+                        presc_stress_idxs, applied_mac_load_mf, residual)
                     # Display Newton-Raphson iteration header
                     type(self)._display_nr_iter_data(
-                        self._is_farfield_formulation, mode='iter',
-                        nr_iter=nr_iter,
+                        mode='iter', nr_iter=nr_iter,
                         nr_iter_time=time.time()-nr_iter_init_time,
                         errors=conv_errors)
                     #
@@ -745,18 +681,9 @@ class ASCA:
                     # Update clusters incremental strain
                     global_strain_mf = global_strain_mf + \
                         d_iter[0:crve.get_n_total_clusters()*len(comp_order)]
-                    # Update additional quantities
-                    if self._is_farfield_formulation:
-                        # Update far-field strain
-                        farfield_strain_mf = farfield_strain_mf + d_iter[
-                            crve.get_n_total_clusters()*len(comp_order):]
-                    else:
-                        # Update homogenized strain components
-                        if n_presc_stress > 0:
-                            applied_mix_strain_mf[presc_stress_idxs] = \
-                                applied_mix_strain_mf[presc_stress_idxs] \
-                                + d_iter[crve.get_n_total_clusters()\
-                                         *len(comp_order):]
+                    # Update far-field strain
+                    farfield_strain_mf = farfield_strain_mf + d_iter[
+                        crve.get_n_total_clusters()*len(comp_order):]
                 #
                 #                                        Self-consistent scheme
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -775,21 +702,12 @@ class ASCA:
                 procedure_init_time = time.time()
                 # Output reference material associated quantities (.refm file)
                 if is_ref_material_output:
-                    if self._is_farfield_formulation:
-                        ref_mat_output.write_ref_mat(
-                            inc, ref_material,
-                            material_state.get_hom_strain_mf(),
-                            material_state.get_hom_stress_mf(),
-                            eff_tangent_mf=eff_tangent_mf,
-                            farfield_strain_mf=farfield_strain_mf,
-                            applied_mac_load_strain_mf=
-                                applied_mac_load_mf['strain'])
-                    else:
-                        ref_mat_output.write_ref_mat(
-                            inc, ref_material,
-                            material_state.get_hom_strain_mf(),
-                            material_state.get_hom_stress_mf(),
-                            eff_tangent_mf=eff_tangent_mf)
+                    ref_mat_output.write_ref_mat(
+                        inc, ref_material,
+                        material_state.get_hom_strain_mf(),
+                        material_state.get_hom_stress_mf(),
+                        farfield_strain_mf, applied_mac_load_mf['strain'],
+                        eff_tangent_mf=eff_tangent_mf)
                     # Increment post-processing time
                     self._post_process_time += \
                         time.time() - procedure_init_time
@@ -1004,13 +922,9 @@ class ASCA:
                     clusters_sct_old_mf = inc_rewinder.get_clusters_sct()
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     # Rewind algorithmic variables
-                    if self._is_farfield_formulation:
-                        self._global_strain_old_mf, \
-                            self._farfield_strain_old_mf = \
-                            inc_rewinder.get_asca_algorithmic_variables()
-                    else:
-                        self._global_strain_old_mf, _ = \
-                            inc_rewinder.get_asca_algorithmic_variables()
+                    self._global_strain_old_mf, \
+                        self._farfield_strain_old_mf = \
+                        inc_rewinder.get_asca_algorithmic_variables()
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     # Set post-processing procedure initial time
                     procedure_init_time = time.time()
@@ -1174,14 +1088,8 @@ class ASCA:
                 # Save clusters strain concentration tensors
                 inc_rewinder.save_clusters_sct(clusters_sct_mf)
                 # Save algorithmic variables
-                if self._is_farfield_formulation:
-                    inc_rewinder.save_asca_algorithmic_variables(
-                        global_strain_mf,
-                        is_farfield_formulation=self._is_farfield_formulation,
-                        farfield_strain_mf=farfield_strain_mf)
-                else:
-                    inc_rewinder.save_asca_algorithmic_variables(
-                        global_strain_mf)
+                inc_rewinder.save_asca_algorithmic_variables(
+                    global_strain_mf, farfield_strain_mf=farfield_strain_mf)
                 # Set increment rewinder flag
                 is_inc_rewinder = True
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1337,9 +1245,7 @@ class ASCA:
     def _build_residual(self, crve, material_state, presc_strain_idxs,
                         presc_stress_idxs, applied_mac_load_mf, ref_material,
                         global_cit_mf, global_strain_mf, inc_mac_load_mf=None,
-                        farfield_strain_mf=None, farfield_strain_old_mf=None,
-                        applied_mix_strain_mf=None,
-                        applied_mix_stress_mf=None):
+                        farfield_strain_mf=None, farfield_strain_old_mf=None):
         """Build Lippmann-Schwinger equilibrium residuals.
 
         **Global residual function:**
@@ -1645,13 +1551,6 @@ class ASCA:
             Far-field strain tensor (matricial form).
         farfield_strain_old_mf : numpy.ndarray (1d), default=None
             Last converged far-field strain tensor (matricial form).
-        applied_mix_strain_mf : numpy.ndarray (1d), default=None
-            Strain tensor (matricial form) that contains prescribed strain
-            components and (non-prescribed) homogenized strain components.
-        applied_mix_stress_mf : numpy.ndarray (1d), default=None
-            Incremental stress tensor (matricial form) that contains prescribed
-            stress components and (non-prescribed) homogenized stress
-            components.
 
         Returns
         -------
@@ -1732,70 +1631,49 @@ class ASCA:
                 i_init = i_init + len(comp_order)
                 i_end = i_init + len(comp_order)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        if self._is_farfield_formulation:
-            # Initialize residual vector
-            residual = np.zeros(n_total_clusters*len(comp_order)
-                                + len(comp_order))
-            # Compute clusters equilibrium residuals
-            residual[0:n_total_clusters*len(comp_order)] = \
-                np.subtract(
-                    np.add(global_strain_mf,
-                           np.matmul(global_cit_mf, global_pol_stress_mf)),
-                    numpy.matlib.repmat(farfield_strain_mf, 1,
-                                        n_total_clusters))
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Add residual term for compatibility with incremental formulation
-            # under infinitesimal strains
-            if self._strain_formulation == 'infinitesimal':
-                residual[0:n_total_clusters*len(comp_order)] += np.reshape(
-                    -np.subtract(
-                        np.add(global_strain_old_mf,
-                               np.matmul(global_cit_mf,
-                                         global_pol_stress_old_mf)),
-                        numpy.matlib.repmat(farfield_strain_old_mf, 1,
-                                            n_total_clusters)),
-                    (n_total_clusters*len(comp_order),))
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Compute homogenization constraints residuals
-            for i in range(len(comp_order)):
-                if i in presc_strain_idxs:
-                    if self._strain_formulation == 'infinitesimal':
-                        # Constraint compatible with incremental formulation
-                        # under infinitesimal strains
-                        residual[n_total_clusters*len(comp_order) + i] = \
-                            inc_hom_strain_mf[i] - inc_mac_load_mf['strain'][i]
-                    else:
-                        residual[n_total_clusters*len(comp_order) + i] = \
-                            hom_strain_mf[i] - applied_mac_load_mf['strain'][i]
-                else:
-                    if self._strain_formulation == 'infinitesimal':
-                        # Constraint compatible with incremental formulation
-                        # under infinitesimal strains
-                        residual[n_total_clusters*len(comp_order) + i] = \
-                            inc_hom_stress_mf[i] - inc_mac_load_mf['stress'][i]
-                    else:
-                        residual[n_total_clusters*len(comp_order) + i] = \
-                            hom_stress_mf[i] - applied_mac_load_mf['stress'][i]
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        else:
-            # Compute number of prescribed loading stress components
-            n_presc_stress = len(presc_stress_idxs)
-            # Initialize residual vector
-            residual = np.zeros(n_total_clusters*len(comp_order) \
-                                + n_presc_stress)
-            # Compute clusters equilibrium residuals
-            residual[0:n_total_clusters*len(comp_order)] = np.subtract(
-                np.add(global_strain_mf, np.matmul(global_cit_mf,
-                                                   global_pol_stress_mf)),
-                numpy.matlib.repmat(applied_mix_strain_mf, 1,
+        # Initialize residual vector
+        residual = np.zeros(n_total_clusters*len(comp_order)
+                            + len(comp_order))
+        # Compute clusters equilibrium residuals
+        residual[0:n_total_clusters*len(comp_order)] = \
+            np.subtract(
+                np.add(global_strain_mf,
+                       np.matmul(global_cit_mf, global_pol_stress_mf)),
+                numpy.matlib.repmat(farfield_strain_mf, 1,
                                     n_total_clusters))
-            # Compute additional residual if there are prescribed loading
-            # stress components
-            if n_presc_stress > 0:
-                # Compute prescribed macroscale stress components residual
-                residual[n_total_clusters*len(comp_order):] = \
-                    hom_stress_mf[presc_stress_idxs] \
-                    - applied_mix_stress_mf[presc_stress_idxs]
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Add residual term for compatibility with incremental formulation
+        # under infinitesimal strains
+        if self._strain_formulation == 'infinitesimal':
+            residual[0:n_total_clusters*len(comp_order)] += np.reshape(
+                -np.subtract(
+                    np.add(global_strain_old_mf,
+                           np.matmul(global_cit_mf,
+                                     global_pol_stress_old_mf)),
+                    numpy.matlib.repmat(farfield_strain_old_mf, 1,
+                                        n_total_clusters)),
+                (n_total_clusters*len(comp_order),))
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Compute homogenization constraints residuals
+        for i in range(len(comp_order)):
+            if i in presc_strain_idxs:
+                if self._strain_formulation == 'infinitesimal':
+                    # Constraint compatible with incremental formulation
+                    # under infinitesimal strains
+                    residual[n_total_clusters*len(comp_order) + i] = \
+                        inc_hom_strain_mf[i] - inc_mac_load_mf['strain'][i]
+                else:
+                    residual[n_total_clusters*len(comp_order) + i] = \
+                        hom_strain_mf[i] - applied_mac_load_mf['strain'][i]
+            else:
+                if self._strain_formulation == 'infinitesimal':
+                    # Constraint compatible with incremental formulation
+                    # under infinitesimal strains
+                    residual[n_total_clusters*len(comp_order) + i] = \
+                        inc_hom_stress_mf[i] - inc_mac_load_mf['stress'][i]
+                else:
+                    residual[n_total_clusters*len(comp_order) + i] = \
+                        hom_stress_mf[i] - applied_mac_load_mf['stress'][i]
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return residual
@@ -1969,10 +1847,6 @@ class ASCA:
             Cluster-Reduced Representative Volume Element.
         material_state : MaterialState
             CRVE material constitutive state.
-        presc_strain_idxs : list[int]
-            Prescribed macroscale loading strain components indexes.
-        presc_stress_idxs : list[int]
-            Prescribed macroscale loading stress components indexes.
         global_cit_diff_tangent_mf : numpy.ndarray (2d)
             Global matrix similar to global cluster interaction matrix but
             where each cluster interaction tensor is double contracted with the
@@ -2013,109 +1887,55 @@ class ASCA:
         # cluster
         clusters_tangent_mf = material_state.get_clusters_tangent_mf()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        if self._is_farfield_formulation:
-            # Initialize Jacobian matrix
-            jacobian = np.zeros(2*(n_total_clusters*len(comp_order)
-                                   + len(comp_order),))
-            # Compute Jacobian matrix component 11
-            i_init = 0
-            i_end = n_total_clusters*len(comp_order)
-            j_init = 0
-            j_end = n_total_clusters*len(comp_order)
-            if self._strain_formulation == 'infinitesimal':
-                jacobian[i_init:i_end, j_init:j_end] = \
-                    scipy.linalg.block_diag(*(n_total_clusters*[fosym_mf,])) \
-                    + global_cit_diff_tangent_mf
-            else:
-                jacobian[i_init:i_end, j_init:j_end] = \
-                    scipy.linalg.block_diag(*(n_total_clusters*[foid_mf,])) \
-                        + global_cit_diff_tangent_mf
-            # Compute Jacobian matrix component 12
-            i_init = 0
-            i_end = n_total_clusters*len(comp_order)
-            j_init = n_total_clusters*len(comp_order)
-            j_end = n_total_clusters*len(comp_order) + len(comp_order)
-            if self._strain_formulation == 'infinitesimal':
-                jacobian[i_init:i_end, j_init:j_end] = \
-                    numpy.matlib.repmat(-1.0*fosym_mf, n_total_clusters, 1)
-            else:
-                jacobian[i_init:i_end, j_init:j_end] = \
-                    numpy.matlib.repmat(-1.0*foid_mf, n_total_clusters, 1)
-            # Compute Jacobian matrix component 21
-            for k in range(len(comp_order)):
-                i = n_total_clusters*len(comp_order) + k
-                jclst = 0
-                for mat_phase in material_phases:
-                    for cluster in phase_clusters[mat_phase]:
-                        if k in presc_strain_idxs:
-                            if self._strain_formulation == 'infinitesimal':
-                                f_foid_mf = clusters_vf[str(cluster)]*fosym_mf
-                            else:
-                                f_foid_mf = clusters_vf[str(cluster)]*foid_mf
-                            j_init = jclst*len(comp_order)
-                            j_end = j_init + len(comp_order)
-                            jacobian[i, j_init:j_end] = f_foid_mf[k, :]
-                        else:
-                            vf_tangent_mf = clusters_vf[str(cluster)]\
-                                *clusters_tangent_mf[str(cluster)]
-                            j_init = jclst*len(comp_order)
-                            j_end = j_init + len(comp_order)
-                            jacobian[i, j_init:j_end] = vf_tangent_mf[k, :]
-                        # Increment column cluster index
-                        jclst = jclst + 1
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Initialize Jacobian matrix
+        jacobian = np.zeros(2*(n_total_clusters*len(comp_order)
+                               + len(comp_order),))
+        # Compute Jacobian matrix component 11
+        i_init = 0
+        i_end = n_total_clusters*len(comp_order)
+        j_init = 0
+        j_end = n_total_clusters*len(comp_order)
+        if self._strain_formulation == 'infinitesimal':
+            jacobian[i_init:i_end, j_init:j_end] = \
+                scipy.linalg.block_diag(*(n_total_clusters*[fosym_mf,])) \
+                + global_cit_diff_tangent_mf
         else:
-            # Compute number of prescribed loading stress components
-            n_presc_stress = len(presc_stress_idxs)
-            # Initialize Jacobian matrix
-            jacobian = np.zeros(2*(n_total_clusters*len(comp_order)
-                                   + n_presc_stress,))
-            # Compute Jacobian matrix component solely related with the
-            # clusters equilibrium residuals
-            i_init = 0
-            i_end = n_total_clusters*len(comp_order)
-            j_init = 0
-            j_end = n_total_clusters*len(comp_order)
-            if self._strain_formulation == 'infinitesimal':
-                jacobian[i_init:i_end, j_init:j_end] = \
-                    scipy.linalg.block_diag(*(n_total_clusters*[fosym_mf,])) \
+            jacobian[i_init:i_end, j_init:j_end] = \
+                scipy.linalg.block_diag(*(n_total_clusters*[foid_mf,])) \
                     + global_cit_diff_tangent_mf
-            else:
-                jacobian[i_init:i_end, j_init:j_end] = \
-                    scipy.linalg.block_diag(*(n_total_clusters*[foid_mf,])) \
-                    + global_cit_diff_tangent_mf
-            # Compute Jacobian matrix components arising due to the prescribed
-            # loading stress components
-            if n_presc_stress > 0:
-                # Compute Jacobian matrix component related with the clusters
-                # equilibrium residuals
-                i_init = 0
-                i_end = n_total_clusters*len(comp_order)
-                j_init = n_total_clusters*len(comp_order)
-                j_end = n_total_clusters*len(comp_order) + len(comp_order)
-                if self._strain_formulation == 'infinitesimal':
-                    jacobian[i_init:i_end, j_init:j_end] = \
-                        numpy.matlib.repmat(-1.0*fosym_mf[:,presc_stress_idxs],
-                                            n_total_clusters, 1)
-                else:
-                    jacobian[i_init:i_end, j_init:j_end] = \
-                        numpy.matlib.repmat(-1.0*foid_mf[:,presc_stress_idxs],
-                                            n_total_clusters, 1)
-                # Compute Jacobian matrix component related with the prescribed
-                # loading stress components
-                jclst = 0
-                for mat_phase in material_phases:
-                    for cluster in phase_clusters[mat_phase]:
-                        vf_tangent_mf = clusters_vf[str(cluster)] \
+        # Compute Jacobian matrix component 12
+        i_init = 0
+        i_end = n_total_clusters*len(comp_order)
+        j_init = n_total_clusters*len(comp_order)
+        j_end = n_total_clusters*len(comp_order) + len(comp_order)
+        if self._strain_formulation == 'infinitesimal':
+            jacobian[i_init:i_end, j_init:j_end] = \
+                numpy.matlib.repmat(-1.0*fosym_mf, n_total_clusters, 1)
+        else:
+            jacobian[i_init:i_end, j_init:j_end] = \
+                numpy.matlib.repmat(-1.0*foid_mf, n_total_clusters, 1)
+        # Compute Jacobian matrix component 21
+        for k in range(len(comp_order)):
+            i = n_total_clusters*len(comp_order) + k
+            jclst = 0
+            for mat_phase in material_phases:
+                for cluster in phase_clusters[mat_phase]:
+                    if k in presc_strain_idxs:
+                        if self._strain_formulation == 'infinitesimal':
+                            f_foid_mf = clusters_vf[str(cluster)]*fosym_mf
+                        else:
+                            f_foid_mf = clusters_vf[str(cluster)]*foid_mf
+                        j_init = jclst*len(comp_order)
+                        j_end = j_init + len(comp_order)
+                        jacobian[i, j_init:j_end] = f_foid_mf[k, :]
+                    else:
+                        vf_tangent_mf = clusters_vf[str(cluster)]\
                             *clusters_tangent_mf[str(cluster)]
-                        for k in range(len(presc_stress_idxs)):
-                            i = n_total_clusters*len(comp_order) + k
-                            j_init = jclst*len(comp_order)
-                            j_end = j_init + len(comp_order)
-                            jacobian[i, j_init:j_end] = \
-                                vf_tangent_mf[presc_stress_idxs[k], :]
-                        # Increment column cluster index
-                        jclst = jclst + 1
+                        j_init = jclst*len(comp_order)
+                        j_end = j_init + len(comp_order)
+                        jacobian[i, j_init:j_end] = vf_tangent_mf[k, :]
+                    # Increment column cluster index
+                    jclst = jclst + 1
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return jacobian
@@ -2266,113 +2086,60 @@ class ASCA:
         hom_strain_mf = material_state.get_hom_strain_mf()
         hom_stress_mf = material_state.get_hom_stress_mf()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        if self._is_farfield_formulation:
-            # Set strain and stress normalization factors
-            if n_presc_strain > 0 and not np.allclose(
-                applied_mac_load_mf['strain'][tuple([presc_strain_idxs])],
-                np.zeros(applied_mac_load_mf['strain'][tuple([
-                         presc_strain_idxs])].shape), atol=1e-10):
-                strain_norm_factor = np.linalg.norm(
-                    applied_mac_load_mf['strain'][tuple([presc_strain_idxs])])
-            elif not np.allclose(hom_strain_mf, np.zeros(hom_strain_mf.shape),
-                                 atol=1e-10):
-                strain_norm_factor = np.linalg.norm(hom_strain_mf)
-            else:
-                strain_norm_factor = 1.0
-            if n_presc_stress > 0 and not np.allclose(
-                applied_mac_load_mf['stress'][tuple([presc_stress_idxs])],
-                np.zeros(applied_mac_load_mf['stress'][tuple([
-                         presc_stress_idxs])].shape), atol=1e-10):
-                stress_norm_factor = np.linalg.norm(
-                    applied_mac_load_mf['stress'][tuple([presc_stress_idxs])])
-            elif not np.allclose(hom_stress_mf, np.zeros(hom_stress_mf.shape),
-                                 atol=1e-10):
-                stress_norm_factor = np.linalg.norm(hom_stress_mf)
-            else:
-                stress_norm_factor = 1.0
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Compute error associated with the clusters equilibrium residuals
-            error_1 = \
-                np.linalg.norm(residual[0:n_total_clusters*len(comp_order)]) \
-                /strain_norm_factor
-            # Compute error associated with the homogenization constraints
-            # residuals
-            aux = residual[n_total_clusters*len(comp_order):]
-            if n_presc_strain > 0:
-                error_2 = \
-                    np.linalg.norm(aux[presc_strain_idxs])/strain_norm_factor
-            if n_presc_stress > 0:
-                error_3 = \
-                    np.linalg.norm(aux[presc_stress_idxs])/stress_norm_factor
-            # Criterion convergence flag is True if all residual errors
-            # converged according to the defined convergence tolerance
-            if n_presc_strain == 0:
-                error_2 = None
-                is_converged = (error_1 < self._conv_tol) \
-                    and (error_3 < self._conv_tol)
-            elif n_presc_stress == 0:
-                error_3 = None
-                is_converged = (error_1 < self._conv_tol) \
-                    and (error_2 < self._conv_tol)
-            else:
-                is_converged = (error_1 < self._conv_tol) \
-                    and (error_2 < self._conv_tol) \
-                    and (error_3 < self._conv_tol)
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Build convergence evaluation errors list
-            errors = [error_1, error_2, error_3]
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set strain and stress normalization factors
+        if n_presc_strain > 0 and not np.allclose(
+            applied_mac_load_mf['strain'][tuple([presc_strain_idxs])],
+            np.zeros(applied_mac_load_mf['strain'][tuple([
+                     presc_strain_idxs])].shape), atol=1e-10):
+            strain_norm_factor = np.linalg.norm(
+                applied_mac_load_mf['strain'][tuple([presc_strain_idxs])])
+        elif not np.allclose(hom_strain_mf, np.zeros(hom_strain_mf.shape),
+                             atol=1e-10):
+            strain_norm_factor = np.linalg.norm(hom_strain_mf)
         else:
-            # Set strain and stress normalization factors
-            if n_presc_strain > 0 and not np.allclose(
-                applied_mac_load_mf['strain'][tuple([presc_strain_idxs])],
-                    np.zeros(applied_mac_load_mf['strain'][tuple([
-                             presc_strain_idxs])].shape), atol=1e-10):
-                strain_norm_factor = np.linalg.norm(
-                    applied_mac_load_mf['strain'][tuple([presc_strain_idxs])])
-            elif not np.allclose(hom_strain_mf, np.zeros(hom_strain_mf.shape),
-                                 atol=1e-10):
-                strain_norm_factor = np.linalg.norm(hom_strain_mf)
-            else:
-                strain_norm_factor = 1.0
-            if n_presc_stress > 0 and not np.allclose(
-                applied_mac_load_mf['stress'][tuple([presc_stress_idxs])],
-                    np.zeros(applied_mac_load_mf['stress'][tuple([
-                             presc_stress_idxs])].shape), atol=1e-10):
-                stress_norm_factor = np.linalg.norm(
-                    applied_mac_load_mf['stress'][tuple([presc_stress_idxs])])
-            elif not np.allclose(hom_stress_mf, np.zeros(hom_stress_mf.shape),
-                                 atol=1e-10):
-                stress_norm_factor = np.linalg.norm(hom_stress_mf)
-            else:
-                stress_norm_factor = 1.0
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Compute error associated with the clusters equilibrium residuals
-            error_1 = \
-                np.linalg.norm(residual[0:n_total_clusters*len(comp_order)]) \
-                /strain_norm_factor
-            # Compute error associated with the stress homogenization
-            # constraints residuals
-            if n_presc_stress > 0:
-                error_2 = np.linalg.norm(
-                    residual[n_total_clusters*len(comp_order):]) \
-                    /stress_norm_factor
-            # Criterion convergence flag is True if all residual errors
-            # converged according to the defined convergence tolerance
-            if n_presc_stress == 0:
-                error_2 = None
-                is_converged = (error_1 < self._conv_tol)
-            else:
-                is_converged = (error_1 < self._conv_tol) \
-                    and (error_2 < self._conv_tol)
-            # Compute the normalized error associated with the homogenized
-            # strain tensor (relative to the prescribed loading strain tensor)
-            # for output purposes only
-            error_hom_strain = abs((np.linalg.norm(hom_strain_mf)
-                - np.linalg.norm(applied_mix_strain_mf)))/strain_norm_factor
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Build convergence evaluation errors list
-            errors = [error_1, error_2, error_hom_strain]
+            strain_norm_factor = 1.0
+        if n_presc_stress > 0 and not np.allclose(
+            applied_mac_load_mf['stress'][tuple([presc_stress_idxs])],
+            np.zeros(applied_mac_load_mf['stress'][tuple([
+                     presc_stress_idxs])].shape), atol=1e-10):
+            stress_norm_factor = np.linalg.norm(
+                applied_mac_load_mf['stress'][tuple([presc_stress_idxs])])
+        elif not np.allclose(hom_stress_mf, np.zeros(hom_stress_mf.shape),
+                             atol=1e-10):
+            stress_norm_factor = np.linalg.norm(hom_stress_mf)
+        else:
+            stress_norm_factor = 1.0
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Compute error associated with the clusters equilibrium residuals
+        error_1 = \
+            np.linalg.norm(residual[0:n_total_clusters*len(comp_order)]) \
+            /strain_norm_factor
+        # Compute error associated with the homogenization constraints
+        # residuals
+        aux = residual[n_total_clusters*len(comp_order):]
+        if n_presc_strain > 0:
+            error_2 = \
+                np.linalg.norm(aux[presc_strain_idxs])/strain_norm_factor
+        if n_presc_stress > 0:
+            error_3 = \
+                np.linalg.norm(aux[presc_stress_idxs])/stress_norm_factor
+        # Criterion convergence flag is True if all residual errors
+        # converged according to the defined convergence tolerance
+        if n_presc_strain == 0:
+            error_2 = None
+            is_converged = (error_1 < self._conv_tol) \
+                and (error_3 < self._conv_tol)
+        elif n_presc_stress == 0:
+            error_3 = None
+            is_converged = (error_1 < self._conv_tol) \
+                and (error_2 < self._conv_tol)
+        else:
+            is_converged = (error_1 < self._conv_tol) \
+                and (error_2 < self._conv_tol) \
+                and (error_3 < self._conv_tol)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Build convergence evaluation errors list
+        errors = [error_1, error_2, error_3]
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return is_converged, errors
@@ -2882,14 +2649,12 @@ class ASCA:
                                      material_properties['v'], norm_dv)
     # -------------------------------------------------------------------------
     @staticmethod
-    def _display_nr_iter_data(is_farfield_formulation, mode='init',
-                              nr_iter=None, nr_iter_time=None, errors=[]):
+    def _display_nr_iter_data(mode='init', nr_iter=None, nr_iter_time=None,
+                              errors=[]):
         """Display Newton-Raphson iteration data.
 
         Parameters
         ----------
-        is_farfield_formulation : bool, default=True
-            True if far-field strain formulation is adopted, False otherwise.
         mode : {'init', 'iter'}
             Output mode: Newton-Raphson iteration header ('init') or solution
             related metrics ('iter').
@@ -2904,10 +2669,7 @@ class ASCA:
         if mode == 'iter':
             info.displayinfo('9', mode, nr_iter, nr_iter_time, *errors)
         else:
-            if is_farfield_formulation:
-                info.displayinfo('9', mode)
-            else:
-                info.displayinfo('10', mode)
+            info.displayinfo('9', mode)
     # -------------------------------------------------------------------------
     def _set_output_files(self, output_dir, crve, problem_name='problem',
                           is_clust_adapt_output=False,
@@ -2964,7 +2726,7 @@ class ASCA:
             # Instantiate reference material output
             ref_mat_output = RefMatOutput(
                 refm_file_path, self._strain_formulation, self._problem_type,
-                self._self_consistent_scheme, self._is_farfield_formulation)
+                self._self_consistent_scheme)
             # Write reference material output file header
             ref_mat_output.init_ref_mat_file()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -957,6 +957,24 @@ class IncrementRewinder:
         Global vector of clusters strain tensors (matricial form).
     _farfield_strain_mf : numpy.ndarray (1d)
         Far-field strain tensor (matricial form).
+
+    Methods
+    -------
+    get_rewind_inc(self)
+        Get increment associated with the rewind state.
+    save_loading_path(self, loading_path)
+        Save loading path rewind state.
+    get_loading_path(self)
+        Get loading path at rewind state.
+    save_material_state(self, material_state)
+        Save material constitutive state at rewind state.
+    save_asca_algorithmic_variables(self, global_strain_mf, \
+                                    farfield_strain_mf)
+        Save ASCA algorithmic variables at rewind state.
+    get_asca_algorithmic_variables(self)
+        Get ASCA algorithmic variables at rewind state.
+    rewind_output_files(self, hres_output=None, ref_mat_output=None, \
+                        voxels_output=None, adapt_output=None, vtk_output=None)
     """
     def __init__(self, rewind_inc, phase_clusters):
         """Increment rewinder constructor.
@@ -1183,24 +1201,20 @@ class IncrementRewinder:
         return copy.deepcopy(self._clusters_sct_mf)
     # -------------------------------------------------------------------------
     def save_asca_algorithmic_variables(self, global_strain_mf,
-                                        is_farfield_formulation=True,
-                                        farfield_strain_mf=None):
+                                        farfield_strain_mf):
         """Save ASCA algorithmic variables at rewind state.
 
         Parameters
         ----------
         global_strain_mf : numpy.ndarray (1d)
             Global vector of clusters strain tensors (matricial form).
-        is_farfield_formulation : bool, default=True
-            True if far-field strain formulation is adopted, False otherwise.
         farfield_strain_mf : numpy.ndarray (1d), default=None
             Far-field strain tensor (matricial form).
         """
         # Save global vector of clusters strain tensors
         self._global_strain_mf = copy.deepcopy(global_strain_mf)
         # Save far-field strain tensor
-        if is_farfield_formulation:
-            self._farfield_strain_mf = farfield_strain_mf
+        self._farfield_strain_mf = farfield_strain_mf
     # -------------------------------------------------------------------------
     def get_asca_algorithmic_variables(self):
         """Get ASCA algorithmic variables at rewind state.

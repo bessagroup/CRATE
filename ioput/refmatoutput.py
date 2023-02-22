@@ -53,7 +53,7 @@ class RefMatOutput:
     """
     def __init__(self, refm_file_path, strain_formulation, problem_type,
                  self_consistent_scheme='regression',
-                 is_farfield_formulation=True, ref_output_mode='converged'):
+                 ref_output_mode='converged'):
         """Constructor.
 
         Parameters
@@ -68,8 +68,6 @@ class RefMatOutput:
         self_consistent_scheme : {'regression',}, default='regression'
             Self-consistent scheme to update the elastic reference material
             properties.
-        is_farfield_formulation : bool, default=True
-            True if SCA farfield formulation, False otherwise.
         ref_output_mode : {'iterative', 'converged'}, default='converged'
             Output mode:
 
@@ -82,7 +80,6 @@ class RefMatOutput:
         self._strain_formulation = strain_formulation
         self._problem_type = problem_type
         self._self_consistent_scheme = self_consistent_scheme
-        self._is_farfield_formulation = is_farfield_formulation
         self._ref_output_mode = ref_output_mode
         # Get problem type parameters
         n_dim, comp_order_sym, comp_order_nsym = \
@@ -132,8 +129,8 @@ class RefMatOutput:
         refm_file.close()
     # -------------------------------------------------------------------------
     def write_ref_mat(self, inc, ref_material, hom_strain_mf, hom_stress_mf,
-                      eff_tangent_mf=None, farfield_strain_mf=None,
-                      applied_mac_load_strain_mf=None):
+                      farfield_strain_mf, applied_mac_load_strain_mf,
+                      eff_tangent_mf=None):
         """Write reference material output file.
 
         Parameters
@@ -150,21 +147,13 @@ class RefMatOutput:
             Homogenized stress tensor (matricial form): Cauchy stress tensor
             (infinitesimal strains) or first Piola-Kirchhoff stress tensor
             (finite strains).
-        eff_tangent_mf : numpy.ndarray (2d)
-            CRVE effective material tangent modulus (matricial form).
-        farfield_strain_mf : numpy.ndarray (1d), default=None
+        farfield_strain_mf : numpy.ndarray (1d)
             Far-field strain tensor (matricial form).
-        applied_mac_load_strain_mf : numpy.ndarray (1d), default=None
+        applied_mac_load_strain_mf : numpy.ndarray (1d)
             Prescribed loading strain tensor (matricial form).
+        eff_tangent_mf : numpy.ndarray (2d), default=None
+            CRVE effective material tangent modulus (matricial form).
         """
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Check required parameters if SCA far-field formulation is being used
-        if self._is_farfield_formulation:
-            if farfield_strain_mf is None \
-                    or applied_mac_load_strain_mf is None:
-                raise RuntimeError('Required parameters for SCA far-field '
-                                   'formulation output are missing.')
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set strain/stress components order according to problem strain
         # formulation
         if self._strain_formulation == 'infinitesimal':
@@ -184,29 +173,23 @@ class RefMatOutput:
         # When the problem type corresponds to a 2D analysis, build the 3D
         # far-field strain tensor considering the appropriate out-of-plane
         # strain component (output purpose only).
-        if self._is_farfield_formulation:
-            farfield_strain = mop.get_tensor_from_mf(farfield_strain_mf,
-                                                     self._n_dim,comp_order)
-            out_farfield_strain = np.zeros((3, 3))
-            if self._problem_type == 1:
-                out_farfield_strain[0:2, 0:2] = farfield_strain
-                if self._strain_formulation == 'finite':
-                    out_farfield_strain[2, 2] = 1.0
-            else:
-                out_farfield_strain[:, :] = farfield_strain
+        farfield_strain = mop.get_tensor_from_mf(farfield_strain_mf,
+                                                 self._n_dim,comp_order)
+        out_farfield_strain = np.zeros((3, 3))
+        if self._problem_type == 1:
+            out_farfield_strain[0:2, 0:2] = farfield_strain
+            if self._strain_formulation == 'finite':
+                out_farfield_strain[2, 2] = 1.0
         else:
-            out_farfield_strain = np.zeros((3, 3))
+            out_farfield_strain[:, :] = farfield_strain
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute norm of difference between the far-field strain tensor and
         # prescribed loading strain tensor and then normalize it to obtain
         # relative measure
-        if self._is_farfield_formulation:
-            diff_norm = np.linalg.norm(farfield_strain_mf
-                                       - applied_mac_load_strain_mf)
-            rel_diff_farfield = \
-                diff_norm/np.linalg.norm(applied_mac_load_strain_mf)
-        else:
-            rel_diff_farfield = 0.0
+        diff_norm = np.linalg.norm(farfield_strain_mf
+                                   - applied_mac_load_strain_mf)
+        rel_diff_farfield = \
+            diff_norm/np.linalg.norm(applied_mac_load_strain_mf)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute self-consistent scheme normalized cost function
         if self._self_consistent_scheme == 'regression':

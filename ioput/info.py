@@ -52,7 +52,6 @@ def displayinfo(code, *args, **kwargs):
         *  7 : Loading increment header and footer
         *  8 : Self-consistent scheme iteration header and footer
         *  9 : Newton-Raphson header and iteration
-        * 10 : Newton-Raphson header and iteration
         * 11 : Loading increment cut
         * 12 : Adaptive clustering step header
         * 13 : Self-consistent scheme iteration header and footer \
@@ -336,28 +335,7 @@ def displayinfo(code, *args, **kwargs):
                     + '{:>11.4e}     {:^11.4e}    {:^11.4e}'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     elif code == '10':
-        mode = args[0]
-        space1 = (output_width - 55)*' '
-        space2 = (output_width - 67)*' '
-        if mode == 'init':
-            arguments = args[1:]
-            info = tuple(arguments)
-            template = indent + 5*' ' + 'Iteration' + space1 \
-                + 'Normalized residuals       Norm. error' + '\n' \
-                + indent + ' Number    Run time (s)' + space2 \
-                + 'Equilibrium    Mac. stress    Hom. Strain' + '\n' \
-                + indent + dashed_line[:-len(indent)]
-        elif mode == 'iter':
-            if not isinstance(args[4], float):
-                arguments = list(args[1:4]) + [args[5],]
-                info = tuple(arguments)
-                template = indent + ' {:^6d}    {:^12.4e}' + space2 \
-                    + '{:>11.4e}         -          {:^11.4e}'
-            else:
-                arguments = args[1:]
-                info = tuple(arguments)
-                template = indent + ' {:^6d}    {:^12.4e}' + space2 \
-                    + '{:>11.4e}     {:^11.4e}    {:^11.4e}'
+        pass
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     elif code == '11':
         mode = args[0]
