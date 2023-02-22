@@ -114,7 +114,7 @@ def set_clustering_data(strain_formulation, problem_type, rve_dims,
                                                             problem_type)
     # Instatiante cluster analysis data
     clustering_data = ClusterAnalysisData(
-        strain_formulation, problem_type, n_voxels_dims,
+        strain_formulation, problem_type, rve_dims, n_voxels_dims,
         base_clustering_scheme, adaptive_clustering_scheme,
         feature_descriptors)
     # Set prescribed clustering features
@@ -291,6 +291,20 @@ def get_available_clustering_features(strain_formulation, problem_type):
     features_descriptors['1'] = (n_feature_dim, feature_algorithm,
                                  mac_strains, strain_magnitude_factor)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Spatial coordinates:
+    # Set number of feature dimensions
+    n_feature_dim = n_dim
+    # Set feature computation algorithm
+    feature_algorithm = SpatialCoordinates()
+    # Set macroscale strain loadings required to compute feature
+    mac_strains = []
+    # Set macroscale strain magnitude factor
+    strain_magnitude_factor = 1.0
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Assemble to available clustering features
+    features_descriptors['2'] = (n_feature_dim, feature_algorithm,
+                                 mac_strains, strain_magnitude_factor)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Return
     return features_descriptors
 # =============================================================================
@@ -401,9 +415,9 @@ class ClusterAnalysisData:
     get_global_data_matrix(self)
         Get global data matrix containing all clustering features.
     """
-    def __init__(self, strain_formulation, problem_type, n_voxels_dims,
-                 base_clustering_scheme, adaptive_clustering_scheme,
-                 feature_descriptors):
+    def __init__(self, strain_formulation, problem_type, rve_dims,
+                 n_voxels_dims, base_clustering_scheme,
+                 adaptive_clustering_scheme, feature_descriptors):
         """Constructor.
 
         Parameters
@@ -413,6 +427,8 @@ class ClusterAnalysisData:
         problem_type : int
             Problem type: 2D plane strain (1), 2D plane stress (2),
             2D axisymmetric (3) and 3D (4).
+        rve_dims : list[float]
+            RVE size in each dimension.
         n_voxels_dims : list[int]
             Number of voxels in each dimension of the regular grid (spatial
             discretization of the RVE).
@@ -429,18 +445,21 @@ class ClusterAnalysisData:
             algorithm (col 1, int), a list of features (col 2, list[int]) and a
             list of the features data matrix' indexes (col 3, list[int]).
         features_descriptors : dict
-            Data (tuple structured as (number of feature dimensions (int), feature
-            computation algorithm (function), list of macroscale strain loadings
-            (list[numpy.ndarray (2d)]), strain magnitude factor (float)))
-            associated to each feature (key, str). The macroscale strain loading
-            is the infinitesimal strain tensor (infinitesimal strains) or the
-            deformation gradient (finite strains).
+            Data (tuple structured as (number of feature dimensions (int),
+            feature computation algorithm (function), list of macroscale strain
+            loadings (list[numpy.ndarray (2d)]),
+            strain magnitude factor (float))) associated to each feature
+            (key, str). The macroscale strain loading is the infinitesimal
+            strain tensor (infinitesimal strains) or the deformation gradient
+            (finite strains).
         n_voxels : int
             Total number of voxels of the regular grid (spatial discretization
             of the RVE).
         """
         self._strain_formulation = strain_formulation
         self._problem_type = problem_type
+        self._rve_dims = rve_dims
+        self._n_voxels_dims = n_voxels_dims
         self._base_clustering_scheme = base_clustering_scheme
         self._adaptive_clustering_scheme = adaptive_clustering_scheme
         self._feature_descriptors = feature_descriptors
@@ -647,7 +666,8 @@ class ClusterAnalysisData:
             # associated data matrix
             feature_algorithm = self._feature_descriptors[str(feature)][1]
             data_matrix = feature_algorithm.get_feature_data_matrix(
-                self._strain_formulation, self._problem_type, rve_response)
+                self._strain_formulation, self._problem_type, self._rve_dims,
+                self._n_voxels_dims, rve_response)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Normalize data matrix according to strain magnitude factor
             if type(feature_algorithm) == StrainConcentrationTensor:
@@ -682,8 +702,8 @@ class FeatureAlgorithm(ABC):
 
     Methods
     -------
-    get_feature_data_matrix(self, strain_formulation, problem_type, \
-                            rve_response):
+    get_feature_data_matrix(self, strain_formulation, problem_type, rve_dims, \
+                            n_voxels_dims, rve_response)
         *abstract*: Compute data matrix associated to clustering feature.
     """
     @abstractmethod
@@ -693,7 +713,7 @@ class FeatureAlgorithm(ABC):
     # -------------------------------------------------------------------------
     @abstractmethod
     def get_feature_data_matrix(self, strain_formulation, problem_type,
-                                rve_response):
+                                rve_dims, n_voxels_dims, rve_response):
         """Compute data matrix associated to clustering feature.
 
         Parameters
@@ -703,6 +723,11 @@ class FeatureAlgorithm(ABC):
         problem_type : int
             Problem type: 2D plane strain (1), 2D plane stress (2),
             2D axisymmetric (3) and 3D (4).
+        rve_dims : list[float]
+            RVE size in each dimension.
+        n_voxels_dims : list[int]
+            Number of voxels in each dimension of the regular grid (spatial
+            discretization of the RVE).
         rve_response : numpy.ndarray (2d)
             RVE elastic response for one or more macroscale loadings
             (numpy.ndarray of shape (n_voxels, n_strain_comps)), where each
@@ -773,8 +798,8 @@ class StrainConcentrationTensor(FeatureAlgorithm):
 
     Methods
     -------
-    get_feature_data_matrix(self, strain_formulation, problem_type, \
-                            rve_response)
+    get_feature_data_matrix(self, strain_formulation, problem_type, rve_dims, \
+                            n_voxels_dims, rve_response)
         Compute data matrix associated to clustering feature.
     """
     def __init__(self):
@@ -782,7 +807,7 @@ class StrainConcentrationTensor(FeatureAlgorithm):
         pass
     # -------------------------------------------------------------------------
     def get_feature_data_matrix(self, strain_formulation, problem_type,
-                                rve_response):
+                                rve_dims, n_voxels_dims, rve_response):
         """Compute data matrix associated to clustering feature.
 
         Parameters
@@ -792,6 +817,11 @@ class StrainConcentrationTensor(FeatureAlgorithm):
         problem_type : int
             Problem type: 2D plane strain (1), 2D plane stress (2),
             2D axisymmetric (3) and 3D (4).
+        rve_dims : list[float]
+            RVE size in each dimension.
+        n_voxels_dims : list[int]
+            Number of voxels in each dimension of the regular grid (spatial
+            discretization of the RVE).
         rve_response : numpy.ndarray (2d)
             RVE elastic response for one or more macroscale loadings
             (numpy.ndarray of shape (n_voxels, n_strain_comps)), where each
@@ -830,6 +860,87 @@ class StrainConcentrationTensor(FeatureAlgorithm):
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Update storage index
                 idx += 1
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Return
+        return data_matrix
+# =============================================================================
+class SpatialCoordinates(FeatureAlgorithm):
+    """Spatial coordinates.
+
+    Methods
+    -------
+    get_feature_data_matrix(self, strain_formulation, problem_type, rve_dims, \
+                            n_voxels_dims, rve_response)
+        Compute data matrix associated to clustering feature.
+    """
+    def __init__(self):
+        """Constructor."""
+        pass
+    # -------------------------------------------------------------------------
+    def get_feature_data_matrix(self, strain_formulation, problem_type,
+                                rve_dims, n_voxels_dims, rve_response):
+        """Compute data matrix associated to clustering feature.
+
+        Parameters
+        ----------
+        strain_formulation: {'infinitesimal', 'finite'}
+            Problem strain formulation.
+        problem_type : int
+            Problem type: 2D plane strain (1), 2D plane stress (2),
+            2D axisymmetric (3) and 3D (4).
+        rve_response : numpy.ndarray (2d)
+            RVE elastic response for one or more macroscale loadings
+            (numpy.ndarray of shape (n_voxels, n_strain_comps)), where each
+            macroscale loading is associated with a set of independent strain
+            components.
+
+        Returns
+        -------
+        data_matrix : numpy.ndarray (2d)
+            Clustering feature data matrix (numpy.ndarray of shape
+            (n_voxels, n_feature_dim)).
+        """
+        # Get problem number of spatial dimensions
+        n_dim, _, _ = mop.get_problem_type_parameters(problem_type)
+        # Compute total number of voxels
+        n_voxels = np.prod(n_voxels_dims)
+        # Set sampling spatial periods
+        sampling_periods = tuple([rve_dims[i]/n_voxels_dims[i]
+                                  for i in range(n_dim)])
+        # Set coordinate axes offset
+        offsets = tuple([0.5*x for x in sampling_periods])
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Initialize voxels coordinates global data matrix
+        data_matrix = np.zeros((n_voxels, n_dim))
+        # Initialize voxel row index
+        i_voxel = 0
+        if n_dim == 2:
+            # Loop over voxels
+            for i in range(n_voxels_dims[0]):
+                # Loop over voxels
+                for j in range(n_voxels_dims[1]):
+                    # Compute voxel coordinates
+                    voxel_coord = (sampling_periods[0]*i + offsets[0],
+                                   sampling_periods[1]*j + offsets[1])
+                    # Store voxel coordinates in global data matrix
+                    data_matrix[i_voxel, :] = np.array(voxel_coord)
+                    # Update voxel row index
+                    i_voxel += 1
+        else:
+            # Loop over voxels
+            for i in range(n_voxels_dims[0]):
+                # Loop over voxels
+                for j in range(n_voxels_dims[1]):
+                    # Loop over voxels
+                    for k in range(n_voxels_dims[2]):
+                        # Compute voxel coordinates
+                        voxel_coord = (sampling_periods[0]*i + offsets[0],
+                                       sampling_periods[1]*j + offsets[1],
+                                       sampling_periods[2]*k + offsets[2])
+                        # Store voxel coordinates in global data matrix
+                        data_matrix[i_voxel, :] = np.array(voxel_coord)
+                        # Update voxel row index
+                        i_voxel += 1
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return data_matrix

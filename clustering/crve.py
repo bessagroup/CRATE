@@ -319,21 +319,12 @@ class CRVE:
             # Get material phase's voxels' indexes
             voxels_idxs = self._phase_voxel_flatidx[mat_phase]
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Get base clustering features' indexes
-            features_idxs = []
-            features_idxs += self._get_features_indexes(
-                self._base_clustering_scheme[mat_phase])
-            # Get adaptive clustering features' indexes
-            if ctype == 'adaptive':
-                features_idxs += self._get_features_indexes(
-                    self._adaptive_clustering_scheme[mat_phase])
-            # Get unique clustering features' indexes
-            features_idxs = list(set(features_idxs))
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Get material phase cluster data matrix containing the required
-            # data to perform all the prescribed cluster analyses
+            # data to perform all the prescribed cluster analyses (condensation
+            # in terms of voxels only)
             cluster_data_matrix = mop.get_condensed_matrix(
-                self._global_data_matrix, voxels_idxs, features_idxs)
+                self._global_data_matrix, voxels_idxs,
+                np.arange(self._global_data_matrix.shape[1]))
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Instatiate cluster-reduced material phase
             if ctype == 'static':

@@ -377,9 +377,8 @@ class SCRMP(CRMP):
             Material phase label.
         cluster_data_matrix: numpy.ndarray (2d)
             Data matrix (numpy.ndarray of shape
-            (n_phase_voxels, n_features_dims)) containing the required
-            clustering features data to perform the material phase cluster
-            analyses.
+            (n_phase_voxels, n_features_dims)) containing the clustering
+            features data to perform the material phase cluster analyses.
         n_clusters : int
             Number of material phase clusters.
         """
@@ -567,9 +566,8 @@ class GACRMP(ACRMP):
             Material phase label.
         cluster_data_matrix: numpy.ndarray (2d)
             Data matrix (numpy.ndarray of shape
-            (n_phase_voxels, n_features_dims)) containing the required
-            clustering features data to perform the material phase cluster
-            analyses.
+            (n_phase_voxels, n_features_dims)) containing the clustering
+            features data to perform the material phase cluster analyses.
         n_clusters : int
             Number of material phase clusters.
         adaptivity_type : dict
@@ -1090,9 +1088,8 @@ class HAACRMP(ACRMP):
             Material phase label.
         cluster_data_matrix: numpy.ndarray (2d)
             Data matrix (numpy.ndarray of shape
-            (n_phase_voxels, n_features_dims)) containing the required
-            clustering features data to perform the material phase cluster
-            analyses.
+            (n_phase_voxels, n_features_dims)) containing the clustering
+            features data to perform the material phase cluster analyses.
         n_clusters : int
             Number of material phase clusters.
         adaptivity_type : dict

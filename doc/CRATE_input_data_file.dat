@@ -236,6 +236,7 @@
 # feature_id (int):                 Clustering feature identifier.
 #                                   1 - Fourth-order local elastic strain
 #                                       concentration tensor
+#                                   2 - Spatial coordinates
 #
 # adapt_criterion_id (int):         Clustering adaptivity criterion identifier.
 #                                   1 - Adaptive Cluster Grouping
