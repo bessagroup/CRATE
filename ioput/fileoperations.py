@@ -247,6 +247,7 @@ def set_problem_dirs(input_file_name, input_file_dir,
         os.remove(ioutil.screen_file_path)
     # Set '.crve' output file path
     crve_file_path = offline_stage_dir + input_file_name + '.crve'
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Check if the problem output directory exists
     if not os.path.exists(problem_dir):
         status = 0
@@ -263,14 +264,19 @@ def set_problem_dirs(input_file_name, input_file_dir,
         # offline-stage data ('.crve' output file)
         if is_data_driven_mode:
             # Data-driven simulation mode: Consider existent offline-stage data
-            if os.path.exists(offline_stage_dir):
+            if os.path.exists(offline_stage_dir) \
+                    and os.path.exists(crve_file_path):
                 is_same_offstage = True
             else:
                 is_same_offstage = False
         else:
-            is_same_offstage = ioutil.query_yn(
-                '\nDo you wish to consider the already existent offline-stage '
-                '\'.crve\' data file?', 'no')
+            if os.path.exists(crve_file_path):
+                is_same_offstage = ioutil.query_yn(
+                    '\nDo you wish to consider the already existent '
+                    'offline-stage \'.crve\' data file?', 'no')
+            else:
+                is_same_offstage = False
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         if is_same_offstage:
             status = 1
             # Raise error if offline-stage subdirectory does not exist
@@ -306,7 +312,7 @@ def set_problem_dirs(input_file_name, input_file_dir,
                 # Data-driven simulation mode: Overwrite
                 is_overwrite = True
             else:
-                is_overwrite = ioutil.query_yn('\nDo you wish to overwrite  '
+                is_overwrite = ioutil.query_yn('\nDo you wish to overwrite '
                                                'the existing problem output '
                                                'directory?')
             if is_overwrite:
