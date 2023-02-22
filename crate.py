@@ -93,7 +93,7 @@ if len(sys.argv[1:]) == 2:
             + 'be found.'
         info.displayinfo('4', summary, description)
     else:
-        discret_file_dir = str(sys.argv[2])
+        discret_file_dir = os.path.normpath(str(sys.argv[2])) + '/'
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Process input data file path
 input_file_name, input_file_path, input_file_dir = \

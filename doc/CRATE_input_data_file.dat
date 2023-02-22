@@ -387,6 +387,10 @@
 #            x
 #
 # x (str):   Spatial discretization file path.
+#
+# Note: The spatial discretization file path may be absolute or relative.
+#       In the last case, the reference directory must be provided as a
+#       calling argument when launching CRATE.
 # -----------------------------------------------------------------------------
 [insert here]
 
