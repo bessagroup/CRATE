@@ -282,12 +282,11 @@ def store_regular_grid_data(discret_file_path, regular_grid, rve_dims,
     return rg_dict
 # =============================================================================
 def store_clustering_data(clustering_solution_method, standardization_method,
-                          links_data, phase_n_clusters, rg_dict,
-                          clustering_type, base_clustering_scheme,
-                          adaptive_clustering_scheme, adapt_criterion_data,
-                          adaptivity_type, adaptivity_control_feature,
-                          clust_adapt_freq, is_clust_adapt_output,
-                          is_store_final_clustering):
+                          phase_n_clusters, rg_dict, clustering_type,
+                          base_clustering_scheme, adaptive_clustering_scheme,
+                          adapt_criterion_data, adaptivity_type,
+                          adaptivity_control_feature, clust_adapt_freq,
+                          is_clust_adapt_output, is_store_final_clustering):
     """Store data associated with the clustering-based domain decomposition.
 
     Parameters
@@ -297,8 +296,6 @@ def store_clustering_data(clustering_solution_method, standardization_method,
         compute the clustering features data.
     standardization_method : int
         Identifier of global cluster analysis data standardization algorithm.
-    links_data : dict
-        Dictionary containing Links parameters.
     phase_n_clusters : dict
         Number of clusters (item, int) prescribed for each material phase
         (key, str).
@@ -357,8 +354,6 @@ def store_clustering_data(clustering_solution_method, standardization_method,
     # Build clustering dictionary
     clst_dict['clustering_solution_method'] = clustering_solution_method
     clst_dict['standardization_method'] = standardization_method
-    if len(links_data.keys()) > 0:
-        clst_dict['links_data'] = links_data
     clst_dict['phase_n_clusters'] = phase_n_clusters
     clst_dict['phase_clusters'] = phase_clusters
     clst_dict['voxels_clusters'] = voxels_clusters

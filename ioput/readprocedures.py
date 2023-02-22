@@ -66,8 +66,6 @@ from material.models.elastic import Elastic
 from material.models.von_mises import VonMises
 from material.models.stvenant_kirchhoff import StVenantKirchhoff
 from online.crom.asca import ElasticReferenceMaterial
-from links.material.models.links_elastic import LinksElastic
-from links.material.models.links_von_mises import LinksVonMises
 #
 #                                                          Authorship & Credits
 # =============================================================================
@@ -412,8 +410,6 @@ def read_material_properties(file, file_path, keyword):
         # Set material phase constitutive model source
         if model_source_id == 1:
             model_source = 'crate'
-        elif model_source_id == 2:
-            model_source = 'links'
         else:
             summary = 'Unknown constitutive model source'
             description = 'The keyword - {} - is not properly defined in '\
@@ -452,13 +448,6 @@ def read_material_properties(file, file_path, keyword):
             elif model_keyword == 'stvenant_kirchhoff':
                 req_properties, req_constitutive_options = \
                     StVenantKirchhoff.get_required_properties()
-        elif model_source == 'links':
-            if model_keyword == 'ELASTIC':
-                req_properties, req_constitutive_options = \
-                    LinksElastic.get_required_properties()
-            elif model_keyword == 'VON_MISES':
-                req_properties, req_constitutive_options = \
-                    LinksVonMises.get_required_properties()
         # Set number of constitutive options and material properties
         n_prop_copt = len(req_properties) \
             + len(req_constitutive_options.keys())

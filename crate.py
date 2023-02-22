@@ -163,9 +163,6 @@ if not is_same_offstage:
     if dns_method_id == 1:
         dns_method = 'fft_basic'
         dns_method_data = None
-    elif dns_method_id == 2:
-        dns_method = 'fem_links'
-        dns_method_data = clst_dict['links_data']
     else:
         raise RuntimeError('Unknown DNS solution method.')
     # Compute the physical-based data required to perform the RVE
@@ -186,10 +183,6 @@ if not is_same_offstage:
     info.displayinfo('3', 'Compute cluster analysis data matrix',
                      phase_times[phase_times.shape[0] - 1, 1] -
                      phase_times[phase_times.shape[0] - 1, 0])
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Convert external sources constitutive models to CRATE corresponding model
-# whenever possible
-material_state.constitutive_source_conversion()
 #
 #          Offline-stage - Steps 2 & 3: Generate Cluster-Reduced Representative
 #                                                         Volume Element (CRVE)

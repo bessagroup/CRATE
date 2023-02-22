@@ -81,7 +81,7 @@ def set_clustering_data(strain_formulation, problem_type, rve_dims,
     material_phases_properties : dict
         Constitutive model material properties (item, dict) associated to each
         material phase (key, str).
-    dns_method : int
+    dns_method : str
         DNS homogenization-based multi-scale method.
     dns_method_data : dict
         Parameters of DNS homogenization-based multi-scale method.

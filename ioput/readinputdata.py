@@ -26,8 +26,6 @@ import ioput.readprocedures as rproc
 import tensor.matrixoperations as mop
 from clustering.clusteringdata import get_available_clustering_features
 from material.materialmodeling import MaterialState
-from links.inputdatareader import read_links_input_parameters
-from links.stateupdate import LinksConstitutiveModel
 #
 #                                                          Authorship & Credits
 # =============================================================================
@@ -120,26 +118,6 @@ def read_input_data_file(input_file, dirs_dict, is_data_driven_mode=False):
     keyword = 'Material_Phases'
     n_material_phases, material_phases_data, material_phases_properties = \
         rproc.read_material_properties(input_file, input_file_path, keyword)
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Read the Links python binary absolute path if at least one material phase
-    # has the associated constitutive model source set as Links
-    is_links_python_bin = False
-    for mat_phase in material_phases_properties.keys():
-        if material_phases_data[mat_phase]['source'] == 'links':
-            # Read the Links python binary absolute path
-            keyword = 'Links_Python_bin'
-            line_number = rproc.searchkeywordline(input_file, keyword) + 1
-            Links_python_bin_path = \
-                linecache.getline(input_file_path, line_number).strip()
-            if not os.path.isabs(Links_python_bin_path):
-                raise RuntimeError('Input data error: Links python binary '
-                                   'path must be absolute.')
-            elif not os.path.isfile(Links_python_bin_path):
-                raise RuntimeError('Input data error: Links python binary '
-                                   'path has not been found.')
-            else:
-                is_links_python_bin = True
-                break
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read macroscale loading (mandatory)
     keyword = 'Macroscale_Loading'
@@ -261,34 +239,11 @@ def read_input_data_file(input_file, dirs_dict, is_data_driven_mode=False):
     keyword = 'Clustering_Solution_Method'
     is_found, _ = rproc.searchoptkeywordline(input_file, keyword)
     if is_found:
-        max_val = 2
+        max_val = 1
         clustering_solution_method = rproc.readtypeAkeyword(
             input_file, input_file_path, keyword, max_val)
     else:
         clustering_solution_method = 1
-    # Read clustering solution method parameters
-    links_data = {}
-    if clustering_solution_method == 2:
-        # Check if all the material phases have the associated constitutive
-        # model source set as Links
-        for mat_phase in material_phases_data.keys():
-            if material_phases_data[mat_phase]['source'] != 'links':
-                raise RuntimeError(
-                    'Input data error: To perform the offline-stage DNS '
-                    'computations with Links, all material constitutive '
-                    'models must have the corresponding source.')
-        # Build Links parameters dictionary
-        links_data = read_links_input_parameters(
-            input_file, input_file_path, problem_type)
-        # Set directory where Links offline-stage simulation files are stored.
-        links_offline_dir =  offline_stage_dir + 'Links' + '/'
-        if not os.path.exists(links_offline_dir):
-            filop.make_directory(links_offline_dir)
-        links_data['links_offline_dir'] = links_offline_dir
-    # If at least one material phase has the associated constitutive model
-    # source set as Links, add Links python binary to Links dictionary
-    if is_links_python_bin:
-        LinksConstitutiveModel.Links_python_bin_path = Links_python_bin_path
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read macroscale loading incrementation parameters (mandatory)
     keyword_1 = 'Number_of_Load_Increments'
@@ -528,7 +483,7 @@ def read_input_data_file(input_file, dirs_dict, is_data_driven_mode=False):
     # Store data associated with the clustering
     info.displayinfo('5', 'Storing clustering data...')
     clst_dict = packager.store_clustering_data(
-        clustering_solution_method, standardization_method, links_data,
+        clustering_solution_method, standardization_method,
         phase_n_clusters, rg_dict, clustering_type, base_clustering_scheme,
         adaptive_clustering_scheme, adapt_criterion_data, adaptivity_type,
         adaptivity_control_feature, clust_adapt_freq, is_clust_adapt_output,

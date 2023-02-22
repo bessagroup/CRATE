@@ -34,8 +34,6 @@ from material.materialoperations import cauchy_from_kirchhoff, \
 from material.models.elastic import Elastic
 from material.models.von_mises import VonMises
 from material.models.stvenant_kirchhoff import StVenantKirchhoff
-from links.material.models.links_elastic import LinksElastic
-from links.material.models.links_von_mises import LinksVonMises
 #
 #                                                          Authorship & Credits
 # =============================================================================
@@ -175,8 +173,6 @@ class MaterialState:
     clustering_adaptivity_update(self, phase_clusters, clusters_vf, \
                                  adaptive_clustering_map)
         Update cluster variables according to clustering adaptivity step.
-    constitutive_source_conversion(self)
-        Convert external sources constitutive models to CRATE model.
     """
     def __init__(self, strain_formulation, problem_type, material_phases,
                  material_phases_properties, material_phases_vf):
@@ -256,16 +252,6 @@ class MaterialState:
             else:
                 raise RuntimeError('Unknown constitutive model from CRATE\'s '
                                    'source.')
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        elif model_source == 'links':
-            if model_keyword == 'ELASTIC':
-                constitutive_model = LinksElastic(
-                    self._strain_formulation, self._problem_type,
-                    self._material_phases_properties[mat_phase])
-            elif model_keyword == 'VON_MISES':
-                constitutive_model = LinksVonMises(
-                    self._strain_formulation, self._problem_type,
-                    self._material_phases_properties[mat_phase])
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         else:
             raise RuntimeError('Unknown material constitutive model source.')
@@ -1274,76 +1260,6 @@ class MaterialState:
                             copy.deepcopy(cluster_dict[target_cluster])
                     # Remove target cluster item
                     cluster_dict.pop(target_cluster)
-    # -------------------------------------------------------------------------
-    def constitutive_source_conversion(self):
-        """Convert external sources constitutive models to CRATE model."""
-        # Initialize available conversions
-        available_conversions = {}
-        # Set available Links-CRATE conversions
-        links_conversions = {'links_elastic': 'elastic',
-                             'links_von_mises': 'von_mises'}
-        available_conversions['links'] = links_conversions
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Loop over material phases
-        for mat_phase in self._material_phases:
-            # Get material phase constitutive model
-            constitutive_model = self._material_phases_models[str(mat_phase)]
-            # Get material constitutive model name
-            model_name = constitutive_model.get_name()
-            # Get material constitutive model source
-            model_source = constitutive_model.get_source()
-            # Skip to next material phase if not external constitutive model
-            if model_source == 'crate':
-                continue
-            # Get material constitutive material properties
-            material_properties = constitutive_model.get_material_properties()
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Get CRATE corresponding constitutive model name
-            new_model_name = \
-                available_conversions[str(model_source)][str(model_name)]
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Get CRATE corresponding constitutive model
-            if model_source == 'links':
-                if new_model_name == 'elastic':
-                    # Get CRATE constitutive model
-                    new_model = Elastic
-                elif new_model_name == 'von_mises':
-                    # Get CRATE constitutive model
-                    new_model = VonMises
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Get CRATE constitutive model required material properties
-                new_required_properties, new_constitutive_options = \
-                    new_model.get_required_properties()
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Check CRATE constitutive model material properties
-                for property in new_required_properties:
-                    # Check CRATE constitutive model material property
-                    if property not in material_properties.keys():
-                        raise RuntimeError('Incompatible material properties '
-                                           'to convert constitutive model.')
-                # Check CRATE constitutive model constitutive options
-                for option in new_constitutive_options:
-                    # Check CRATE constitutive model constitutive option
-                    if option not in material_properties.keys():
-                        raise RuntimeError('Incompatible material '
-                                           'constitutive options to convert '
-                                           'constitutive model.')
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Build CRATE constitutive model material properties
-                new_material_properties = copy.deepcopy(material_properties)
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Initialize CRATE constitutive model
-                new_constitutive_model = new_model(self._strain_formulation,
-                                                   self._problem_type,
-                                                   new_material_properties)
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                # Update material phases constitutive models
-                self._material_phases_models[str(mat_phase)] = \
-                    new_constitutive_model
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            else:
-                raise RuntimeError('Unknown material constitutive model '
-                                   'source.')
 #
 #                                        Available material constitutive models
 # =============================================================================
@@ -1352,7 +1268,7 @@ def get_available_material_models(model_source='crate'):
 
     Parameters
     ----------
-    model_source : {'crate', 'links'}, default='crate'
+    model_source : {'crate',}, default='crate'
         Material constitutive model source.
 
     Returns
@@ -1364,9 +1280,6 @@ def get_available_material_models(model_source='crate'):
     if model_source == 'crate':
         # CRATE material constitutive models
         available_mat_models = ['elastic', 'von_mises', 'stvenant_kirchhoff']
-    elif model_source == 'links':
-        # Links material constitutive models
-        available_mat_models = ['ELASTIC', 'VON_MISES']
     else:
         raise RuntimeError('Unknown material constitutive model source.')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

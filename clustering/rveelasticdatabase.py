@@ -22,7 +22,6 @@ import numpy as np
 import ioput.info as info
 import tensor.matrixoperations as mop
 from clustering.solution.ffthombasicscheme import FFTBasicScheme
-from links.offlinestage import LinksFEMHomogenization
 from material.materialoperations import compute_rotation_tensor
 #
 #                                                          Authorship & Credits
@@ -126,7 +125,7 @@ class RVEElasticDatabase:
 
         Parameters
         ----------
-        dns_method : {'fft-basic', 'fem_links'}
+        dns_method : {'fft-basic'}
             DNS homogenization-based multi-scale method.
         dns_method_data : dict
             Parameters of DNS homogenization-based multi-scale method.
@@ -156,18 +155,6 @@ class RVEElasticDatabase:
                 self._strain_formulation, self._problem_type, self._rve_dims,
                 self._n_voxels_dims, self._regular_grid, self._material_phases,
                 self._material_phases_properties)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        elif dns_method == 'fem_links':
-            homogenization_method = LinksFEMHomogenization(
-                self._strain_formulation, self._problem_type, self._rve_dims,
-                self._n_voxels_dims, self._regular_grid, self._material_phases,
-                self._material_phases_properties,
-                dns_method_data['links_bin_path'],
-                dns_method_data['links_offline_dir'],
-                dns_method_data['fe_order'],
-                dns_method_data['boundary_type'],
-                dns_method_data['convergence_tolerance'],
-                dns_method_data['element_avg_output_mode'])
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         else:
             raise RuntimeError('Unknown homogenization-based multi-scale '

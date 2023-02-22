@@ -96,16 +96,6 @@
 # z (int, float):          Constitutive option property value.
 #
 # model_source (int, optional): 1 - CRATE material database model (default)
-#                               2 - Links material database model
-#
-#
-#
-# Option 2 (Links material database model):
-#
-# Syntax:    Links_Python_bin
-#            x
-#
-# x:         string (Links python binary, '.so')
 # -----------------------------------------------------------------------------
 [insert here]
 
@@ -543,26 +533,6 @@
 # Syntax:    Clustering_Solution_Method x
 #
 # x (int):   1 - FFT-based homogenization basic scheme (default)
-#            2 - Finite Element Method from multi-scale finite element code
-#                Links
-#
-#
-#
-#
-# Option 2 (Finite Element Method from multi-scale finite element code Links):
-#
-# Syntax:    Links_bin
-#            x
-#
-#            Links_FE_Order y
-#
-#            Links_Python_bin
-#            z
-#
-# x:         string (Links binary path)
-# y:         linear - QUAD4 (2D) / HEXA8 (3D) finite element mesh
-#            quadratic - QUAD8 (2D) / HEXA20 (3D) finite element mesh
-# z:         string (Links python binary, '.so')
 # -----------------------------------------------------------------------------
 [insert here]
 
