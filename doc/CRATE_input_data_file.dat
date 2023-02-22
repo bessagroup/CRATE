@@ -726,3 +726,21 @@
 #                               constitutive models
 # -----------------------------------------------------------------------------
 [insert here]
+
+
+#                                               Data-driven simulation mode [O]
+# =============================================================================
+# Meaning: Some procedures are adopted to alleviate the computational costs
+#          (time and memory) of simulations run in the context of a data-driven
+#          framework (i.e., in the computation of large material response
+#          databases). Such procedures do not impact the solution of the
+#          material simulation.
+#
+# Syntax:  Data_Driven_Simulation_Mode
+#
+# Note 1: The data-driven simulation mode suppresses all user input prompts.
+#
+# Note 2: Existing offline-stage data ('.crve' output file) is considered by
+#         default, otherwise existing problem directory is overridden.
+# -----------------------------------------------------------------------------
+[insert here]

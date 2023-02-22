@@ -98,17 +98,17 @@ if len(sys.argv[1:]) == 2:
 # Process input data file path
 input_file_name, input_file_path, input_file_dir = \
     filop.set_input_datafile_path(arg_input_file_path)
+# Check if data-driven simulation mode
+is_data_driven_mode = rid.read_data_driven_mode(input_file_path)
 # Set output directory structure and output files paths
 problem_name, problem_dir, offline_stage_dir, postprocess_dir, \
-    is_same_offstage, crve_file_path = filop.set_problem_dirs(input_file_name,
-                                                              input_file_dir)
+    is_same_offstage, crve_file_path = filop.set_problem_dirs(
+        input_file_name, input_file_dir, is_data_driven_mode)
 # Store problem directories and files paths
 dirs_dict = packager.store_paths_data(
     input_file_name, input_file_path, input_file_dir, problem_name,
     problem_dir, offline_stage_dir, postprocess_dir, crve_file_path,
     discret_file_dir=discret_file_dir)
-# Open user input data file
-input_file = open(input_file_path, 'r')
 #
 #                                                                 Start program
 # =============================================================================
@@ -135,7 +135,7 @@ input_file = open(input_file_path, 'r')
 info.displayinfo('5', 'Reading the input data file...')
 problem_dict, mat_dict, macload_dict, rg_dict, clst_dict, scs_dict, \
     algpar_dict, vtk_dict, output_dict, material_state = \
-    rid.read_input_data_file(input_file, dirs_dict)
+    rid.read_input_data_file(input_file, dirs_dict, is_data_driven_mode)
 # Close user input data file
 input_file.close()
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -191,7 +191,7 @@ if not is_same_offstage:
 # whenever possible
 material_state.constitutive_source_conversion()
 #
-#               Offline-stage - Step 2: Generate Cluster-Reduced Representative
+#          Offline-stage - Steps 2 & 3: Generate Cluster-Reduced Representative
 #                                                         Volume Element (CRVE)
 # =============================================================================
 if is_same_offstage:
@@ -312,6 +312,15 @@ else:
     # Dump CRVE into file
     crve_file_path = dirs_dict['crve_file_path']
     crve.save_crve_file(crve, crve_file_path)
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Data-driven simulation mode: remove non-essential files and directories
+if is_data_driven_mode:
+    # Get offline-stage directory path
+    offline_stage_dir = dirs_dict['offline_stage_dir']
+    # Get path of spatial discretization file (within problem directory)
+    discret_file_path = dirs_dict['discret_file_path']
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    filop.remove_dirs(problem_dir, [offline_stage_dir, discret_file_path])
 #
 #                       Online-stage: Solve CRVE mechanical equilibrium problem
 # =============================================================================

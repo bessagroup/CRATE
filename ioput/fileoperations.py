@@ -118,7 +118,8 @@ def set_input_datafile_path(path):
 #
 #                                                             Results directory
 # =============================================================================
-def set_problem_dirs(input_file_name, input_file_dir):
+def set_problem_dirs(input_file_name, input_file_dir,
+                     is_data_driven_mode=False):
     """Set output directory structure.
 
     *Output directory structure:*
@@ -209,6 +210,11 @@ def set_problem_dirs(input_file_name, input_file_dir):
         Problem input data file name.
     input_file_dir : str
         Problem input data file directory path.
+    is_data_driven_mode : bool, default=False
+        Data-driven simulation flag. If `True`, then some procedures are
+        adopted to alleviate the computational costs (time and memory) of
+        simulations run in the context of a data-driven framework (i.e., in
+        the computation of large material response databases).
 
     Returns
     -------
@@ -255,9 +261,16 @@ def set_problem_dirs(input_file_name, input_file_dir):
                       'specified input data file already exists.')
         # Ask user if the purpose is to consider previously computed
         # offline-stage data ('.crve' output file)
-        is_same_offstage = \
-            ioutil.query_yn('\nDo you wish to consider the already existent '
-                            'offline-stage \'.crve\' data file?', 'no')
+        if is_data_driven_mode:
+            # Data-driven simulation mode: Consider existent offline-stage data
+            if os.path.exists(offline_stage_dir):
+                is_same_offstage = True
+            else:
+                is_same_offstage = False
+        else:
+            is_same_offstage = ioutil.query_yn(
+                '\nDo you wish to consider the already existent offline-stage '
+                '\'.crve\' data file?', 'no')
         if is_same_offstage:
             status = 1
             # Raise error if offline-stage subdirectory does not exist
@@ -275,21 +288,27 @@ def set_problem_dirs(input_file_name, input_file_dir):
             make_directory(postprocess_dir, 'overwrite')
             # Warn user to potential compatibility issues between the problem
             # input data file and the existent offline-stage '.crve' data file
-            ioutil.useraction('\n\nWarning: Please make sure that the problem '
-                              'input data file is consistent with the already'
-                              '\n' + len('Warning: ')*' '
-                              + 'existent offline-stage \'.crve\' data file '
-                              '(stored in Offline_Stage/) to avoid ' + '\n'
-                              + len('Warning: ')*' '
-                              + 'unexpected errors or misleading conclusions.'
-                              + '\n\n' + 'Press any key to continue or type '
-                              '\'exit\' to leave: ')
+            if not is_data_driven_mode:
+                ioutil.useraction(
+                    '\n\nWarning: Please make sure that the problem '
+                    'input data file is consistent with the already'
+                    '\n' + len('Warning: ')*' '
+                    + 'existent offline-stage \'.crve\' data file '
+                    '(stored in Offline_Stage/) to avoid ' + '\n'
+                    + len('Warning: ')*' '
+                    + 'unexpected errors or misleading conclusions.'
+                    + '\n\n' + 'Press any key to continue or type '
+                    '\'exit\' to leave: ')
         else:
             # Ask user if existent problem output directory should be
             # overwritten
-            is_overwrite = ioutil.query_yn('\nDo you wish to overwrite the '
-                                           'existing problem output '
-                                           'directory?')
+            if is_data_driven_mode:
+                # Data-driven simulation mode: Overwrite
+                is_overwrite = True
+            else:
+                is_overwrite = ioutil.query_yn('\nDo you wish to overwrite  '
+                                               'the existing problem output '
+                                               'directory?')
             if is_overwrite:
                 status = 2
                 # Remove all existent subdirectories and files except the

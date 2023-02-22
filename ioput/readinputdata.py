@@ -37,7 +37,7 @@ __status__ = 'Stable'
 # =============================================================================
 #
 # =============================================================================
-def read_input_data_file(input_file, dirs_dict):
+def read_input_data_file(input_file, dirs_dict, is_data_driven_mode=False):
     """Read input data file and store data in suitable containers.
 
     Parameters
@@ -46,6 +46,11 @@ def read_input_data_file(input_file, dirs_dict):
         Input data file.
     dirs_dict : dict
         Container of output directories and files paths.
+    is_data_driven_mode : bool, default=False
+        Data-driven simulation flag. If `True`, then some procedures are
+        adopted to alleviate the computational costs (time and memory) of
+        simulations run in the context of a data-driven framework (i.e., in
+        the computation of large material response databases).
 
     Returns
     -------
@@ -452,6 +457,14 @@ def read_input_data_file(input_file, dirs_dict):
     else:
         is_store_final_clustering = False
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Data-driven simulation mode: Suppress optional output files (override)
+    if is_data_driven_mode:
+        is_vtk_output = False
+        is_ref_material_output = False
+        is_clust_adapt_output = False
+        is_voxels_output = False
+        is_store_final_clustering = False
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read the spatial discretization file (regular grid of voxels)
     info.displayinfo('5', 'Reading discretization file...')
     if os.path.splitext(os.path.basename(discret_file_path))[-1] == '.npy':
@@ -544,3 +557,31 @@ def read_input_data_file(input_file, dirs_dict):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return problem_dict, mat_dict, macload_dict, rg_dict, clst_dict, \
         scs_dict, algpar_dict, vtk_dict, output_dict, material_state
+# =============================================================================
+def read_data_driven_mode(input_file_path):
+    """Read input data file and search for data-driven mode keyword.
+
+    Parameters
+    ----------
+    input_file_path : str
+        Input data file path.
+
+    Returns
+    -------
+    is_data_driven_mode : bool
+        Data-driven simulation flag. If `True`, then some procedures are
+        adopted to alleviate the computational costs (time and memory) of
+        simulations run in the context of a data-driven framework (i.e., in
+        the computation of large material response databases).
+    """
+    # Read data-driven simulation mode (optional)
+    keyword = 'Data_Driven_Simulation_Mode'
+    with open(input_file_path, 'r') as input_file:
+        is_found, keyword_line_number = rproc.searchoptkeywordline(
+            input_file, keyword)
+        if is_found:
+            is_data_driven_mode = True
+        else:
+            is_data_driven_mode = False
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    return is_data_driven_mode
