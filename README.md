@@ -4,118 +4,194 @@
   <a href=""><img alt="logo" src="doc/media/CRATE_logo_horizontal_long.png" width="80%"></a>
 </p>
 
-# Overview
+# What is CRATE?
 
 ### Summary
-CRATE is a numerical tool developed in the context of computational mechanics to aid the design and development of advanced materials. Through a suitable coupling between first-order computational homogenization and a clustering-based reduced order approach, CRATE aims to perform **accurate** and **efficient** multi-scale nonlinear analyses of heterogeneous materials.
+**CRATE** (Clustering-based Nonlinear Analysis of Materials) is a Python program developed in the context of computational mechanics to aid the design and development of new materials. Its main purpose is **performing multi-scale nonlinear analyses of heterogeneous materials** through a suitable coupling between first-order computational homogenization and clustering-based reduced-order modeling.
 
-### Authors
-This program initial version was documented and fully coded by Bernardo P. Ferreira<sup>[1](#f1)</sup> ([bpferreira@fe.up.pt](mailto:bpferreira@fe.up.pt)) and developed in colaboration with Miguel A. Bessa<sup>[2](#f2)</sup> ([m.a.bessa@tudelft.nl](mailto:m.a.bessa@tudelft.nl)) and Francisco M. Andrade Pires<sup>[3](#f3)</sup> ([fpires@fe.up.pt](mailto:fpires@fe.up.pt)).
+### Authorship & Citation
+CRATE's initial version (1.0.0) was originally developed by Bernardo P. Ferreira<sup>[1](#f1)</sup> in the context of his PhD Thesis<sup>[2](#f2)</sup>.
 
-<sup id="f1"> 1 </sup> Member of CM2S and Bessa research groups, Department of Mechanical Engineering, Faculty of Engineering, University of Porto  
-<sup id="f2"> 2 </sup> Leader of Bessa research group, Faculty of Mechanical, Maritime and Materials Engineering, Delft University of Technology  
-<sup id="f3"> 3 </sup> Leader of CM2S research group, Department of Mechanical Engineering, Faculty of Engineering, University of Porto
+If you use CRATE in a scientific publication, it is appreciated that you cite this [paper]().
 
-### Description
-CRATE has been designed with the main purpose of performing accurate and efficient multi-scale analyses of nonlinear heterogeneous materials, a crucial task in the development of new materials with innovative and enhanced properties. This goal is achieved through the coupling between **first-order computational homogenization** and a **clustering-based reduced order modeling** approach, allowing the efficient solution of a given microscale equilibrium problem that essentially involves four main steps:
-1. Definition of a **representative volume element (RVE)** of the heterogeneous material under analysis;
-2. Enforcement of first-order macroscale strain and/or stress loading constraints;
-3. Solution of the microscale equilibrium problem with suitable boundary conditions;
-4. Computation of the heterogeneous material first-order homogenized response through computational homogenization.
+<sup id="f1"> 1 </sup> Profile: [LinkedIN](https://www.linkedin.com/in/bpferreira/), [ORCID](https://orcid.org/0000-0001-5956-3877), [ResearchGate](https://www.researchgate.net/profile/Bernardo-Ferreira-11?ev=hdr_xprf)
 
-The clustering-based reduced order modeling approach comes into play by compressing the RVE into a **cluster-reduced representative volume element (CRVE)**, aiming to reduce the overall computational cost of the analysis by reducing the problem dimension. Of course that there is no free lunch but rather a **tradeoff between accuracy and computational cost** - in general, a greater (lower) degree of model compression, associated to a greater (lower) computational cost, leads to more (less) accurate results.
+<sup id="f2"> 2 </sup> Ferreira, B.P. (2022). *Towards Data-driven Multi-scale Optimization of Thermoplastic Blends: Microstructural Generation, Constitutive Development and Clustering-based Reduced-Order Modeling.* PhD Thesis, University of Porto
 
-Although nothing prevents the use of CRATE as a standalone program to analyse a given material's behavior, it is in applications where the overall computational cost emerges as a bottleneck (both in terms of computational time and/or memory footprint) that its utility really shines. Among such applications, one can mention for instance: heavy parametric material studies, where the computational cost stems from a large number of microscale analyses under different parameters ranges (microstructure topology, material properties, loading conditions, ...); first-order hierarchical coupled multi-scale schemes (so-called FE<sup>2</sup>), where a high computational cost arises from the nested solution of equilibrium problems at different scales; and the more recent data-driven material design frameworks, usually requiring large material response databases to train the underlying machine learning models. 
 
-> **Note:** The heterogeneous material representative volume element (RVE) is part of the input data that must be provided to CRATE,
-i.e., CRATE does **not** perform the computational generation of microstructures. 
+### Conceptual map
+CRATE's conceptual structure can be easily understood by getting familiar with some fundamental concepts and having a basic comprehension of a first-order multi-scale modeling scheme.
+
+Assume that we are interested in predicting the behavior of a fiber-reinforced composite (heterogeneous) material composed of two different material phases (matrix and fiber). At the micro-scale level, the composite material needs to be first characterized by a **Representative Volume Element (RVE)**, i.e., a volume of material sufficient large such that it contains enough morphological and topological information to be representative in an average sense. Given the enforcement of periodic boundary conditions in the material analysis, the RVE is assumed periodic. In the second place, the RVE needs to be spatially discretized in a regular (or uniform) grid of voxels, where each voxel is associated with a given material phase. Finally, the RVE model can be compressed by means of a clustering-based domain decomposition, i.e., a cluster analysis that decomposes the spatial domain into a given number of material clusters according to a given set of features. The compressed model is then called **Cluster-reduced Representative Volume Element (CRVE)**, composed of **cluster-reduced material phases (CRMPs)**, each composed of different material clusters. Each **material cluster** is, therefore, a group of voxels that exhibit some type of similarity and that are numerically handled in a unified way.
+
+< insert figure >
+
+The multi-scale analysis of a uniaxial tensile test of a dogbone specimen is schematically illustrated below. Besides the **spatially discretized RVE** of the fiber-reinforced composite, CRATE receives as input data a given **macro-scale strain and/or stress loading path**, i.e., a given set of macro-scale first-order homogeneous loading constraints. A two-stage **clustering-based reduced-order method** is then employed to solve the micro-scale equilibrium problem. In the so-called offline-stage, the RVE is compressed into the CRVE by means of a clustering-based domain decomposition. In the following online-stage, the CRVE is subject to the macro-scale loading path and the micro-scale equilibrium problem is solved under periodic boundary conditions. The **macro-scale material response** is then computed by means of computational homogenization, rendering the main output data of CRATE.
+
+< insert figure >
+
 
 ### Computational framework
-CRATE is designed and implemented in Python (Python 3 release), making it easily portable between all major computer platforms, easily integrated with
+
+CRATE is designed and implemented in **Python**, making it easily portable between all major computer platforms, easily integrated with
 other softwares implemented in different programming languages and benefiting from an extensive collection of prebuilt (standard library) and third-party libraries. Given the extensive numerical nature of the program, its implementation relies heavily on the well-known [NumPy](https://numpy.org/devdocs/index.html) and [SciPy](https://www.scipy.org/) scientific computing packages, being most numerical tasks dispatched to compiled C code inside the Python interpreter.
 
+Moreover, it is worth remarking that CRATE is implemented in a high-modular architecture and following an **object-oriented programming (OOP)** paradigm. Besides improving the overall readability and comprehension of the code, this means that CRATE can be easily extended by means of suitable interfaces to account for new features and developments, as well as being efficiently coupled with other softwares. CRATE's OOP structure is described through the well-known Unified Modeling Language (UML), a language-independent abstract schematic toolkit that allows the visual representation of object-oriented programs. In particular, the so-called UML class diagrams are employed to represent the most important classes of CRATE along with the interactions and relationships between them.
 
-# Main features
 
-### General formulation:
-* Quasi-static loading conditions;
-* General monotonic and non-monotonic loading paths;
-* Infinitesimal strains;
-* Nonlinear material constitutive behavior (elasticity and plasticity).
+# Installation (WIP)
 
-### Material constitutive modeling:
-* CRATE's embedded material model database includes:  
-  * Isotropic linear elastic model;
-  * Von Mises elastoplastic model with isotropic strain hardening.
-* Interface with the constitutive model database of LINKS<sup>[5](#f5)</sup>, accounting for several infinitesimal and finite strain hyperelastic, elastoplastic and elastoviscoplastic constitutive models.
+CRATE is a simple **Python package** - [crate]() - available from the Python Package Index ([PyPI](https://pypi.org/)). This means that running CRATE requires solely a Python 3.X installation and a few Python packages used for scientific computing and data science:
 
-### Methods:
-* Self-Consistent Clustering Analysis (SCA) clustering-based reduced order model<sup>[6](#f6)</sup> proposed by Zeliang Liu and coworkers;
-* FFT-based homogenization basic scheme<sup>[7](#f7)</sup> proposed by H. Moulinec and P. Suquet;
-* FEM-based homogenization through suitable interface with LINKS<sup>[5](#f5)</sup> (includes FE mesh generation and post-processing);
-* Clustering algorithms imported from [scikit-learn](https://scikit-learn.org/stable/index.html) python machine learning package.
+- Whether you are using Linux, MacOS or Windows, Python can be easily installed by following the [Python Getting Started](https://www.python.org/about/gettingstarted/) official webpage. Many other resources are available to help you install and setup Python (e.g., [Real Python](https://realpython.com/installing-python/)).
 
-### Algorithmic features:
-* Dynamic macroscale loading subincrementation.
+- CRATE can be installed either through **pip** (recommended) or **from source**:
 
-### Post-processing:
-* VTK (XML format) output files allowing the visualization of data associated to the material microstructure (material phases, material clusters, ...) and response local fields (strain, stress, internal variables, ...);
+    - [**pip**](https://pip.pypa.io/en/stable/getting-started/) is a Python package manager that installs Python packages from PyPI. After [installing pip](https://pip.pypa.io/en/stable/installation/), installing a package is straightforward as described [here](https://packaging.python.org/en/latest/tutorials/installing-packages/) and [here](https://pip.pypa.io/en/stable/getting-started/). Note that, besides installing CRATE, pip automatically installs all the required Python package dependencies. Therefore, CRATE can be simply installed by running the following pip installation command:
+    
+        > pip install crate
 
-***
-<sup id="f5"> 5 </sup> LINKS (Large Strain Implicit Non-linear Analysis of Solids Linking Scales) is a multi-scale finite element code developed by CM2S research group at Faculty of Engineering of University of Porto.  
-<sup id="f6"> 6 </sup> Liu, Z., Bessa, M., and Liu, W. K. (2016a). Self-consistent clustering analysis: An efficient multi-
-scale scheme for inelastic heterogeneous materials. Computer Methods in Applied Mechanics
-and Engineering, 306:319–341.  
-<sup id="f7"> 7 </sup> Moulinec, H. and Suquet, P. (1994). A fast numerical method for computing the linear and
-nonlinear mechanical properties of composites. A fast numerical method for computing the
-linear and nonlinear mechanical properties of composites, 318(11):1417–1423.
+    - CRATE can be installed directly by [git](https://git-scm.com/) cloning the [GitHub repository]() into a local directory. In this case, all the required Python package dependencies must be installed manually.
 
-# Quick guide
 
-### Requirements
-Some software must be installed in order to successfully run CRATE:
-* Python 3.X (see [here](https://www.python.org/downloads/)) - Required to compile (byte code) and run (Python Virtual Machine) CRATE;
+# How to use CRATE? (WIP)
 
-  > In Linux/UNIX operative systems, python can be simply installed from apt library by executing the following command:  
-  `sudo apt install python3.X`  
+Performing a multi-scale simulation with CRATE involves setting a **user-defined input data file**, which contains all the required data about the problem and the simulation procedure itself, and **running CRATE's main script**, which carries out all the simulation operations automatically.
 
-* PyPi pip (see [here](https://pypi.org/project/pip/)) - Required to install Python 3 packages (learn [here](https://docs.python.org/3/installing/));
+The **general workflow of CRATE** in the solution of a micro-scale equilibrium problem entails **4 different steps** described as follows:
 
-  > In Linux/UNIX operative systems, pip can be simply installed from apt library by executing the following command:  
-  `sudo apt install python3-pip`
-  
-* ParaView (see [here](https://www.paraview.org/download/)) - Required to visualize the data contained in the VTK output files (learn [here](https://www.paraview.org/resources/));  
+- **Step 1 (Input Data): Generate Representative Volume Element (RVE).**
 
-  > In Linux/UNIX operative systems, ParaView can be installed by placing the tarball in the installation directory and extracting it by executing the following command:  
-  `sudo tar -xvf ParaView-< version >.tar.gz`
-
-> **Note:** When trying to run CRATE for the first couple times, it is expected that Python's ImportError and ModuleNotFoundError are raised depending on the required packages that are not installed. Install them in turn and rerun CRATE until these exceptions are no longer raised, meaning that all required packages are properly installed and accessed.
-
-### CRATE workflow
-In what follows, the general workflow of CRATE in the solution of a microscale equilibrium problem is described in a step-by-step manner:  
-1. **Generate microstructure.** The first step consists in the computational generation of a representative volume element (RVE) of the heterogeneous material under analysis, being mandatory that the RVE is quadrilateral (2D) or paralelepipedic (3D). The generation of the RVE can be made with any external software suitable for this purpose, **but** the discretization file that is ultimately supplied to CRATE **must** be generated within a Python script:
-  
-    * The generated microstructure must be discretized in a regular grid of pixels (2D) or voxels (3D), something that can be conveniently done by storing it in a [NumPy](https://numpy.org/devdocs/index.html) 2darray or 3darray named, for instance, `regular_grid`. Each entry of this integer arrays contains the label (id) associated to a given material phase (properly defined in the input data file);  
-    * The discretization file (which **must** must have extension `.rgmsh`) should then be generated by saving the `regular_grid` array in binary format through the [NumPy](https://numpy.org/devdocs/index.html) function [save](https://numpy.org/doc/stable/reference/generated/numpy.save.html);
+    * The first step consists in the computational generation of a RVE of the heterogeneous material under analysis;
+    
+    * The RVE must be quadrilateral (2d) or paralelepipedic (3d);
+    
+    * The RVE must be spatially discretized in a regular (or uniform) grid of voxels, where each voxel is associated with a given material phase as illustrated below;
+    
+    < insert figure >
+    
+    * The **spatial discretization file (`.rgmsh` file)** that is ultimately provided to CRATE as part of the input data must be generated with [NumPy](https://numpy.org/devdocs/index.html) as illustrated in the following Python (pseudo-)script:
     <br/><br/>
     
     ```python
-    # Import NumPy module
     import numpy as np
 
-    # Generate the microstructure and store it in a numpy ndarray
+    # The RVE discretization in a regular grid of voxels (2d or 3d), where each voxel
+    # is associated with a given material phase, must be materialized as a NumPy ndarray
+    # (2d or 3d), where each entry corresponds to a given voxel. Hence, each entry of the
+    # ndarray contains the identifier (integer) of the corresponding voxel's material phase.
+    # Assume that the ndarray is called `regular_grid`.
     regular_grid = ...
 
-    # Generate the discretization file in binary format
-    # (this will append the .npy extension to the filename)
-    np.save('filename.rgmsh', regular_grid)
-    ```
-2. **Write input data file.** After generating the microstructure RVE discretization file, the next step consists in writing the actual CRATE's input data file. This file contains all the required information about the problem itself (problem type, material properties, loading conditions, discretization file, ...) and about the solution procedure (load incrementation, clustering domain decomposition, convergence tolerances, ...). A complete CRATE input data file where each parameter specification (either mandatory or optional) is fully documented (meaning, syntax, available options) can be found in the `doc/` directory (or [here](https://github.com/BernardoFerreira/CRATE/blob/master/doc/CRATE_input_data_file.dat)). This file can be copied to a given directory and be readily used by replacing the `[insert here]` boxes with the suitable specification.
+    # The spatial discretization file (.rgmsh) is then generated by saving the `regular_grid`
+    # ndarray in binary format through the NumPy save function. Note that this appends the
+    # .npy extension to the filename.
+    np.save('example_rve.rgmsh', regular_grid)
 
-3. **Run CRATE.** In order to run CRATE, one must simply execute the main file (`crate.py`) with Python 3.X and provide the input data file (argument parsing).
-    > In Linux/UNIX operative systems, open a terminal console window and execute the following command:  
-    `python3.X crate.py input_data_file.dat`
-     <br/><br/>
-    The program execution can be followed in the terminal console window, where the data associated to the program launch, to the progress of the main execution phases and to the program end is output. 
-  
-4. **Get results.** As soon as CRATE is executed over a given input data file (lets say, `input_data_file.dat`), a folder with the same name is created in the same directory (`input_data_file/`). This folder contains all the output data related to the problem solution, namely: a log file (`input_data_file.screen`), where all data printed to the default standard ouput is stored; a homogenized results file (`input_data_file.hres`), where the homogenized results are stored; and one or more VTK output files (`.vti`) that can be read with a suitable software (e.g. [ParaView](https://www.paraview.org/)) to visualize and analyse the problem data.
+    # Output: example_rve.rgmsh.npy file
+    ```
+
+- **Step 2 (Input Data): Set CRATE's user-defined input data file.**
+
+    * The second step consists in defining a **CRATE's user-defined input data file (`.dat` file)**;
+    
+    * The input data file contains all the required information about the problem (problem type, material properties, macro-scale loading path, ...) and about the solution procedure (macro-scale loading incrementation, clustering-based domain decomposition, output options, ...). The **spatial discretization file (`.rgmsh` file)** path is provided in the input data file;
+
+    * A complete **CRATE's user-defined input data file (`.dat` file)** template, where each available keyword specification (mandatory or optional) is fully documented, can be found [here](https://github.com/BernardoFerreira/CRATE/blob/master/doc/CRATE_input_data_file.dat). This template file can be copied to a given local simulation directory and be readily used by replacing the `[insert here]` boxes with the suitable specification!
+
+
+- **Step 3: (Execution) Run CRATE simulator.**
+
+    * The third step consists in running CRATE to perform the numerical simulation;
+    
+    * Running CRATE is a single-liner as illustrated in the following Python (pseudo-)script:
+    <br/><br/>
+    
+    ```python
+    import crate
+    
+    # Set input data file path (mandatory)
+    input_data_file_path = ...
+    
+    # Set spatial discretization file directory path (optional). If the spatial discretization
+    # file path specific in the input data file is not absolute, then it is assumed to be
+    # relative to the provided spatial discretization file directory
+    discret_file_dir = ...
+    
+    # Perform numerical simulation
+    crate.crate_simulator(input_data_file_path, discret_file_dir=discret_file_dir)
+    ```
+    
+    * The program execution can be monitored in real-time in the terminal console window where the previous script is run. Display data includes program launching information, a detailed description of the different simulation phases, and a execution summary when the program is successfully completed.
+    
+
+- **Step 4 (Output): Post-process results.**
+
+    * The fourth-step consists in post-processing the simulation results;
+    
+    * CRATE generates several output files during running time that are collectively stored in a single output directory created in the same path and sharing the same name as the input data file. Among these output files, three are particularly useful:
+    
+        - `.screen` file - A log file where all the data displayed in the default standard output device is stored;
+        
+        - `.hres` file - A file where the macro-scale material response is stored, i.e., the homogenized stress-strain response of the RVE computed at every macro-scale loading increment;
+        
+        - `.vti` file - A VTK XML output file associated with a given macro-scale loading increment that allows the RVE relevant physical data to be conveniently analyzed with a suitable visualization software (e.g. [ParaView](https://www.paraview.org/).
+        
+
+# What comes in the box?
+
+Below is a summary of the **main features** that CRATE has to offer regarding the computational simulation of materials.
+
+### General formulation:
+* Quasi-static deformation process;
+* Infinitesimal and finite strains;
+* Implicit time integration.
+
+### Macro-scale loading path:
+* General monotonic and non-monotonic macro-scale loading paths;
+* Enforcement of macro-scale strain and/or stress constraints;
+* General prescription of macro-scale loading incrementation;
+* Dynamic macro-scale loading subincrementation.
+
+### Material constitutive modeling:
+* General nonlinear material constitutive behavior;
+* Interface to implement a new constitutive model;
+* Admits three different families of constitutive models:
+  - Infinitesimal strains constitutive models;
+  - Finite strains constitutive models;
+  - Finite strains constitutive models whose implementation stems from a purely kinematical extension of their infinitesimal counterpart;
+* Available computational solid mechanics common procedures;
+* Suitable toolkit of tensorial and matricial operations;
+* Out-of-the-box constitutive models include:
+  - General anisotropic linear elastic constitutive model (infinitesimal strains);
+  - von Mises elasto-plastic constitutive model with isotropic strain hardening (infinitesimal and finite strains);
+  - General anisotropic Hencky hyperelastic constitutive model (finite strains);
+  - General anisotropic St.Venant-Kirchhoff hyperelastic constitutive model (finite strains).
+
+### Offline-stage DNS methods:
+* Interface to implement any direct numerical simulation (DNS) homogenization-based multi-scale method;
+* FFT-based homogenization basic scheme ([article](https://www.sciencedirect.com/science/article/pii/S0045782597002181), [article](https://link.springer.com/article/10.1007/s00466-014-1071-8)).
+
+### Offline-stage clustering methods:
+* Interface to implement any clustering algorithm;
+* Wrappers over clustering algorithms available from third-party libraries (e.g., [SciPy](https://docs.scipy.org/doc/scipy/reference/cluster.html), [Scikit-Learn](https://scikit-learn.org/stable/modules/clustering.html), ...).
+
+### Online-stage clustering-based reduced-order models:
+* Self-Consistent Clustering Analysis (SCA) ([article](https://www.sciencedirect.com/science/article/pii/S0045782516301499));
+* Adaptive Self-Consistent Clustering Analysis (ASCA) ([article](https://www.sciencedirect.com/science/article/pii/S0045782522000895)).
+
+### Post-processing:
+* VTK (XML format) output files allowing the visualization of data associated to the material microstructure (topoloy, material phases, material clusters) and micro-scale physical fields (strain, stress, internal variables, ...).
+
+# Credits
+
+* Bernardo P. Ferreira is deeply thankful to [Francisco Pires](https://sigarra.up.pt/feup/pt/func_geral.formview?p_codigo=240385) and [Miguel Bessa](https://github.com/mabessa) for supervising the PhD Thesis that motivated the development of CRATE.
+
+
+# License
+
+Copyright 2020, Bernardo Ferreira
+
+All rights reserved.
+
+CRATE is a free and open-source software published under a BSD 3-Clause License.
