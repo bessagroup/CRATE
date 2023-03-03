@@ -9,13 +9,13 @@ computational mechanics.
 Functions
 ---------
 dyad11
-    Dyadic product: :math:`i \\otimes j \rightarrow ij`.
+    Dyadic product: :math:`i \\otimes j \\rightarrow ij`.
 dyad22_1
-    Dyadic product: :math:`ij \\otimes kl \rightarrow ijkl`.
+    Dyadic product: :math:`ij \\otimes kl \\rightarrow ijkl`.
 dyad22_2
-    Dyadic product: :math:`ik \\otimes jl \rightarrow ijkl`.
+    Dyadic product: :math:`ik \\otimes jl \\rightarrow ijkl`.
 dyad22_3
-    Dyadic product: :math:`il \\otimes jk \rightarrow ijkl`.
+    Dyadic product: :math:`il \\otimes jk \\rightarrow ijkl`.
 dot21_1
     Single contraction: :math:`ij \\cdot j \\rightarrow i`.
 dot12_1
