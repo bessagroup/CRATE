@@ -146,7 +146,7 @@ class ASCA:
     _build_residual(self, crve, material_state, presc_strain_idxs, \
                     presc_stress_idxs, applied_mac_load_mf, ref_material, \
                     global_cit_mf, global_strain_mf, farfield_strain_mf=None, \
-                    applied_mix_strain_mf=None, applied_mix_stress_mf=None):
+                    applied_mix_strain_mf=None, applied_mix_stress_mf=None)
         Build Lippmann-Schwinger equilibrium residuals.
     _build_jacobian(self, crve, material_state, presc_strain_idxs, \
                     presc_stress_idxs, global_cit_diff_tangent_mf)
@@ -173,16 +173,16 @@ class ASCA:
     _display_inc_data(mac_load_path)
         Display loading increment data.
     _display_scs_iter_data(ref_material, is_lock_prop_ref, mode='init', \
-                           scs_iter_time=None):
+                           scs_iter_time=None)
         Display reference material self-consistent scheme iteration data.
     _display_nr_iter_data(mode='init', nr_iter=None, nr_iter_time=None, \
-                          errors=[]):
+                          errors=[])
         Display Newton-Raphson iteration data.
     _set_output_files(self, output_dir, crve, problem_name='problem', \
                       is_clust_adapt_output=False, \
                       is_ref_material_output=None, \
                       is_vtk_output=False, vtk_data=None, \
-                      is_voxels_output=None):
+                      is_voxels_output=None)
         Create and initialize output files.
     """
     def __init__(self, strain_formulation, problem_type,
