@@ -11,6 +11,11 @@ homogenization and clustering-based reduced-order modeling.
        Optimization of Thermoplastic Blends: Microstructural
        Generation, Constitutive Development and Clustering-based
        Reduced-Order Modeling.* PhD Thesis, University of Porto
+
+Functions
+---------
+crate_simulation
+    Perform CRATE simulation.
 """
 #
 #                                                                       Modules
@@ -369,9 +374,9 @@ def crate_simulation(arg_input_file_path, arg_discret_file_dir=None):
                      phase_times)
 
 
-if __name__ == '__main__':
-    input_file_path = '/home/bernardoferreira/Documents/launch_crate/figures/example_input_data_file.dat'
-
-    discret_file_dir = '/home/bernardoferreira/Documents/launch_crate/benchmarks/microstructures'
-
-    crate_simulation(input_file_path, discret_file_dir)
+#if __name__ == '__main__':
+#    input_file_path = '/home/bernardoferreira/Documents/launch_crate/figures/example_input_data_file.dat'
+#
+#    discret_file_dir = '/home/bernardoferreira/Documents/launch_crate/benchmarks/microstructures'
+#
+#    crate_simulation(input_file_path, discret_file_dir)

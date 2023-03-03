@@ -44,7 +44,7 @@ import copy
 import numpy as np
 import scipy.cluster.hierarchy as sciclst
 from anytree import Node
-from anytree.exporter import DotExporter
+#from anytree.exporter import DotExporter
 # Local
 import clustering.clusteringalgs as clstalgs
 from clustering.clusteringalgs import ClusterAnalysis
@@ -514,9 +514,9 @@ class GACRMP(ACRMP):
         Otherwise, the adaptive clustering split factor is always set equal to
         `_adapt_split_factor`.
     _clustering_tree_nodes : dict
-        Clustering tree node (item, anytree.Node) associated with each material
+        Clustering tree node (item, Node) associated with each material
         cluster (key, str).
-    _root_cluster_node : anytree.Node
+    _root_cluster_node : Node
         Clustering tree root node.
     max_label : int
         Clustering maximum label.
@@ -917,9 +917,9 @@ class GACRMP(ACRMP):
         Returns
         -------
         clustering_tree_nodes : dict
-            Clustering tree node (item, anytree.Node) associated with each
+            Clustering tree node (item, Node) associated with each
             material cluster (key, str).
-        root_cluster_node : anytree.Node
+        root_cluster_node : Node
             Clustering tree root node.
         """
         # Output clustering tree
