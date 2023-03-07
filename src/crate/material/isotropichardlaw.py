@@ -57,7 +57,7 @@ def get_available_hardening_types():
         - ``hp_i`` - Hardening point with coordinates
           (:math:`\\bar{\\varepsilon}^{p}`, :math:`\\sigma_{y}`).
 
-    |
+    ----
 
     * Linear hardening
 
@@ -81,7 +81,7 @@ def get_available_hardening_types():
         - ``s0`` - Initial yielding stress (:math:`\\sigma_{y, 0}`).
         - ``a`` - Hardening law parameter (:math:`a`).
 
-    |
+    ----
 
     * Swift hardening:
 
@@ -107,7 +107,7 @@ def get_available_hardening_types():
         - ``a`` - Hardening law parameter (:math:`a`).
         - ``b`` - Hardening law parameter (:math:`b`).
 
-    |
+    ----
 
     * Ramberg-Osgood hardening:
 
@@ -132,6 +132,8 @@ def get_available_hardening_types():
         - ``s0`` - Initial yielding stress (:math:`\\sigma_{y, 0}`).
         - ``a`` - Hardening law parameter (:math:`a`).
         - ``b`` - Hardening law parameter (:math:`b`).
+
+    ----
 
     Returns
     -------
@@ -205,6 +207,8 @@ def get_hardening_law(type):
             given value of accumulated plastic strain, return the corresponding
             material yield stress and hardening slope.
 
+            ----
+
             Parameters
             ----------
             hardening_parameters : dict
@@ -272,6 +276,8 @@ def get_hardening_law(type):
             given value of accumulated plastic strain, return the corresponding
             material yield stress and hardening slope.
 
+            ----
+
             Parameters
             ----------
             hardening_parameters : dict
@@ -307,6 +313,8 @@ def get_hardening_law(type):
             Provided the required isotropic hardening law parameters and a
             given value of accumulated plastic strain, return the corresponding
             material yield stress and hardening slope.
+
+            ----
 
             Parameters
             ----------
@@ -355,6 +363,8 @@ def get_hardening_law(type):
             given value of accumulated plastic strain, return the corresponding
             material yield stress and hardening slope.
 
+            ----
+            
             Parameters
             ----------
             hardening_parameters : dict

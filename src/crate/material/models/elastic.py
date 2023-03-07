@@ -135,6 +135,8 @@ class Elastic(ConstitutiveModel):
           coefficient (``v``) may be alternatively provided if
           ``elastic_symmetry`` is set as `isotropic`.
 
+        ----
+
         Returns
         -------
         material_properties : list[str]
@@ -196,6 +198,8 @@ class Elastic(ConstitutiveModel):
         * ``is_su_fail``
 
             * State update failure flag.
+
+        ----
 
         Returns
         -------
@@ -371,7 +375,7 @@ class Elastic(ConstitutiveModel):
               coefficient (``v``) may be alternatively provided if
               ``elastic_symmetry`` is set as `isotropic`.
 
-        |
+        ----
 
         * Transverse isotropic (axis of symmetry 3):
 
@@ -392,7 +396,7 @@ class Elastic(ConstitutiveModel):
               Bunge convention.
             - ``Eijkl`` - Elastic moduli.
 
-        |
+        ----
 
         * Orthotropic (planes of symmetry 12 and 13):
 
@@ -413,7 +417,7 @@ class Elastic(ConstitutiveModel):
               Bunge convention.
             - ``Eijkl`` - Elastic moduli.
 
-        |
+        ----
 
         * Monoclinic (plane of symmetry 12):
 
@@ -434,7 +438,7 @@ class Elastic(ConstitutiveModel):
               Bunge convention.
             - ``Eijkl`` - Elastic moduli.
 
-        |
+        ----
 
         * Triclinic:
 
@@ -455,6 +459,8 @@ class Elastic(ConstitutiveModel):
               Bunge convention.
             - ``Eijkl`` - Elastic moduli.
 
+        ----
+        
         Returns
         -------
         elastic_symmetries : dict

@@ -6,11 +6,6 @@ Classes
 -------
 ConstitutiveModel
     Constitutive model interface.
-
-Functions
----------
-get_available_material_models
-    Get available material constitutive models.
 """
 #
 #                                                                       Modules

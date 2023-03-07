@@ -24,8 +24,7 @@ import copy
 import time
 # Third-party
 import numpy as np
-from anytree.walker import Walker
-from anytree.exporter import DotExporter
+import anytree.walker
 # Local
 import ioput.info as info
 import ioput.ioutilities as ioutil
@@ -458,6 +457,8 @@ class LoadingPath:
         remaining independent components are sorted according to the problem
         strain/stress symmetric component order.
 
+        ----
+
         Parameters
         ----------
         comp_order_sym : list[str]
@@ -813,6 +814,8 @@ class LoadingSubpath:
             incremental load factor, and :math:`n+1` denotes the current
             increment.
 
+        ----
+
         *Finite strains:*
 
             .. math::
@@ -1114,7 +1117,7 @@ class IncrementRewinder:
                             clustering_tree_nodes[str(cluster)])
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     # Initialize node walker
-                    node_walker = Walker()
+                    node_walker = anytree.walker.Walker()
                     # Loop over material phase clusters
                     for cluster in phase_clusters[mat_phase]:
                         # Get cluster node

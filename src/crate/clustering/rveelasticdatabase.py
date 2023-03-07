@@ -123,6 +123,8 @@ class RVEElasticDatabase:
         macroscale strain loading) through a given homogenization-based
         multi-scale method.
 
+        ----
+
         Parameters
         ----------
         dns_method : {'fft-basic'}

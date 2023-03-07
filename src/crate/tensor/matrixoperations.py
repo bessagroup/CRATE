@@ -103,6 +103,8 @@ def get_tensor_mf(tensor, n_dim, comp_order):
            of deformation processes. Environmental Earth Sciences, 75(11):937
            (see `here <https://dspace.mit.edu/handle/1721.1/105251>`_)
 
+    ----
+
     Parameters
     ----------
     tensor : numpy.ndarray (2d or 4d)
@@ -211,13 +213,15 @@ def get_tensor_from_mf(tensor_mf, n_dim, comp_order):
     (compatible) ordered strain/stress components list. If the second-order
     tensor is symmetric or the fourth-order tensor has minor symmetry
     (component list only contains independent components), then matricial form
-    is assumed to follow the Kelvin notation[#]_. Otherwise, a columnwise
+    is assumed to follow the Kelvin notation [#]_. Otherwise, a columnwise
     matricial form is assumed.
 
     .. [#] Nagel, T., Görke, U.-J., Moerman, K. M., and Kolditz, O. (2016). On
            advantages of the Kelvin mapping in finite element implementations
            of deformation processes. Environmental Earth Sciences, 75(11):937
            (see `here <https://dspace.mit.edu/handle/1721.1/105251>`_)
+
+    ----
 
     Parameters
     ----------
@@ -347,13 +351,15 @@ def get_tensor_from_mf(tensor_mf, n_dim, comp_order):
 def kelvin_factor(idx, comp_order):
     """Get Kelvin notation coefficient of given strain/stress component.
 
-    The Kelvin notation[#]_ is a particular way of building the matricial form
+    The Kelvin notation [#]_ is a particular way of building the matricial form
     of tensorial quantities.
 
     .. [#] Nagel, T., Görke, U.-J., Moerman, K. M., and Kolditz, O. (2016). On
            advantages of the Kelvin mapping in finite element implementations
            of deformation processes. Environmental Earth Sciences, 75(11):937
            (see `here <https://dspace.mit.edu/handle/1721.1/105251>`_)
+           
+    ----
 
     Parameters
     ----------

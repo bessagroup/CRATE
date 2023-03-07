@@ -19,6 +19,8 @@ reduced order modeling (see Chapter 4 of Ferreira (2022) [#]_).
        Optimization of Thermoplastic Blends: Microstructural
        Generation, Constitutive Development and Clustering-based
        Reduced-Order Modeling.* PhD Thesis, University of Porto
+       (see `here <https://repositorio-aberto.up.pt/handle/10216/
+       146900?locale=en>`_)
 
 Classes
 -------
@@ -43,8 +45,8 @@ import copy
 # Third-party
 import numpy as np
 import scipy.cluster.hierarchy as sciclst
-from anytree import Node
-#from anytree.exporter import DotExporter
+import anytree
+# import anytree.exporter
 # Local
 import clustering.clusteringalgs as clstalgs
 from clustering.clusteringalgs import ClusterAnalysis
@@ -179,7 +181,7 @@ class ACRMP(CRMP):
         parameters.
     _set_adaptivity_type_parameters(self, adaptivity_type)
         *abstract*: Set clustering adaptivity parameters.
-    _dynamic_split_factor(ref_split_factor, adapt_trigger_ratio, magnitude,
+    _dynamic_split_factor(ref_split_factor, adapt_trigger_ratio, magnitude, \
                           dynamic_amp=0)
         Compute dynamic adaptive clustering split factor.
     """
@@ -270,6 +272,8 @@ class ACRMP(CRMP):
                localized history-dependent phenomena.* Comp Methods Appl M, 393
                (see `here <https://www.sciencedirect.com/science/article/pii/
                S0045782522000895?via%3Dihub>`_)
+
+        ----
 
         Parameters
         ----------
@@ -514,9 +518,9 @@ class GACRMP(ACRMP):
         Otherwise, the adaptive clustering split factor is always set equal to
         `_adapt_split_factor`.
     _clustering_tree_nodes : dict
-        Clustering tree node (item, Node) associated with each material
+        Clustering tree node (item, anytree.Node) associated with each material
         cluster (key, str).
-    _root_cluster_node : Node
+    _root_cluster_node : anytree.Node
         Clustering tree root node.
     max_label : int
         Clustering maximum label.
@@ -534,10 +538,10 @@ class GACRMP(ACRMP):
         Perform GACRMP base clustering.
     get_valid_clust_algs():
         Get valid clustering algorithms to compute the CRMP.
-    perform_adaptive_clustering(self, target_clusters, target_clusters_data,
+    perform_adaptive_clustering(self, target_clusters, target_clusters_data, \
                                 adaptive_clustering_scheme=None, min_label=0)
         Perform GACRMP adaptive clustering step.
-    _check_adaptivity_lock(self):
+    _check_adaptivity_lock(self)
         Check ACRMP adaptivity locking conditions.
     get_n_clusters(self)
         Get current number of clusters.
@@ -593,7 +597,7 @@ class GACRMP(ACRMP):
             self._is_dynamic_split_factor = True
         # Set clustering tree root node
         root_cluster = -1
-        self._root_cluster_node = Node(-1)
+        self._root_cluster_node = anytree.Node(-1)
         self._clustering_tree_nodes[str(root_cluster)] = \
             self._root_cluster_node
     # -------------------------------------------------------------------------
@@ -662,7 +666,7 @@ class GACRMP(ACRMP):
         for cluster in set(self.cluster_labels):
             # Update clustering tree
             self._clustering_tree_nodes[str(cluster)] = \
-                Node(cluster, parent=self._root_cluster_node)
+                anytree.Node(cluster, parent=self._root_cluster_node)
     # -------------------------------------------------------------------------
     @staticmethod
     def get_valid_clust_algs():
@@ -682,6 +686,8 @@ class GACRMP(ACRMP):
 
         Refine the provided target clusters by splitting them according to the
         prescribed adaptive clustering scheme.
+
+        ----
 
         Parameters
         ----------
@@ -869,7 +875,7 @@ class GACRMP(ACRMP):
             for child_cluster in adaptive_clustering_map[target_cluster]:
                 # Set child cluster tree node
                 self._clustering_tree_nodes[str(child_cluster)] = \
-                    Node(child_cluster, parent=parent_node)
+                    anytree.Node(child_cluster, parent=parent_node)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Update total amount of time spent in the adaptive procedures
         self.adaptive_time += time.time() - init_time
@@ -917,13 +923,13 @@ class GACRMP(ACRMP):
         Returns
         -------
         clustering_tree_nodes : dict
-            Clustering tree node (item, Node) associated with each
+            Clustering tree node (item, anytree.Node) associated with each
             material cluster (key, str).
-        root_cluster_node : Node
+        root_cluster_node : anytree.Node
             Clustering tree root node.
         """
         # Output clustering tree
-        #DotExporter(self._root_cluster_node).to_picture(
+        #anytree.exporter.DotExporter(self._root_cluster_node).to_picture(
         #   'clustering_tree_nodes_phase_' + self._mat_phase + '.png')
         return self._clustering_tree_nodes, self._root_cluster_node
     # -------------------------------------------------------------------------
@@ -934,6 +940,8 @@ class GACRMP(ACRMP):
         Besides returning the ACRMP mandatory and optional adaptivity type
         parameters, this method establishes the default values for the optional
         parameters.
+
+        ----
 
         Returns
         ----------
@@ -1055,15 +1063,15 @@ class HAACRMP(ACRMP):
     -------
     perform_base_clustering(self, base_clustering_scheme, min_label=0)
         Perform HAACRMP base clustering.
-    perform_adaptive_clustering(self, target_clusters, target_clusters_data,
-                                adaptive_clustering_scheme=None,
+    perform_adaptive_clustering(self, target_clusters, target_clusters_data, \
+                                adaptive_clustering_scheme=None, \
                                 min_label=0)
         Perform HAACRMP adaptive clustering step.
     add_to_tree_node_list(node_list, node)
         Add node to tree node list and sort by descending linkage distance.
     _check_adaptivity_lock(self)
         Check ACRMP adaptivity locking conditions.
-    print_adaptive_clustering(self, adaptive_clustering_map,
+    print_adaptive_clustering(self, adaptive_clustering_map, \
                               adaptive_tree_node_map)
     get_valid_clust_algs()
         Get valid clustering algorithms to compute the CRMP.
@@ -1075,7 +1083,7 @@ class HAACRMP(ACRMP):
         Get ACRMP mandatory and optional adaptivity type parameters.
     _set_adaptivity_type_parameters(self, adaptivity_type)
         Set clustering adaptivity parameters.
-    get_adaptive_output(self):
+    get_adaptive_output(self)
         Get adaptivity metrics for clustering adaptivity output.
     """
     def __init__(self, mat_phase, cluster_data_matrix, n_clusters,
@@ -1179,6 +1187,8 @@ class HAACRMP(ACRMP):
         Refine the provided target clusters by splitting them according to the
         hierarchical agglomerative tree, prioritizing child nodes by descending
         order of linkage distance.
+
+        ----
 
         Parameters
         ----------
@@ -1462,6 +1472,8 @@ class HAACRMP(ACRMP):
         Besides returning the ACRMP mandatory and optional adaptivity type
         parameters, this method establishes the default values for the optional
         parameters.
+
+        ----
 
         Returns
         ----------

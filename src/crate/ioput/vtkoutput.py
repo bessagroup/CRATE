@@ -51,7 +51,7 @@ class VTKOutput:
         Write VTK file associated with the CRVE clustering.
     write_vtk_file_time_step(self, time_step, strain_formulation, \
                              problem_type, crve, material_state, \
-                             vtk_vars='all', adaptivity_manager=None):
+                             vtk_vars='all', adaptivity_manager=None)
         Write VTK file associated with time step (increment).
     rewind_files(self, rewind_inc)
         Rewind VTK output files.

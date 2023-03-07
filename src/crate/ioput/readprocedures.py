@@ -196,6 +196,8 @@ def readtypeAkeyword(file, file_path, keyword, max_val):
 
        < keyword > < int >
 
+    ----
+
     Parameters
     ----------
     file : file
@@ -242,6 +244,8 @@ def readtypeBkeyword(file, file_path, keyword):
 
        < keyword >
        < float >
+
+    ----
 
     Parameters
     ----------
@@ -310,6 +314,8 @@ def read_material_properties(file, file_path, keyword):
     name, `n_coproperties` is the number of properties associated with the
     constitutive option, and `coproperty_X_name` is the constitutive option
     property name.
+
+    ----
 
     Parameters
     ----------
@@ -814,6 +820,8 @@ def read_macroscale_loading(file, file_path, mac_load_type, strain_formulation,
     order. Components not enforced through the mixed loading prescription are
     ignored.
 
+    ----
+
     Parameters
     ----------
     file : file
@@ -1100,6 +1108,8 @@ def read_mac_load_increm(file, file_path, keyword, n_load_subpaths):
     incremental time is obtained by multiplying the loading time factor by the
     incremental loading factor. Defaults to 1.0 if not specified.
 
+    ----
+
     Parameters
     ----------
     file : file
@@ -1216,6 +1226,8 @@ def decode_increm_spec(spec, load_time_factor):
     defaults to loading time factor times the absolute value of the incremental
     load factor).
 
+    ----
+
     Parameters
     ----------
     spec : str
@@ -1282,6 +1294,8 @@ def read_phase_clustering(file, file_path, keyword, n_material_phases,
 
     where `phase_id` (int) is the material identifier and `n_clusters` is the
     corresponding (base) number of clusters.
+
+    ----
 
     Parameters
     ----------
@@ -1373,6 +1387,8 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
     adaptivity criterion identifier, `adapt_type_id` (int) is the adaptive
     cluster-reduced material phase type identifier, and `adapt_parameter_name`
     is the adaptive parameter name.
+
+    ----
 
     Parameters
     ----------
@@ -1880,6 +1896,8 @@ def read_adaptivity_frequency(file, file_path, keyword, adapt_material_phases):
     corresponding clustering adaptivity frequency ({none, all, every < int >})
     with respect to the loading incrementation.
 
+    ----
+
     Parameters
     ----------
     file : file
@@ -1987,6 +2005,8 @@ def read_rewind_state_parameters(file, file_path, keyword):
     where `criterion` (str) is the solution rewind state criterion name and
     `parameter_value` ({int, float}) is the corresponding parameter value.
 
+    ----
+
     Parameters
     ----------
     file : file
@@ -2063,6 +2083,8 @@ def read_rewinding_criterion_parameters(file, file_path, keyword):
     where `criterion` (str) is the solution rewind criterion name and
     `parameter_value` ({int, float}) is the corresponding parameter value.
 
+    ----
+
     Parameters
     ----------
     file : file
@@ -2133,6 +2155,8 @@ def read_discretization_file_path(file, file_path, keyword, valid_exts,
        < path >
 
     where `path` is the path of the spatial discretization file.
+
+    ----
 
     Parameters
     ----------
@@ -2212,6 +2236,8 @@ def read_rve_dimensions(file, file_path, keyword, n_dim):
 
     where `dimX_size` is the size length along dimension X.
 
+    ----
+
     *3D Problem:*
 
     .. code-block:: text
@@ -2220,6 +2246,8 @@ def read_rve_dimensions(file, file_path, keyword, n_dim):
        < dim1_size > < dim2_size > < dim3_size >
 
     where `dimX_size` is the size length along dimension X.
+
+    ----
 
     Parameters
     ----------
@@ -2278,6 +2306,8 @@ def read_self_consistent_scheme(file, file_path, keyword, strain_formulation):
     reference material properties, `n_parameters` (int) is the number of
     self-consistent scheme parameters, and `parameter_X_name` (str) is the
     self-consistent scheme parameter name.
+
+    ----
 
     Parameters
     ----------
@@ -2401,6 +2431,8 @@ def read_vtk_options(file, file_path, keyword, keyword_line_number):
     where `option_X` is option of the VTK output (e.g., ascii, every < int >,
     all_variables).
 
+    ----
+    
     Parameters
     ----------
     file : file

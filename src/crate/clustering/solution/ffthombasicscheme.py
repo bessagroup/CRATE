@@ -59,34 +59,35 @@ class FFTBasicScheme(DNSHomogenizationMethod):
     """FFT-based homogenization basic scheme.
 
     FFT-based homogenization basic scheme proposed by Moulinec and Suquet
-    (1998) [1]_ for the solution of micro-scale equilibrium problems of linear
+    (1998) [#]_ for the solution of micro-scale equilibrium problems of linear
     elastic heterogeneous materials. In particular, for a given RVE discretized
     in a regular grid of voxels, the method solves the microscale equilibrium
     problem when the RVE is subjected to a macroscale strain tensor and is
     constrained by periodic boundary conditions. Finite strain extension
     is also available, following the formulation of Kabel and coworkers
-    (2022) [2]_ and adopting the Hencky hyperelastic constitutive model.
+    (2022) [#]_ and adopting the Hencky hyperelastic constitutive model.
 
     A detailed description of the computational implementation can be found
     in Appendix B (infinitesimal strains) and Section 4.6 (finite strains)
-    of Ferreira (2022) [3]_.
+    of Ferreira (2022) [#]_.
 
-    .. [1] Moulinec, H. and Suquet, P. (1998). *A numerical method for
+    .. [#] Moulinec, H. and Suquet, P. (1998). *A numerical method for
            computing the overall response of nonlinear composites with complex
            microstructure.* Comp Methods Appl M, 157:69-94 (see `here
            <https://www.sciencedirect.com/science/article/pii/
            S0045782597002181>`_)
 
-    .. [2] Kabel, M., Bohlke, T., and Schneider, M. (2014). *Efficient fixed
+    .. [#] Kabel, M., Bohlke, T., and Schneider, M. (2014). *Efficient fixed
            point and Newton-Krylov solver for FFT-based homogenization of
            elasticity at large deformations.* Comp Methods Appl M, 54:1497-1514
            (see `here <https://link.springer.com/article/10.1007/
            s00466-014-1071-8>`_)
 
-    .. [3] Ferreira, B.P. (2022). *Towards Data-driven Multi-scale Optimization
+    .. [#] Ferreira, B.P. (2022). *Towards Data-driven Multi-scale Optimization
            of Thermoplastic Blends: Microstructural Generation, Constitutive
            Development and Clustering-based Reduced-Order Modeling.*
-           PhD Thesis, University of Porto.
+           PhD Thesis, University of Porto (see `here <https://
+           repositorio-aberto.up.pt/handle/10216/146900?locale=en>`_)
 
     Attributes
     ----------
@@ -123,7 +124,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         Compute RVE local elastic strain response.
     _elastic_constitutive_model(self, strain_vox, evar1, evar2, evar3, \
                                 finite_strains_model='stvenant-kirchhoff', \
-                                is_optimized=True):
+                                is_optimized=True)
         Elastic or hyperelastic material constitutive model.
     stress_div_conv_criterion(self, freqs_dims, stress_DFT_vox)
         Convergence criterion based on the divergence of the stress tensor.
@@ -137,7 +138,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         Output greetings.
     _display_increment_init(inc, subinc_level, total_lfact, inc_lfact)
         Output increment initial data.
-    _display_increment_end(strain_formulation, hom_strain, hom_stress,
+    _display_increment_end(strain_formulation, hom_strain, hom_stress, \
                            inc_time, total_time)
         Output increment end data.
     _display_iteration(iter, iter_time, discrete_error)
@@ -209,6 +210,8 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         assumed that the RVE is spatially discretized in a regular grid of
         voxels.
 
+        ----
+
         Parameters
         ----------
         mac_strain_id : int
@@ -232,12 +235,12 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         # Display greetings
         if verbose:
             type(self)._display_greetings()
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Store total macroscale strain tensor
         mac_strain_total = copy.deepcopy(mac_strain)
         # Initialize macroscale strain increment cut flag
         is_inc_cut = False
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set strain/stress components order according to problem strain
         # formulation
         if self._strain_formulation == 'infinitesimal':
@@ -248,14 +251,14 @@ class FFTBasicScheme(DNSHomogenizationMethod):
             comp_order = self._comp_order_nsym
         else:
             raise RuntimeError('Unknown problem strain formulation.')
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize homogenized strain-stress response
         self._hom_stress_strain = np.zeros((1, 2*self._n_dim**2))
         if self._strain_formulation == 'finite':
             self._hom_stress_strain[0, 0] = 1.0
         #
         #                                    Material phases elasticity tensors
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set elastic properties-related optimized variables
         evar1 = np.zeros(tuple(self._n_voxels_dims))
         evar2 = np.zeros(tuple(self._n_voxels_dims))
@@ -271,7 +274,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         evar3 = np.add(evar1, evar2)
         #
         #                                 Reference material elastic properties
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set reference material elastic properties as the mean between the
         # minimum and maximum values existent among the microstructure's
         # material phases (proposed by Moulinec and Suquet (1998))
@@ -288,7 +291,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                  for phase in self._material_phases]))
         #
         #                                              Frequency discretization
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set discrete frequencies (rad/m) for each dimension
         freqs_dims = list()
         for i in range(self._n_dim):
@@ -299,7 +302,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                                                      sampling_period))
         #
         #                                     Reference material Green operator
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get reference material Young modulus and Poisson coeficient
         E_ref = mat_prop_ref['E']
         v_ref = mat_prop_ref['v']
@@ -315,12 +318,12 @@ class FFTBasicScheme(DNSHomogenizationMethod):
             # Non-symmetrized isotropic reference material elasticity tensor
             c1 = 1.0/(2.0*miu_ref)
             c2 = lam_ref/(2.0*miu_ref*(lam_ref + 2.0*miu_ref))
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute Green operator material independent terms
         gop_1_dft_vox, gop_2_dft_vox, _ = \
             citop.gop_material_independent_terms(self._strain_formulation,
                 self._problem_type, self._rve_dims, self._n_voxels_dims)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set Green operator matricial form components
         comps = list(it.product(comp_order, comp_order))
         # Set mapping between Green operator fourth-order tensor and matricial
@@ -332,7 +335,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                                for x in list(comps[i][0] + comps[i][1])])
             mf_indexes.append([x for x in [comp_order.index(comps[i][0]),
                                            comp_order.index(comps[i][1])]])
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize Green operator
         gop_dft_vox = {''.join([str(x + 1) for x in idx]): \
             np.zeros(tuple(self._n_voxels_dims)) for idx in fo_indexes}
@@ -346,7 +349,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
             gop_dft_vox[comp] = c1*gop_1_dft_vox[comp] + c2*gop_2_dft_vox[comp]
         #
         #                              Macroscale strain loading incrementation
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set number of increments
         if self._strain_formulation == 'infinitesimal':
             n_incs = 1
@@ -373,7 +376,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         iter_init_time = time.time()
         #
         #                                   Macroscale loading incremental loop
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Start macroscale loading incremental loop
         while True:
             #
@@ -655,6 +658,8 @@ class FFTBasicScheme(DNSHomogenizationMethod):
           :math:`\\boldsymbol{\\varepsilon}` is the infinitesimal strain
           tensor.
 
+        ----
+
         *Finite strains*:
 
         * Hencky hyperelastic (isotropic) constitutive model:
@@ -688,7 +693,11 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         .. [#] Ferreira, B.P. (2022). *Towards Data-driven Multi-scale
                Optimization of Thermoplastic Blends: Microstructural
                Generation, Constitutive Development and Clustering-based
-               Reduced-Order Modeling.* PhD Thesis, University of Porto.
+               Reduced-Order Modeling.* PhD Thesis, University of Porto
+               (see `here <https://repositorio-aberto.up.pt/handle/10216/
+               146900?locale=en>`_)
+
+        ----
 
         Parameters
         ----------
@@ -1331,6 +1340,8 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                complex microstructure.* Comp Methods Appl M, 157:69-94 (see
                `here <https://www.sciencedirect.com/science/article/pii/
                S0045782597002181>`_)
+
+        ----
 
         Parameters
         ----------

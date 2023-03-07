@@ -49,6 +49,8 @@ class DNSHomogenizationMethod(ABC):
         assumed that the RVE is spatially discretized in a regular grid of
         voxels.
 
+        ----
+        
         Parameters
         ----------
         mac_strain_id : int

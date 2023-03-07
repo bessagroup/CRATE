@@ -11,6 +11,9 @@ homogenization and clustering-based reduced-order modeling.
        Optimization of Thermoplastic Blends: Microstructural
        Generation, Constitutive Development and Clustering-based
        Reduced-Order Modeling.* PhD Thesis, University of Porto
+       (see `here <https://repositorio-aberto.up.pt/handle/10216/
+       146900?locale=en>`_)
+
 
 Functions
 ---------

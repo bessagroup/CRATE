@@ -66,6 +66,8 @@ def compute_rotation_tensor(def_gradient):
     where :math:`\\boldsymbol{R}` is the rotation tensor and
     :math:`\\boldsymbol{F}` is the deformation gradient.
 
+    ----
+
     Parameters
     ----------
     def_gradient : numpy.ndarray (2d)
@@ -98,6 +100,8 @@ def compute_material_log_strain(def_gradient):
     where :math:`\\boldsymbol{E}` is the material logarithmic strain tensor and
     :math:`\\boldsymbol{F}` is the deformation gradient.
 
+    ----
+
     Parameters
     ----------
     def_gradient : numpy.ndarray (2d)
@@ -125,6 +129,8 @@ def compute_spatial_log_strain(def_gradient):
 
     where :math:`\\boldsymbol{\\varepsilon}` is the spatial logarithmic strain
     tensor and :math:`\\boldsymbol{F}` is the deformation gradient.
+
+    ----
 
     Parameters
     ----------
@@ -157,6 +163,8 @@ def cauchy_from_kirchhoff(def_gradient, kirchhoff_stress):
     :math:`\\boldsymbol{F}` is the deformation gradient, and
     :math:`\\boldsymbol{\\tau}` is the Kirchhoff stress tensor.
 
+    ----
+
     Parameters
     ----------
     def_gradient : numpy.ndarray (2d)
@@ -185,6 +193,8 @@ def first_piola_from_kirchhoff(def_gradient, kirchhoff_stress):
     where :math:`\\boldsymbol{P}` is the first Piola-Kirchhoff stress tensor,
     :math:`\\boldsymbol{\\tau}` is the Kirchhoff stress tensor, and
     :math:`\\boldsymbol{F}` is the deformation gradient.
+
+    ----
 
     Parameters
     ----------
@@ -216,6 +226,8 @@ def cauchy_from_first_piola(def_gradient, first_piola_stress):
     where :math:`\\boldsymbol{\\sigma}` is the Cauchy stress tensor,
     :math:`\\boldsymbol{F}` is the deformation gradient, and
     :math:`\\boldsymbol{P}` is the first Piola-Kirchhoff stress tensor.
+
+    ----
 
     Parameters
     ----------
@@ -249,6 +261,8 @@ def cauchy_from_second_piola(def_gradient, second_piola_stress):
     :math:`\\boldsymbol{F}` is the deformation gradient, and
     :math:`\\boldsymbol{S}` is the second Piola-Kirchhoff stress tensor.
 
+    ----
+
     Parameters
     ----------
     def_gradient : numpy.ndarray (2d)
@@ -281,6 +295,8 @@ def first_piola_from_cauchy(def_gradient, cauchy_stress):
     :math:`\\boldsymbol{F}` is the deformation gradient, and
     :math:`\\boldsymbol{\\sigma}` is the Cauchy stress tensor.
 
+    ----
+
     Parameters
     ----------
     def_gradient : numpy.ndarray (2d)
@@ -310,6 +326,8 @@ def first_piola_from_second_piola(def_gradient, second_piola_stress):
     where :math:`\\boldsymbol{P}` is the first Piola-Kirchhoff stress tensor
     and :math:`\\boldsymbol{S}` is the second Piola-Kirchhoff stress tensor.
 
+    ----
+
     Parameters
     ----------
     def_gradient : numpy.ndarray (2d)
@@ -338,6 +356,8 @@ def kirchhoff_from_first_piola(def_gradient, first_piola_stress):
     where :math:`\\boldsymbol{\\tau}` is the Kirchhoff stress tensor,
     :math:`\\boldsymbol{P}` is the first Piola-Kirchhoff stress tensor,
     and :math:`\\boldsymbol{F}` is the deformation gradient.
+
+    ----
 
     Parameters
     ----------
@@ -370,6 +390,8 @@ def material_from_spatial_tangent_modulus(spatial_consistent_tangent,
     where :math:`\\mathbf{\\mathsf{A}}` is the material consistent tangent
     modulus, :math:`\\boldsymbol{F}` is the deformation gradient, and
     :math:`\\mathbf{\\mathsf{a}}` is the spatial consistent tangent modulus.
+
+    ----
 
     Parameters
     ----------
@@ -409,6 +431,8 @@ def conjugate_material_log_strain(def_gradient, first_piola_stress):
     where :math:`\\boldsymbol{E}` is the material logarithmic strain tensor and
     :math:`\\boldsymbol{F}` is the deformation gradient.
 
+    ----
+
     *Stress conjugate of material logarithmic strain tensor*:
 
     .. math::
@@ -420,6 +444,8 @@ def conjugate_material_log_strain(def_gradient, first_piola_stress):
     logarithmic strain tensor, :math:`\\boldsymbol{R}` is the rotation tensor,
     :math:`\\boldsymbol{P}` is the first Piola-Kirchhoff stress tensor,
     and :math:`\\boldsymbol{F}` is the deformation gradient.
+
+    ----
 
     Parameters
     ----------
@@ -461,6 +487,8 @@ def conjugate_spatial_log_strain(def_gradient, first_piola_stress):
     where :math:`\\boldsymbol{\\varepsilon}` is the spatial logarithmic strain
     tensor and :math:`\\boldsymbol{F}` is the deformation gradient.
 
+    ----
+
     *Stress conjugate of spatial logarithmic strain tensor*:
 
     .. math::
@@ -470,6 +498,8 @@ def conjugate_spatial_log_strain(def_gradient, first_piola_stress):
     where :math:`\\boldsymbol{\\tau}` is the Kirchhoff stress tensor,
     :math:`\\boldsymbol{P}` is the first Piola-Kirchhoff stress tensor,
     and :math:`\\boldsymbol{F}` is the deformation gradient.
+
+    ----
 
     Parameters
     ----------
@@ -550,6 +580,8 @@ class MaterialQuantitiesComputer:
         and :math:`\\boldsymbol{\\sigma_{d}}` is the deviatoric Cauchy stress
         tensor.
 
+        ----
+
         Parameters
         ----------
         stress_mf : numpy.ndarray (1d)
@@ -575,6 +607,8 @@ class MaterialQuantitiesComputer:
         deviatoric infinitesimal strain tensor (infinitesimal strains) or the
         spatial logarithmic strain tensor (finite strains).
 
+        ----
+        
         Parameters
         ----------
         strain_mf : numpy.ndarray (1d)

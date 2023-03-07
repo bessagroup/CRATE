@@ -383,11 +383,25 @@ class RelativeRootMeanSquaredError(Loss):
         Loss function.
     """
     def __init__(self):
-        """Loss function constructor."""
+        """Constructor."""
         pass
     # -------------------------------------------------------------------------
     def loss(self, y, y_ref, type='minimization'):
         """Loss function.
+
+        The Relative Root Mean Squared Error (RRMSE) is defined as
+
+        .. math::
+
+           \\text{RRMSE} (\\boldsymbol{y}, \hat{\\boldsymbol{y}}) =
+           \\sqrt{\\dfrac{\\dfrac{1}{n} \\sum_{i=1}^{n}(y_{i} -
+           \\hat{y}_{i})^{2}}{ \\sum_{i=1}^{n} \\hat{y}_{i}^{2}}}
+
+        where :math:`\\boldsymbol{y}` is the vector of predicted values,
+        :math:`\hat{\\boldsymbol{y}}` is the vector of reference values,
+        and :math:`n` is the number of data points.
+
+        ----
 
         Parameters
         ----------

@@ -15,6 +15,8 @@ Ferreira (2022) [#]_).
        Optimization of Thermoplastic Blends: Microstructural
        Generation, Constitutive Development and Clustering-based
        Reduced-Order Modeling.* PhD Thesis, University of Porto
+       (see `here <https://repositorio-aberto.up.pt/handle/10216/
+       146900?locale=en>`_)
 
 Classes
 -------
@@ -157,7 +159,7 @@ class CRVE:
         Reset CRVE adaptive progress parameters and set base clustering.
     update_adaptive_parameters(self, adaptive_clustering_scheme, \
                                adapt_criterion_data, adaptivity_type, \
-                               adaptivity_control_feature):
+                               adaptivity_control_feature)
         Update CRVE clustering adaptivity attributes.
     get_crmp_types()
         Get available cluster-reduced material phases types.
@@ -1056,7 +1058,10 @@ class CRVE:
                Optimization of Thermoplastic Blends: Microstructural
                Generation, Constitutive Development and Clustering-based
                Reduced-Order Modeling.* PhD Thesis, University of Porto
+               (see `here <https://repositorio-aberto.up.pt/handle/10216/
+               146900?locale=en>`_)
 
+        ----
 
         *Adaptive update of cluster interaction matrix:*
 
@@ -1072,6 +1077,8 @@ class CRVE:
                localized history-dependent phenomena.* Comp Methods Appl M, 393
                (see `here <https://www.sciencedirect.com/science/article/pii/
                S0045782522000895?via%3Dihub>`_)
+
+        ----
 
         Parameters
         ----------
@@ -1282,6 +1289,10 @@ class CRVE:
                Optimization of Thermoplastic Blends: Microstructural
                Generation, Constitutive Development and Clustering-based
                Reduced-Order Modeling.* PhD Thesis, University of Porto
+               (see `here <https://repositorio-aberto.up.pt/handle/10216/
+               146900?locale=en>`_)
+
+        ----
 
         Parameters
         ----------
@@ -1343,6 +1354,10 @@ class CRVE:
                Optimization of Thermoplastic Blends: Microstructural
                Generation, Constitutive Development and Clustering-based
                Reduced-Order Modeling.* PhD Thesis, University of Porto
+               (see `here <https://repositorio-aberto.up.pt/handle/10216/
+               146900?locale=en>`_)
+
+        ----
 
         Parameters
         ----------
@@ -1461,6 +1476,10 @@ class CRVE:
                Optimization of Thermoplastic Blends: Microstructural
                Generation, Constitutive Development and Clustering-based
                Reduced-Order Modeling.* PhD Thesis, University of Porto
+               (see `here <https://repositorio-aberto.up.pt/handle/10216/
+               146900?locale=en>`_)
+
+        ----
 
         Parameters
         ----------

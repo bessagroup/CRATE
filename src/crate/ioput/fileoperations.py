@@ -143,6 +143,7 @@ def set_problem_dirs(input_file_name, input_file_dir,
                         |---- VTK/
                         |---- example.voxout
 
+    ----
 
     *Glossary: Files and directories*
 
@@ -203,6 +204,8 @@ def set_problem_dirs(input_file_name, input_file_dir,
             * **example.voxout**
                 File where material-related quantities defined at the voxel \
                 level are stored.
+
+    ----
 
     Parameters
     ----------

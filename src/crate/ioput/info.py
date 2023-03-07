@@ -36,6 +36,8 @@ def displayinfo(code, *args, **kwargs):
     Information is output to both default standard output device
     (e.g., terminal) and to the '.screen' output file.
 
+    ----
+
     Parameters
     ----------
     code : str

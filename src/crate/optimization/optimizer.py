@@ -87,7 +87,7 @@ class LIPO(Optimizer):
     Methods
     -------
     solve_optimization(self, optimization_function, max_n_iter=None, \
-                       verbose=False):
+                       verbose=False)
         Solve optimization problem.
     """
     def __init__(self):
@@ -155,7 +155,7 @@ class GeneticAlgorithm(Optimizer):
     Methods
     -------
     solve_optimization(self, optimization_function, max_n_iter=None, \
-                       verbose=False):
+                       verbose=False)
         Solve optimization problem.
     """
     def __init__(self):
@@ -236,7 +236,7 @@ class SciPyMinimizer(Optimizer):
     Methods
     -------
     solve_optimization(self, optimization_function, max_n_iter=None, \
-                       verbose=False):
+                       verbose=False)
         Solve optimization problem.
     """
     def __init__(self, method='Powell'):
@@ -314,7 +314,7 @@ class ScikitOptimizer(Optimizer):
     Methods
     -------
     solve_optimization(self, optimization_function, max_n_iter=None, \
-                       verbose=False):
+                       verbose=False)
         Solve optimization problem.
     """
     def __init__(self, method='dummy_minimize'):

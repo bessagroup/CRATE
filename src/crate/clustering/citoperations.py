@@ -61,7 +61,7 @@ def set_discrete_freqs(n_dim, rve_dims, n_voxels_dims):
     dimension, and :math:`n_{i}` is the number of voxels in the :math:`i` th
     dimension.
 
-    |
+    ----
 
     *3D case*:
 
@@ -82,6 +82,7 @@ def set_discrete_freqs(n_dim, rve_dims, n_voxels_dims):
     :math:`i` th dimension, and :math:`n_{i}` is the number of voxels in the
     :math:`i` th dimension.
 
+    ----
 
     Parameters
     ----------
@@ -151,7 +152,7 @@ def gop_material_independent_terms(strain_formulation, problem_type, rve_dims,
     :math:`\\delta_{ij}` is the Kronecker delta, and :math:`n_{\\text{dim}}`
     is the number of spatial dimensions.
 
-    |
+    ----
 
     *Finite strains*:
 
@@ -182,7 +183,11 @@ def gop_material_independent_terms(strain_formulation, problem_type, rve_dims,
     .. [#] Ferreira, B.P. (2022). *Towards Data-driven Multi-scale
            Optimization of Thermoplastic Blends: Microstructural
            Generation, Constitutive Development and Clustering-based
-           Reduced-Order Modeling.* PhD Thesis, University of Porto.
+           Reduced-Order Modeling.* PhD Thesis, University of Porto
+           (see `here <https://repositorio-aberto.up.pt/handle/10216/
+           146900?locale=en>`_)
+
+    ----
 
     Parameters
     ----------
@@ -348,7 +353,7 @@ def assemble_cit(strain_formulation, problem_type, mat_prop_ref,
     and :math:`(\\lambda^{0}, \\mu^{0})` are the reference elastic (isotropic)
     material Lamé parameters.
 
-    |
+    ----
 
     *Finite strains*:
 
@@ -370,6 +375,8 @@ def assemble_cit(strain_formulation, problem_type, mat_prop_ref,
     fourth-order Green operator material independent terms, respectively,
     and :math:`(\\lambda^{0}, \\mu^{0})` are the reference elastic (isotropic)
     material Lamé parameters.
+
+    ----
 
     Parameters
     ----------

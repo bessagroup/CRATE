@@ -35,7 +35,7 @@ dot24_3
 dot24_4
     Single contraction: :math:`lm \\cdot ijkm \\rightarrow ijkl`.
 ddot22_1
-    Double contraction: :math:`ij : ij \\rightarrow \text{scalar}`.
+    Double contraction: :math:`ij : ij \\rightarrow \\text{scalar}`.
 ddot42_1
     Double contraction: :math:`ijkl : kl \\rightarrow ij`.
 ddot44_1
@@ -109,6 +109,8 @@ def dd(i, j):
                    1, &         \\text{if } i=j, \\\\
                    0, &         \\text{if } i\\neq j.
            \\end{cases}
+
+    ----
 
     Parameters
     ----------
@@ -219,6 +221,8 @@ def spectral_decomposition(x):
            Computational Methods for Plasticity. John Wiley & Sons, Ltd,
            Chichester, UK (see `here <https://onlinelibrary.wiley.com/doi/
            book/10.1002/9780470694626>`_)
+
+    ----
 
     Parameters
     ----------
@@ -378,6 +382,8 @@ def isotropic_tensor(mode, x):
            Chichester, UK (see `here <https://onlinelibrary.wiley.com/doi/
            book/10.1002/9780470694626>`_)
 
+    ----
+
     Parameters
     ----------
     mode : {'log', 'exp'}
@@ -425,6 +431,8 @@ def derivative_isotropic_tensor(mode, x):
            Computational Methods for Plasticity. John Wiley & Sons, Ltd,
            Chichester, UK (see `here <https://onlinelibrary.wiley.com/doi/
            book/10.1002/9780470694626>`_)
+
+    ----
 
     Parameters
     ----------
@@ -555,6 +563,8 @@ def diso_scalars(abc, eigenvalues, fun, fund):
            Chichester, UK (see `here <https://onlinelibrary.wiley.com/doi/
            book/10.1002/9780470694626>`_)
 
+    ----
+
     Parameters
     ----------
     abc : {'012', '210', '102', '021', '102', '120', '201'}
@@ -616,6 +626,8 @@ def rotate_tensor(tensor, r):
     where :math:`\\mathbf{R}` denotes the rotation tensor, :math:`\\mathbf{A}`
     denotes the original tensor, and :math:`\\mathbf{A}^{r}` denotes the
     rotated tensor.
+
+    ----
 
     Parameters
     ----------
@@ -690,6 +702,8 @@ def rotation_tensor_from_euler_angles(n_dim, euler_deg):
     and :math:`(\\alpha, \\beta, \\gamma)` are the Euler angles corresponding
     to the Bunge convention (Z1-X2-Z3).
 
+    ----
+    
     Parameters
     ----------
     n_dim : int

@@ -28,6 +28,8 @@ Section 4.9).
        Optimization of Thermoplastic Blends: Microstructural
        Generation, Constitutive Development and Clustering-based
        Reduced-Order Modeling.* PhD Thesis, University of Porto
+       (see `here <https://repositorio-aberto.up.pt/handle/10216/
+       146900?locale=en>`_)
 
 Besides the main class that implements the aforementioned methods, this
 module also includes a class associated with the reference (fictitious)
@@ -98,6 +100,8 @@ class ASCA:
            Optimization of Thermoplastic Blends: Microstructural
            Generation, Constitutive Development and Clustering-based
            Reduced-Order Modeling.* PhD Thesis, University of Porto
+           (see `here <https://repositorio-aberto.up.pt/handle/10216/
+           146900?locale=en>`_)
 
     Attributes
     ----------
@@ -286,6 +290,10 @@ class ASCA:
                Optimization of Thermoplastic Blends: Microstructural
                Generation, Constitutive Development and Clustering-based
                Reduced-Order Modeling.* PhD Thesis, University of Porto
+               (see `here <https://repositorio-aberto.up.pt/handle/10216/
+               146900?locale=en>`_)
+
+        ----
 
         Parameters
         ----------
@@ -1269,6 +1277,8 @@ class ASCA:
             :math:`n_{c}` is the number of material clusters,
             and :math:`n+1` denotes the current increment.
 
+        ----
+
         **Infinitesimal strains (incremental equilibrium formulation, \
                                  incremental primary unknowns):**
 
@@ -1347,6 +1357,8 @@ class ASCA:
                 incremental Cauchy stress tensor, :math:`n_{c}` is the number
                 of material clusters, and :math:`n+1` denotes the current
                 increment.
+
+        ----
 
         **Infinitesimal strains (incremental equilibrium formulation, \
                                  total primary unknowns):**
@@ -1446,6 +1458,7 @@ class ASCA:
                 current increment, and :math:`n` denotes the last converged
                 increment.
 
+        ----
 
         **Finite strains (total equilibrium formulation, \
                           total primary unknowns):**
@@ -1520,6 +1533,8 @@ class ASCA:
                 the macroscale first Piola-Kirchhoff stress tensor,
                 :math:`n_{c}` is the number of material clusters, and
                 :math:`n+1` denotes the current increment.
+
+        ----
 
         Parameters
         ----------
@@ -1766,6 +1781,7 @@ class ASCA:
         functions are derived with respect to the total strains (assuming
         incremental equilibrium formulation and total primary unknowns).
 
+        ----
 
         *Finite strains:*
 
@@ -1840,6 +1856,8 @@ class ASCA:
         :math:`\\boldsymbol{\\mathsf{A}}^{e,\\, 0}` is the elastic tangent
         modulus of the reference homogeneous material, :math:`f^{(K)}` is
         the volume fraction of the :math:`K` th material cluster.
+
+        ----
 
         Parameters
         ----------
@@ -1963,6 +1981,8 @@ class ASCA:
         number of material clusters. and :math:`n+1` denotes the current
         increment.
 
+        ----
+
         *Finite strains:*
 
         .. math::
@@ -1981,6 +2001,8 @@ class ASCA:
         modulus of the reference homogeneous material, :math:`n_{c}` is the
         number of material clusters. and :math:`n+1` denotes the current
         increment.
+
+        ----
 
         Parameters
         ----------
@@ -2269,6 +2291,8 @@ class ASCA:
 
            \\forall I, K = 1, \\, \\dots, \\, n_{\\text{c}} \\, .
 
+        ----
+
         Parameters
         ----------
         crve : CRVE
@@ -2438,6 +2462,8 @@ class ASCA:
         instead of the far-field strain tensor in the SCA formulation without
         the far-field strain tensor.
 
+        ----
+
         Parameters
         ----------
         material_phases : list[str]
@@ -2531,6 +2557,8 @@ class ASCA:
         This procedure is only carried out so that clusters equilibrium
         residuals are conveniently stored to perform post-processing
         operations.
+
+        ----
 
         Parameters
         ----------
@@ -3544,6 +3572,8 @@ class InfinitesimalRegressionSCS(ReferenceMaterialOptimizer):
     elastic tangent modulus, :math:`\\Delta \\boldsymbol{\\varepsilon}` is
     the homogenized incremental infinitesimal strain tensor, and
     :math:`n+1` denotes the current increment.
+
+    ----
 
     *Solution:*
 

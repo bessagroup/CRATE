@@ -180,7 +180,7 @@ def get_available_clustering_features(strain_formulation, problem_type):
 
         * *Infinitesimal strains*: Fourth-order local elastic strain
           concentration tensor based on the elastic infinitesimal strain
-          tensor.
+          tensor,
 
           .. math::
 
@@ -201,7 +201,7 @@ def get_available_clustering_features(strain_formulation, problem_type):
           configuration (:math:`\\Omega_{0}`).
 
         * *Finite strains*: Fourth-order local elastic strain concentration
-          tensor based on the elastic material logarithmic strain tensor.
+          tensor based on the elastic material logarithmic strain tensor,
 
           .. math::
 
@@ -220,6 +220,15 @@ def get_available_clustering_features(strain_formulation, problem_type):
           configuration (:math:`\\Omega_{\\mu,\\,0}`), and
           :math:`\\boldsymbol{X}` is a point of the macroscale reference
           configuration (:math:`\\Omega_{0}`).
+
+    ----
+
+    * Identifier: 2
+
+        * Spatial coordinates first-order tensor in the reference
+          configuration, :math:`\\boldsymbol{Y}`.
+
+    ----
 
     Parameters
     ----------
@@ -343,6 +352,8 @@ def def_gradient_from_log_strain(log_strain):
     :math:`\\lambda_{i}^{\\boldsymbol{F}} =
     \\exp \\left[\\lambda_{i}^{\\boldsymbol{E}}\\right], \\, i=1,2,3`, are the
     corresponding eigenvalues.
+
+    ----
 
     Parameters
     ----------
@@ -624,6 +635,8 @@ class ClusterAnalysisData:
         prescribed in the clustering scheme. This involves the computation of
         each clustering feature's data matrix (based on a RVE response
         database) and post assembly to the clustering global data matrix.
+
+        ----
 
         Parameters
         ----------

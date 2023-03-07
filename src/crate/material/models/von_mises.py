@@ -68,7 +68,7 @@ class VonMises(ConstitutiveModel):
     state_init(self)
         Get initialized material constitutive model state variables.
     state_update(self, inc_strain, state_variables_old, \
-                 su_max_n_iterations=20, su_conv_tol=1e-6):
+                 su_max_n_iterations=20, su_conv_tol=1e-6)
         Perform material constitutive model state update.
     """
     def __init__(self, strain_formulation, problem_type, material_properties):
@@ -151,6 +151,8 @@ class VonMises(ConstitutiveModel):
           of parameters.
         - ``hard_parameter`` - Isotropic strain hardening type parameter.
 
+        ----
+
         Returns
         -------
         material_properties : list[str]
@@ -226,6 +228,8 @@ class VonMises(ConstitutiveModel):
 
             * State update failure flag.
 
+        ----
+        
         Returns
         -------
         state_variables_init : dict

@@ -1,4 +1,4 @@
-"""Cluster-Reduced Representative Volume Element.
+"""Clustering adaptivity.
 
 This module includes the class that has major control over the clustering
 adaptivity procedures. It also includes a class that handles the clustering
@@ -1107,6 +1107,8 @@ class AdaptivityManager:
         A cluster adaptive level of 0 is associated with the base clustering
         and is increased by one whenever the cluster is refined.
 
+        ----
+
         Parameters
         ----------
         voxels_clusters : numpy.ndarray (2d or 3d)
@@ -1174,7 +1176,7 @@ class ClusteringAdaptivityOutput:
     -------
     init_adapt_file(self, crve)
         Open clustering adaptivity output file and write file header.
-    write_adapt_file(self, inc, adaptivity_manager, crve, mode='increment'):
+    write_adapt_file(self, inc, adaptivity_manager, crve, mode='increment')
         Write clustering adaptivity output file.
     rewind_file(self, rewind_inc)
         Rewind clustering adaptivity output file.

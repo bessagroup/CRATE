@@ -648,6 +648,8 @@ class SpatialDiscontinuities(AdaptivityCriterion):
         parameters, this method establishes the default values for the optional
         parameters.
 
+        ----
+
         Returns
         -------
         mandatory_parameters : dict
@@ -774,6 +776,8 @@ class SpatialDiscontinuities(AdaptivityCriterion):
         dimension i), while the others cycle the remainder dimensions (assumed
         dimensions j and k). During this process, both the list of target
         clusters and the dictionary containing associated data are updated.
+
+        ----
 
         Parameters
         ----------

@@ -126,7 +126,7 @@ class MaterialState:
         Update last converged material state variables.
     set_rewind_state_updated_clustering(self, phase_clusters, clusters_vf, \
                                         clusters_state, \
-                                        clusters_def_gradient_mf):
+                                        clusters_def_gradient_mf)
         Set rewind state variables according to updated clustering.
     get_hom_strain_mf(self)
         Get homogenized strain tensor (matricial form).
@@ -150,15 +150,15 @@ class MaterialState:
         Get RVE material phases constitutive models.
     get_material_phases_vf(self)
         Get RVE material phases volume fraction.
-    get_clusters_def_gradient_mf(self):
+    get_clusters_def_gradient_mf(self)
         Get deformation gradient of each material cluster.
-    get_clusters_def_gradient_old_mf(self):
+    get_clusters_def_gradient_old_mf(self)
         Get last converged deformation gradient of each material cluster.
-    get_clusters_state(self):
+    get_clusters_state(self)
         Get material state variables of each material cluster.
-    get_clusters_state_old(self):
+    get_clusters_state_old(self)
         Get last converged material state variables of each material cluster.
-    get_clusters_tangent_mf(self):
+    get_clusters_tangent_mf(self)
         Get material consistent tangent modulus of each material cluster.
     _material_su_interface(strain_formulation, problem_type, \
                            constitutive_model, def_gradient_old, inc_strain, \
@@ -327,6 +327,8 @@ class MaterialState:
         the current increment, and :math:`n` denotes the last converged
         increment.
 
+        ----
+
         *Finite strains*:
 
         .. math::
@@ -342,6 +344,8 @@ class MaterialState:
         cluster deformation gradient, :math:`n_{c}` is the number of material
         clusters, :math:`n+1` denotes the current increment, and :math:`n`
         denotes the last converged increment.
+
+        ----
 
         Parameters
         ----------
@@ -549,6 +553,8 @@ class MaterialState:
         the number of material clusters, and :math:`n+1` denotes the current
         increment.
 
+        ----
+
         *Finite strains*:
 
         .. math::
@@ -725,6 +731,8 @@ class MaterialState:
         strain tensor, :math:`n+1` denotes the current increment, and
         :math:`n` denotes the last converged increment.
 
+        ----
+
         *Finite strains*:
 
         .. math::
@@ -737,6 +745,8 @@ class MaterialState:
         deformation gradient, :math:`\\boldsymbol{F}` is the homogenized
         deformation gradient, :math:`n+1` denotes the current increment,
         and :math:`n` denotes the last converged increment.
+
+        ----
 
         Returns
         -------
@@ -783,6 +793,8 @@ class MaterialState:
         homogenized Cauchy stress tensor, :math:`n+1` denotes the current
         increment, and :math:`n` denotes the last converged increment.
 
+        ----
+
         *Finite strains*:
 
         .. math::
@@ -796,6 +808,8 @@ class MaterialState:
         homogenized first Piola-Kirchhoff stress tensor, :math:`n+1` denotes
         the current increment, and :math:`n` denotes the last converged
         increment.
+
+        ----
 
         Returns
         -------
@@ -954,7 +968,11 @@ class MaterialState:
         .. [1] Ferreira, B.P. (2022). *Towards Data-driven Multi-scale
                Optimization of Thermoplastic Blends: Microstructural
                Generation, Constitutive Development and Clustering-based
-               Reduced-Order Modeling.* PhD Thesis, University of Porto.
+               Reduced-Order Modeling.* PhD Thesis, University of Porto
+               (see `here <https://repositorio-aberto.up.pt/handle/10216/
+               146900?locale=en>`_)
+
+        ----
 
         Parameters
         ----------
@@ -1072,6 +1090,8 @@ class MaterialState:
         the current increment, and :math:`n` denotes the last converged
         increment.
 
+        ----
+
         *Elastic trial left Cauchy-Green strain tensor*:
 
         .. math::
@@ -1099,7 +1119,11 @@ class MaterialState:
         .. [#] Ferreira, B.P. (2022). *Towards Data-driven Multi-scale
                Optimization of Thermoplastic Blends: Microstructural
                Generation, Constitutive Development and Clustering-based
-               Reduced-Order Modeling.* PhD Thesis, University of Porto.
+               Reduced-Order Modeling.* PhD Thesis, University of Porto
+               (see `here <https://repositorio-aberto.up.pt/handle/10216/
+               146900?locale=en>`_)
+
+        ----
 
         Parameters
         ----------
@@ -1161,7 +1185,11 @@ class MaterialState:
         .. [#] Ferreira, B.P. (2022). *Towards Data-driven Multi-scale
                Optimization of Thermoplastic Blends: Microstructural
                Generation, Constitutive Development and Clustering-based
-               Reduced-Order Modeling.* PhD Thesis, University of Porto.
+               Reduced-Order Modeling.* PhD Thesis, University of Porto
+               (see `here <https://repositorio-aberto.up.pt/handle/10216/
+               146900?locale=en>`_)
+
+        ----
 
         Parameters
         ----------
