@@ -16,7 +16,7 @@ If you use CRATE in a scientific publication, it is appreciated that you cite th
 
 <sup id="f1"> 1 </sup> Profile: [LinkedIN](https://www.linkedin.com/in/bpferreira/), [ORCID](https://orcid.org/0000-0001-5956-3877), [ResearchGate](https://www.researchgate.net/profile/Bernardo-Ferreira-11?ev=hdr_xprf)
 
-<sup id="f2"> 2 </sup> Ferreira, B.P. (2022). *Towards Data-driven Multi-scale Optimization of Thermoplastic Blends: Microstructural Generation, Constitutive Development and Clustering-based Reduced-Order Modeling.* PhD Thesis, University of Porto
+<sup id="f2"> 2 </sup> Ferreira, B.P. (2022). *Towards Data-driven Multi-scale Optimization of Thermoplastic Blends: Microstructural Generation, Constitutive Development and Clustering-based Reduced-Order Modeling.* PhD Thesis, University of Porto (see [here](https://repositorio-aberto.up.pt/handle/10216/146900?locale=en))
 
 
 ### Conceptual map
@@ -52,7 +52,7 @@ CRATE is a simple **Python package** - [crate]() - available from the Python Pac
 - CRATE can be installed either through **pip** (recommended) or **from source**:
 
     - [**pip**](https://pip.pypa.io/en/stable/getting-started/) is a Python package manager that installs Python packages from PyPI. After [installing pip](https://pip.pypa.io/en/stable/installation/), installing a package is straightforward as described [here](https://packaging.python.org/en/latest/tutorials/installing-packages/) and [here](https://pip.pypa.io/en/stable/getting-started/). Note that, besides installing CRATE, pip automatically installs all the required Python package dependencies. Therefore, CRATE can be simply installed by running the following pip installation command:
-    
+
         > pip install crate
 
     - CRATE can be installed directly by [git](https://git-scm.com/) cloning the [GitHub repository]() into a local directory. In this case, all the required Python package dependencies must be installed manually.
@@ -67,17 +67,17 @@ The **general workflow of CRATE** in the solution of a micro-scale equilibrium p
 - **Step 1 (Input Data): Generate Representative Volume Element (RVE).**
 
     * The first step consists in the computational generation of a RVE of the heterogeneous material under analysis;
-    
+
     * The RVE must be quadrilateral (2d) or paralelepipedic (3d);
-    
+
     * The RVE must be spatially discretized in a regular (or uniform) grid of voxels, where each voxel is associated with a given material phase as illustrated below;
     <p align="center">
   <a href=""><img alt="logo" src="doc/schematics/doc_CRATE_spatial_discretization_file.png" width="80%"></a>
     </p>
-    
+
     * The **spatial discretization file (`.rgmsh` file)** that is ultimately provided to CRATE as part of the input data must be generated with [NumPy](https://numpy.org/devdocs/index.html) as illustrated in the following Python (pseudo-)script:
     <br/><br/>
-    
+
     ```python
     import numpy as np
 
@@ -99,7 +99,7 @@ The **general workflow of CRATE** in the solution of a micro-scale equilibrium p
 - **Step 2 (Input Data): Set CRATE's user-defined input data file.**
 
     * The second step consists in defining a **CRATE's user-defined input data file (`.dat` file)**;
-    
+
     * The input data file contains all the required information about the problem (problem type, material properties, macro-scale loading path, ...) and about the solution procedure (macro-scale loading incrementation, clustering-based domain decomposition, output options, ...). The **spatial discretization file (`.rgmsh` file)** path is provided in the input data file;
 
     * A complete **CRATE's user-defined input data file (`.dat` file)** template, where each available keyword specification (mandatory or optional) is fully documented, can be found [here](https://github.com/BernardoFerreira/CRATE/blob/master/doc/CRATE_input_data_file.dat). This template file can be copied to a given local simulation directory and be readily used by replacing the `[insert here]` boxes with the suitable specification!
@@ -111,27 +111,27 @@ The **general workflow of CRATE** in the solution of a micro-scale equilibrium p
 - **Step 3: (Execution) Run CRATE simulator.**
 
     * The third step consists in running CRATE to perform the numerical simulation;
-    
+
     * Running CRATE is a single-liner as illustrated in the following Python (pseudo-)script:
     <br/><br/>
-    
+
     ```python
     import crate
-    
+
     # Set input data file path (mandatory)
     input_data_file_path = ...
-    
+
     # Set spatial discretization file directory path (optional). If the spatial discretization
     # file path specific in the input data file is not absolute, then it is assumed to be
     # relative to the provided spatial discretization file directory
     discret_file_dir = ...
-    
+
     # Perform numerical simulation
     crate.crate_simulator(input_data_file_path, discret_file_dir=discret_file_dir)
     ```
-    
+
     * The program execution can be monitored in real-time in the terminal console window where the previous script is run. Display data includes program launching information, a detailed description of the different simulation phases, and a execution summary when the program is successfully completed.
-   
+
 <p align="center">
   <a href=""><img alt="logo" src="doc/schematics/doc_CRATE_execution_output.png" width="70%"></a>
 </p>
@@ -139,11 +139,11 @@ The **general workflow of CRATE** in the solution of a micro-scale equilibrium p
 - **Step 4 (Output): Post-process results.**
 
     * The fourth-step consists in post-processing the simulation results;
-    
+
     * CRATE generates several output files during running time that are collectively stored in a single output directory created in the same path and sharing the same name as the input data file. Among these output files, three are particularly useful:
-    
+
         - `.screen` file - A log file where all the data displayed in the default standard output device is stored;
-        
+
         - `.hres` file - A file where the macro-scale material response is stored, i.e., the homogenized stress-strain response of the RVE computed at every macro-scale loading increment;
 
         - `.vti` file - A VTK XML output file associated with a given macro-scale loading increment that allows the RVE relevant physical data to be conveniently analyzed with a suitable visualization software (e.g. [ParaView](https://www.paraview.org/)).
@@ -152,7 +152,7 @@ The **general workflow of CRATE** in the solution of a micro-scale equilibrium p
 <p align="center">
   <a href=""><img alt="logo" src="doc/schematics/doc_CRATE_hres_output.png" width="80%"></a>
 </p>
-          
+
 <p align="center">
   <a href=""><img alt="logo" src="doc/schematics/doc_CRATE_vti_output.png" width="80%"></a>
 </p>

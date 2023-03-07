@@ -1,7 +1,7 @@
-﻿crate
-=====
+crate.online.loading
+====================
 
-.. automodule:: crate
+.. automodule:: crate.online.loading
   
    
    
@@ -28,11 +28,5 @@
    :template: custom-module-template.rst
    :recursive:
 
-   crate.clustering
-   crate.ioput
-   crate.main
-   crate.material
-   crate.online
-   crate.optimization
-   crate.tensor
+   crate.online.loading.macloadincrem
 

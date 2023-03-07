@@ -66,6 +66,9 @@ toc_object_entries_show_parents = 'hide'
 # Source: https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-show_authors
 show_authors = True
 
+# Source: https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#confval-autodoc_default_options
+autodoc_default_options = {'private-members': True}
+
 
 # -- Extensions configuration -------------------------------------------------
 
