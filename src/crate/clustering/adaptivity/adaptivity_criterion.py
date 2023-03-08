@@ -464,7 +464,7 @@ class AdaptiveClusterGrouping(AdaptivityCriterion):
             return True
         else:
             return False
-   # --------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     def _adaptivity_selection_criterion(self, adapt_data_matrix):
         """Select target clusters from adaptive cluster group.
 
@@ -490,7 +490,7 @@ class AdaptiveClusterGrouping(AdaptivityCriterion):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get split boundary adaptivity feature value
         adapt_boundary = min(adapt_data_matrix[:, 1]) \
-            + self._adapt_split_threshold*(max(adapt_data_matrix[:, 1]) \
+            + self._adapt_split_threshold*(max(adapt_data_matrix[:, 1])
                                            - min(adapt_data_matrix[:, 1]))
         # Get indexes of clusters whose adaptivity feature value is greater or
         # equal than the split boundary value
@@ -580,7 +580,7 @@ class SpatialDiscontinuities(AdaptivityCriterion):
             the lower valued targeted cluster.
         """
         # Initialize clusters adaptive level
-        self._clusters_adapt_level = {str(cluster) : 0 for cluster in
+        self._clusters_adapt_level = {str(cluster): 0 for cluster in
                                       phase_clusters[adapt_mat_phase]}
         # Get optional parameters
         optional_parameters = type(self).get_parameters()
@@ -993,7 +993,7 @@ class SpatialDiscontinuities(AdaptivityCriterion):
                                     self._magnitude_lower_factor*magnitude
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     # Update target clusters list and associated data
-                    if not(is_cluster_targeted and is_cluster_next_targeted):
+                    if not (is_cluster_targeted and is_cluster_next_targeted):
                         # Evaluate clusters adaptive level
                         cluster_adapt_level = \
                             self._clusters_adapt_level[str(cluster)]
