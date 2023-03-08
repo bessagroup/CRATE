@@ -436,10 +436,10 @@ class MiniBatchKMeansSK(ClusteringAlgorithm):
             Cluster label (int) assigned to each dataset item.
         """
         # Instantiate scikit-learn Mini-Batch K-Means clustering algorithm
-        self._clst_alg = skclst.MiniBatchKMeans(n_clusters=self.n_clusters,
-            init=self._init, n_init=self._n_init, max_iter=self._max_iter,
-            tol=self._tol, random_state=self._random_state,
-            init_size=self._init_size,
+        self._clst_alg = skclst.MiniBatchKMeans(
+            n_clusters=self.n_clusters, init=self._init, n_init=self._n_init,
+            max_iter=self._max_iter, tol=self._tol,
+            random_state=self._random_state, init_size=self._init_size,
             reassignment_ratio=self._reassignment_ratio)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute cluster centers (fitted estimator) and predict cluster label
@@ -744,7 +744,7 @@ class BirchPC(ClusteringAlgorithm):
     def __init__(
         self, threshold=0.5, branching_factor=50, max_node_entries=200,
         type_measurement=pycftree.measurement_type.CENTROID_EUCLIDEAN_DISTANCE,
-        entry_size_limit=500, threshold_multiplier=1.5, n_clusters=None):
+            entry_size_limit=500, threshold_multiplier=1.5, n_clusters=None):
         """Constructor.
 
         Parameters
@@ -895,7 +895,7 @@ class KMeansPC(ClusteringAlgorithm):
     def __init__(
         self, tolerance=1e-03, itermax=200,
         metric=pymetric.distance_metric(pymetric.type_metric.EUCLIDEAN_SQUARE),
-        n_clusters=None):
+            n_clusters=None):
         """Constructor.
 
         Parameters
@@ -971,7 +971,7 @@ class XMeansPC(ClusteringAlgorithm):
     def __init__(
         self, tolerance=2.5e-2,
         criterion=pyxmeans.splitting_type.BAYESIAN_INFORMATION_CRITERION,
-        repeat=1, n_clusters=None):
+            repeat=1, n_clusters=None):
         """Constructor.
 
         Parameters
