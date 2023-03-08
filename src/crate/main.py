@@ -27,7 +27,6 @@ import os
 import sys
 import pickle
 import time
-import inspect
 import copy
 # Third-party
 import numpy as np
@@ -44,7 +43,7 @@ from ioput.vtkoutput import VTKOutput
 #                                                          Authorship & Credits
 # =============================================================================
 __author__ = 'Bernardo Ferreira (bernardo_ferreira@brown.edu)'
-__credits__ = ['Bernardo Ferreira',]
+__credits__ = ['Bernardo Ferreira', ]
 __status__ = 'Stable'
 # =============================================================================
 #
@@ -102,7 +101,7 @@ def crate_simulation(arg_input_file_path, arg_discret_file_dir=None):
     phase_names = ['']
     phase_times = np.zeros((1, 2))
     phase_names[0] = 'Total'
-    phase_times[0,:] = [start_time_s, 0.0]
+    phase_times[0, :] = [start_time_s, 0.0]
     # Display starting program header
     info.displayinfo('0', problem_name, start_time, start_date)
     #
@@ -166,8 +165,8 @@ def crate_simulation(arg_input_file_path, arg_discret_file_dir=None):
         phase_times = np.append(
             phase_times, [[phase_init_time, phase_end_time]], axis=0)
         info.displayinfo('3', 'Compute cluster analysis data matrix',
-                         phase_times[phase_times.shape[0] - 1, 1] -
-                         phase_times[phase_times.shape[0] - 1, 0])
+                         phase_times[phase_times.shape[0] - 1, 1]
+                         - phase_times[phase_times.shape[0] - 1, 0])
     #
     #                     Offline-stage - Steps 2 & 3: Generate Cluster-Reduced
     #                                      Representative Volume Element (CRVE)
@@ -250,8 +249,6 @@ def crate_simulation(arg_input_file_path, arg_discret_file_dir=None):
             vtk_byte_order = vtk_dict['vtk_byte_order']
             vtk_format = vtk_dict['vtk_format']
             vtk_precision = vtk_dict['vtk_precision']
-            vtk_vars = vtk_dict['vtk_vars']
-            vtk_inc_div = vtk_dict['vtk_inc_div']
             # Instantiante VTK output
             vtk_output = VTKOutput(
                 type='ImageData', version='1.0', byte_order=vtk_byte_order,
@@ -286,8 +283,8 @@ def crate_simulation(arg_input_file_path, arg_discret_file_dir=None):
         phase_times = np.append(
             phase_times, [[phase_init_time, phase_end_time]], axis=0)
         info.displayinfo('3', 'Compute cluster interaction tensors',
-                         phase_times[phase_times.shape[0] - 1, 1] -
-                         phase_times[phase_times.shape[0] - 1, 0])
+                         phase_times[phase_times.shape[0] - 1, 1]
+                         - phase_times[phase_times.shape[0] - 1, 0])
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Dump CRVE into file
         crve_file_path = dirs_dict['crve_file_path']
