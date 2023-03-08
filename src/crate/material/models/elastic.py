@@ -460,7 +460,7 @@ class Elastic(ConstitutiveModel):
             - ``Eijkl`` - Elastic moduli.
 
         ----
-        
+
         Returns
         -------
         elastic_symmetries : dict
@@ -540,8 +540,8 @@ class Elastic(ConstitutiveModel):
                 elastic_properties['E1122'] = (E*v)/((1.0 + v)*(1.0 - 2.0*v))
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Initialize independent elastic moduli
-            ind_moduli = {str(modulus) : 0.0 for modulus in \
-                           elastic_symmetries['triclinic']}
+            ind_moduli = {str(modulus): 0.0 for modulus in
+                          elastic_symmetries['triclinic']}
             # Loop over required elastic moduli
             for modulus in required_moduli:
                 # Set symmetric modulus
@@ -556,7 +556,7 @@ class Elastic(ConstitutiveModel):
                                        + elastic_symmetry + ' material.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set all (non-symmetric) elastic moduli according to elastic symmetry
-        all_moduli = {str(modulus) : 0.0 for modulus in ind_moduli.keys()}
+        all_moduli = {str(modulus): 0.0 for modulus in ind_moduli.keys()}
         if elastic_symmetry == 'isotropic':
             all_moduli['E1111'] = ind_moduli['E1111']
             all_moduli['E2222'] = all_moduli['E1111']
@@ -671,11 +671,11 @@ class Elastic(ConstitutiveModel):
             required_moduli = elastic_symmetries[elastic_symmetry]
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Initialize independent elastic moduli
-            ind_moduli = {str(modulus) : 0.0 for modulus in \
-                           elastic_symmetries['triclinic']}
+            ind_moduli = {str(modulus): 0.0 for modulus in
+                          elastic_symmetries['triclinic']}
             # Check elastic moduli
-            if not(elastic_symmetry == 'isotropic' and \
-                    {'E', 'v'}.issubset(set(elastic_properties.keys()))):
+            if not (elastic_symmetry == 'isotropic'
+                    and {'E', 'v'}.issubset(set(elastic_properties.keys()))):
                 # Loop over required elastic moduli
                 for modulus in required_moduli:
                     # Set symmetric modulus
@@ -686,8 +686,8 @@ class Elastic(ConstitutiveModel):
                     elif sym_modulus in elastic_properties.keys():
                         ind_moduli[modulus] = elastic_properties[sym_modulus]
                     else:
-                        raise RuntimeError('Missing elastic moduli for ' +
-                                           elastic_symmetry + ' material.')
+                        raise RuntimeError('Missing elastic moduli for '
+                                           + elastic_symmetry + ' material.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize technical constants of elasticity
         technical_constants = {}
