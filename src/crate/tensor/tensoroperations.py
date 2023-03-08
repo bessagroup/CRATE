@@ -78,24 +78,24 @@ __status__ = 'Stable'
 #                                                          Tensorial operations
 # =============================================================================
 # Tensorial products
-dyad11 = lambda a1, b1 : np.einsum('i,j -> ij', a1, b1)
-dyad22_1 = lambda a2, b2 : np.einsum('ij,kl -> ijkl', a2, b2)
-dyad22_2 = lambda a2, b2 : np.einsum('ik,jl -> ijkl', a2, b2)
-dyad22_3 = lambda a2, b2 : np.einsum('il,jk -> ijkl', a2, b2)
+dyad11 = lambda a1, b1: np.einsum('i,j -> ij', a1, b1)
+dyad22_1 = lambda a2, b2: np.einsum('ij,kl -> ijkl', a2, b2)
+dyad22_2 = lambda a2, b2: np.einsum('ik,jl -> ijkl', a2, b2)
+dyad22_3 = lambda a2, b2: np.einsum('il,jk -> ijkl', a2, b2)
 # Tensorial single contractions
-dot21_1 = lambda a2, b1 : np.einsum('ij,j -> i', a2, b1)
-dot12_1 = lambda a1, b2 : np.einsum('i,ij -> j', a1, b2)
-dot42_1 = lambda a4, b2 : np.einsum('ijkm,lm -> ijkl', a4, b2)
-dot42_2 = lambda a4, b2 : np.einsum('ipkl,jp -> ijkl', a4, b2)
-dot42_3 = lambda a4, b2 : np.einsum('ijkm,ml -> ijkl', a4, b2)
-dot24_1 = lambda a2, b4 : np.einsum('im,mjkl -> ijkl', a2, b4)
-dot24_2 = lambda a2, b4 : np.einsum('jm,imkl -> ijkl', a2, b4)
-dot24_3 = lambda a2, b4 : np.einsum('km,ijml -> ijkl', a2, b4)
-dot24_4 = lambda a2, b4 : np.einsum('lm,ijkm -> ijkl', a2, b4)
+dot21_1 = lambda a2, b1: np.einsum('ij,j -> i', a2, b1)
+dot12_1 = lambda a1, b2: np.einsum('i,ij -> j', a1, b2)
+dot42_1 = lambda a4, b2: np.einsum('ijkm,lm -> ijkl', a4, b2)
+dot42_2 = lambda a4, b2: np.einsum('ipkl,jp -> ijkl', a4, b2)
+dot42_3 = lambda a4, b2: np.einsum('ijkm,ml -> ijkl', a4, b2)
+dot24_1 = lambda a2, b4: np.einsum('im,mjkl -> ijkl', a2, b4)
+dot24_2 = lambda a2, b4: np.einsum('jm,imkl -> ijkl', a2, b4)
+dot24_3 = lambda a2, b4: np.einsum('km,ijml -> ijkl', a2, b4)
+dot24_4 = lambda a2, b4: np.einsum('lm,ijkm -> ijkl', a2, b4)
 # Tensorial double contractions
-ddot22_1 = lambda a2, b2 : np.einsum('ij,ij', a2, b2)
-ddot42_1 = lambda a4, b2 : np.einsum('ijkl,kl -> ij', a4, b2)
-ddot44_1 = lambda a4, b4 : np.einsum('ijmn,mnkl -> ijkl', a4, b4)
+ddot22_1 = lambda a2, b2: np.einsum('ij,ij', a2, b2)
+ddot42_1 = lambda a4, b2: np.einsum('ijkl,kl -> ij', a4, b2)
+ddot44_1 = lambda a4, b4: np.einsum('ijmn,mnkl -> ijkl', a4, b4)
 #
 #                                                                     Operators
 # =============================================================================
@@ -126,8 +126,8 @@ def dd(i, j):
     """
     if (not isinstance(i, int) and not isinstance(i, np.integer)) or \
             (not isinstance(j, int) and not isinstance(j, np.integer)):
-        raise RuntimeError('The Kronecker delta function only accepts two ' +
-                           'integer indexes as arguments.')
+        raise RuntimeError('The Kronecker delta function only accepts two '
+                           + 'integer indexes as arguments.')
     value = 1 if i == j else 0
     return value
 # =============================================================================
@@ -200,7 +200,7 @@ def get_id_operators(n_dim):
     # Set fourth-order symmetric projection tensor
     fosym = 0.5*(foid + fotransp)
     # Set fourth-order 'diagonal trace' tensor
-    fodiagtrace = dyad22_1(soid,soid)
+    fodiagtrace = dyad22_1(soid, soid)
     # Set fourth-order deviatoric projection tensor
     fodevproj = foid - (1.0/3.0)*fodiagtrace
     # Set fourth-order deviatoric projection tensor (second order symmetric
@@ -258,7 +258,7 @@ def spectral_decomposition(x):
     sort_idxs = np.argsort(eigenvalues)[::-1]
     # Sort eigenvalues in descending order and eigenvectors accordingly
     eigenvalues = eigenvalues[sort_idxs]
-    eigenvectors = eigenvectors[:,sort_idxs]
+    eigenvectors = eigenvectors[:, sort_idxs]
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Get square array dimensions
     n_dim = x.shape[0]
@@ -270,10 +270,10 @@ def spectral_decomposition(x):
         eig_norm = np.max(np.abs(eigenvalues))
         # Check eigenvalues multiplicity
         if eig_norm < eig_toler:
-            eig_mult = [(eigenvalues[0] - eigenvalues[1]) < eig_toler,]
+            eig_mult = [(eigenvalues[0] - eigenvalues[1]) < eig_toler, ]
         else:
             eig_mult = \
-                [(eigenvalues[0] - eigenvalues[1])/eig_norm < eig_toler,]
+                [(eigenvalues[0] - eigenvalues[1])/eig_norm < eig_toler, ]
         # Get distinct eigenvalues
         if np.sum(eig_mult) == 0:
             n_eig_distinct = 2
@@ -287,7 +287,7 @@ def spectral_decomposition(x):
         # Compute eigenprojections according with eigenvalues multiplicity
         if n_eig_distinct == 1:
             eig = eigenvalues[0]
-            eigenprojections = [(eig, np.eye(n_dim)),]
+            eigenprojections = [(eig, np.eye(n_dim)), ]
         else:
             # Compute first principal invariant of second-order tensor
             pinv_1 = np.trace(x)
@@ -296,8 +296,8 @@ def spectral_decomposition(x):
                 # Get eigenvalue
                 eig = eigenvalues[i]
                 # Compute eigenprojection
-                eigenprojections.append((eig, (1.0/(2.0*eig - pinv_1))*(x +
-                    (eig - pinv_1)*np.eye(n_dim))))
+                eigenprojections.append((eig, (1.0/(2.0*eig - pinv_1))*(x
+                                         + (eig - pinv_1)*np.eye(n_dim))))
     elif n_dim == 3:
         # Set eigenvalue normalization factor
         eig_norm = np.max(np.abs(eigenvalues))
@@ -331,7 +331,7 @@ def spectral_decomposition(x):
         # Compute eigenprojections according with eigenvalues multiplicity
         if n_eig_distinct == 1:
             eig = eigenvalues[0]
-            eigenprojections = [(eig, np.eye(n_dim)),]
+            eigenprojections = [(eig, np.eye(n_dim)), ]
         else:
             # Compute principal invariants of second-order tensor
             pinv_1 = np.trace(x)
@@ -344,14 +344,14 @@ def spectral_decomposition(x):
                 eig = eigenvalues[idxa]
                 eigenprojections.append(
                     (eig, (eig/(2*eig**3 - pinv_1*eig**2 + pinv_3))*(
-                    np.linalg.matrix_power(x, 2) - (pinv_1 - eig)*x +
-                    (pinv_3/eig)*np.eye(n_dim))))
+                        np.linalg.matrix_power(x, 2) - (pinv_1 - eig)*x
+                        + (pinv_3/eig)*np.eye(n_dim))))
                 # Compute second eigenprojection
                 idxc = [int(key) for key, val in
                         eig_multiplicity.items() if val == 2][0]
                 eig = eigenvalues[idxc]
                 eigenprojections.append(
-                    (eig,np.eye(n_dim) - eigenprojections[0][1]))
+                    (eig, np.eye(n_dim) - eigenprojections[0][1]))
             else:
                 # Compute eigenprojections
                 for i in range(3):
@@ -360,8 +360,8 @@ def spectral_decomposition(x):
                     # Compute eigenprojection
                     eigenprojections.append(
                         (eig, (eig/(2*eig**3 - pinv_1*eig**2 + pinv_3))*(
-                        np.linalg.matrix_power(x, 2) - (pinv_1 - eig)*x +
-                        (pinv_3/eig)*np.eye(n_dim))))
+                            np.linalg.matrix_power(x, 2) - (pinv_1 - eig)*x
+                            + (pinv_3/eig)*np.eye(n_dim))))
     else:
         eigenprojections = []
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -401,9 +401,9 @@ def isotropic_tensor(mode, x):
     """
     # Set scalar function with single argument
     if mode == 'log':
-        fun = lambda x : np.log(x)
+        fun = lambda x: np.log(x)
     elif mode == 'exp':
-        fun = lambda x : np.exp(x)
+        fun = lambda x: np.exp(x)
     else:
         raise RuntimeError('Unknown scalar function.')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -458,11 +458,11 @@ def derivative_isotropic_tensor(mode, x):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set scalar function with single argument and associated derivative
     if mode == 'log':
-        fun = lambda x : np.log(x)
-        fund = lambda x : 1.0/x
+        fun = lambda x: np.log(x)
+        fund = lambda x: 1.0/x
     elif mode == 'exp':
-        fun = lambda x : np.exp(x)
-        fund = lambda x : np.exp(x)
+        fun = lambda x: np.exp(x)
+        fund = lambda x: np.exp(x)
     else:
         raise RuntimeError('Unknown scalar function.')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -500,8 +500,8 @@ def derivative_isotropic_tensor(mode, x):
             # Compute derivative of square symmetric tensor
             dx2dx = np.zeros(4*(n_dim,))
             for i, j, k, l in it.product(range(n_dim), repeat=4):
-                dx2dx[i, j, k, l] = 0.5*(dd(i, k)*x[l, j] + dd(i, l)*x[k, j] +
-                                         dd(j, l)*x[i, k] + dd(k, j)*x[i, l])
+                dx2dx[i, j, k, l] = 0.5*(dd(i, k)*x[l, j] + dd(i, l)*x[k, j]
+                                         + dd(j, l)*x[i, k] + dd(k, j)*x[i, l])
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             if n_eig_distinct == 2:
                 # Set eigenvalues evaluation triplet (a != b = c)
@@ -541,12 +541,14 @@ def derivative_isotropic_tensor(mode, x):
                     funda = fund(eiga)
                     # Assemble derivative of isotropic symmetric tensor-valued
                     # function
-                    y += (funa/((eiga - eigb)*(eiga - eigc)))*(dx2dx
-                         - (eigb + eigc)*fosym - ((eiga - eigb)
-                         + (eiga - eigc))*dyad22_1(eigproja, eigproja)
-                         - (eigb - eigc)*(dyad22_1(eigprojb, eigprojb)
-                         - dyad22_1(eigprojc, eigprojc))) \
-                         + funda*dyad22_1(eigproja, eigproja)
+                    y += (funa/((eiga - eigb)*(eiga - eigc)))*(
+                        dx2dx
+                        - (eigb + eigc)*fosym
+                        - ((eiga - eigb) + (eiga - eigc))
+                        * dyad22_1(eigproja, eigproja)
+                        - (eigb - eigc)*(dyad22_1(eigprojb, eigprojb)
+                                         - dyad22_1(eigprojc, eigprojc))) \
+                        + funda*dyad22_1(eigproja, eigproja)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Return
     return y
@@ -587,7 +589,7 @@ def diso_scalars(abc, eigenvalues, fun, fund):
     # Check eigenvalues order triplet validity
     if not re.match('^[0-2]{3}$', str(abc)):
         raise RuntimeError('Invalid triplet.')
-    elif set([int(x) for x in abc]) != {0,1,2}:
+    elif set([int(x) for x in abc]) != {0, 1, 2}:
         raise RuntimeError('Invalid triplet.')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Set eigenvalues according to triplet order
@@ -620,8 +622,8 @@ def rotate_tensor(tensor, r):
 
     .. math::
 
-       A^{r}_{i_{1}i_{2}\dots i_{n}} = R_{i_{1}j_{1}} R_{i_{2}j_{2}} \dots
-       R_{i_{n}j_{n}} A_{j_{1}j_{2}\dots j_{n}}
+       A^{r}_{i_{1}i_{2}\\dots i_{n}} = R_{i_{1}j_{1}} R_{i_{2}j_{2}} \\dots
+       R_{i_{n}j_{n}} A_{j_{1}j_{2} \\dots j_{n}}
 
     where :math:`\\mathbf{R}` denotes the rotation tensor, :math:`\\mathbf{A}`
     denotes the original tensor, and :math:`\\mathbf{A}^{r}` denotes the
@@ -669,8 +671,8 @@ def rotate_tensor(tensor, r):
             rtensor[i, j, k, l] = rtensor[i, j, k, l] \
                 + r[i, p]*r[j, q]*r[k, r]*r[l, s]*tensor[p, q, r, s]
     else:
-        raise RuntimeError('The rotation tensor is not available for ' +
-                           'tensor order greater than 4.')
+        raise RuntimeError('The rotation tensor is not available for '
+                           + 'tensor order greater than 4.')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Return
     return rtensor
@@ -703,7 +705,7 @@ def rotation_tensor_from_euler_angles(n_dim, euler_deg):
     to the Bunge convention (Z1-X2-Z3).
 
     ----
-    
+
     Parameters
     ----------
     n_dim : int
