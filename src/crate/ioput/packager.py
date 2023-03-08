@@ -268,7 +268,7 @@ def store_regular_grid_data(discret_file_path, regular_grid, rve_dims,
     for mat_phase in material_phases:
         is_phase_list = regular_grid.flatten() == int(mat_phase)
         phase_voxel_flatidx[mat_phase] = \
-            list(it.compress(range(len(is_phase_list)),is_phase_list))
+            list(it.compress(range(len(is_phase_list)), is_phase_list))
     # Initialize regular grid dictionary
     rg_dict = dict()
     # Build regular grid dictionary
