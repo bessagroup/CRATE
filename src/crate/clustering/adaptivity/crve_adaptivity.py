@@ -379,14 +379,14 @@ class AdaptivityManager:
             # Output adaptive phases target clusters summary table
             indent = 10*' '
             info.displayinfo(
-                '5', 'Summary:' + '\n\n' +
-                indent + 'Phase   Target Clusters' + '\n' +
-                indent + 23*'-' + '\n' +
-                ((indent + '{:^5s}{:>11d}\n')*
-                (len(self._adapt_material_phases))).format(*output_list) +
-                indent + 23*'-' + '\n' +
-                indent + '{:^5s}'.format('Total') +
-                '{:>11d}'.format(output_total) + '\n',
+                '5', 'Summary:' + '\n\n'
+                + indent + 'Phase   Target Clusters' + '\n'
+                + indent + 23*'-' + '\n'
+                + ((indent + '{:^5s}{:>11d}\n')
+                   * (len(self._adapt_material_phases))).format(*output_list)
+                + indent + 23*'-' + '\n'
+                + indent + '{:^5s}'.format('Total')
+                + '{:>11d}'.format(output_total) + '\n',
                 2)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return is_trigger, target_clusters, target_clusters_data
@@ -489,10 +489,10 @@ class AdaptivityManager:
             if not ioutil.checknumber(
                     clusters_state[str(int(adapt_data_matrix[0, 0]))][
                         adapt_control_feature]) and not is_norm:
-                raise RuntimeError('The clustering adaptivity feature (' +
-                                   adapt_control_feature + ') prescribed for '
-                                   'material phase ' + target_phase +
-                                   ' must be a scalar.')
+                raise RuntimeError('The clustering adaptivity feature ('
+                                   + adapt_control_feature + ') prescribed '
+                                   + 'for material phase ' + target_phase
+                                   + ' must be a scalar.')
             else:
                 # Build adaptivity feature data matrix
                 for i in range(n_clusters):
@@ -526,10 +526,10 @@ class AdaptivityManager:
             # Check if adaptivity feature is scalar
             if ioutil.checknumber(clusters_state[
                     str(int(adapt_data_matrix[0, 0]))][adapt_control_feature]):
-                raise RuntimeError('The clustering adaptivity feature (' +
-                                   adapt_control_feature + ') prescribed '
-                                   'for material material phase ' +
-                                   target_phase + ' is a scalar.')
+                raise RuntimeError('The clustering adaptivity feature ('
+                                   + adapt_control_feature + ') prescribed '
+                                   + 'for material material phase '
+                                   + target_phase + ' is a scalar.')
             # Build adaptivity feature data matrix
             for i in range(n_clusters):
                 # Get cluster label
@@ -547,8 +547,8 @@ class AdaptivityManager:
                     else:
                         raise RuntimeError('Invalid component specified for '
                                            'the clustering adaptivity '
-                                           'feature ' +
-                                           adapt_control_feature + '.')
+                                           'feature '
+                                           + adapt_control_feature + '.')
                 else:
                     raise RuntimeError('Clustering adaptivity feature '
                                        'is not a second-order tensor stored '
@@ -602,10 +602,10 @@ class AdaptivityManager:
                     if self._strain_formulation == 'infinitesimal':
                         stress_33 = clusters_state[str(cluster)]['stress_33']
                     else:
-                         # Get Cauchy stress tensor out-of-plain component from
-                         # first Piola-Kirchhoff counterpart
-                         stress_33 = (1.0/np.linalg.det(def_gradient))\
-                             *clusters_state[str(cluster)]['stress_33']
+                        # Get Cauchy stress tensor out-of-plain component from
+                        # first Piola-Kirchhoff counterpart
+                        stress_33 = (1.0/np.linalg.det(def_gradient))\
+                            * clusters_state[str(cluster)]['stress_33']
                     # Build 3D stress tensor (matricial form)
                     stress_mf = mop.getstate3Dmffrom2Dmf(self._problem_type,
                                                          stress_mf, stress_33)
@@ -650,10 +650,10 @@ class AdaptivityManager:
                             stress_33 = \
                                 clusters_state_old[str(cluster)]['stress_33']
                         else:
-                             # Get Cauchy stress tensor out-of-plain component
-                             # from first Piola-Kirchhoff counterpart
-                             stress_33 = (1.0/np.linalg.det(def_gradient))\
-                                 *clusters_state_old[str(cluster)]['stress_33']
+                            # Get Cauchy stress tensor out-of-plain component
+                            # from first Piola-Kirchhoff counterpart
+                            stress_33 = (1.0/np.linalg.det(def_gradient))\
+                                * clusters_state_old[str(cluster)]['stress_33']
                         # Build 3D stress tensor (matricial form)
                         stress_mf = mop.getstate3Dmffrom2Dmf(
                             self._problem_type, stress_mf, stress_33)
@@ -895,7 +895,7 @@ class AdaptivityManager:
                     # Get previous clustering cluster initial index
                     init_idx_old = mat_phase_init_idx_old \
                         + phase_clusters_old[mat_phase].index(cluster) \
-                        *len(comp_order)
+                        * len(comp_order)
                     # Build new clustering global vector of clusters strain
                     # tensors. If cluster remained unchanged after the
                     # clustering adaptive step, then simply transfer the
@@ -909,7 +909,8 @@ class AdaptivityManager:
                             + crve.get_phase_clusters()[mat_phase].index(
                                 cluster)*len(comp_order)
                         # Transfer cluster strain
-                        global_strain_mf_new[init_idx_new:init_idx_new
+                        global_strain_mf_new[
+                            init_idx_new:init_idx_new
                             + len(comp_order)] = global_strain_mf_old[
                                 init_idx_old:init_idx_old+len(comp_order)]
                     else:
@@ -992,31 +993,32 @@ class AdaptivityManager:
             indent = 10*' '
             info.displayinfo(
                 '5',
-                'Summary:' + '\n\n' +
-                indent + 'Phase   New Clusters   Total Clusters' + '\n' +
-                indent + 37*'-' + '\n' +
-                ((indent + '{:^5s}{:>11d}{:>15d}\n')*
-                (len(self._adapt_material_phases))).format(*output_list) +
-                indent + 37*'-' + '\n' +
-                indent + '{:^5s}'.format('Total') +
-                '{:>11d}{:>15d}'.format(*output_total),
+                'Summary:' + '\n\n'
+                + indent + 'Phase   New Clusters   Total Clusters' + '\n'
+                + indent + 37*'-' + '\n'
+                + ((indent + '{:^5s}{:>11d}{:>15d}\n')
+                   * (len(self._adapt_material_phases))).format(*output_list)
+                + indent + 37*'-' + '\n'
+                + indent + '{:^5s}'.format('Total')
+                + '{:>11d}{:>15d}'.format(*output_total),
                 2)
             # Output adaptive phases execution time table
             indent = 10*' '
             info.displayinfo(
-                '5', 'Execution times (s):' + '\n\n' +
-                indent + '           Time(s)        %' + '\n' +
-                indent + 28*'-' + '\n' +
-                indent + '{:^5s}'.format('A') + '{:^18.4e}'.format(a_time) +
-                '{:>5.2f}'.format((a_time/dtime)*100) + '\n' +
-                indent + '{:^5s}'.format('B') + '{:^18.4e}'.format(b_time) +
-                '{:>5.2f}'.format((b_time/dtime)*100) + '\n' +
-                indent + '{:^5s}'.format('C') + '{:^18.4e}'.format(c_time) +
-                '{:>5.2f}'.format((c_time/dtime)*100) + '\n' +
-                indent + '{:^5s}'.format('D') + '{:^18.4e}'.format(c_time) +
-                '{:>5.2f}'.format((d_time/dtime)*100) + '\n' +
-                indent + 28*'-' + '\n' +
-                indent + '{:^5s}'.format('Total') + '{:>14.4e}'.format(dtime),
+                '5', 'Execution times (s):' + '\n\n'
+                + indent + '           Time(s)        %' + '\n'
+                + indent + 28*'-' + '\n'
+                + indent + '{:^5s}'.format('A') + '{:^18.4e}'.format(a_time)
+                + '{:>5.2f}'.format((a_time/dtime)*100) + '\n'
+                + indent + '{:^5s}'.format('B') + '{:^18.4e}'.format(b_time)
+                + '{:>5.2f}'.format((b_time/dtime)*100) + '\n'
+                + indent + '{:^5s}'.format('C') + '{:^18.4e}'.format(c_time)
+                + '{:>5.2f}'.format((c_time/dtime)*100) + '\n'
+                + indent + '{:^5s}'.format('D') + '{:^18.4e}'.format(c_time)
+                + '{:>5.2f}'.format((d_time/dtime)*100) + '\n'
+                + indent + 28*'-' + '\n'
+                + indent + '{:^5s}'.format('Total')
+                + '{:>14.4e}'.format(dtime),
                 2)
     # -------------------------------------------------------------------------
     def check_inc_adaptive_steps(self, inc):
@@ -1221,22 +1223,23 @@ class ClusteringAdaptivityOutput:
         # Open clustering adaptivity output file (write mode)
         adapt_file = open(self._adapt_file_path, 'w')
         # Set clustering adaptivity output file header format structure
-        write_list = ['{:>9s}'.format(self._header[0]) +
-                      ''.join([('{:>' + str(self._col_width) + 's}').format(x)
-                      for x in self._header[1:]]),]
+        write_list = ['{:>9s}'.format(self._header[0])
+                      + ''.join([('{:>' + str(self._col_width)
+                                  + 's}').format(x)
+                                for x in self._header[1:]]), ]
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set clustering adaptivity output file increment format structure
         write_list += [
-            '\n' + '{:>9d}'.format(0) +
-            ('{:>' + str(self._col_width) + '.8e}').format(0) +
-            ('{:>' + str(self._col_width) + '.8e}').format(0) +
-            ('{:>' + str(self._col_width) + '.8e}').format(0) +
-            ('{:>' + str(self._col_width) + '.8e}').format(0) +
-            ''.join([''.join([('{:>' + str(self._col_width) + 'd}').format(x)
-                              for x in output_list[3*i:3*i+2]] +
-                             [('{:>' + str(self._col_width) + '.8e}').format(
-                              output_list[3*i+2])])
-                     for i in range(len(self._adapt_material_phases))])]
+            '\n' + '{:>9d}'.format(0)
+            + ('{:>' + str(self._col_width) + '.8e}').format(0)
+            + ('{:>' + str(self._col_width) + '.8e}').format(0)
+            + ('{:>' + str(self._col_width) + '.8e}').format(0)
+            + ('{:>' + str(self._col_width) + '.8e}').format(0)
+            + ''.join([''.join([('{:>' + str(self._col_width) + 'd}').format(x)
+                                for x in output_list[3*i:3*i+2]]
+                               + [('{:>' + str(self._col_width)
+                                   + '.8e}').format(output_list[3*i+2])])
+                       for i in range(len(self._adapt_material_phases))])]
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Write clustering adaptivity output file
         adapt_file.writelines(write_list)
@@ -1266,10 +1269,10 @@ class ClusteringAdaptivityOutput:
             # Open clustering adaptivity output file (write mode)
             adapt_file = open(self._adapt_file_path, 'w')
             # Set clustering adaptivity output file header format structure
-            write_list += ['{:>9s}'.format(self._header[0]) +
-                           ''.join([('{:>' + str(self._col_width)
-                                     + 's}').format(x)
-                           for x in self._header[1:]]),]
+            write_list += ['{:>9s}'.format(self._header[0])
+                           + ''.join([('{:>' + str(self._col_width)
+                                       + 's}').format(x)
+                                      for x in self._header[1:]]), ]
         elif mode == 'increment':
             # Open clustering adaptivity output file (append mode)
             adapt_file = open(self._adapt_file_path, 'a')
@@ -1282,20 +1285,20 @@ class ClusteringAdaptivityOutput:
             output_list += adaptivity_output[mat_phase]
         # Set clustering adaptivity output file increment format structure
         write_list += [
-            '\n' + '{:>9d}'.format(inc) +
-            ('{:>' + str(self._col_width) + '.8e}').format(
-                adaptivity_manager.adaptive_time) +
-            ('{:>' + str(self._col_width) + '.8e}').format(
-                adaptivity_manager.adaptive_evaluation_time) +
-            ('{:>' + str(self._col_width) + '.8e}').format(
-                crve.get_adaptive_clustering_time()) +
-            ('{:>' + str(self._col_width) + '.8e}').format(
-                crve.get_adaptive_cit_time()) +
-            ''.join([''.join([('{:>' + str(self._col_width) + 'd}').format(x)
-                              for x in output_list[3*i:3*i+2]] +
-                             [('{:>' + str(self._col_width) + '.8e}').format(
-                              output_list[3*i+2])])
-                     for i in range(len(self._adapt_material_phases))])]
+            '\n' + '{:>9d}'.format(inc)
+            + ('{:>' + str(self._col_width) + '.8e}').format(
+                adaptivity_manager.adaptive_time)
+            + ('{:>' + str(self._col_width) + '.8e}').format(
+                adaptivity_manager.adaptive_evaluation_time)
+            + ('{:>' + str(self._col_width) + '.8e}').format(
+                crve.get_adaptive_clustering_time())
+            + ('{:>' + str(self._col_width) + '.8e}').format(
+                crve.get_adaptive_cit_time())
+            + ''.join([''.join([('{:>' + str(self._col_width) + 'd}').format(x)
+                                for x in output_list[3*i:3*i+2]]
+                               + [('{:>' + str(self._col_width)
+                                   + '.8e}').format(output_list[3*i+2])])
+                       for i in range(len(self._adapt_material_phases))])]
         # Write clustering adaptivity output file
         adapt_file.writelines(write_list)
         # Close clustering adaptivity output file
