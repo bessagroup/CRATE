@@ -633,7 +633,7 @@ class MaterialState:
                     # out-of-plane component component
                     oop_hom_comp = oop_hom_comp \
                         + self._clusters_vf[str(cluster)] \
-                        *self._clusters_state[str(cluster)][comp_name]
+                        * self._clusters_state[str(cluster)][comp_name]
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Update out-of-plane stress or strain component
             if self._strain_formulation == 'infinitesimal':
@@ -1239,8 +1239,8 @@ class MaterialState:
         spatial_consistent_tangent = np.zeros(4*(n_dim,))
         # Compute spatial consistent tangent modulus
         spatial_consistent_tangent = (1.0/(2.0*np.linalg.det(def_gradient))) \
-            *(top.ddot44_1(inf_consistent_tangent,
-                           top.ddot44_1(fo_log_derivative, fo_cauchy_green)))
+            * (top.ddot44_1(inf_consistent_tangent,
+                            top.ddot44_1(fo_log_derivative, fo_cauchy_green)))
         for i, j, k, l in it.product(range(n_dim), repeat=4):
             spatial_consistent_tangent[i, j, k, l] += \
                 -1.0*cauchy_stress[i, l]*top.dd(j, k)
