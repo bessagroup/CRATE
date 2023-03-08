@@ -83,8 +83,8 @@ class HomResOutput:
         # Set loading initial output
         load_init = (0, 0.0, 0, 0.0, 0.0, 0)
         # Set strain and stress initial output
-        strain_init = 9*[0.0,]
-        stress_init = 9*[0.0,]
+        strain_init = 9*[0.0, ]
+        stress_init = 9*[0.0, ]
         if strain_formulation == 'finite':
             strain_init[0] = 1.0
             strain_init[4] = 1.0
