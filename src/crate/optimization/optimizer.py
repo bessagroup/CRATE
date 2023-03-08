@@ -126,7 +126,7 @@ class LIPO(Optimizer):
         # Compute optimization function at optimization parameters initial
         # guess
         init_shot = optimization_function.get_init_shot(is_normalized=True)
-        if not init_shot is None:
+        if init_shot is not None:
             # Initialize prior evaluations of optimization function
             evaluations = []
             # Append evaluation at optimization parameters intial guess
@@ -142,7 +142,7 @@ class LIPO(Optimizer):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Get optimization solution
         parameters = optimizer.optimum[0]
-        optimum = optimizer.optimum[1]
+        # optimum = optimizer.optimum[1]
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return parameters
@@ -222,7 +222,7 @@ class GeneticAlgorithm(Optimizer):
         # Get optimization solution
         parameters = {str(param): optimizer.best_variable[i]
                       for i, param in enumerate(parameters_names)}
-        optimum = optimizer.best_function
+        # optimum = optimizer.best_function
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return parameters
@@ -285,10 +285,11 @@ class SciPyMinimizer(Optimizer):
             optimization_function.get_bounds(is_normalized=True)
         # Build optimization parameters bounds array
         bounds = np.array([(lower_bounds[str(param)], upper_bounds[str(param)])
-            for param in parameters_names]).reshape(dimension, 2)
+                           for param in parameters_names]).reshape(dimension,
+                                                                   2)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set algorithmic parameters
-        options = {'maxiter': max_n_iter,}
+        options = {'maxiter': max_n_iter, }
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Solve optimization problem
         result = scipy.optimize.minimize(fun=norm_opt_function_seq,
@@ -300,7 +301,7 @@ class SciPyMinimizer(Optimizer):
         # Get optimization solution
         parameters = {str(param): result.x[i]
                       for i, param in enumerate(parameters_names)}
-        optimum = result.fun
+        # optimum = result.fun
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return parameters
@@ -385,7 +386,7 @@ class ScikitOptimizer(Optimizer):
         # Get optimization solution
         parameters = {str(param): result.x[i]
                       for i, param in enumerate(parameters_names)}
-        optimum = result.fun
+        # optimum = result.fun
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return parameters

@@ -393,12 +393,12 @@ class RelativeRootMeanSquaredError(Loss):
 
         .. math::
 
-           \\text{RRMSE} (\\boldsymbol{y}, \hat{\\boldsymbol{y}}) =
+           \\text{RRMSE} (\\boldsymbol{y}, \\hat{\\boldsymbol{y}}) =
            \\sqrt{\\dfrac{\\dfrac{1}{n} \\sum_{i=1}^{n}(y_{i} -
            \\hat{y}_{i})^{2}}{ \\sum_{i=1}^{n} \\hat{y}_{i}^{2}}}
 
         where :math:`\\boldsymbol{y}` is the vector of predicted values,
-        :math:`\hat{\\boldsymbol{y}}` is the vector of reference values,
+        :math:`\\hat{\\boldsymbol{y}}` is the vector of reference values,
         and :math:`n` is the number of data points.
 
         ----
