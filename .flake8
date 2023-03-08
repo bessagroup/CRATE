@@ -2,7 +2,7 @@
 
 # Configuration compatible with Bessa Research Group Python Coding Style
 #
-# Version: December 6, 2022
+# Version: March 8, 2023
 
 
 # >>> UPDATE ACCORDING WITH YOUR PYTHON PROJECT
@@ -36,12 +36,13 @@ max-complexity = 15
 #       Remark: Use the appropriate delimiters if not following PEP8!
 # E226: Missing whitespace around arithmetic operator
 #       Remark: Flake8 does not distinguish +, - from *, /, ** cases yet.
-extend-ignore = E226, E3
+# E731: Lambda expression
+extend-ignore = E226, E3, E731
 
 # List of (additional) error codes to check:
 # E241 : Multiple spaces after ‘,’
 # E242 : Tab after ‘,’
 # E704 : Multiple statements on one line (def)
 # W504 : Line break after binary operator
-# W505 : Doc line too long (82 > 79 characters)
+# W505 : Doc line too long
 extend-select = E241, E242, E704, W504, W505
