@@ -229,7 +229,7 @@ class VonMises(ConstitutiveModel):
             * State update failure flag.
 
         ----
-        
+
         Returns
         -------
         state_variables_init : dict
@@ -401,8 +401,8 @@ class VonMises(ConstitutiveModel):
             # Start Newton-Raphson iterative loop
             while True:
                 # Compute current yield stress and hardening modulus
-                yield_stress,H = hardening_law(hardening_parameters,
-                                              acc_p_strain_old + inc_p_mult)
+                yield_stress, H = hardening_law(hardening_parameters,
+                                                acc_p_strain_old + inc_p_mult)
                 # Compute return-mapping residual (scalar)
                 residual = vm_trial_stress - 3.0*G*inc_p_mult - yield_stress
                 # Check Newton-Raphson iterative procedure convergence
@@ -479,14 +479,14 @@ class VonMises(ConstitutiveModel):
         if is_plast:
             # Compute elastoplastic consistent tangent modulus
             factor_1 = ((inc_p_mult*6.0*G**2)/vm_trial_stress)
-            factor_2 = (6.0*G**2)*((inc_p_mult/vm_trial_stress) \
-                - (1.0/(3.0*G + H)))
+            factor_2 = (6.0*G**2)*((inc_p_mult/vm_trial_stress)
+                                   - (1.0/(3.0*G + H)))
             unit_flow_vector = \
                 np.sqrt(2.0/3.0)*mop.get_tensor_from_mf(flow_vector_mf, n_dim,
                                                         comp_order_sym)
             consistent_tangent = e_consistent_tangent \
                 - factor_1*fodevprojsym + factor_2*top.dyad22_1(
-                unit_flow_vector, unit_flow_vector)
+                    unit_flow_vector, unit_flow_vector)
         else:
             consistent_tangent = e_consistent_tangent
         # Build consistent tangent modulus matricial form
