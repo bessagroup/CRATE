@@ -2,6 +2,12 @@
 CRATE (Clustering-based Nonlinear Analysis of Materials)
 ========================================================
 
+.. image:: ../media/logo/CRATE_logo_horizontal_long.png
+   :width: 70 %
+   :align: center
+
+|
+
 What is CRATE?
 --------------
 
@@ -30,12 +36,19 @@ CRATE's conceptual structure can be easily understood by getting familiar with s
 
 Assume that we are interested in predicting the behavior of a fiber-reinforced composite (heterogeneous) material composed of two different material phases (matrix and fiber). At the micro-scale level, the composite material needs to be first characterized by a **Representative Volume Element (RVE)**, i.e., a volume of material sufficient large such that it contains enough morphological and topological information to be representative in an average sense. Given the enforcement of periodic boundary conditions in the material analysis, the RVE is assumed periodic. In the second place, the RVE needs to be spatially discretized in a regular (or uniform) grid of voxels, where each voxel is associated with a given material phase. Finally, the RVE model can be compressed by means of a clustering-based domain decomposition, i.e., a cluster analysis that decomposes the spatial domain into a given number of material clusters according to a given set of features. The compressed model is then called **Cluster-reduced Representative Volume Element (CRVE)**, composed of **cluster-reduced material phases (CRMPs)**, each composed of different material clusters. Each **material cluster** is, therefore, a group of voxels that exhibit some type of similarity and that are numerically handled in a unified way.
 
-.. image:: ../../src/crate/doc/schematics/doc_CRATE_concepts.png
+.. image:: ../schematics/doc_CRATE_concepts.png
+   :width: 70 %
+   :align: center
+
+|
 
 The multi-scale analysis of a uniaxial tensile test of a dogbone specimen is schematically illustrated below. Besides the **spatially discretized RVE** of the fiber-reinforced composite, CRATE receives as input data a given **macro-scale strain and/or stress loading path**, i.e., a given set of macro-scale first-order homogeneous loading constraints. A two-stage **clustering-based reduced-order method** is then employed to solve the micro-scale equilibrium problem. In the so-called offline-stage, the RVE is compressed into the CRVE by means of a clustering-based domain decomposition. In the following online-stage, the CRVE is subject to the macro-scale loading path and the micro-scale equilibrium problem is solved under periodic boundary conditions. The **macro-scale material response** is then computed by means of computational homogenization, rendering the main output data of CRATE.
 
-.. image:: ../../src/crate/doc/schematics/doc_CRATE_conceptual_scheme.png
+.. image:: ../schematics/doc_CRATE_conceptual_scheme.png
+   :width: 70 %
+   :align: center
 
+|
 
 Computational framework
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -81,7 +94,9 @@ The **general workflow of CRATE** in the solution of a micro-scale equilibrium p
 
     |
 
-    .. image:: ../../src/crate/doc/schematics/doc_CRATE_spatial_discretization_file.png
+    .. image:: ../schematics/doc_CRATE_spatial_discretization_file.png
+       :width: 80 %
+       :align: center
 
     |
 
@@ -113,7 +128,9 @@ The **general workflow of CRATE** in the solution of a micro-scale equilibrium p
 
     |
 
-    .. image:: ../../src/crate/doc/schematics/doc_CRATE_input_data_file.png
+    .. image:: ../schematics/doc_CRATE_input_data_file.png
+       :width: 80 %
+       :align: center
 
     |
 
@@ -142,8 +159,9 @@ The **general workflow of CRATE** in the solution of a micro-scale equilibrium p
 
     |
 
-    .. image:: ../../src/crate/doc/schematics/doc_CRATE_execution_output.png
-
+    .. image:: ../schematics/doc_CRATE_execution_output.png
+       :width: 80 %
+       :align: center
     |
 
 - **Step 4 (Output): Post-process results.**
@@ -160,11 +178,15 @@ The **general workflow of CRATE** in the solution of a micro-scale equilibrium p
 
     |
 
-    .. image:: ../../src/crate/doc/schematics/doc_CRATE_hres_output.png
+    .. image:: ../schematics/doc_CRATE_hres_output.png
+       :width: 80 %
+       :align: center
 
     |
 
-    .. image:: ../../src/crate/doc/schematics/doc_CRATE_vti_output.png
+    .. image:: ../schematics/doc_CRATE_vti_output.png
+       :width: 80 %
+       :align: center
 
     |
 
