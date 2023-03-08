@@ -50,7 +50,7 @@ class DNSHomogenizationMethod(ABC):
         voxels.
 
         ----
-        
+
         Parameters
         ----------
         mac_strain_id : int
