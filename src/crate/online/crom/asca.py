@@ -447,9 +447,9 @@ class ASCA:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         if is_vtk_output:
             # Write VTK file associated with the initial state
-            vtk_output.write_vtk_file_time_step(0, self._strain_formulation,
-                self._problem_type, crve, material_state,
-                vtk_vars=vtk_data['vtk_vars'],
+            vtk_output.write_vtk_file_time_step(
+                0, self._strain_formulation, self._problem_type, crve,
+                material_state, vtk_vars=vtk_data['vtk_vars'],
                 adaptivity_manager=adaptivity_manager)
             # Get VTK output increment divider
             vtk_inc_div = vtk_data['vtk_inc_div']
@@ -512,8 +512,8 @@ class ASCA:
             # Set reference rewind time
             rewind_manager.update_rewind_time(mode='init')
             # Instantiate increment rewinder
-            inc_rewinder = IncrementRewinder(rewind_inc=inc,
-                phase_clusters=crve.get_phase_clusters())
+            inc_rewinder = IncrementRewinder(
+                rewind_inc=inc, phase_clusters=crve.get_phase_clusters())
             # Save loading path state
             inc_rewinder.save_loading_path(loading_path=mac_load_path)
             # Save material constitutive state
@@ -633,8 +633,7 @@ class ASCA:
                         global_strain_mf,
                         inc_mac_load_mf=inc_mac_load_mf,
                         farfield_strain_mf=farfield_strain_mf,
-                        farfield_strain_old_mf=
-                            self._farfield_strain_old_mf)
+                        farfield_strain_old_mf=self._farfield_strain_old_mf)
                     #
                     #                                    Convergence evaluation
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -994,7 +993,7 @@ class ASCA:
             # Write increment homogenized results (.hres)
             hres_output.write_hres_file(
                 self._strain_formulation, self._problem_type, mac_load_path,
-                hom_results, time.time()- init_time - self._post_process_time)
+                hom_results, time.time() - init_time - self._post_process_time)
             # Increment post-processing time
             self._post_process_time += time.time() - procedure_init_time
             #
@@ -1085,8 +1084,8 @@ class ASCA:
                 # Set reference rewind time
                 rewind_manager.update_rewind_time(mode='init')
                 # Instantiate increment rewinder
-                inc_rewinder = IncrementRewinder(rewind_inc=inc,
-                    phase_clusters=crve.get_phase_clusters())
+                inc_rewinder = IncrementRewinder(
+                    rewind_inc=inc, phase_clusters=crve.get_phase_clusters())
                 # Save loading path state
                 inc_rewinder.save_loading_path(loading_path=mac_load_path)
                 # Save material constitutive state
@@ -1915,12 +1914,12 @@ class ASCA:
         j_end = n_total_clusters*len(comp_order)
         if self._strain_formulation == 'infinitesimal':
             jacobian[i_init:i_end, j_init:j_end] = \
-                scipy.linalg.block_diag(*(n_total_clusters*[fosym_mf,])) \
+                scipy.linalg.block_diag(*(n_total_clusters*[fosym_mf, ])) \
                 + global_cit_diff_tangent_mf
         else:
             jacobian[i_init:i_end, j_init:j_end] = \
-                scipy.linalg.block_diag(*(n_total_clusters*[foid_mf,])) \
-                    + global_cit_diff_tangent_mf
+                scipy.linalg.block_diag(*(n_total_clusters*[foid_mf, ])) \
+                + global_cit_diff_tangent_mf
         # Compute Jacobian matrix component 12
         i_init = 0
         i_end = n_total_clusters*len(comp_order)
@@ -1948,7 +1947,7 @@ class ASCA:
                         jacobian[i, j_init:j_end] = f_foid_mf[k, :]
                     else:
                         vf_tangent_mf = clusters_vf[str(cluster)]\
-                            *clusters_tangent_mf[str(cluster)]
+                            * clusters_tangent_mf[str(cluster)]
                         j_init = jclst*len(comp_order)
                         j_end = j_init + len(comp_order)
                         jacobian[i, j_init:j_end] = vf_tangent_mf[k, :]
@@ -2135,7 +2134,7 @@ class ASCA:
         # Compute error associated with the clusters equilibrium residuals
         error_1 = \
             np.linalg.norm(residual[0:n_total_clusters*len(comp_order)]) \
-            /strain_norm_factor
+            / strain_norm_factor
         # Compute error associated with the homogenization constraints
         # residuals
         aux = residual[n_total_clusters*len(comp_order):]
@@ -2167,8 +2166,9 @@ class ASCA:
         return is_converged, errors
     # -------------------------------------------------------------------------
     def _crve_effective_tangent_modulus(self, crve, material_state,
-            global_cit_diff_tangent_mf, global_strain_mf=None,
-            farfield_strain_mf=None):
+                                        global_cit_diff_tangent_mf,
+                                        global_strain_mf=None,
+                                        farfield_strain_mf=None):
         """CRVE tangent modulus and clusters strain concentration tensors.
 
         *Infinitesimal strains:*
@@ -2351,11 +2351,11 @@ class ASCA:
         # tensors system of linear equations coefficient matrix)
         if self._strain_formulation == 'infinitesimal':
             csct_matrix = \
-                scipy.linalg.block_diag(*(n_total_clusters*[fosym_mf,])) \
+                scipy.linalg.block_diag(*(n_total_clusters*[fosym_mf, ])) \
                 + global_cit_diff_tangent_mf
         else:
             csct_matrix = \
-                scipy.linalg.block_diag(*(n_total_clusters*[foid_mf,])) \
+                scipy.linalg.block_diag(*(n_total_clusters*[foid_mf, ])) \
                 + global_cit_diff_tangent_mf
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Select clusters strain concentration tensors computation option:
@@ -2941,10 +2941,10 @@ class ElasticReferenceMaterial:
             # is not provided, set them from the volume average of the actual
             # material phases elastic properties
             E = sum([material_phases_vf[phase]
-                     *material_phases_properties[phase]['E']
+                     * material_phases_properties[phase]['E']
                      for phase in material_phases])
             v = sum([material_phases_vf[phase]
-                     *material_phases_properties[phase]['v']
+                     * material_phases_properties[phase]['v']
                      for phase in material_phases])
         else:
             # Set initial guess of elastic reference material properties
@@ -3331,8 +3331,8 @@ class ElasticReferenceMaterial:
                 # Compute elastic tangent modulus
                 elastic_tangent = lam*fodiagtrace + 2.0*miu*fosym
                 # Compute elastic compliance
-                elastic_compliance = -(lam/(2*miu*(3*lam + 2*miu)))\
-                    *fodiagtrace + (1.0/(2.0*miu))*fosym
+                elastic_compliance = -(lam/(2*miu*(3*lam + 2*miu))) \
+                    * fodiagtrace + (1.0/(2.0*miu))*fosym
         else:
             # Set nonsymmetric strain/stress component order
             comp_order = self._comp_order_nsym
@@ -3343,8 +3343,8 @@ class ElasticReferenceMaterial:
                 # 3D problem)
                 elastic_tangent = lam*fodiagtrace + 2.0*miu*foid
                 # Compute elastic compliance
-                elastic_compliance = -(lam/(2*miu*(3*lam + 2*miu)))\
-                    *fodiagtrace + (1.0/(2.0*miu))*foid
+                elastic_compliance = -(lam/(2*miu*(3*lam + 2*miu))) \
+                    * fodiagtrace + (1.0/(2.0*miu))*foid
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Build elastic tangent modulus matricial form
         elastic_tangent_mf = mop.get_tensor_mf(elastic_tangent, self._n_dim,
@@ -3358,9 +3358,9 @@ class ElasticReferenceMaterial:
         for j in range(len(comp_order)):
             for i in range(len(comp_order)):
                 elastic_compliance_matrix[i, j] = \
-                    (1.0/mop.kelvin_factor(i, comp_order))*\
-                    (1.0/mop.kelvin_factor(j, comp_order))*\
-                    elastic_compliance_mf[i, j]
+                    (1.0/mop.kelvin_factor(i, comp_order)) \
+                    * (1.0/mop.kelvin_factor(j, comp_order)) \
+                    * elastic_compliance_mf[i, j]
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Update reference material elastic tangent modulus and compliance
         # matrix
@@ -3435,7 +3435,7 @@ class ElasticReferenceMaterial:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return is_converged
-   # -------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     @staticmethod
     def get_available_scs(strain_formulation):
         """Get available self-consistent schemes.
@@ -3458,7 +3458,7 @@ class ElasticReferenceMaterial:
             raise RuntimeError('Unknown problem strain formulation.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return available_scs
-   # -------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     @staticmethod
     def lame_from_technical(E, v):
         """Get Lamé parameters from Young modulus and Poisson ratio.
@@ -3721,7 +3721,7 @@ class InfinitesimalRegressionSCS(ReferenceMaterialOptimizer):
         # is the same as in the previous converged values and solve the first
         # equation of self-consistent scheme system of linear equations
         elif np.all([abs(inc_strain[0, 0] - inc_strain[i, i])
-                     /np.linalg.norm(inc_strain) < 1e-10
+                     / np.linalg.norm(inc_strain) < 1e-10
                      for i in range(self._n_dim)]) and \
                 np.allclose(inc_strain, np.diag(np.diag(inc_strain)),
                             atol=1e-10):
@@ -3858,7 +3858,7 @@ class FiniteRegressionSCS(ReferenceMaterialOptimizer):
         scs_matrix[0, 1] = 2.0*np.trace(top.ddot42_1(
             top.dot42_1(foid, strain_old), inc_strain))
         scs_matrix[1, 0] = top.ddot22_1(top.ddot42_1(
-            top.dot42_1(fodiagtrace, strain_old),inc_strain),
+            top.dot42_1(fodiagtrace, strain_old), inc_strain),
             np.matmul(inc_strain, strain_old))
         scs_matrix[1, 1] = 2.0*top.ddot22_1(top.ddot42_1(
             top.dot42_1(foid, strain_old), inc_strain),
@@ -4188,7 +4188,7 @@ class SelfConsistentTangentLoss(OptimizationFunction):
                                    '3232', '1313', '2323', '3333', '1122',
                                    '2233', '1133')
         # Check weights attributed to each data point
-        if not self._weights is None:
+        if self._weights is not None:
             if len(weights) != len(self._opt_comps):
                 raise RuntimeError('Number of weights must be equal to number '
                                    'of data points (reference material '
@@ -4261,7 +4261,7 @@ class SelfConsistentTangentLoss(OptimizationFunction):
             y_ref[i] = self._eff_tangent_mf[so_idx]
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Apply weights to parametric and reference solutions
-        if not self._weights is None:
+        if self._weights is not None:
             y = tuple(map(lambda w, v: w*v, self._weights, y))
             y_ref = tuple(map(lambda w, v: w*v, self._weights, y_ref))
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -4357,7 +4357,7 @@ class SelfConsistentCompRegressionLoss(OptimizationFunction):
         else:
             self._opt_comps = tuple(comp_order_nsym)
         # Check weights attributed to each data point
-        if not self._weights is None:
+        if self._weights is not None:
             if len(weights) != len(self._opt_comps):
                 raise RuntimeError('Number of weights must be equal to number '
                                    'of data points (reference material '
@@ -4440,7 +4440,7 @@ class SelfConsistentCompRegressionLoss(OptimizationFunction):
                 # form)
                 inc_elastic_tangent_mf = mop.get_tensor_mf(
                     top.dot42_1(elastic_tangent, strain_old), self._n_dim,
-                                comp_order)
+                    comp_order)
             else:
                 # Set reference material incremental tangent modulus (matricial
                 # form)
@@ -4467,7 +4467,7 @@ class SelfConsistentCompRegressionLoss(OptimizationFunction):
             y_ref[i] = self._inc_stress_mf[i]
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Apply weights to parametric and reference solutions
-        if not self._weights is None:
+        if self._weights is not None:
             y = tuple(map(lambda w, v: w*v, self._weights, y))
             y_ref = tuple(map(lambda w, v: w*v, self._weights, y_ref))
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
