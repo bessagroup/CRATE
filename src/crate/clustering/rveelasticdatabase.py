@@ -167,8 +167,8 @@ class RVEElasticDatabase:
             np.zeros((n_voxels, len(mac_strains)*len(comp_order)))
         # Loop over macroscale strain loadings
         for i in range(len(mac_strains)):
-            info.displayinfo('5', 'Macroscale strain loading (' + str(i + 1) +
-                             ' of ' + str(len(mac_strains)) + ')...', 2)
+            info.displayinfo('5', 'Macroscale strain loading (' + str(i + 1)
+                             + ' of ' + str(len(mac_strains)) + ')...', 2)
             # Get macroscale strain tensor
             mac_strain_id = i + 1
             mac_strain = mac_strains[i]
@@ -225,11 +225,11 @@ class RVEElasticDatabase:
             else:
                 # Get homogenized deformation gradient
                 def_gradient = \
-                    hom_stress_strain[-1,:len(comp_order_nsym)].reshape(
+                    hom_stress_strain[-1, :len(comp_order_nsym)].reshape(
                         (n_dim, n_dim), order='F')
                 # Get homogenized first Piola-Kirchhoff stress tensor
                 first_piola_stress = \
-                    hom_stress_strain[-1,len(comp_order_nsym):].reshape(
+                    hom_stress_strain[-1, len(comp_order_nsym):].reshape(
                         (n_dim, n_dim), order='F')
                 # Compute rotation tensor
                 rotation = compute_rotation_tensor(def_gradient)
