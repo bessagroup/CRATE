@@ -283,8 +283,9 @@ class StVenantKirchhoff(ConstitutiveModel):
             self._material_properties,
             elastic_symmetry=self._material_properties['elastic_symmetry'])
         # Compute second Piola-Kirchhoff stress tensor (matricial form)
-        second_piola_stress_mf = np.matmul(elastic_tangent_mf,
-            mop.get_tensor_mf(green_lagrange, n_dim, comp_order_sym))
+        second_piola_stress_mf = np.matmul(
+            elastic_tangent_mf, mop.get_tensor_mf(green_lagrange, n_dim,
+                                                  comp_order_sym))
         # Build second Piola-Kirchhoff stress tensor
         second_piola_stress = mop.get_tensor_from_mf(second_piola_stress_mf,
                                                      n_dim, comp_order_sym)
@@ -344,8 +345,8 @@ class StVenantKirchhoff(ConstitutiveModel):
                 e_strain, top.dot24_3(e_strain, elastic_tangent)))
         # Compute spatial consistent tangent modulus
         spatial_consistent_tangent = (1.0/np.linalg.det(e_strain)) \
-            *top.dot42_3(der_kirchhoff_e_strain, np.transpose(e_strain)) \
-                - top.dyad22_3(cauchy_stress, soid)
+            * top.dot42_3(der_kirchhoff_e_strain, np.transpose(e_strain)) \
+            - top.dyad22_3(cauchy_stress, soid)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute material consistent tangent modulus (matricial form)
         material_consistent_tangent = material_from_spatial_tangent_modulus(
