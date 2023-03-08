@@ -102,7 +102,7 @@ The **general workflow of CRATE** in the solution of a micro-scale equilibrium p
 
     * The input data file contains all the required information about the problem (problem type, material properties, macro-scale loading path, ...) and about the solution procedure (macro-scale loading incrementation, clustering-based domain decomposition, output options, ...). The **spatial discretization file (`.rgmsh` file)** path is provided in the input data file;
 
-    * A complete **CRATE's user-defined input data file (`.dat` file)** template, where each available keyword specification (mandatory or optional) is fully documented, can be found [here](hhttps://github.com/BernardoFerreira/CRATE/blob/PRv1.0.0-package-structure/src/crate/input_data_file_template.dat). This template file can be copied to a given local simulation directory and be readily used by replacing the `[insert here]` boxes with the suitable specification!
+    * A complete **CRATE's user-defined input data file (`.dat` file)** template, where each available keyword specification (mandatory or optional) is fully documented, can be found [here](https://github.com/BernardoFerreira/CRATE/blob/PRv1.0.0-package-structure/src/crate/input_data_file_template.dat). This template file can be copied to a given local simulation directory and be readily used by replacing the `[insert here]` boxes with the suitable specification!
 
 <p align="center">
   <a href=""><img alt="logo" src="docs/schematics/doc_CRATE_input_data_file.png" width="60%"></a>
