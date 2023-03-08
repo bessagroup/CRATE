@@ -34,7 +34,7 @@ import numpy as np
 #                                                          Authorship & Credits
 # =============================================================================
 __author__ = 'Bernardo Ferreira (bernardo_ferreira@brown.edu)'
-__credits__ = ['Bernardo Ferreira',]
+__credits__ = ['Bernardo Ferreira', ]
 __status__ = 'Stable'
 # =============================================================================
 #
@@ -61,7 +61,7 @@ def print2(*objects):
     objects_esc = list()
     for i in range(len(objects)):
         objects_esc.append(escapeANSI(objects[i]))
-    print(*objects_esc, file = screen_file)
+    print(*objects_esc, file=screen_file)
     screen_file.close()
 # =============================================================================
 def setdisplayfeatures():
@@ -126,7 +126,7 @@ def checknumber(x):
     try:
         float(x)
         return is_number
-    except:
+    except Exception:
         is_number = False
         return is_number
 # =============================================================================
