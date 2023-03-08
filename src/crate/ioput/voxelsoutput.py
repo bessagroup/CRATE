@@ -97,7 +97,7 @@ class VoxelsOutput:
         for i in range(len(self._output_variables)):
             write_list += \
                 [''.join([('{:>' + str(self._col_width) + '.8e}').format(x)
-                          for x in voxels_array[i, :]])  + '\n']
+                          for x in voxels_array[i, :]]) + '\n']
         # Open voxels material-related output file (write mode) and write
         # voxels material-related output variables initial values
         open(self._voxout_file_path, 'w').writelines(write_list)
@@ -248,7 +248,7 @@ class VoxelsArraysFactory:
         """
         # Check availability of cluster state-based voxel-defined quantity and
         # get number of dimensions
-        if not csbvar in self._available_csbvars.keys():
+        if csbvar not in self._available_csbvars.keys():
             raise RuntimeError('The computation of the cluster state-based '
                                'voxel-defined quantity \'' + csbvar + '\' is '
                                'not implemented.')
@@ -317,7 +317,7 @@ class VoxelsArraysFactory:
                                 # component from first Piola-Kirchhoff
                                 # counterpart
                                 stress_33 = (1.0/np.linalg.det(def_gradient))\
-                                    *clusters_state[str(cluster)]['stress_33']
+                                    * clusters_state[str(cluster)]['stress_33']
                             # Build 3D Cauchy stress tensor (matricial form)
                             stress_mf = mop.get_state_3Dmf_from_2Dmf(
                                 self._problem_type, stress_mf, stress_33)
