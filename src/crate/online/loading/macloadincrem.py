@@ -719,7 +719,7 @@ class LoadingSubpath:
             summary = 'Maximum loading subincrementation level'
             description = 'The maximum macroscale loading subincrementation ' \
                 + 'level ({}) has been reached without' + '\n' \
-            	+ indent + 'solution convergence.'
+                + indent + 'solution convergence.'
             info.displayinfo('4', summary, description, self._max_subinc_level)
         # Get current incremental load factor and associated incremental time
         inc_lfact = self._inc_lfacts[inc_idx]
@@ -934,8 +934,8 @@ class LoadingSubpath:
                                 - self._init_conv_hom_state[ltype][i])
                         # Compute current incremental loading component
                         self._inc_applied_load[ltype][i] = \
-                            inc_lfact*(self._load[ltype][i] -
-                                       self._init_conv_hom_state[ltype][i])
+                            inc_lfact*(self._load[ltype][i]
+                                       - self._init_conv_hom_state[ltype][i])
 #
 #                                                         Loading path rewinder
 # =============================================================================
@@ -1251,15 +1251,15 @@ class IncrementRewinder:
             Output associated with the VTK files.
         """
         # Rewind output files
-        if hres_output != None:
+        if hres_output is not None:
             hres_output.rewind_file(self._rewind_inc)
-        if ref_mat_output != None:
+        if ref_mat_output is not None:
             ref_mat_output.rewind_file(self._rewind_inc)
-        if voxels_output != None:
+        if voxels_output is not None:
             voxels_output.rewind_file(self._rewind_inc)
-        if adapt_output != None:
+        if adapt_output is not None:
             adapt_output.rewind_file(self._rewind_inc)
-        if vtk_output != None:
+        if vtk_output is not None:
             vtk_output.rewind_files(self._rewind_inc)
 # =============================================================================
 class RewindManager:
@@ -1432,7 +1432,7 @@ class RewindManager:
                     state_variables = clusters_state[str(cluster)]
                     # Check if accumulated plastic strain is cluster state
                     # variable
-                    if not 'acc_p_strain' in state_variables:
+                    if 'acc_p_strain' not in state_variables:
                         continue
                     # Evaluate accumulated plastic strain
                     if state_variables['acc_p_strain'] \
@@ -1463,7 +1463,7 @@ class RewindManager:
             default parameters (item).
         """
         # Set available rewind state storage criteria
-        available_save_rewind_state_criteria = {'increment_number': 0,}
+        available_save_rewind_state_criteria = {'increment_number': 0, }
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return available_save_rewind_state_criteria
