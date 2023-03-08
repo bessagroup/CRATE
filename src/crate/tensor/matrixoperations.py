@@ -194,8 +194,8 @@ def get_tensor_mf(tensor, n_dim, comp_order):
             mf_idx = tuple(mf_indexes[i])
             fo_idx = tuple(fo_indexes[i])
             factor = 1.0
-            if is_kelvin_notation and not (fo_idx[0] == fo_idx[1] and \
-                    fo_idx[2] == fo_idx[3]):
+            if is_kelvin_notation and not (fo_idx[0] == fo_idx[1]
+                                           and fo_idx[2] == fo_idx[3]):
                 factor = \
                     factor*np.sqrt(2) if fo_idx[0] != fo_idx[1] else factor
                 factor = \
@@ -316,16 +316,16 @@ def get_tensor_from_mf(tensor_mf, n_dim, comp_order):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize tensor
         if tensor_mf.dtype == 'complex':
-            tensor = np.zeros(tensor_order*(n_dim ,), dtype=complex)
+            tensor = np.zeros(tensor_order*(n_dim, ), dtype=complex)
         else:
-            tensor = np.zeros(tensor_order*(n_dim ,))
+            tensor = np.zeros(tensor_order*(n_dim, ))
         # Get tensor from matricial form
         for i in range(len(mf_indexes)):
             mf_idx = tuple(mf_indexes[i])
             fo_idx = tuple(fo_indexes[i])
             factor = 1.0
-            if is_kelvin_notation and not (fo_idx[0] == fo_idx[1] and
-                                           fo_idx[2] == fo_idx[3]):
+            if is_kelvin_notation and not (fo_idx[0] == fo_idx[1]
+                                           and fo_idx[2] == fo_idx[3]):
                 factor = \
                     factor*np.sqrt(2) if fo_idx[0] != fo_idx[1] else factor
                 factor = \
@@ -358,7 +358,7 @@ def kelvin_factor(idx, comp_order):
            advantages of the Kelvin mapping in finite element implementations
            of deformation processes. Environmental Earth Sciences, 75(11):937
            (see `here <https://dspace.mit.edu/handle/1721.1/105251>`_)
-           
+
     ----
 
     Parameters
@@ -424,11 +424,11 @@ def get_condensed_matrix(matrix, rows, cols):
     """
     # Check validity of rows and columns indexes to perform the condensation
     if not np.all([isinstance(rows[i], int) or isinstance(rows[i], np.integer)
-            for i in range(len(rows))]):
+                   for i in range(len(rows))]):
         raise RuntimeError('All the indexes specified to perform a matrix '
                            'condensation must be non-negative integers.')
-    elif not np.all([isinstance(cols[i], int) or
-                     isinstance(cols[i], np.integer)
+    elif not np.all([isinstance(cols[i], int)
+                     or isinstance(cols[i], np.integer)
                      for i in range(len(cols))]):
         raise RuntimeError('All the indexes specified to perform a matrix '
                            'condensation must be non-negative integers.')
@@ -549,8 +549,8 @@ def get_state_2Dmf_from_3Dmf(problem_type, mf_3d):
             comp_j = comp_order_2d[j]
             for i in range(len(comp_order_2d)):
                 comp_i = comp_order_2d[i]
-                mf_2d[i,j] = mf_3d[comp_order_3d.index(comp_i),
-                                   comp_order_3d.index(comp_j)]
+                mf_2d[i, j] = mf_3d[comp_order_3d.index(comp_i),
+                                    comp_order_3d.index(comp_j)]
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Return
     return mf_2d
