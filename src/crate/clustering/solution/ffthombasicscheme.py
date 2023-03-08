@@ -30,8 +30,6 @@ MacroscaleStrainIncrementer
 #                                                                       Modules
 # =============================================================================
 # Standard
-import os
-import sys
 import time
 import copy
 import warnings
@@ -270,7 +268,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
             evar1[self._regular_grid == int(mat_phase)] = \
                 (E*v)/((1.0 + v)*(1.0 - 2.0*v))
             evar2[self._regular_grid == int(mat_phase)] = \
-                np.multiply(2,E/(2.0*(1.0 + v)))
+                np.multiply(2, E/(2.0*(1.0 + v)))
         evar3 = np.add(evar1, evar2)
         #
         #                                 Reference material elastic properties
@@ -281,14 +279,14 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         mat_prop_ref = dict()
         mat_prop_ref['E'] = \
             0.5*(min([self._material_phases_properties[phase]['E']
-                 for phase in self._material_phases]) + \
-                 max([self._material_phases_properties[phase]['E']
-                 for phase in self._material_phases]))
+                      for phase in self._material_phases])
+                 + max([self._material_phases_properties[phase]['E']
+                        for phase in self._material_phases]))
         mat_prop_ref['v'] = \
             0.5*(min([self._material_phases_properties[phase]['v']
-                 for phase in self._material_phases]) + \
-                 max([self._material_phases_properties[phase]['v']
-                 for phase in self._material_phases]))
+                      for phase in self._material_phases])
+                 + max([self._material_phases_properties[phase]['v']
+                        for phase in self._material_phases]))
         #
         #                                              Frequency discretization
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -321,8 +319,9 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute Green operator material independent terms
         gop_1_dft_vox, gop_2_dft_vox, _ = \
-            citop.gop_material_independent_terms(self._strain_formulation,
-                self._problem_type, self._rve_dims, self._n_voxels_dims)
+            citop.gop_material_independent_terms(
+                self._strain_formulation, self._problem_type, self._rve_dims,
+                self._n_voxels_dims)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set Green operator matricial form components
         comps = list(it.product(comp_order, comp_order))
@@ -337,8 +336,9 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                                            comp_order.index(comps[i][1])]])
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize Green operator
-        gop_dft_vox = {''.join([str(x + 1) for x in idx]): \
-            np.zeros(tuple(self._n_voxels_dims)) for idx in fo_indexes}
+        gop_dft_vox = {''.join([str(x + 1) for x in idx]):
+                       np.zeros(tuple(self._n_voxels_dims))
+                       for idx in fo_indexes}
         # Compute Green operator matricial form components
         for i in range(len(mf_indexes)):
             # Get fourth-order tensor indexes
@@ -356,7 +356,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         else:
             n_incs = 1
         # Set incremental load factors
-        inc_lfacts = n_incs*[1.0/n_incs,]
+        inc_lfacts = n_incs*[1.0/n_incs, ]
         # Initialize macroscale strain incrementer
         mac_strain_incrementer = MacroscaleStrainIncrementer(
             self._strain_formulation, self._problem_type, mac_strain_total,
@@ -470,8 +470,9 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 elif self._conv_criterion == 'avg_stress_norm':
                     # Compute discrete error
-                    discrete_error = abs(avg_stress_norm -
-                        avg_stress_norm_itold)/avg_stress_norm
+                    discrete_error = \
+                        abs(avg_stress_norm - avg_stress_norm_itold) \
+                        / avg_stress_norm
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Display iteration data
                 if verbose:
@@ -520,11 +521,12 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                         idx1 = [comp_order.index(comp_i),
                                 comp_order.index(comp_j)]
                         idx2 = comp_order.index(comp_j)
-                        aux = np.add(aux,np.multiply(
-                            mop.kelvin_factor(idx1, comp_order)
-                            *gop_dft_vox[comp_i + comp_j],
-                            mop.kelvin_factor(idx2, comp_order)
-                            *stress_DFT_vox[comp_j]))
+                        aux = np.add(
+                            aux, np.multiply(
+                                mop.kelvin_factor(idx1, comp_order)
+                                * gop_dft_vox[comp_i + comp_j],
+                                mop.kelvin_factor(idx2, comp_order)
+                                * stress_DFT_vox[comp_j]))
                     # Update strain DFT
                     strain_DFT_vox[comp_i] = np.subtract(
                         strain_DFT_vox[comp_i],
@@ -1139,22 +1141,26 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                                         np.multiply(def_gradient_vox['21'],
                                                     def_gradient_vox['12'])))
                         # Compute First Piola-Kirchhoff stress tensor
-                        first_piola_stress_vox['11'] = np.multiply(jvar,
+                        first_piola_stress_vox['11'] = np.multiply(
+                            jvar,
                             np.subtract(np.multiply(stress_vox['11'],
                                                     def_gradient_vox['22']),
                                         np.multiply(stress_vox['12'],
                                                     def_gradient_vox['12'])))
-                        first_piola_stress_vox['21'] = np.multiply(jvar,
+                        first_piola_stress_vox['21'] = np.multiply(
+                            jvar,
                             np.subtract(np.multiply(stress_vox['12'],
                                                     def_gradient_vox['22']),
                                         np.multiply(stress_vox['22'],
                                                     def_gradient_vox['12'])))
-                        first_piola_stress_vox['12'] = np.multiply(jvar,
+                        first_piola_stress_vox['12'] = np.multiply(
+                            jvar,
                             np.subtract(np.multiply(stress_vox['12'],
                                                     def_gradient_vox['11']),
                                         np.multiply(stress_vox['11'],
                                                     def_gradient_vox['21'])))
-                        first_piola_stress_vox['22'] = np.multiply(jvar,
+                        first_piola_stress_vox['22'] = np.multiply(
+                            jvar,
                             np.subtract(np.multiply(stress_vox['22'],
                                                     def_gradient_vox['11']),
                                         np.multiply(stress_vox['12'],
@@ -1162,19 +1168,22 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                     else:
                         # Compute voxelwise determinant of deformation gradient
                         jvar = np.reciprocal(np.add(np.subtract(
-                            np.multiply(def_gradient_vox['11'],
+                            np.multiply(
+                                def_gradient_vox['11'],
                                 np.subtract(
                                     np.multiply(def_gradient_vox['22'],
                                                 def_gradient_vox['33']),
                                     np.multiply(def_gradient_vox['23'],
                                                 def_gradient_vox['32']))),
-                            np.multiply(def_gradient_vox['12'],
+                            np.multiply(
+                                def_gradient_vox['12'],
                                 np.subtract(
                                     np.multiply(def_gradient_vox['21'],
                                                 def_gradient_vox['33']),
                                     np.multiply(def_gradient_vox['23'],
                                                 def_gradient_vox['31'])))),
-                            np.multiply(def_gradient_vox['13'],
+                            np.multiply(
+                                def_gradient_vox['13'],
                                 np.subtract(
                                     np.multiply(def_gradient_vox['21'],
                                                 def_gradient_vox['32']),
@@ -1182,47 +1191,56 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                                                 def_gradient_vox['31'])))))
                         # Compute voxelwise transpose of inverse of deformation
                         # gradient
-                        fitvar11 = np.multiply(jvar,
+                        fitvar11 = np.multiply(
+                            jvar,
                             np.subtract(np.multiply(def_gradient_vox['22'],
                                                     def_gradient_vox['33']),
                                         np.multiply(def_gradient_vox['23'],
                                                     def_gradient_vox['32'])))
-                        fitvar21 = np.multiply(jvar,
+                        fitvar21 = np.multiply(
+                            jvar,
                             np.subtract(np.multiply(def_gradient_vox['13'],
                                                     def_gradient_vox['32']),
                                         np.multiply(def_gradient_vox['12'],
                                                     def_gradient_vox['33'])))
-                        fitvar31 = np.multiply(jvar,
+                        fitvar31 = np.multiply(
+                            jvar,
                             np.subtract(np.multiply(def_gradient_vox['12'],
                                                     def_gradient_vox['23']),
                                         np.multiply(def_gradient_vox['13'],
                                                     def_gradient_vox['22'])))
-                        fitvar12 = np.multiply(jvar,
+                        fitvar12 = np.multiply(
+                            jvar,
                             np.subtract(np.multiply(def_gradient_vox['23'],
                                                     def_gradient_vox['31']),
                                         np.multiply(def_gradient_vox['21'],
                                                     def_gradient_vox['33'])))
-                        fitvar22 = np.multiply(jvar,
+                        fitvar22 = np.multiply(
+                            jvar,
                             np.subtract(np.multiply(def_gradient_vox['11'],
                                                     def_gradient_vox['33']),
                                         np.multiply(def_gradient_vox['13'],
                                                     def_gradient_vox['31'])))
-                        fitvar32 = np.multiply(jvar,
+                        fitvar32 = np.multiply(
+                            jvar,
                             np.subtract(np.multiply(def_gradient_vox['13'],
                                                     def_gradient_vox['21']),
                                         np.multiply(def_gradient_vox['11'],
                                                     def_gradient_vox['23'])))
-                        fitvar13 = np.multiply(jvar,
+                        fitvar13 = np.multiply(
+                            jvar,
                             np.subtract(np.multiply(def_gradient_vox['21'],
                                                     def_gradient_vox['32']),
                                         np.multiply(def_gradient_vox['22'],
                                                     def_gradient_vox['31'])))
-                        fitvar23 = np.multiply(jvar,
+                        fitvar23 = np.multiply(
+                            jvar,
                             np.subtract(np.multiply(def_gradient_vox['12'],
                                                     def_gradient_vox['31']),
                                         np.multiply(def_gradient_vox['11'],
                                                     def_gradient_vox['32'])))
-                        fitvar33 = np.multiply(jvar,
+                        fitvar33 = np.multiply(
+                            jvar,
                             np.subtract(np.multiply(def_gradient_vox['11'],
                                                     def_gradient_vox['22']),
                                         np.multiply(def_gradient_vox['12'],
@@ -1313,7 +1331,8 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                                     kirchhoff_stress[so_idx]
                         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                         # Compute First Piola-Kirchhoff stress tensor
-                        first_piola_stress = np.matmul(kirchhoff_stress,
+                        first_piola_stress = np.matmul(
+                            kirchhoff_stress,
                             np.transpose(np.linalg.inv(def_gradient)))
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     # Loop over First Piola-Kirchhoff stress tensor components
@@ -1385,7 +1404,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         # Loop over discrete frequencies
         for freq_coord in it.product(*freqs_dims):
             # Get discrete frequency index
-            freq_idx = tuple([list(freqs_dims[x]).index(freq_coord[x]) \
+            freq_idx = tuple([list(freqs_dims[x]).index(freq_coord[x])
                               for x in range(self._n_dim)])
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Initialize stress tensor DFT matricial form
@@ -1395,12 +1414,12 @@ class FFTBasicScheme(DNSHomogenizationMethod):
                 # Get stress component
                 comp = comp_order[i]
                 # Build stress tensor DFT matricial form
-                stress_DFT_mf[i] = mop.kelvin_factor(i, comp_order)*\
-                    stress_DFT_vox[comp][freq_idx]
+                stress_DFT_mf[i] = mop.kelvin_factor(i, comp_order) \
+                    * stress_DFT_vox[comp][freq_idx]
                 # Store stress tensor DFT matricial form for zero-frequency
                 if freq_idx == self._n_dim*(0,):
-                    stress_DFT_0_mf[i] = mop.kelvin_factor(i, comp_order)*\
-                        stress_DFT_vox[comp][freq_idx]
+                    stress_DFT_0_mf[i] = mop.kelvin_factor(i, comp_order) \
+                        * stress_DFT_vox[comp][freq_idx]
             # Build stress tensor DFT
             stress_DFT = mop.get_tensor_from_mf(stress_DFT_mf, self._n_dim,
                                                 comp_order)
@@ -1417,7 +1436,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         discrete_error = \
             np.sqrt(error_sum/n_voxels)/np.linalg.norm(stress_DFT_0_mf)
         # Compute stress divergence Inverse Discrete Fourier Transform (IDFT)
-        div_stress = {str(comp + 1): np.zeros(tuple(self._n_voxels_dims)) \
+        div_stress = {str(comp + 1): np.zeros(tuple(self._n_voxels_dims))
                       for comp in range(self._n_dim)}
         for i in range(self._n_dim):
             # Inverse Discrete Fourier Transform (IDFT) by means of Fast
@@ -1555,7 +1574,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Output data
         print(template.format(*info, width=output_width))
-        #ioutil.print2(template.format(*info, width=output_width))
+        # ioutil.print2(template.format(*info, width=output_width))
     # -------------------------------------------------------------------------
     @staticmethod
     def _display_increment_init(inc, subinc_level, total_lfact, inc_lfact):
@@ -1581,29 +1600,29 @@ class FFTBasicScheme(DNSHomogenizationMethod):
             # Set output data
             info = (inc, total_lfact, inc_lfact)
             # Set output template
-            template = colorama.Fore.CYAN + '\n' + \
-                       indent + 'Increment number: {:3d}' + '\n' + \
-                       indent + equal_line[:-len(indent)] + '\n' + \
-                       indent + 60*' ' + 'Load factor | Total = {:8.1e}' \
-                              + 7*' ' + '\n' + \
-                       indent + 72*' ' + '| Incr. = {:8.1e}' + \
-                       colorama.Style.RESET_ALL + '\n'
+            template = colorama.Fore.CYAN + '\n' \
+                + indent + 'Increment number: {:3d}' + '\n' \
+                + indent + equal_line[:-len(indent)] + '\n' \
+                + indent + 60*' ' + 'Load factor | Total = {:8.1e}' \
+                + 7*' ' + '\n' \
+                + indent + 72*' ' + '| Incr. = {:8.1e}' \
+                + colorama.Style.RESET_ALL + '\n'
         else:
             # Set output data
             info = (inc, subinc_level, total_lfact, inc_lfact)
             # Set output template
-            template = colorama.Fore.CYAN + '\n' + \
-                       indent + 'Increment number: {:3d}' + 3*' ' + \
-                       '(Sub-inc. level: {:3d})' + '\n' + \
-                       indent + equal_line[:-len(indent)] + '\n' + \
-                       indent + 60*' ' + 'Load factor | Total = {:8.1e}' \
-                              + 7*' ' + '\n' + \
-                       indent + 72*' ' + '| Incr. = {:8.1e}' + \
-                       colorama.Style.RESET_ALL  + '\n'
+            template = colorama.Fore.CYAN + '\n' \
+                + indent + 'Increment number: {:3d}' + 3*' ' \
+                + '(Sub-inc. level: {:3d})' + '\n' \
+                + indent + equal_line[:-len(indent)] + '\n' \
+                + indent + 60*' ' + 'Load factor | Total = {:8.1e}' \
+                + 7*' ' + '\n' \
+                + indent + 72*' ' + '| Incr. = {:8.1e}' \
+                + colorama.Style.RESET_ALL + '\n'
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Output data
         print(template.format(*info, width=output_width))
-        #ioutil.print2(template.format(*info, width=output_width))
+        # ioutil.print2(template.format(*info, width=output_width))
     # -------------------------------------------------------------------------
     @staticmethod
     def _display_increment_end(strain_formulation, hom_strain, hom_stress,
@@ -1681,7 +1700,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Output data
         print(template.format(*info, width=output_width))
-        #ioutil.print2(template.format(*info, width=output_width))
+        # ioutil.print2(template.format(*info, width=output_width))
     # -------------------------------------------------------------------------
     @staticmethod
     def _display_iteration(iter, iter_time, discrete_error):
@@ -1720,7 +1739,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Output data
         print(template.format(*info, width=output_width))
-        #ioutil.print2(template.format(*info, width=output_width))
+        # ioutil.print2(template.format(*info, width=output_width))
     # -------------------------------------------------------------------------
     @staticmethod
     def _display_increment_cut(cut_msg=''):
@@ -1748,7 +1767,7 @@ class FFTBasicScheme(DNSHomogenizationMethod):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Output data
         print(template.format(*info, width=output_width))
-        #ioutil.print2(template.format(*info, width=output_width))
+        # ioutil.print2(template.format(*info, width=output_width))
 # =============================================================================
 class MacroscaleStrainIncrementer:
     """Macroscale strain loading incrementer.
@@ -1801,7 +1820,7 @@ class MacroscaleStrainIncrementer:
         Update current macroscale strain loading.
     """
     def __init__(self, strain_formulation, problem_type, mac_strain_total,
-                 mac_strain_init=None, inc_lfacts=[1.0,], max_subinc_level=5,
+                 mac_strain_init=None, inc_lfacts=[1.0, ], max_subinc_level=5,
                  max_cinc_cuts=5):
         """Constructor.
 
@@ -1838,7 +1857,7 @@ class MacroscaleStrainIncrementer:
         # Set total macroscale strain tensor
         self._mac_strain_total = mac_strain_total
         # Set initial macroscale strain tensor
-        if mac_strain_init != None:
+        if mac_strain_init is not None:
             self._mac_strain_init = mac_strain_init
         else:
             if self._strain_formulation == 'infinitesimal':
@@ -1864,7 +1883,7 @@ class MacroscaleStrainIncrementer:
         # Set list of incremental load factors
         self._inc_lfacts = copy.deepcopy(inc_lfacts)
         # Initialize subincrementation levels
-        self._sub_inc_levels = [0,]*len(self._inc_lfacts)
+        self._sub_inc_levels = [0, ]*len(self._inc_lfacts)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         self._max_subinc_level = max_subinc_level
         self._max_cinc_cuts = max_cinc_cuts
