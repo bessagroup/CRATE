@@ -311,8 +311,8 @@ class CRVE:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over material phases
         for mat_phase in self._material_phases:
-            info.displayinfo('5', 'Computing material phase ' + mat_phase +
-                             ' base clustering...', 2)
+            info.displayinfo('5', 'Computing material phase ' + mat_phase
+                             + ' base clustering...', 2)
             # Get material phase clustering type
             ctype = self._clustering_type[mat_phase]
             # Get material phase initial number of clusters
@@ -427,7 +427,7 @@ class CRVE:
                 list(set(target_clusters).intersection(
                     self._phase_clusters[mat_phase]))
             phase_target_clusters_data[mat_phase] = \
-                {str(cluster) : target_clusters_data[str(cluster)]
+                {str(cluster): target_clusters_data[str(cluster)]
                  for cluster in phase_target_clusters[mat_phase]}
         # Get CRVE maximum cluster label
         max_label = self._get_clusters_max_label()
@@ -1018,8 +1018,8 @@ class CRVE:
             raise RuntimeError('Invalid cluster labels mapping dictionary.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Sort cluster labels in ascending order of material phase
-        for voxel_idx in it.product(*[list(range(self._n_voxels_dims[i])) \
-                for i in range(len(self._n_voxels_dims))]):
+        for voxel_idx in it.product(*[list(range(self._n_voxels_dims[i]))
+                                    for i in range(len(self._n_voxels_dims))]):
             self._voxels_clusters[voxel_idx] = \
                 sort_dict[self._voxels_clusters[voxel_idx]]
     # -------------------------------------------------------------------------
@@ -1132,8 +1132,8 @@ class CRVE:
                 else:
                     phase_new_clusters[mat_phase] = []
                 phase_old_clusters[mat_phase] = list(
-                    set(self._phase_clusters[mat_phase]) -
-                    set(phase_new_clusters[mat_phase]))
+                    set(self._phase_clusters[mat_phase])
+                    - set(phase_new_clusters[mat_phase]))
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Loop over material phases
         for mat_phase_B in self._material_phases:
@@ -1172,7 +1172,7 @@ class CRVE:
                             # Set cluster volume fractions ratio
                             clst_vf_ratio = (
                                 self._clusters_vf[str(cluster_J)]
-                                /self._clusters_vf[str(cluster_I)])
+                                / self._clusters_vf[str(cluster_I)])
                             # Compute clustering interaction tensor between
                             # material phase A cluster and material phase B
                             # cluster through cluster-symmetry
@@ -1195,7 +1195,7 @@ class CRVE:
                             # cluster
                             rve_vol = np.prod(self._rve_dims)
                             factor = 1.0/(self._clusters_vf[str(cluster_I)]
-                                          *rve_vol)
+                                          * rve_vol)
                             for i in range(len(self._cit_x_mf)):
                                 self._cit_x_mf[i][mat_phase_pair][
                                     cluster_pair] = np.multiply(
@@ -1235,7 +1235,7 @@ class CRVE:
                             # Set cluster volume fractions ratio
                             clst_vf_ratio = (
                                 self._clusters_vf[str(cluster_J)]
-                                /self._clusters_vf[str(cluster_I)])
+                                / self._clusters_vf[str(cluster_I)])
                             # Compute clustering interaction tensor
                             for cit_mf in self._cit_x_mf:
                                 cit_mf[mat_phase_pair][cluster_pair] = \
@@ -1546,18 +1546,18 @@ class CRVE:
                 # Perform discrete integral over the spatial domain of material
                 # cluster I
                 cit_1_integral_mf[i, j] = mop.kelvin_factor(i, comp_order) \
-                    *mop.kelvin_factor(j, comp_order) \
-                    *np.sum(np.multiply(cluster_filter,
-                                        gop_1_filt_vox[compi + compj]))
+                    * mop.kelvin_factor(j, comp_order) \
+                    * np.sum(np.multiply(cluster_filter,
+                                         gop_1_filt_vox[compi + compj]))
                 cit_2_integral_mf[i, j] = mop.kelvin_factor(i, comp_order) \
-                    *mop.kelvin_factor(j, comp_order) \
-                        *np.sum(np.multiply(cluster_filter,
-                                            gop_2_filt_vox[compi + compj]))
+                    * mop.kelvin_factor(j, comp_order) \
+                    * np.sum(np.multiply(cluster_filter,
+                                         gop_2_filt_vox[compi + compj]))
                 cit_0_freq_integral_mf[i, j] = \
                     mop.kelvin_factor(i, comp_order) \
-                    *mop.kelvin_factor(j, comp_order) \
-                    *np.sum(np.multiply(cluster_filter,
-                                        gop_0_freq_filt_vox[compi + compj]))
+                    * mop.kelvin_factor(j, comp_order) \
+                    * np.sum(np.multiply(cluster_filter,
+                                         gop_0_freq_filt_vox[compi + compj]))
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         return cit_1_integral_mf, cit_2_integral_mf, cit_0_freq_integral_mf
     # -------------------------------------------------------------------------
