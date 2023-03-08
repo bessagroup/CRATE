@@ -102,7 +102,7 @@ class RefMatOutput:
         # Set reference material elastic properties initial output
         properties_init = (0.0, 0.0)
         # Set far-field strain initial output
-        strain_init = 9*[0.0,]
+        strain_init = 9*[0.0, ]
         if self._strain_formulation == 'finite':
             strain_init[0] = 1.0
             strain_init[4] = 1.0
@@ -122,7 +122,7 @@ class RefMatOutput:
             + ''.join([('{:>' + str(self._col_width) + '.8e}').format(x)
                        for x in strain_init])
             + ''.join([('{:>' + str(self._col_width) + '.8e}').format(0)
-                       for x in self._header[13:]]),]
+                       for x in self._header[13:]]), ]
         # Write output file header
         refm_file.writelines(write_list)
         # Close output file
@@ -174,7 +174,7 @@ class RefMatOutput:
         # far-field strain tensor considering the appropriate out-of-plane
         # strain component (output purpose only).
         farfield_strain = mop.get_tensor_from_mf(farfield_strain_mf,
-                                                 self._n_dim,comp_order)
+                                                 self._n_dim, comp_order)
         out_farfield_strain = np.zeros((3, 3))
         if self._problem_type == 1:
             out_farfield_strain[0:2, 0:2] = farfield_strain
@@ -194,9 +194,9 @@ class RefMatOutput:
         # Compute self-consistent scheme normalized cost function
         if self._self_consistent_scheme == 'regression':
             # Compute regression-based scheme cost function
-            scs_cost = np.linalg.norm(hom_stress_mf -
-                                      np.matmul(ref_elastic_tangent_mf,
-                                                hom_strain_mf))**2
+            scs_cost = np.linalg.norm(hom_stress_mf
+                                      - np.matmul(ref_elastic_tangent_mf,
+                                                  hom_strain_mf))**2
             # Normalize cost function
             rel_scs_cost = scs_cost/(np.linalg.norm(hom_stress_mf)**2)
         else:
@@ -207,7 +207,7 @@ class RefMatOutput:
         # Compute norm of difference between the effective tangent modulus and
         # the reference material tangent modulus and then normalize it to
         # obtain a relative measure
-        if not eff_tangent_mf is None:
+        if eff_tangent_mf is not None:
             diff_norm = np.linalg.norm(ref_elastic_tangent_mf - eff_tangent_mf)
             rel_diff_tangent = diff_norm/np.linalg.norm(eff_tangent_mf)
         else:
