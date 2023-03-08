@@ -332,12 +332,12 @@ class ACRMP(CRMP):
                                    'equal than zero.')
             # Power dynamic function
             dynamic_function = \
-                lambda magnitude : (1/((1 - adapt_trigger_ratio)**n))*(
+                lambda magnitude: (1/((1 - adapt_trigger_ratio)**n))*(
                     magnitude**n)
         else:
             # Linear dynamic function
             dynamic_function = \
-                lambda magnitude : (1/(1 - adapt_trigger_ratio))*magnitude
+                lambda magnitude: (1/(1 - adapt_trigger_ratio))*magnitude
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute adaptive clustering split factor
         adapt_split_factor = min(1, lower_bound
@@ -681,7 +681,7 @@ class GACRMP(ACRMP):
     # -------------------------------------------------------------------------
     def perform_adaptive_clustering(
         self, target_clusters, target_clusters_data,
-        adaptive_clustering_scheme=None, min_label=0):
+            adaptive_clustering_scheme=None, min_label=0):
         """Perform GACRMP adaptive clustering step.
 
         Refine the provided target clusters by splitting them according to the
@@ -747,7 +747,8 @@ class GACRMP(ACRMP):
             # Set sorted target clusters flag
             is_sorted_target_clusters = True
             # Get target clusters magnitude
-            target_clusters_magnitude = {str(cluster):
+            target_clusters_magnitude = {
+                str(cluster):
                 target_clusters_data[str(cluster)]['max_magnitude']
                 for cluster in target_clusters}
             # Get target clusters in descending order of magnitude
@@ -794,8 +795,9 @@ class GACRMP(ACRMP):
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Compute number of child clusters, enforcing at least two
                 # clusters
-                n_new_clusters = max(2, int(round(adapt_split_factor*
-                    int(round(1.0/self._child_cluster_vol_fraction)))))
+                n_new_clusters = max(
+                    2, int(round(adapt_split_factor*int(
+                        round(1.0/self._child_cluster_vol_fraction)))))
                 # Compare number of child clusters and number of target cluster
                 # number of voxels
                 if n_cluster_voxels <= n_new_clusters:
@@ -929,8 +931,8 @@ class GACRMP(ACRMP):
             Clustering tree root node.
         """
         # Output clustering tree
-        #anytree.exporter.DotExporter(self._root_cluster_node).to_picture(
-        #   'clustering_tree_nodes_phase_' + self._mat_phase + '.png')
+        # anytree.exporter.DotExporter(self._root_cluster_node).to_picture(
+        #    'clustering_tree_nodes_phase_' + self._mat_phase + '.png')
         return self._clustering_tree_nodes, self._root_cluster_node
     # -------------------------------------------------------------------------
     @staticmethod
@@ -1164,10 +1166,10 @@ class HAACRMP(ACRMP):
                                                   self._n_clusters)
         # Check if prescribed number of clusters is satisfied
         if not is_n_clusters_satisfied:
-            raise RuntimeError('The number of clusters (' \
-                               + str(len(set(cluster_labels))) \
+            raise RuntimeError('The number of clusters ('
+                               + str(len(set(cluster_labels)))
                                + ') obtained is different from the '
-                               'prescribed number of clusters (' \
+                               'prescribed number of clusters ('
                                + str(self._n_clusters) + ').')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set cluster labels
@@ -1179,7 +1181,8 @@ class HAACRMP(ACRMP):
         self.cluster_labels, self.max_label = \
             self._update_cluster_labels(self.cluster_labels, min_label)
     # -------------------------------------------------------------------------
-    def perform_adaptive_clustering(self, target_clusters, target_clusters_data,
+    def perform_adaptive_clustering(self, target_clusters,
+                                    target_clusters_data,
                                     adaptive_clustering_scheme=None,
                                     min_label=0):
         """Perform HAACRMP adaptive clustering step.
@@ -1225,8 +1228,8 @@ class HAACRMP(ACRMP):
         # Check for unexistent target clusters
         for target_cluster in target_clusters:
             if target_cluster not in self.cluster_labels:
-                raise RuntimeError('Target cluster ' + str(target_cluster) \
-                                   + ' does not exist in material phase ' \
+                raise RuntimeError('Target cluster ' + str(target_cluster)
+                                   + ' does not exist in material phase '
                                    + str(self._mat_phase))
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         init_time = time.time()
@@ -1251,7 +1254,7 @@ class HAACRMP(ACRMP):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Build initial cluster-node mapping between cluster labels and tree
         # nodes associated with the hierarchical agglomerative base clustering
-        if self._cluster_node_map == None:
+        if self._cluster_node_map is None:
             # Get root nodes of hierarchical clustering corresponding to an
             # horizontal cut defined by a flat clustering assignment vector.
             # L contains the tree nodes ids while M contains the corresponding
@@ -1271,8 +1274,8 @@ class HAACRMP(ACRMP):
             # target cluster
             if target_node.is_leaf():
                 continue
-            else:
-                n_leaves = target_node.get_count()
+            # else:
+            #     n_leaves = target_node.get_count()
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Get referece adaptive clustering split factor
             ref_split_factor = self._adapt_split_factor
@@ -1296,8 +1299,9 @@ class HAACRMP(ACRMP):
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Compute total number of tree node splits, enforcing at least one
             # split
-            n_splits = max(1, int(round(adapt_split_factor*
-                  int(int(round(1.0/self._child_cluster_vol_fraction)) - 1))))
+            n_splits = max(
+                1, int(round(adapt_split_factor*int(int(
+                    round(1.0/self._child_cluster_vol_fraction)) - 1))))
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Initialize child nodes list
             child_nodes = []
@@ -1377,7 +1381,7 @@ class HAACRMP(ACRMP):
         """
         # Check parameters
         if not isinstance(node, sciclst.ClusterNode):
-            raise TypeError('Node must be of type ClusterNode, not ' \
+            raise TypeError('Node must be of type ClusterNode, not '
                             + str(type(node)) + '.')
         if any([not isinstance(node, sciclst.ClusterNode)
                 for node in node_list]):
@@ -1405,33 +1409,33 @@ class HAACRMP(ACRMP):
                                   adaptive_tree_node_map):
         """Print hierarchical adaptive clustering report (validation)."""
         # Print report header
-        print(3*'\n' + 'Hierarchical adaptive clustering report\n' + 80*'-' + \
-              '\n\n' + 'Material phase: ' + str(self._mat_phase))
+        print(3*'\n' + 'Hierarchical adaptive clustering report\n' + 80*'-'
+              + '\n\n' + 'Material phase: ' + str(self._mat_phase))
         # Print adaptive clustering adaptive step
         print('\nAdaptive refinement step: ', self._adaptive_step)
         # Print hierarchical adaptive CRVE
-        print('\n\n' + 'Adaptive clustering: ' + '(' \
-              + str(len(np.unique(self.cluster_labels))) + ' clusters)' \
+        print('\n\n' + 'Adaptive clustering: ' + '('
+              + str(len(np.unique(self.cluster_labels))) + ' clusters)'
               + '\n\n', self.cluster_labels)
         # Print adaptive clustering mapping
         print('\n\n' + 'Adaptive cluster mapping: ')
         for old_cluster in adaptive_clustering_map.keys():
-            print('    Old cluster: ' + '{:>4s}'.format(old_cluster) +
-                  '  ->  ' +
-                  'New clusters: ',
+            print('    Old cluster: ' + '{:>4s}'.format(old_cluster)
+                  + '  ->  '
+                  + 'New clusters: ',
                   adaptive_clustering_map[str(old_cluster)])
         # Print adaptive tree node mapping
         print('\n\n' + 'Adaptive tree node mapping (validation): ')
         for old_node in adaptive_tree_node_map.keys():
-            print('  Old node: ' + '{:>4s}'.format(old_node) +
-                  '  ->  ' +
-                  'New nodes: ', adaptive_tree_node_map[str(old_node)])
+            print('  Old node: ' + '{:>4s}'.format(old_node)
+                  + '  ->  '
+                  + 'New nodes: ', adaptive_tree_node_map[str(old_node)])
         # Print cluster-node mapping
         print('\n\n' + 'Cluster-Node mapping: ')
         for new_cluster in self._cluster_node_map.keys():
-            print('    Cluster: ' + '{:>4s}'.format(new_cluster) +
-                  '  ->  ' +
-                  'Tree node: ',
+            print('    Cluster: ' + '{:>4s}'.format(new_cluster)
+                  + '  ->  '
+                  + 'Tree node: ',
                   self._cluster_node_map[str(new_cluster)])
     # -------------------------------------------------------------------------
     @staticmethod
@@ -1443,7 +1447,7 @@ class HAACRMP(ACRMP):
         clust_algs : list[str]
             Clustering algorithms identifiers (str).
         """
-        return ['5',]
+        return ['5', ]
     # -------------------------------------------------------------------------
     def get_n_clusters(self):
         """Get current number of clusters.
