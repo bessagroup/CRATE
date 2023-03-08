@@ -50,7 +50,6 @@ read_vtk_options
 import os
 import copy
 import linecache
-import inspect
 import re
 # Third-party
 import numpy as np
@@ -174,7 +173,7 @@ def get_formatted_parameter(parameter, x, etype=None):
             y = x
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Check if specification type agrees with expected type
-    if etype != None:
+    if etype is not None:
         if stype_name != etype.__name__:
             raise TypeError('The parameter \'' + str(parameter)
                             + '\' hasn\'t been properly specified: expected '
@@ -261,8 +260,8 @@ def readtypeBkeyword(file, file_path, keyword):
     keyword_value : float
         Keyword value.
     """
-    keyword_line_number = searchkeywordline(file,keyword)
-    line = linecache.getline(file_path,keyword_line_number+1).split()
+    keyword_line_number = searchkeywordline(file, keyword)
+    line = linecache.getline(file_path, keyword_line_number+1).split()
     if line == '':
         summary = 'Invalid keyword specification'
         description = 'The keyword - {} - is not properly defined in the ' \
@@ -1009,7 +1008,7 @@ def read_macroscale_loading(file, file_path, mac_load_type, strain_formulation,
                 # Get load nature type
                 ltype = mac_load_presctype[symmetric_indexes[0, i], j]
                 if mac_load_type == 3 \
-                        and mac_load_presctype[symmetric_indexes[0, i] , j] \
+                        and mac_load_presctype[symmetric_indexes[0, i], j] \
                         != mac_load_presctype[symmetric_indexes[1, i], j]:
                     summary = 'Symmetric components prescribed with ' \
                         + 'different nature under infinitesimal strains'
@@ -1179,7 +1178,7 @@ def read_mac_load_increm(file, file_path, keyword, n_load_subpaths):
         while not is_empty_line:
             increm_list = np.append(increm_list,
                                     np.full((1, n_load_subpaths), '',
-                                    dtype=object), axis=0)
+                                            dtype=object), axis=0)
             # Assemble macroscale increment specification line
             increm_list[i, 0:len(increm_line)] = increm_line
             i += 1
@@ -1204,7 +1203,7 @@ def read_mac_load_increm(file, file_path, keyword, n_load_subpaths):
                 # Build macroscale loading subpath
                 load_subpath = np.append(load_subpath,
                                          np.tile([inc_lfact, inc_time],
-                                         (rep, 1)), axis=0)
+                                                 (rep, 1)), axis=0)
             # Store macroscale loading subpath
             mac_load_increm[str(j)] = load_subpath
     else:
@@ -1263,7 +1262,7 @@ def decode_increm_spec(spec, load_time_factor):
         inc_lfact = float(code[int(has_rep)])
         inc_time = abs(float(code[-1])) \
             if has_time else load_time_factor*abs(inc_lfact)
-    except:
+    except Exception:
         summary = 'Invalid loading increment'
         description = 'A macroscale loading increment specification in ' \
             + 'the input data file is invalid.'
@@ -1279,7 +1278,7 @@ def decode_increm_spec(spec, load_time_factor):
     return n_rep, inc_lfact, inc_time
 # =============================================================================
 def read_phase_clustering(file, file_path, keyword, n_material_phases,
-                        material_properties):
+                          material_properties):
     """Read (base) number of clusters associated with each material phase.
 
     The specification of the data associated with the material phases (base)
@@ -1459,7 +1458,7 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
         # Read material phase and clustering type
         if is_empty_line:
             summary = 'Missing clustering scheme for material phase'
-            description = 'The keyword - {} - is not properly defined in the ' \
+            description = 'The keyword - {} - is not properly defined in the '\
                 + 'input data file.' + '\n' \
                 + indent + 'The clustering scheme must be specified for all ' \
                 + 'material phases.'
@@ -1654,7 +1653,7 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
                 # Get parameter value
                 value = get_formatted_parameter(parameter, line[1])
                 # Store adaptivity criterion parameter
-                if type(value) == type(oacp[parameter]):
+                if isinstance(value, oacp[parameter]):
                     adapt_criterion_data[mat_phase][parameter] = \
                         get_formatted_parameter(parameter,
                                                 type(oacp[parameter])(line[1]))
@@ -1670,7 +1669,7 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
                 # Get parameter value
                 value = get_formatted_parameter(parameter, line[1])
                 # Store adaptivity type parameter
-                if type(value) == type(oatp[parameter]):
+                if isinstance(value, oatp[parameter]):
                     adaptivity_type[mat_phase][parameter] = \
                         get_formatted_parameter(parameter,
                                                 type(oatp[parameter])(line[1]))
@@ -2432,7 +2431,7 @@ def read_vtk_options(file, file_path, keyword, keyword_line_number):
     all_variables).
 
     ----
-    
+
     Parameters
     ----------
     file : file
