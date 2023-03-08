@@ -79,7 +79,7 @@ from ioput.voxelsoutput import VoxelsOutput
 #                                                          Authorship & Credits
 # =============================================================================
 __author__ = 'Bernardo Ferreira (bernardo_ferreira@brown.edu)'
-__credits__ = ['Bernardo Ferreira',]
+__credits__ = ['Bernardo Ferreira', ]
 __status__ = 'Stable'
 # =============================================================================
 #

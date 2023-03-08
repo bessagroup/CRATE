@@ -27,7 +27,7 @@ from material.materialoperations import compute_rotation_tensor
 #                                                          Authorship & Credits
 # =============================================================================
 __author__ = 'Bernardo Ferreira (bernardo_ferreira@brown.edu)'
-__credits__ = ['Bernardo Ferreira',]
+__credits__ = ['Bernardo Ferreira', ]
 __status__ = 'Stable'
 # =============================================================================
 #
