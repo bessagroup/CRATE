@@ -14,7 +14,6 @@ homogenization and clustering-based reduced-order modeling.
        (see `here <https://repositorio-aberto.up.pt/handle/10216/
        146900?locale=en>`_)
 
-
 Functions
 ---------
 crate_simulation
@@ -375,11 +374,26 @@ def crate_simulation(arg_input_file_path, arg_discret_file_dir=None):
     # Display ending program message
     info.displayinfo('1', end_time, end_date, problem_name, phase_names,
                      phase_times)
-
-
-#if __name__ == '__main__':
-#    input_file_path = '/home/bernardoferreira/Documents/launch_crate/figures/example_input_data_file.dat'
+# =============================================================================
+# A CRATE simulation can be performed directly by executing this script with
+# the following command
 #
-#    discret_file_dir = '/home/bernardoferreira/Documents/launch_crate/benchmarks/microstructures'
+# python main.py < input_data_file_path > [< discret_file_dir >]
 #
-#    crate_simulation(input_file_path, discret_file_dir)
+# where input_data_file_path is the input data file path (mandatory) and
+# discret_file_dir is the spatial discretization file directory path (optional)
+if __name__ == '__main__':
+    # Set input data file path
+    if len(sys.argv[1:]) == 0:
+        summary = 'Missing input data file'
+        description = 'The input data file was not provided.'
+        info.displayinfo('4', summary, description)
+    else:
+        input_file_path = str(sys.argv[1])
+    # Set spatial discretization file directory
+    discret_file_dir = None
+    if len(sys.argv[1:]) == 2:
+        discret_file_dir = os.path.normpath(str(sys.argv[2])) + '/'
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Perform CRATE simulation
+    crate_simulation(input_file_path, discret_file_dir)
