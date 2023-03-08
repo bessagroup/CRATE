@@ -247,7 +247,7 @@ def gop_material_independent_terms(strain_formulation, problem_type, rve_dims,
         mf_indexes.append([x for x in [comp_order.index(comps[i][0]),
                                        comp_order.index(comps[i][1])]])
     # Set optimized variables
-    var1 = [*np.meshgrid(*freqs_dims, indexing = 'ij')]
+    var1 = [*np.meshgrid(*freqs_dims, indexing='ij')]
     var2 = dict()
     for fo_idx in fo_indexes:
         if str(fo_idx[1]) + str(fo_idx[3]) not in var2.keys():
@@ -274,11 +274,11 @@ def gop_material_independent_terms(strain_formulation, problem_type, rve_dims,
                               np.square(var1[2])))
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Initialize Green operator material independent terms
-    gop_1_dft_vox = {''.join([str(x+1) for x in idx]): \
+    gop_1_dft_vox = {''.join([str(x+1) for x in idx]):
                      np.zeros(tuple(n_voxels_dims)) for idx in fo_indexes}
-    gop_2_dft_vox = {''.join([str(x+1) for x in idx]): \
+    gop_2_dft_vox = {''.join([str(x+1) for x in idx]):
                      np.zeros(tuple(n_voxels_dims)) for idx in fo_indexes}
-    gop_0_freq_dft_vox = {''.join([str(x+1) for x in idx]): \
+    gop_0_freq_dft_vox = {''.join([str(x+1) for x in idx]):
                           np.zeros(tuple(n_voxels_dims)) for idx in fo_indexes}
     # Compute Green operator matricial form components
     for i in range(len(mf_indexes)):
@@ -293,8 +293,8 @@ def gop_material_independent_terms(strain_formulation, problem_type, rve_dims,
                 str(fo_idx[1]) + str(fo_idx[2]),
                 str(fo_idx[0]) + str(fo_idx[2]),
                 str(fo_idx[0]) + str(fo_idx[3])]
-        var4 = [fo_idx[0] == fo_idx[2],]
-        var5 = [str(fo_idx[1]) + str(fo_idx[3]),]
+        var4 = [fo_idx[0] == fo_idx[2], ]
+        var5 = [str(fo_idx[1]) + str(fo_idx[3]), ]
         if strain_formulation == 'infinitesimal':
             var4 += [fo_idx[0] == fo_idx[3], fo_idx[1] == fo_idx[3],
                      fo_idx[1] == fo_idx[2]]
@@ -307,12 +307,12 @@ def gop_material_independent_terms(strain_formulation, problem_type, rve_dims,
             if var4[j]:
                 first_term = np.add(first_term, var2[var5[j]])
         first_term = np.divide(first_term, np.square(var3),
-                               where = abs(var3) > 1e-10)
+                               where=abs(var3) > 1e-10)
         gop_1_dft_vox[comp] = copy.copy(first_term)
         # Compute second material independent term of Green operator
         gop_2_dft_vox[comp] = -1.0*np.divide(
             var2[''.join([str(x) for x in fo_idx])],
-            np.square(np.square(var3)), where = abs(var3) > 1e-10)
+            np.square(np.square(var3)), where=abs(var3) > 1e-10)
         # Compute Green operator zero-frequency term
         gop_0_freq_dft_vox[comp][tuple(n_dim*(0,))] = 1.0
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -495,7 +495,7 @@ def assemble_cit(strain_formulation, problem_type, mat_prop_ref,
     # Assemble global cluster interaction matrix
     global_cit_mf = np.add(
         np.add(np.multiply(gop_factor_1, global_cit_1_mf),
-                           np.multiply(gop_factor_2, global_cit_2_mf)),
+               np.multiply(gop_factor_2, global_cit_2_mf)),
         np.multiply(gop_factor_0_freq, global_cit_0_freq_mf))
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     return global_cit_mf
