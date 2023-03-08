@@ -14,7 +14,6 @@ read_input_data_file
 # Standard
 import os
 import shutil
-import linecache
 # Third-party
 import numpy as np
 # Local
@@ -30,7 +29,7 @@ from material.materialmodeling import MaterialState
 #                                                          Authorship & Credits
 # =============================================================================
 __author__ = 'Bernardo Ferreira (bernardo_ferreira@brown.edu)'
-__credits__ = ['Bernardo Ferreira',]
+__credits__ = ['Bernardo Ferreira', ]
 __status__ = 'Stable'
 # =============================================================================
 #
@@ -84,7 +83,6 @@ def read_input_data_file(input_file, dirs_dict, is_data_driven_mode=False):
     input_file_path = dirs_dict['input_file_path']
     discret_file_dir = dirs_dict['discret_file_dir']
     problem_dir = dirs_dict['problem_dir']
-    offline_stage_dir = dirs_dict['offline_stage_dir']
     postprocess_dir = dirs_dict['postprocess_dir']
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Read strain formulation (mandatory)
@@ -210,9 +208,9 @@ def read_input_data_file(input_file, dirs_dict, is_data_driven_mode=False):
     keyword = 'Cluster_Analysis_Scheme'
     clustering_type, base_clustering_scheme, adaptive_clustering_scheme, \
         adapt_criterion_data, adaptivity_type, adaptivity_control_feature = \
-            rproc.read_cluster_analysis_scheme(
-                input_file, input_file_path, keyword,
-                material_phases_properties.keys(), clustering_features)
+        rproc.read_cluster_analysis_scheme(
+            input_file, input_file_path, keyword,
+            material_phases_properties.keys(), clustering_features)
     # Get adaptive material phases
     adapt_material_phases = [x for x in clustering_type.keys()
                              if clustering_type[x] == 'adaptive']
@@ -253,14 +251,14 @@ def read_input_data_file(input_file, dirs_dict, is_data_driven_mode=False):
     if not (is_found_1 or is_found_2):
         summary = 'Missing macroscale loading incrementation keyword'
         description = 'One of the keywords associated with the macroscale ' \
-        	+ 'loading incrementation must be' + '\n' \
-        	+ indent + 'specified in the input data file.'
+            + 'loading incrementation must be' + '\n' \
+            + indent + 'specified in the input data file.'
         info.displayinfo('4', summary, description)
     elif is_found_1 and is_found_2:
         summary = 'Multiple macroscale loading incrementation keywords'
         description = 'Only one of the keywords associated with the ' \
-        	+ 'macroscale loading incrementation can be' + '\n' \
-        	+ indent + 'specified in the input data file.'
+            + 'macroscale loading incrementation can be' + '\n' \
+            + indent + 'specified in the input data file.'
         info.displayinfo('4', summary, description)
     else:
         # Get number of loading subpaths
@@ -431,8 +429,8 @@ def read_input_data_file(input_file, dirs_dict, is_data_driven_mode=False):
         raise RuntimeError('Input data error: Number of dimensions of regular '
                            'grid of voxels must be either 2 (2D problem) or '
                            '3 (3D problem).')
-    elif np.any([str(phase) not in material_phases_properties.keys() \
-            for phase in np.unique(regular_grid)]):
+    elif np.any([str(phase) not in material_phases_properties.keys()
+                 for phase in np.unique(regular_grid)]):
         raise RuntimeError('Input data error: At least one material phase '
                            'present in the regular grid of voxels has not '
                            'been specified.')
