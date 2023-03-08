@@ -32,7 +32,7 @@ from ioput.voxelsoutput import VoxelsArraysFactory
 #                                                          Authorship & Credits
 # =============================================================================
 __author__ = 'Bernardo Ferreira (bernardo_ferreira@brown.edu)'
-__credits__ = ['Bernardo Ferreira',]
+__credits__ = ['Bernardo Ferreira', ]
 __status__ = 'Stable'
 # =============================================================================
 #
@@ -106,7 +106,7 @@ class VTKOutput:
         self._header_type = header_type
         self._base_name = base_name
         self._vtk_dir = vtk_dir
-        if pvd_dir == None:
+        if pvd_dir is None:
             self._pvd_dir = self._vtk_dir
         else:
             self._pvd_dir = pvd_dir
@@ -224,7 +224,8 @@ class VTKOutput:
             self._vtk_collection = VTKCollection(pvd_file_path=pvd_file_path)
             self._vtk_collection.init_vtk_collection_file()
         # Add VTK file path to collection
-        self._vtk_collection.write_vtk_collection_file(time_step=time_step,
+        self._vtk_collection.write_vtk_collection_file(
+            time_step=time_step,
             time_step_file_path='VTK/' + vtk_file_path.split('VTK/', 1)[1])
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Open clustering VTK file (append mode)
@@ -379,8 +380,8 @@ class VTKOutput:
                 model_state_variables = constitutive_model.state_init()
                 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 # Loop over constitutive model state variables
-                for var_name in list(set(model_state_variables.keys()) -
-                                     set(common_var_list)):
+                for var_name in list(set(model_state_variables.keys())
+                                     - set(common_var_list)):
                     # Get state variable descriptors
                     var, var_type, var_n_comp = \
                         self._set_state_var_descriptors(
@@ -439,7 +440,7 @@ class VTKOutput:
         xml.write_cell_data_array(vtk_file, data_list, data_parameters)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Write VTK cell data array - Cluster adaptive level
-        if adaptivity_manager != None:
+        if adaptivity_manager is not None:
             rg_array = adaptivity_manager.get_adapt_vtk_array(voxels_clusters)
             data_list = list(rg_array.flatten('F'))
             min_val = min(data_list)
@@ -488,8 +489,8 @@ class VTKOutput:
                 os.remove(vtk_file_path)
                 # Remove VTK output file from VTK collection
                 self._vtk_collection.remove_vtk_collection_file(
-                    time_step_file_path='VTK/' \
-                    + vtk_file_path.split('VTK/', 1)[1])
+                    time_step_file_path='VTK/' + vtk_file_path.split('VTK/',
+                                                                     1)[1])
     # -------------------------------------------------------------------------
     @staticmethod
     def _set_image_data_parameters(rve_dims, n_voxels_dims):
@@ -555,7 +556,7 @@ class VTKOutput:
             included as a prefix in the variable cell data array name.
         """
         # Set cell data array name prefix
-        if model_name != None:
+        if model_name is not None:
             prefix = model_name + ': '
         else:
             prefix = ''
@@ -613,12 +614,12 @@ class VTKOutput:
         """
         # Get stored state variable for output
         if source == 'model_state_variables':
-            if model_state_variables == None:
+            if model_state_variables is None:
                 raise RuntimeError('State variable source is not available.')
             else:
                 stored_var = model_state_variables[var_name]
         elif source == 'clusters_state':
-            if cluster == None or clusters_state == None:
+            if cluster is None or clusters_state is None:
                 raise RuntimeError('State variable source is not available.')
             else:
                 stored_var = clusters_state[str(cluster)][var_name]
@@ -1170,7 +1171,7 @@ class XMLGenerator:
         template2 = 5*self._indent \
             + (len(values) % n_line_vals)*('{: ' + frmt + '}') + '\n'
         aux_list = [values[i:i+n_line_vals]
-                    for i in range(0, len(values),n_line_vals)]
+                    for i in range(0, len(values), n_line_vals)]
         for i in range(len(aux_list)):
             if i == len(aux_list) - 1 and len(values) % n_line_vals != 0:
                 vtk_file.write(template2.format(*aux_list[i]))
