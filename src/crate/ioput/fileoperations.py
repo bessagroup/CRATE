@@ -28,7 +28,7 @@ import ioput.ioutilities as ioutil
 #                                                          Authorship & Credits
 # =============================================================================
 __author__ = 'Bernardo Ferreira (bernardo_ferreira@brown.edu)'
-__credits__ = ['Bernardo Ferreira',]
+__credits__ = ['Bernardo Ferreira', ]
 __status__ = 'Stable'
 # =============================================================================
 #
@@ -286,8 +286,8 @@ def set_problem_dirs(input_file_name, input_file_dir,
             if not os.path.exists(offline_stage_dir):
                 summary = 'Missing offline-stage subdirectory'
                 description = 'The subdirectory with the previously computed '\
-                	+ 'offline-stage data files could not be found:' + '\n\n' \
-                	+ indent + '{}'
+                    + 'offline-stage data files could not be found:' + '\n\n' \
+                    + indent + '{}'
                 info.displayinfo('4', summary, description, offline_stage_dir)
             # Remove all the existent subdirectories and files except the
             # offline-stage subdirectory and the '.screen' output file
@@ -333,4 +333,4 @@ def set_problem_dirs(input_file_name, input_file_dir,
         info.displayinfo('-1', problem_dir, status)
     # Return
     return problem_name, problem_dir, offline_stage_dir, postprocess_dir, \
-           is_same_offstage, crve_file_path
+        is_same_offstage, crve_file_path
