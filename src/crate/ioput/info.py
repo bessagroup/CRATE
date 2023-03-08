@@ -72,7 +72,7 @@ def displayinfo(code, *args, **kwargs):
     # Set informations and formats to display
     if code == '-1':
         status = args[1]
-        arguments = [args[0],]
+        arguments = [args[0], ]
         info = tuple(arguments)
         if status == 0:
             template = 4*'\n' + 'Problem directory: {}' + '\n\n' \
@@ -93,7 +93,7 @@ def displayinfo(code, *args, **kwargs):
         arguments = \
             ['CRATE - Clustering-based Nonlinear Analysis of Materials',
              'Created by Bernardo P. Ferreira', 'Release 1.0.0 (Jun 2023)'] \
-            + 2*[args[0],] + list(args[1:3])
+            + 2*[args[0], ] + list(args[1:3])
         info = tuple(arguments)
         template = '\n' + colorama.Fore.WHITE + tilde_line \
                    + colorama.Style.RESET_ALL \
@@ -114,7 +114,7 @@ def displayinfo(code, *args, **kwargs):
         phase_times = args[4]
         total_time = phase_times[0, 1] - phase_times[0, 0]
         number_of_phases = len(phase_names)
-        phase_durations = [phase_times[i, 1] - phase_times[i, 0] \
+        phase_durations = [phase_times[i, 1] - phase_times[i, 0]
                            for i in range(0, number_of_phases)]
         for i in range(0, number_of_phases):
             phase_durations.insert(3*i, phase_names[i])
@@ -122,7 +122,7 @@ def displayinfo(code, *args, **kwargs):
                                    (phase_durations[3*i + 1]/total_time)*100)
         arguments = list(args[0:3]) \
             + [total_time, np.floor(total_time/3600),
-               (total_time%3600)/60] + ['Phase','Duration (s)','%'] \
+               (total_time % 3600)/60] + ['Phase', 'Duration (s)', '%'] \
             + phase_durations[3:] \
             + [colorama.Fore.GREEN + 'Program Completed'
                + colorama.Style.RESET_ALL]
@@ -144,7 +144,7 @@ def displayinfo(code, *args, **kwargs):
             + 2*indent + 75*'-' + '\n\n\n' + '{:^{width}}' + '\n'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     elif code == '2':
-        arguments = [args[0],]
+        arguments = [args[0], ]
         info = tuple(arguments)
         template = colorama.Fore.GREEN + 'Start phase: ' \
             + colorama.Fore.WHITE \
@@ -177,7 +177,7 @@ def displayinfo(code, *args, **kwargs):
             n_indents = args[1]
         else:
             n_indents = 1
-        arguments = [args[0],]
+        arguments = [args[0], ]
         info = tuple(arguments)
         template = '\n' + n_indents*indent + '> {}'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -186,15 +186,15 @@ def displayinfo(code, *args, **kwargs):
         if mode == 'progress':
             arguments = args[1:3]
             if args[1] == 1:
-                print(' '.format(width=output_width))
+                print(' ')
             info = tuple(arguments)
             template = indent + '> Performing clustering process {} of {}...'
             print(template.format(*info, width=output_width), end='\r')
             if args[1] == args[2]:
-                print(' '.format(width=output_width))
+                print(' ')
             return
         elif mode == 'completed':
-            arguments = ['',]
+            arguments = ['', ]
             info = tuple(arguments)
             template = '\n' + indent + '> Completed all clustering processes!'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -240,12 +240,12 @@ def displayinfo(code, *args, **kwargs):
             hom_strain_out = np.zeros((3, 3))
             hom_stress_out = np.zeros((3, 3))
             if problem_type == 1:
-                hom_strain_out[0:2,0:2] = hom_strain
+                hom_strain_out[0:2, 0:2] = hom_strain
                 if strain_formulation == 'infinitesimal':
                     hom_strain_out[2, 2] = 0.0
                 else:
                     hom_strain_out[2, 2] = 1.0
-                hom_stress_out[0:2,0:2] = hom_stress
+                hom_stress_out[0:2, 0:2] = hom_stress
                 hom_stress_out[2, 2] = args[7]
             else:
                 hom_strain_out = copy.deepcopy(hom_strain)
@@ -321,7 +321,7 @@ def displayinfo(code, *args, **kwargs):
                 + indent + dashed_line[:-len(indent)]
         elif mode == 'iter':
             if not isinstance(args[4], float):
-                arguments = list(args[1:4]) + [args[5],]
+                arguments = list(args[1:4]) + [args[5], ]
                 info = tuple(arguments)
                 template = indent + ' {:^6d}    {:^12.4e}' + space2 \
                     + '{:>11.4e}         -          {:^11.4e}'
@@ -342,14 +342,14 @@ def displayinfo(code, *args, **kwargs):
     elif code == '11':
         mode = args[0]
         if mode == 'max_iter':
-            arguments = [args[1],]
+            arguments = [args[1], ]
             cut_msg = ('Maximum number of iterations ({}) reached without '
                        'convergence.')
         elif mode == 'su_fail':
             arguments = [args[1]['cluster'], args[1]['mat_phase']]
             cut_msg = 'State update failure in cluster {} (material phase {}).'
         elif mode == 'max_scs_iter':
-            arguments = [args[1],]
+            arguments = [args[1], ]
             cut_msg = 'Maximum number of self-consistent iterations ({}) ' \
                 + 'reached without' + '\n' \
                 + indent + len('Increment cut: ')*' ' + 'convergence.'
@@ -364,7 +364,7 @@ def displayinfo(code, *args, **kwargs):
             + colorama.Style.RESET_ALL + '\n'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     elif code == '12':
-        arguments = [args[0],]
+        arguments = [args[0], ]
         info = tuple(arguments)
         template = '\n\n' \
             + indent + 'Adaptive clustering step: {:3d}' + '\n' \
@@ -400,7 +400,7 @@ def displayinfo(code, *args, **kwargs):
     elif code == '14':
         mode = args[0]
         if mode == 'max_scs_iter':
-            arguments = [args[1],]
+            arguments = [args[1], ]
             lock_msg = 'Maximum number of self-consistent iterations ({}) ' \
                 + 'reached' + '\n' \
                 + indent + len('Locking reference properties: ')*' ' \
@@ -535,7 +535,7 @@ def displayinfo(code, *args, **kwargs):
                 + spacing + 'Performing the new macroscale loading ' \
                 + 'increment ({})' + '\n' + spacing \
                 + 'considering the new clustering.'
-        arguments = [inc,]
+        arguments = [inc, ]
         info = tuple(arguments)
         template = '\n\n' + colorama.Fore.CYAN + indent \
             + asterisk_line[:-len(indent)] + '\n' \
