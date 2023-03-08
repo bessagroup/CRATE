@@ -608,7 +608,7 @@ class MaterialQuantitiesComputer:
         spatial logarithmic strain tensor (finite strains).
 
         ----
-        
+
         Parameters
         ----------
         strain_mf : numpy.ndarray (1d)

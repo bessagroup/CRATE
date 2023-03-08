@@ -364,7 +364,7 @@ def get_hardening_law(type):
             material yield stress and hardening slope.
 
             ----
-            
+
             Parameters
             ----------
             hardening_parameters : dict
