@@ -37,7 +37,9 @@ max-complexity = 15
 # E226: Missing whitespace around arithmetic operator
 #       Remark: Flake8 does not distinguish +, - from *, /, ** cases yet.
 # E731: Lambda expression
-extend-ignore = E226, E3, E731
+# C901: McCabe complexity for a block of code
+#       Remark: You may use this to check your code complexity though!
+extend-ignore = E226, E3, E731, C901
 
 # List of (additional) error codes to check:
 # E241 : Multiple spaces after ‘,’
