@@ -24,6 +24,7 @@ if root_dir not in sys.path:
     sys.path.insert(0, root_dir)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 from crate import main
+from crate.main import crate_simulation
 from crate import clustering
 from crate import ioput
 from crate import material
