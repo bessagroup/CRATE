@@ -40,7 +40,7 @@ __status__ = 'Stable'
 #
 # =============================================================================
 # Set '.screen' file path as a global variable
-screen_file_path = ''
+screen_file_path = None
 # =============================================================================
 def print2(*objects):
     """Double output printer.
@@ -57,12 +57,13 @@ def print2(*objects):
     print(*objects)
     # Print to '.screen' file
     global screen_file_path
-    screen_file = open(screen_file_path, 'a')
-    objects_esc = list()
-    for i in range(len(objects)):
-        objects_esc.append(escapeANSI(objects[i]))
-    print(*objects_esc, file=screen_file)
-    screen_file.close()
+    if screen_file_path is not None:
+        screen_file = open(screen_file_path, 'a')
+        objects_esc = list()
+        for i in range(len(objects)):
+            objects_esc.append(escapeANSI(objects[i]))
+        print(*objects_esc, file=screen_file)
+        screen_file.close()
 # =============================================================================
 def setdisplayfeatures():
     """Set output display features.
