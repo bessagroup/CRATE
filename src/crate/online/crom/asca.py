@@ -2771,7 +2771,7 @@ class ASCA:
         vtk_output = None
         if is_vtk_output:
             # Set VTK output directories paths
-            pvd_dir = output_dir + 'Post_Process/'
+            pvd_dir = output_dir + 'post_processing/'
             vtk_dir = pvd_dir + 'VTK/'
             # Instantiante VTK output
             vtk_output = \

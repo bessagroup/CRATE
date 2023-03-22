@@ -134,11 +134,11 @@ def set_problem_dirs(input_file_name, input_file_dir,
             |---- example.hres
             |---- example.refm
             |---- example.adapt
-            |---- Offline_Stage/
+            |---- offline_stage/
             |           |---- example.crve
             |           |---- example_clusters.vti
             |
-            |---- Post_Process/
+            |---- post_process/
                         |---- example.pvd
                         |---- VTK/
                         |---- example.voxout
@@ -176,7 +176,7 @@ def set_problem_dirs(input_file_name, input_file_dir,
             adaptivity steps are stored (only if clustering adaptivity is \
             activated).
 
-        * **Offline_Stage/**
+        * **offline_stage/**
             Clustering-based model reduction (offline-stage) directory.
 
             * **example.crve**
@@ -190,7 +190,7 @@ def set_problem_dirs(input_file_name, input_file_dir,
                 reduction (offline-stage), namely the material phases and the \
                 base material clusters.
 
-        * **Post_Process/**
+        * **post_processing/**
             Post-processing directory.
 
             * **example.pvd**
@@ -242,8 +242,8 @@ def set_problem_dirs(input_file_name, input_file_dir,
     problem_name = input_file_name
     problem_dir = input_file_dir + problem_name + '/'
     # Set offline-stage and post-processing subdirectories
-    offline_stage_dir = problem_dir + 'Offline_Stage' + '/'
-    postprocess_dir = problem_dir + 'Post_Process' + '/'
+    offline_stage_dir = problem_dir + 'offline_stage' + '/'
+    postprocess_dir = problem_dir + 'post_processing' + '/'
     # Set '.screen' output file path (delete existing file)
     ioutil.screen_file_path = problem_dir + input_file_name + '.screen'
     if os.path.isfile(ioutil.screen_file_path):
@@ -291,7 +291,7 @@ def set_problem_dirs(input_file_name, input_file_dir,
                 info.displayinfo('4', summary, description, offline_stage_dir)
             # Remove all the existent subdirectories and files except the
             # offline-stage subdirectory and the '.screen' output file
-            required_dirnames = [input_file_name + '.screen', 'Offline_Stage']
+            required_dirnames = [input_file_name + '.screen', 'offline_stage']
             remove_dirs(problem_dir, required_dirnames)
             # Create post-processing subdirectory
             make_directory(postprocess_dir, 'overwrite')
@@ -303,7 +303,7 @@ def set_problem_dirs(input_file_name, input_file_dir,
                     'input data file is consistent with the already'
                     '\n' + len('Warning: ')*' '
                     + 'existent offline-stage \'.crve\' data file '
-                    '(stored in Offline_Stage/) to avoid ' + '\n'
+                    '(stored in offline_stage/) to avoid ' + '\n'
                     + len('Warning: ')*' '
                     + 'unexpected errors or misleading conclusions.'
                     + '\n\n' + 'Press any key to continue or type '
