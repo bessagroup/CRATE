@@ -6,6 +6,10 @@
 
 # What is CRATE?
 
+[**Docs**](https://bessagroup.github.io/CRATE/)
+| [**GitHub**](https://github.com/bessagroup/CRATE/)
+| [**PyPI**](https://pypi.org/project/crate/)
+
 ### Summary
 **CRATE** (Clustering-based Nonlinear Analysis of Materials) is a Python program developed in the context of computational mechanics to aid the design and development of new materials. Its main purpose is **performing multi-scale nonlinear analyses of heterogeneous materials** through a suitable coupling between first-order computational homogenization and clustering-based reduced-order modeling.
 
@@ -43,22 +47,35 @@ other softwares implemented in different programming languages and benefiting fr
 Moreover, it is worth remarking that CRATE is implemented in a high-modular architecture and following an **object-oriented programming (OOP)** paradigm. Besides improving the overall readability and comprehension of the code, this means that CRATE can be easily extended by means of suitable interfaces to account for new features and developments, as well as being efficiently coupled with other softwares. CRATE's OOP structure is described through the well-known Unified Modeling Language (UML), a language-independent abstract schematic toolkit that allows the visual representation of object-oriented programs. In particular, the so-called UML class diagrams are employed to represent the most important classes of CRATE along with the interactions and relationships between them.
 
 
-# Installation (WIP)
+# Installation
 
-CRATE is a simple **Python package** - [crate]() - available from the Python Package Index ([PyPI](https://pypi.org/)). This means that running CRATE requires solely a Python 3.X installation and a few Python packages used for scientific computing and data science:
+CRATE is a simple **Python package** - [crate]() - available from the Python Package Index ([PyPI](https://pypi.org/)). This means that running CRATE requires solely a Python 3 installation and a few Python packages used for scientific computing and data science:
 
-- Whether you are using Linux, MacOS or Windows, Python can be easily installed by following the [Python Getting Started](https://www.python.org/about/gettingstarted/) official webpage. Many other resources are available to help you install and setup Python (e.g., [Real Python](https://realpython.com/installing-python/)).
+- Python can be easily installed by following the [Python Getting Started](https://www.python.org/about/gettingstarted/) official webpage. Many other resources are available to help you install and setup Python (e.g., [Real Python](https://realpython.com/installing-python/)).
 
-- CRATE can be installed either through **pip** (recommended) or **from source**:
+- Installation **from Python Package Index** with pip:
 
     - [**pip**](https://pip.pypa.io/en/stable/getting-started/) is a Python package manager that installs Python packages from PyPI. After [installing pip](https://pip.pypa.io/en/stable/installation/), installing a package is straightforward as described [here](https://packaging.python.org/en/latest/tutorials/installing-packages/) and [here](https://pip.pypa.io/en/stable/getting-started/). Note that, besides installing CRATE, pip automatically installs all the required Python package dependencies. Therefore, CRATE can be simply installed by running the following pip installation command:
 
         > pip install crate
 
-    - CRATE can be installed directly by [git](https://git-scm.com/) cloning the [GitHub repository]() into a local directory. In this case, all the required Python package dependencies must be installed manually.
+- Installation **from source**:
 
+    - CRATE can be installed directly by [git](https://git-scm.com/) cloning the [GitHub repository]() into a local directory:
+    
+        > git clone git@github.com:bessagroup/CRATE.git
+    
+    - In this case, please note that (1) all the required Python package dependencies (e.g., NumPy, SciPy) must be installed manually and (2) CRATE's root directory must be added to sys.path before importing crate as:
+    
+        ```python
+        import sys
+        # Add project directory to sys.path
+        root_dir = ‘/path/to/project/CRATE/src’
+        if root_dir not in sys.path:
+          sys.path.insert(0, root_dir)
+        ```    
 
-# How to use CRATE? (WIP)
+# How to use CRATE?
 
 Performing a multi-scale simulation with CRATE involves setting a **user-defined input data file**, which contains all the required data about the problem and the simulation procedure itself, and **running CRATE's main script**, which carries out all the simulation operations automatically.
 
@@ -78,23 +95,23 @@ The **general workflow of CRATE** in the solution of a micro-scale equilibrium p
     * The **spatial discretization file (`.rgmsh` file)** that is ultimately provided to CRATE as part of the input data must be generated with [NumPy](https://numpy.org/devdocs/index.html) as illustrated in the following Python (pseudo-)script:
     <br/><br/>
 
-    ```python
-    import numpy as np
+        ```python
+        import numpy as np
 
-    # The RVE discretization in a regular grid of voxels (2d or 3d), where each voxel
-    # is associated with a given material phase, must be materialized as a NumPy ndarray
-    # (2d or 3d), where each entry corresponds to a given voxel. Hence, each entry of the
-    # ndarray contains the identifier (integer) of the corresponding voxel's material phase.
-    # Assume that the ndarray is called `regular_grid`.
-    regular_grid = ...
+        # The RVE discretization in a regular grid of voxels (2d or 3d), where each voxel
+        # is associated with a given material phase, must be materialized as a NumPy ndarray
+        # (2d or 3d), where each entry corresponds to a given voxel. Hence, each entry of the
+        # ndarray contains the identifier (integer) of the corresponding voxel's material phase.
+        # Assume that the ndarray is called `regular_grid`.
+        regular_grid = ...
 
-    # The spatial discretization file (.rgmsh) is then generated by saving the `regular_grid`
-    # ndarray in binary format through the NumPy save function. Note that this appends the
-    # .npy extension to the filename.
-    np.save('example_rve.rgmsh', regular_grid)
+        # The spatial discretization file (.rgmsh) is then generated by saving the `regular_grid`
+        # ndarray in binary format through the NumPy save function. Note that this appends the
+        # .npy extension to the filename.
+        np.save('example_rve.rgmsh', regular_grid)
 
-    # Output: example_rve.rgmsh.npy file
-    ```
+        # Output: example_rve.rgmsh.npy file
+        ```
 
 - **Step 2 (Input Data): Set CRATE's user-defined input data file.**
 
@@ -108,27 +125,32 @@ The **general workflow of CRATE** in the solution of a micro-scale equilibrium p
   <a href=""><img alt="logo" src="https://github.com/BernardoFerreira/CRATE/blob/PRv1.0.0-package-structure/docs/schematics/doc_CRATE_input_data_file.png?raw=true" width="60%"></a>
 </p>
 
-- **Step 3: (Execution) Run CRATE simulator.**
+- **Step 3: (Execution) Run CRATE simulation.**
 
     * The third step consists in running CRATE to perform the numerical simulation;
 
     * Running CRATE is a single-liner as illustrated in the following Python (pseudo-)script:
     <br/><br/>
 
-    ```python
-    import crate
+        ```python
+        import crate
 
-    # Set input data file path (mandatory)
-    input_data_file_path = ...
+        # Set input data file path (mandatory)
+        input_data_file_path = ...
 
-    # Set spatial discretization file directory path (optional). If the spatial discretization
-    # file path specific in the input data file is not absolute, then it is assumed to be
-    # relative to the provided spatial discretization file directory
-    discret_file_dir = ...
+        # Set spatial discretization file directory path (optional). If the spatial discretization
+        # file path specific in the input data file is not absolute, then it is assumed to be
+        # relative to the provided spatial discretization file directory
+        discret_file_dir = ...
 
-    # Perform numerical simulation
-    crate.crate_simulator(input_data_file_path, discret_file_dir=discret_file_dir)
-    ```
+        # Perform numerical simulation
+        crate.crate_simulation(input_data_file_path, discret_file_dir=discret_file_dir)
+        ```
+        
+    * CRATE can also be launched directly from the command line by executing the main script and providing the required inputs as arguments
+    
+        > python3 CRATE/src/crate/main.py  ‘/path/to/example_input_data_file.dat’  ‘/path/to/discretization/file/directory/’    
+        
 
     * The program execution can be monitored in real-time in the terminal console window where the previous script is run. Display data includes program launching information, a detailed description of the different simulation phases, and a execution summary when the program is successfully completed.
 
@@ -136,7 +158,7 @@ The **general workflow of CRATE** in the solution of a micro-scale equilibrium p
   <a href=""><img alt="logo" src="https://github.com/BernardoFerreira/CRATE/blob/PRv1.0.0-package-structure/docs/schematics/doc_CRATE_execution_output.png?raw=true" width="70%"></a>
 </p>
 
-- **Step 4 (Output): Post-process results.**
+- **Step 4 (Output): Post-processing results.**
 
     * The fourth-step consists in post-processing the simulation results;
 
@@ -163,8 +185,10 @@ Below is a summary of the **main features** that CRATE has to offer regarding th
 
 ### General formulation:
 * Quasi-static deformation process;
-* Infinitesimal and finite strains;
+* Infinitesimal and finite strains*;
 * Implicit time integration.
+
+(*) A limitation under finite strains is still under investigation - the development of a suitable self-consistent scheme for the clustering-based reduced-order models SCA and ASCA. Therefore, enforcing constant reference material properties is currently the only option available to simulate with the previous models.
 
 ### Macro-scale loading path:
 * General monotonic and non-monotonic macro-scale loading paths;
@@ -189,7 +213,9 @@ Below is a summary of the **main features** that CRATE has to offer regarding th
 
 ### Offline-stage DNS methods:
 * Interface to implement any direct numerical simulation (DNS) homogenization-based multi-scale method;
-* FFT-based homogenization basic scheme ([article](https://www.sciencedirect.com/science/article/pii/S0045782597002181), [article](https://link.springer.com/article/10.1007/s00466-014-1071-8)).
+* FFT-based homogenization basic scheme* ([article](https://www.sciencedirect.com/science/article/pii/S0045782597002181), [article](https://link.springer.com/article/10.1007/s00466-014-1071-8)).
+
+(*) Despite the highly efficient implementation, the convergence of this method is limited to moderate stiffness ratios between different material phases.
 
 ### Offline-stage clustering methods:
 * Interface to implement any clustering algorithm;
