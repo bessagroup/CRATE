@@ -219,9 +219,8 @@
 #
 # clustering_algorithm_id (int):    Clustering algorithm identifier.
 #                                   1 - K-Means (scikit-learn)
-#                                   2 - K-Means (pyclustering)
-#                                   3 - Mini-Batch K-Means (scikit-learn)
-#                                   ...
+#                                   2 - Mini-Batch K-Means (scikit-learn)
+#                                   3 - Agglomerative (scipy)
 #
 # feature_id (int):                 Clustering feature identifier.
 #                                   1 - Fourth-order local elastic strain
@@ -234,7 +233,7 @@
 #
 # adapt_type_id (int):              Adaptive Cluster-Reduced Material Phase
 #                                   (CRMP) type identifier.
-#                                   1 - Generalize Adaptive (GACRMP)
+#                                   1 - Generalized Adaptive (GACRMP)
 #                                   2 - Hierarchical Agglomerative Adaptive
 #                                       (HAACRMP)
 #

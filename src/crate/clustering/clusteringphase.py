@@ -1447,7 +1447,7 @@ class HAACRMP(ACRMP):
         clust_algs : list[str]
             Clustering algorithms identifiers (str).
         """
-        return ['5', ]
+        return ['3', ]
     # -------------------------------------------------------------------------
     def get_n_clusters(self):
         """Get current number of clusters.
