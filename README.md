@@ -62,11 +62,11 @@ CRATE is a simple **Python package** - [crate]() - available from the Python Pac
 - Installation **from source**:
 
     - CRATE can be installed directly by [git](https://git-scm.com/) cloning the [GitHub repository]() into a local directory:
-    
+
         > git clone git@github.com:bessagroup/CRATE.git
-    
-    - In this case, please note that (1) all the required Python package dependencies (e.g., NumPy, SciPy) must be installed manually and (2) CRATE's root directory must be added to sys.path before importing crate as:
-    
+
+    - In this case, please note that (1) all the required third-party package dependencies (e.g., NumPy, SciPy) must be installed manually and (2) CRATE's root directory must be added to sys.path before importing crate as:
+
         ```python
         import sys
         # Add project directory to sys.path
@@ -146,11 +146,11 @@ The **general workflow of CRATE** in the solution of a micro-scale equilibrium p
         # Perform numerical simulation
         crate.crate_simulation(input_data_file_path, discret_file_dir=discret_file_dir)
         ```
-        
+
     * CRATE can also be launched directly from the command line by executing the main script and providing the required inputs as arguments
-    
+
         > python3 CRATE/src/crate/main.py  ‘/path/to/example_input_data_file.dat’  ‘/path/to/discretization/file/directory/’    
-        
+
 
     * The program execution can be monitored in real-time in the terminal console window where the previous script is run. Display data includes program launching information, a detailed description of the different simulation phases, and a execution summary when the program is successfully completed.
 

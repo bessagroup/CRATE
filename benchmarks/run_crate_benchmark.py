@@ -6,8 +6,9 @@ a Python environment by simply executing the command:
 | python3 run_crate_benchmark.py
 
 Note that this module works even if CRATE Python package 'crate' is not
-installed. However, CRATE third-party package dependencies (e.g., 'numpy') must
-be installed and accessible to the Python interpreter.
+installed from the Python Package Index (e.g., with pip). However, note that
+CRATE third-party package dependencies (e.g., 'numpy') must be installed and
+accessible to the Python interpreter.
 """
 #
 #                                                                       Modules
