@@ -38,7 +38,8 @@ import crate
 # Get benchmarks' data files directory
 benchmarks_dir = str(pathlib.Path(__file__).parents[0])
 # Set benchmark input data file
-benchmark_file = 'example_input_data_file.dat'
+benchmark_file = 'infinitesimal_strains/2d/sca/example_1/uniaxial_tension/' + \
+    'example_1_uniaxial_tension_nc54.dat'
 # Set benchmark input data file path
 input_file_path = os.path.join(benchmarks_dir, benchmark_file)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
