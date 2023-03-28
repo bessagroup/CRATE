@@ -58,7 +58,7 @@ class ClusterAnalysis:
     """
     available_clustering_alg = {'1': 'K-Means (scikit-learn)',
                                 '2': 'Mini-Batch K-Means (scikit-learn)',
-                                '3': 'Agglomerative (scipy)',}
+                                '3': 'Agglomerative (scipy)', }
     # -------------------------------------------------------------------------
     def __init__(self):
         """Constructor."""
@@ -117,15 +117,6 @@ class ClusterAnalysis:
                                           n_clusters=n_clusters)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         elif clust_alg_id == '3':
-            # Instantiate Agglomerative clustering
-            clust_alg = AgglomerativeSK(affinity='euclidean', memory=None,
-                                        connectivity=None,
-                                        compute_full_tree='auto',
-                                        linkage='ward',
-                                        distance_threshold=None,
-                                        n_clusters=n_clusters)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        elif clust_alg_id == '4':
             # Instatiate Agglomerative clustering
             clust_alg = AgglomerativeSP(0, method='ward', metric='euclidean',
                                         criterion='maxclust',

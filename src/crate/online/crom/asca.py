@@ -64,11 +64,6 @@ import tensor.tensoroperations as top
 from clustering.citoperations import assemble_cit
 from online.loading.macloadincrem import LoadingPath, IncrementRewinder, \
                                          RewindManager
-from material.materialoperations import conjugate_material_log_strain, \
-                                        compute_material_log_strain
-from optimization.optimizationfunction import OptimizationFunction, \
-                                              RelativeRootMeanSquaredError
-from optimization.optimizer import SciPyMinimizer
 from clustering.adaptivity.crve_adaptivity import AdaptivityManager, \
                                                   ClusteringAdaptivityOutput
 from ioput.homresoutput import HomResOutput
