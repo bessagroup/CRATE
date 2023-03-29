@@ -34,7 +34,7 @@ Conceptual map
 ~~~~~~~~~~~~~~
 CRATE's conceptual structure can be easily understood by getting familiar with some fundamental concepts and having a basic comprehension of a first-order multi-scale modeling scheme.
 
-Assume that we are interested in predicting the behavior of a fiber-reinforced composite (heterogeneous) material composed of two different material phases (matrix and fiber). At the micro-scale level, the composite material needs to be first characterized by a **Representative Volume Element (RVE)**, i.e., a volume of material sufficient large such that it contains enough morphological and topological information to be representative in an average sense. Given the enforcement of periodic boundary conditions in the material analysis, the RVE is assumed periodic. In the second place, the RVE needs to be spatially discretized in a regular (or uniform) grid of voxels, where each voxel is associated with a given material phase. Finally, the RVE model can be compressed by means of a clustering-based domain decomposition, i.e., a cluster analysis that decomposes the spatial domain into a given number of material clusters according to a given set of features. The compressed model is then called **Cluster-reduced Representative Volume Element (CRVE)**, composed of **cluster-reduced material phases (CRMPs)**, each composed of different material clusters. Each **material cluster** is, therefore, a group of voxels that exhibit some type of similarity and that are numerically handled in a unified way.
+Assume that we are interested in predicting the behavior of a fiber-reinforced composite (heterogeneous) material composed of two different material phases (matrix and fiber). At the micro-scale level, the composite material needs to be first characterized by a **Representative Volume Element (RVE)**, i.e., a volume of material sufficiently large such that it contains enough morphological and topological information to be representative in an average sense. Given the enforcement of periodic boundary conditions in the material analysis, the RVE is assumed periodic. In the second place, the RVE needs to be spatially discretized in a regular (or uniform) grid of voxels, where each voxel is associated with a given material phase. Finally, the RVE model can be compressed by means of a clustering-based domain decomposition, i.e., a cluster analysis that decomposes the spatial domain into a given number of material clusters according to a given set of features. The compressed model is then called **Cluster-reduced Representative Volume Element (CRVE)**, composed of **cluster-reduced material phases (CRMPs)**, each composed of different material clusters. Each **material cluster** is, therefore, a group of voxels that exhibit some type of similarity and that are numerically handled in a unified way.
 
 .. image:: ../schematics/doc_CRATE_concepts.png
    :width: 70 %
@@ -52,10 +52,9 @@ The multi-scale analysis of a uniaxial tensile test of a dogbone specimen is sch
 
 Computational framework
 ~~~~~~~~~~~~~~~~~~~~~~~
-CRATE is designed and implemented in **Python**, making it easily portable between all major computer platforms, easily integrated with
-other softwares implemented in different programming languages and benefiting from an extensive collection of prebuilt (standard library) and third-party libraries. Given the extensive numerical nature of the program, its implementation relies heavily on the well-known `NumPy <https://numpy.org/devdocs/index.html>`_ and `SciPy <https://www.scipy.org/>`_ scientific computing packages, being most numerical tasks dispatched to compiled C code inside the Python interpreter.
+CRATE is designed and implemented in **Python**, making it easily portable between all major computer platforms, easily integrated with other software implemented in different programming languages and benefiting from an extensive collection of prebuilt (standard library) and third-party libraries. Given the extensive numerical nature of the program, its implementation relies heavily on the well-known `NumPy <https://numpy.org/devdocs/index.html>`_ and `SciPy <https://www.scipy.org/>`_ scientific computing packages, being most numerical tasks dispatched to compiled C code inside the Python interpreter.
 
-Moreover, it is worth remarking that CRATE is implemented in a high-modular architecture and following an **object-oriented programming (OOP)** paradigm. Besides improving the overall readability and comprehension of the code, this means that CRATE can be easily extended by means of suitable interfaces to account for new features and developments, as well as being efficiently coupled with other softwares. CRATE's OOP structure is described through the well-known Unified Modeling Language (UML), a language-independent abstract schematic toolkit that allows the visual representation of object-oriented programs. In particular, the so-called UML class diagrams are employed to represent the most important classes of CRATE along with the interactions and relationships between them.
+Moreover, it is worth remarking that CRATE is implemented in a high-modular architecture and following an **object-oriented programming (OOP)** paradigm. Besides improving the overall readability and comprehension of the code, this means that CRATE can be easily extended by means of suitable interfaces to account for new features and developments, as well as being efficiently coupled with other software. CRATE's OOP structure is described through the well-known Unified Modeling Language (UML), a language-independent abstract schematic toolkit that allows the visual representation of object-oriented programs. In particular, the so-called UML class diagrams are employed to represent the most important classes of CRATE along with the interactions and relationships between them.
 
 ----
 
@@ -86,7 +85,7 @@ The **general workflow of CRATE** in the solution of a micro-scale equilibrium p
 
 - **Step 1 (Input Data): Generate Representative Volume Element (RVE).**
 
-    * The first step consists in the computational generation of a RVE of the heterogeneous material under analysis;
+    * The first step is the computational generation of an RVE of the heterogeneous material under analysis;
 
     * The RVE must be quadrilateral (2d) or paralelepipedic (3d);
 
@@ -120,7 +119,7 @@ The **general workflow of CRATE** in the solution of a micro-scale equilibrium p
 
 - **Step 2 (Input Data): Set CRATE's user-defined input data file.**
 
-    * The second step consists in defining a **CRATE's user-defined input data file** (:code:`.dat` file);
+    * The second step is to define a **CRATE's user-defined input data file** (:code:`.dat` file);
 
     * The input data file contains all the required information about the problem (problem type, material properties, macro-scale loading path, ...) and about the solution procedure (macro-scale loading incrementation, clustering-based domain decomposition, output options, ...). The **spatial discretization file (`.rgmsh` file)** path is provided in the input data file;
 
@@ -136,7 +135,7 @@ The **general workflow of CRATE** in the solution of a micro-scale equilibrium p
 
 - **Step 3: (Execution) Run CRATE simulator.**
 
-    * The third step consists in running CRATE to perform the numerical simulation;
+    * The third step is to run CRATE to perform the numerical simulation;
 
     * Running CRATE is a single-liner as illustrated in the following Python (pseudo-)script:
 
@@ -230,12 +229,12 @@ Material constitutive modeling:
 Offline-stage DNS methods:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 * Interface to implement any direct numerical simulation (DNS) homogenization-based multi-scale method;
-* FFT-based homogenization basic scheme (`article <https://www.sciencedirect.com/science/article/pii/S0045782597002181>`_, `article <https://link.springer.com/article/10.1007/s00466-014-1071-8>`_).
+* FFT-based homogenization basic scheme (`article 1 <https://www.sciencedirect.com/science/article/pii/S0045782597002181>`_, `article 2 <https://link.springer.com/article/10.1007/s00466-014-1071-8>`_).
 
 Offline-stage clustering methods:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 * Interface to implement any clustering algorithm;
-* Wrappers over clustering algorithms available from third-party libraries (e.g., `SciPy <https://docs.scipy.org/doc/scipy/reference/cluster.html>`_), `Scikit-Learn <https://scikit-learn.org/stable/modules/clustering.html>`_, ...).
+* Wrappers over clustering algorithms available from third-party libraries (e.g., `SciPy <https://docs.scipy.org/doc/scipy/reference/cluster.html>`_, `Scikit-Learn <https://scikit-learn.org/stable/modules/clustering.html>`_, ...).
 
 Online-stage clustering-based reduced-order models:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -244,7 +243,7 @@ Online-stage clustering-based reduced-order models:
 
 Post-processing:
 ~~~~~~~~~~~~~~~~
-* VTK (XML format) output files allowing the visualization of data associated to the material microstructure (topoloy, material phases, material clusters) and micro-scale physical fields (strain, stress, internal variables, ...).
+* VTK (XML format) output files allowing the visualization of data associated to the material microstructure (topology, material phases, material clusters) and micro-scale physical fields (strain, stress, internal variables, ...).
 
 ----
 
