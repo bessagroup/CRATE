@@ -9,6 +9,8 @@
 
 # Exclude (additional) glob patterns from checks:
 extend-exclude =
+	docs/
+	benchmarks/
 
 # <<< UPDATE ACCORDING WITH YOUR PYTHON PROJECT
 
