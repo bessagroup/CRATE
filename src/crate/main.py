@@ -69,7 +69,8 @@ def crate_simulation(arg_input_file_path, arg_discret_file_dir=None):
         info.displayinfo('4', summary, description)
     # Check spatial discretization file directory
     discret_file_dir = None
-    if not os.path.exists(str(arg_discret_file_dir)):
+    if arg_discret_file_dir is not None and \
+            not os.path.exists(str(arg_discret_file_dir)):
         summary = 'Missing spatial discretization file directory'
         description = 'The spatial discretization file directory could ' \
             + 'not be found.'
