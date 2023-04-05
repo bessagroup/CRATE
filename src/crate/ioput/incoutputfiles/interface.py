@@ -64,7 +64,7 @@ class IncrementalOutputFile(ABC):
         """Write output file."""
         pass
     # -------------------------------------------------------------------------
-    def rewind_file(self):
+    def rewind_file(self, rewind_inc):
         """Rewind output file.
 
         Parameters
