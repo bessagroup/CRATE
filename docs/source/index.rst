@@ -173,6 +173,8 @@ The **general workflow of CRATE** in the solution of a micro-scale equilibrium p
 
         - :code:`.hres` file - A file where the macro-scale material response is stored, i.e., the homogenized stress-strain response of the RVE computed at every macro-scale loading increment;
 
+        - :code:`.efftan` file - A file where the RVE effective material consistent tangent modulus computed at every macro-scale loading increment is stored;
+
         - :code:`.vti` file - A VTK XML output file associated with a given macro-scale loading increment that allows the RVE relevant physical data to be conveniently analyzed with a suitable visualization software (e.g. `ParaView <https://www.paraview.org/>`_).
 
     |

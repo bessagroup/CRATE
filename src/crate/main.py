@@ -48,7 +48,8 @@ __status__ = 'Stable'
 # =============================================================================
 #
 # =============================================================================
-def crate_simulation(arg_input_file_path, arg_discret_file_dir=None):
+def crate_simulation(arg_input_file_path, arg_discret_file_dir=None,
+                     is_null_stdout=False):
     """Perform CRATE simulation.
 
     Parameters
@@ -57,7 +58,13 @@ def crate_simulation(arg_input_file_path, arg_discret_file_dir=None):
         Input data file path provided as input.
     arg_discret_file_dir : str, default=None
         Spatial discretization file directory path provided as input.
+    is_null_stdout : bool, default=False
+        Suppress execution output to stdout.
     """
+    # Suppress execution output to stdout
+    if is_null_stdout:
+        null_file = open(os.devnull, 'w')
+        sys.stdout = null_file
     #
     #                                             Read user input data file and
     #                                 create problem output directory structure
@@ -82,11 +89,12 @@ def crate_simulation(arg_input_file_path, arg_discret_file_dir=None):
     input_file_name, input_file_path, input_file_dir = \
         filop.set_input_datafile_path(arg_input_file_path)
     # Check if data-driven simulation mode
-    is_data_driven_mode = rid.read_data_driven_mode(input_file_path)
+    is_minimize_output = rid.read_output_minimization_option(input_file_path)
     # Set output directory structure and output files paths
     problem_name, problem_dir, offline_stage_dir, postprocess_dir, \
         is_same_offstage, crve_file_path = filop.set_problem_dirs(
-            input_file_name, input_file_dir, is_data_driven_mode)
+            input_file_name, input_file_dir, is_minimize_output,
+            is_null_stdout)
     # Store problem directories and files paths
     dirs_dict = packager.store_paths_data(
         input_file_name, input_file_path, input_file_dir, problem_name,
@@ -118,7 +126,7 @@ def crate_simulation(arg_input_file_path, arg_discret_file_dir=None):
     info.displayinfo('5', 'Reading the input data file...')
     problem_dict, mat_dict, macload_dict, rg_dict, clst_dict, scs_dict, \
         algpar_dict, vtk_dict, output_dict, material_state = \
-        rid.read_input_data_file(input_file, dirs_dict, is_data_driven_mode)
+        rid.read_input_data_file(input_file, dirs_dict, is_minimize_output)
     # Close user input data file
     input_file.close()
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -291,8 +299,8 @@ def crate_simulation(arg_input_file_path, arg_discret_file_dir=None):
         crve_file_path = dirs_dict['crve_file_path']
         crve.save_crve_file(crve, crve_file_path)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Data-driven simulation mode: remove non-essential files and directories
-    if is_data_driven_mode:
+    # Output minimization
+    if is_minimize_output:
         # Get offline-stage directory path
         offline_stage_dir = dirs_dict['offline_stage_dir']
         # Get path of spatial discretization file (within problem directory)
@@ -394,4 +402,5 @@ if __name__ == '__main__':
         discret_file_dir = os.path.normpath(str(sys.argv[2])) + '/'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Perform CRATE simulation
-    crate_simulation(input_file_path, discret_file_dir)
+    crate_simulation(input_file_path, arg_discret_file_dir=discret_file_dir,
+                     is_null_stdout=False)

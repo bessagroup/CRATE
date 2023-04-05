@@ -701,17 +701,21 @@
 [insert here]
 
 
-#                                               Data-driven simulation mode [O]
+#                                                           Minimize output [O]
 # =============================================================================
-# Meaning: Some procedures are adopted to alleviate the computational costs
-#          (time and memory) of simulations run in the context of a data-driven
-#          framework (i.e., in the computation of large material response
-#          databases). Such procedures do not impact the solution of the
-#          material simulation.
+# Meaning: Minimize output files and directories to the essential outputs of
+#          the multi-scale simulation.
+#          Output files:
+#          .screen - File where all the data printed to the default standard
+#                    output device is stored
+#          .hres   - File where the homogenized strain/stress results are
+#                    stored.
+#          .efftan - File where the CRVE effective material consistent tangent
+#                    modulus is stored.
 #
-# Syntax:  Data_Driven_Simulation_Mode
+# Syntax:  Minimize_Output
 #
-# Note 1: The data-driven simulation mode suppresses all user input prompts.
+# Note 1: All user input prompts are suppressed.
 #
 # Note 2: Existing offline-stage data ('.crve' output file) is considered by
 #         default, otherwise existing problem directory is overridden.

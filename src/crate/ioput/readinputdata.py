@@ -34,7 +34,7 @@ __status__ = 'Stable'
 # =============================================================================
 #
 # =============================================================================
-def read_input_data_file(input_file, dirs_dict, is_data_driven_mode=False):
+def read_input_data_file(input_file, dirs_dict, is_minimize_output=False):
     """Read input data file and store data in suitable containers.
 
     Parameters
@@ -43,11 +43,8 @@ def read_input_data_file(input_file, dirs_dict, is_data_driven_mode=False):
         Input data file.
     dirs_dict : dict
         Container of output directories and files paths.
-    is_data_driven_mode : bool, default=False
-        Data-driven simulation flag. If `True`, then some procedures are
-        adopted to alleviate the computational costs (time and memory) of
-        simulations run in the context of a data-driven framework (i.e., in
-        the computation of large material response databases).
+    is_minimize_output : bool, default=False
+        Output minimization flag.
 
     Returns
     -------
@@ -410,8 +407,8 @@ def read_input_data_file(input_file, dirs_dict, is_data_driven_mode=False):
     else:
         is_store_final_clustering = False
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Data-driven simulation mode: Suppress optional output files (override)
-    if is_data_driven_mode:
+    # Suppress optional output files (override)
+    if is_minimize_output:
         is_vtk_output = False
         is_ref_material_output = False
         is_clust_adapt_output = False
@@ -511,8 +508,8 @@ def read_input_data_file(input_file, dirs_dict, is_data_driven_mode=False):
     return problem_dict, mat_dict, macload_dict, rg_dict, clst_dict, \
         scs_dict, algpar_dict, vtk_dict, output_dict, material_state
 # =============================================================================
-def read_data_driven_mode(input_file_path):
-    """Read input data file and search for data-driven mode keyword.
+def read_output_minimization_option(input_file_path):
+    """Read input data file and search for output minimization keyword.
 
     Parameters
     ----------
@@ -521,20 +518,17 @@ def read_data_driven_mode(input_file_path):
 
     Returns
     -------
-    is_data_driven_mode : bool
-        Data-driven simulation flag. If `True`, then some procedures are
-        adopted to alleviate the computational costs (time and memory) of
-        simulations run in the context of a data-driven framework (i.e., in
-        the computation of large material response databases).
+    is_minimize_output : bool
+        Output minimization flag.
     """
-    # Read data-driven simulation mode (optional)
-    keyword = 'Data_Driven_Simulation_Mode'
+    # Read output minimization (optional)
+    keyword = 'Minimize_Output'
     with open(input_file_path, 'r') as input_file:
         is_found, keyword_line_number = rproc.searchoptkeywordline(
             input_file, keyword)
         if is_found:
-            is_data_driven_mode = True
+            is_minimize_output = True
         else:
-            is_data_driven_mode = False
+            is_minimize_output = False
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    return is_data_driven_mode
+    return is_minimize_output

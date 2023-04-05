@@ -48,4 +48,6 @@ microstructure_dir = os.path.join(str(pathlib.Path(__file__).parents[0]),
                                   'microstructures')
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Perform CRATE simulation
-crate.crate_simulation(input_file_path, microstructure_dir)
+crate.crate_simulation(input_file_path,
+                       arg_discret_file_dir=microstructure_dir,
+                       is_null_stdout=False)

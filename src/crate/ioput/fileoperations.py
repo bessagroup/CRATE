@@ -119,7 +119,7 @@ def set_input_datafile_path(path):
 #                                                             Results directory
 # =============================================================================
 def set_problem_dirs(input_file_name, input_file_dir,
-                     is_data_driven_mode=False):
+                     is_minimize_output=False, is_null_stdout=False):
     """Set output directory structure.
 
     *Output directory structure:*
@@ -132,6 +132,7 @@ def set_problem_dirs(input_file_name, input_file_dir,
             |-----example.screen
             |---- microstructure_regular_grid.rgmsh
             |---- example.hres
+            |---- example.efftan
             |---- example.refm
             |---- example.adapt
             |---- offline_stage/
@@ -166,6 +167,10 @@ def set_problem_dirs(input_file_name, input_file_dir,
 
         * **example.hres**
             File where the homogenized strain/stress results are stored.
+
+        * **example.efftan**
+            File where the CRVE effective material consistent tangent modulus
+            is stored.
 
         * **example.refm**
             File where data associated with the homogeneous (fictitious)
@@ -213,11 +218,10 @@ def set_problem_dirs(input_file_name, input_file_dir,
         Problem input data file name.
     input_file_dir : str
         Problem input data file directory path.
-    is_data_driven_mode : bool, default=False
-        Data-driven simulation flag. If `True`, then some procedures are
-        adopted to alleviate the computational costs (time and memory) of
-        simulations run in the context of a data-driven framework (i.e., in
-        the computation of large material response databases).
+    is_minimize_output : bool, default=False
+        Output minimization flag.
+    is_null_stdout : bool, default=False
+        Suppress execution output to stdout.
 
     Returns
     -------
@@ -251,6 +255,11 @@ def set_problem_dirs(input_file_name, input_file_dir,
     # Set '.crve' output file path
     crve_file_path = offline_stage_dir + input_file_name + '.crve'
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Disable user prompts
+    is_user_prompts = True
+    if is_null_stdout or is_minimize_output:
+        is_user_prompts = False
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Check if the problem output directory exists
     if not os.path.exists(problem_dir):
         status = 0
@@ -265,18 +274,18 @@ def set_problem_dirs(input_file_name, input_file_dir,
                       'specified input data file already exists.')
         # Ask user if the purpose is to consider previously computed
         # offline-stage data ('.crve' output file)
-        if is_data_driven_mode:
-            # Data-driven simulation mode: Consider existent offline-stage data
-            if os.path.exists(offline_stage_dir) \
-                    and os.path.exists(crve_file_path):
-                is_same_offstage = True
-            else:
-                is_same_offstage = False
-        else:
+        if is_user_prompts:
             if os.path.exists(crve_file_path):
                 is_same_offstage = ioutil.query_yn(
                     '\nDo you wish to consider the already existent '
                     'offline-stage \'.crve\' data file?', 'no')
+            else:
+                is_same_offstage = False
+        else:
+            # Consider existent offline-stage data by default
+            if os.path.exists(offline_stage_dir) \
+                    and os.path.exists(crve_file_path):
+                is_same_offstage = True
             else:
                 is_same_offstage = False
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -297,7 +306,7 @@ def set_problem_dirs(input_file_name, input_file_dir,
             make_directory(postprocess_dir, 'overwrite')
             # Warn user to potential compatibility issues between the problem
             # input data file and the existent offline-stage '.crve' data file
-            if not is_data_driven_mode:
+            if is_user_prompts:
                 ioutil.useraction(
                     '\n\nWarning: Please make sure that the problem '
                     'input data file is consistent with the already'
@@ -311,13 +320,14 @@ def set_problem_dirs(input_file_name, input_file_dir,
         else:
             # Ask user if existent problem output directory should be
             # overwritten
-            if is_data_driven_mode:
-                # Data-driven simulation mode: Overwrite
-                is_overwrite = True
-            else:
+            if is_user_prompts:
                 is_overwrite = ioutil.query_yn('\nDo you wish to overwrite '
                                                'the existing problem output '
                                                'directory?')
+            else:
+                # Overwrite by default
+                is_overwrite = True
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             if is_overwrite:
                 status = 2
                 # Remove all existent subdirectories and files except the
