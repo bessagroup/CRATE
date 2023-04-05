@@ -69,8 +69,8 @@ from clustering.adaptivity.crve_adaptivity import AdaptivityManager, \
 from ioput.incoutputfiles.homresoutput import HomResOutput
 from ioput.incoutputfiles.efftanoutput import EffTanOutput
 from ioput.incoutputfiles.refmatoutput import RefMatOutput
-from ioput.vtkoutput import VTKOutput
-from ioput.voxelsoutput import VoxelsOutput
+from ioput.miscoutputfiles.vtkoutput import VTKOutput
+from ioput.miscoutputfiles.voxelsoutput import VoxelsOutput
 #
 #                                                          Authorship & Credits
 # =============================================================================

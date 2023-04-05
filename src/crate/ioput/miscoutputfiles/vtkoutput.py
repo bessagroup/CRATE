@@ -27,7 +27,7 @@ import copy
 import numpy as np
 # Local
 import tensor.matrixoperations as mop
-from ioput.voxelsoutput import VoxelsArraysFactory
+from ioput.miscoutputfiles.voxelsoutput import VoxelsArraysFactory
 #
 #                                                          Authorship & Credits
 # =============================================================================

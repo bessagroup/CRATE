@@ -38,7 +38,7 @@ import ioput.packager as packager
 from clustering.crve import CRVE
 from clustering.clusteringdata import set_clustering_data
 from online.crom.asca import ASCA
-from ioput.vtkoutput import VTKOutput
+from ioput.miscoutputfiles.vtkoutput import VTKOutput
 #
 #                                                          Authorship & Credits
 # =============================================================================
