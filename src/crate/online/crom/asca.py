@@ -443,6 +443,7 @@ class ASCA:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         if is_vtk_output:
             # Write VTK file associated with the initial state
+            info.displayinfo('18')
             vtk_output.write_vtk_file_time_step(
                 0, self._strain_formulation, self._problem_type, crve,
                 material_state, vtk_vars=vtk_data['vtk_vars'],
@@ -1004,6 +1005,7 @@ class ASCA:
                 # Set post-processing procedure initial time
                 procedure_init_time = time.time()
                 # Write VTK file associated with the converged increment
+                info.displayinfo('18')
                 vtk_output.write_vtk_file_time_step(
                     inc, self._strain_formulation, self._problem_type, crve,
                     material_state, vtk_vars=vtk_data['vtk_vars'],

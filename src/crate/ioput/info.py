@@ -63,6 +63,7 @@ def displayinfo(code, *args, **kwargs):
         * 15 : Clustering adaptivity step summary
         * 16 : Clustering adaptivity step triggered
         * 17 : Adaptive clustering solution rewinding
+        * 18 : Writing increment VTK output file
     """
     # Get display features
     display_features = ioutil.setdisplayfeatures()
@@ -561,6 +562,17 @@ def displayinfo(code, *args, **kwargs):
             + '\n' + colorama.Fore.CYAN \
             + indent + asterisk_line[:-len(indent)] \
             + colorama.Style.RESET_ALL + '\n'
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    elif code == '18':
+        msg = 'Writing increment VTK output file...'
+        arguments = []
+        info = tuple(arguments)
+        template = '\n' + colorama.Fore.MAGENTA \
+            + indent + asterisk_line[:-len(indent)] + '\n' \
+            + indent + 'VTK Output: ' + colorama.Style.RESET_ALL + msg \
+            + '\n' + colorama.Fore.MAGENTA \
+            + indent + asterisk_line[:-len(indent)] \
+            + colorama.Style.RESET_ALL
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Display information
     ioutil.print2(template.format(*info, width=output_width))
