@@ -1,9 +1,9 @@
-crate.online.crom.asca.RefMatOutput
-===================================
+crate.ioput.incoutputfiles.interface.ABC
+========================================
 
-.. currentmodule:: crate.online.crom.asca
+.. currentmodule:: crate.ioput.incoutputfiles.interface
 
-.. autoclass:: RefMatOutput
+.. autoclass:: ABC
    :members:
    :show-inheritance:
    :inherited-members:
@@ -16,9 +16,6 @@ crate.online.crom.asca.RefMatOutput
    .. autosummary::
       :nosignatures:
    
-      ~RefMatOutput.init_file
-      ~RefMatOutput.rewind_file
-      ~RefMatOutput.write_file
    
    
 

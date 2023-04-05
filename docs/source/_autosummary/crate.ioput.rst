@@ -29,13 +29,11 @@ crate.ioput
    :recursive:
 
    crate.ioput.fileoperations
-   crate.ioput.homresoutput
+   crate.ioput.incoutputfiles
    crate.ioput.info
    crate.ioput.ioutilities
+   crate.ioput.miscoutputfiles
    crate.ioput.packager
    crate.ioput.readinputdata
    crate.ioput.readprocedures
-   crate.ioput.refmatoutput
-   crate.ioput.voxelsoutput
-   crate.ioput.vtkoutput
 

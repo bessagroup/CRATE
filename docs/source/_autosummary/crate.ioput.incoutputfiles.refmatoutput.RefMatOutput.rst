@@ -1,7 +1,7 @@
-crate.online.crom.asca.RefMatOutput
-===================================
+crate.ioput.incoutputfiles.refmatoutput.RefMatOutput
+====================================================
 
-.. currentmodule:: crate.online.crom.asca
+.. currentmodule:: crate.ioput.incoutputfiles.refmatoutput
 
 .. autoclass:: RefMatOutput
    :members:

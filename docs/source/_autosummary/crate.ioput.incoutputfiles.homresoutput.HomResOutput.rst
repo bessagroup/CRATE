@@ -1,7 +1,7 @@
-crate.online.crom.asca.HomResOutput
-===================================
+crate.ioput.incoutputfiles.homresoutput.HomResOutput
+====================================================
 
-.. currentmodule:: crate.online.crom.asca
+.. currentmodule:: crate.ioput.incoutputfiles.homresoutput
 
 .. autoclass:: HomResOutput
    :members:

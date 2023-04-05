@@ -1,7 +1,7 @@
-crate.clustering.clusteringalgs
-===============================
+crate.ioput.incoutputfiles.interface
+====================================
 
-.. automodule:: crate.clustering.clusteringalgs
+.. automodule:: crate.ioput.incoutputfiles.interface
   
    
    
@@ -27,12 +27,7 @@ crate.clustering.clusteringalgs
       :template: custom-class-template.rst
    
       ABC
-      AgglomerativeAlgorithm
-      AgglomerativeSP
-      ClusterAnalysis
-      ClusteringAlgorithm
-      KMeansSK
-      MiniBatchKMeansSK
+      IncrementalOutputFile
    
    
 

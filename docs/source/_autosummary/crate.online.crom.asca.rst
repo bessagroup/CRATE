@@ -16,8 +16,6 @@ crate.online.crom.asca
    
       abstractmethod
       assemble_cit
-      compute_material_log_strain
-      conjugate_material_log_strain
    
    
 
@@ -33,21 +31,15 @@ crate.online.crom.asca
       ASCA
       AdaptivityManager
       ClusteringAdaptivityOutput
+      EffTanOutput
       ElasticReferenceMaterial
-      FiniteRegressionSCS
       HomResOutput
       IncrementRewinder
       InfinitesimalRegressionSCS
       LoadingPath
-      OptimizationFunction
       RefMatOutput
       ReferenceMaterialOptimizer
-      RelativeRootMeanSquaredError
       RewindManager
-      SciPyMinimizer
-      SelfConsistentCompRegressionLoss
-      SelfConsistentOptimization
-      SelfConsistentTangentLoss
       VTKOutput
       VoxelsOutput
    

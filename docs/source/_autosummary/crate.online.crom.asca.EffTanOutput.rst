@@ -1,9 +1,9 @@
-crate.online.crom.asca.RefMatOutput
+crate.online.crom.asca.EffTanOutput
 ===================================
 
 .. currentmodule:: crate.online.crom.asca
 
-.. autoclass:: RefMatOutput
+.. autoclass:: EffTanOutput
    :members:
    :show-inheritance:
    :inherited-members:
@@ -16,9 +16,9 @@ crate.online.crom.asca.RefMatOutput
    .. autosummary::
       :nosignatures:
    
-      ~RefMatOutput.init_file
-      ~RefMatOutput.rewind_file
-      ~RefMatOutput.write_file
+      ~EffTanOutput.init_file
+      ~EffTanOutput.rewind_file
+      ~EffTanOutput.write_file
    
    
 

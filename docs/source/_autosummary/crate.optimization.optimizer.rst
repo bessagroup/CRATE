@@ -27,11 +27,8 @@ crate.optimization.optimizer
       :template: custom-class-template.rst
    
       ABC
-      GeneticAlgorithm
-      LIPO
       Optimizer
       SciPyMinimizer
-      ScikitOptimizer
    
    
 

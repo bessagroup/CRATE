@@ -9,6 +9,13 @@
 
    
    
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      crate_simulation
+   
    
 
    
