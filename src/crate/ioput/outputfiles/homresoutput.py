@@ -18,6 +18,7 @@ import numpy as np
 # Local
 import tensor.matrixoperations as mop
 import tensor.tensoroperations as top
+from ioput.outputfiles.interface import IncrementalOutputFile
 from material.materialoperations import compute_spatial_log_strain, \
                                         cauchy_from_first_piola, \
                                         MaterialQuantitiesComputer
@@ -30,11 +31,13 @@ __status__ = 'Stable'
 # =============================================================================
 #
 # =============================================================================
-class HomResOutput:
+class HomResOutput(IncrementalOutputFile):
     """Output file: Homogenized strain/stress results.
 
     Attributes
     ----------
+    _file_path : str
+        Output file path.
     _header : list[str]
         List containing the header of each column (str).
     _col_width : int
@@ -42,23 +45,21 @@ class HomResOutput:
 
     Methods
     -------
-    init_hres_file(self, strain_formulation)
+    init_file(self, strain_formulation)
         Open output file and write file header.
-    write_hres_file(self, strain_formulation, problem_type, mac_load_path, \
-                    hom_results, effective_time)
+    write_file(self, strain_formulation, problem_type, mac_load_path, \
+               hom_results, effective_time)
         Write output file.
-    rewind_file(self, rewind_inc)
-        Rewind output file.
     """
-    def __init__(self, hres_file_path):
+    def __init__(self, file_path):
         """Constructor.
 
         Parameters
         ----------
-        hres_file_path : str
-            Problem '.hres' output file path.
+        file_path : str
+            Output file path.
         """
-        self._hres_file_path = hres_file_path
+        self._file_path = file_path
         # Set output file header
         self._header = ['Increment', 'RunEffectTime', 'LoadSubpath',
                         'LoadFactor', 'Time', 'SubincLevel',
@@ -72,7 +73,7 @@ class HomResOutput:
         # Set column width
         self._col_width = max(16, max([len(x) for x in self._header]) + 2)
     # -------------------------------------------------------------------------
-    def init_hres_file(self, strain_formulation):
+    def init_file(self, strain_formulation):
         """Open output file and write file header.
 
         Parameters
@@ -91,7 +92,7 @@ class HomResOutput:
             strain_init[8] = 1.0
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Open output file (write mode)
-        hres_file = open(self._hres_file_path, 'w')
+        output_file = open(self._file_path, 'w')
         # Set output file header format structure
         write_list = [
             '{:>9s}'.format(self._header[0])
@@ -110,12 +111,12 @@ class HomResOutput:
             + ''.join([('{:>' + str(self._col_width) + '.8e}').format(0.0)
                        for x in range(2)])]
         # Write output file header
-        hres_file.writelines(write_list)
+        output_file.writelines(write_list)
         # Close output file
-        hres_file.close()
+        output_file.close()
     # -------------------------------------------------------------------------
-    def write_hres_file(self, strain_formulation, problem_type, mac_load_path,
-                        hom_results, effective_time):
+    def write_file(self, strain_formulation, problem_type, mac_load_path,
+                   hom_results, effective_time):
         """Write output file.
 
         Parameters
@@ -194,7 +195,7 @@ class HomResOutput:
         vm_stress = csbvar_computer.get_vm_stress(cauchy_stress_mf)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Open homogenized results output file (append mode)
-        hres_file = open(self._hres_file_path, 'a')
+        output_file = open(self._file_path, 'a')
         # Set increment homogenized results format structure
         inc_data = [sp_inc, effective_time, sp_id, sp_total_lfact,
                     sp_total_time, subinc_level,
@@ -218,22 +219,6 @@ class HomResOutput:
              + ''.join([('{:>' + str(self._col_width) + '.8e}').format(x)
                         for x in inc_data[6:]])]
         # Write increment homogenized results
-        hres_file.writelines(write_list)
+        output_file.writelines(write_list)
         # Close output file
-        hres_file.close()
-    # -------------------------------------------------------------------------
-    def rewind_file(self, rewind_inc):
-        """Rewind output file.
-
-        Parameters
-        ----------
-        rewind_inc : int
-            Increment associated with the rewind state.
-        """
-        # Open output file and read lines (read)
-        file_lines = open(self._hres_file_path, 'r').readlines()
-        # Set output file last line
-        last_line = 1 + rewind_inc
-        file_lines[last_line] = file_lines[last_line][:-1]
-        # Open output file (write mode) and write data
-        open(self._hres_file_path, 'w').writelines(file_lines[: last_line + 1])
+        output_file.close()

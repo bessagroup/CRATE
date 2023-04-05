@@ -3,7 +3,6 @@
 #                                                                       Modules
 # =============================================================================
 from ioput import fileoperations
-from ioput import homresoutput
 from ioput import info
 from ioput import ioutilities
 from ioput import packager
@@ -12,3 +11,4 @@ from ioput import readprocedures
 from ioput import refmatoutput
 from ioput import voxelsoutput
 from ioput import vtkoutput
+from ioput import outputfiles

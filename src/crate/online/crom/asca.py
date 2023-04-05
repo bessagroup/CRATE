@@ -66,7 +66,7 @@ from online.loading.macloadincrem import LoadingPath, IncrementRewinder, \
                                          RewindManager
 from clustering.adaptivity.crve_adaptivity import AdaptivityManager, \
                                                   ClusteringAdaptivityOutput
-from ioput.homresoutput import HomResOutput
+from ioput.outputfiles.homresoutput import HomResOutput
 from ioput.outputfiles.efftanoutput import EffTanOutput
 from ioput.refmatoutput import RefMatOutput
 from ioput.vtkoutput import VTKOutput
@@ -987,7 +987,7 @@ class ASCA:
             # Set post-processing procedure initial time
             procedure_init_time = time.time()
             # Write increment homogenized results (.hres)
-            hres_output.write_hres_file(
+            hres_output.write_file(
                 self._strain_formulation, self._problem_type, mac_load_path,
                 hom_results, time.time() - init_time - self._post_process_time)
             # Write increment CRVE effective tangent modulus (.efftan)
@@ -2747,7 +2747,7 @@ class ASCA:
         # Instantiate homogenized results output
         hres_output = HomResOutput(hres_file_path)
         # Write homogenized results output file header
-        hres_output.init_hres_file(self._strain_formulation)
+        hres_output.init_file(self._strain_formulation)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Set file where CRVE effective material tangent modulus is stored
         efftan_file_path = output_dir + problem_name + '.efftan'
