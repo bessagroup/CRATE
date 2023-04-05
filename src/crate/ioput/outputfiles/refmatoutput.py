@@ -14,6 +14,7 @@ RefMatOutput
 # Third-party
 import numpy as np
 # Local
+from ioput.outputfiles.interface import IncrementalOutputFile
 import tensor.matrixoperations as mop
 #
 #                                                          Authorship & Credits
@@ -24,42 +25,44 @@ __status__ = 'Stable'
 # =============================================================================
 #
 # =============================================================================
-class RefMatOutput:
+class RefMatOutput(IncrementalOutputFile):
     """Output file: Homogeneous (fictitious) reference material data.
 
     Attributes
     ----------
+    _file_path : str
+        Output file path.
+    _header : list[str]
+        List containing the header of each column (str).
+    _col_width : int
+        Output file column width.
     _n_dim : int
         Problem number of spatial dimensions.
     _comp_order_sym : list[str]
         Strain/Stress components symmetric order.
     _comp_order_nsym : list[str]
         Strain/Stress components nonsymmetric order.
-    _header : list[str]
-        List containing the header of each column (str).
-    _col_width : int
-        Output file column width.
 
     Methods
     -------
-    init_ref_mat_file(self)
+    init_file(self)
         Open reference material output file and write file header.
-    write_ref_mat(self, inc, ref_material, hom_strain_mf, hom_stress_mf, \
-                  eff_tangent_mf=None, farfield_strain_mf=None, \
-                  applied_mac_load_strain_mf=None)
+    write_mat(self, inc, ref_material, hom_strain_mf, hom_stress_mf, \
+              eff_tangent_mf=None, farfield_strain_mf=None, \
+              applied_mac_load_strain_mf=None)
         Write reference material output file.
     rewind_file(self, rewind_inc)
         Rewind reference material output file.
     """
-    def __init__(self, refm_file_path, strain_formulation, problem_type,
+    def __init__(self, file_path, strain_formulation, problem_type,
                  self_consistent_scheme='regression',
                  ref_output_mode='converged'):
         """Constructor.
 
         Parameters
         ----------
-        refm_file_path : str
-            Path of reference material output file.
+        file_path : str
+            Output file path.
         strain_formulation: {'infinitesimal', 'finite'}
             Problem strain formulation.
         problem_type : int
@@ -76,7 +79,7 @@ class RefMatOutput:
             * 'converged' : outputs the reference material quantities that \
                             converged at each loading increment
         """
-        self._refm_file_path = refm_file_path
+        self._file_path = file_path
         self._strain_formulation = strain_formulation
         self._problem_type = problem_type
         self._self_consistent_scheme = self_consistent_scheme
@@ -97,8 +100,8 @@ class RefMatOutput:
         # Set column width
         self._col_width = max(16, max([len(x) for x in self._header]) + 2)
     # -------------------------------------------------------------------------
-    def init_ref_mat_file(self):
-        """Open reference material output file and write file header."""
+    def init_file(self):
+        """Open output file and write file header."""
         # Set reference material elastic properties initial output
         properties_init = (0.0, 0.0)
         # Set far-field strain initial output
@@ -109,7 +112,7 @@ class RefMatOutput:
             strain_init[8] = 1.0
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Open output file (write mode)
-        refm_file = open(self._refm_file_path, 'w')
+        refm_file = open(self._file_path, 'w')
         # Set output file header format structure
         write_list = [
             '{:>9s}'.format(self._header[0]) + '  '
@@ -128,10 +131,10 @@ class RefMatOutput:
         # Close output file
         refm_file.close()
     # -------------------------------------------------------------------------
-    def write_ref_mat(self, inc, ref_material, hom_strain_mf, hom_stress_mf,
-                      farfield_strain_mf, applied_mac_load_strain_mf,
-                      eff_tangent_mf=None):
-        """Write reference material output file.
+    def write_file(self, inc, ref_material, hom_strain_mf, hom_stress_mf,
+                   farfield_strain_mf, applied_mac_load_strain_mf,
+                   eff_tangent_mf=None):
+        """Write output file.
 
         Parameters
         ----------
@@ -228,7 +231,7 @@ class RefMatOutput:
                        for x in inc_data[2:]])]
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Open reference material output file and read lines (read)
-        file_lines = open(self._refm_file_path, 'r').readlines()
+        file_lines = open(self._file_path, 'r').readlines()
         # Update reference material output file according to output mode
         if self._ref_output_mode == 'iterative':
             # If loading increment is being repeated for some reason, then
@@ -252,7 +255,7 @@ class RefMatOutput:
             else:
                 file_lines += write_list[0]
         # Open output file (write mode) and write data
-        open(self._refm_file_path, 'w').writelines(file_lines)
+        open(self._file_path, 'w').writelines(file_lines)
     # -------------------------------------------------------------------------
     def rewind_file(self, rewind_inc):
         """Rewind output file.
@@ -263,7 +266,7 @@ class RefMatOutput:
             Increment associated with the rewind state.
         """
         # Open reference material output file and read lines (read)
-        file_lines = open(self._refm_file_path, 'r').readlines()
+        file_lines = open(self._file_path, 'r').readlines()
         # Rewind reference material output file according to output mode
         if self._ref_output_mode == 'iterative':
             # Loop over file lines
@@ -282,4 +285,4 @@ class RefMatOutput:
         # Remove next line character
         file_lines[last_line] = file_lines[last_line][:-1]
         # Open output file (write mode) and write data
-        open(self._refm_file_path, 'w').writelines(file_lines[: last_line + 1])
+        open(self._file_path, 'w').writelines(file_lines[: last_line + 1])

@@ -68,7 +68,7 @@ from clustering.adaptivity.crve_adaptivity import AdaptivityManager, \
                                                   ClusteringAdaptivityOutput
 from ioput.outputfiles.homresoutput import HomResOutput
 from ioput.outputfiles.efftanoutput import EffTanOutput
-from ioput.refmatoutput import RefMatOutput
+from ioput.outputfiles.refmatoutput import RefMatOutput
 from ioput.vtkoutput import VTKOutput
 from ioput.voxelsoutput import VoxelsOutput
 #
@@ -705,7 +705,7 @@ class ASCA:
                 procedure_init_time = time.time()
                 # Output reference material associated quantities (.refm file)
                 if is_ref_material_output:
-                    ref_mat_output.write_ref_mat(
+                    ref_mat_output.write_file(
                         inc, ref_material,
                         material_state.get_hom_strain_mf(),
                         material_state.get_hom_stress_mf(),
@@ -2765,7 +2765,7 @@ class ASCA:
                 refm_file_path, self._strain_formulation, self._problem_type,
                 self._self_consistent_scheme)
             # Write reference material output file header
-            ref_mat_output.init_ref_mat_file()
+            ref_mat_output.init_file()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         voxels_output = None
         if is_voxels_output:
