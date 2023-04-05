@@ -66,9 +66,9 @@ from online.loading.macloadincrem import LoadingPath, IncrementRewinder, \
                                          RewindManager
 from clustering.adaptivity.crve_adaptivity import AdaptivityManager, \
                                                   ClusteringAdaptivityOutput
-from ioput.outputfiles.homresoutput import HomResOutput
-from ioput.outputfiles.efftanoutput import EffTanOutput
-from ioput.outputfiles.refmatoutput import RefMatOutput
+from ioput.incoutputfiles.homresoutput import HomResOutput
+from ioput.incoutputfiles.efftanoutput import EffTanOutput
+from ioput.incoutputfiles.refmatoutput import RefMatOutput
 from ioput.vtkoutput import VTKOutput
 from ioput.voxelsoutput import VoxelsOutput
 #

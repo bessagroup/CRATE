@@ -14,7 +14,7 @@ RefMatOutput
 # Third-party
 import numpy as np
 # Local
-from ioput.outputfiles.interface import IncrementalOutputFile
+from ioput.incoutputfiles.interface import IncrementalOutputFile
 import tensor.matrixoperations as mop
 #
 #                                                          Authorship & Credits

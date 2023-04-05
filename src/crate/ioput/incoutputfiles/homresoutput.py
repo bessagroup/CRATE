@@ -18,7 +18,7 @@ import numpy as np
 # Local
 import tensor.matrixoperations as mop
 import tensor.tensoroperations as top
-from ioput.outputfiles.interface import IncrementalOutputFile
+from ioput.incoutputfiles.interface import IncrementalOutputFile
 from material.materialoperations import compute_spatial_log_strain, \
                                         cauchy_from_first_piola, \
                                         MaterialQuantitiesComputer

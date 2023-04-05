@@ -17,7 +17,7 @@ import itertools as it
 import numpy as np
 # Local
 import tensor.matrixoperations as mop
-from ioput.outputfiles.interface import IncrementalOutputFile
+from ioput.incoutputfiles.interface import IncrementalOutputFile
 #
 #                                                          Authorship & Credits
 # =============================================================================
