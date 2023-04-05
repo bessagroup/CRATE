@@ -67,6 +67,7 @@ from online.loading.macloadincrem import LoadingPath, IncrementRewinder, \
 from clustering.adaptivity.crve_adaptivity import AdaptivityManager, \
                                                   ClusteringAdaptivityOutput
 from ioput.homresoutput import HomResOutput
+from ioput.outputfiles.efftanoutput import EffTanOutput
 from ioput.refmatoutput import RefMatOutput
 from ioput.vtkoutput import VTKOutput
 from ioput.voxelsoutput import VoxelsOutput
@@ -432,8 +433,8 @@ class ASCA:
         procedure_init_time = time.time()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Create and initialize output files
-        hres_output, ref_mat_output, voxels_output, adapt_output,\
-            vtk_output = self._set_output_files(
+        hres_output, efftan_output, ref_mat_output, voxels_output, \
+            adapt_output, vtk_output = self._set_output_files(
                 output_dir, crve, problem_name=problem_name,
                 is_clust_adapt_output=is_clust_adapt_output,
                 is_ref_material_output=is_ref_material_output,
@@ -932,8 +933,8 @@ class ASCA:
                     procedure_init_time = time.time()
                     # Rewind output files
                     inc_rewinder.rewind_output_files(
-                        hres_output, ref_mat_output, voxels_output,
-                        adapt_output, vtk_output)
+                        hres_output, efftan_output, ref_mat_output,
+                        voxels_output, adapt_output, vtk_output)
                     # Increment post-processing time
                     self._post_process_time += \
                         time.time() - procedure_init_time
@@ -989,6 +990,10 @@ class ASCA:
             hres_output.write_hres_file(
                 self._strain_formulation, self._problem_type, mac_load_path,
                 hom_results, time.time() - init_time - self._post_process_time)
+            # Write increment CRVE effective tangent modulus (.efftan)
+            efftan_output.write_file(
+                self._strain_formulation, self._problem_type, mac_load_path,
+                eff_tangent_mf)
             # Increment post-processing time
             self._post_process_time += time.time() - procedure_init_time
             #
@@ -2723,6 +2728,8 @@ class ASCA:
         -------
         hres_output : HomResOutput
             Output associated with the homogenized results.
+        efftan_output : EffTanOutput
+            Output associated with the CRVE effective tangent modulus.
         ref_mat_output : RefMatOutput
             Output associated with the reference material.
         voxels_output : VoxelsOutput
@@ -2741,6 +2748,13 @@ class ASCA:
         hres_output = HomResOutput(hres_file_path)
         # Write homogenized results output file header
         hres_output.init_hres_file(self._strain_formulation)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set file where CRVE effective material tangent modulus is stored
+        efftan_file_path = output_dir + problem_name + '.efftan'
+        # Instantiate CRVE effective material tangent modulus output
+        efftan_output = EffTanOutput(efftan_file_path)
+        # Write homogenized results output file header
+        efftan_output.init_file(self._strain_formulation)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         ref_mat_output = None
         if is_ref_material_output:
@@ -2788,8 +2802,8 @@ class ASCA:
             adapt_output.init_adapt_file(crve)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
-        return hres_output, ref_mat_output, voxels_output, adapt_output, \
-            vtk_output
+        return hres_output, efftan_output, ref_mat_output, voxels_output, \
+            adapt_output, vtk_output
 #
 #                                   Reference (fictitious) homogeneous material
 # =============================================================================

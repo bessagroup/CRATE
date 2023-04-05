@@ -976,8 +976,9 @@ class IncrementRewinder:
         Save ASCA algorithmic variables at rewind state.
     get_asca_algorithmic_variables(self)
         Get ASCA algorithmic variables at rewind state.
-    rewind_output_files(self, hres_output=None, ref_mat_output=None, \
-                        voxels_output=None, adapt_output=None, vtk_output=None)
+    rewind_output_files(self, hres_output=None, efftan_output=None, \
+                        ref_mat_output=None, voxels_output=None, \
+                        adapt_output=None, vtk_output=None)
     """
     def __init__(self, rewind_inc, phase_clusters):
         """Increment rewinder constructor.
@@ -1232,15 +1233,17 @@ class IncrementRewinder:
         return copy.deepcopy(self._global_strain_mf), \
             copy.deepcopy(self._farfield_strain_mf)
     # -------------------------------------------------------------------------
-    def rewind_output_files(self, hres_output=None, ref_mat_output=None,
-                            voxels_output=None, adapt_output=None,
-                            vtk_output=None):
+    def rewind_output_files(self, hres_output=None, efftan_output=None,
+                            ref_mat_output=None, voxels_output=None,
+                            adapt_output=None, vtk_output=None):
         """Rewind output files to the rewind state.
 
         Parameters
         ----------
         hres_output : HomResOutput
             Output associated with the homogenized results.
+        efftan_output : EffTanOutput
+            Output associated with the CRVE effective tangent modulus.
         ref_mat_output : RefMatOutput
             Output associated with the reference material.
         voxels_output : VoxelsOutput
@@ -1253,6 +1256,8 @@ class IncrementRewinder:
         # Rewind output files
         if hres_output is not None:
             hres_output.rewind_file(self._rewind_inc)
+        if efftan_output is not None:
+            efftan_output.rewind_file(self._rewind_inc)
         if ref_mat_output is not None:
             ref_mat_output.rewind_file(self._rewind_inc)
         if voxels_output is not None:
