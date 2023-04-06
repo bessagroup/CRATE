@@ -19,7 +19,18 @@ Authorship & Citation
 ~~~~~~~~~~~~~~~~~~~~~
 CRATE's initial version (1.0.0) was originally developed by Bernardo P. Ferreira [#]_ in the context of his PhD Thesis [#]_ .
 
-If you use CRATE in a scientific publication, it is appreciated that you cite this `paper <>`_.
+If you use CRATE in a scientific publication, it is appreciated that you cite this PhD Thesis:
+
+.. code-block:: python
+
+    @phdthesis{ferreira:2022a,
+      title = {Towards Data-driven Multi-scale Optimization of Thermoplastic Blends: Microstructural Generation, Constitutive Development and Clustering-based Reduced-Order Modeling},
+      author = {Ferreira, B.P.},
+      year = {2022},
+      langid = {english},
+      school = {University of Porto},
+      url={https://hdl.handle.net/10216/146900}
+    }
 
 .. [#] `LinkedIN <https://www.linkedin.com/in/bpferreira/>`_ , `ORCID <https://orcid.org/0000-0001-5956-3877>`_, `ResearchGate <https://www.researchgate.net/profile/Bernardo-Ferreira-11?ev=hdr_xprf>`_
 
@@ -54,31 +65,74 @@ Computational framework
 ~~~~~~~~~~~~~~~~~~~~~~~
 CRATE is designed and implemented in **Python**, making it easily portable between all major computer platforms, easily integrated with other software implemented in different programming languages and benefiting from an extensive collection of prebuilt (standard library) and third-party libraries. Given the extensive numerical nature of the program, its implementation relies heavily on the well-known `NumPy <https://numpy.org/devdocs/index.html>`_ and `SciPy <https://www.scipy.org/>`_ scientific computing packages, being most numerical tasks dispatched to compiled C code inside the Python interpreter.
 
-Moreover, it is worth remarking that CRATE is implemented in a high-modular architecture and following an **object-oriented programming (OOP)** paradigm. Besides improving the overall readability and comprehension of the code, this means that CRATE can be easily extended by means of suitable interfaces to account for new features and developments, as well as being efficiently coupled with other software. CRATE's OOP structure is described through the well-known Unified Modeling Language (UML), a language-independent abstract schematic toolkit that allows the visual representation of object-oriented programs. In particular, the so-called UML class diagrams are employed to represent the most important classes of CRATE along with the interactions and relationships between them.
+Moreover, it is worth remarking that CRATE is implemented in a high-modular architecture and following an **object-oriented programming (OOP)** paradigm. Besides improving the overall readability and comprehension of the code, this means that CRATE can be easily extended by means of suitable interfaces to account for new features and developments, as well as being efficiently coupled with other software.
 
 ----
 
-Installation (WIP)
-------------------
+Installation
+------------
 
-CRATE is a simple **Python package** - `crate <>`_ - available from the Python Package Index (`PyPI <https://pypi.org/>`_). This means that running CRATE requires solely a Python 3.X installation and a few Python packages used for scientific computing and data science:
+CRATE is a simple **Python package** (`crate <>`_) available from the Python Package Index (`PyPI <https://pypi.org/>`_). This means that running CRATE requires solely a Python 3.X installation and a few Python packages used for scientific computing and data science:
 
 - Whether you are using Linux, MacOS or Windows, Python can be easily installed by following the `Python Getting Started <https://www.python.org/about/gettingstarted/>`_ official webpage. Many other resources are available to help you install and setup Python (e.g., `Real Python <https://realpython.com/installing-python/>`_).
 
-- CRATE can be installed either through **pip** (recommended) or **from source**:
+- Installation **from Python Package Index**:
 
     - `pip <https://pip.pypa.io/en/stable/getting-started/>`_ is a Python package manager that installs Python packages from PyPI. After `installing pip <https://pip.pypa.io/en/stable/installation/>`_, installing a package is straightforward as described `here <https://packaging.python.org/en/latest/tutorials/installing-packages/>`_ and `here <https://pip.pypa.io/en/stable/getting-started/>`_. Note that, besides installing CRATE, pip automatically installs all the required Python package dependencies. Therefore, CRATE can be simply installed by running the following pip installation command:
 
       .. code-block::
 
-         pip install crate
+         pip install -U crate
 
-    - CRATE can be installed directly by `git <https://git-scm.com/>`_ cloning the `GitHub repository <>`_ into a local directory. In this case, all the required Python package dependencies must be installed manually.
+    - By following this installation option, you will get `crate <>`_ newest available version on PyPI, i.e., the latest distribution version of CRATE :code:`master` branch source code uploaded to PyPI.
+
+- Installation from **source**:
+
+    - Clone `CRATE GitHub repository <>`_ into a local directory (check `here <https://git-scm.com/docs/git-clone>`_ for details) :
+
+      .. code-block::
+
+         git clone git@github.com:bessagroup/CRATE.git
+
+    - In the cloned repository root directory, install CRATE by running the following pip installation command (check pip `regular installation <https://pip.pypa.io/en/stable/topics/local-project-installs/#regular-installs>`_ from local project):
+
+      .. code-block::
+
+         pip install .
+
+
+      From a development point of view, it may be of interest to install CRATE in "editable" mode by adding the -e option to the pip installation command as :code:`pip install -e .` (check `here <https://pip.pypa.io/en/stable/topics/local-project-installs/#editable-installs>`_ for details);
+
+    - By following this installation option, you will get the complete CRATE project content besides the source code, namely the documentation source and a directory with fully documented benchmarks.
+
+- It is also possible to use CRATE **without an installation**, provided you clone `CRATE GitHub repository <>`_ into a local directory. Make sure that all the required third-party package dependencies (listed in :code:`requirements.txt`) are installed - this can be done automatically by running the following pip installation command :code:`pip install -r requirements.txt`. In this case, CRATE's source code directory must be explicitly added to sys.path to successfully import crate as:
+
+  .. code-block:: python
+
+    import sys
+    # Add project directory to sys.path
+    root_dir = ‘/path/to/project/CRATE/src’   # Replace by CRATE's source code path!
+    if root_dir not in sys.path:
+        sys.path.insert(0, root_dir)
+
+    import crate
 
 ----
 
-How to use CRATE? (WIP)
------------------------
+Getting started
+---------------
+
+Watching CRATE in action with minimal effort is straighforward: clone C`CRATE GitHub repository <>`_ (see instructions above) and run the following command from the cloned repository root directory:
+
+.. code-block::
+
+    python3 benchmarks/run_crate_benchmark.py
+
+This module is meant to illustrate how a CRATE simulation can be performed in a Python environment by running one of the benchmarks made available with the project. The following section describes the main ingredients required to perform your own CRATE simulation.
+----
+
+How to use CRATE?
+-----------------
 Performing a multi-scale simulation with CRATE involves setting a **user-defined input data file**, which contains all the required data about the problem and the simulation procedure itself, and **running CRATE's main script**, which carries out all the simulation operations automatically.
 
 The **general workflow of CRATE** in the solution of a micro-scale equilibrium problem entails **4 different steps** described as follows:
@@ -135,7 +189,7 @@ The **general workflow of CRATE** in the solution of a micro-scale equilibrium p
 
 - **Step 3: (Execution) Run CRATE simulator.**
 
-    * The third step is to run CRATE to perform the numerical simulation;
+    * The third step consists in **running CRATE to perform the numerical simulation**;
 
     * Running CRATE is a single-liner as illustrated in the following Python (pseudo-)script:
 
@@ -152,9 +206,15 @@ The **general workflow of CRATE** in the solution of a micro-scale equilibrium p
         discret_file_dir = ...
 
         # Perform numerical simulation
-        crate.crate_simulator(input_data_file_path, discret_file_dir=discret_file_dir)
+        crate.crate_simulation(input_data_file_path, discret_file_dir=discret_file_dir)
 
-    * The program execution can be monitored in real-time in the terminal console window where the previous script is run. Display data includes program launching information, a detailed description of the different simulation phases, and a execution summary when the program is successfully completed.
+    * CRATE can also be launched directly from the command line by executing the main script and providing the required inputs as arguments as:
+
+    .. code-block::
+
+        python3 CRATE/src/crate/main.py ‘/path/to/example_input_data_file.dat’ ‘/path/to/discretization/file/directory/’
+
+    * The program execution can be **monitored in real-time** in the terminal console window where the previous script is run. Display data includes program launching information, a detailed description of the different simulation phases, and a execution summary when the program is successfully completed.
 
     |
 
@@ -165,17 +225,17 @@ The **general workflow of CRATE** in the solution of a micro-scale equilibrium p
 
 - **Step 4 (Output): Post-process results.**
 
-    * The fourth-step consists in post-processing the simulation results;
+    * The fourth-step consists in **post-processing the simulation results**;
 
-    * CRATE generates several output files during running time that are collectively stored in a single output directory created in the same path and sharing the same name as the input data file. Among these output files, three are particularly useful:
+    * CRATE generates **several output files** during running time that are collectively stored in a single output directory created in the same path and sharing the same name as the input data file. Among these output files, three are particularly useful:
 
         - :code:`.screen` file - A log file where all the data displayed in the default standard output device is stored;
 
-        - :code:`.hres` file - A file where the macro-scale material response is stored, i.e., the homogenized stress-strain response of the RVE computed at every macro-scale loading increment;
+        - :code:`.hres` file - A file where the macro-scale material response is stored, i.e., the homogenized stress-strain response of the RVE computed at every macro-scale loading increment (show below);
 
         - :code:`.efftan` file - A file where the RVE effective material consistent tangent modulus computed at every macro-scale loading increment is stored;
 
-        - :code:`.vti` file - A VTK XML output file associated with a given macro-scale loading increment that allows the RVE relevant physical data to be conveniently analyzed with a suitable visualization software (e.g. `ParaView <https://www.paraview.org/>`_).
+        - :code:`.vti` file - A VTK XML output file associated with a given macro-scale loading increment that allows the RVE relevant physical data to be conveniently analyzed with a suitable visualization software (e.g. `ParaView <https://www.paraview.org/>`_) (show below).
 
     |
 
@@ -246,6 +306,19 @@ Online-stage clustering-based reduced-order models:
 Post-processing:
 ~~~~~~~~~~~~~~~~
 * VTK (XML format) output files allowing the visualization of data associated to the material microstructure (topology, material phases, material clusters) and micro-scale physical fields (strain, stress, internal variables, ...).
+
+
+----
+
+Community Support
+-----------------
+
+If you find any **issues**, **bugs** or **problems** with CRATE, please use the `GitHub issue tracker <https://github.com/BernardoFerreira/CRATE/pulls>`_ to report them. Provide a clear description of the problem, as well as a complete report on the underlying details, so that it can be easily reproduced and (hopefully) fixed!
+
+You are also welcome to post there any **questions**, **comments** or **suggestions** for improvement!
+
+.. note::
+    Bear in mind that CRATE is a program developed in an academic environment and that I'm currently the only developer as a side project. This means that I'll do my best to address all the issues, questions and suggestions, but do expect a reasonable time frame! ~ Bernardo P. Ferreira
 
 ----
 
