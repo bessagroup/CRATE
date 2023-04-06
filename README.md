@@ -230,6 +230,16 @@ Below is a summary of the **main features** that CRATE has to offer regarding th
 ### Post-processing:
 * VTK (XML format) output files allowing the visualization of data associated to the material microstructure (topoloy, material phases, material clusters) and micro-scale physical fields (strain, stress, internal variables, ...).
 
+# Community Support
+
+If you find any issues, bugs or problems with CRATE, please use the [GitHub issue tracker](https://github.com/BernardoFerreira/CRATE/pulls) to report them. Provide a clear description of the problem, as well as a complete report on the underlying details, so that it can be easily reproduced and (hopefully) fixed!
+
+You are also welcome to post there any questions, comments or suggestions for improvement!
+
+>**Note:**  
+>Bear in mind that CRATE is a program developed in an academic environment and that I'm currently the only developer as a side project. This means that I'll do my best to address all the issues, questions and suggestions, but do expect a reasonable time frame! ~ *Bernardo P. Ferreira*
+
+
 # Credits
 
 * Bernardo P. Ferreira is deeply thankful to [Francisco Pires](https://sigarra.up.pt/feup/pt/func_geral.formview?p_codigo=240385) and [Miguel Bessa](https://github.com/mabessa) for supervising the PhD Thesis that motivated the development of CRATE.
