@@ -275,7 +275,7 @@ Below is a summary of the **main features** that CRATE has to offer regarding th
 
 If you find any **issues**, **bugs** or **problems** with CRATE, please use the [GitHub issue tracker](https://github.com/BernardoFerreira/CRATE/pulls) to report them. Provide a clear description of the problem, as well as a complete report on the underlying details, so that it can be easily reproduced and (hopefully) fixed!
 
-You are also welcome to post there any **questions**, **comments** or **suggestions** for improvement!
+You are also welcome to post there any **questions**, **comments** or **suggestions** for improvement in the [GitHub Discussions](https://github.com/BernardoFerreira/CRATE/discussions) space!
 
 >**Note:**  
 >Bear in mind that CRATE is a program developed in an academic environment and that I'm currently the only developer as a side project. This means that I'll do my best to address all the issues, questions and suggestions, but do expect a reasonable time frame! ~ *Bernardo P. Ferreira*
