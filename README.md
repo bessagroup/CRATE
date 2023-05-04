@@ -1,20 +1,20 @@
 
 
 <p align="center">
-  <a href=""><img alt="logo" src="https://github.com/BernardoFerreira/CRATE/blob/PRv1.0.0-package-structure/docs/media/logo/CRATE_logo_horizontal_long.png?raw=true" width="80%"></a>
+  <a href=""><img alt="logo" src="docs/media/logo/CRATE_logo_horizontal_long.png?raw=true?raw=true" width="80%"></a>
 </p>
 
 # What is CRATE?
 
 [**Docs**](https://bessagroup.github.io/CRATE/)
-| [**GitHub**](https://github.com/bessagroup/CRATE/)
+| [**GitHub**](https://github.com/bessagroup/CRATE)
 | [**PyPI**](https://pypi.org/project/crate/)
 
 ### Summary
 **CRATE** (Clustering-based Nonlinear Analysis of Materials) is a Python program developed in the context of computational mechanics to aid the design and development of new materials. Its main purpose is **performing multi-scale nonlinear analyses of heterogeneous materials** through a suitable coupling between first-order computational homogenization and clustering-based reduced-order modeling.
 
 ### Authorship & Citation
-CRATE's initial version (1.0.0) was originally developed by Bernardo P. Ferreira<sup>[1](#f1)</sup> in the context of his PhD Thesis<sup>[2](#f2)</sup>.
+CRATE was originally developed by Bernardo P. Ferreira<sup>[1](#f1)</sup> in the context of his PhD Thesis<sup>[2](#f2)</sup>.
 
 If you use CRATE in a scientific publication, it is appreciated that you cite this PhD Thesis:
 
@@ -31,7 +31,7 @@ If you use CRATE in a scientific publication, it is appreciated that you cite th
 
 <sup id="f1"> 1 </sup> Profile: [LinkedIN](https://www.linkedin.com/in/bpferreira/), [ORCID](https://orcid.org/0000-0001-5956-3877), [ResearchGate](https://www.researchgate.net/profile/Bernardo-Ferreira-11?ev=hdr_xprf)
 
-<sup id="f2"> 2 </sup> Ferreira, B.P. (2022). *Towards Data-driven Multi-scale Optimization of Thermoplastic Blends: Microstructural Generation, Constitutive Development and Clustering-based Reduced-Order Modeling.* PhD Thesis, University of Porto (see [here](https://repositorio-aberto.up.pt/handle/10216/146900?locale=en))
+<sup id="f2"> 2 </sup> Ferreira, B.P. (2022). *Towards Data-driven Multi-scale Optimization of Thermoplastic Blends: Microstructural Generation, Constitutive Development and Clustering-based Reduced-Order Modeling.* PhD Thesis, University of Porto (see [here](http://dx.doi.org/10.13140/RG.2.2.33940.17289))
 
 
 ### Conceptual map
@@ -40,13 +40,13 @@ CRATE's conceptual structure can be easily understood by getting familiar with s
 Assume that we are interested in predicting the behavior of a fiber-reinforced composite (heterogeneous) material composed of two different material phases (matrix and fiber). At the micro-scale level, the composite material needs to be first characterized by a **Representative Volume Element (RVE)**, i.e., a volume of material sufficient large such that it contains enough morphological and topological information to be representative in an average sense. Given the enforcement of periodic boundary conditions in the material analysis, the RVE is assumed periodic. In the second place, the RVE needs to be spatially discretized in a regular (or uniform) grid of voxels, where each voxel is associated with a given material phase. Finally, the RVE model can be compressed by means of a clustering-based domain decomposition, i.e., a cluster analysis that decomposes the spatial domain into a given number of material clusters according to a given set of features. The compressed model is then called **Cluster-reduced Representative Volume Element (CRVE)**, composed of **cluster-reduced material phases (CRMPs)**, each composed of different material clusters. Each **material cluster** is, therefore, a group of voxels that exhibit some type of similarity and that are numerically handled in a unified way.
 
 <p align="center">
-  <a href=""><img alt="logo" src="https://github.com/BernardoFerreira/CRATE/blob/PRv1.0.0-package-structure/docs/schematics/doc_CRATE_concepts.png?raw=true" width="80%"></a>
+  <a href=""><img alt="logo" src="docs/schematics/doc_CRATE_concepts.png?raw=true" width="80%"></a>
 </p>
 
 The multi-scale analysis of a uniaxial tensile test of a dogbone specimen is schematically illustrated below. Besides the **spatially discretized RVE** of the fiber-reinforced composite, CRATE receives as input data a given **macro-scale strain and/or stress loading path**, i.e., a given set of macro-scale first-order homogeneous loading constraints. A two-stage **clustering-based reduced-order method** is then employed to solve the micro-scale equilibrium problem. In the so-called offline-stage, the RVE is compressed into the CRVE by means of a clustering-based domain decomposition. In the following online-stage, the CRVE is subject to the macro-scale loading path and the micro-scale equilibrium problem is solved under periodic boundary conditions. The **macro-scale material response** is then computed by means of computational homogenization, rendering the main output data of CRATE.
 
 <p align="center">
-  <a href=""><img alt="logo" src="https://github.com/BernardoFerreira/CRATE/blob/PRv1.0.0-package-structure/docs/schematics/doc_CRATE_conceptual_scheme.png?raw=true" width="80%"></a>
+  <a href=""><img alt="logo" src="docs/schematics/doc_CRATE_conceptual_scheme.png?raw=true" width="80%"></a>
 </p>
 
 
@@ -76,7 +76,7 @@ CRATE is a simple **Python package** ([crate]()) available from the Python Packa
 
 - Installation **from source**:
 
-    - Clone [CRATE GitHub repository]() into a local directory (check [here](https://git-scm.com/docs/git-clone) for details) :
+    - Clone [CRATE GitHub repository](https://github.com/bessagroup/CRATE) into a local directory (check [here](https://git-scm.com/docs/git-clone) for details) :
 
         ```
         git clone git@github.com:bessagroup/CRATE.git
@@ -92,7 +92,7 @@ CRATE is a simple **Python package** ([crate]()) available from the Python Packa
         
     - By following this installation option, you will get the complete CRATE project content besides the source code, namely the documentation source and a directory with fully documented benchmarks.
 
-- It is also possible to use CRATE **without an installation**, provided you clone [CRATE GitHub repository]() into a local directory. Make sure that all the required third-party package dependencies (listed in `requirements.txt`) are installed - this can be done automatically by running the following pip installation command `pip install -r requirements.txt`. In this case, CRATE's source code directory must be explicitly added to sys.path to successfully import `crate` as:
+- It is also possible to use CRATE **without an installation**, provided you clone [CRATE GitHub repository](https://github.com/bessagroup/CRATE) into a local directory. Make sure that all the required third-party package dependencies (listed in `requirements.txt`) are installed - this can be done automatically by running the following pip installation command `pip install -r requirements.txt`. In this case, CRATE's source code directory must be explicitly added to sys.path to successfully import `crate` as:
 
     ```python
     import sys
@@ -106,18 +106,18 @@ CRATE is a simple **Python package** ([crate]()) available from the Python Packa
    
 # Getting started
 
-Watching CRATE in action with minimal effort is straighforward: clone [CRATE GitHub repository]() (see instructions above) and run the following command from the cloned repository root directory:
+Watching CRATE in action with minimal effort is straighforward: clone [CRATE GitHub repository](https://github.com/bessagroup/CRATE) (see instructions above) and run the following command from the cloned repository root directory:
 
 ```
 python3 benchmarks/run_crate_benchmark.py
 ```
 
-This module is meant to illustrate how a CRATE simulation can be performed in a Python environment by running one of the benchmarks made available with the project. The following section describes the main ingredients required to perform your own CRATE simulation.
+This [module](benchmarks/run_crate_benchmark.py) is meant to illustrate how a CRATE simulation can be performed in a Python environment by running one of the [benchmarks](benchmarks) made available with the project. The following section describes the main ingredients required to perform your own CRATE simulation.
 
 
 # How to use CRATE?
 
-Performing a multi-scale simulation with CRATE involves setting a **user-defined input data file**, which contains all the required data about the problem and the simulation procedure itself, and **running CRATE's main script**, which carries out all the simulation operations automatically.
+Performing a multi-scale simulation with CRATE involves setting a **user-defined input data file**, which contains all the required data about the problem and the simulation procedure itself, and **running CRATE's simulator**, which carries out all the simulation operations automatically.
 
 The **general workflow of CRATE** in the solution of a micro-scale equilibrium problem entails **4 different steps** described as follows:
 
@@ -129,7 +129,7 @@ The **general workflow of CRATE** in the solution of a micro-scale equilibrium p
 
     * The RVE must be spatially discretized in a regular (or uniform) grid of voxels, where each voxel is associated with a given material phase as illustrated below;
     <p align="center">
-  <a href=""><img alt="logo" src="https://github.com/BernardoFerreira/CRATE/blob/PRv1.0.0-package-structure/docs/schematics/doc_CRATE_spatial_discretization_file.png?raw=true" width="80%"></a>
+  <a href=""><img alt="logo" src="docs/schematics/doc_CRATE_spatial_discretization_file.png?raw=true" width="80%"></a>
     </p>
 
     * The **spatial discretization file (`.rgmsh` file)** that is ultimately provided to CRATE as part of the input data must be generated with [NumPy](https://numpy.org/devdocs/index.html) as illustrated in the following Python (pseudo-)script:
@@ -159,10 +159,10 @@ The **general workflow of CRATE** in the solution of a micro-scale equilibrium p
 
     * The input data file contains all the required information about the problem (problem type, material properties, macro-scale loading path, ...) and about the solution procedure (macro-scale loading incrementation, clustering-based domain decomposition, output options, ...). The **spatial discretization file (`.rgmsh` file)** path is provided in the input data file;
 
-    * A complete **CRATE's user-defined input data file (`.dat` file)** template, where each available keyword specification (mandatory or optional) is fully documented, can be found [here](). This template file can be copied to a given local simulation directory and be readily used by replacing the `[insert here]` boxes with the suitable specification!
+    * A complete **CRATE's user-defined input data file (`.dat` file)** template, where each available keyword specification (mandatory or optional) is fully documented, can be found [here](src/crate/input_data_file_template.dat). This template file can be copied to a given local simulation directory and be readily used by replacing the `[insert here]` boxes with the suitable specification!
 
 <p align="center">
-  <a href=""><img alt="logo" src="https://github.com/BernardoFerreira/CRATE/blob/PRv1.0.0-package-structure/docs/schematics/doc_CRATE_input_data_file.png?raw=true" width="60%"></a>
+  <a href=""><img alt="logo" src="docs/schematics/doc_CRATE_input_data_file.png?raw=true" width="60%"></a>
 </p>
 
 - **Step 3: (Execution) Run CRATE simulation.**
@@ -184,10 +184,10 @@ The **general workflow of CRATE** in the solution of a micro-scale equilibrium p
         discret_file_dir = ...
 
         # Perform numerical simulation
-        crate.crate_simulation(input_data_file_path, discret_file_dir=discret_file_dir)
+        crate.crate_simulation(input_data_file_path, arg_discret_file_dir=discret_file_dir)
         ```
 
-    * CRATE can also be launched directly from the command line by executing the main script and providing the required inputs as arguments
+    * CRATE can also be launched directly from the command line by executing the [main script](src/crate/main.py) and providing the required inputs as arguments
 
         ```
         python3 CRATE/src/crate/main.py  ‘/path/to/example_input_data_file.dat’  ‘/path/to/discretization/file/directory/’    
@@ -196,7 +196,7 @@ The **general workflow of CRATE** in the solution of a micro-scale equilibrium p
     * The program execution can be **monitored in real-time** in the terminal console window where the previous script is run. Display data includes program launching information, a detailed description of the different simulation phases, and a execution summary when the program is successfully completed.
 
 <p align="center">
-  <a href=""><img alt="logo" src="https://github.com/BernardoFerreira/CRATE/blob/PRv1.0.0-package-structure/docs/schematics/doc_CRATE_execution_output.png?raw=true" width="70%"></a>
+  <a href=""><img alt="logo" src="docs/schematics/doc_CRATE_execution_output.png?raw=true" width="70%"></a>
 </p>
 
 - **Step 4 (Output): Post-processing results.**
@@ -215,11 +215,11 @@ The **general workflow of CRATE** in the solution of a micro-scale equilibrium p
 
 
 <p align="center">
-  <a href=""><img alt="logo" src="https://github.com/BernardoFerreira/CRATE/blob/PRv1.0.0-package-structure/docs/schematics/doc_CRATE_hres_output.png?raw=true" width="80%"></a>
+  <a href=""><img alt="logo" src="docs/schematics/doc_CRATE_hres_output.png?raw=true" width="80%"></a>
 </p>
 
 <p align="center">
-  <a href=""><img alt="logo" src="https://github.com/BernardoFerreira/CRATE/blob/PRv1.0.0-package-structure/docs/schematics/doc_CRATE_vti_output.png?raw=true" width="80%"></a>
+  <a href=""><img alt="logo" src="docs/schematics/doc_CRATE_vti_output.png?raw=true" width="80%"></a>
 </p>
 
 # What comes in the box?
@@ -273,9 +273,9 @@ Below is a summary of the **main features** that CRATE has to offer regarding th
 
 # Community Support
 
-If you find any **issues**, **bugs** or **problems** with CRATE, please use the [GitHub issue tracker](https://github.com/BernardoFerreira/CRATE/pulls) to report them. Provide a clear description of the problem, as well as a complete report on the underlying details, so that it can be easily reproduced and (hopefully) fixed!
+If you find any **issues**, **bugs** or **problems** with CRATE, please use the [GitHub issue tracker](https://github.com/bessagroup/CRATE/issues) to report them. Provide a clear description of the problem, as well as a complete report on the underlying details, so that it can be easily reproduced and (hopefully) fixed!
 
-You are also welcome to post there any **questions**, **comments** or **suggestions** for improvement in the [GitHub Discussions](https://github.com/BernardoFerreira/CRATE/discussions) space!
+You are also welcome to post there any **questions**, **comments** or **suggestions** for improvement in the [GitHub discussions](https://github.com/bessagroup/CRATE/discussions) space!
 
 >**Note:**  
 >Bear in mind that CRATE is a program developed in an academic environment and that I'm currently the only developer as a side project. This means that I'll do my best to address all the issues, questions and suggestions, but do expect a reasonable time frame! ~ *Bernardo P. Ferreira*
