@@ -83,21 +83,22 @@ def get_available_hardening_types():
 
     ----
 
-    * Swift hardening:
+    * Nadai-Ludwik hardening:
 
         .. math::
 
            \\sigma_{y}(\\bar{\\varepsilon}^{p}) = \\sigma_{y, 0}
-           + a (\\bar{\\varepsilon}^{p})^{b}
+           + a (\\bar{\\varepsilon}^{p}_{0} + \\bar{\\varepsilon}^{p})^{b}
 
         *Input data file syntax*:
 
         .. code-block:: text
 
-           isotropic_hardening swift 3
-               s0 < value >
-               a  < value >
-               b  < value >
+           isotropic_hardening nadai_ludwik 4
+               s0  < value >
+               a   < value >
+               b   < value >
+               ep0 < value >
 
         where
 
@@ -106,32 +107,8 @@ def get_available_hardening_types():
         - ``s0`` - Initial yielding stress (:math:`\\sigma_{y, 0}`).
         - ``a`` - Hardening law parameter (:math:`a`).
         - ``b`` - Hardening law parameter (:math:`b`).
-
-    ----
-
-    * Ramberg-Osgood hardening:
-
-        .. math::
-
-           \\sigma_{y}(\\bar{\\varepsilon}^{p}) = \\sigma_{y, 0}(1.0
-           + a \\bar{\\varepsilon}^{p})^{1/b}
-
-        *Input data file syntax*:
-
-        .. code-block:: text
-
-           isotropic_hardening ramberg_osgood 3
-               s0 < value >
-               a  < value >
-               b  < value >
-
-        where
-
-        - ``isotropic_hardening`` - Isotropic strain hardening type and number
-          of parameters.
-        - ``s0`` - Initial yielding stress (:math:`\\sigma_{y, 0}`).
-        - ``a`` - Hardening law parameter (:math:`a`).
-        - ``b`` - Hardening law parameter (:math:`b`).
+        - ``ep0`` - Accumulated plastic strain corresponding to initial \
+                    yielding stress (:math:`\\bar{\\varepsilon}^{p}_{0}`)
 
     ----
 
@@ -141,8 +118,7 @@ def get_available_hardening_types():
         List of available isotropic hardening laws (str).
     """
     # Set available isotropic hardening types
-    available_hardening_types = ('piecewise_linear', 'linear', 'swift',
-                                 'ramberg_osgood')
+    available_hardening_types = ('piecewise_linear', 'linear', 'nadai_ludwik')
     # Return
     return available_hardening_types
 # =============================================================================
@@ -172,10 +148,15 @@ def build_hardening_parameters(type, material_properties):
         elif type == 'linear':
             hardening_parameters['s0'] = material_properties['s0']
             hardening_parameters['a'] = material_properties['a']
-        elif type == 'swift' or type == 'ramberg_osgood':
+        elif type == 'nadai_ludwik':
             hardening_parameters['s0'] = material_properties['s0']
             hardening_parameters['a'] = material_properties['a']
             hardening_parameters['b'] = material_properties['b']
+            # Tolerance to avoid overflow when computing hardening slope at
+            # null accumulated plastic strain
+            ep0_tol = 1e-8
+            hardening_parameters['ep0'] = \
+                np.maximum(material_properties['ep0'], ep0_tol)
         else:
             raise RuntimeError('Unknown isotropic hardening type.')
     except KeyError as err:
@@ -304,11 +285,11 @@ def get_hardening_law(type):
             # Return
             return yield_stress, H
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Swift isotropic hardening
-    elif type == 'swift':
-        # Set Swift isotropic hardening law
+    # Nadai-Ludwik isotropic hardening
+    elif type == 'nadai_ludwik':
+        # Set Nadai-Ludwik isotropic hardening law
         def hardening_law(hardening_parameters, acc_p_strain):
-            """Swift isotropic hardening law.
+            """Nadai-Ludwik isotropic hardening law.
 
             Provided the required isotropic hardening law parameters and a
             given value of accumulated plastic strain, return the corresponding
@@ -327,54 +308,8 @@ def get_hardening_law(type):
 
                 b : float, hardening law parameter
 
-            Returns
-            -------
-            yield_stress : float
-                Material yield stress.
-            H : float
-                Material hardening slope.
-            """
-            # Get initial yield stress and parameters
-            yield_stress_init = float(hardening_parameters['s0'])
-            a = float(hardening_parameters['a'])
-            b = float(hardening_parameters['b'])
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Compute yield stress
-            yield_stress = yield_stress_init + a*(acc_p_strain**b)
-            # Compute hardening slope
-            if abs(acc_p_strain) < 10e-8:
-                # Compute hardening slope at the initial point (null
-                # accumulated plastic strain) with a forward finite difference
-                H = (a*((acc_p_strain + 10e-8)**b) - a*(acc_p_strain**b))/10e-8
-            else:
-                # Compute analytical hardening slope
-                H = a*b*(acc_p_strain**(b - 1))
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Return
-            return yield_stress, H
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Ramberg-Osgood isotropic hardening
-    elif type == 'ramberg_osgood':
-        # Set Ramberg-Osgood isotropic hardening law
-        def hardening_law(hardening_parameters, acc_p_strain):
-            """Ramberg-Osgood isotropic hardening law.
-
-            Provided the required isotropic hardening law parameters and a
-            given value of accumulated plastic strain, return the corresponding
-            material yield stress and hardening slope.
-
-            ----
-
-            Parameters
-            ----------
-            hardening_parameters : dict
-                Isotropic hardening law required parameters:
-
-                s0 : float, initial yield stress
-
-                a : float, hardening law parameter
-
-                b : float, hardening law parameter
+                ep0 : float, accumulated plastic strain corresponding to \\
+                      initial yielding stress
 
             Returns
             -------
@@ -387,11 +322,14 @@ def get_hardening_law(type):
             yield_stress_init = float(hardening_parameters['s0'])
             a = float(hardening_parameters['a'])
             b = float(hardening_parameters['b'])
+            ep0 = float(hardening_parameters['ep0'])
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Consider minimum non-negative accumulated plastic strain
+            acc_p_strain = np.maximum(0.0, acc_p_strain)
             # Compute yield stress
-            yield_stress = yield_stress_init*(1.0 + a*acc_p_strain)**(1/b)
+            yield_stress = yield_stress_init + a*((acc_p_strain + ep0)**b)
             # Compute hardening slope
-            H = yield_stress_init*(a/b)*(1.0 + a*acc_p_strain)**((1 - b)/b)
+            H = a*b*(acc_p_strain + ep0)**(b - 1)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Return
             return yield_stress, H

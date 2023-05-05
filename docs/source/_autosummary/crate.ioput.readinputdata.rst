@@ -1,4 +1,4 @@
-crate.ioput.readinputdata
+﻿crate.ioput.readinputdata
 =========================
 
 .. automodule:: crate.ioput.readinputdata
@@ -15,8 +15,8 @@ crate.ioput.readinputdata
       :toctree:
    
       get_available_clustering_features
-      read_data_driven_mode
       read_input_data_file
+      read_output_minimization_option
    
    
 
