@@ -1,33 +1,39 @@
 
 Available features
-******************
+==================
 
-Below is a summary of the **main features** that CRATE has to offer regarding the computational simulation of materials.
+Below is a summary of the **main features** and **current limitations** of CRATE in the computational multi-scale simulation of heterogeneous materials.
 
-General formulation:
-~~~~~~~~~~~~~~~~~~~~
-* Quasi-static deformation process;
+**General formulation:**
+
+* Quasi-static deformation processes;
 * Infinitesimal and finite strains;
 * Implicit time integration.
 
-Macro-scale loading path:
-~~~~~~~~~~~~~~~~~~~~~~~~~
+.. note ::
+
+   A **limitation under finite strains** is under investigation, namely the development of a suitable self-consistent scheme for the clustering-based reduced-order models SCA and ASCA. Therefore, enforcing **constant reference material properties** is currently the only option available to simulate with the previous models.
+
+----
+
+**Macro-scale loading path:**
+
 * General monotonic and non-monotonic macro-scale loading paths;
 * Enforcement of macro-scale strain and/or stress constraints;
 * General prescription of macro-scale loading incrementation;
 * Dynamic macro-scale loading subincrementation.
 
-Material constitutive modeling:
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----
+
+**Material constitutive modeling:**
+
 * General nonlinear material constitutive behavior;
 * Interface to implement a new constitutive model;
 * Admits three different families of constitutive models:
 
   - Infinitesimal strains constitutive models;
   - Finite strains constitutive models;
-  - Finite strains constitutive models whose implementation stems from a purely kinematical extension of their infinitesimal counterpart;
-* Available computational solid mechanics common procedures;
-* Suitable toolkit of tensorial and matricial operations;
+  - Finite strains constitutive models whose computational implementation only involves a kinematical extension of their infinitesimal counterpart;
 * Out-of-the-box constitutive models include:
 
   - General anisotropic linear elastic constitutive model (infinitesimal strains);
@@ -35,23 +41,30 @@ Material constitutive modeling:
   - General anisotropic Hencky hyperelastic constitutive model (finite strains);
   - General anisotropic St.Venant-Kirchhoff hyperelastic constitutive model (finite strains).
 
-Offline-stage DNS methods:
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-* Interface to implement any direct numerical simulation (DNS) homogenization-based multi-scale method;
+.. note ::
+   Besides the constitutive models themselves, CRATE also makes available a complete and validated **set of computational solid mechanics common procedures** as well as a **toolkit of tensorial and matricial operations**!
+
+----
+
+**Offline-stage DNS methods:**
+
+* Interface to implement any direct numerical simulation (DNS) multi-scale method;
 * FFT-based homogenization basic scheme (`article 1 <https://www.sciencedirect.com/science/article/pii/S0045782597002181>`_, `article 2 <https://link.springer.com/article/10.1007/s00466-014-1071-8>`_).
 
-Offline-stage clustering methods:
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. note::
+
+   Despite a highly efficient implementation of the FFT-based homogenization basic scheme, the convergence of this method is **limited to moderate stiffness ratios** between different material phases. Variants of this method or different methods should be implemented to handle some cases of engineering interest (e.g., microstructures with voids or rigid inclusions).
+
+----
+
+**Offline-stage clustering methods:**
+
 * Interface to implement any clustering algorithm;
 * Wrappers over clustering algorithms available from third-party libraries (e.g., `SciPy <https://docs.scipy.org/doc/scipy/reference/cluster.html>`_, `Scikit-Learn <https://scikit-learn.org/stable/modules/clustering.html>`_, ...).
 
-Online-stage clustering-based reduced-order models:
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----
+
+**Online-stage clustering-based reduced-order models:**
+
 * Self-Consistent Clustering Analysis (SCA) (`article <https://www.sciencedirect.com/science/article/pii/S0045782516301499>`_);
 * Adaptive Self-Consistent Clustering Analysis (ASCA) (`article <https://www.sciencedirect.com/science/article/pii/S0045782522000895>`_).
-
-Post-processing:
-~~~~~~~~~~~~~~~~
-* VTK (XML format) output files allowing the visualization of data associated to the material microstructure (topology, material phases, material clusters) and micro-scale physical fields (strain, stress, internal variables, ...).
-
-   

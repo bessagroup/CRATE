@@ -1,23 +1,20 @@
 
-CRATE (Clustering-based Nonlinear Analysis of Materials)
-========================================================
+CRATE
+=====
+
+Summary
+-------
+**CRATE** (Clustering-based Nonlinear Analysis of Materials) is a Python program developed in the context of computational mechanics to aid the design and development of new materials. Its main purpose is **performing multi-scale nonlinear analyses of heterogeneous materials** through a suitable coupling between first-order computational homogenization and clustering-based reduced-order modeling: given a representative volume element of the material micro-structure and the corresponding material phase properties, CRATE computes the material's effective mechanical response when subject to prescribed loading conditions.
 
 .. image:: ../media/logo/CRATE_logo_horizontal_long.png
    :width: 70 %
    :align: center
 
-|
-
-What is CRATE?
---------------
-
-Summary
-~~~~~~~
-**CRATE** (Clustering-based Nonlinear Analysis of Materials) is a Python program developed in the context of computational mechanics to aid the design and development of new materials. Its main purpose is **performing multi-scale nonlinear analyses of heterogeneous materials** through a suitable coupling between first-order computational homogenization and clustering-based reduced-order modeling.
+----
 
 Authorship & Citation
-~~~~~~~~~~~~~~~~~~~~~
-CRATE's initial version (1.0.0) was originally developed by Bernardo P. Ferreira [#]_ in the context of his PhD Thesis [#]_ .
+---------------------
+CRATE was originally developed by Bernardo P. Ferreira [#]_ in the context of his PhD Thesis [#]_ .
 
 If you use CRATE in a scientific publication, it is appreciated that you cite this PhD Thesis:
 
@@ -38,15 +35,14 @@ If you use CRATE in a scientific publication, it is appreciated that you cite th
        Optimization of Thermoplastic Blends: Microstructural
        Generation, Constitutive Development and Clustering-based
        Reduced-Order Modeling.* PhD Thesis, University of Porto
-       (see `here <https://repositorio-aberto.up.pt/handle/10216/
-       146900?locale=en>`_)
+       (see `here <http://dx.doi.org/10.13140/RG.2.2.33940.17289>`_)
 
 ----
 
-Getting started
----------------
+Getting started (WIP)
+---------------------
 
-Watching CRATE in action with minimal effort is straighforward: clone `CRATE GitHub repository <>`_ (see instructions above) and run the following command from the cloned repository root directory:
+Watching CRATE in action with minimal effort is straighforward: clone `CRATE GitHub repository <https://github.com/bessagroup/CRATE>`_ (see instructions above) and run the following command from the cloned repository root directory:
 
 .. code-block::
 
@@ -59,9 +55,9 @@ This module is meant to illustrate how a CRATE simulation can be performed in a 
 Community Support
 -----------------
 
-If you find any **issues**, **bugs** or **problems** with CRATE, please use the `GitHub issue tracker <https://github.com/BernardoFerreira/CRATE/pulls>`_ to report them. Provide a clear description of the problem, as well as a complete report on the underlying details, so that it can be easily reproduced and (hopefully) fixed!
+If you find any **issues**, **bugs** or **problems** with CRATE, please use the `GitHub issue tracker <https://github.com/bessagroup/CRATE/issues>`_ to report them. Provide a clear description of the problem, as well as a complete report on the underlying details, so that it can be easily reproduced and (hopefully) fixed!
 
-You are also welcome to post there any **questions**, **comments** or **suggestions** for improvement!
+You are also welcome to post there any **questions**, **comments** or **suggestions** for improvement in the `GitHub discussions <https://github.com/bessagroup/CRATE/discussions>`_ space!
 
 .. note::
     Bear in mind that CRATE is a program developed in an academic environment and that I'm currently the only developer as a side project. This means that I'll do my best to address all the issues, questions and suggestions, but do expect a reasonable time frame! ~ Bernardo P. Ferreira
@@ -110,13 +106,13 @@ CRATE is a free and open-source software published under a BSD 3-Clause License.
    rst_doc_files/basic_usage/available_features.rst
 
 .. toctree::
-   :name: benchmarkstoc
-   :caption: Benchmarks
+   :name: validationtoc
+   :caption: Validation
    :maxdepth: 3
    :hidden:
    :includehidden:
 
-   rst_doc_files/benchmarks/overview.rst
+   rst_doc_files/validation/benchmarks.rst
 
 .. toctree::
    :name: advancedusagetoc
