@@ -60,7 +60,7 @@ Below is a summary of the **main features** and **current limitations** of CRATE
 **Offline-stage clustering methods:**
 
 * Interface to implement any clustering algorithm;
-* Wrappers over clustering algorithms available from third-party libraries (e.g., `SciPy <https://docs.scipy.org/doc/scipy/reference/cluster.html>`_, `Scikit-Learn <https://scikit-learn.org/stable/modules/clustering.html>`_, ...).
+* Wrappers over clustering algorithms available from third-party libraries (e.g., `SciPy <https://docs.scipy.org/doc/scipy/reference/cluster.html>`_, `Scikit-Learn <https://scikit-learn.org/stable/modules/clustering.html>`_).
 
 ----
 

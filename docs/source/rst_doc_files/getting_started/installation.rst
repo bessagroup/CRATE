@@ -30,15 +30,15 @@ To install CRATE **from the associated GitHub repository**, follow the steps bel
 
 * Clone `CRATE GitHub repository <https://github.com/bessagroup/CRATE>`_ into a local directory (check `git documentation <https://git-scm.com/docs/git-clone>`_ for details) by running the following command:
 
-.. code-block::
+    .. code-block::
 
-   git clone git@github.com:bessagroup/CRATE.git
+       git clone git@github.com:bessagroup/CRATE.git
 
 * In the cloned repository root directory, install CRATE by running the following pip installation command (check pip `regular installation <https://pip.pypa.io/en/stable/topics/local-project-installs/#regular-installs>`_ from local project for details):
 
-.. code-block::
+    .. code-block::
 
-   pip install .
+       pip install .
 
 .. note::
    From a development point of view, it may be of interest to install CRATE in "editable" mode by adding the -e option to the pip installation command as :code:`pip install -e .` (check `here <https://pip.pypa.io/en/stable/topics/local-project-installs/#editable-installs>`_ for details).

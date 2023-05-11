@@ -39,16 +39,10 @@ If you use CRATE in a scientific publication, it is appreciated that you cite th
 
 ----
 
-Getting started (WIP)
----------------------
+Getting started
+---------------
+To get a quick idea of what CRATE is all about, take a look into the :doc:`GETTING STARTED <../rst_doc_files/getting_started/overview>` tab and go through :doc:`Overview <../rst_doc_files/getting_started/overview>` > :doc:`Installation <../rst_doc_files/getting_started/installation>` > :doc:`Run a benchmark <../rst_doc_files/getting_started/run_benchmark>`!
 
-Watching CRATE in action with minimal effort is straighforward: clone `CRATE GitHub repository <https://github.com/bessagroup/CRATE>`_ (see instructions above) and run the following command from the cloned repository root directory:
-
-.. code-block::
-
-    python3 benchmarks/run_crate_benchmark.py
-
-This module is meant to illustrate how a CRATE simulation can be performed in a Python environment by running one of the benchmarks made available with the project. The following section describes the main ingredients required to perform your own CRATE simulation.
 
 ----
 
@@ -126,8 +120,6 @@ CRATE is a free and open-source software published under a BSD 3-Clause License.
    rst_doc_files/advanced_usage/interface_clustering_feature.rst
    rst_doc_files/advanced_usage/interface_clustering_algorithm.rst
    rst_doc_files/advanced_usage/interface_constitutive_model.rst
-   rst_doc_files/advanced_usage/interface_incremental_output_file.rst
-   rst_doc_files/advanced_usage/interface_tensor_matrix_operations.rst
 
 .. toctree::
    :name: apitoc
