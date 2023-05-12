@@ -4,9 +4,11 @@ Overview
 
 A quick overview over CRATE's structure, both from a conceptual and computational point of view.
 
+----
+
 Conceptual framework
 --------------------
-CRATE's conceptual framework can be easily understood by getting familiar with some fundamental concepts and having a basic comprehension of a first-order multi-scale modeling scheme.
+CRATE's **conceptual framework** can be easily understood by getting familiar with some fundamental concepts and having a basic comprehension of a first-order multi-scale modeling scheme.
 
 .. note::
     For a complete treatment of these topics, the interested reader is referred to `Ferreira (2022) <http://dx.doi.org/10.13140/RG.2.2.33940.17289>`_ and references therein. In particular, check:
@@ -29,6 +31,8 @@ The multi-scale analysis of a uniaxial tensile test of a dogbone specimen is sch
    :align: center
 
 |
+
+----
 
 Computational framework
 -----------------------

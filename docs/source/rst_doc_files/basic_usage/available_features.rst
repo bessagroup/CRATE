@@ -12,7 +12,7 @@ Below is a summary of the **main features** and **current limitations** of CRATE
 
 .. note ::
 
-   A **limitation under finite strains** is under investigation, namely the development of a suitable self-consistent scheme for the clustering-based reduced-order models SCA and ASCA. Therefore, enforcing **constant reference material properties** is currently the only option available to simulate with the previous models.
+   A **limitation under finite strains** is under investigation, namely the development of a suitable self-consistent scheme for the clustering-based reduced-order models SCA and ASCA. Therefore, enforcing **constant reference material properties** is currently the only option available to simulate with the previous models under finite strains.
 
 ----
 
@@ -29,11 +29,6 @@ Below is a summary of the **main features** and **current limitations** of CRATE
 
 * General nonlinear material constitutive behavior;
 * Interface to implement a new constitutive model;
-* Admits three different families of constitutive models:
-
-  - Infinitesimal strains constitutive models;
-  - Finite strains constitutive models;
-  - Finite strains constitutive models whose computational implementation only involves a kinematical extension of their infinitesimal counterpart;
 * Out-of-the-box constitutive models include:
 
   - General anisotropic linear elastic constitutive model (infinitesimal strains);
@@ -48,7 +43,7 @@ Below is a summary of the **main features** and **current limitations** of CRATE
 
 **Offline-stage DNS methods:**
 
-* Interface to implement any direct numerical simulation (DNS) multi-scale method;
+* Interface to implement a new direct numerical simulation (DNS) multi-scale method;
 * FFT-based homogenization basic scheme (`article 1 <https://www.sciencedirect.com/science/article/pii/S0045782597002181>`_, `article 2 <https://link.springer.com/article/10.1007/s00466-014-1071-8>`_).
 
 .. note::
@@ -59,7 +54,7 @@ Below is a summary of the **main features** and **current limitations** of CRATE
 
 **Offline-stage clustering methods:**
 
-* Interface to implement any clustering algorithm;
+* Interface to implement a new clustering algorithm;
 * Wrappers over clustering algorithms available from third-party libraries (e.g., `SciPy <https://docs.scipy.org/doc/scipy/reference/cluster.html>`_, `Scikit-Learn <https://scikit-learn.org/stable/modules/clustering.html>`_).
 
 ----

@@ -17,7 +17,7 @@ Constitutive framework and requirements
 ---------------------------------------
 CRATE constitutive modeling implementation is designed (but not limited to) around a particular case of the general history functional-based constitutive theory named **thermodynamics with internal variables**. Such a framework admits the implementation of a broad spectrum of general nonlinear constitutive models where (i) the thermodynamic state at a given instant of the deformation process is assumed to be completely defined by the instantaneous values of a finite number of state variables, and (ii) a given set of internal variables contains all the relevant information about the material thermodynamical history. Moreover, CRATE assumes an **implicit time integration scheme** and adopts an integration algorithm based on approximated **incremental constitutive functions**. Therefore, the implementation of a constitutive model requires not only the **state update** procedure, i.e., the incremental update of stress and state variables according to the constitutive equations, but also the computation of the **material consistent tangent modulus**, which arises in the linearization of the macro-scale equilibrium problem.
 
-In this context, the implementation of a particular constitutive model in CRATE requires that the following elements are clearly defined beforehand:
+In this context, the implementation of a particular constitutive model in CRATE requires that the following elements are clearly defined **beforehand**:
 
 * **Model name** - A unique identifier of the constitutive model;
 
@@ -37,7 +37,7 @@ In this context, the implementation of a particular constitutive model in CRATE 
 
 Implementation steps
 --------------------
-The implementation of a new constitutive model in CRATE involves **four fundamental steps**:
+The implementation of a **new constitutive model** in CRATE involves **four fundamental steps**:
 
 * **Step 1** - Create a Python module with the name of the new constitutive model (e.g., :code:`new_model.py`) in :py:mod:`crate.material.models` directory;
 
@@ -95,8 +95,8 @@ The implementation of a new constitutive model in CRATE involves **four fundamen
 Recommendations
 ---------------
 
-* If you are not familiar with the implementation of a constitutive model in CRATE, it is recommended that you first take a look into the implementation of the constitutive models already available (:py:mod:`crate.material.models`). The implementation of these models follows the steps previously outlined and are fully documented;
+* If you are not familiar with the implementation of a constitutive model in CRATE, it is **recommended** that you first take a look into the implementation of the constitutive models already available (:py:mod:`crate.material.models`). The implementation of these models follows the steps previously outlined and are fully documented;
 
-* Focus on the essential and don't lose time implementing standard computations and operations in solid mechanics - make use of the extensive set of tools available in :py:mod:`crate.material.materialoperations` and :py:mod:`crate.tensor.tensoroperations`;
+* Focus on the essential and don't lose time implementing standard computations and operations in solid mechanics - make use of the **extensive set of tools available** in :py:mod:`crate.material.materialoperations` and :py:mod:`crate.tensor.tensoroperations`;
 
-* Avoid troublesome debugging processes by taking advantage of the matricial storage procedures of strain and stress related tensors available in :py:mod:`crate.tensor.matrixoperations` - such a toolkit ensures a systematic and consistent way of performing all the conversions between tensorial and matricial forms arising in your implementation.
+* Avoid troublesome debugging processes by taking advantage of the **matricial storage procedures** of strain and stress related tensors available in :py:mod:`crate.tensor.matrixoperations` - such a toolkit ensures a systematic and consistent way of performing all the conversions between tensorial and matricial forms arising in your implementation.

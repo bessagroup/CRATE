@@ -47,8 +47,8 @@ One appealing feature of CRATE is that the simulation execution can be **monitor
 
 * In the case of a failed simulation (e.g., maximum level of sub-incrementation, non-convergent solution), **abortion information** is provided.
 
-.. image:: ../../../schematics/doc_CRATE_execution_output.png
-   :width: 80 %
+.. image:: ../../../schematics/doc_CRATE_execution_output_labels.png
+   :width: 90 %
    :align: center
 
 |

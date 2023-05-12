@@ -32,10 +32,15 @@ Among the **default output files**, three are particularly relevant:
 
 * :code:`.hres` file - A file where incremental macro-scale loading path data and the macro-scale material response are stored, namely the **homogenized strain and stress tensors** computed at every macro-scale loading increment;
 
+.. image:: ../../../schematics/doc_CRATE_hres_output.png
+   :width: 80 %
+   :align: center
+
+|
+
 * :code:`.efftan` file - A file where the RVE **effective material consistent tangent modulus** computed at every macro-scale loading increment is stored.
 
-
-.. image:: ../../../schematics/doc_CRATE_hres_output.png
+.. image:: ../../../schematics/doc_CRATE_efftan_output.png
    :width: 80 %
    :align: center
 

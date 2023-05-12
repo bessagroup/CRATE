@@ -1,8 +1,7 @@
 
 Index
-*****
+=====
 
-* :ref:`genindex`
-* :ref:`modindex`
+Search anything by alphabetical order: :ref:`genindex`
 
-   
+List of CRATE modules: :ref:`modindex`

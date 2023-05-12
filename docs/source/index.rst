@@ -2,13 +2,15 @@
 CRATE
 =====
 
-Summary
--------
-**CRATE** (Clustering-based Nonlinear Analysis of Materials) is a Python program developed in the context of computational mechanics to aid the design and development of new materials. Its main purpose is **performing multi-scale nonlinear analyses of heterogeneous materials** through a suitable coupling between first-order computational homogenization and clustering-based reduced-order modeling: given a representative volume element of the material micro-structure and the corresponding material phase properties, CRATE computes the material's effective mechanical response when subject to prescribed loading conditions.
-
 .. image:: ../media/logo/CRATE_logo_horizontal_long.png
    :width: 70 %
    :align: center
+
+|
+
+Summary
+-------
+**CRATE** (Clustering-based Nonlinear Analysis of Materials) is a Python program developed in the context of computational mechanics to aid the design and development of new materials. Its main purpose is **performing multi-scale nonlinear analyses of heterogeneous materials** through a suitable coupling between first-order computational homogenization and clustering-based reduced-order modeling: given a representative volume element of the material microstructure and the corresponding material phase properties, CRATE computes the material's effective mechanical response when subject to a prescribed macro-scale loading path.
 
 ----
 
@@ -29,7 +31,7 @@ If you use CRATE in a scientific publication, it is appreciated that you cite th
       url={https://hdl.handle.net/10216/146900}
     }
 
-.. [#] `LinkedIN <https://www.linkedin.com/in/bpferreira/>`_ , `ORCID <https://orcid.org/0000-0001-5956-3877>`_, `ResearchGate <https://www.researchgate.net/profile/Bernardo-Ferreira-11?ev=hdr_xprf>`_
+.. [#] `LinkedIn <https://www.linkedin.com/in/bpferreira/>`_ , `ORCID <https://orcid.org/0000-0001-5956-3877>`_, `ResearchGate <https://www.researchgate.net/profile/Bernardo-Ferreira-11?ev=hdr_xprf>`_
 
 .. [#] Ferreira, B.P. (2022). *Towards Data-driven Multi-scale
        Optimization of Thermoplastic Blends: Microstructural
@@ -41,7 +43,7 @@ If you use CRATE in a scientific publication, it is appreciated that you cite th
 
 Getting started
 ---------------
-To get a quick idea of what CRATE is all about, take a look into the :doc:`GETTING STARTED <../rst_doc_files/getting_started/overview>` tab and go through :doc:`Overview <../rst_doc_files/getting_started/overview>` > :doc:`Installation <../rst_doc_files/getting_started/installation>` > :doc:`Run a benchmark <../rst_doc_files/getting_started/run_benchmark>`!
+To get a quick idea of what CRATE is all about, take a look into :doc:`GETTING STARTED <../rst_doc_files/getting_started/overview>` and go through :doc:`Overview <../rst_doc_files/getting_started/overview>` > :doc:`Installation <../rst_doc_files/getting_started/installation>` > :doc:`Run a benchmark <../rst_doc_files/getting_started/run_benchmark>`!
 
 
 ----
@@ -51,7 +53,7 @@ Community Support
 
 If you find any **issues**, **bugs** or **problems** with CRATE, please use the `GitHub issue tracker <https://github.com/bessagroup/CRATE/issues>`_ to report them. Provide a clear description of the problem, as well as a complete report on the underlying details, so that it can be easily reproduced and (hopefully) fixed!
 
-You are also welcome to post there any **questions**, **comments** or **suggestions** for improvement in the `GitHub discussions <https://github.com/bessagroup/CRATE/discussions>`_ space!
+You are also welcome to post any **questions**, **comments** or **suggestions** for improvement in the `GitHub discussions <https://github.com/bessagroup/CRATE/discussions>`_ space!
 
 .. note::
     Bear in mind that CRATE is a program developed in an academic environment and that I'm currently the only developer as a side project. This means that I'll do my best to address all the issues, questions and suggestions, but do expect a reasonable time frame! ~ Bernardo P. Ferreira
@@ -128,3 +130,10 @@ CRATE is a free and open-source software published under a BSD 3-Clause License.
 
    rst_doc_files/reference/index.rst
    Code <_autosummary/crate>
+
+.. toctree::
+   :name: licensetoc
+   :caption: License
+   :hidden:
+
+   license.rst

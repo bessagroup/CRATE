@@ -27,7 +27,7 @@ Below is a list of some CRATE **available interfaces** alongside a brief descrip
 
 * **Interface: Clustering algorithm** - Implement a clustering algorithm to perform the RVE cluster analysis (:doc:`interface documentation <interface_clustering_algorithm>`);
 
-* **Interface: Constitutive model** - Implement a constitutive model to describe the physical behavior of a given material phase (:doc:`interface documentation <interface_constitutive_model>`);
+* **Interface: Constitutive model** - Implement a constitutive model to describe the physical behavior of a given material phase (:doc:`interface documentation <interface_constitutive_model>`).
 
 ----
 
