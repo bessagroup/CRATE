@@ -33,10 +33,12 @@ If you use CRATE in a scientific publication, it is appreciated that you cite th
 
 <sup id="f2"> 2 </sup> Ferreira, B.P. (2022). *Towards Data-driven Multi-scale Optimization of Thermoplastic Blends: Microstructural Generation, Constitutive Development and Clustering-based Reduced-Order Modeling.* PhD Thesis, University of Porto (see [here](http://dx.doi.org/10.13140/RG.2.2.33940.17289))
 
+----
 
 # Getting started
 
-You can find everything you need in CRATE [documentation](https://bessagroup.github.io/CRATE/)!
+You can find everything you need to know in [CRATE documentation](https://bessagroup.github.io/CRATE/)!
+
 
 <p align="center">
   <a href=""><img alt="logo" src="docs/schematics/doc_CRATE_conceptual_scheme.png?raw=true" width="80%"></a>
