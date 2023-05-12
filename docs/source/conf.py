@@ -21,7 +21,7 @@ for path in src_dir:
 # Source: https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 project = 'crate'
 author = 'Bernardo Ferreira'
-copyright = '2022, Bernardo Ferreira'
+copyright = '2020, Bernardo Ferreira'
 version = '1.0'
 release = '1.0.0'
 
