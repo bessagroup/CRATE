@@ -10,7 +10,7 @@ Executing the CRATE simulator **in a Python environment** is a single-linear as 
 
     # python_script.py
 
-    import crate
+    import cratepy
 
     # Set input data file path (mandatory)
     input_data_file_path = ...
@@ -21,7 +21,7 @@ Executing the CRATE simulator **in a Python environment** is a single-linear as 
     discret_file_dir = ...
 
     # Perform CRATE simulation
-    crate.crate_simulation(input_data_file_path, arg_discret_file_dir=discret_file_dir)
+    cratepy.crate_simulation(input_data_file_path, arg_discret_file_dir=discret_file_dir)
 
 
 .. note::
@@ -29,7 +29,7 @@ Executing the CRATE simulator **in a Python environment** is a single-linear as 
 
     .. code-block::
 
-        python3 CRATE/src/crate/main.py "/path/to/example_input_data_file.dat"
+        python3 CRATE/src/cratepy/main.py "/path/to/example_input_data_file.dat"
 
    The optional spatial discretization file directory may be provided as a **second** calling argument after the input data file path.
 

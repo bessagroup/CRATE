@@ -19,11 +19,11 @@ for path in src_dir:
 
 # -- Project information ------------------------------------------------------
 # Source: https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
-project = 'crate'
+project = 'CRATE'
 author = 'Bernardo Ferreira'
 copyright = '2020, Bernardo Ferreira'
 version = '1.0'
-release = '1.0.0'
+release = '1.0.3'
 
 
 # -- General configuration ----------------------------------------------------

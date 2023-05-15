@@ -37,8 +37,8 @@ Other implementations
 Below is a description of possible implementations that can be regarded as a minor enrichment of existent CRATE toolkits:
 
 * **Tensor/Matrix operations and procedures**:
-    - Additional algebraic tensorial operations and tensorial operators can be implemented in module :py:mod:`crate.tensor.tensoroperations`;
-    - Additional matricial procedures can be implemented in module :py:mod:`crate.tensor.matrixoperations`.
+    - Additional algebraic tensorial operations and tensorial operators can be implemented in module :py:mod:`cratepy.tensor.tensoroperations`;
+    - Additional matricial procedures can be implemented in module :py:mod:`cratepy.tensor.matrixoperations`.
 
 * **Computational solid mechanics procedures**:
-    - Additional computations and procedures arising in computational solid mechanics can be implemented in module :py:mod:`crate.material.materialoperations`.
+    - Additional computations and procedures arising in computational solid mechanics can be implemented in module :py:mod:`cratepy.material.materialoperations`.

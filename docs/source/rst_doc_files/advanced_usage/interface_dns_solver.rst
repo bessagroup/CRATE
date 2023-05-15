@@ -22,9 +22,9 @@ Implementation steps
 --------------------
 The implementation of a **new direct numerical simulation (DNS) multi-scale method** in CRATE involves **five fundamental steps**:
 
-* **Step 1** - Create a Python module with the name of the new DNS multi-scale method (e.g., :code:`new_dns_method.py`) in the directory :py:mod:`crate.clustering.solution`;
+* **Step 1** - Create a Python module with the name of the new DNS multi-scale method (e.g., :code:`new_dns_method.py`) in the directory :py:mod:`cratepy.clustering.solution`;
 
-* **Step 2** - In :code:`new_dns_method.py`, import the DNS multi-scale method interface (:py:class:`~crate.clustering.solution.dnshomogenization.DNSHomogenizationMethod`) and derive a class for the new DNS multi-scale method (e.g., :code:`NewDNSMethod`):
+* **Step 2** - In :code:`new_dns_method.py`, import the DNS multi-scale method interface (:py:class:`~cratepy.clustering.solution.dnshomogenization.DNSHomogenizationMethod`) and derive a class for the new DNS multi-scale method (e.g., :code:`NewDNSMethod`):
 
     .. code-block:: python
 
@@ -37,7 +37,7 @@ The implementation of a **new direct numerical simulation (DNS) multi-scale meth
 
 * **Step 3** - Choose a unique identifier :code:`id` for the new DNS multi-scale method;
 
-* **Step 4** - In :py:mod:`crate.clustering.rveelasticdatabase`, import and add the initialization of the new DNS multi-scale method in the :py:meth:`~crate.clustering.rveelasticdatabase.RVEElasticDatabase.compute_rve_response_database` method of class :py:class:`~crate.clustering.rveelasticdatabase.RVEElasticDatabase`:
+* **Step 4** - In :py:mod:`cratepy.clustering.rveelasticdatabase`, import and add the initialization of the new DNS multi-scale method in the :py:meth:`~cratepy.clustering.rveelasticdatabase.RVEElasticDatabase.compute_rve_response_database` method of class :py:class:`~cratepy.clustering.rveelasticdatabase.RVEElasticDatabase`:
 
     .. code-block:: python
        :emphasize-lines: 3, 13-14
@@ -61,11 +61,11 @@ The implementation of a **new direct numerical simulation (DNS) multi-scale meth
                    raise RuntimeError('Unknown homogenization-based multi-scale '
                                       'method.')
 
-* **Step 5** - Perform the complete implementation of the new DNS multi-scale method in :code:`new_dns_method.py` by developing the class :code:`NewDNSMethod` and implementing the abstract methods (look for the @abstractmethod decorator) established by the DNS multi-scale method interface (:py:class:`~crate.clustering.solution.dnshomogenization.DNSHomogenizationMethod`).
+* **Step 5** - Perform the complete implementation of the new DNS multi-scale method in :code:`new_dns_method.py` by developing the class :code:`NewDNSMethod` and implementing the abstract methods (look for the @abstractmethod decorator) established by the DNS multi-scale method interface (:py:class:`~cratepy.clustering.solution.dnshomogenization.DNSHomogenizationMethod`).
 
 ----
 
 Recommendations
 ---------------
 
-* If you are not familiar with the implementation of a DNS multi-scale method in CRATE, it is **recommended** that you first take a look into the implementation of the DNS multi-scale methods already available (:py:mod:`crate.clustering.solution`). The implementation of these DNS multi-scale methods follows the steps previously outlined and are fully documented;
+* If you are not familiar with the implementation of a DNS multi-scale method in CRATE, it is **recommended** that you first take a look into the implementation of the DNS multi-scale methods already available (:py:mod:`cratepy.clustering.solution`). The implementation of these DNS multi-scale methods follows the steps previously outlined and are fully documented;

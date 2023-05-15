@@ -21,9 +21,9 @@ The implementation of a **new clustering feature** in CRATE involves **two diffe
 
 * **Stage 1** - Implement the new clustering feature algorithm:
 
-    * **Step 1.1** - Create a Python module with the name of the clustering feature (e.g., :code:`new_feature_algorithm.py`) in the directory :code:`crate.clustering.features` (create directory if not existent);
+    * **Step 1.1** - Create a Python module with the name of the clustering feature (e.g., :code:`new_feature_algorithm.py`) in the directory :code:`cratepy.clustering.features` (create directory if not existent);
 
-    * **Step 1.2** - In :code:`new_feature_algorithm.py`, import the clustering feature algorithm interface (:py:class:`~crate.clustering.clusteringdata.FeatureAlgorithm`), derive a class for the new clustering feature algorithm (e.g., :code:`NewFeatureAlgorithm`), and implement the abstract methods (look for the @abstractmethod decorator) established by the clustering feature algorithm interface:
+    * **Step 1.2** - In :code:`new_feature_algorithm.py`, import the clustering feature algorithm interface (:py:class:`~cratepy.clustering.clusteringdata.FeatureAlgorithm`), derive a class for the new clustering feature algorithm (e.g., :code:`NewFeatureAlgorithm`), and implement the abstract methods (look for the @abstractmethod decorator) established by the clustering feature algorithm interface:
 
         .. code-block:: python
 
@@ -41,16 +41,16 @@ The implementation of a **new clustering feature** in CRATE involves **two diffe
 
 * **Stage 2** - Setup the new clustering feature descriptors:
 
-    * **Step 2.1** - In :py:mod:`crate.clustering.clusteringdata`, import the new clustering feature algorithm (:code:`NewFeatureAlgorithm`) implemented during Stage 1 in :code:`new_feature_algorithm.py`;
+    * **Step 2.1** - In :py:mod:`cratepy.clustering.clusteringdata`, import the new clustering feature algorithm (:code:`NewFeatureAlgorithm`) implemented during Stage 1 in :code:`new_feature_algorithm.py`;
 
-    * **Step 2.2** - In :py:mod:`crate.clustering.clusteringdata`, check the already existent clustering features (read the documentation of :py:func:`~crate.clustering.clusteringdata.get_available_clustering_features`) and choose a unique integer identifier :code:`id` for the new clustering feature;
+    * **Step 2.2** - In :py:mod:`cratepy.clustering.clusteringdata`, check the already existent clustering features (read the documentation of :py:func:`~cratepy.clustering.clusteringdata.get_available_clustering_features`) and choose a unique integer identifier :code:`id` for the new clustering feature;
 
-    * **Step 2.3** - In :py:mod:`crate.clustering.clusteringdata`, implement the descriptors of the new clustering feature (e.g., number of dimensions, feature algorithm, macro-scale loadings) in the function :py:func:`~crate.clustering.clusteringdata.get_available_clustering_features`:
+    * **Step 2.3** - In :py:mod:`cratepy.clustering.clusteringdata`, implement the descriptors of the new clustering feature (e.g., number of dimensions, feature algorithm, macro-scale loadings) in the function :py:func:`~cratepy.clustering.clusteringdata.get_available_clustering_features`:
 
         .. code-block:: python
            :emphasize-lines: 3, 9-21
 
-           # crate.clustering.clusteringdata.py
+           # cratepy.clustering.clusteringdata.py
 
            from clustering.features.new_feature_algorithm import NewFeatureAlgorithm
 
@@ -73,11 +73,11 @@ The implementation of a **new clustering feature** in CRATE involves **two diffe
                                                  mac_strains, strain_magnitude_factor)
                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    * **Step 2.4** - In :py:mod:`crate.clustering.clusteringdata`, add the documentation of the new clustering feature in the docstring of :py:func:`~crate.clustering.clusteringdata.get_available_clustering_features`.
+    * **Step 2.4** - In :py:mod:`cratepy.clustering.clusteringdata`, add the documentation of the new clustering feature in the docstring of :py:func:`~cratepy.clustering.clusteringdata.get_available_clustering_features`.
 
 ----
 
 Recommendations
 ---------------
 
-* If you are not familiar with the implementation of a clustering feature in CRATE, it is **recommended** that you first take a look into the implementation of the clustering features already available (:py:func:`~crate.clustering.clusteringdata.get_available_clustering_features`). Despite being embedded directly in :py:mod:`crate.clustering.clusteringdata`, the fundamental implementation steps of these clustering features follows the steps previously outlined and are fully documented.
+* If you are not familiar with the implementation of a clustering feature in CRATE, it is **recommended** that you first take a look into the implementation of the clustering features already available (:py:func:`~cratepy.clustering.clusteringdata.get_available_clustering_features`). Despite being embedded directly in :py:mod:`cratepy.clustering.clusteringdata`, the fundamental implementation steps of these clustering features follows the steps previously outlined and are fully documented.
