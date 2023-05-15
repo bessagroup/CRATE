@@ -8,7 +8,7 @@
 
 [**Docs**](https://bessagroup.github.io/CRATE/)
 | [**GitHub**](https://github.com/bessagroup/CRATE)
-| [**PyPI**](https://pypi.org/project/crate/)
+| [**PyPI**](https://pypi.org/project/crate-sim/)
 
 ### Summary
 **CRATE** (Clustering-based Nonlinear Analysis of Materials) is a Python program developed in the context of computational mechanics to aid the design and development of new materials. Its main purpose is **performing multi-scale nonlinear analyses of heterogeneous materials** through a suitable coupling between first-order computational homogenization and clustering-based reduced-order modeling: given a representative volume element of the material microstructure and the corresponding material phase properties, CRATE computes the material's effective mechanical response when subject to a prescribed macro-scale loading path.
