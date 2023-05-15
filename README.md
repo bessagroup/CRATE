@@ -7,6 +7,7 @@
 # What is CRATE?
 
 [**Docs**](https://bessagroup.github.io/CRATE/)
+| [**Installation**](https://bessagroup.github.io/CRATE/rst_doc_files/getting_started/installation.html)
 | [**GitHub**](https://github.com/bessagroup/CRATE)
 | [**PyPI**](https://pypi.org/project/crate-sim/)
 
