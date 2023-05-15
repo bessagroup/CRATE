@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cratepy.optimization.optimizationfunction &mdash; CRATE 1.0.3 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            CRATE
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/cratepy.html">Code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">CRATE</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">cratepy.optimization.optimizationfunction</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for cratepy.optimization.optimizationfunction</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Parametric optimization function and loss function interfaces.</span>
+
+<span class="sd">This module includes the interface to implement any parameterized function for</span>
+<span class="sd">optimization purposes. This interface offers convenient methods to handle</span>
+<span class="sd">optimization parameters, namely their specification (named or sequential),</span>
+<span class="sd">their bounds, and their normalization/denormalization.</span>
+
+<span class="sd">This module also includes the interface of a general loss function defined</span>
+<span class="sd">between a given set of values of parametric and reference solutions, allowing</span>
+<span class="sd">the implementation of common loss functions such as the Relative Root Mean</span>
+<span class="sd">Squared Error (RRMSE).</span>
+
+<span class="sd">Classes</span>
+<span class="sd">-------</span>
+<span class="sd">OptimizationFunction</span>
+<span class="sd">    Optimization function interface.</span>
+<span class="sd">Loss</span>
+<span class="sd">    Loss function interface.</span>
+<span class="sd">RelativeRootMeanSquaredError</span>
+<span class="sd">    Relative Root Mean Squared Error (RRMSE).</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#                                                                       Modules</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1"># Standard</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="c1"># Third-party</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="c1">#</span>
+<span class="c1">#                                                          Authorship &amp; Credits</span>
+<span class="c1"># =============================================================================</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Bernardo Ferreira (bernardo_ferreira@brown.edu)&#39;</span>
+<span class="n">__credits__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Bernardo Ferreira&#39;</span><span class="p">,</span> <span class="p">]</span>
+<span class="n">__status__</span> <span class="o">=</span> <span class="s1">&#39;Stable&#39;</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#</span>
+<span class="c1">#                                              Interface: Optimization function</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="OptimizationFunction"><a class="viewcode-back" href="../../../_autosummary/cratepy.optimization.optimizationfunction.OptimizationFunction.html#cratepy.optimization.optimizationfunction.OptimizationFunction">[docs]</a><span class="k">class</span> <span class="nc">OptimizationFunction</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Optimization function interface.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    opt_function(self, parameters)</span>
+<span class="sd">        *abstract*: Optimization function.</span>
+<span class="sd">    get_parameters_names(self)</span>
+<span class="sd">        Get optimization parameters names.</span>
+<span class="sd">    get_bounds(self, is_normalized=False)</span>
+<span class="sd">        Get optimization parameters lower and upper bounds.</span>
+<span class="sd">    get_init_shot(self, is_normalized=False)</span>
+<span class="sd">        Get optimization parameters initial guess.</span>
+<span class="sd">    set_norm_bounds(self, norm_min=-1.0, norm_max=1.0)</span>
+<span class="sd">        Set optimization parameters normalization bounds.</span>
+<span class="sd">    get_norm_bounds(self)</span>
+<span class="sd">        Get optimization parameters normalization bounds.</span>
+<span class="sd">    normalize(self, parameters)</span>
+<span class="sd">        Normalize optimization parameters between min and max values.</span>
+<span class="sd">    denormalize(self, norm_parameters)</span>
+<span class="sd">        Recover optimization parameters from normalized values.</span>
+<span class="sd">    norm_opt_function(self, norm_parameters)</span>
+<span class="sd">        Wrapper of optimization function with normalized parameters.</span>
+<span class="sd">    opt_function_seq(self, parameters_seq)</span>
+<span class="sd">        Wrapper of optimization function with sequential parameters.</span>
+<span class="sd">    norm_opt_function_seq(self, parameters_seq)</span>
+<span class="sd">        Wrapper of optimization function with norm. sequential parameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="OptimizationFunction.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.optimization.optimizationfunction.OptimizationFunction.html#cratepy.optimization.optimizationfunction.OptimizationFunction.__init__">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower_bounds</span><span class="p">,</span> <span class="n">upper_bounds</span><span class="p">,</span> <span class="n">init_shot</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        lower_bounds : dict</span>
+<span class="sd">            Optimization parameters (key, str) lower bounds (item, float).</span>
+<span class="sd">        upper_bounds : dict</span>
+<span class="sd">            Optimization parameters (key, str) upper bounds (item, float).</span>
+<span class="sd">        init_shot : dict, default=None</span>
+<span class="sd">            Optimization parameters (key, str) initial guess (item, float).</span>
+<span class="sd">        weights : tuple, default=None</span>
+<span class="sd">            Weights attributed to each data point.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="OptimizationFunction.opt_function"><a class="viewcode-back" href="../../../_autosummary/cratepy.optimization.optimizationfunction.OptimizationFunction.html#cratepy.optimization.optimizationfunction.OptimizationFunction.opt_function">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">opt_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Optimization function.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        parameters : dict</span>
+<span class="sd">            Optimization parameters names (key, str) and values (item, float).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        value : float</span>
+<span class="sd">            Optimization function value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="OptimizationFunction.get_parameters_names"><a class="viewcode-back" href="../../../_autosummary/cratepy.optimization.optimizationfunction.OptimizationFunction.html#cratepy.optimization.optimizationfunction.OptimizationFunction.get_parameters_names">[docs]</a>    <span class="k">def</span> <span class="nf">get_parameters_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get optimization parameters names.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        parameters_names : tuple[str]</span>
+<span class="sd">            Optimization parameters names (str).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parameters_names</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="OptimizationFunction.get_bounds"><a class="viewcode-back" href="../../../_autosummary/cratepy.optimization.optimizationfunction.OptimizationFunction.html#cratepy.optimization.optimizationfunction.OptimizationFunction.get_bounds">[docs]</a>    <span class="k">def</span> <span class="nf">get_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_normalized</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get optimization parameters lower and upper bounds.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        is_normalized : bool, default=False</span>
+<span class="sd">            Whether optimization parameters are normalized or not.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        lower_bounds : dict</span>
+<span class="sd">            Optimization parameters (key, str) lower bounds (item, float).</span>
+<span class="sd">        upper_bounds : dict</span>
+<span class="sd">            Optimization parameters (key, str) upper bounds (item, float).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get optimization function parameters lower and upper bounds</span>
+        <span class="k">if</span> <span class="n">is_normalized</span><span class="p">:</span>
+            <span class="c1"># Get normalized lower and upper bounds</span>
+            <span class="n">lower_bounds</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">param</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">_norm_bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parameters_names</span><span class="p">}</span>
+            <span class="n">upper_bounds</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">param</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">_norm_bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                            <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parameters_names</span><span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Get lower and upper bounds</span>
+            <span class="n">lower_bounds</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lower_bounds</span><span class="p">)</span>
+            <span class="n">upper_bounds</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_upper_bounds</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">lower_bounds</span><span class="p">,</span> <span class="n">upper_bounds</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="OptimizationFunction.get_init_shot"><a class="viewcode-back" href="../../../_autosummary/cratepy.optimization.optimizationfunction.OptimizationFunction.html#cratepy.optimization.optimizationfunction.OptimizationFunction.get_init_shot">[docs]</a>    <span class="k">def</span> <span class="nf">get_init_shot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_normalized</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get optimization parameters initial guess.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        is_normalized : bool, default=False</span>
+<span class="sd">            Whether optimization parameters are normalized or not.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        init_shot : dict</span>
+<span class="sd">            Optimization parameters (key, str) initial guess (item, float).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check if optimization parameters initial guess is defined</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_shot</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Optimization parameters initial guess is not &#39;</span>
+                               <span class="s1">&#39;defined.&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Get optimization parameters initial guess</span>
+        <span class="k">if</span> <span class="n">is_normalized</span><span class="p">:</span>
+            <span class="n">init_shot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_init_shot</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">init_shot</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_init_shot</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">init_shot</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="OptimizationFunction.set_norm_bounds"><a class="viewcode-back" href="../../../_autosummary/cratepy.optimization.optimizationfunction.OptimizationFunction.html#cratepy.optimization.optimizationfunction.OptimizationFunction.set_norm_bounds">[docs]</a>    <span class="k">def</span> <span class="nf">set_norm_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">norm_min</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">norm_max</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set optimization parameters normalization bounds.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        norm_min : float, default=-1.0</span>
+<span class="sd">            Normalized optimization parameter lower bound.</span>
+<span class="sd">        norm_max : float, default=1.0</span>
+<span class="sd">            Normalized optimization parameter upper bound.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set normalization bounds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_norm_bounds</span> <span class="o">=</span> <span class="p">(</span><span class="n">norm_min</span><span class="p">,</span> <span class="n">norm_max</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="OptimizationFunction.get_norm_bounds"><a class="viewcode-back" href="../../../_autosummary/cratepy.optimization.optimizationfunction.OptimizationFunction.html#cratepy.optimization.optimizationfunction.OptimizationFunction.get_norm_bounds">[docs]</a>    <span class="k">def</span> <span class="nf">get_norm_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get optimization parameters normalization bounds.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        norm_bounds : tuple</span>
+<span class="sd">            Normalization bounds (lower, upper) used to perform the</span>
+<span class="sd">            normalization of the optimization parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_norm_bounds</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="OptimizationFunction.normalize"><a class="viewcode-back" href="../../../_autosummary/cratepy.optimization.optimizationfunction.OptimizationFunction.html#cratepy.optimization.optimizationfunction.OptimizationFunction.normalize">[docs]</a>    <span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Normalize optimization parameters between min and max values.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        parameters : dict</span>
+<span class="sd">            Optimization parameters names (key, str) and values (item, float).</span>
+<span class="sd">        norm_min : float, default=-1.0</span>
+<span class="sd">            Normalized optimization parameter lower bound.</span>
+<span class="sd">        norm_max : float, default=1.0</span>
+<span class="sd">            Normalized optimization parameter upper bound.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        norm_parameters : dict</span>
+<span class="sd">            Normalized optimization parameters names (key, str) and values</span>
+<span class="sd">            (item, float).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get optimization parameters normalization bounds</span>
+        <span class="n">norm_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_norm_bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">norm_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_norm_bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Initialize normalized optimization parameters</span>
+        <span class="n">norm_parameters</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># Loop over optimization parameters</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parameters_names</span><span class="p">:</span>
+            <span class="c1"># Get optimization parameter value</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">param</span><span class="p">)]</span>
+            <span class="c1"># Get optimization parameter lower and upper bounds</span>
+            <span class="n">lbound</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lower_bounds</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">param</span><span class="p">)]</span>
+            <span class="n">ubound</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upper_bounds</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">param</span><span class="p">)]</span>
+            <span class="c1"># Normalize optimization parameter</span>
+            <span class="n">norm_parameters</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">param</span><span class="p">)]</span> <span class="o">=</span> <span class="n">norm_min</span> \
+                <span class="o">+</span> <span class="p">((</span><span class="n">value</span> <span class="o">-</span> <span class="n">lbound</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">ubound</span> <span class="o">-</span> <span class="n">lbound</span><span class="p">))</span><span class="o">*</span><span class="p">(</span><span class="n">norm_max</span> <span class="o">-</span> <span class="n">norm_min</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">norm_parameters</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="OptimizationFunction.denormalize"><a class="viewcode-back" href="../../../_autosummary/cratepy.optimization.optimizationfunction.OptimizationFunction.html#cratepy.optimization.optimizationfunction.OptimizationFunction.denormalize">[docs]</a>    <span class="k">def</span> <span class="nf">denormalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">norm_parameters</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Recover optimization parameters from normalized values.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        norm_parameters : dict</span>
+<span class="sd">            Normalized optimization parameters names (key, str) and values</span>
+<span class="sd">            (item, float).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        parameters : dict</span>
+<span class="sd">            Optimization parameters names (key, str) and values (item, float).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get optimization parameters normalization bounds</span>
+        <span class="n">norm_min</span><span class="p">,</span> <span class="n">norm_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_norm_bounds</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Initialize optimization function parameters</span>
+        <span class="n">parameters</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># Loop over optimization parameters</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parameters_names</span><span class="p">:</span>
+            <span class="c1"># Get optimization parameter value</span>
+            <span class="n">norm_value</span> <span class="o">=</span> <span class="n">norm_parameters</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">param</span><span class="p">)]</span>
+            <span class="c1"># Get optimization parameter lower and upper bounds</span>
+            <span class="n">lbound</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lower_bounds</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">param</span><span class="p">)]</span>
+            <span class="n">ubound</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upper_bounds</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">param</span><span class="p">)]</span>
+            <span class="c1"># Recover optimization parameter</span>
+            <span class="n">parameters</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">param</span><span class="p">)]</span> <span class="o">=</span> <span class="n">lbound</span> \
+                <span class="o">+</span> <span class="p">((</span><span class="n">norm_value</span> <span class="o">-</span> <span class="n">norm_min</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">norm_max</span> <span class="o">-</span> <span class="n">norm_min</span><span class="p">))</span><span class="o">*</span><span class="p">(</span><span class="n">ubound</span>
+                                                                   <span class="o">-</span> <span class="n">lbound</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">parameters</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="OptimizationFunction.norm_opt_function"><a class="viewcode-back" href="../../../_autosummary/cratepy.optimization.optimizationfunction.OptimizationFunction.html#cratepy.optimization.optimizationfunction.OptimizationFunction.norm_opt_function">[docs]</a>    <span class="k">def</span> <span class="nf">norm_opt_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">norm_parameters</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Wrapper of optimization function with normalized parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        norm_parameters : dict</span>
+<span class="sd">            Normalized optimization parameters names (key, str) and values</span>
+<span class="sd">            (item, float).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        value : float</span>
+<span class="sd">            Optimization function value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Recover optimization parameters from normalized values</span>
+        <span class="n">parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">denormalize</span><span class="p">(</span><span class="n">norm_parameters</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Compute optimization function</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt_function</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">value</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="OptimizationFunction.opt_function_seq"><a class="viewcode-back" href="../../../_autosummary/cratepy.optimization.optimizationfunction.OptimizationFunction.html#cratepy.optimization.optimizationfunction.OptimizationFunction.opt_function_seq">[docs]</a>    <span class="k">def</span> <span class="nf">opt_function_seq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters_seq</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Wrapper of optimization function with sequential parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        parameters_seq : tuple[float]</span>
+<span class="sd">            Optimization parameters values.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        value : float</span>
+<span class="sd">            Optimization function value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Build optimization parameters dictionary</span>
+        <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">param</span><span class="p">):</span> <span class="n">parameters_seq</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                      <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parameters_names</span><span class="p">)}</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Compute optimization function</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt_function</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">value</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="OptimizationFunction.norm_opt_function_seq"><a class="viewcode-back" href="../../../_autosummary/cratepy.optimization.optimizationfunction.OptimizationFunction.html#cratepy.optimization.optimizationfunction.OptimizationFunction.norm_opt_function_seq">[docs]</a>    <span class="k">def</span> <span class="nf">norm_opt_function_seq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters_seq</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Wrapper of optimization function with norm. sequential parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        parameters_seq : tuple[float]</span>
+<span class="sd">            Optimization parameters values.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        value : float</span>
+<span class="sd">            Optimization function value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Build normalized optimization parameters dictionary</span>
+        <span class="n">norm_parameters</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">param</span><span class="p">):</span> <span class="n">parameters_seq</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                           <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parameters_names</span><span class="p">)}</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Recover optimization parameters from normalized values</span>
+        <span class="n">parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">denormalize</span><span class="p">(</span><span class="n">norm_parameters</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Compute optimization function</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt_function</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">value</span></div></div>
+<span class="c1">#</span>
+<span class="c1">#                                                      Interface: Loss function</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="Loss"><a class="viewcode-back" href="../../../_autosummary/cratepy.optimization.optimizationfunction.Loss.html#cratepy.optimization.optimizationfunction.Loss">[docs]</a><span class="k">class</span> <span class="nc">Loss</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Loss function interface.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    loss(self, y, y_ref, type=&#39;minimization&#39;)</span>
+<span class="sd">        *abstract*: Loss function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Loss.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.optimization.optimizationfunction.Loss.html#cratepy.optimization.optimizationfunction.Loss.__init__">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="Loss.loss"><a class="viewcode-back" href="../../../_autosummary/cratepy.optimization.optimizationfunction.Loss.html#cratepy.optimization.optimizationfunction.Loss.loss">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_ref</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;minimization&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Loss function.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        y : tuple[float]</span>
+<span class="sd">            Values of parametric solution.</span>
+<span class="sd">        y_ref : tuple[float]</span>
+<span class="sd">            Values of reference solution.</span>
+<span class="sd">        type : {&#39;minimization&#39;, &#39;maximization&#39;}, default=&#39;minimization&#39;</span>
+<span class="sd">            Type of optimization problem. The option &#39;maximization&#39; negates the</span>
+<span class="sd">            loss function evaluation.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        loss : float</span>
+<span class="sd">            Loss function value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div></div>
+<span class="c1">#</span>
+<span class="c1">#                                                                Loss functions</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="RelativeRootMeanSquaredError"><a class="viewcode-back" href="../../../_autosummary/cratepy.optimization.optimizationfunction.RelativeRootMeanSquaredError.html#cratepy.optimization.optimizationfunction.RelativeRootMeanSquaredError">[docs]</a><span class="k">class</span> <span class="nc">RelativeRootMeanSquaredError</span><span class="p">(</span><span class="n">Loss</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Relative Root Mean Squared Error (RRMSE).</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    loss(self, y, y_ref, type=&#39;minimization&#39;)</span>
+<span class="sd">        Loss function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="RelativeRootMeanSquaredError.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.optimization.optimizationfunction.RelativeRootMeanSquaredError.html#cratepy.optimization.optimizationfunction.RelativeRootMeanSquaredError.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="RelativeRootMeanSquaredError.loss"><a class="viewcode-back" href="../../../_autosummary/cratepy.optimization.optimizationfunction.RelativeRootMeanSquaredError.html#cratepy.optimization.optimizationfunction.RelativeRootMeanSquaredError.loss">[docs]</a>    <span class="k">def</span> <span class="nf">loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_ref</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;minimization&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Loss function.</span>
+
+<span class="sd">        The Relative Root Mean Squared Error (RRMSE) is defined as</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           \\text{RRMSE} (\\boldsymbol{y}, \\hat{\\boldsymbol{y}}) =</span>
+<span class="sd">           \\sqrt{\\dfrac{\\dfrac{1}{n} \\sum_{i=1}^{n}(y_{i} -</span>
+<span class="sd">           \\hat{y}_{i})^{2}}{ \\sum_{i=1}^{n} \\hat{y}_{i}^{2}}}</span>
+
+<span class="sd">        where :math:`\\boldsymbol{y}` is the vector of predicted values,</span>
+<span class="sd">        :math:`\\hat{\\boldsymbol{y}}` is the vector of reference values,</span>
+<span class="sd">        and :math:`n` is the number of data points.</span>
+
+<span class="sd">        ----</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        y : tuple[float]</span>
+<span class="sd">            Values of parametric solution.</span>
+<span class="sd">        y_ref : tuple[float]</span>
+<span class="sd">            Values of reference solution.</span>
+<span class="sd">        type : {&#39;minimization&#39;, &#39;maximization&#39;}, default=&#39;minimization&#39;</span>
+<span class="sd">            Type of optimization problem. The option &#39;maximization&#39; negates the</span>
+<span class="sd">            loss function evaluation.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        loss : float</span>
+<span class="sd">            Loss function value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get number of data points</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Compute required summations</span>
+        <span class="n">sum_1</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([(</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">y_ref</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)])</span>
+        <span class="n">sum_2</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">y_ref</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)])</span>
+        <span class="c1"># Compute relative root mean squared error</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(((</span><span class="mf">1.0</span><span class="o">/</span><span class="n">n</span><span class="p">)</span><span class="o">*</span><span class="n">sum_1</span><span class="p">)</span><span class="o">/</span><span class="n">sum_2</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Negate loss function if maximization optimization</span>
+        <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;maximization&#39;</span><span class="p">:</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="o">-</span><span class="n">loss</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">loss</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

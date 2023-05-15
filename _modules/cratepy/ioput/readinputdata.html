@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cratepy.ioput.readinputdata &mdash; CRATE 1.0.3 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            CRATE
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/cratepy.html">Code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">CRATE</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">cratepy.ioput.readinputdata</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for cratepy.ioput.readinputdata</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Read input data file and store data.</span>
+
+<span class="sd">This module includes a function that reads the input data file and stores all</span>
+<span class="sd">the relevant data in suitable containers.</span>
+
+<span class="sd">Functions</span>
+<span class="sd">---------</span>
+<span class="sd">read_input_data_file</span>
+<span class="sd">    Read input data file and store data in suitable containers.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#                                                                       Modules</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1"># Standard</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="c1"># Third-party</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="c1"># Local</span>
+<span class="kn">import</span> <span class="nn">ioput.info</span> <span class="k">as</span> <span class="nn">info</span>
+<span class="kn">import</span> <span class="nn">ioput.ioutilities</span> <span class="k">as</span> <span class="nn">ioutil</span>
+<span class="kn">import</span> <span class="nn">ioput.fileoperations</span> <span class="k">as</span> <span class="nn">filop</span>
+<span class="kn">import</span> <span class="nn">ioput.packager</span> <span class="k">as</span> <span class="nn">packager</span>
+<span class="kn">import</span> <span class="nn">ioput.readprocedures</span> <span class="k">as</span> <span class="nn">rproc</span>
+<span class="kn">import</span> <span class="nn">tensor.matrixoperations</span> <span class="k">as</span> <span class="nn">mop</span>
+<span class="kn">from</span> <span class="nn">clustering.clusteringdata</span> <span class="kn">import</span> <span class="n">get_available_clustering_features</span>
+<span class="kn">from</span> <span class="nn">material.materialmodeling</span> <span class="kn">import</span> <span class="n">MaterialState</span>
+<span class="c1">#</span>
+<span class="c1">#                                                          Authorship &amp; Credits</span>
+<span class="c1"># =============================================================================</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Bernardo Ferreira (bernardo_ferreira@brown.edu)&#39;</span>
+<span class="n">__credits__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Bernardo Ferreira&#39;</span><span class="p">,</span> <span class="p">]</span>
+<span class="n">__status__</span> <span class="o">=</span> <span class="s1">&#39;Stable&#39;</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="read_input_data_file"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readinputdata.read_input_data_file.html#cratepy.ioput.readinputdata.read_input_data_file">[docs]</a><span class="k">def</span> <span class="nf">read_input_data_file</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">dirs_dict</span><span class="p">,</span> <span class="n">is_minimize_output</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read input data file and store data in suitable containers.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input_file : file</span>
+<span class="sd">        Input data file.</span>
+<span class="sd">    dirs_dict : dict</span>
+<span class="sd">        Container of output directories and files paths.</span>
+<span class="sd">    is_minimize_output : bool, default=False</span>
+<span class="sd">        Output minimization flag.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    problem_dict : dict</span>
+<span class="sd">        Container of data associated with the problem type.</span>
+<span class="sd">    mat_dict : dict</span>
+<span class="sd">        Container of data associated with the material phases.</span>
+<span class="sd">    macload_dict : dict</span>
+<span class="sd">        Container of data associated with the macroscale loading.</span>
+<span class="sd">    rg_dict : dict</span>
+<span class="sd">        Container of data associated with the spatial discretization in a</span>
+<span class="sd">        regular grid of voxels.</span>
+<span class="sd">    clst_dict : dict</span>
+<span class="sd">        Container of data associated with the clustering-based domain</span>
+<span class="sd">        decomposition.</span>
+<span class="sd">    scs_dict : dict</span>
+<span class="sd">        Container of data associated with the self-consistent scheme.</span>
+<span class="sd">    algpar_dict : dict</span>
+<span class="sd">        Container of data associated with algorithmic parameters underlying the</span>
+<span class="sd">        equilibrium problem solution procedure.</span>
+<span class="sd">    vtk_dict : dict</span>
+<span class="sd">        Container of data associated with the VTK output files.</span>
+<span class="sd">    output_dict : dict</span>
+<span class="sd">        Container of data associated with general output files.</span>
+<span class="sd">    material_state : MaterialState</span>
+<span class="sd">        CRVE material constitutive state.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get display features</span>
+    <span class="n">indent</span> <span class="o">=</span> <span class="n">ioutil</span><span class="o">.</span><span class="n">setdisplayfeatures</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Get input data file path and output directories paths</span>
+    <span class="n">input_file_name</span> <span class="o">=</span> <span class="n">dirs_dict</span><span class="p">[</span><span class="s1">&#39;input_file_name&#39;</span><span class="p">]</span>
+    <span class="n">input_file_path</span> <span class="o">=</span> <span class="n">dirs_dict</span><span class="p">[</span><span class="s1">&#39;input_file_path&#39;</span><span class="p">]</span>
+    <span class="n">discret_file_dir</span> <span class="o">=</span> <span class="n">dirs_dict</span><span class="p">[</span><span class="s1">&#39;discret_file_dir&#39;</span><span class="p">]</span>
+    <span class="n">problem_dir</span> <span class="o">=</span> <span class="n">dirs_dict</span><span class="p">[</span><span class="s1">&#39;problem_dir&#39;</span><span class="p">]</span>
+    <span class="n">postprocess_dir</span> <span class="o">=</span> <span class="n">dirs_dict</span><span class="p">[</span><span class="s1">&#39;postprocess_dir&#39;</span><span class="p">]</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Read strain formulation (mandatory)</span>
+    <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;Strain_Formulation&#39;</span>
+    <span class="n">max_val</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">strain_formulation_code</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">readtypeAkeyword</span><span class="p">(</span>
+        <span class="n">input_file</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">max_val</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">strain_formulation_code</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">strain_formulation</span> <span class="o">=</span> <span class="s1">&#39;infinitesimal&#39;</span>
+    <span class="k">elif</span> <span class="n">strain_formulation_code</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">strain_formulation</span> <span class="o">=</span> <span class="s1">&#39;finite&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown problem strain formulation.&#39;</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Read problem type (mandatory)</span>
+    <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;Problem_Type&#39;</span>
+    <span class="n">max_val</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">problem_type</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">readtypeAkeyword</span><span class="p">(</span>
+        <span class="n">input_file</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">max_val</span><span class="p">)</span>
+    <span class="c1"># Get parameters dependent on the problem type</span>
+    <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span> <span class="o">=</span> \
+        <span class="n">mop</span><span class="o">.</span><span class="n">get_problem_type_parameters</span><span class="p">(</span><span class="n">problem_type</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Read RVE dimensions (mandatory)</span>
+    <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;RVE_Dimensions&#39;</span>
+    <span class="n">rve_dims</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">read_rve_dimensions</span><span class="p">(</span>
+        <span class="n">input_file</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Read number of material phases, constitutive models and associated</span>
+    <span class="c1"># properties (mandatory)</span>
+    <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;Material_Phases&#39;</span>
+    <span class="n">n_material_phases</span><span class="p">,</span> <span class="n">material_phases_data</span><span class="p">,</span> <span class="n">material_phases_properties</span> <span class="o">=</span> \
+        <span class="n">rproc</span><span class="o">.</span><span class="n">read_material_properties</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Read macroscale loading (mandatory)</span>
+    <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;Macroscale_Loading&#39;</span>
+    <span class="n">max_val</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">mac_load_type</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">readtypeAkeyword</span><span class="p">(</span>
+        <span class="n">input_file</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">max_val</span><span class="p">)</span>
+    <span class="n">mac_load</span><span class="p">,</span> <span class="n">mac_load_presctype</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">read_macroscale_loading</span><span class="p">(</span>
+        <span class="n">input_file</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">mac_load_type</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span>
+        <span class="n">comp_order_nsym</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Read analysis rewinding procedure (optional)</span>
+    <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;Analysis_Rewinding&#39;</span>
+    <span class="n">is_found</span><span class="p">,</span> <span class="n">keyword_line_number</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">searchoptkeywordline</span><span class="p">(</span>
+        <span class="n">input_file</span><span class="p">,</span> <span class="n">keyword</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">is_found</span><span class="p">:</span>
+        <span class="n">is_solution_rewinding</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1"># Read rewind state criterion</span>
+        <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;Analysis_Rewind_State_Criterion&#39;</span>
+        <span class="n">rewind_state_criterion</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">read_rewind_state_parameters</span><span class="p">(</span>
+            <span class="n">input_file</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Read rewinding criterion</span>
+        <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;Analysis_Rewinding_Criterion&#39;</span>
+        <span class="n">rewinding_criterion</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">read_rewinding_criterion_parameters</span><span class="p">(</span>
+            <span class="n">input_file</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Read maximum number of rewinds</span>
+        <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;Max_Number_of_Rewinds&#39;</span>
+        <span class="n">is_found</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">searchoptkeywordline</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">keyword</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">is_found</span><span class="p">:</span>
+            <span class="n">max_val</span> <span class="o">=</span> <span class="s1">&#39;~&#39;</span>
+            <span class="n">max_n_rewinds</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">readtypeAkeyword</span><span class="p">(</span>
+                <span class="n">input_file</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">max_val</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">max_n_rewinds</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">is_solution_rewinding</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">rewind_state_criterion</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">rewinding_criterion</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">max_n_rewinds</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Read self-consistent scheme (optional)</span>
+    <span class="c1"># If the associated keyword is not found, then a default option is adopted</span>
+    <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;Self_Consistent_Scheme&#39;</span>
+    <span class="n">is_found</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">searchoptkeywordline</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">keyword</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">is_found</span><span class="p">:</span>
+        <span class="c1"># Read self-consistent scheme and associated parameters</span>
+        <span class="n">self_consistent_scheme</span><span class="p">,</span> <span class="n">scs_parameters</span> <span class="o">=</span> \
+            <span class="n">rproc</span><span class="o">.</span><span class="n">read_self_consistent_scheme</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span>
+                                              <span class="n">keyword</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Set default self-consistent scheme and associated parameters</span>
+        <span class="k">if</span> <span class="n">strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;infinitesimal&#39;</span><span class="p">:</span>
+            <span class="n">self_consistent_scheme</span> <span class="o">=</span> <span class="s1">&#39;regression&#39;</span>
+            <span class="n">scs_parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;E_init&#39;</span><span class="p">:</span> <span class="s1">&#39;init_eff_tangent&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;v_init&#39;</span><span class="p">:</span> <span class="s1">&#39;init_eff_tangent&#39;</span><span class="p">}</span>
+        <span class="k">elif</span> <span class="n">strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;finite&#39;</span><span class="p">:</span>
+            <span class="n">self_consistent_scheme</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span>
+            <span class="n">scs_parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;E_init&#39;</span><span class="p">:</span> <span class="s1">&#39;init_eff_tangent&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;v_init&#39;</span><span class="p">:</span> <span class="s1">&#39;init_eff_tangent&#39;</span><span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown problem strain formulation.&#39;</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Read self-consistent scheme maximum number of iterations (optional)</span>
+    <span class="c1"># If the associated keyword is not found, then a default option is adopted</span>
+    <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;SCS_Max_Number_of_Iterations&#39;</span>
+    <span class="n">is_found</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">searchoptkeywordline</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">keyword</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">is_found</span><span class="p">:</span>
+        <span class="n">max_val</span> <span class="o">=</span> <span class="s1">&#39;~&#39;</span>
+        <span class="n">scs_max_n_iterations</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">readtypeAkeyword</span><span class="p">(</span>
+            <span class="n">input_file</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">max_val</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">scs_max_n_iterations</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Read self-consistent scheme convergence tolerance (optional)</span>
+    <span class="c1"># If the associated keyword is not found, then a default option is adopted</span>
+    <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;SCS_Convergence_Tolerance&#39;</span>
+    <span class="n">is_found</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">searchoptkeywordline</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">keyword</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">is_found</span><span class="p">:</span>
+        <span class="n">max_val</span> <span class="o">=</span> <span class="s1">&#39;~&#39;</span>
+        <span class="n">scs_conv_tol</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">readtypeBkeyword</span><span class="p">(</span>
+            <span class="n">input_file</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">scs_conv_tol</span> <span class="o">=</span> <span class="mf">1e-4</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Get available clustering features</span>
+    <span class="n">clustering_features</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">get_available_clustering_features</span><span class="p">(</span>
+        <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">)</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="c1"># Read cluster analysis scheme (mandatory)</span>
+    <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;Cluster_Analysis_Scheme&#39;</span>
+    <span class="n">clustering_type</span><span class="p">,</span> <span class="n">base_clustering_scheme</span><span class="p">,</span> <span class="n">adaptive_clustering_scheme</span><span class="p">,</span> \
+        <span class="n">adapt_criterion_data</span><span class="p">,</span> <span class="n">adaptivity_type</span><span class="p">,</span> <span class="n">adaptivity_control_feature</span> <span class="o">=</span> \
+        <span class="n">rproc</span><span class="o">.</span><span class="n">read_cluster_analysis_scheme</span><span class="p">(</span>
+            <span class="n">input_file</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span>
+            <span class="n">material_phases_properties</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">clustering_features</span><span class="p">)</span>
+    <span class="c1"># Get adaptive material phases</span>
+    <span class="n">adapt_material_phases</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">clustering_type</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+                             <span class="k">if</span> <span class="n">clustering_type</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;adaptive&#39;</span><span class="p">]</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Read number of cluster associated with each material phase (mandatory)</span>
+    <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;Number_of_Clusters&#39;</span>
+    <span class="n">phase_n_clusters</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">read_phase_clustering</span><span class="p">(</span>
+        <span class="n">input_file</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">n_material_phases</span><span class="p">,</span>
+        <span class="n">material_phases_properties</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Read clustering adaptivity frequency (optional)</span>
+    <span class="c1"># If the associated keyword is not found, then a default option is adopted</span>
+    <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;Clustering_Adaptivity_Frequency&#39;</span>
+    <span class="n">is_found</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">searchoptkeywordline</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">keyword</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">is_found</span><span class="p">:</span>
+        <span class="n">clust_adapt_freq</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">read_adaptivity_frequency</span><span class="p">(</span>
+            <span class="n">input_file</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">adapt_material_phases</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">clust_adapt_freq</span> <span class="o">=</span> <span class="p">{</span><span class="n">mat_phase</span><span class="p">:</span> <span class="mi">1</span>
+                            <span class="k">for</span> <span class="n">mat_phase</span> <span class="ow">in</span> <span class="n">adapt_material_phases</span><span class="p">}</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Read clustering solution method (optional)</span>
+    <span class="c1"># If the associated keyword is not found, then a default option is adopted</span>
+    <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;Clustering_Solution_Method&#39;</span>
+    <span class="n">is_found</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">searchoptkeywordline</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">keyword</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">is_found</span><span class="p">:</span>
+        <span class="n">max_val</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">clustering_solution_method</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">readtypeAkeyword</span><span class="p">(</span>
+            <span class="n">input_file</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">max_val</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">clustering_solution_method</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Read macroscale loading incrementation parameters (mandatory)</span>
+    <span class="n">keyword_1</span> <span class="o">=</span> <span class="s1">&#39;Number_of_Load_Increments&#39;</span>
+    <span class="n">is_found_1</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">searchoptkeywordline</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">keyword_1</span><span class="p">)</span>
+    <span class="n">keyword_2</span> <span class="o">=</span> <span class="s1">&#39;Increment_List&#39;</span>
+    <span class="n">is_found_2</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">searchoptkeywordline</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">keyword_2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">is_found_1</span> <span class="ow">or</span> <span class="n">is_found_2</span><span class="p">):</span>
+        <span class="n">summary</span> <span class="o">=</span> <span class="s1">&#39;Missing macroscale loading incrementation keyword&#39;</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;One of the keywords associated with the macroscale &#39;</span> \
+            <span class="o">+</span> <span class="s1">&#39;loading incrementation must be&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> \
+            <span class="o">+</span> <span class="n">indent</span> <span class="o">+</span> <span class="s1">&#39;specified in the input data file.&#39;</span>
+        <span class="n">info</span><span class="o">.</span><span class="n">displayinfo</span><span class="p">(</span><span class="s1">&#39;4&#39;</span><span class="p">,</span> <span class="n">summary</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">is_found_1</span> <span class="ow">and</span> <span class="n">is_found_2</span><span class="p">:</span>
+        <span class="n">summary</span> <span class="o">=</span> <span class="s1">&#39;Multiple macroscale loading incrementation keywords&#39;</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;Only one of the keywords associated with the &#39;</span> \
+            <span class="o">+</span> <span class="s1">&#39;macroscale loading incrementation can be&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> \
+            <span class="o">+</span> <span class="n">indent</span> <span class="o">+</span> <span class="s1">&#39;specified in the input data file.&#39;</span>
+        <span class="n">info</span><span class="o">.</span><span class="n">displayinfo</span><span class="p">(</span><span class="s1">&#39;4&#39;</span><span class="p">,</span> <span class="n">summary</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Get number of loading subpaths</span>
+        <span class="n">n_load_subpaths</span> <span class="o">=</span> <span class="n">mac_load_presctype</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># Read macroscale loading incrementation</span>
+        <span class="n">keyword</span> <span class="o">=</span> <span class="n">keyword_1</span> <span class="k">if</span> <span class="n">is_found_1</span> <span class="k">else</span> <span class="n">keyword_2</span>
+        <span class="n">mac_load_increm</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">read_mac_load_increm</span><span class="p">(</span>
+            <span class="n">input_file</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">n_load_subpaths</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Read maximum number of iterations to solve each load increment (optional)</span>
+    <span class="c1"># If the associated keyword is not found, then a default option is adopted</span>
+    <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;Max_Number_of_Iterations&#39;</span>
+    <span class="n">is_found</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">searchoptkeywordline</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">keyword</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">is_found</span><span class="p">:</span>
+        <span class="n">max_val</span> <span class="o">=</span> <span class="s1">&#39;~&#39;</span>
+        <span class="n">max_n_iterations</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">readtypeAkeyword</span><span class="p">(</span>
+            <span class="n">input_file</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">max_val</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">max_n_iterations</span> <span class="o">=</span> <span class="mi">12</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Read convergence tolerance to solve each load increment (optional)</span>
+    <span class="c1"># If the associated keyword is not found, then a default option is adopted</span>
+    <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;Convergence_Tolerance&#39;</span>
+    <span class="n">is_found</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">searchoptkeywordline</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">keyword</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">is_found</span><span class="p">:</span>
+        <span class="n">conv_tol</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">readtypeBkeyword</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">conv_tol</span> <span class="o">=</span> <span class="mf">1e-6</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Read maximum level of macroscale loading subincrementation (optional)</span>
+    <span class="c1"># If the associated keyword is not found, then a default option is adopted</span>
+    <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;Max_SubInc_Level&#39;</span>
+    <span class="n">is_found</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">searchoptkeywordline</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">keyword</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">is_found</span><span class="p">:</span>
+        <span class="n">max_val</span> <span class="o">=</span> <span class="s1">&#39;~&#39;</span>
+        <span class="n">max_subinc_level</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">readtypeAkeyword</span><span class="p">(</span>
+            <span class="n">input_file</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">max_val</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">max_subinc_level</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Read maximum number of consecutive macroscale loading increment cuts</span>
+    <span class="c1"># (optional)</span>
+    <span class="c1"># If the associated keyword is not found, then a default option is adopted</span>
+    <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;Max_Consecutive_Inc_Cuts&#39;</span>
+    <span class="n">is_found</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">searchoptkeywordline</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">keyword</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">is_found</span><span class="p">:</span>
+        <span class="n">max_val</span> <span class="o">=</span> <span class="s1">&#39;~&#39;</span>
+        <span class="n">max_cinc_cuts</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">readtypeAkeyword</span><span class="p">(</span>
+            <span class="n">input_file</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">max_val</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">max_cinc_cuts</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Read material state update maximum number of iterations (optional)</span>
+    <span class="c1"># If the associated keyword is not found, then a default option is adopted</span>
+    <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;SU_Max_Number_of_Iterations&#39;</span>
+    <span class="n">is_found</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">searchoptkeywordline</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">keyword</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">is_found</span><span class="p">:</span>
+        <span class="n">max_val</span> <span class="o">=</span> <span class="s1">&#39;~&#39;</span>
+        <span class="n">su_max_n_iterations</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">readtypeAkeyword</span><span class="p">(</span>
+            <span class="n">input_file</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">max_val</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">su_max_n_iterations</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Read material state update convergence tolerance (optional)</span>
+    <span class="c1"># If the associated keyword is not found, then a default option is adopted</span>
+    <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;SU_Convergence_Tolerance&#39;</span>
+    <span class="n">is_found</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">searchoptkeywordline</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">keyword</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">is_found</span><span class="p">:</span>
+        <span class="n">su_conv_tol</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">readtypeBkeyword</span><span class="p">(</span>
+            <span class="n">input_file</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">su_conv_tol</span> <span class="o">=</span> <span class="mf">1e-6</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Read the spatial discretization file absolute path (mandatory)</span>
+    <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;Discretization_File&#39;</span>
+    <span class="n">valid_exts</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;.rgmsh&#39;</span><span class="p">]</span>
+    <span class="n">discret_file_path</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">read_discretization_file_path</span><span class="p">(</span>
+        <span class="n">input_file</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">valid_exts</span><span class="p">,</span>
+        <span class="n">discret_file_dir</span><span class="o">=</span><span class="n">discret_file_dir</span><span class="p">)</span>
+    <span class="c1"># Copy the spatial discretization file to the problem directory and update</span>
+    <span class="c1"># the absolute path to the copied file</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">discret_file_path</span><span class="p">,</span>
+                 <span class="n">problem_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">discret_file_path</span><span class="p">))</span>
+    <span class="n">discret_file_path</span> <span class="o">=</span> <span class="n">problem_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">discret_file_path</span><span class="p">)</span>
+    <span class="c1"># Store spatial discretization file absolute path</span>
+    <span class="n">dirs_dict</span><span class="p">[</span><span class="s1">&#39;discret_file_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">discret_file_path</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Read clustering global matrix data standardization method (optional)</span>
+    <span class="c1"># If the associated keyword is not found, then a default option is adopted</span>
+    <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;Standardization_Method&#39;</span>
+    <span class="n">is_found</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">searchoptkeywordline</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">keyword</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">is_found</span><span class="p">:</span>
+        <span class="n">max_val</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">standardization_method</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">readtypeAkeyword</span><span class="p">(</span>
+            <span class="n">input_file</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">max_val</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">standardization_method</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Read VTK output options (optional)</span>
+    <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;VTK_Output&#39;</span>
+    <span class="n">is_found</span><span class="p">,</span> <span class="n">keyword_line_number</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">searchoptkeywordline</span><span class="p">(</span>
+        <span class="n">input_file</span><span class="p">,</span> <span class="n">keyword</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">is_found</span><span class="p">:</span>
+        <span class="n">is_vtk_output</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">vtk_format</span><span class="p">,</span> <span class="n">vtk_inc_div</span><span class="p">,</span> <span class="n">vtk_vars</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">read_vtk_options</span><span class="p">(</span>
+            <span class="n">input_file</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">keyword_line_number</span><span class="p">)</span>
+        <span class="c1"># Create VTK folder in post processing directory</span>
+        <span class="n">filop</span><span class="o">.</span><span class="n">make_directory</span><span class="p">(</span><span class="n">postprocess_dir</span> <span class="o">+</span> <span class="s1">&#39;VTK/&#39;</span><span class="p">,</span> <span class="s1">&#39;overwrite&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">is_vtk_output</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Read voxels material-related quantities output options (optional)</span>
+    <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;Voxels_Output&#39;</span>
+    <span class="n">is_found</span><span class="p">,</span> <span class="n">keyword_line_number</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">searchoptkeywordline</span><span class="p">(</span>
+        <span class="n">input_file</span><span class="p">,</span> <span class="n">keyword</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">is_found</span><span class="p">:</span>
+        <span class="n">is_voxels_output</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1"># Set voxels material-related quantities output file path</span>
+        <span class="n">voxout_file_path</span> <span class="o">=</span> <span class="n">postprocess_dir</span> <span class="o">+</span> <span class="n">input_file_name</span> <span class="o">+</span> <span class="s1">&#39;.voxout&#39;</span>
+        <span class="c1"># Store output file path in directories and paths dictionary</span>
+        <span class="n">dirs_dict</span><span class="p">[</span><span class="s1">&#39;voxout_file_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">voxout_file_path</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">is_voxels_output</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Read clustering adaptivity output (optional)</span>
+    <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;Clustering_Adaptivity_Output&#39;</span>
+    <span class="n">is_found</span><span class="p">,</span> <span class="n">keyword_line_number</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">searchoptkeywordline</span><span class="p">(</span>
+        <span class="n">input_file</span><span class="p">,</span> <span class="n">keyword</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">is_found</span><span class="p">:</span>
+        <span class="n">is_clust_adapt_output</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">is_clust_adapt_output</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Read reference material output (optional)</span>
+    <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;Reference_Material_Output&#39;</span>
+    <span class="n">is_found</span><span class="p">,</span> <span class="n">keyword_line_number</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">searchoptkeywordline</span><span class="p">(</span>
+        <span class="n">input_file</span><span class="p">,</span> <span class="n">keyword</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">is_found</span><span class="p">:</span>
+        <span class="n">is_ref_material_output</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">is_ref_material_output</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Read final clustering state storage option (optional)</span>
+    <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;Store_Final_Clustering_State&#39;</span>
+    <span class="n">is_found</span><span class="p">,</span> <span class="n">keyword_line_number</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">searchoptkeywordline</span><span class="p">(</span>
+        <span class="n">input_file</span><span class="p">,</span> <span class="n">keyword</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">is_found</span><span class="p">:</span>
+        <span class="n">is_store_final_clustering</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">is_store_final_clustering</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Suppress optional output files (override)</span>
+    <span class="k">if</span> <span class="n">is_minimize_output</span><span class="p">:</span>
+        <span class="n">is_vtk_output</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">is_ref_material_output</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">is_clust_adapt_output</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">is_voxels_output</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">is_store_final_clustering</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Read the spatial discretization file (regular grid of voxels)</span>
+    <span class="n">info</span><span class="o">.</span><span class="n">displayinfo</span><span class="p">(</span><span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;Reading discretization file...&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">discret_file_path</span><span class="p">))[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;.npy&#39;</span><span class="p">:</span>
+        <span class="n">regular_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">discret_file_path</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">regular_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">discret_file_path</span><span class="p">)</span>
+    <span class="c1"># Check validity of regular grid of voxels</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">regular_grid</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Input data error: Number of dimensions of regular &#39;</span>
+                           <span class="s1">&#39;grid of voxels must be either 2 (2D problem) or &#39;</span>
+                           <span class="s1">&#39;3 (3D problem).&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">material_phases_properties</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+                 <span class="k">for</span> <span class="n">phase</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">regular_grid</span><span class="p">)]):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Input data error: At least one material phase &#39;</span>
+                           <span class="s1">&#39;present in the regular grid of voxels has not &#39;</span>
+                           <span class="s1">&#39;been specified.&#39;</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Set material phases that are actually present in the microstructure</span>
+    <span class="n">material_phases</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">regular_grid</span><span class="p">))]</span>
+    <span class="c1"># Initialize material phases volume fractions</span>
+    <span class="n">material_phases_vf</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="c1"># Loop over material phases</span>
+    <span class="k">for</span> <span class="n">mat_phase</span> <span class="ow">in</span> <span class="n">material_phases</span><span class="p">:</span>
+        <span class="c1"># Compute material phase volume fraction</span>
+        <span class="n">material_phases_vf</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">regular_grid</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">mat_phase</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">regular_grid</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Instantiate CRVE material constitutive state</span>
+    <span class="n">material_state</span> <span class="o">=</span> <span class="n">MaterialState</span><span class="p">(</span><span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span>
+                                   <span class="n">material_phases</span><span class="p">,</span> <span class="n">material_phases_properties</span><span class="p">,</span>
+                                   <span class="n">material_phases_vf</span><span class="p">)</span>
+    <span class="c1"># Loop over material phases</span>
+    <span class="k">for</span> <span class="n">mat_phase</span> <span class="ow">in</span> <span class="n">material_phases</span><span class="p">:</span>
+        <span class="c1"># Get material phase constitutive model keyword and source</span>
+        <span class="n">model_keyword</span> <span class="o">=</span> <span class="n">material_phases_data</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">][</span><span class="s1">&#39;keyword&#39;</span><span class="p">]</span>
+        <span class="n">model_source</span> <span class="o">=</span> <span class="n">material_phases_data</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">][</span><span class="s1">&#39;source&#39;</span><span class="p">]</span>
+        <span class="c1"># Initialize material phase constitutive model</span>
+        <span class="n">material_state</span><span class="o">.</span><span class="n">init_constitutive_model</span><span class="p">(</span><span class="n">mat_phase</span><span class="p">,</span> <span class="n">model_keyword</span><span class="p">,</span>
+                                               <span class="n">model_source</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Store problem general data</span>
+    <span class="n">info</span><span class="o">.</span><span class="n">displayinfo</span><span class="p">(</span><span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;Storing problem general data...&#39;</span><span class="p">)</span>
+    <span class="n">problem_dict</span> <span class="o">=</span> <span class="n">packager</span><span class="o">.</span><span class="n">store_problem_data</span><span class="p">(</span>
+        <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span>
+        <span class="n">comp_order_nsym</span><span class="p">)</span>
+    <span class="c1"># Store data associated with the material phases</span>
+    <span class="n">info</span><span class="o">.</span><span class="n">displayinfo</span><span class="p">(</span><span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;Storing material data...&#39;</span><span class="p">)</span>
+    <span class="n">mat_dict</span> <span class="o">=</span> <span class="n">packager</span><span class="o">.</span><span class="n">store_material_data</span><span class="p">(</span>
+        <span class="n">material_phases</span><span class="p">,</span> <span class="n">material_phases_data</span><span class="p">,</span> <span class="n">material_phases_properties</span><span class="p">,</span>
+        <span class="n">material_phases_vf</span><span class="p">)</span>
+    <span class="c1"># Store data associated with the macroscale loading</span>
+    <span class="n">info</span><span class="o">.</span><span class="n">displayinfo</span><span class="p">(</span><span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;Storing macroscale loading data...&#39;</span><span class="p">)</span>
+    <span class="n">macload_dict</span> <span class="o">=</span> <span class="n">packager</span><span class="o">.</span><span class="n">store_loading_path_data</span><span class="p">(</span>
+        <span class="n">mac_load_type</span><span class="p">,</span> <span class="n">mac_load</span><span class="p">,</span> <span class="n">mac_load_presctype</span><span class="p">,</span> <span class="n">mac_load_increm</span><span class="p">,</span>
+        <span class="n">is_solution_rewinding</span><span class="p">,</span> <span class="n">rewind_state_criterion</span><span class="p">,</span> <span class="n">rewinding_criterion</span><span class="p">,</span>
+        <span class="n">max_n_rewinds</span><span class="p">)</span>
+    <span class="c1"># Store data associated with the spatial discretization file(s)</span>
+    <span class="n">info</span><span class="o">.</span><span class="n">displayinfo</span><span class="p">(</span><span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;Storing regular grid data...&#39;</span><span class="p">)</span>
+    <span class="n">rg_dict</span> <span class="o">=</span> <span class="n">packager</span><span class="o">.</span><span class="n">store_regular_grid_data</span><span class="p">(</span>
+        <span class="n">discret_file_path</span><span class="p">,</span> <span class="n">regular_grid</span><span class="p">,</span> <span class="n">rve_dims</span><span class="p">,</span> <span class="n">problem_dict</span><span class="p">)</span>
+    <span class="c1"># Store data associated with the clustering</span>
+    <span class="n">info</span><span class="o">.</span><span class="n">displayinfo</span><span class="p">(</span><span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;Storing clustering data...&#39;</span><span class="p">)</span>
+    <span class="n">clst_dict</span> <span class="o">=</span> <span class="n">packager</span><span class="o">.</span><span class="n">store_clustering_data</span><span class="p">(</span>
+        <span class="n">clustering_solution_method</span><span class="p">,</span> <span class="n">standardization_method</span><span class="p">,</span>
+        <span class="n">phase_n_clusters</span><span class="p">,</span> <span class="n">rg_dict</span><span class="p">,</span> <span class="n">clustering_type</span><span class="p">,</span> <span class="n">base_clustering_scheme</span><span class="p">,</span>
+        <span class="n">adaptive_clustering_scheme</span><span class="p">,</span> <span class="n">adapt_criterion_data</span><span class="p">,</span> <span class="n">adaptivity_type</span><span class="p">,</span>
+        <span class="n">adaptivity_control_feature</span><span class="p">,</span> <span class="n">clust_adapt_freq</span><span class="p">,</span> <span class="n">is_clust_adapt_output</span><span class="p">,</span>
+        <span class="n">is_store_final_clustering</span><span class="p">)</span>
+    <span class="c1"># Store data associated with the self-consistent scheme</span>
+    <span class="n">info</span><span class="o">.</span><span class="n">displayinfo</span><span class="p">(</span><span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;Storing self-consistent scheme data...&#39;</span><span class="p">)</span>
+    <span class="n">scs_dict</span> <span class="o">=</span> <span class="n">packager</span><span class="o">.</span><span class="n">store_scs_data</span><span class="p">(</span>
+        <span class="n">self_consistent_scheme</span><span class="p">,</span> <span class="n">scs_parameters</span><span class="p">,</span> <span class="n">scs_max_n_iterations</span><span class="p">,</span>
+        <span class="n">scs_conv_tol</span><span class="p">)</span>
+    <span class="c1"># Store data associated with the self-consistent scheme</span>
+    <span class="n">info</span><span class="o">.</span><span class="n">displayinfo</span><span class="p">(</span><span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;Storing algorithmic data...&#39;</span><span class="p">)</span>
+    <span class="n">algpar_dict</span> <span class="o">=</span> <span class="n">packager</span><span class="o">.</span><span class="n">store_algorithmic_data</span><span class="p">(</span>
+        <span class="n">max_n_iterations</span><span class="p">,</span> <span class="n">conv_tol</span><span class="p">,</span> <span class="n">max_subinc_level</span><span class="p">,</span> <span class="n">max_cinc_cuts</span><span class="p">,</span>
+        <span class="n">su_max_n_iterations</span><span class="p">,</span> <span class="n">su_conv_tol</span><span class="p">)</span>
+    <span class="c1"># Store data associated with the VTK output</span>
+    <span class="n">info</span><span class="o">.</span><span class="n">displayinfo</span><span class="p">(</span><span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;Storing VTK output data...&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">is_vtk_output</span><span class="p">:</span>
+        <span class="n">vtk_dict</span> <span class="o">=</span> <span class="n">packager</span><span class="o">.</span><span class="n">store_vtk_data</span><span class="p">(</span>
+            <span class="n">is_vtk_output</span><span class="p">,</span> <span class="n">vtk_format</span><span class="p">,</span> <span class="n">vtk_inc_div</span><span class="p">,</span> <span class="n">vtk_vars</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">vtk_dict</span> <span class="o">=</span> <span class="n">packager</span><span class="o">.</span><span class="n">store_vtk_data</span><span class="p">(</span><span class="n">is_vtk_output</span><span class="p">)</span>
+    <span class="c1"># Store data associated with the output files</span>
+    <span class="n">info</span><span class="o">.</span><span class="n">displayinfo</span><span class="p">(</span><span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;Storing general output files data...&#39;</span><span class="p">)</span>
+    <span class="n">output_dict</span> <span class="o">=</span> <span class="n">packager</span><span class="o">.</span><span class="n">store_output_data</span><span class="p">(</span>
+        <span class="n">is_ref_material_output</span><span class="p">,</span> <span class="n">is_voxels_output</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="k">return</span> <span class="n">problem_dict</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">,</span> <span class="n">macload_dict</span><span class="p">,</span> <span class="n">rg_dict</span><span class="p">,</span> <span class="n">clst_dict</span><span class="p">,</span> \
+        <span class="n">scs_dict</span><span class="p">,</span> <span class="n">algpar_dict</span><span class="p">,</span> <span class="n">vtk_dict</span><span class="p">,</span> <span class="n">output_dict</span><span class="p">,</span> <span class="n">material_state</span></div>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="read_output_minimization_option"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readinputdata.read_output_minimization_option.html#cratepy.ioput.readinputdata.read_output_minimization_option">[docs]</a><span class="k">def</span> <span class="nf">read_output_minimization_option</span><span class="p">(</span><span class="n">input_file_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read input data file and search for output minimization keyword.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input_file_path : str</span>
+<span class="sd">        Input data file path.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    is_minimize_output : bool</span>
+<span class="sd">        Output minimization flag.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Read output minimization (optional)</span>
+    <span class="n">keyword</span> <span class="o">=</span> <span class="s1">&#39;Minimize_Output&#39;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">input_file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">input_file</span><span class="p">:</span>
+        <span class="n">is_found</span><span class="p">,</span> <span class="n">keyword_line_number</span> <span class="o">=</span> <span class="n">rproc</span><span class="o">.</span><span class="n">searchoptkeywordline</span><span class="p">(</span>
+            <span class="n">input_file</span><span class="p">,</span> <span class="n">keyword</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">is_found</span><span class="p">:</span>
+            <span class="n">is_minimize_output</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">is_minimize_output</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="k">return</span> <span class="n">is_minimize_output</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

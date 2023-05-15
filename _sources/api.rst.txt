@@ -5,4 +5,4 @@
    :template: custom-module-template.rst
    :recursive:
 
-   crate
+   cratepy

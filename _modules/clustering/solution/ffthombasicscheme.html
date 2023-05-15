@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>clustering.solution.ffthombasicscheme &mdash; crate 1.0.0 documentation</title>
+  <title>clustering.solution.ffthombasicscheme &mdash; CRATE 1.0.3 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
@@ -28,7 +28,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            crate
+            CRATE
           </a>
               <div class="version">
                 1.0
@@ -71,7 +71,7 @@
 <p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/reference/index.html">Index</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/crate.html">Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/cratepy.html">Code</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">License</span></p>
 <ul>
@@ -84,7 +84,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">crate</a>
+          <a href="../../../index.html">CRATE</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -158,7 +158,7 @@
 <span class="c1"># =============================================================================</span>
 <span class="c1">#</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="FFTBasicScheme"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.rveelasticdatabase.FFTBasicScheme.html#crate.clustering.rveelasticdatabase.FFTBasicScheme">[docs]</a><span class="k">class</span> <span class="nc">FFTBasicScheme</span><span class="p">(</span><span class="n">DNSHomogenizationMethod</span><span class="p">):</span>
+<div class="viewcode-block" id="FFTBasicScheme"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.rveelasticdatabase.FFTBasicScheme.html#cratepy.clustering.rveelasticdatabase.FFTBasicScheme">[docs]</a><span class="k">class</span> <span class="nc">FFTBasicScheme</span><span class="p">(</span><span class="n">DNSHomogenizationMethod</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;FFT-based homogenization basic scheme.</span>
 
 <span class="sd">    FFT-based homogenization basic scheme proposed by Moulinec and Suquet</span>
@@ -249,7 +249,7 @@
 <span class="sd">    _display_increment_cut(cut_msg=&#39;&#39;)</span>
 <span class="sd">        Output increment cut data.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="FFTBasicScheme.__init__"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.rveelasticdatabase.FFTBasicScheme.html#crate.clustering.rveelasticdatabase.FFTBasicScheme.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">rve_dims</span><span class="p">,</span>
+<div class="viewcode-block" id="FFTBasicScheme.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.rveelasticdatabase.FFTBasicScheme.html#cratepy.clustering.rveelasticdatabase.FFTBasicScheme.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">rve_dims</span><span class="p">,</span>
                  <span class="n">n_voxels_dims</span><span class="p">,</span> <span class="n">regular_grid</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span>
                  <span class="n">material_phases_properties</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
@@ -302,7 +302,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;finite&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_hom_stress_strain</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="FFTBasicScheme.compute_rve_local_response"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.rveelasticdatabase.FFTBasicScheme.html#crate.clustering.rveelasticdatabase.FFTBasicScheme.compute_rve_local_response">[docs]</a>    <span class="k">def</span> <span class="nf">compute_rve_local_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mac_strain_id</span><span class="p">,</span> <span class="n">mac_strain</span><span class="p">,</span>
+<div class="viewcode-block" id="FFTBasicScheme.compute_rve_local_response"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.rveelasticdatabase.FFTBasicScheme.html#cratepy.clustering.rveelasticdatabase.FFTBasicScheme.compute_rve_local_response">[docs]</a>    <span class="k">def</span> <span class="nf">compute_rve_local_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mac_strain_id</span><span class="p">,</span> <span class="n">mac_strain</span><span class="p">,</span>
                                    <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute RVE local elastic strain response.</span>
 
@@ -744,7 +744,7 @@
                 <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_display_increment_init</span><span class="p">(</span>
                     <span class="o">*</span><span class="n">mac_strain_incrementer</span><span class="o">.</span><span class="n">get_inc_output_data</span><span class="p">())</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="FFTBasicScheme._elastic_constitutive_model"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.rveelasticdatabase.FFTBasicScheme.html#crate.clustering.rveelasticdatabase.FFTBasicScheme._elastic_constitutive_model">[docs]</a>    <span class="k">def</span> <span class="nf">_elastic_constitutive_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_vox</span><span class="p">,</span> <span class="n">evar1</span><span class="p">,</span> <span class="n">evar2</span><span class="p">,</span> <span class="n">evar3</span><span class="p">,</span>
+<div class="viewcode-block" id="FFTBasicScheme._elastic_constitutive_model"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.rveelasticdatabase.FFTBasicScheme.html#cratepy.clustering.rveelasticdatabase.FFTBasicScheme._elastic_constitutive_model">[docs]</a>    <span class="k">def</span> <span class="nf">_elastic_constitutive_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_vox</span><span class="p">,</span> <span class="n">evar1</span><span class="p">,</span> <span class="n">evar2</span><span class="p">,</span> <span class="n">evar3</span><span class="p">,</span>
                                     <span class="n">finite_strains_model</span><span class="o">=</span><span class="s1">&#39;stvenant-kirchhoff&#39;</span><span class="p">,</span>
                                     <span class="n">is_optimized</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Elastic or hyperelastic material constitutive model.</span>
@@ -1454,7 +1454,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">stress_vox</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="FFTBasicScheme._stress_div_conv_criterion"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.rveelasticdatabase.FFTBasicScheme.html#crate.clustering.rveelasticdatabase.FFTBasicScheme._stress_div_conv_criterion">[docs]</a>    <span class="k">def</span> <span class="nf">_stress_div_conv_criterion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">freqs_dims</span><span class="p">,</span> <span class="n">stress_DFT_vox</span><span class="p">):</span>
+<div class="viewcode-block" id="FFTBasicScheme._stress_div_conv_criterion"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.rveelasticdatabase.FFTBasicScheme.html#cratepy.clustering.rveelasticdatabase.FFTBasicScheme._stress_div_conv_criterion">[docs]</a>    <span class="k">def</span> <span class="nf">_stress_div_conv_criterion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">freqs_dims</span><span class="p">,</span> <span class="n">stress_DFT_vox</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convergence criterion based on the divergence of the stress tensor.</span>
 
 <span class="sd">        Convergence criterion proposed by Moulinec and Suquet (1998) [#]_.</span>
@@ -1552,7 +1552,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">discrete_error</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="FFTBasicScheme._compute_avg_state_vox"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.rveelasticdatabase.FFTBasicScheme.html#crate.clustering.rveelasticdatabase.FFTBasicScheme._compute_avg_state_vox">[docs]</a>    <span class="k">def</span> <span class="nf">_compute_avg_state_vox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_vox</span><span class="p">):</span>
+<div class="viewcode-block" id="FFTBasicScheme._compute_avg_state_vox"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.rveelasticdatabase.FFTBasicScheme.html#cratepy.clustering.rveelasticdatabase.FFTBasicScheme._compute_avg_state_vox">[docs]</a>    <span class="k">def</span> <span class="nf">_compute_avg_state_vox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_vox</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute average norm of strain or stress local field.</span>
 
 <span class="sd">        Parameters</span>
@@ -1598,7 +1598,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">avg_state_norm</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="FFTBasicScheme._compute_homogenized_field"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.rveelasticdatabase.FFTBasicScheme.html#crate.clustering.rveelasticdatabase.FFTBasicScheme._compute_homogenized_field">[docs]</a>    <span class="k">def</span> <span class="nf">_compute_homogenized_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_vox</span><span class="p">):</span>
+<div class="viewcode-block" id="FFTBasicScheme._compute_homogenized_field"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.rveelasticdatabase.FFTBasicScheme.html#cratepy.clustering.rveelasticdatabase.FFTBasicScheme._compute_homogenized_field">[docs]</a>    <span class="k">def</span> <span class="nf">_compute_homogenized_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_vox</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform homogenization over regular grid spatial discretization.</span>
 
 <span class="sd">        Parameters</span>
@@ -1642,7 +1642,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">hom_state</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="FFTBasicScheme.get_hom_stress_strain"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.rveelasticdatabase.FFTBasicScheme.html#crate.clustering.rveelasticdatabase.FFTBasicScheme.get_hom_stress_strain">[docs]</a>    <span class="k">def</span> <span class="nf">get_hom_stress_strain</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="FFTBasicScheme.get_hom_stress_strain"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.rveelasticdatabase.FFTBasicScheme.html#cratepy.clustering.rveelasticdatabase.FFTBasicScheme.get_hom_stress_strain">[docs]</a>    <span class="k">def</span> <span class="nf">get_hom_stress_strain</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get homogenized strain-stress material response.</span>
 
 <span class="sd">        Returns</span>
@@ -1658,7 +1658,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hom_stress_strain</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="FFTBasicScheme._display_greetings"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.rveelasticdatabase.FFTBasicScheme.html#crate.clustering.rveelasticdatabase.FFTBasicScheme._display_greetings">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="FFTBasicScheme._display_greetings"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.rveelasticdatabase.FFTBasicScheme.html#cratepy.clustering.rveelasticdatabase.FFTBasicScheme._display_greetings">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_display_greetings</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Output greetings.&quot;&quot;&quot;</span>
         <span class="c1"># Get display features</span>
@@ -1681,7 +1681,7 @@
         <span class="nb">print</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">info</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">output_width</span><span class="p">))</span></div>
         <span class="c1"># ioutil.print2(template.format(*info, width=output_width))</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="FFTBasicScheme._display_increment_init"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.rveelasticdatabase.FFTBasicScheme.html#crate.clustering.rveelasticdatabase.FFTBasicScheme._display_increment_init">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="FFTBasicScheme._display_increment_init"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.rveelasticdatabase.FFTBasicScheme.html#cratepy.clustering.rveelasticdatabase.FFTBasicScheme._display_increment_init">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_display_increment_init</span><span class="p">(</span><span class="n">inc</span><span class="p">,</span> <span class="n">subinc_level</span><span class="p">,</span> <span class="n">total_lfact</span><span class="p">,</span> <span class="n">inc_lfact</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Output increment initial data.</span>
 
@@ -1729,7 +1729,7 @@
         <span class="nb">print</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">info</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">output_width</span><span class="p">))</span></div>
         <span class="c1"># ioutil.print2(template.format(*info, width=output_width))</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="FFTBasicScheme._display_increment_end"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.rveelasticdatabase.FFTBasicScheme.html#crate.clustering.rveelasticdatabase.FFTBasicScheme._display_increment_end">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="FFTBasicScheme._display_increment_end"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.rveelasticdatabase.FFTBasicScheme.html#cratepy.clustering.rveelasticdatabase.FFTBasicScheme._display_increment_end">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_display_increment_end</span><span class="p">(</span><span class="n">strain_formulation</span><span class="p">,</span> <span class="n">hom_strain</span><span class="p">,</span> <span class="n">hom_stress</span><span class="p">,</span>
                                <span class="n">inc_time</span><span class="p">,</span> <span class="n">total_time</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Output increment end data.</span>
@@ -1807,7 +1807,7 @@
         <span class="nb">print</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">info</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">output_width</span><span class="p">))</span></div>
         <span class="c1"># ioutil.print2(template.format(*info, width=output_width))</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="FFTBasicScheme._display_iteration"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.rveelasticdatabase.FFTBasicScheme.html#crate.clustering.rveelasticdatabase.FFTBasicScheme._display_iteration">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="FFTBasicScheme._display_iteration"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.rveelasticdatabase.FFTBasicScheme.html#cratepy.clustering.rveelasticdatabase.FFTBasicScheme._display_iteration">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_display_iteration</span><span class="p">(</span><span class="nb">iter</span><span class="p">,</span> <span class="n">iter_time</span><span class="p">,</span> <span class="n">discrete_error</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Output iteration data.</span>
 
@@ -1846,7 +1846,7 @@
         <span class="nb">print</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">info</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">output_width</span><span class="p">))</span></div>
         <span class="c1"># ioutil.print2(template.format(*info, width=output_width))</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="FFTBasicScheme._display_increment_cut"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.rveelasticdatabase.FFTBasicScheme.html#crate.clustering.rveelasticdatabase.FFTBasicScheme._display_increment_cut">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="FFTBasicScheme._display_increment_cut"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.rveelasticdatabase.FFTBasicScheme.html#cratepy.clustering.rveelasticdatabase.FFTBasicScheme._display_increment_cut">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_display_increment_cut</span><span class="p">(</span><span class="n">cut_msg</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Output increment cut data.</span>
 

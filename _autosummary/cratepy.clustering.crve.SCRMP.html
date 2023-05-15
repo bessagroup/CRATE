@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cratepy.clustering.crve.SCRMP &mdash; CRATE 1.0.3 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="cratepy.clustering.rveelasticdatabase" href="cratepy.clustering.rveelasticdatabase.html" />
+    <link rel="prev" title="cratepy.clustering.crve.HAACRMP" href="cratepy.clustering.crve.HAACRMP.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            CRATE
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="cratepy.html">Code</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cratepy.crate_simulation.html">cratepy.crate_simulation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="cratepy.clustering.html">cratepy.clustering</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cratepy.clustering.adaptivity.html">cratepy.clustering.adaptivity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.clustering.citoperations.html">cratepy.clustering.citoperations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.clustering.clusteringalgs.html">cratepy.clustering.clusteringalgs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.clustering.clusteringdata.html">cratepy.clustering.clusteringdata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.clustering.clusteringphase.html">cratepy.clustering.clusteringphase</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="cratepy.clustering.crve.html">cratepy.clustering.crve</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="cratepy.clustering.crve.html#classes">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.clustering.crve.CRVE.html">cratepy.clustering.crve.CRVE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.clustering.crve.GACRMP.html">cratepy.clustering.crve.GACRMP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.clustering.crve.HAACRMP.html">cratepy.clustering.crve.HAACRMP</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">cratepy.clustering.crve.SCRMP</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.clustering.rveelasticdatabase.html">cratepy.clustering.rveelasticdatabase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.clustering.solution.html">cratepy.clustering.solution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.ioput.html">cratepy.ioput</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.main.html">cratepy.main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.material.html">cratepy.material</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.online.html">cratepy.online</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.optimization.html">cratepy.optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.tensor.html">cratepy.tensor</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CRATE</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="cratepy.html">cratepy</a></li>
+          <li class="breadcrumb-item"><a href="cratepy.clustering.html">cratepy.clustering</a></li>
+          <li class="breadcrumb-item"><a href="cratepy.clustering.crve.html">cratepy.clustering.crve</a></li>
+      <li class="breadcrumb-item active">cratepy.clustering.crve.SCRMP</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cratepy-clustering-crve-scrmp">
+<h1>cratepy.clustering.crve.SCRMP<a class="headerlink" href="#cratepy-clustering-crve-scrmp" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="cratepy.clustering.crve.SCRMP">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SCRMP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mat_phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_data_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_clusters</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/clusteringphase.html#SCRMP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.clustering.crve.SCRMP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">CRMP</span></code></p>
+<p>Static Cluster-Reduced Material Phase (SCRMP).</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cratepy.clustering.crve.SCRMP._clustering_type">
+<span class="sig-name descname"><span class="pre">_clustering_type</span></span><a class="headerlink" href="#cratepy.clustering.crve.SCRMP._clustering_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type of cluster-reduced material phase.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cratepy.clustering.crve.SCRMP.max_label">
+<span class="sig-name descname"><span class="pre">max_label</span></span><a class="headerlink" href="#cratepy.clustering.crve.SCRMP.max_label" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clustering maximum label.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cratepy.clustering.crve.SCRMP.cluster_labels">
+<span class="sig-name descname"><span class="pre">cluster_labels</span></span><a class="headerlink" href="#cratepy.clustering.crve.SCRMP.cluster_labels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Material phase cluster labels (numpy.ndarray[int] of shape
+(n_phase_voxels,)).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (1d)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.clustering.crve.SCRMP.perform_base_clustering">
+<span class="sig-name descname"><span class="pre">perform_base_clustering</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_clustering_scheme</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/clusteringphase.html#SCRMP.perform_base_clustering"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.clustering.crve.SCRMP.perform_base_clustering" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform SCRMP base clustering.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.clustering.crve.SCRMP.get_n_clusters">
+<span class="sig-name descname"><span class="pre">get_n_clusters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/clusteringphase.html#SCRMP.get_n_clusters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.clustering.crve.SCRMP.get_n_clusters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get current number of clusters.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.clustering.crve.SCRMP.get_clustering_type">
+<span class="sig-name descname"><span class="pre">get_clustering_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/clusteringphase.html#SCRMP.get_clustering_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.clustering.crve.SCRMP.get_clustering_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get cluster-reduced material phase adaptivity type.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.clustering.crve.SCRMP.get_valid_clust_algs">
+<span class="sig-name descname"><span class="pre">get_valid_clust_algs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/clusteringphase.html#SCRMP.get_valid_clust_algs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.clustering.crve.SCRMP.get_valid_clust_algs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get valid clustering algorithms to compute the CRMP.</p>
+</dd></dl>
+
+<p>Constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mat_phase</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Material phase label.</p></li>
+<li><p><strong>cluster_data_matrix</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Data matrix (numpy.ndarray of shape
+(n_phase_voxels, n_features_dims)) containing the clustering
+features data to perform the material phase cluster analyses.</p></li>
+<li><p><strong>n_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Number of material phase clusters.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">List of Public Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id0" title="cratepy.clustering.crve.SCRMP.get_clustering_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_clustering_type</span></code></a></p></td>
+<td><p>Get cluster-reduced material phase adaptivity type.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id1" title="cratepy.clustering.crve.SCRMP.get_n_clusters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_n_clusters</span></code></a></p></td>
+<td><p>Get current number of clusters.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id2" title="cratepy.clustering.crve.SCRMP.get_valid_clust_algs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_valid_clust_algs</span></code></a></p></td>
+<td><p>Get valid clustering algorithms to compute the CRMP.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id3" title="cratepy.clustering.crve.SCRMP.perform_base_clustering"><code class="xref py py-obj docutils literal notranslate"><span class="pre">perform_base_clustering</span></code></a></p></td>
+<td><p>Perform SCRMP base clustering.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.clustering.crve.SCRMP.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mat_phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_data_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_clusters</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/clusteringphase.html#SCRMP.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.clustering.crve.SCRMP.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mat_phase</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Material phase label.</p></li>
+<li><p><strong>cluster_data_matrix</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Data matrix (numpy.ndarray of shape
+(n_phase_voxels, n_features_dims)) containing the clustering
+features data to perform the material phase cluster analyses.</p></li>
+<li><p><strong>n_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Number of material phase clusters.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.clustering.crve.SCRMP._update_cluster_labels">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_update_cluster_labels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cratepy.clustering.crve.SCRMP._update_cluster_labels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update cluster labels starting with the provided minimum label.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>labels</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Cluster labels (numpy.ndarray[int] of shape (n_items,)).</p></li>
+<li><p><strong>min_label</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=0</em>) – Minimum cluster label.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>new_labels</strong> (<em>numpy.ndarray (1d)</em>) – Updated cluster labels (numpy.ndarray[int] of shape (n_items,)).</p></li>
+<li><p><strong>max_label</strong> (<em>int</em>) – Maximum cluster label.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">get_clustering_type</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/clusteringphase.html#SCRMP.get_clustering_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get cluster-reduced material phase adaptivity type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>clustering_type</strong> – Type of cluster-reduced material phase.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">get_n_clusters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/clusteringphase.html#SCRMP.get_n_clusters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get current number of clusters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>n_clusters</strong> – Number of material phase clusters.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id2">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_valid_clust_algs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/clusteringphase.html#SCRMP.get_valid_clust_algs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get valid clustering algorithms to compute the CRMP.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>clust_algs</strong> – Clustering algorithms identifiers (str).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">perform_base_clustering</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_clustering_scheme</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/clusteringphase.html#SCRMP.perform_base_clustering"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform SCRMP base clustering.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base_clustering_scheme</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Prescribed base clustering scheme (item, numpy.ndarray of shape
+(n_clusterings, 3)) for each material phase (key, str). Each row is
+associated with a unique clustering characterized by a clustering
+algorithm (col 1, int), a list of features (col 2, list[int]) and a
+list of the features data matrix’ indexes (col 3, list[int]).</p></li>
+<li><p><strong>min_label</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=0</em>) – Minimum cluster label.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cratepy.clustering.crve.HAACRMP.html" class="btn btn-neutral float-left" title="cratepy.clustering.crve.HAACRMP" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cratepy.clustering.rveelasticdatabase.html" class="btn btn-neutral float-right" title="cratepy.clustering.rveelasticdatabase" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

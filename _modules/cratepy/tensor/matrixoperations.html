@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cratepy.tensor.matrixoperations &mdash; CRATE 1.0.3 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            CRATE
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/cratepy.html">Code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">CRATE</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">cratepy.tensor.matrixoperations</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for cratepy.tensor.matrixoperations</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Strain/Stress tensors matricial storage and procedures.</span>
+
+<span class="sd">This module contains fundamental procedures associated with the matricial</span>
+<span class="sd">storage of strain/stress tensorial quantities and related manipulations.</span>
+
+<span class="sd">Among others, it includes functions that set the strain/stress components</span>
+<span class="sd">symmetric and nonsymmetric matricial storage order and that perform the</span>
+<span class="sd">conversion between tensorial and matricial forms of second- and fourth-order</span>
+<span class="sd">tensors following the Kelvin notation [#]_.</span>
+
+<span class="sd">.. [#] Nagel, T., Görke, U.-J., Moerman, K. M., and Kolditz, O. (2016). On</span>
+<span class="sd">       advantages of the Kelvin mapping in finite element implementations of</span>
+<span class="sd">       deformation processes. Environmental Earth Sciences, 75(11):937 (see</span>
+<span class="sd">       `here &lt;https://dspace.mit.edu/handle/1721.1/105251&gt;`_)</span>
+
+<span class="sd">Functions</span>
+<span class="sd">---------</span>
+<span class="sd">get_problem_type_parameters</span>
+<span class="sd">    Get parameters dependent on the problem type.</span>
+<span class="sd">get_tensor_mf</span>
+<span class="sd">    Get tensor matricial form.</span>
+<span class="sd">get_tensor_from_mf</span>
+<span class="sd">    Recover tensor from associated matricial form.</span>
+<span class="sd">kelvin_factor</span>
+<span class="sd">    Get Kelvin notation coefficient of given strain/stress component.</span>
+<span class="sd">get_condensed_matrix</span>
+<span class="sd">    Perform condensation of matrix given a set of rows and columns.</span>
+<span class="sd">get_state_3Dmf_from_2Dmf</span>
+<span class="sd">    Build 3D counterpart of 2D strain/stress second-order tensor.</span>
+<span class="sd">get_state_2Dmf_from_3Dmf</span>
+<span class="sd">    Build 2D counterpart of 3D strain/stress second- or fourth-order tensor.</span>
+<span class="sd">matrix_root</span>
+<span class="sd">    Compute p-th root of general nonsymmetric square matrix.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#                                                                       Modules</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1"># Third-party</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy.linalg</span>
+<span class="kn">import</span> <span class="nn">itertools</span> <span class="k">as</span> <span class="nn">it</span>
+<span class="c1">#</span>
+<span class="c1">#                                                          Authorship &amp; Credits</span>
+<span class="c1"># =============================================================================</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Bernardo Ferreira (bernardo_ferreira@brown.edu)&#39;</span>
+<span class="n">__credits__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Bernardo Ferreira&#39;</span><span class="p">,</span> <span class="p">]</span>
+<span class="n">__status__</span> <span class="o">=</span> <span class="s1">&#39;Stable&#39;</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#</span>
+<span class="c1">#                                                       Problem type parameters</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="get_problem_type_parameters"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.matrixoperations.get_problem_type_parameters.html#cratepy.tensor.matrixoperations.get_problem_type_parameters">[docs]</a><span class="k">def</span> <span class="nf">get_problem_type_parameters</span><span class="p">(</span><span class="n">problem_type</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get parameters dependent on the problem type.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    problem_type : int</span>
+<span class="sd">        Problem type: 2D plane strain (1), 2D plane stress (2), 2D axisymmetric</span>
+<span class="sd">        (3) and 3D (4).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    n_dim : int</span>
+<span class="sd">        Problem number of spatial dimensions.</span>
+<span class="sd">    comp_order_sym : list</span>
+<span class="sd">        Strain/Stress components symmetric order.</span>
+<span class="sd">    comp_order_nsym : list</span>
+<span class="sd">        Strain/Stress components nonsymmetric order.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Set problem number of spatial dimensions and strain/stress components</span>
+    <span class="c1"># symmetric and nonsymmetric order</span>
+    <span class="k">if</span> <span class="n">problem_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">n_dim</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">comp_order_sym</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;11&#39;</span><span class="p">,</span> <span class="s1">&#39;22&#39;</span><span class="p">,</span> <span class="s1">&#39;12&#39;</span><span class="p">]</span>
+        <span class="n">comp_order_nsym</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;11&#39;</span><span class="p">,</span> <span class="s1">&#39;21&#39;</span><span class="p">,</span> <span class="s1">&#39;12&#39;</span><span class="p">,</span> <span class="s1">&#39;22&#39;</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">problem_type</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="n">n_dim</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="n">comp_order_sym</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;11&#39;</span><span class="p">,</span> <span class="s1">&#39;22&#39;</span><span class="p">,</span> <span class="s1">&#39;33&#39;</span><span class="p">,</span> <span class="s1">&#39;12&#39;</span><span class="p">,</span> <span class="s1">&#39;23&#39;</span><span class="p">,</span> <span class="s1">&#39;13&#39;</span><span class="p">]</span>
+        <span class="n">comp_order_nsym</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;11&#39;</span><span class="p">,</span> <span class="s1">&#39;21&#39;</span><span class="p">,</span> <span class="s1">&#39;31&#39;</span><span class="p">,</span> <span class="s1">&#39;12&#39;</span><span class="p">,</span> <span class="s1">&#39;22&#39;</span><span class="p">,</span> <span class="s1">&#39;32&#39;</span><span class="p">,</span> <span class="s1">&#39;13&#39;</span><span class="p">,</span> <span class="s1">&#39;23&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;33&#39;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unavailable problem type.&#39;</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span></div>
+<span class="c1">#</span>
+<span class="c1">#                                        Tensorial - Matricial forms conversion</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="get_tensor_mf"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.matrixoperations.get_tensor_mf.html#cratepy.tensor.matrixoperations.get_tensor_mf">[docs]</a><span class="k">def</span> <span class="nf">get_tensor_mf</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get tensor matricial form.</span>
+
+<span class="sd">    Store a given second-order or fourth-order tensor in matricial form for a</span>
+<span class="sd">    given number of problem spatial dimensions and given ordered strain/stress</span>
+<span class="sd">    components list. If the second-order tensor is symmetric or the</span>
+<span class="sd">    fourth-order tensor has minor symmetry (component list only contains</span>
+<span class="sd">    independent components), then the Kelvin notation[#]_ is employed to</span>
+<span class="sd">    perform the storage. Otherwise, the matricial form is built columnwise.</span>
+
+<span class="sd">    .. [#] Nagel, T., Görke, U.-J., Moerman, K. M., and Kolditz, O. (2016). On</span>
+<span class="sd">           advantages of the Kelvin mapping in finite element implementations</span>
+<span class="sd">           of deformation processes. Environmental Earth Sciences, 75(11):937</span>
+<span class="sd">           (see `here &lt;https://dspace.mit.edu/handle/1721.1/105251&gt;`_)</span>
+
+<span class="sd">    ----</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    tensor : numpy.ndarray (2d or 4d)</span>
+<span class="sd">        Tensor to be stored in matricial form.</span>
+<span class="sd">    n_dim : int</span>
+<span class="sd">        Problem number of spatial dimensions.</span>
+<span class="sd">    comp_order : list</span>
+<span class="sd">        Strain/Stress components order associated to matricial form.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tensor_mf : numpy.ndarray (1d or 2d)</span>
+<span class="sd">        Matricial form of input tensor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get tensor order</span>
+    <span class="n">tensor_order</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Check input arguments validity</span>
+    <span class="k">if</span> <span class="n">tensor_order</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Matricial form storage is only available for &#39;</span>
+                           <span class="s1">&#39;second-order or fourth-order tensors.&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">any</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_dim</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+              <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">comp_order</span><span class="p">))]):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Invalid component in strain/stress components &#39;</span>
+                           <span class="s1">&#39;order.&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">any</span><span class="p">([</span><span class="n">tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">n_dim</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">))]):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Invalid tensor dimensions.&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">any</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">comp</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">comp</span> <span class="ow">in</span> <span class="n">comp_order</span><span class="p">]):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Invalid component in strain/stress components &#39;</span>
+                           <span class="s1">&#39;order.&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)))</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Duplicated component in strain/stress components &#39;</span>
+                           <span class="s1">&#39;order.&#39;</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Set Kelvin notation flag</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)</span> <span class="o">==</span> <span class="n">n_dim</span><span class="o">**</span><span class="mi">2</span><span class="p">:</span>
+        <span class="n">is_kelvin_notation</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)</span> <span class="o">==</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_dim</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)):</span>
+        <span class="n">is_kelvin_notation</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Invalid number of components in strain/stress &#39;</span>
+                           <span class="s1">&#39;components order.&#39;</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Store tensor according to tensor order</span>
+    <span class="k">if</span> <span class="n">tensor_order</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="c1"># Set second-order and matricial form indexes</span>
+        <span class="n">so_indexes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">mf_indexes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)):</span>
+            <span class="n">so_indexes</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">comp_order</span><span class="p">[</span><span class="n">i</span><span class="p">])])</span>
+            <span class="n">mf_indexes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">comp_order</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">comp_order</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Initialize tensor matricial form</span>
+        <span class="k">if</span> <span class="n">tensor</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s1">&#39;complex&#39;</span><span class="p">:</span>
+            <span class="n">tensor_mf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tensor_mf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">))</span>
+        <span class="c1"># Store tensor in matricial form</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mf_indexes</span><span class="p">)):</span>
+            <span class="n">mf_idx</span> <span class="o">=</span> <span class="n">mf_indexes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">so_idx</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">so_indexes</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">factor</span> <span class="o">=</span> <span class="mf">1.0</span>
+            <span class="k">if</span> <span class="n">is_kelvin_notation</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">so_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">so_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">factor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">tensor_mf</span><span class="p">[</span><span class="n">mf_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">factor</span><span class="o">*</span><span class="n">tensor</span><span class="p">[</span><span class="n">so_idx</span><span class="p">]</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="k">elif</span> <span class="n">tensor_order</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="c1"># Set cartesian product of component list</span>
+        <span class="n">comps</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">it</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">comp_order</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">))</span>
+        <span class="c1"># Set fourth-order and matricial form indexes</span>
+        <span class="n">fo_indexes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">mf_indexes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">):</span>
+            <span class="n">fo_indexes</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span>
+                               <span class="nb">list</span><span class="p">(</span><span class="n">comps</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">comps</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])])</span>
+            <span class="n">mf_indexes</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="n">comp_order</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">comps</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span>
+                                           <span class="n">comp_order</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">comps</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])]])</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Initialize tensor matricial form</span>
+        <span class="k">if</span> <span class="n">tensor</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s1">&#39;complex&#39;</span><span class="p">:</span>
+            <span class="n">tensor_mf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)),</span>
+                                 <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tensor_mf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)))</span>
+        <span class="c1"># Store tensor in matricial form</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mf_indexes</span><span class="p">)):</span>
+            <span class="n">mf_idx</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">mf_indexes</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">fo_idx</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">fo_indexes</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">factor</span> <span class="o">=</span> <span class="mf">1.0</span>
+            <span class="k">if</span> <span class="n">is_kelvin_notation</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                                           <span class="ow">and</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">3</span><span class="p">]):</span>
+                <span class="n">factor</span> <span class="o">=</span> \
+                    <span class="n">factor</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">if</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">else</span> <span class="n">factor</span>
+                <span class="n">factor</span> <span class="o">=</span> \
+                    <span class="n">factor</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">if</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="k">else</span> <span class="n">factor</span>
+            <span class="n">tensor_mf</span><span class="p">[</span><span class="n">mf_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">factor</span><span class="o">*</span><span class="n">tensor</span><span class="p">[</span><span class="n">fo_idx</span><span class="p">]</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">tensor_mf</span></div>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="get_tensor_from_mf"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.matrixoperations.get_tensor_from_mf.html#cratepy.tensor.matrixoperations.get_tensor_from_mf">[docs]</a><span class="k">def</span> <span class="nf">get_tensor_from_mf</span><span class="p">(</span><span class="n">tensor_mf</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Recover tensor from associated matricial form.</span>
+
+<span class="sd">    Recover a given second-order or fourth-order tensor from the associated</span>
+<span class="sd">    matricial form, given the problem number of spatial dimensions and given a</span>
+<span class="sd">    (compatible) ordered strain/stress components list. If the second-order</span>
+<span class="sd">    tensor is symmetric or the fourth-order tensor has minor symmetry</span>
+<span class="sd">    (component list only contains independent components), then matricial form</span>
+<span class="sd">    is assumed to follow the Kelvin notation [#]_. Otherwise, a columnwise</span>
+<span class="sd">    matricial form is assumed.</span>
+
+<span class="sd">    .. [#] Nagel, T., Görke, U.-J., Moerman, K. M., and Kolditz, O. (2016). On</span>
+<span class="sd">           advantages of the Kelvin mapping in finite element implementations</span>
+<span class="sd">           of deformation processes. Environmental Earth Sciences, 75(11):937</span>
+<span class="sd">           (see `here &lt;https://dspace.mit.edu/handle/1721.1/105251&gt;`_)</span>
+
+<span class="sd">    ----</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    tensor_mf : numpy.ndarray (1d or 2d)</span>
+<span class="sd">        Tensor stored in matricial form.</span>
+<span class="sd">    n_dim : int</span>
+<span class="sd">        Problem number of spatial dimensions.</span>
+<span class="sd">    comp_order : list</span>
+<span class="sd">        Strain/Stress components order associated to matricial form.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tensor : numpy.ndarray</span>
+<span class="sd">        Tensor recovered from matricial form.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Set tensor order</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tensor_mf</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">tensor_order</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="k">if</span> <span class="n">tensor_mf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">n_dim</span><span class="o">**</span><span class="mi">2</span> <span class="ow">and</span> \
+                <span class="n">tensor_mf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_dim</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Invalid number of components in tensor &#39;</span>
+                               <span class="s1">&#39;matricial form.&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">tensor_mf</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">tensor_order</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="k">if</span> <span class="n">tensor_mf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">tensor_mf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Fourth-order tensor matricial form must be a&#39;</span>
+                               <span class="s1">&#39;square matrix.&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">tensor_mf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">n_dim</span><span class="o">**</span><span class="mi">2</span> <span class="ow">and</span> \
+                <span class="n">tensor_mf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_dim</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Invalid number of components in tensor &#39;</span>
+                               <span class="s1">&#39;matricial form.&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Tensor matricial form must be a vector or a &#39;</span>
+                           <span class="s1">&#39;matrix.&#39;</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Check input arguments validity</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_dim</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">comp_order</span><span class="p">))]):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Invalid component in strain/stress components &#39;</span>
+                           <span class="s1">&#39;order.&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">any</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">comp</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">comp</span> <span class="ow">in</span> <span class="n">comp_order</span><span class="p">]):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Invalid component in strain/stress components &#39;</span>
+                           <span class="s1">&#39;order.&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)))</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Duplicated component in strain/stress components &#39;</span>
+                           <span class="s1">&#39;order.&#39;</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Set Kelvin notation flag</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)</span> <span class="o">==</span> <span class="n">n_dim</span><span class="o">**</span><span class="mi">2</span><span class="p">:</span>
+        <span class="n">is_kelvin_notation</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)</span> <span class="o">==</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_dim</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)):</span>
+        <span class="n">is_kelvin_notation</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Invalid number of components in strain/stress &#39;</span>
+                           <span class="s1">&#39;components order.&#39;</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Get tensor according to tensor order</span>
+    <span class="k">if</span> <span class="n">tensor_order</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="c1"># Set second-order and matricial form indexes</span>
+        <span class="n">so_indexes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">mf_indexes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)):</span>
+            <span class="n">so_indexes</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">comp_order</span><span class="p">[</span><span class="n">i</span><span class="p">])])</span>
+            <span class="n">mf_indexes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">comp_order</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">comp_order</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Initialize tensor</span>
+        <span class="k">if</span> <span class="n">tensor_mf</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s1">&#39;complex&#39;</span><span class="p">:</span>
+            <span class="n">tensor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">tensor_order</span><span class="o">*</span><span class="p">(</span><span class="n">n_dim</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tensor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">tensor_order</span><span class="o">*</span><span class="p">(</span><span class="n">n_dim</span><span class="p">,))</span>
+        <span class="c1"># Get tensor from matricial form</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mf_indexes</span><span class="p">)):</span>
+            <span class="n">mf_idx</span> <span class="o">=</span> <span class="n">mf_indexes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">so_idx</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">so_indexes</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">factor</span> <span class="o">=</span> <span class="mf">1.0</span>
+            <span class="k">if</span> <span class="n">is_kelvin_notation</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">so_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">so_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">factor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+                <span class="n">tensor</span><span class="p">[</span><span class="n">so_idx</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">factor</span><span class="p">)</span><span class="o">*</span><span class="n">tensor_mf</span><span class="p">[</span><span class="n">mf_idx</span><span class="p">]</span>
+            <span class="n">tensor</span><span class="p">[</span><span class="n">so_idx</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">factor</span><span class="p">)</span><span class="o">*</span><span class="n">tensor_mf</span><span class="p">[</span><span class="n">mf_idx</span><span class="p">]</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="k">elif</span> <span class="n">tensor_order</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="c1"># Set cartesian product of component list</span>
+        <span class="n">comps</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">it</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">comp_order</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">))</span>
+        <span class="c1"># Set fourth-order and matricial form indexes</span>
+        <span class="n">mf_indexes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">fo_indexes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">):</span>
+            <span class="n">fo_indexes</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+                               <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">comps</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">comps</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])])</span>
+            <span class="n">mf_indexes</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="n">comp_order</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">comps</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span>
+                                           <span class="n">comp_order</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">comps</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])]])</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Initialize tensor</span>
+        <span class="k">if</span> <span class="n">tensor_mf</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s1">&#39;complex&#39;</span><span class="p">:</span>
+            <span class="n">tensor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">tensor_order</span><span class="o">*</span><span class="p">(</span><span class="n">n_dim</span><span class="p">,</span> <span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tensor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">tensor_order</span><span class="o">*</span><span class="p">(</span><span class="n">n_dim</span><span class="p">,</span> <span class="p">))</span>
+        <span class="c1"># Get tensor from matricial form</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mf_indexes</span><span class="p">)):</span>
+            <span class="n">mf_idx</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">mf_indexes</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">fo_idx</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">fo_indexes</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">factor</span> <span class="o">=</span> <span class="mf">1.0</span>
+            <span class="k">if</span> <span class="n">is_kelvin_notation</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                                           <span class="ow">and</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">3</span><span class="p">]):</span>
+                <span class="n">factor</span> <span class="o">=</span> \
+                    <span class="n">factor</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">if</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">else</span> <span class="n">factor</span>
+                <span class="n">factor</span> <span class="o">=</span> \
+                    <span class="n">factor</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">if</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="k">else</span> <span class="n">factor</span>
+                <span class="k">if</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span>
+                    <span class="n">tensor</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">2</span><span class="p">:])]</span> <span class="o">=</span> \
+                        <span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">factor</span><span class="p">)</span><span class="o">*</span><span class="n">tensor_mf</span><span class="p">[</span><span class="n">mf_idx</span><span class="p">]</span>
+                    <span class="n">tensor</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])]</span> <span class="o">=</span> \
+                        <span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">factor</span><span class="p">)</span><span class="o">*</span><span class="n">tensor_mf</span><span class="p">[</span><span class="n">mf_idx</span><span class="p">]</span>
+                    <span class="n">tensor</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])]</span> <span class="o">=</span> \
+                        <span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">factor</span><span class="p">)</span><span class="o">*</span><span class="n">tensor_mf</span><span class="p">[</span><span class="n">mf_idx</span><span class="p">]</span>
+                <span class="k">elif</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                    <span class="n">tensor</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">2</span><span class="p">:])]</span> <span class="o">=</span> \
+                        <span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">factor</span><span class="p">)</span><span class="o">*</span><span class="n">tensor_mf</span><span class="p">[</span><span class="n">mf_idx</span><span class="p">]</span>
+                <span class="k">elif</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span>
+                    <span class="n">tensor</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])]</span> <span class="o">=</span> \
+                        <span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">factor</span><span class="p">)</span><span class="o">*</span><span class="n">tensor_mf</span><span class="p">[</span><span class="n">mf_idx</span><span class="p">]</span>
+            <span class="n">tensor</span><span class="p">[</span><span class="n">fo_idx</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">factor</span><span class="p">)</span><span class="o">*</span><span class="n">tensor_mf</span><span class="p">[</span><span class="n">mf_idx</span><span class="p">]</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">tensor</span></div>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="kelvin_factor"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.matrixoperations.kelvin_factor.html#cratepy.tensor.matrixoperations.kelvin_factor">[docs]</a><span class="k">def</span> <span class="nf">kelvin_factor</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get Kelvin notation coefficient of given strain/stress component.</span>
+
+<span class="sd">    The Kelvin notation [#]_ is a particular way of building the matricial form</span>
+<span class="sd">    of tensorial quantities.</span>
+
+<span class="sd">    .. [#] Nagel, T., Görke, U.-J., Moerman, K. M., and Kolditz, O. (2016). On</span>
+<span class="sd">           advantages of the Kelvin mapping in finite element implementations</span>
+<span class="sd">           of deformation processes. Environmental Earth Sciences, 75(11):937</span>
+<span class="sd">           (see `here &lt;https://dspace.mit.edu/handle/1721.1/105251&gt;`_)</span>
+
+<span class="sd">    ----</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    idx : int (or list[int])</span>
+<span class="sd">        Index of strain/stress component. Alternatively, a pair of</span>
+<span class="sd">        strain/stress components indexes (associated to a given fourth-order</span>
+<span class="sd">        tensor matricial form element) can also be provided.</span>
+<span class="sd">    comp_order : list</span>
+<span class="sd">        Strain/Stress components order associated to matricial form.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    factor : float</span>
+<span class="sd">        Kelvin notation coefficient.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)</span> <span class="o">==</span> <span class="mi">9</span><span class="p">:</span>
+        <span class="c1"># Set Kelvin coefficient associated to a non-symmetric tensor matricial</span>
+        <span class="c1"># storage</span>
+        <span class="n">factor</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Set Kelvin coefficient associated to symmetric tensor matricial</span>
+        <span class="c1"># storage</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">):</span>
+            <span class="c1"># Set Kelvin coefficient associated with single strain/stress</span>
+            <span class="c1"># component</span>
+            <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">comp_order</span><span class="p">[</span><span class="n">idx</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">comp_order</span><span class="p">[</span><span class="n">idx</span><span class="p">])[</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="n">factor</span> <span class="o">=</span> <span class="mf">1.0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">factor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># Set Kelvin coefficient associated with pair of strain/stress</span>
+            <span class="c1"># components</span>
+            <span class="n">factor</span> <span class="o">=</span> <span class="mf">1.0</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">comp_order</span><span class="p">[</span><span class="n">i</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span> <span class="o">!=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">comp_order</span><span class="p">[</span><span class="n">i</span><span class="p">])[</span><span class="mi">1</span><span class="p">]):</span>
+                    <span class="n">factor</span> <span class="o">=</span> <span class="n">factor</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Invalid strain/stress component(s) index(es).&#39;</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="k">return</span> <span class="n">factor</span></div>
+<span class="c1">#</span>
+<span class="c1">#                                                           Matrix condensation</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="get_condensed_matrix"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.matrixoperations.get_condensed_matrix.html#cratepy.tensor.matrixoperations.get_condensed_matrix">[docs]</a><span class="k">def</span> <span class="nf">get_condensed_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform condensation of matrix given a set of rows and columns.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    matrix : numpy.ndarray (2d)</span>
+<span class="sd">        Matrix to be condensed.</span>
+<span class="sd">    rows : numpy.ndarray (1d)</span>
+<span class="sd">        Indexes of rows to keep in condensed matrix.</span>
+<span class="sd">    cols : numpy.ndarray (1d)</span>
+<span class="sd">        Indexes of columns to keep in condensed matrix.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    matrix_condensed : numpy.ndarray (2d)</span>
+<span class="sd">        Condensed matrix.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check validity of rows and columns indexes to perform the condensation</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">)</span>
+                   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">))]):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;All the indexes specified to perform a matrix &#39;</span>
+                           <span class="s1">&#39;condensation must be non-negative integers.&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="nb">int</span><span class="p">)</span>
+                     <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">)</span>
+                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">))]):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;All the indexes specified to perform a matrix &#39;</span>
+                           <span class="s1">&#39;condensation must be non-negative integers.&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">rows</span><span class="p">)))</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span> <span class="ow">or</span> \
+            <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">cols</span><span class="p">)))</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Duplicated rows or columns indexes.&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">([</span><span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">))]):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Out-of-bounds row index.&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">([</span><span class="n">cols</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">))]):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Out-of-bounds column index.&#39;</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Build auxiliary matrices with rows and columns condensation indexes</span>
+    <span class="n">rows_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">cols_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)):</span>
+        <span class="n">rows_matrix</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">rows</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">)):</span>
+        <span class="n">cols_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">cols</span>
+    <span class="c1"># Build condensed matrix</span>
+    <span class="n">matrix_condensed</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">[</span><span class="n">rows_matrix</span><span class="p">,</span> <span class="n">cols_matrix</span><span class="p">]</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Return condensed matrix</span>
+    <span class="k">return</span> <span class="n">matrix_condensed</span></div>
+<span class="c1">#</span>
+<span class="c1">#                              Strain/Stress 2D - 3D matricial form conversions</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="get_state_3Dmf_from_2Dmf"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.matrixoperations.get_state_3Dmf_from_2Dmf.html#cratepy.tensor.matrixoperations.get_state_3Dmf_from_2Dmf">[docs]</a><span class="k">def</span> <span class="nf">get_state_3Dmf_from_2Dmf</span><span class="p">(</span><span class="n">problem_type</span><span class="p">,</span> <span class="n">mf_2d</span><span class="p">,</span> <span class="n">comp_33</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build 3D counterpart of 2D strain/stress second-order tensor.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    problem_type : int</span>
+<span class="sd">        Problem type: 2D plane strain (1), 2D plane stress (2),</span>
+<span class="sd">        2D axisymmetric (3) and 3D (4).</span>
+<span class="sd">    mf_2d : numpy.ndarray (1d)</span>
+<span class="sd">        Matricial form of 2D strain/stress second-order tensor.</span>
+<span class="sd">    comp_33 : float</span>
+<span class="sd">        Out-of-plane strain/stress component.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mf_3d : numpy.ndarray (1d)</span>
+<span class="sd">        Matricial form of 3D strain/stress second-order tensor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get 2D strain/stress components order in symmetric and nonsymmetric cases</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">comp_order_sym_2d</span><span class="p">,</span> <span class="n">comp_order_nsym_2d</span> <span class="o">=</span> \
+        <span class="n">get_problem_type_parameters</span><span class="p">(</span><span class="n">problem_type</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># Get 3D strain/stress components order in symmetric and nonsymmetric cases</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">comp_order_sym_3d</span><span class="p">,</span> <span class="n">comp_order_nsym_3d</span> <span class="o">=</span> \
+        <span class="n">get_problem_type_parameters</span><span class="p">(</span><span class="n">problem_type</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Set required strain/stress component order according to strain tensor</span>
+    <span class="c1"># symmetry</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mf_2d</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order_sym_2d</span><span class="p">):</span>
+        <span class="n">comp_order_2d</span> <span class="o">=</span> <span class="n">comp_order_sym_2d</span>
+        <span class="n">comp_order_3d</span> <span class="o">=</span> <span class="n">comp_order_sym_3d</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">comp_order_2d</span> <span class="o">=</span> <span class="n">comp_order_nsym_2d</span>
+        <span class="n">comp_order_3d</span> <span class="o">=</span> <span class="n">comp_order_nsym_3d</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Build 3D strain/stress second-order tensor (matricial form)</span>
+    <span class="n">mf_3d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order_3d</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">problem_type</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unavailable problem type.&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Include out-of-plane strain/stress component under 2D plane</span>
+        <span class="c1"># strain/stress conditions</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order_2d</span><span class="p">)):</span>
+            <span class="n">comp</span> <span class="o">=</span> <span class="n">comp_order_2d</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">mf_3d</span><span class="p">[</span><span class="n">comp_order_3d</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">comp</span><span class="p">)]</span> <span class="o">=</span> <span class="n">mf_2d</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">mf_3d</span><span class="p">[</span><span class="n">comp_order_3d</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;33&#39;</span><span class="p">)]</span> <span class="o">=</span> <span class="n">comp_33</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">mf_3d</span></div>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="get_state_2Dmf_from_3Dmf"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.matrixoperations.get_state_2Dmf_from_3Dmf.html#cratepy.tensor.matrixoperations.get_state_2Dmf_from_3Dmf">[docs]</a><span class="k">def</span> <span class="nf">get_state_2Dmf_from_3Dmf</span><span class="p">(</span><span class="n">problem_type</span><span class="p">,</span> <span class="n">mf_3d</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build 2D counterpart of 3D strain/stress second- or fourth-order tensor.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    problem_type : int</span>
+<span class="sd">        Problem type: 2D plane strain (1), 2D plane stress (2),</span>
+<span class="sd">        2D axisymmetric (3) and 3D (4).</span>
+<span class="sd">    mf_3d : numpy.ndarray (1d or 2d)</span>
+<span class="sd">        Matricial form of 3D strain/stress related tensor.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mf_2d : numpy.ndarray (1d or 2d)</span>
+<span class="sd">        Matricial form of 2D strain/stress related tensor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get 2D strain/stress components order in symmetric and nonsymmetric cases</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">comp_order_sym_2d</span><span class="p">,</span> <span class="n">comp_order_nsym_2d</span> <span class="o">=</span> \
+        <span class="n">get_problem_type_parameters</span><span class="p">(</span><span class="n">problem_type</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># Get 3D strain/stress components order in symmetric and nonsymmetric cases</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">comp_order_sym_3d</span><span class="p">,</span> <span class="n">comp_order_nsym_3d</span> <span class="o">=</span> \
+        <span class="n">get_problem_type_parameters</span><span class="p">(</span><span class="n">problem_type</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Set required strain/stress component order according to strain tensor</span>
+    <span class="c1"># symmetry</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mf_3d</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order_sym_3d</span><span class="p">):</span>
+        <span class="n">comp_order_2d</span> <span class="o">=</span> <span class="n">comp_order_sym_2d</span>
+        <span class="n">comp_order_3d</span> <span class="o">=</span> <span class="n">comp_order_sym_3d</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">comp_order_2d</span> <span class="o">=</span> <span class="n">comp_order_nsym_2d</span>
+        <span class="n">comp_order_3d</span> <span class="o">=</span> <span class="n">comp_order_nsym_3d</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Build 2D strain/stress related tensor (matricial form)</span>
+    <span class="n">mf_2d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mf_3d</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order_2d</span><span class="p">),))</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mf_3d</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order_2d</span><span class="p">)):</span>
+            <span class="n">comp</span> <span class="o">=</span> <span class="n">comp_order_2d</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">mf_2d</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">mf_3d</span><span class="p">[</span><span class="n">comp_order_3d</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">comp</span><span class="p">)]</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">mf_3d</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order_2d</span><span class="p">)):</span>
+            <span class="n">comp_j</span> <span class="o">=</span> <span class="n">comp_order_2d</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order_2d</span><span class="p">)):</span>
+                <span class="n">comp_i</span> <span class="o">=</span> <span class="n">comp_order_2d</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">mf_2d</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">mf_3d</span><span class="p">[</span><span class="n">comp_order_3d</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">comp_i</span><span class="p">),</span>
+                                    <span class="n">comp_order_3d</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">comp_j</span><span class="p">)]</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">mf_2d</span></div>
+<span class="c1">#</span>
+<span class="c1">#                                                    P-th root of square matrix</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="matrix_root"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.matrixoperations.matrix_root.html#cratepy.tensor.matrixoperations.matrix_root">[docs]</a><span class="k">def</span> <span class="nf">matrix_root</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute p-th root of general nonsymmetric square matrix.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    matrix : numpy.ndarray (2d)</span>
+<span class="sd">        Square matrix.</span>
+<span class="sd">    p : float</span>
+<span class="sd">        Factor which defines the p-th root of square matrix.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    matrix_proot : numpy.ndarray (2d)</span>
+<span class="sd">        p-th root of square matrix.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Compute p-th root of square matrix</span>
+    <span class="n">matrix_proot</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">expm</span><span class="p">(</span><span class="n">p</span><span class="o">*</span><span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">logm</span><span class="p">(</span><span class="n">matrix</span><span class="p">))</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">matrix_proot</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

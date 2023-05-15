@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cratepy.ioput.packager &mdash; CRATE 1.0.3 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            CRATE
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/cratepy.html">Code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">CRATE</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">cratepy.ioput.packager</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for cratepy.ioput.packager</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Store data in suitable containers.</span>
+
+<span class="sd">This module includes a set of functions that store data in suitable</span>
+<span class="sd">category-related containers.</span>
+
+<span class="sd">Functions</span>
+<span class="sd">---------</span>
+<span class="sd">store_paths_data</span>
+<span class="sd">    Store problem directories and files paths.</span>
+<span class="sd">store_problem_data</span>
+<span class="sd">    Store data associated with the problem formulation and type.</span>
+<span class="sd">store_material_data</span>
+<span class="sd">    Store data associated with the material phases.</span>
+<span class="sd">store_loading_path_data</span>
+<span class="sd">    Store data associated with the macroscale loading path.</span>
+<span class="sd">store_regular_grid_data</span>
+<span class="sd">    Store data associated with the RVE spatial discretization.</span>
+<span class="sd">store_clustering_data</span>
+<span class="sd">    Store data associated with the clustering-based domain decomposition.</span>
+<span class="sd">store_scs_data</span>
+<span class="sd">    Store data associated with the self-consistent scheme.</span>
+<span class="sd">store_algorithmic_data</span>
+<span class="sd">    Store data associated with the problem solution algorithmic parameters.</span>
+<span class="sd">store_vtk_data</span>
+<span class="sd">    Store data associated with the VTK output.</span>
+<span class="sd">store_output_data</span>
+<span class="sd">    Store data associated with general output files.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#                                                                       Modules</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1"># Standard</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">itertools</span> <span class="k">as</span> <span class="nn">it</span>
+<span class="c1"># Third-party</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="c1">#</span>
+<span class="c1">#                                                          Authorship &amp; Credits</span>
+<span class="c1"># =============================================================================</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Bernardo Ferreira (bernardo_ferreira@brown.edu)&#39;</span>
+<span class="n">__credits__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Bernardo Ferreira&#39;</span><span class="p">,</span> <span class="p">]</span>
+<span class="n">__status__</span> <span class="o">=</span> <span class="s1">&#39;Stable&#39;</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="store_paths_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_paths_data.html#cratepy.ioput.packager.store_paths_data">[docs]</a><span class="k">def</span> <span class="nf">store_paths_data</span><span class="p">(</span><span class="n">input_file_name</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">input_file_dir</span><span class="p">,</span>
+                     <span class="n">problem_name</span><span class="p">,</span> <span class="n">problem_dir</span><span class="p">,</span> <span class="n">offline_stage_dir</span><span class="p">,</span>
+                     <span class="n">postprocess_dir</span><span class="p">,</span> <span class="n">crve_file_path</span><span class="p">,</span> <span class="n">discret_file_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Store problem directories and files paths.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input_file_name : str</span>
+<span class="sd">        Input data file name.</span>
+<span class="sd">    input_file_path : str</span>
+<span class="sd">        Input data file path.</span>
+<span class="sd">    input_file_dir : str</span>
+<span class="sd">        Input data file directory path.</span>
+<span class="sd">    problem_name : str</span>
+<span class="sd">        Problem name.</span>
+<span class="sd">    problem_dir : str</span>
+<span class="sd">        Problem output directory path.</span>
+<span class="sd">    offline_stage_dir : str</span>
+<span class="sd">        Problem output offline-stage subdirectory path.</span>
+<span class="sd">    postprocess_dir : str</span>
+<span class="sd">        Problem output post-processing subdirectory path.</span>
+<span class="sd">    crve_file_path : str</span>
+<span class="sd">        Problem &#39;.crve&#39; output file path.</span>
+<span class="sd">    discret_file_dir : str, default=None</span>
+<span class="sd">        Spatial discretization file directory path.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dirs_dict : dict</span>
+<span class="sd">        Container.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Initialize directories and paths dictionary</span>
+    <span class="n">dirs_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="c1"># Build directories and paths dictionary</span>
+    <span class="n">dirs_dict</span><span class="p">[</span><span class="s1">&#39;input_file_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">input_file_name</span>
+    <span class="n">dirs_dict</span><span class="p">[</span><span class="s1">&#39;input_file_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">input_file_path</span>
+    <span class="n">dirs_dict</span><span class="p">[</span><span class="s1">&#39;input_file_dir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">input_file_dir</span>
+    <span class="n">dirs_dict</span><span class="p">[</span><span class="s1">&#39;discret_file_dir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">discret_file_dir</span>
+    <span class="n">dirs_dict</span><span class="p">[</span><span class="s1">&#39;problem_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">problem_name</span>
+    <span class="n">dirs_dict</span><span class="p">[</span><span class="s1">&#39;problem_dir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">problem_dir</span>
+    <span class="n">dirs_dict</span><span class="p">[</span><span class="s1">&#39;offline_stage_dir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">offline_stage_dir</span>
+    <span class="n">dirs_dict</span><span class="p">[</span><span class="s1">&#39;crve_file_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">crve_file_path</span>
+    <span class="n">dirs_dict</span><span class="p">[</span><span class="s1">&#39;postprocess_dir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">postprocess_dir</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">dirs_dict</span></div>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="store_problem_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_problem_data.html#cratepy.ioput.packager.store_problem_data">[docs]</a><span class="k">def</span> <span class="nf">store_problem_data</span><span class="p">(</span><span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span>
+                       <span class="n">comp_order_nsym</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Store data associated with the problem formulation and type.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    strain_formulation: {&#39;infinitesimal&#39;, &#39;finite&#39;}</span>
+<span class="sd">        Problem strain formulation.</span>
+<span class="sd">    problem_type : int</span>
+<span class="sd">        Problem type: 2D plane strain (1), 2D plane stress (2),</span>
+<span class="sd">        2D axisymmetric (3) and 3D (4).</span>
+<span class="sd">    n_dim : int</span>
+<span class="sd">        Problem number of spatial dimensions.</span>
+<span class="sd">    comp_order_sym : list[str]</span>
+<span class="sd">        Strain/Stress components symmetric order.</span>
+<span class="sd">    comp_order_nsym : list[str]</span>
+<span class="sd">        Strain/Stress components nonsymmetric order.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    problem_dict : dict</span>
+<span class="sd">        Container.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Initialize problem dictionary</span>
+    <span class="n">problem_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="c1"># Build problem dictionary</span>
+    <span class="n">problem_dict</span><span class="p">[</span><span class="s1">&#39;strain_formulation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">strain_formulation</span>
+    <span class="n">problem_dict</span><span class="p">[</span><span class="s1">&#39;problem_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">problem_type</span>
+    <span class="n">problem_dict</span><span class="p">[</span><span class="s1">&#39;n_dim&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">n_dim</span>
+    <span class="n">problem_dict</span><span class="p">[</span><span class="s1">&#39;comp_order_sym&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">comp_order_sym</span>
+    <span class="n">problem_dict</span><span class="p">[</span><span class="s1">&#39;comp_order_nsym&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">comp_order_nsym</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">problem_dict</span></div>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="store_material_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_material_data.html#cratepy.ioput.packager.store_material_data">[docs]</a><span class="k">def</span> <span class="nf">store_material_data</span><span class="p">(</span><span class="n">material_phases</span><span class="p">,</span> <span class="n">material_phases_data</span><span class="p">,</span>
+                        <span class="n">material_phases_properties</span><span class="p">,</span> <span class="n">material_phases_vf</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Store data associated with the material phases.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    material_phases : list[str]</span>
+<span class="sd">        RVE material phases labels (str).</span>
+<span class="sd">    material_phases_data : dict</span>
+<span class="sd">        Material phase data (item, dict) associated with each material phase</span>
+<span class="sd">        (key, str).</span>
+<span class="sd">    material_phases_properties : dict</span>
+<span class="sd">        Constitutive model material properties (item, dict) associated with</span>
+<span class="sd">        each material phase (key, str).</span>
+<span class="sd">    material_phases_vf : dict</span>
+<span class="sd">        Volume fraction (item, float) associated to each material phase</span>
+<span class="sd">        (key, str).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mat_dict : dict</span>
+<span class="sd">        Container.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Initialize material phases dictionary</span>
+    <span class="n">mat_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="c1"># Build material phases dictionary</span>
+    <span class="n">mat_dict</span><span class="p">[</span><span class="s1">&#39;n_material_phases&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">material_phases</span><span class="p">)</span>
+    <span class="n">mat_dict</span><span class="p">[</span><span class="s1">&#39;material_phases&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">material_phases</span>
+    <span class="n">mat_dict</span><span class="p">[</span><span class="s1">&#39;material_phases_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">material_phases_data</span>
+    <span class="n">mat_dict</span><span class="p">[</span><span class="s1">&#39;material_phases_properties&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">material_phases_properties</span>
+    <span class="n">mat_dict</span><span class="p">[</span><span class="s1">&#39;material_phases_vf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">material_phases_vf</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">mat_dict</span></div>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="store_loading_path_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_loading_path_data.html#cratepy.ioput.packager.store_loading_path_data">[docs]</a><span class="k">def</span> <span class="nf">store_loading_path_data</span><span class="p">(</span><span class="n">mac_load_type</span><span class="p">,</span> <span class="n">mac_load</span><span class="p">,</span> <span class="n">mac_load_presctype</span><span class="p">,</span>
+                            <span class="n">mac_load_increm</span><span class="p">,</span> <span class="n">is_solution_rewinding</span><span class="p">,</span>
+                            <span class="n">rewind_state_criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                            <span class="n">rewinding_criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_n_rewinds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Store data associated with the macroscale loading path.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mac_load_type : {1, 2, 3}</span>
+<span class="sd">        Loading type:</span>
+
+<span class="sd">        * 1 : Macroscale strain constraint</span>
+<span class="sd">        * 2 : Macroscale stress constraint</span>
+<span class="sd">        * 3 : Macroscale strain and stress constraint</span>
+<span class="sd">    mac_load : dict</span>
+<span class="sd">        For each loading nature type (key, {&#39;strain&#39;, &#39;stress&#39;}), stores</span>
+<span class="sd">        the loading constraints for each loading subpath in a</span>
+<span class="sd">        numpy.ndarray (2d), where the i-th row is associated with the i-th</span>
+<span class="sd">        strain/stress component and the j-th column is associated with the</span>
+<span class="sd">        j-th loading subpath.</span>
+<span class="sd">    mac_load_presctype : numpy.ndarray (2d)</span>
+<span class="sd">        Loading nature type ({&#39;strain&#39;, &#39;stress&#39;}) associated with each</span>
+<span class="sd">        loading constraint (ndarray of shape (n_comps, n_load_subpaths)),</span>
+<span class="sd">        where the i-th row is associated with the i-th strain/stress</span>
+<span class="sd">        component and the j-th column is associated with the j-th loading</span>
+<span class="sd">        subpath.</span>
+<span class="sd">    mac_load_increm : dict</span>
+<span class="sd">        For each loading subpath id (key, str), stores a numpy.ndarray of shape</span>
+<span class="sd">        (n_load_increments, 2) where each row is associated with a prescribed</span>
+<span class="sd">        loading increment, and the columns 0 and 1 contain the corresponding</span>
+<span class="sd">        incremental load factor and incremental time, respectively.</span>
+<span class="sd">    is_solution_rewinding : bool, default=False</span>
+<span class="sd">        Problem solution rewinding flag.</span>
+<span class="sd">    rewind_state_criterion : tuple, default=None</span>
+<span class="sd">        Rewind state storage criterion [0] and associated parameter [1].</span>
+<span class="sd">    rewinding_criterion : tuple, default=None</span>
+<span class="sd">        Rewinding criterion [0] and associated parameter [1].</span>
+<span class="sd">    max_n_rewinds : int, default=None</span>
+<span class="sd">        Maximum number of rewind operations.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    macload_dict : dict</span>
+<span class="sd">        Container.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Initialize macroscale loading dictionary</span>
+    <span class="n">macload_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="c1"># Build macroscale loading dictionary</span>
+    <span class="n">macload_dict</span><span class="p">[</span><span class="s1">&#39;mac_load_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mac_load_type</span>
+    <span class="n">macload_dict</span><span class="p">[</span><span class="s1">&#39;mac_load&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mac_load</span>
+    <span class="n">macload_dict</span><span class="p">[</span><span class="s1">&#39;mac_load_presctype&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mac_load_presctype</span>
+    <span class="n">macload_dict</span><span class="p">[</span><span class="s1">&#39;mac_load_increm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mac_load_increm</span>
+    <span class="n">macload_dict</span><span class="p">[</span><span class="s1">&#39;is_solution_rewinding&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">is_solution_rewinding</span>
+    <span class="n">macload_dict</span><span class="p">[</span><span class="s1">&#39;rewind_state_criterion&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rewind_state_criterion</span>
+    <span class="n">macload_dict</span><span class="p">[</span><span class="s1">&#39;rewinding_criterion&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rewinding_criterion</span>
+    <span class="n">macload_dict</span><span class="p">[</span><span class="s1">&#39;max_n_rewinds&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_n_rewinds</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">macload_dict</span></div>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="store_regular_grid_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_regular_grid_data.html#cratepy.ioput.packager.store_regular_grid_data">[docs]</a><span class="k">def</span> <span class="nf">store_regular_grid_data</span><span class="p">(</span><span class="n">discret_file_path</span><span class="p">,</span> <span class="n">regular_grid</span><span class="p">,</span> <span class="n">rve_dims</span><span class="p">,</span>
+                            <span class="n">problem_dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Store data associated with the RVE spatial discretization.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    discret_file_path : str</span>
+<span class="sd">        Spatial discretization file path.</span>
+<span class="sd">    regular_grid : numpy.ndarray (2d or 3d)</span>
+<span class="sd">        Regular grid of voxels (spatial discretization of the RVE), where</span>
+<span class="sd">        each entry contains the material phase label (int) assigned to the</span>
+<span class="sd">        corresponding voxel.</span>
+<span class="sd">    rve_dims : list</span>
+<span class="sd">        RVE size in each dimension.</span>
+<span class="sd">    problem_dict : dict</span>
+<span class="sd">        Container.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    rg_dict : dict</span>
+<span class="sd">        Container.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get problem data</span>
+    <span class="n">n_dim</span> <span class="o">=</span> <span class="n">problem_dict</span><span class="p">[</span><span class="s1">&#39;n_dim&#39;</span><span class="p">]</span>
+    <span class="c1"># Set number of pixels/voxels in each dimension</span>
+    <span class="n">n_voxels_dims</span> <span class="o">=</span> <span class="p">[</span><span class="n">regular_grid</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">regular_grid</span><span class="o">.</span><span class="n">shape</span><span class="p">))]</span>
+    <span class="n">n_voxels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">n_voxels_dims</span><span class="p">)</span>
+    <span class="c1"># Get material phases present in the microstructure</span>
+    <span class="n">material_phases</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">regular_grid</span><span class="p">))]</span>
+    <span class="c1"># Flatten the regular grid array such that:</span>
+    <span class="c1">#</span>
+    <span class="c1"># 2D Problem (swipe 2-1):</span>
+    <span class="c1">#   voxel(i,j) is stored in index = i*d2 + j, where d2 is the</span>
+    <span class="c1">#   the number of voxels along dimension 2</span>
+    <span class="c1">#</span>
+    <span class="c1"># 3D Problem (swipe 3-2-1):</span>
+    <span class="c1">#   voxel(i,j,k) is stored in index = i*(d2*d3) + j*d3 + k,</span>
+    <span class="c1">#   where d2 and d3 are the number of voxels along dimensions 2 and 3</span>
+    <span class="c1">#   respectively</span>
+    <span class="c1">#</span>
+    <span class="n">regular_grid_flat</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">regular_grid</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+    <span class="c1"># Build flattened list with the voxels indexes (consistent with the flat</span>
+    <span class="c1"># regular grid)</span>
+    <span class="n">voxels_idx_flat</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">n_voxels_dims</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_dim</span><span class="p">)])</span>
+    <span class="n">voxels_idx_flat</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">unravel_index</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_voxels</span><span class="p">)]</span>
+    <span class="c1"># Set voxel flattened indexes associated to each material phase</span>
+    <span class="n">phase_voxel_flatidx</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">mat_phase</span> <span class="ow">in</span> <span class="n">material_phases</span><span class="p">:</span>
+        <span class="n">is_phase_list</span> <span class="o">=</span> <span class="n">regular_grid</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">mat_phase</span><span class="p">)</span>
+        <span class="n">phase_voxel_flatidx</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="nb">list</span><span class="p">(</span><span class="n">it</span><span class="o">.</span><span class="n">compress</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">is_phase_list</span><span class="p">)),</span> <span class="n">is_phase_list</span><span class="p">))</span>
+    <span class="c1"># Initialize regular grid dictionary</span>
+    <span class="n">rg_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="c1"># Build regular grid dictionary</span>
+    <span class="n">rg_dict</span><span class="p">[</span><span class="s1">&#39;rve_dims&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rve_dims</span>
+    <span class="n">rg_dict</span><span class="p">[</span><span class="s1">&#39;regular_grid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">regular_grid</span>
+    <span class="n">rg_dict</span><span class="p">[</span><span class="s1">&#39;n_voxels_dims&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">n_voxels_dims</span>
+    <span class="n">rg_dict</span><span class="p">[</span><span class="s1">&#39;regular_grid_flat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">regular_grid_flat</span>
+    <span class="n">rg_dict</span><span class="p">[</span><span class="s1">&#39;voxels_idx_flat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">voxels_idx_flat</span>
+    <span class="n">rg_dict</span><span class="p">[</span><span class="s1">&#39;phase_voxel_flatidx&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">phase_voxel_flatidx</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">rg_dict</span></div>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="store_clustering_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_clustering_data.html#cratepy.ioput.packager.store_clustering_data">[docs]</a><span class="k">def</span> <span class="nf">store_clustering_data</span><span class="p">(</span><span class="n">clustering_solution_method</span><span class="p">,</span> <span class="n">standardization_method</span><span class="p">,</span>
+                          <span class="n">phase_n_clusters</span><span class="p">,</span> <span class="n">rg_dict</span><span class="p">,</span> <span class="n">clustering_type</span><span class="p">,</span>
+                          <span class="n">base_clustering_scheme</span><span class="p">,</span> <span class="n">adaptive_clustering_scheme</span><span class="p">,</span>
+                          <span class="n">adapt_criterion_data</span><span class="p">,</span> <span class="n">adaptivity_type</span><span class="p">,</span>
+                          <span class="n">adaptivity_control_feature</span><span class="p">,</span> <span class="n">clust_adapt_freq</span><span class="p">,</span>
+                          <span class="n">is_clust_adapt_output</span><span class="p">,</span> <span class="n">is_store_final_clustering</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Store data associated with the clustering-based domain decomposition.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    clustering_solution_method : int</span>
+<span class="sd">        Identifier of DNS homogenization-based multi-scale DNS method to</span>
+<span class="sd">        compute the clustering features data.</span>
+<span class="sd">    standardization_method : int</span>
+<span class="sd">        Identifier of global cluster analysis data standardization algorithm.</span>
+<span class="sd">    phase_n_clusters : dict</span>
+<span class="sd">        Number of clusters (item, int) prescribed for each material phase</span>
+<span class="sd">        (key, str).</span>
+<span class="sd">    rg_dict : dict</span>
+<span class="sd">        Container.</span>
+<span class="sd">    clustering_type : str</span>
+<span class="sd">        Type of cluster-reduced material phase.</span>
+<span class="sd">    base_clustering_scheme : dict</span>
+<span class="sd">        Prescribed base clustering scheme (item, numpy.ndarray of shape</span>
+<span class="sd">        (n_clusterings, 3)) for each material phase (key, str). Each row is</span>
+<span class="sd">        associated with a unique clustering characterized by a clustering</span>
+<span class="sd">        algorithm (col 1, int), a list of features (col 2, list[int]) and a</span>
+<span class="sd">        list of the features data matrix&#39; indexes (col 3, list[int]).</span>
+<span class="sd">    adaptive_clustering_scheme : dict</span>
+<span class="sd">        Prescribed adaptive clustering scheme (item, numpy.ndarray of shape</span>
+<span class="sd">        (n_clusterings, 3)) for each material phase (key, str). Each row is</span>
+<span class="sd">        associated with a unique clustering characterized by a clustering</span>
+<span class="sd">        algorithm (col 1, int), a list of features (col 2, list[int]) and a</span>
+<span class="sd">        list of the features data matrix&#39; indexes (col 3, list[int]).</span>
+<span class="sd">    adapt_criterion_data : dict</span>
+<span class="sd">        Clustering adaptivity criterion (item, dict) associated with each</span>
+<span class="sd">        material phase (key, str). This dictionary contains the adaptivity</span>
+<span class="sd">        criterion to be used and the required parameters.</span>
+<span class="sd">    adaptivity_type : dict</span>
+<span class="sd">        Clustering adaptivity type (item, dict) associated with each material</span>
+<span class="sd">        phase (key, str). This dictionary contains the adaptivity type to be</span>
+<span class="sd">        used and the required parameters.</span>
+<span class="sd">    adaptivity_control_feature : dict</span>
+<span class="sd">        Clustering adaptivity control feature (item, str) associated with each</span>
+<span class="sd">        material phase (key, str).</span>
+<span class="sd">    clust_adapt_freq : dict</span>
+<span class="sd">        Clustering adaptivity frequency (relative to the macroscale</span>
+<span class="sd">        loading) (item, int, default=1) associated with each adaptive</span>
+<span class="sd">        cluster-reduced material phase (key, str).</span>
+<span class="sd">    is_clust_adapt_output : bool</span>
+<span class="sd">        Clustering adaptivity output flag.</span>
+<span class="sd">    is_store_final_clustering : bool</span>
+<span class="sd">        `True` to store CRVE final clustering state into file, `False`</span>
+<span class="sd">        otherwise.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    clst_dict : dict</span>
+<span class="sd">        Container.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get regular grid data</span>
+    <span class="n">n_voxels_dims</span> <span class="o">=</span> <span class="n">rg_dict</span><span class="p">[</span><span class="s1">&#39;n_voxels_dims&#39;</span><span class="p">]</span>
+    <span class="c1"># Initialize array with voxels cluster labels</span>
+    <span class="n">voxels_clusters</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n_voxels_dims</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="c1"># Initialize dictionary with each material phase clusters</span>
+    <span class="n">phase_clusters</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="c1"># Initialize dictionary with clusters volume fractions</span>
+    <span class="n">clusters_vf</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="c1"># Initialize clustering dictionary</span>
+    <span class="n">clst_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="c1"># Build clustering dictionary</span>
+    <span class="n">clst_dict</span><span class="p">[</span><span class="s1">&#39;clustering_solution_method&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clustering_solution_method</span>
+    <span class="n">clst_dict</span><span class="p">[</span><span class="s1">&#39;standardization_method&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">standardization_method</span>
+    <span class="n">clst_dict</span><span class="p">[</span><span class="s1">&#39;phase_n_clusters&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">phase_n_clusters</span>
+    <span class="n">clst_dict</span><span class="p">[</span><span class="s1">&#39;phase_clusters&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">phase_clusters</span>
+    <span class="n">clst_dict</span><span class="p">[</span><span class="s1">&#39;voxels_clusters&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">voxels_clusters</span>
+    <span class="n">clst_dict</span><span class="p">[</span><span class="s1">&#39;clusters_vf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clusters_vf</span>
+    <span class="n">clst_dict</span><span class="p">[</span><span class="s1">&#39;clustering_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clustering_type</span>
+    <span class="n">clst_dict</span><span class="p">[</span><span class="s1">&#39;base_clustering_scheme&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">base_clustering_scheme</span>
+    <span class="n">clst_dict</span><span class="p">[</span><span class="s1">&#39;adaptive_clustering_scheme&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adaptive_clustering_scheme</span>
+    <span class="n">clst_dict</span><span class="p">[</span><span class="s1">&#39;adapt_criterion_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adapt_criterion_data</span>
+    <span class="n">clst_dict</span><span class="p">[</span><span class="s1">&#39;adaptivity_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adaptivity_type</span>
+    <span class="n">clst_dict</span><span class="p">[</span><span class="s1">&#39;adaptivity_control_feature&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adaptivity_control_feature</span>
+    <span class="n">clst_dict</span><span class="p">[</span><span class="s1">&#39;clust_adapt_freq&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clust_adapt_freq</span>
+    <span class="n">clst_dict</span><span class="p">[</span><span class="s1">&#39;is_clust_adapt_output&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">is_clust_adapt_output</span>
+    <span class="n">clst_dict</span><span class="p">[</span><span class="s1">&#39;is_store_final_clustering&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">is_store_final_clustering</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">clst_dict</span></div>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="store_scs_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_scs_data.html#cratepy.ioput.packager.store_scs_data">[docs]</a><span class="k">def</span> <span class="nf">store_scs_data</span><span class="p">(</span><span class="n">self_consistent_scheme</span><span class="p">,</span> <span class="n">scs_parameters</span><span class="p">,</span>
+                   <span class="n">scs_max_n_iterations</span><span class="p">,</span> <span class="n">scs_conv_tol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Store data associated with the self-consistent scheme.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    self_consistent_scheme : {&#39;none&#39;, &#39;regression&#39;,}</span>
+<span class="sd">        Self-consistent scheme to update the elastic reference material</span>
+<span class="sd">        properties.</span>
+<span class="sd">    scs_parameters : {dict, None}</span>
+<span class="sd">        Self-consistent scheme parameters (key, str; item, {int, float, bool}).</span>
+<span class="sd">    scs_max_n_iterations : int</span>
+<span class="sd">        Self-consistent scheme maximum number of iterations.</span>
+<span class="sd">    scs_conv_tol : float</span>
+<span class="sd">        Self-consistent scheme convergence tolerance.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    scs_dict : dict</span>
+<span class="sd">        Container.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Initialize self-consistent scheme dictionary</span>
+    <span class="n">scs_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="c1"># Build self-consistent scheme dictionary</span>
+    <span class="n">scs_dict</span><span class="p">[</span><span class="s1">&#39;self_consistent_scheme&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">self_consistent_scheme</span>
+    <span class="n">scs_dict</span><span class="p">[</span><span class="s1">&#39;scs_parameters&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scs_parameters</span>
+    <span class="n">scs_dict</span><span class="p">[</span><span class="s1">&#39;scs_max_n_iterations&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scs_max_n_iterations</span>
+    <span class="n">scs_dict</span><span class="p">[</span><span class="s1">&#39;scs_conv_tol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scs_conv_tol</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">scs_dict</span></div>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="store_algorithmic_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_algorithmic_data.html#cratepy.ioput.packager.store_algorithmic_data">[docs]</a><span class="k">def</span> <span class="nf">store_algorithmic_data</span><span class="p">(</span><span class="n">max_n_iterations</span><span class="p">,</span> <span class="n">conv_tol</span><span class="p">,</span> <span class="n">max_subinc_level</span><span class="p">,</span>
+                           <span class="n">max_cinc_cuts</span><span class="p">,</span> <span class="n">su_max_n_iterations</span><span class="p">,</span> <span class="n">su_conv_tol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Store data associated with the problem solution algorithmic parameters.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    max_n_iterations : int</span>
+<span class="sd">        Newton-Raphson maximum number of iterations.</span>
+<span class="sd">    conv_tol : float</span>
+<span class="sd">        Newton-Raphson convergence tolerance.</span>
+<span class="sd">    max_subinc_level : int</span>
+<span class="sd">        Maximum level of loading subincrementation.</span>
+<span class="sd">    max_cinc_cuts : int</span>
+<span class="sd">        Maximum number of consecutive increment cuts.</span>
+<span class="sd">    su_max_n_iterations : int</span>
+<span class="sd">        State update maximum number of iterations.</span>
+<span class="sd">    su_conv_tol : float</span>
+<span class="sd">        State update convergence tolerance.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    algpar_dict : dict</span>
+<span class="sd">        Container.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Initialize algorithmic parameters dictionary</span>
+    <span class="n">algpar_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="c1"># Build algorithmic parameters dictionary</span>
+    <span class="n">algpar_dict</span><span class="p">[</span><span class="s1">&#39;max_n_iterations&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_n_iterations</span>
+    <span class="n">algpar_dict</span><span class="p">[</span><span class="s1">&#39;conv_tol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">conv_tol</span>
+    <span class="n">algpar_dict</span><span class="p">[</span><span class="s1">&#39;max_subinc_level&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_subinc_level</span>
+    <span class="n">algpar_dict</span><span class="p">[</span><span class="s1">&#39;max_cinc_cuts&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_cinc_cuts</span>
+    <span class="n">algpar_dict</span><span class="p">[</span><span class="s1">&#39;su_max_n_iterations&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">su_max_n_iterations</span>
+    <span class="n">algpar_dict</span><span class="p">[</span><span class="s1">&#39;su_conv_tol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">su_conv_tol</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">algpar_dict</span></div>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="store_vtk_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_vtk_data.html#cratepy.ioput.packager.store_vtk_data">[docs]</a><span class="k">def</span> <span class="nf">store_vtk_data</span><span class="p">(</span><span class="n">is_vtk_output</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Store data associated with the VTK output.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    is_vtk_output : bool</span>
+<span class="sd">        VTK output flag.</span>
+<span class="sd">    *args :</span>
+<span class="sd">        * vtk_inc_div (int): VTK output increment divider.</span>
+<span class="sd">        * vtk_vars {&#39;all&#39;, &#39;common&#39;}: VTK output constitutive state variables.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    vtk_dict : dict</span>
+<span class="sd">        Container.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Initialize VTK dictionary</span>
+    <span class="n">vtk_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="c1"># Build VTK dictionary</span>
+    <span class="n">vtk_dict</span><span class="p">[</span><span class="s1">&#39;is_vtk_output&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">is_vtk_output</span>
+    <span class="k">if</span> <span class="n">is_vtk_output</span><span class="p">:</span>
+        <span class="n">vtk_format</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">vtk_inc_div</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">vtk_vars</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">vtk_dict</span><span class="p">[</span><span class="s1">&#39;vtk_format&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vtk_format</span>
+        <span class="n">vtk_dict</span><span class="p">[</span><span class="s1">&#39;vtk_inc_div&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vtk_inc_div</span>
+        <span class="n">vtk_dict</span><span class="p">[</span><span class="s1">&#39;vtk_vars&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vtk_vars</span>
+        <span class="n">vtk_dict</span><span class="p">[</span><span class="s1">&#39;vtk_precision&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;SinglePrecision&#39;</span>
+        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">byteorder</span> <span class="o">==</span> <span class="s1">&#39;little&#39;</span><span class="p">:</span>
+            <span class="n">vtk_dict</span><span class="p">[</span><span class="s1">&#39;vtk_byte_order&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;LittleEndian&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">vtk_dict</span><span class="p">[</span><span class="s1">&#39;vtk_byte_order&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;BigEndian&#39;</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">vtk_dict</span></div>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="store_output_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_output_data.html#cratepy.ioput.packager.store_output_data">[docs]</a><span class="k">def</span> <span class="nf">store_output_data</span><span class="p">(</span><span class="n">is_ref_material_output</span><span class="p">,</span> <span class="n">is_voxels_output</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Store data associated with general output files.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    is_ref_material_output : bool, default=False</span>
+<span class="sd">        Reference material output flag.</span>
+<span class="sd">    is_voxels_output : bool</span>
+<span class="sd">        Voxels output file flag.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    output_dict : dict</span>
+<span class="sd">        Container.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Initialize output dictionary</span>
+    <span class="n">output_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="c1"># Build output dictionary</span>
+    <span class="n">output_dict</span><span class="p">[</span><span class="s1">&#39;is_ref_material_output&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">is_ref_material_output</span>
+    <span class="n">output_dict</span><span class="p">[</span><span class="s1">&#39;is_voxels_output&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">is_voxels_output</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">output_dict</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

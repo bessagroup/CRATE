@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cratepy.online.crom.asca.RewindManager &mdash; CRATE 1.0.3 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="cratepy.online.crom.asca.VTKOutput" href="cratepy.online.crom.asca.VTKOutput.html" />
+    <link rel="prev" title="cratepy.online.crom.asca.ReferenceMaterialOptimizer" href="cratepy.online.crom.asca.ReferenceMaterialOptimizer.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            CRATE
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="cratepy.html">Code</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cratepy.crate_simulation.html">cratepy.crate_simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.clustering.html">cratepy.clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.ioput.html">cratepy.ioput</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.main.html">cratepy.main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.material.html">cratepy.material</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="cratepy.online.html">cratepy.online</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="cratepy.online.crom.html">cratepy.online.crom</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="cratepy.online.crom.asca.html">cratepy.online.crom.asca</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.online.loading.html">cratepy.online.loading</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.optimization.html">cratepy.optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.tensor.html">cratepy.tensor</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CRATE</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="cratepy.html">cratepy</a></li>
+          <li class="breadcrumb-item"><a href="cratepy.online.html">cratepy.online</a></li>
+          <li class="breadcrumb-item"><a href="cratepy.online.crom.html">cratepy.online.crom</a></li>
+          <li class="breadcrumb-item"><a href="cratepy.online.crom.asca.html">cratepy.online.crom.asca</a></li>
+      <li class="breadcrumb-item active">cratepy.online.crom.asca.RewindManager</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cratepy-online-crom-asca-rewindmanager">
+<h1>cratepy.online.crom.asca.RewindManager<a class="headerlink" href="#cratepy-online-crom-asca-rewindmanager" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="cratepy.online.crom.asca.RewindManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RewindManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rewind_state_criterion</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rewinding_criterion</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_n_rewinds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/online/loading/macloadincrem.html#RewindManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.online.crom.asca.RewindManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Manage analysis rewind operations and evaluate analysis rewind criteria.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cratepy.online.crom.asca.RewindManager._n_rewinds">
+<span class="sig-name descname"><span class="pre">_n_rewinds</span></span><a class="headerlink" href="#cratepy.online.crom.asca.RewindManager._n_rewinds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of rewind operations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cratepy.online.crom.asca.RewindManager._rewind_time">
+<span class="sig-name descname"><span class="pre">_rewind_time</span></span><a class="headerlink" href="#cratepy.online.crom.asca.RewindManager._rewind_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Total time spent in rewind operations and in deleted analysis
+increments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cratepy.online.crom.asca.RewindManager._init_time">
+<span class="sig-name descname"><span class="pre">_init_time</span></span><a class="headerlink" href="#cratepy.online.crom.asca.RewindManager._init_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reference time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.online.crom.asca.RewindManager.get_rewind_time">
+<span class="sig-name descname"><span class="pre">get_rewind_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/online/loading/macloadincrem.html#RewindManager.get_rewind_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.online.crom.asca.RewindManager.get_rewind_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get total time of rewind operations and deleted analysis increments.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.online.crom.asca.RewindManager.update_rewind_time">
+<span class="sig-name descname"><span class="pre">update_rewind_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'init'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/online/loading/macloadincrem.html#RewindManager.update_rewind_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.online.crom.asca.RewindManager.update_rewind_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update total rewind time.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.online.crom.asca.RewindManager.is_rewind_available">
+<span class="sig-name descname"><span class="pre">is_rewind_available</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/online/loading/macloadincrem.html#RewindManager.is_rewind_available"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.online.crom.asca.RewindManager.is_rewind_available" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate if rewind operations are available.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.online.crom.asca.RewindManager.is_save_rewind_state">
+<span class="sig-name descname"><span class="pre">is_save_rewind_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/online/loading/macloadincrem.html#RewindManager.is_save_rewind_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.online.crom.asca.RewindManager.is_save_rewind_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate conditions to save rewind state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.online.crom.asca.RewindManager.is_rewinding_criteria">
+<span class="sig-name descname"><span class="pre">is_rewinding_criteria</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_phases</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_state</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/online/loading/macloadincrem.html#RewindManager.is_rewinding_criteria"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.online.crom.asca.RewindManager.is_rewinding_criteria" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check analysis rewinding criteria.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.online.crom.asca.RewindManager.get_save_rewind_state_criteria">
+<span class="sig-name descname"><span class="pre">get_save_rewind_state_criteria</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/online/loading/macloadincrem.html#RewindManager.get_save_rewind_state_criteria"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.online.crom.asca.RewindManager.get_save_rewind_state_criteria" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get available rewind state storage criteria and default parameters.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.online.crom.asca.RewindManager.get_rewinding_criteria">
+<span class="sig-name descname"><span class="pre">get_rewinding_criteria</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/online/loading/macloadincrem.html#RewindManager.get_rewinding_criteria"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.online.crom.asca.RewindManager.get_rewinding_criteria" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get rewinding criteria and default parameters.</p>
+</dd></dl>
+
+<p>Analysis rewind manager constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rewind_state_criterion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a>) – Rewind state storage criterion [0] and associated parameter [1].</p></li>
+<li><p><strong>rewinding_criterion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a>) – Rewinding criterion [0] and associated parameter [1].</p></li>
+<li><p><strong>max_n_rewinds</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=1</em>) – Maximum number of rewind operations.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">List of Public Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id0" title="cratepy.online.crom.asca.RewindManager.get_rewind_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_rewind_time</span></code></a></p></td>
+<td><p>Get total time of rewind operations and deleted analysis increments.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id1" title="cratepy.online.crom.asca.RewindManager.get_rewinding_criteria"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_rewinding_criteria</span></code></a></p></td>
+<td><p>Get rewinding criteria and default parameters.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id2" title="cratepy.online.crom.asca.RewindManager.get_save_rewind_state_criteria"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_save_rewind_state_criteria</span></code></a></p></td>
+<td><p>Get available rewind state storage criteria and default parameters.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id3" title="cratepy.online.crom.asca.RewindManager.is_rewind_available"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_rewind_available</span></code></a></p></td>
+<td><p>Evaluate if rewind operations are available.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id4" title="cratepy.online.crom.asca.RewindManager.is_rewinding_criteria"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_rewinding_criteria</span></code></a></p></td>
+<td><p>Check analysis rewinding criteria.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id5" title="cratepy.online.crom.asca.RewindManager.is_save_rewind_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_save_rewind_state</span></code></a></p></td>
+<td><p>Evaluate conditions to save rewind state.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id6" title="cratepy.online.crom.asca.RewindManager.update_rewind_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_rewind_time</span></code></a></p></td>
+<td><p>Update total rewind time.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.online.crom.asca.RewindManager.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rewind_state_criterion</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rewinding_criterion</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_n_rewinds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/online/loading/macloadincrem.html#RewindManager.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.online.crom.asca.RewindManager.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Analysis rewind manager constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rewind_state_criterion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a>) – Rewind state storage criterion [0] and associated parameter [1].</p></li>
+<li><p><strong>rewinding_criterion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a>) – Rewinding criterion [0] and associated parameter [1].</p></li>
+<li><p><strong>max_n_rewinds</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=1</em>) – Maximum number of rewind operations.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">get_rewind_time</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/online/loading/macloadincrem.html#RewindManager.get_rewind_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get total time of rewind operations and deleted analysis increments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>rewind_time</strong> – Total time of rewind operations and in deleted analysis increments.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id1">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_rewinding_criteria</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/online/loading/macloadincrem.html#RewindManager.get_rewinding_criteria"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get rewinding criteria and default parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>available_rewinding_criteria</strong> – Available rewinding criteria (key, str) and associated default
+parameters (item).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id2">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_save_rewind_state_criteria</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/online/loading/macloadincrem.html#RewindManager.get_save_rewind_state_criteria"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get available rewind state storage criteria and default parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>available_save_rewind_state_criteria</strong> – Available rewind state storage criteria (key, str) and associated
+default parameters (item).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">is_rewind_available</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/online/loading/macloadincrem.html#RewindManager.is_rewind_available"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate if rewind operations are available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>is_available</strong> – True if rewind operations are available, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">is_rewinding_criteria</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_phases</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_state</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/online/loading/macloadincrem.html#RewindManager.is_rewinding_criteria"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check analysis rewinding criteria.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Macroscale loading increment.</p></li>
+<li><p><strong>material_phases</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – CRVE material phases labels (str).</p></li>
+<li><p><strong>phase_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clusters labels (item, list[int]) associated with each material
+phase (key, str).</p></li>
+<li><p><strong>clusters_state</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Material constitutive model state variables (item, dict) associated
+with each material cluster (key, str).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>is_rewind</strong> – True if analysis rewinding criteria are satisfied, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">is_save_rewind_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/online/loading/macloadincrem.html#RewindManager.is_save_rewind_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate conditions to save rewind state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Macroscale loading increment.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>is_save_state</strong> – True if conditions to save rewind state are satisfied, False
+otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">update_rewind_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'init'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/online/loading/macloadincrem.html#RewindManager.update_rewind_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update total rewind time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mode</strong> (<em>{'init'</em><em>, </em><em>'update'}</em><em>, </em><em>default='init'</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cratepy.online.crom.asca.ReferenceMaterialOptimizer.html" class="btn btn-neutral float-left" title="cratepy.online.crom.asca.ReferenceMaterialOptimizer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cratepy.online.crom.asca.VTKOutput.html" class="btn btn-neutral float-right" title="cratepy.online.crom.asca.VTKOutput" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

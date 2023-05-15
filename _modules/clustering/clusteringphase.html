@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>clustering.clusteringphase &mdash; crate 1.0.0 documentation</title>
+  <title>clustering.clusteringphase &mdash; CRATE 1.0.3 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/readthedocs-custom.css" type="text/css" />
@@ -28,7 +28,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            crate
+            CRATE
           </a>
               <div class="version">
                 1.0
@@ -71,7 +71,7 @@
 <p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/reference/index.html">Index</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/crate.html">Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/cratepy.html">Code</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">License</span></p>
 <ul>
@@ -84,7 +84,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">crate</a>
+          <a href="../../index.html">CRATE</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -453,7 +453,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                               Cluster-Reduced Material Phases</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="SCRMP"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readprocedures.SCRMP.html#crate.clustering.crve.SCRMP">[docs]</a><span class="k">class</span> <span class="nc">SCRMP</span><span class="p">(</span><span class="n">CRMP</span><span class="p">):</span>
+<div class="viewcode-block" id="SCRMP"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readprocedures.SCRMP.html#cratepy.clustering.crve.SCRMP">[docs]</a><span class="k">class</span> <span class="nc">SCRMP</span><span class="p">(</span><span class="n">CRMP</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Static Cluster-Reduced Material Phase (SCRMP).</span>
 
 <span class="sd">    Attributes</span>
@@ -477,7 +477,7 @@
 <span class="sd">    get_valid_clust_algs()</span>
 <span class="sd">        Get valid clustering algorithms to compute the CRMP.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="SCRMP.__init__"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readprocedures.SCRMP.html#crate.clustering.crve.SCRMP.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat_phase</span><span class="p">,</span> <span class="n">cluster_data_matrix</span><span class="p">,</span> <span class="n">n_clusters</span><span class="p">):</span>
+<div class="viewcode-block" id="SCRMP.__init__"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readprocedures.SCRMP.html#cratepy.clustering.crve.SCRMP.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat_phase</span><span class="p">,</span> <span class="n">cluster_data_matrix</span><span class="p">,</span> <span class="n">n_clusters</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
 
 <span class="sd">        Parameters</span>
@@ -498,7 +498,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">max_label</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cluster_labels</span> <span class="o">=</span> <span class="kc">None</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="SCRMP.perform_base_clustering"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readprocedures.SCRMP.html#crate.clustering.crve.SCRMP.perform_base_clustering">[docs]</a>    <span class="k">def</span> <span class="nf">perform_base_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_clustering_scheme</span><span class="p">,</span> <span class="n">min_label</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="SCRMP.perform_base_clustering"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readprocedures.SCRMP.html#cratepy.clustering.crve.SCRMP.perform_base_clustering">[docs]</a>    <span class="k">def</span> <span class="nf">perform_base_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_clustering_scheme</span><span class="p">,</span> <span class="n">min_label</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform SCRMP base clustering.</span>
 
 <span class="sd">        Parameters</span>
@@ -559,7 +559,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">cluster_labels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_label</span> <span class="o">=</span> \
             <span class="bp">self</span><span class="o">.</span><span class="n">_update_cluster_labels</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cluster_labels</span><span class="p">,</span> <span class="n">min_label</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="SCRMP.get_n_clusters"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readprocedures.SCRMP.html#crate.clustering.crve.SCRMP.get_n_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">get_n_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SCRMP.get_n_clusters"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readprocedures.SCRMP.html#cratepy.clustering.crve.SCRMP.get_n_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">get_n_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current number of clusters.</span>
 
 <span class="sd">        Returns</span>
@@ -569,7 +569,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_clusters</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="SCRMP.get_clustering_type"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readprocedures.SCRMP.html#crate.clustering.crve.SCRMP.get_clustering_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_clustering_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SCRMP.get_clustering_type"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readprocedures.SCRMP.html#cratepy.clustering.crve.SCRMP.get_clustering_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_clustering_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get cluster-reduced material phase adaptivity type.</span>
 
 <span class="sd">        Returns</span>
@@ -579,7 +579,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clustering_type</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="SCRMP.get_valid_clust_algs"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readprocedures.SCRMP.html#crate.clustering.crve.SCRMP.get_valid_clust_algs">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="SCRMP.get_valid_clust_algs"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readprocedures.SCRMP.html#cratepy.clustering.crve.SCRMP.get_valid_clust_algs">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_valid_clust_algs</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get valid clustering algorithms to compute the CRMP.</span>
 
@@ -590,7 +590,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">ClusterAnalysis</span><span class="o">.</span><span class="n">available_clustering_alg</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="GACRMP"><a class="viewcode-back" href="../../_autosummary/crate.clustering.crve.GACRMP.html#crate.clustering.crve.GACRMP">[docs]</a><span class="k">class</span> <span class="nc">GACRMP</span><span class="p">(</span><span class="n">ACRMP</span><span class="p">):</span>
+<div class="viewcode-block" id="GACRMP"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.crve.GACRMP.html#cratepy.clustering.crve.GACRMP">[docs]</a><span class="k">class</span> <span class="nc">GACRMP</span><span class="p">(</span><span class="n">ACRMP</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generalized Adaptive Cluster-Reduced Material Phase.</span>
 
 <span class="sd">    A detailed description of a Generalized Adaptive Cluster-Reduced Material</span>
@@ -665,7 +665,7 @@
 <span class="sd">    update_adaptivity_type(self, adaptivity_type)</span>
 <span class="sd">        Update clustering adaptivity parameters.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="GACRMP.__init__"><a class="viewcode-back" href="../../_autosummary/crate.clustering.crve.GACRMP.html#crate.clustering.crve.GACRMP.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat_phase</span><span class="p">,</span> <span class="n">cluster_data_matrix</span><span class="p">,</span> <span class="n">n_clusters</span><span class="p">,</span>
+<div class="viewcode-block" id="GACRMP.__init__"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.crve.GACRMP.html#cratepy.clustering.crve.GACRMP.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat_phase</span><span class="p">,</span> <span class="n">cluster_data_matrix</span><span class="p">,</span> <span class="n">n_clusters</span><span class="p">,</span>
                  <span class="n">adaptivity_type</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
 
@@ -706,7 +706,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_clustering_tree_nodes</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">root_cluster</span><span class="p">)]</span> <span class="o">=</span> \
             <span class="bp">self</span><span class="o">.</span><span class="n">_root_cluster_node</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="GACRMP.perform_base_clustering"><a class="viewcode-back" href="../../_autosummary/crate.clustering.crve.GACRMP.html#crate.clustering.crve.GACRMP.perform_base_clustering">[docs]</a>    <span class="k">def</span> <span class="nf">perform_base_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_clustering_scheme</span><span class="p">,</span> <span class="n">min_label</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="GACRMP.perform_base_clustering"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.crve.GACRMP.html#cratepy.clustering.crve.GACRMP.perform_base_clustering">[docs]</a>    <span class="k">def</span> <span class="nf">perform_base_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_clustering_scheme</span><span class="p">,</span> <span class="n">min_label</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform GACRMP base clustering.</span>
 
 <span class="sd">        Parameters</span>
@@ -773,7 +773,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_clustering_tree_nodes</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span> <span class="o">=</span> \
                 <span class="n">anytree</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">cluster</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_root_cluster_node</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="GACRMP.get_valid_clust_algs"><a class="viewcode-back" href="../../_autosummary/crate.clustering.crve.GACRMP.html#crate.clustering.crve.GACRMP.get_valid_clust_algs">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GACRMP.get_valid_clust_algs"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.crve.GACRMP.html#cratepy.clustering.crve.GACRMP.get_valid_clust_algs">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_valid_clust_algs</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get valid clustering algorithms to compute the CRMP.</span>
 
@@ -784,7 +784,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">ClusterAnalysis</span><span class="o">.</span><span class="n">available_clustering_alg</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="GACRMP.perform_adaptive_clustering"><a class="viewcode-back" href="../../_autosummary/crate.clustering.crve.GACRMP.html#crate.clustering.crve.GACRMP.perform_adaptive_clustering">[docs]</a>    <span class="k">def</span> <span class="nf">perform_adaptive_clustering</span><span class="p">(</span>
+<div class="viewcode-block" id="GACRMP.perform_adaptive_clustering"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.crve.GACRMP.html#cratepy.clustering.crve.GACRMP.perform_adaptive_clustering">[docs]</a>    <span class="k">def</span> <span class="nf">perform_adaptive_clustering</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">target_clusters</span><span class="p">,</span> <span class="n">target_clusters_data</span><span class="p">,</span>
             <span class="n">adaptive_clustering_scheme</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_label</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform GACRMP adaptive clustering step.</span>
@@ -993,7 +993,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">adaptive_clustering_map</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="GACRMP._check_adaptivity_lock"><a class="viewcode-back" href="../../_autosummary/crate.clustering.crve.GACRMP.html#crate.clustering.crve.GACRMP._check_adaptivity_lock">[docs]</a>    <span class="k">def</span> <span class="nf">_check_adaptivity_lock</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GACRMP._check_adaptivity_lock"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.crve.GACRMP.html#cratepy.clustering.crve.GACRMP._check_adaptivity_lock">[docs]</a>    <span class="k">def</span> <span class="nf">_check_adaptivity_lock</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check ACRMP adaptivity locking conditions.</span>
 
 <span class="sd">        Check conditions that may deactivate the adaptive procedures in the</span>
@@ -1004,7 +1004,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_clusters</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_threshold_n_clusters</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">adaptivity_lock</span> <span class="o">=</span> <span class="kc">True</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="GACRMP.get_n_clusters"><a class="viewcode-back" href="../../_autosummary/crate.clustering.crve.GACRMP.html#crate.clustering.crve.GACRMP.get_n_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">get_n_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GACRMP.get_n_clusters"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.crve.GACRMP.html#cratepy.clustering.crve.GACRMP.get_n_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">get_n_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current number of clusters.</span>
 
 <span class="sd">        Returns</span>
@@ -1014,7 +1014,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_clusters</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="GACRMP.get_clustering_type"><a class="viewcode-back" href="../../_autosummary/crate.clustering.crve.GACRMP.html#crate.clustering.crve.GACRMP.get_clustering_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_clustering_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GACRMP.get_clustering_type"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.crve.GACRMP.html#cratepy.clustering.crve.GACRMP.get_clustering_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_clustering_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get cluster-reduced material phase adaptivity type.</span>
 
 <span class="sd">        Returns</span>
@@ -1024,7 +1024,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clustering_type</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="GACRMP.get_clustering_tree_nodes"><a class="viewcode-back" href="../../_autosummary/crate.clustering.crve.GACRMP.html#crate.clustering.crve.GACRMP.get_clustering_tree_nodes">[docs]</a>    <span class="k">def</span> <span class="nf">get_clustering_tree_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GACRMP.get_clustering_tree_nodes"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.crve.GACRMP.html#cratepy.clustering.crve.GACRMP.get_clustering_tree_nodes">[docs]</a>    <span class="k">def</span> <span class="nf">get_clustering_tree_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get clustering tree nodes.</span>
 
 <span class="sd">        Returns</span>
@@ -1040,7 +1040,7 @@
         <span class="c1">#    &#39;clustering_tree_nodes_phase_&#39; + self._mat_phase + &#39;.png&#39;)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clustering_tree_nodes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root_cluster_node</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="GACRMP.get_adaptivity_type_parameters"><a class="viewcode-back" href="../../_autosummary/crate.clustering.crve.GACRMP.html#crate.clustering.crve.GACRMP.get_adaptivity_type_parameters">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GACRMP.get_adaptivity_type_parameters"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.crve.GACRMP.html#cratepy.clustering.crve.GACRMP.get_adaptivity_type_parameters">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_adaptivity_type_parameters</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get ACRMP mandatory and optional adaptivity type parameters.</span>
 
@@ -1070,7 +1070,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">mandatory_parameters</span><span class="p">,</span> <span class="n">optional_parameters</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="GACRMP._set_adaptivity_type_parameters"><a class="viewcode-back" href="../../_autosummary/crate.clustering.crve.GACRMP.html#crate.clustering.crve.GACRMP._set_adaptivity_type_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">_set_adaptivity_type_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptivity_type</span><span class="p">):</span>
+<div class="viewcode-block" id="GACRMP._set_adaptivity_type_parameters"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.crve.GACRMP.html#cratepy.clustering.crve.GACRMP._set_adaptivity_type_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">_set_adaptivity_type_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptivity_type</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set clustering adaptivity parameters.</span>
 
 <span class="sd">        Parameters</span>
@@ -1093,7 +1093,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_is_dynamic_split_factor</span> <span class="o">=</span> <span class="kc">True</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="GACRMP.get_adaptive_output"><a class="viewcode-back" href="../../_autosummary/crate.clustering.crve.GACRMP.html#crate.clustering.crve.GACRMP.get_adaptive_output">[docs]</a>    <span class="k">def</span> <span class="nf">get_adaptive_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GACRMP.get_adaptive_output"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.crve.GACRMP.html#cratepy.clustering.crve.GACRMP.get_adaptive_output">[docs]</a>    <span class="k">def</span> <span class="nf">get_adaptive_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get adaptivity metrics for clustering adaptivity output.</span>
 
 <span class="sd">        Returns</span>
@@ -1108,14 +1108,14 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">adaptivity_output</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="GACRMP.reset_adaptive_parameters"><a class="viewcode-back" href="../../_autosummary/crate.clustering.crve.GACRMP.html#crate.clustering.crve.GACRMP.reset_adaptive_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">reset_adaptive_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GACRMP.reset_adaptive_parameters"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.crve.GACRMP.html#cratepy.clustering.crve.GACRMP.reset_adaptive_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">reset_adaptive_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset clustering adaptive progress parameters.&quot;&quot;&quot;</span>
         <span class="c1"># Reset counter of adaptive clustering steps</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_adaptive_step</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="c1"># Reset time spent in adaptive procedures</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">adaptive_time</span> <span class="o">=</span> <span class="mi">0</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="GACRMP.update_adaptivity_type"><a class="viewcode-back" href="../../_autosummary/crate.clustering.crve.GACRMP.html#crate.clustering.crve.GACRMP.update_adaptivity_type">[docs]</a>    <span class="k">def</span> <span class="nf">update_adaptivity_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptivity_type</span><span class="p">):</span>
+<div class="viewcode-block" id="GACRMP.update_adaptivity_type"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.crve.GACRMP.html#cratepy.clustering.crve.GACRMP.update_adaptivity_type">[docs]</a>    <span class="k">def</span> <span class="nf">update_adaptivity_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptivity_type</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update clustering adaptivity parameters.</span>
 
 <span class="sd">        Parameters</span>
@@ -1128,7 +1128,7 @@
         <span class="c1"># Set clustering adaptivity parameters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_adaptivity_type_parameters</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_adaptivity_type</span><span class="p">)</span></div></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="HAACRMP"><a class="viewcode-back" href="../../_autosummary/crate.clustering.crve.HAACRMP.html#crate.clustering.crve.HAACRMP">[docs]</a><span class="k">class</span> <span class="nc">HAACRMP</span><span class="p">(</span><span class="n">ACRMP</span><span class="p">):</span>
+<div class="viewcode-block" id="HAACRMP"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.crve.HAACRMP.html#cratepy.clustering.crve.HAACRMP">[docs]</a><span class="k">class</span> <span class="nc">HAACRMP</span><span class="p">(</span><span class="n">ACRMP</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Hierarchical Agglomerative Adaptive Cluster-Reduced Material Phase.</span>
 
 <span class="sd">    Attributes</span>
@@ -1193,7 +1193,7 @@
 <span class="sd">    get_adaptive_output(self)</span>
 <span class="sd">        Get adaptivity metrics for clustering adaptivity output.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="HAACRMP.__init__"><a class="viewcode-back" href="../../_autosummary/crate.clustering.crve.HAACRMP.html#crate.clustering.crve.HAACRMP.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat_phase</span><span class="p">,</span> <span class="n">cluster_data_matrix</span><span class="p">,</span> <span class="n">n_clusters</span><span class="p">,</span>
+<div class="viewcode-block" id="HAACRMP.__init__"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.crve.HAACRMP.html#cratepy.clustering.crve.HAACRMP.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat_phase</span><span class="p">,</span> <span class="n">cluster_data_matrix</span><span class="p">,</span> <span class="n">n_clusters</span><span class="p">,</span>
                  <span class="n">adaptivity_type</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
 
@@ -1230,7 +1230,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_is_dynamic_split_factor</span> <span class="o">=</span> <span class="kc">True</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="HAACRMP.perform_base_clustering"><a class="viewcode-back" href="../../_autosummary/crate.clustering.crve.HAACRMP.html#crate.clustering.crve.HAACRMP.perform_base_clustering">[docs]</a>    <span class="k">def</span> <span class="nf">perform_base_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_clustering_scheme</span><span class="p">,</span> <span class="n">min_label</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="HAACRMP.perform_base_clustering"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.crve.HAACRMP.html#cratepy.clustering.crve.HAACRMP.perform_base_clustering">[docs]</a>    <span class="k">def</span> <span class="nf">perform_base_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_clustering_scheme</span><span class="p">,</span> <span class="n">min_label</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform HAACRMP base clustering.</span>
 
 <span class="sd">        Parameters</span>
@@ -1286,7 +1286,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">cluster_labels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_label</span> <span class="o">=</span> \
             <span class="bp">self</span><span class="o">.</span><span class="n">_update_cluster_labels</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cluster_labels</span><span class="p">,</span> <span class="n">min_label</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="HAACRMP.perform_adaptive_clustering"><a class="viewcode-back" href="../../_autosummary/crate.clustering.crve.HAACRMP.html#crate.clustering.crve.HAACRMP.perform_adaptive_clustering">[docs]</a>    <span class="k">def</span> <span class="nf">perform_adaptive_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_clusters</span><span class="p">,</span>
+<div class="viewcode-block" id="HAACRMP.perform_adaptive_clustering"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.crve.HAACRMP.html#cratepy.clustering.crve.HAACRMP.perform_adaptive_clustering">[docs]</a>    <span class="k">def</span> <span class="nf">perform_adaptive_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_clusters</span><span class="p">,</span>
                                     <span class="n">target_clusters_data</span><span class="p">,</span>
                                     <span class="n">adaptive_clustering_scheme</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                     <span class="n">min_label</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
@@ -1473,7 +1473,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">adaptive_clustering_map</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="HAACRMP.add_to_tree_node_list"><a class="viewcode-back" href="../../_autosummary/crate.clustering.crve.HAACRMP.html#crate.clustering.crve.HAACRMP.add_to_tree_node_list">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="HAACRMP.add_to_tree_node_list"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.crve.HAACRMP.html#cratepy.clustering.crve.HAACRMP.add_to_tree_node_list">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">add_to_tree_node_list</span><span class="p">(</span><span class="n">node_list</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add node to tree node list and sort by descending linkage distance.</span>
 
@@ -1499,7 +1499,7 @@
         <span class="c1"># Return sorted tree node list</span>
         <span class="k">return</span> <span class="n">node_list</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="HAACRMP._check_adaptivity_lock"><a class="viewcode-back" href="../../_autosummary/crate.clustering.crve.HAACRMP.html#crate.clustering.crve.HAACRMP._check_adaptivity_lock">[docs]</a>    <span class="k">def</span> <span class="nf">_check_adaptivity_lock</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="HAACRMP._check_adaptivity_lock"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.crve.HAACRMP.html#cratepy.clustering.crve.HAACRMP._check_adaptivity_lock">[docs]</a>    <span class="k">def</span> <span class="nf">_check_adaptivity_lock</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check ACRMP adaptivity locking conditions.</span>
 
 <span class="sd">        Check conditions that may deactivate the adaptive procedures in the</span>
@@ -1510,7 +1510,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_clusters</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_threshold_n_clusters</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">adaptivity_lock</span> <span class="o">=</span> <span class="kc">True</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="HAACRMP.print_adaptive_clustering"><a class="viewcode-back" href="../../_autosummary/crate.clustering.crve.HAACRMP.html#crate.clustering.crve.HAACRMP.print_adaptive_clustering">[docs]</a>    <span class="k">def</span> <span class="nf">print_adaptive_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptive_clustering_map</span><span class="p">,</span>
+<div class="viewcode-block" id="HAACRMP.print_adaptive_clustering"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.crve.HAACRMP.html#cratepy.clustering.crve.HAACRMP.print_adaptive_clustering">[docs]</a>    <span class="k">def</span> <span class="nf">print_adaptive_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptive_clustering_map</span><span class="p">,</span>
                                   <span class="n">adaptive_tree_node_map</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Print hierarchical adaptive clustering report (validation).&quot;&quot;&quot;</span>
         <span class="c1"># Print report header</span>
@@ -1543,7 +1543,7 @@
                   <span class="o">+</span> <span class="s1">&#39;Tree node: &#39;</span><span class="p">,</span>
                   <span class="bp">self</span><span class="o">.</span><span class="n">_cluster_node_map</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">new_cluster</span><span class="p">)])</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="HAACRMP.get_valid_clust_algs"><a class="viewcode-back" href="../../_autosummary/crate.clustering.crve.HAACRMP.html#crate.clustering.crve.HAACRMP.get_valid_clust_algs">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="HAACRMP.get_valid_clust_algs"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.crve.HAACRMP.html#cratepy.clustering.crve.HAACRMP.get_valid_clust_algs">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_valid_clust_algs</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get valid clustering algorithms to compute the CRMP.</span>
 
@@ -1554,7 +1554,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;3&#39;</span><span class="p">,</span> <span class="p">]</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="HAACRMP.get_n_clusters"><a class="viewcode-back" href="../../_autosummary/crate.clustering.crve.HAACRMP.html#crate.clustering.crve.HAACRMP.get_n_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">get_n_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="HAACRMP.get_n_clusters"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.crve.HAACRMP.html#cratepy.clustering.crve.HAACRMP.get_n_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">get_n_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current number of clusters.</span>
 
 <span class="sd">        Returns</span>
@@ -1564,7 +1564,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_clusters</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="HAACRMP.get_clustering_type"><a class="viewcode-back" href="../../_autosummary/crate.clustering.crve.HAACRMP.html#crate.clustering.crve.HAACRMP.get_clustering_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_clustering_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="HAACRMP.get_clustering_type"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.crve.HAACRMP.html#cratepy.clustering.crve.HAACRMP.get_clustering_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_clustering_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get cluster-reduced material phase adaptivity type.</span>
 
 <span class="sd">        Returns</span>
@@ -1574,7 +1574,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clustering_type</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="HAACRMP.get_adaptivity_type_parameters"><a class="viewcode-back" href="../../_autosummary/crate.clustering.crve.HAACRMP.html#crate.clustering.crve.HAACRMP.get_adaptivity_type_parameters">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="HAACRMP.get_adaptivity_type_parameters"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.crve.HAACRMP.html#cratepy.clustering.crve.HAACRMP.get_adaptivity_type_parameters">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_adaptivity_type_parameters</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get ACRMP mandatory and optional adaptivity type parameters.</span>
 
@@ -1604,7 +1604,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">mandatory_parameters</span><span class="p">,</span> <span class="n">optional_parameters</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="HAACRMP._set_adaptivity_type_parameters"><a class="viewcode-back" href="../../_autosummary/crate.clustering.crve.HAACRMP.html#crate.clustering.crve.HAACRMP._set_adaptivity_type_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">_set_adaptivity_type_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptivity_type</span><span class="p">):</span>
+<div class="viewcode-block" id="HAACRMP._set_adaptivity_type_parameters"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.crve.HAACRMP.html#cratepy.clustering.crve.HAACRMP._set_adaptivity_type_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">_set_adaptivity_type_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptivity_type</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set clustering adaptivity parameters.</span>
 
 <span class="sd">        Parameters</span>
@@ -1622,7 +1622,7 @@
             <span class="n">adaptivity_type</span><span class="p">[</span><span class="s1">&#39;dynamic_split_factor_amp&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_threshold_n_clusters</span> <span class="o">=</span> <span class="n">adaptivity_type</span><span class="p">[</span><span class="s1">&#39;threshold_n_clusters&#39;</span><span class="p">]</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="HAACRMP.get_adaptive_output"><a class="viewcode-back" href="../../_autosummary/crate.clustering.crve.HAACRMP.html#crate.clustering.crve.HAACRMP.get_adaptive_output">[docs]</a>    <span class="k">def</span> <span class="nf">get_adaptive_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="HAACRMP.get_adaptive_output"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.crve.HAACRMP.html#cratepy.clustering.crve.HAACRMP.get_adaptive_output">[docs]</a>    <span class="k">def</span> <span class="nf">get_adaptive_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get adaptivity metrics for clustering adaptivity output.</span>
 
 <span class="sd">        Returns</span>

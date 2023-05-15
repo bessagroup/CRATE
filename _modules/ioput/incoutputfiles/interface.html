@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ioput.incoutputfiles.interface &mdash; crate 1.0.0 documentation</title>
+  <title>ioput.incoutputfiles.interface &mdash; CRATE 1.0.3 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
@@ -28,7 +28,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            crate
+            CRATE
           </a>
               <div class="version">
                 1.0
@@ -71,7 +71,7 @@
 <p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/reference/index.html">Index</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/crate.html">Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/cratepy.html">Code</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">License</span></p>
 <ul>
@@ -84,7 +84,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">crate</a>
+          <a href="../../../index.html">CRATE</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -127,7 +127,7 @@
 <span class="c1"># =============================================================================</span>
 <span class="c1">#</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="IncrementalOutputFile"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.incoutputfiles.refmatoutput.IncrementalOutputFile.html#crate.ioput.incoutputfiles.efftanoutput.IncrementalOutputFile">[docs]</a><span class="k">class</span> <span class="nc">IncrementalOutputFile</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<div class="viewcode-block" id="IncrementalOutputFile"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.incoutputfiles.refmatoutput.IncrementalOutputFile.html#cratepy.ioput.incoutputfiles.efftanoutput.IncrementalOutputFile">[docs]</a><span class="k">class</span> <span class="nc">IncrementalOutputFile</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Incremental output file interface.</span>
 
 <span class="sd">    Attributes</span>
@@ -148,7 +148,7 @@
 <span class="sd">    rewind_file(self, rewind_inc)</span>
 <span class="sd">        Rewind output file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="IncrementalOutputFile.__init__"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.incoutputfiles.refmatoutput.IncrementalOutputFile.html#crate.ioput.incoutputfiles.efftanoutput.IncrementalOutputFile.__init__">[docs]</a>    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="IncrementalOutputFile.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.incoutputfiles.refmatoutput.IncrementalOutputFile.html#cratepy.ioput.incoutputfiles.efftanoutput.IncrementalOutputFile.__init__">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
 
@@ -159,17 +159,17 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="IncrementalOutputFile.init_file"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.incoutputfiles.refmatoutput.IncrementalOutputFile.html#crate.ioput.incoutputfiles.efftanoutput.IncrementalOutputFile.init_file">[docs]</a>    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="IncrementalOutputFile.init_file"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.incoutputfiles.refmatoutput.IncrementalOutputFile.html#cratepy.ioput.incoutputfiles.efftanoutput.IncrementalOutputFile.init_file">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">init_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Open output file and write file header.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="IncrementalOutputFile.write_file"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.incoutputfiles.refmatoutput.IncrementalOutputFile.html#crate.ioput.incoutputfiles.efftanoutput.IncrementalOutputFile.write_file">[docs]</a>    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="IncrementalOutputFile.write_file"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.incoutputfiles.refmatoutput.IncrementalOutputFile.html#cratepy.ioput.incoutputfiles.efftanoutput.IncrementalOutputFile.write_file">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">write_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Write output file.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="IncrementalOutputFile.rewind_file"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.incoutputfiles.refmatoutput.IncrementalOutputFile.html#crate.ioput.incoutputfiles.efftanoutput.IncrementalOutputFile.rewind_file">[docs]</a>    <span class="k">def</span> <span class="nf">rewind_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rewind_inc</span><span class="p">):</span>
+<div class="viewcode-block" id="IncrementalOutputFile.rewind_file"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.incoutputfiles.refmatoutput.IncrementalOutputFile.html#cratepy.ioput.incoutputfiles.efftanoutput.IncrementalOutputFile.rewind_file">[docs]</a>    <span class="k">def</span> <span class="nf">rewind_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rewind_inc</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Rewind output file.</span>
 
 <span class="sd">        Parameters</span>

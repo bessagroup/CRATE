@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cratepy.material &mdash; CRATE 1.0.3 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="cratepy.material.isotropichardlaw" href="cratepy.material.isotropichardlaw.html" />
+    <link rel="prev" title="cratepy.main.VTKOutput" href="cratepy.main.VTKOutput.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            CRATE
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="cratepy.html">Code</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cratepy.crate_simulation.html">cratepy.crate_simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.clustering.html">cratepy.clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.ioput.html">cratepy.ioput</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.main.html">cratepy.main</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">cratepy.material</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.material.isotropichardlaw.html">cratepy.material.isotropichardlaw</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.material.materialmodeling.html">cratepy.material.materialmodeling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.material.materialoperations.html">cratepy.material.materialoperations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.material.models.html">cratepy.material.models</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.online.html">cratepy.online</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.optimization.html">cratepy.optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.tensor.html">cratepy.tensor</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CRATE</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="cratepy.html">cratepy</a></li>
+      <li class="breadcrumb-item active">cratepy.material</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-cratepy.material">
+<span id="cratepy-material"></span><h1>cratepy.material<a class="headerlink" href="#module-cratepy.material" title="Permalink to this heading">¶</a></h1>
+<p>Material constitutive modeling.</p>
+<p class="rubric">Modules</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="cratepy.material.isotropichardlaw.html#module-cratepy.material.isotropichardlaw" title="cratepy.material.isotropichardlaw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cratepy.material.isotropichardlaw</span></code></a></p></td>
+<td><p>Isotropic strain hardening laws.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="cratepy.material.materialmodeling.html#module-cratepy.material.materialmodeling" title="cratepy.material.materialmodeling"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cratepy.material.materialmodeling</span></code></a></p></td>
+<td><p>Constitutive modeling of CRVE material clusters and homogenization.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="cratepy.material.materialoperations.html#module-cratepy.material.materialoperations" title="cratepy.material.materialoperations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cratepy.material.materialoperations</span></code></a></p></td>
+<td><p>Computational solid mechanics standard computations.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="cratepy.material.models.html#module-cratepy.material.models" title="cratepy.material.models"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cratepy.material.models</span></code></a></p></td>
+<td><p>Material constitutive models.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cratepy.main.VTKOutput.html" class="btn btn-neutral float-left" title="cratepy.main.VTKOutput" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cratepy.material.isotropichardlaw.html" class="btn btn-neutral float-right" title="cratepy.material.isotropichardlaw" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

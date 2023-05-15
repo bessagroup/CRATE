@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Interface: DNS solver &mdash; crate 1.0.0 documentation</title>
+  <title>Interface: DNS solver &mdash; CRATE 1.0.3 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/readthedocs-custom.css" type="text/css" />
@@ -31,7 +31,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            crate
+            CRATE
           </a>
               <div class="version">
                 1.0
@@ -79,7 +79,7 @@
 <p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../reference/index.html">Index</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/crate.html">Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/cratepy.html">Code</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">License</span></p>
 <ul>
@@ -92,7 +92,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">crate</a>
+          <a href="../../index.html">CRATE</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -130,8 +130,8 @@
 <h2>Implementation steps<a class="headerlink" href="#implementation-steps" title="Permalink to this heading">¶</a></h2>
 <p>The implementation of a <strong>new direct numerical simulation (DNS) multi-scale method</strong> in CRATE involves <strong>five fundamental steps</strong>:</p>
 <ul>
-<li><p><strong>Step 1</strong> - Create a Python module with the name of the new DNS multi-scale method (e.g., <code class="code docutils literal notranslate"><span class="pre">new_dns_method.py</span></code>) in the directory <a class="reference internal" href="../../_autosummary/crate.clustering.solution.html#module-crate.clustering.solution" title="crate.clustering.solution"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.clustering.solution</span></code></a>;</p></li>
-<li><p><strong>Step 2</strong> - In <code class="code docutils literal notranslate"><span class="pre">new_dns_method.py</span></code>, import the DNS multi-scale method interface (<a class="reference internal" href="../../_autosummary/crate.clustering.solution.dnshomogenization.DNSHomogenizationMethod.html#crate.clustering.solution.dnshomogenization.DNSHomogenizationMethod" title="crate.clustering.solution.dnshomogenization.DNSHomogenizationMethod"><code class="xref py py-class docutils literal notranslate"><span class="pre">DNSHomogenizationMethod</span></code></a>) and derive a class for the new DNS multi-scale method (e.g., <code class="code docutils literal notranslate"><span class="pre">NewDNSMethod</span></code>):</p>
+<li><p><strong>Step 1</strong> - Create a Python module with the name of the new DNS multi-scale method (e.g., <code class="code docutils literal notranslate"><span class="pre">new_dns_method.py</span></code>) in the directory <a class="reference internal" href="../../_autosummary/cratepy.clustering.solution.html#module-cratepy.clustering.solution" title="cratepy.clustering.solution"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cratepy.clustering.solution</span></code></a>;</p></li>
+<li><p><strong>Step 2</strong> - In <code class="code docutils literal notranslate"><span class="pre">new_dns_method.py</span></code>, import the DNS multi-scale method interface (<a class="reference internal" href="../../_autosummary/cratepy.clustering.solution.dnshomogenization.DNSHomogenizationMethod.html#cratepy.clustering.solution.dnshomogenization.DNSHomogenizationMethod" title="cratepy.clustering.solution.dnshomogenization.DNSHomogenizationMethod"><code class="xref py py-class docutils literal notranslate"><span class="pre">DNSHomogenizationMethod</span></code></a>) and derive a class for the new DNS multi-scale method (e.g., <code class="code docutils literal notranslate"><span class="pre">NewDNSMethod</span></code>):</p>
 <blockquote>
 <div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># clustering.solution.new_dns_method.py</span>
 
@@ -144,7 +144,7 @@
 </div></blockquote>
 </li>
 <li><p><strong>Step 3</strong> - Choose a unique identifier <code class="code docutils literal notranslate"><span class="pre">id</span></code> for the new DNS multi-scale method;</p></li>
-<li><p><strong>Step 4</strong> - In <a class="reference internal" href="../../_autosummary/crate.clustering.rveelasticdatabase.html#module-crate.clustering.rveelasticdatabase" title="crate.clustering.rveelasticdatabase"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.clustering.rveelasticdatabase</span></code></a>, import and add the initialization of the new DNS multi-scale method in the <a class="reference internal" href="../../_autosummary/crate.clustering.rveelasticdatabase.RVEElasticDatabase.html#id1" title="crate.clustering.rveelasticdatabase.RVEElasticDatabase.compute_rve_response_database"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compute_rve_response_database()</span></code></a> method of class <a class="reference internal" href="../../_autosummary/crate.clustering.rveelasticdatabase.RVEElasticDatabase.html#crate.clustering.rveelasticdatabase.RVEElasticDatabase" title="crate.clustering.rveelasticdatabase.RVEElasticDatabase"><code class="xref py py-class docutils literal notranslate"><span class="pre">RVEElasticDatabase</span></code></a>:</p>
+<li><p><strong>Step 4</strong> - In <a class="reference internal" href="../../_autosummary/cratepy.clustering.rveelasticdatabase.html#module-cratepy.clustering.rveelasticdatabase" title="cratepy.clustering.rveelasticdatabase"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cratepy.clustering.rveelasticdatabase</span></code></a>, import and add the initialization of the new DNS multi-scale method in the <a class="reference internal" href="../../_autosummary/cratepy.clustering.rveelasticdatabase.RVEElasticDatabase.html#id1" title="cratepy.clustering.rveelasticdatabase.RVEElasticDatabase.compute_rve_response_database"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compute_rve_response_database()</span></code></a> method of class <a class="reference internal" href="../../_autosummary/cratepy.clustering.rveelasticdatabase.RVEElasticDatabase.html#cratepy.clustering.rveelasticdatabase.RVEElasticDatabase" title="cratepy.clustering.rveelasticdatabase.RVEElasticDatabase"><code class="xref py py-class docutils literal notranslate"><span class="pre">RVEElasticDatabase</span></code></a>:</p>
 <blockquote>
 <div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># clustering.rveelasticdatabase.py</span>
 
@@ -168,14 +168,14 @@
 </div>
 </div></blockquote>
 </li>
-<li><p><strong>Step 5</strong> - Perform the complete implementation of the new DNS multi-scale method in <code class="code docutils literal notranslate"><span class="pre">new_dns_method.py</span></code> by developing the class <code class="code docutils literal notranslate"><span class="pre">NewDNSMethod</span></code> and implementing the abstract methods (look for the &#64;abstractmethod decorator) established by the DNS multi-scale method interface (<a class="reference internal" href="../../_autosummary/crate.clustering.solution.dnshomogenization.DNSHomogenizationMethod.html#crate.clustering.solution.dnshomogenization.DNSHomogenizationMethod" title="crate.clustering.solution.dnshomogenization.DNSHomogenizationMethod"><code class="xref py py-class docutils literal notranslate"><span class="pre">DNSHomogenizationMethod</span></code></a>).</p></li>
+<li><p><strong>Step 5</strong> - Perform the complete implementation of the new DNS multi-scale method in <code class="code docutils literal notranslate"><span class="pre">new_dns_method.py</span></code> by developing the class <code class="code docutils literal notranslate"><span class="pre">NewDNSMethod</span></code> and implementing the abstract methods (look for the &#64;abstractmethod decorator) established by the DNS multi-scale method interface (<a class="reference internal" href="../../_autosummary/cratepy.clustering.solution.dnshomogenization.DNSHomogenizationMethod.html#cratepy.clustering.solution.dnshomogenization.DNSHomogenizationMethod" title="cratepy.clustering.solution.dnshomogenization.DNSHomogenizationMethod"><code class="xref py py-class docutils literal notranslate"><span class="pre">DNSHomogenizationMethod</span></code></a>).</p></li>
 </ul>
 </section>
 <hr class="docutils" />
 <section id="recommendations">
 <h2>Recommendations<a class="headerlink" href="#recommendations" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
-<li><p>If you are not familiar with the implementation of a DNS multi-scale method in CRATE, it is <strong>recommended</strong> that you first take a look into the implementation of the DNS multi-scale methods already available (<a class="reference internal" href="../../_autosummary/crate.clustering.solution.html#module-crate.clustering.solution" title="crate.clustering.solution"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.clustering.solution</span></code></a>). The implementation of these DNS multi-scale methods follows the steps previously outlined and are fully documented;</p></li>
+<li><p>If you are not familiar with the implementation of a DNS multi-scale method in CRATE, it is <strong>recommended</strong> that you first take a look into the implementation of the DNS multi-scale methods already available (<a class="reference internal" href="../../_autosummary/cratepy.clustering.solution.html#module-cratepy.clustering.solution" title="cratepy.clustering.solution"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cratepy.clustering.solution</span></code></a>). The implementation of these DNS multi-scale methods follows the steps previously outlined and are fully documented;</p></li>
 </ul>
 </section>
 </section>

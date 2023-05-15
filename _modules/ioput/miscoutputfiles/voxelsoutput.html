@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ioput.miscoutputfiles.voxelsoutput &mdash; crate 1.0.0 documentation</title>
+  <title>ioput.miscoutputfiles.voxelsoutput &mdash; CRATE 1.0.3 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
@@ -28,7 +28,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            crate
+            CRATE
           </a>
               <div class="version">
                 1.0
@@ -71,7 +71,7 @@
 <p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/reference/index.html">Index</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/crate.html">Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/cratepy.html">Code</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">License</span></p>
 <ul>
@@ -84,7 +84,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">crate</a>
+          <a href="../../../index.html">CRATE</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -132,7 +132,7 @@
 <span class="c1"># =============================================================================</span>
 <span class="c1">#</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="VoxelsOutput"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.VoxelsOutput.html#crate.ioput.miscoutputfiles.vtkoutput.VoxelsOutput">[docs]</a><span class="k">class</span> <span class="nc">VoxelsOutput</span><span class="p">:</span>
+<div class="viewcode-block" id="VoxelsOutput"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.VoxelsOutput.html#cratepy.ioput.miscoutputfiles.vtkoutput.VoxelsOutput">[docs]</a><span class="k">class</span> <span class="nc">VoxelsOutput</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Output file: Voxels material-related output.</span>
 
 <span class="sd">    Attributes</span>
@@ -156,7 +156,7 @@
 <span class="sd">    rewind_file(self, rewind_inc)</span>
 <span class="sd">        Rewind output file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="VoxelsOutput.__init__"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.VoxelsOutput.html#crate.ioput.miscoutputfiles.vtkoutput.VoxelsOutput.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">voxout_file_path</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">):</span>
+<div class="viewcode-block" id="VoxelsOutput.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.VoxelsOutput.html#cratepy.ioput.miscoutputfiles.vtkoutput.VoxelsOutput.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">voxout_file_path</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
 
 <span class="sd">        Parameters</span>
@@ -180,7 +180,7 @@
         <span class="c1"># Set column width</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_col_width</span> <span class="o">=</span> <span class="mi">16</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="VoxelsOutput.init_voxels_output_file"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.VoxelsOutput.html#crate.ioput.miscoutputfiles.vtkoutput.VoxelsOutput.init_voxels_output_file">[docs]</a>    <span class="k">def</span> <span class="nf">init_voxels_output_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">):</span>
+<div class="viewcode-block" id="VoxelsOutput.init_voxels_output_file"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.VoxelsOutput.html#cratepy.ioput.miscoutputfiles.vtkoutput.VoxelsOutput.init_voxels_output_file">[docs]</a>    <span class="k">def</span> <span class="nf">init_voxels_output_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Open output file and write file header.</span>
 
 <span class="sd">        Parameters</span>
@@ -207,7 +207,7 @@
         <span class="c1"># voxels material-related output variables initial values</span>
         <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_voxout_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">write_list</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="VoxelsOutput.write_voxels_output_file"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.VoxelsOutput.html#crate.ioput.miscoutputfiles.vtkoutput.VoxelsOutput.write_voxels_output_file">[docs]</a>    <span class="k">def</span> <span class="nf">write_voxels_output_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span>
+<div class="viewcode-block" id="VoxelsOutput.write_voxels_output_file"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.VoxelsOutput.html#cratepy.ioput.miscoutputfiles.vtkoutput.VoxelsOutput.write_voxels_output_file">[docs]</a>    <span class="k">def</span> <span class="nf">write_voxels_output_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span>
                                  <span class="n">clusters_state</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Write output file.</span>
 
@@ -266,7 +266,7 @@
         <span class="c1"># voxels material-related output variables of current loading increment</span>
         <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_voxout_file_path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">write_list</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="VoxelsOutput.rewind_file"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.VoxelsOutput.html#crate.ioput.miscoutputfiles.vtkoutput.VoxelsOutput.rewind_file">[docs]</a>    <span class="k">def</span> <span class="nf">rewind_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rewind_inc</span><span class="p">):</span>
+<div class="viewcode-block" id="VoxelsOutput.rewind_file"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.VoxelsOutput.html#cratepy.ioput.miscoutputfiles.vtkoutput.VoxelsOutput.rewind_file">[docs]</a>    <span class="k">def</span> <span class="nf">rewind_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rewind_inc</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Rewind output file.</span>
 
 <span class="sd">        Parameters</span>
@@ -282,7 +282,7 @@
         <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_voxout_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span>
             <span class="n">file_lines</span><span class="p">[:</span> <span class="n">last_line</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span></div></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="VoxelsArraysFactory"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.miscoutputfiles.vtkoutput.VoxelsArraysFactory.html#crate.ioput.miscoutputfiles.vtkoutput.VoxelsArraysFactory">[docs]</a><span class="k">class</span> <span class="nc">VoxelsArraysFactory</span><span class="p">:</span>
+<div class="viewcode-block" id="VoxelsArraysFactory"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.miscoutputfiles.vtkoutput.VoxelsArraysFactory.html#cratepy.ioput.miscoutputfiles.vtkoutput.VoxelsArraysFactory">[docs]</a><span class="k">class</span> <span class="nc">VoxelsArraysFactory</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Build clusters state-based voxels arrays.</span>
 
 <span class="sd">    Attributes</span>
@@ -304,7 +304,7 @@
 <span class="sd">        Build clusters state-based voxel array.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="VoxelsArraysFactory.__init__"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.miscoutputfiles.vtkoutput.VoxelsArraysFactory.html#crate.ioput.miscoutputfiles.vtkoutput.VoxelsArraysFactory.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">):</span>
+<div class="viewcode-block" id="VoxelsArraysFactory.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.miscoutputfiles.vtkoutput.VoxelsArraysFactory.html#cratepy.ioput.miscoutputfiles.vtkoutput.VoxelsArraysFactory.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
 
 <span class="sd">        Parameters</span>
@@ -327,7 +327,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_available_csbvars</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vm_stress&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;vm_strain&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
                                    <span class="s1">&#39;acc_p_strain&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;acc_p_energy_dens&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="VoxelsArraysFactory.build_voxels_array"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.miscoutputfiles.vtkoutput.VoxelsArraysFactory.html#crate.ioput.miscoutputfiles.vtkoutput.VoxelsArraysFactory.build_voxels_array">[docs]</a>    <span class="k">def</span> <span class="nf">build_voxels_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">csbvar</span><span class="p">,</span> <span class="n">clusters_state</span><span class="p">,</span>
+<div class="viewcode-block" id="VoxelsArraysFactory.build_voxels_array"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.miscoutputfiles.vtkoutput.VoxelsArraysFactory.html#cratepy.ioput.miscoutputfiles.vtkoutput.VoxelsArraysFactory.build_voxels_array">[docs]</a>    <span class="k">def</span> <span class="nf">build_voxels_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">csbvar</span><span class="p">,</span> <span class="n">clusters_state</span><span class="p">,</span>
                            <span class="n">clusters_def_gradient_mf</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Build clusters state-based voxel array.</span>
 

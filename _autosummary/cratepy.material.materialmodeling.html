@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cratepy.material.materialmodeling &mdash; CRATE 1.0.3 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="cratepy.material.materialmodeling.cauchy_from_kirchhoff" href="cratepy.material.materialmodeling.cauchy_from_kirchhoff.html" />
+    <link rel="prev" title="cratepy.material.isotropichardlaw.get_hardening_law" href="cratepy.material.isotropichardlaw.get_hardening_law.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            CRATE
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="cratepy.html">Code</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cratepy.crate_simulation.html">cratepy.crate_simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.clustering.html">cratepy.clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.ioput.html">cratepy.ioput</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.main.html">cratepy.main</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="cratepy.material.html">cratepy.material</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cratepy.material.isotropichardlaw.html">cratepy.material.isotropichardlaw</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">cratepy.material.materialmodeling</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#classes">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.material.materialmodeling.cauchy_from_kirchhoff.html">cratepy.material.materialmodeling.cauchy_from_kirchhoff</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.material.materialmodeling.first_piola_from_kirchhoff.html">cratepy.material.materialmodeling.first_piola_from_kirchhoff</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.material.materialmodeling.get_available_material_models.html">cratepy.material.materialmodeling.get_available_material_models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.material.materialmodeling.material_from_spatial_tangent_modulus.html">cratepy.material.materialmodeling.material_from_spatial_tangent_modulus</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.material.materialmodeling.Elastic.html">cratepy.material.materialmodeling.Elastic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.material.materialmodeling.MaterialState.html">cratepy.material.materialmodeling.MaterialState</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.material.materialmodeling.StVenantKirchhoff.html">cratepy.material.materialmodeling.StVenantKirchhoff</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.material.materialmodeling.VonMises.html">cratepy.material.materialmodeling.VonMises</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.material.materialoperations.html">cratepy.material.materialoperations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.material.models.html">cratepy.material.models</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.online.html">cratepy.online</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.optimization.html">cratepy.optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.tensor.html">cratepy.tensor</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CRATE</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="cratepy.html">cratepy</a></li>
+          <li class="breadcrumb-item"><a href="cratepy.material.html">cratepy.material</a></li>
+      <li class="breadcrumb-item active">cratepy.material.materialmodeling</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-cratepy.material.materialmodeling">
+<span id="cratepy-material-materialmodeling"></span><h1>cratepy.material.materialmodeling<a class="headerlink" href="#module-cratepy.material.materialmodeling" title="Permalink to this heading">¶</a></h1>
+<p>Constitutive modeling of CRVE material clusters and homogenization.</p>
+<p>This module includes the class that contains the data associated with the
+CRVE’s material clusters constitutive state and homogenized strain and stress
+tensors, as well as the required methods to perform the material clusters
+constitutive state update, the computation of the material clusters consistent
+tangent modulus, and the computational homogenization of the material clusters
+strain and stress tensors.</p>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">¶</a></h2>
+<dl class="simple">
+<dt>MaterialState</dt><dd><p>CRVE material constitutive state.</p>
+</dd>
+</dl>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">¶</a></h2>
+<dl class="simple">
+<dt>get_available_material_models</dt><dd><p>Get available material constitutive models.</p>
+</dd>
+</dl>
+</section>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="cratepy.material.materialmodeling.cauchy_from_kirchhoff.html#cratepy.material.materialmodeling.cauchy_from_kirchhoff" title="cratepy.material.materialmodeling.cauchy_from_kirchhoff"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cauchy_from_kirchhoff</span></code></a>(def_gradient, ...)</p></td>
+<td><p>Cauchy stress tensor from Kirchhoff stress tensor.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="cratepy.material.materialmodeling.first_piola_from_kirchhoff.html#cratepy.material.materialmodeling.first_piola_from_kirchhoff" title="cratepy.material.materialmodeling.first_piola_from_kirchhoff"><code class="xref py py-obj docutils literal notranslate"><span class="pre">first_piola_from_kirchhoff</span></code></a>(def_gradient, ...)</p></td>
+<td><p>First Piola-Kirchhoff stress tensor from Kirchhoff stress tensor.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="cratepy.material.materialmodeling.get_available_material_models.html#cratepy.material.materialmodeling.get_available_material_models" title="cratepy.material.materialmodeling.get_available_material_models"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_available_material_models</span></code></a>([model_source])</p></td>
+<td><p>Get available material constitutive models.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="cratepy.material.materialmodeling.material_from_spatial_tangent_modulus.html#cratepy.material.materialmodeling.material_from_spatial_tangent_modulus" title="cratepy.material.materialmodeling.material_from_spatial_tangent_modulus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">material_from_spatial_tangent_modulus</span></code></a>(...)</p></td>
+<td><p>Material consistent tangent modulus from spatial counterpart.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="cratepy.material.materialmodeling.Elastic.html#cratepy.material.materialmodeling.Elastic" title="cratepy.material.materialmodeling.Elastic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Elastic</span></code></a>(strain_formulation, problem_type, ...)</p></td>
+<td><p>Linear elastic constitutive model.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="cratepy.material.materialmodeling.MaterialState.html#cratepy.material.materialmodeling.MaterialState" title="cratepy.material.materialmodeling.MaterialState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MaterialState</span></code></a>(strain_formulation, ...)</p></td>
+<td><p>CRVE material constitutive state.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="cratepy.material.materialmodeling.StVenantKirchhoff.html#cratepy.material.materialmodeling.StVenantKirchhoff" title="cratepy.material.materialmodeling.StVenantKirchhoff"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StVenantKirchhoff</span></code></a>(strain_formulation, ...)</p></td>
+<td><p>St.Venant-Kirchhoff hyperelastic constitutive model.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="cratepy.material.materialmodeling.VonMises.html#cratepy.material.materialmodeling.VonMises" title="cratepy.material.materialmodeling.VonMises"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VonMises</span></code></a>(strain_formulation, problem_type, ...)</p></td>
+<td><p>Von Mises constitutive model with isotropic strain hardening.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cratepy.material.isotropichardlaw.get_hardening_law.html" class="btn btn-neutral float-left" title="cratepy.material.isotropichardlaw.get_hardening_law" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cratepy.material.materialmodeling.cauchy_from_kirchhoff.html" class="btn btn-neutral float-right" title="cratepy.material.materialmodeling.cauchy_from_kirchhoff" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

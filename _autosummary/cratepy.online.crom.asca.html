@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cratepy.online.crom.asca &mdash; CRATE 1.0.3 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="cratepy.online.crom.asca.abstractmethod" href="cratepy.online.crom.asca.abstractmethod.html" />
+    <link rel="prev" title="cratepy.online.crom" href="cratepy.online.crom.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            CRATE
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="cratepy.html">Code</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cratepy.crate_simulation.html">cratepy.crate_simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.clustering.html">cratepy.clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.ioput.html">cratepy.ioput</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.main.html">cratepy.main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.material.html">cratepy.material</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="cratepy.online.html">cratepy.online</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="cratepy.online.crom.html">cratepy.online.crom</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">cratepy.online.crom.asca</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.online.loading.html">cratepy.online.loading</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.optimization.html">cratepy.optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.tensor.html">cratepy.tensor</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CRATE</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="cratepy.html">cratepy</a></li>
+          <li class="breadcrumb-item"><a href="cratepy.online.html">cratepy.online</a></li>
+          <li class="breadcrumb-item"><a href="cratepy.online.crom.html">cratepy.online.crom</a></li>
+      <li class="breadcrumb-item active">cratepy.online.crom.asca</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-cratepy.online.crom.asca">
+<span id="cratepy-online-crom-asca"></span><h1>cratepy.online.crom.asca<a class="headerlink" href="#module-cratepy.online.crom.asca" title="Permalink to this heading">¶</a></h1>
+<p>Adaptive Self-consistent Clustering Analysis (ASCA).</p>
+<p>This module includes the implementation of the Adaptive Self-consistent
+Clustering Analysis (ASCA), a clustering-based reduced-order model proposed by
+Ferreira et. al (2022) <a class="footnote-reference brackets" href="#id3" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. Under infinitesimal strains, the Self-consistent
+Clustering Analysis (SCA) proposed by Liu et. al (2016) <a class="footnote-reference brackets" href="#id4" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> is recovered in
+the absence of clustering adaptivity.</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id3" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Ferreira, B.P., Andrade Pires, F.M. and Bessa, M.A. (2022).
+<em>Adaptivity for clustering-based reduced-order modeling of
+localized history-dependent phenomena.</em> Comp Methods Appl M, 393
+(see <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0045782522000895?via%3Dihub">here</a>)</p>
+</aside>
+<aside class="footnote brackets" id="id4" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>Liu, Z., Bessa, M., and Liu, W.K. (2016).
+<em>Self-consistent clustering analysis: An efficient multi-scale scheme
+for inelastic heterogeneous materials.</em> Comp Methods Appl M, 396:319-341
+(see <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0045782516301499">here</a>)</p>
+</aside>
+</aside>
+<p>The finite strain extension compatible with multiplicative kinematics of both
+SCA and ASCA methods is also available as proposed by Ferreira (2022) <a class="footnote-reference brackets" href="#id7" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>
+(see Sections 4.7-4.9). However, the development of an accurate self-consistent
+scheme compatible with such as a formulation is still under investigation (see
+Section 4.9).</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id7" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">3</a><span class="fn-bracket">]</span></span>
+<p>Ferreira, B.P. (2022). <em>Towards Data-driven Multi-scale
+Optimization of Thermoplastic Blends: Microstructural
+Generation, Constitutive Development and Clustering-based
+Reduced-Order Modeling.</em> PhD Thesis, University of Porto
+(see <a class="reference external" href="https://repositorio-aberto.up.pt/handle/10216/146900?locale=en">here</a>)</p>
+</aside>
+</aside>
+<p>Besides the main class that implements the aforementioned methods, this
+module also includes a class associated with the reference (fictitious)
+homogeneous material, which arises in the formulation of the SCA and ASCA,
+and an interface to implement any self-consistent scheme, required to determine
+the properties of such a reference material.</p>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">¶</a></h2>
+<dl class="simple">
+<dt>ASCA</dt><dd><p>Adaptive Self-Consistent Clustering Analysis (ASCA).</p>
+</dd>
+<dt>ReferenceMaterialOptimizer(ABC)</dt><dd><p>Elastic reference material properties optimizer interface.</p>
+</dd>
+<dt>InfinitesimalRegressionSCS(ReferenceMaterialOptimizer)</dt><dd><p>Infinitesimal strains format regression-based self-consistent scheme.</p>
+</dd>
+</dl>
+</section>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="cratepy.online.crom.asca.abstractmethod.html#cratepy.online.crom.asca.abstractmethod" title="cratepy.online.crom.asca.abstractmethod"><code class="xref py py-obj docutils literal notranslate"><span class="pre">abstractmethod</span></code></a>(funcobj)</p></td>
+<td><p>A decorator indicating abstract methods.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="cratepy.online.crom.asca.assemble_cit.html#cratepy.online.crom.asca.assemble_cit" title="cratepy.online.crom.asca.assemble_cit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assemble_cit</span></code></a>(strain_formulation, ...)</p></td>
+<td><p>Assemble global cluster interaction matrix.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="cratepy.online.crom.asca.ABC.html#cratepy.online.crom.asca.ABC" title="cratepy.online.crom.asca.ABC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ABC</span></code></a>()</p></td>
+<td><p>Helper class that provides a standard way to create an ABC using inheritance.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="cratepy.online.crom.asca.ASCA.html#cratepy.online.crom.asca.ASCA" title="cratepy.online.crom.asca.ASCA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ASCA</span></code></a>(strain_formulation, problem_type[, ...])</p></td>
+<td><p>Adaptive Self-Consistent Clustering Analysis (ASCA).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="cratepy.online.crom.asca.AdaptivityManager.html#cratepy.online.crom.asca.AdaptivityManager" title="cratepy.online.crom.asca.AdaptivityManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AdaptivityManager</span></code></a>(strain_formulation, ...)</p></td>
+<td><p>CRVE clustering adaptivity manager.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="cratepy.online.crom.asca.ClusteringAdaptivityOutput.html#cratepy.online.crom.asca.ClusteringAdaptivityOutput" title="cratepy.online.crom.asca.ClusteringAdaptivityOutput"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClusteringAdaptivityOutput</span></code></a>(adapt_file_path, ...)</p></td>
+<td><p>Clustering adaptivity output.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="cratepy.online.crom.asca.EffTanOutput.html#cratepy.online.crom.asca.EffTanOutput" title="cratepy.online.crom.asca.EffTanOutput"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EffTanOutput</span></code></a>(file_path)</p></td>
+<td><p>Output file: CRVE effective material consistent tangent modulus.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="cratepy.online.crom.asca.ElasticReferenceMaterial.html#cratepy.online.crom.asca.ElasticReferenceMaterial" title="cratepy.online.crom.asca.ElasticReferenceMaterial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ElasticReferenceMaterial</span></code></a>(strain_formulation, ...)</p></td>
+<td><p>Elastic reference material.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="cratepy.online.crom.asca.HomResOutput.html#cratepy.online.crom.asca.HomResOutput" title="cratepy.online.crom.asca.HomResOutput"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HomResOutput</span></code></a>(file_path)</p></td>
+<td><p>Output file: Homogenized strain/stress results.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="cratepy.online.crom.asca.IncrementRewinder.html#cratepy.online.crom.asca.IncrementRewinder" title="cratepy.online.crom.asca.IncrementRewinder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IncrementRewinder</span></code></a>(rewind_inc, phase_clusters)</p></td>
+<td><p>Rewind analysis to rewind state increment (initial instant).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="cratepy.online.crom.asca.InfinitesimalRegressionSCS.html#cratepy.online.crom.asca.InfinitesimalRegressionSCS" title="cratepy.online.crom.asca.InfinitesimalRegressionSCS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InfinitesimalRegressionSCS</span></code></a>(...[, is_symmetrized])</p></td>
+<td><p>Infinitesimal strains format regression-based self-consistent scheme.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="cratepy.online.crom.asca.LoadingPath.html#cratepy.online.crom.asca.LoadingPath" title="cratepy.online.crom.asca.LoadingPath"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LoadingPath</span></code></a>(strain_formulation, ...[, ...])</p></td>
+<td><p>Loading incrementation flow.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="cratepy.online.crom.asca.RefMatOutput.html#cratepy.online.crom.asca.RefMatOutput" title="cratepy.online.crom.asca.RefMatOutput"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RefMatOutput</span></code></a>(file_path, strain_formulation, ...)</p></td>
+<td><p>Output file: Homogeneous (fictitious) reference material data.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="cratepy.online.crom.asca.ReferenceMaterialOptimizer.html#cratepy.online.crom.asca.ReferenceMaterialOptimizer" title="cratepy.online.crom.asca.ReferenceMaterialOptimizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReferenceMaterialOptimizer</span></code></a>(...)</p></td>
+<td><p>Elastic reference material properties optimizer interface.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="cratepy.online.crom.asca.RewindManager.html#cratepy.online.crom.asca.RewindManager" title="cratepy.online.crom.asca.RewindManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RewindManager</span></code></a>(rewind_state_criterion, ...[, ...])</p></td>
+<td><p>Manage analysis rewind operations and evaluate analysis rewind criteria.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="cratepy.online.crom.asca.VTKOutput.html#cratepy.online.crom.asca.VTKOutput" title="cratepy.online.crom.asca.VTKOutput"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VTKOutput</span></code></a>(type, version, byte_order, format, ...)</p></td>
+<td><p>VTK output.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="cratepy.online.crom.asca.VoxelsOutput.html#cratepy.online.crom.asca.VoxelsOutput" title="cratepy.online.crom.asca.VoxelsOutput"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VoxelsOutput</span></code></a>(voxout_file_path, ...)</p></td>
+<td><p>Output file: Voxels material-related output.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cratepy.online.crom.html" class="btn btn-neutral float-left" title="cratepy.online.crom" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cratepy.online.crom.asca.abstractmethod.html" class="btn btn-neutral float-right" title="cratepy.online.crom.asca.abstractmethod" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

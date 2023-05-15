@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cratepy.clustering.clusteringalgs.ABC &mdash; CRATE 1.0.3 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="cratepy.clustering.clusteringalgs.AgglomerativeAlgorithm" href="cratepy.clustering.clusteringalgs.AgglomerativeAlgorithm.html" />
+    <link rel="prev" title="cratepy.clustering.clusteringalgs.abstractmethod" href="cratepy.clustering.clusteringalgs.abstractmethod.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            CRATE
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="cratepy.html">Code</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cratepy.crate_simulation.html">cratepy.crate_simulation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="cratepy.clustering.html">cratepy.clustering</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cratepy.clustering.adaptivity.html">cratepy.clustering.adaptivity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.clustering.citoperations.html">cratepy.clustering.citoperations</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="cratepy.clustering.clusteringalgs.html">cratepy.clustering.clusteringalgs</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="cratepy.clustering.clusteringalgs.html#classes">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.clustering.clusteringalgs.abstractmethod.html">cratepy.clustering.clusteringalgs.abstractmethod</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">cratepy.clustering.clusteringalgs.ABC</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.clustering.clusteringalgs.AgglomerativeAlgorithm.html">cratepy.clustering.clusteringalgs.AgglomerativeAlgorithm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.clustering.clusteringalgs.AgglomerativeSP.html">cratepy.clustering.clusteringalgs.AgglomerativeSP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.clustering.clusteringalgs.ClusterAnalysis.html">cratepy.clustering.clusteringalgs.ClusterAnalysis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.clustering.clusteringalgs.ClusteringAlgorithm.html">cratepy.clustering.clusteringalgs.ClusteringAlgorithm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.clustering.clusteringalgs.KMeansSK.html">cratepy.clustering.clusteringalgs.KMeansSK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.clustering.clusteringalgs.MiniBatchKMeansSK.html">cratepy.clustering.clusteringalgs.MiniBatchKMeansSK</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.clustering.clusteringdata.html">cratepy.clustering.clusteringdata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.clustering.clusteringphase.html">cratepy.clustering.clusteringphase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.clustering.crve.html">cratepy.clustering.crve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.clustering.rveelasticdatabase.html">cratepy.clustering.rveelasticdatabase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.clustering.solution.html">cratepy.clustering.solution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.ioput.html">cratepy.ioput</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.main.html">cratepy.main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.material.html">cratepy.material</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.online.html">cratepy.online</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.optimization.html">cratepy.optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.tensor.html">cratepy.tensor</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CRATE</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="cratepy.html">cratepy</a></li>
+          <li class="breadcrumb-item"><a href="cratepy.clustering.html">cratepy.clustering</a></li>
+          <li class="breadcrumb-item"><a href="cratepy.clustering.clusteringalgs.html">cratepy.clustering.clusteringalgs</a></li>
+      <li class="breadcrumb-item active">cratepy.clustering.clusteringalgs.ABC</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cratepy-clustering-clusteringalgs-abc">
+<h1>cratepy.clustering.clusteringalgs.ABC<a class="headerlink" href="#cratepy-clustering-clusteringalgs-abc" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="cratepy.clustering.clusteringalgs.ABC">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ABC</span></span><a class="reference internal" href="../_modules/abc.html#ABC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.clustering.clusteringalgs.ABC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Helper class that provides a standard way to create an ABC using
+inheritance.</p>
+<p class="rubric">List of Public Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cratepy.clustering.clusteringalgs.abstractmethod.html" class="btn btn-neutral float-left" title="cratepy.clustering.clusteringalgs.abstractmethod" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cratepy.clustering.clusteringalgs.AgglomerativeAlgorithm.html" class="btn btn-neutral float-right" title="cratepy.clustering.clusteringalgs.AgglomerativeAlgorithm" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -39,9 +39,9 @@ Implementation steps
 --------------------
 The implementation of a **new constitutive model** in CRATE involves **four fundamental steps**:
 
-* **Step 1** - Create a Python module with the name of the new constitutive model (e.g., :code:`new_model.py`) in :py:mod:`crate.material.models` directory;
+* **Step 1** - Create a Python module with the name of the new constitutive model (e.g., :code:`new_model.py`) in :py:mod:`cratepy.material.models` directory;
 
-* **Step 2** - In :code:`new_model.py`, import the constitutive model interface (:py:class:`~crate.material.models.interface.ConstitutiveModel`), derive a class for the new constitutive model (e.g., :code:`NewConstitutiveModel`), and set the constitutive model name as an attribute (e.g., :code:`new_constitutive_model`):
+* **Step 2** - In :code:`new_model.py`, import the constitutive model interface (:py:class:`~cratepy.material.models.interface.ConstitutiveModel`), derive a class for the new constitutive model (e.g., :code:`NewConstitutiveModel`), and set the constitutive model name as an attribute (e.g., :code:`new_constitutive_model`):
 
     .. code-block:: python
 
@@ -62,12 +62,12 @@ The implementation of a **new constitutive model** in CRATE involves **four fund
 
                self._name = 'new_constitutive_model'
 
-* **Step 3** - In :py:mod:`crate.material.materialmodeling`, import and add the initialization of the new constitutive model in the :py:meth:`~crate.material.materialmodeling.MaterialState.init_constitutive_model` method of class :py:class:`~crate.material.materialmodeling.MaterialState`:
+* **Step 3** - In :py:mod:`cratepy.material.materialmodeling`, import and add the initialization of the new constitutive model in the :py:meth:`~cratepy.material.materialmodeling.MaterialState.init_constitutive_model` method of class :py:class:`~cratepy.material.materialmodeling.MaterialState`:
 
     .. code-block:: python
        :emphasize-lines: 3, 14-17
 
-       # crate.material.materialmodeling.py
+       # cratepy.material.materialmodeling.py
 
        from material.models.new_model import NewConstitutiveModel
 
@@ -88,15 +88,15 @@ The implementation of a **new constitutive model** in CRATE involves **four fund
                        raise RuntimeError('Unknown constitutive model from CRATE\'s '
                                           'source.')
 
-* **Step 4** - Perform the complete implementation of the new constitutive model in :code:`new_model.py` by developing the class :code:`NewConstitutiveModel` and implementing the abstract methods (look for the @abstractmethod decorator) established by the constitutive model interface (:py:class:`~crate.material.models.interface.ConstitutiveModel`).
+* **Step 4** - Perform the complete implementation of the new constitutive model in :code:`new_model.py` by developing the class :code:`NewConstitutiveModel` and implementing the abstract methods (look for the @abstractmethod decorator) established by the constitutive model interface (:py:class:`~cratepy.material.models.interface.ConstitutiveModel`).
 
 ----
 
 Recommendations
 ---------------
 
-* If you are not familiar with the implementation of a constitutive model in CRATE, it is **recommended** that you first take a look into the implementation of the constitutive models already available (:py:mod:`crate.material.models`). The implementation of these models follows the steps previously outlined and are fully documented;
+* If you are not familiar with the implementation of a constitutive model in CRATE, it is **recommended** that you first take a look into the implementation of the constitutive models already available (:py:mod:`cratepy.material.models`). The implementation of these models follows the steps previously outlined and are fully documented;
 
-* Focus on the essential and don't lose time implementing standard computations and operations in solid mechanics - make use of the **extensive set of tools available** in :py:mod:`crate.material.materialoperations` and :py:mod:`crate.tensor.tensoroperations`;
+* Focus on the essential and don't lose time implementing standard computations and operations in solid mechanics - make use of the **extensive set of tools available** in :py:mod:`cratepy.material.materialoperations` and :py:mod:`cratepy.tensor.tensoroperations`;
 
-* Avoid troublesome debugging processes by taking advantage of the **matricial storage procedures** of strain and stress related tensors available in :py:mod:`crate.tensor.matrixoperations` - such a toolkit ensures a systematic and consistent way of performing all the conversions between tensorial and matricial forms arising in your implementation.
+* Avoid troublesome debugging processes by taking advantage of the **matricial storage procedures** of strain and stress related tensors available in :py:mod:`cratepy.tensor.matrixoperations` - such a toolkit ensures a systematic and consistent way of performing all the conversions between tensorial and matricial forms arising in your implementation.

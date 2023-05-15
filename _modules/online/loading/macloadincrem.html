@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>online.loading.macloadincrem &mdash; crate 1.0.0 documentation</title>
+  <title>online.loading.macloadincrem &mdash; CRATE 1.0.3 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
@@ -28,7 +28,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            crate
+            CRATE
           </a>
               <div class="version">
                 1.0
@@ -71,7 +71,7 @@
 <p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/reference/index.html">Index</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/crate.html">Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/cratepy.html">Code</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">License</span></p>
 <ul>
@@ -84,7 +84,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">crate</a>
+          <a href="../../../index.html">CRATE</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -146,7 +146,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                                      Loading path and subpath</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="LoadingPath"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.LoadingPath.html#crate.ioput.readprocedures.LoadingPath">[docs]</a><span class="k">class</span> <span class="nc">LoadingPath</span><span class="p">:</span>
+<div class="viewcode-block" id="LoadingPath"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.LoadingPath.html#cratepy.ioput.readprocedures.LoadingPath">[docs]</a><span class="k">class</span> <span class="nc">LoadingPath</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Loading incrementation flow.</span>
 
 <span class="sd">    This class contains a collection of loading subpaths, the current loading</span>
@@ -202,7 +202,7 @@
 <span class="sd">    _get_load_mf(n_dim, comp_order, load_vector)</span>
 <span class="sd">        Get matricial form of load tensor given in vector form.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="LoadingPath.__init__"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.LoadingPath.html#crate.ioput.readprocedures.LoadingPath.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">mac_load</span><span class="p">,</span>
+<div class="viewcode-block" id="LoadingPath.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.LoadingPath.html#cratepy.ioput.readprocedures.LoadingPath.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">mac_load</span><span class="p">,</span>
                  <span class="n">mac_load_presctype</span><span class="p">,</span> <span class="n">mac_load_increm</span><span class="p">,</span> <span class="n">max_subinc_level</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
                  <span class="n">max_cinc_cuts</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
@@ -266,7 +266,7 @@
         <span class="c1"># Initialize consecutive increment cuts counter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_n_cinc_cuts</span> <span class="o">=</span> <span class="mi">0</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="LoadingPath.new_load_increment"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.LoadingPath.html#crate.ioput.readprocedures.LoadingPath.new_load_increment">[docs]</a>    <span class="k">def</span> <span class="nf">new_load_increment</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LoadingPath.new_load_increment"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.LoadingPath.html#cratepy.ioput.readprocedures.LoadingPath.new_load_increment">[docs]</a>    <span class="k">def</span> <span class="nf">new_load_increment</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Setup new loading increment and get associated data.</span>
 
 <span class="sd">        Returns</span>
@@ -338,7 +338,7 @@
             <span class="n">load_subpath</span><span class="o">.</span><span class="n">_n_presc_stress</span><span class="p">,</span> <span class="n">load_subpath</span><span class="o">.</span><span class="n">_presc_stress_idxs</span><span class="p">,</span> \
             <span class="bp">self</span><span class="o">.</span><span class="n">_is_last_inc</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="LoadingPath.increment_cut"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.LoadingPath.html#crate.ioput.readprocedures.LoadingPath.increment_cut">[docs]</a>    <span class="k">def</span> <span class="nf">increment_cut</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">):</span>
+<div class="viewcode-block" id="LoadingPath.increment_cut"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.LoadingPath.html#cratepy.ioput.readprocedures.LoadingPath.increment_cut">[docs]</a>    <span class="k">def</span> <span class="nf">increment_cut</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform loading increment cut and setup new increment.</span>
 
 <span class="sd">        Parameters</span>
@@ -409,7 +409,7 @@
             <span class="n">load_subpath</span><span class="o">.</span><span class="n">_n_presc_stress</span><span class="p">,</span> <span class="n">load_subpath</span><span class="o">.</span><span class="n">_presc_stress_idxs</span><span class="p">,</span> \
             <span class="bp">self</span><span class="o">.</span><span class="n">_is_last_inc</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="LoadingPath.update_hom_state"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.LoadingPath.html#crate.ioput.readprocedures.LoadingPath.update_hom_state">[docs]</a>    <span class="k">def</span> <span class="nf">update_hom_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hom_strain_mf</span><span class="p">,</span> <span class="n">hom_stress_mf</span><span class="p">):</span>
+<div class="viewcode-block" id="LoadingPath.update_hom_state"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.LoadingPath.html#cratepy.ioput.readprocedures.LoadingPath.update_hom_state">[docs]</a>    <span class="k">def</span> <span class="nf">update_hom_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hom_strain_mf</span><span class="p">,</span> <span class="n">hom_stress_mf</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update converged homogenized state.</span>
 
 <span class="sd">        Parameters</span>
@@ -450,7 +450,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_conv_hom_state</span><span class="p">[</span><span class="s1">&#39;strain&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">hom_strain</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_conv_hom_state</span><span class="p">[</span><span class="s1">&#39;stress&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">hom_stress</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="LoadingPath.get_subpath_state"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.LoadingPath.html#crate.ioput.readprocedures.LoadingPath.get_subpath_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_subpath_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LoadingPath.get_subpath_state"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.LoadingPath.html#cratepy.ioput.readprocedures.LoadingPath.get_subpath_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_subpath_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current loading subpath state.</span>
 
 <span class="sd">        Returns</span>
@@ -475,7 +475,7 @@
         <span class="c1"># Return loading subpath state</span>
         <span class="k">return</span> <span class="n">load_subpath</span><span class="o">.</span><span class="n">get_state</span><span class="p">()</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="LoadingPath.get_increm_state"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.LoadingPath.html#crate.ioput.readprocedures.LoadingPath.get_increm_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_increm_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LoadingPath.get_increm_state"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.LoadingPath.html#cratepy.ioput.readprocedures.LoadingPath.get_increm_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_increm_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get incremental state.</span>
 
 <span class="sd">        Returns</span>
@@ -486,7 +486,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_increm_state</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="LoadingPath._new_subpath"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.LoadingPath.html#crate.ioput.readprocedures.LoadingPath._new_subpath">[docs]</a>    <span class="k">def</span> <span class="nf">_new_subpath</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LoadingPath._new_subpath"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.LoadingPath.html#cratepy.ioput.readprocedures.LoadingPath._new_subpath">[docs]</a>    <span class="k">def</span> <span class="nf">_new_subpath</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a new loading subpath to the loading path.&quot;&quot;&quot;</span>
         <span class="c1"># Increment (+1) loading subpath id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_increm_state</span><span class="p">[</span><span class="s1">&#39;subpath_id&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -507,7 +507,7 @@
                            <span class="n">load</span><span class="p">,</span> <span class="n">presctype</span><span class="p">,</span> <span class="n">inc_lfacts</span><span class="p">,</span> <span class="n">inc_times</span><span class="p">,</span>
                            <span class="bp">self</span><span class="o">.</span><span class="n">_max_subinc_level</span><span class="p">))</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="LoadingPath._get_load_subpath"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.LoadingPath.html#crate.ioput.readprocedures.LoadingPath._get_load_subpath">[docs]</a>    <span class="k">def</span> <span class="nf">_get_load_subpath</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LoadingPath._get_load_subpath"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.LoadingPath.html#cratepy.ioput.readprocedures.LoadingPath._get_load_subpath">[docs]</a>    <span class="k">def</span> <span class="nf">_get_load_subpath</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current loading subpath.</span>
 
 <span class="sd">        Returns</span>
@@ -517,14 +517,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_subpaths</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_increm_state</span><span class="p">[</span><span class="s1">&#39;subpath_id&#39;</span><span class="p">]]</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="LoadingPath._update_inc"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.LoadingPath.html#crate.ioput.readprocedures.LoadingPath._update_inc">[docs]</a>    <span class="k">def</span> <span class="nf">_update_inc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LoadingPath._update_inc"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.LoadingPath.html#cratepy.ioput.readprocedures.LoadingPath._update_inc">[docs]</a>    <span class="k">def</span> <span class="nf">_update_inc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update loading increment counters.&quot;&quot;&quot;</span>
         <span class="c1"># Increment (+1) global increment counter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_increm_state</span><span class="p">[</span><span class="s1">&#39;inc&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="c1"># Increment (+1) loading subpath increment counter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_get_load_subpath</span><span class="p">()</span><span class="o">.</span><span class="n">update_inc</span><span class="p">()</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="LoadingPath._get_applied_mac_load"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.LoadingPath.html#crate.ioput.readprocedures.LoadingPath._get_applied_mac_load">[docs]</a>    <span class="k">def</span> <span class="nf">_get_applied_mac_load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LoadingPath._get_applied_mac_load"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.LoadingPath.html#cratepy.ioput.readprocedures.LoadingPath._get_applied_mac_load">[docs]</a>    <span class="k">def</span> <span class="nf">_get_applied_mac_load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute current applied loading.</span>
 
 <span class="sd">        Returns</span>
@@ -539,7 +539,7 @@
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="k">return</span> <span class="n">applied_mac_load</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="LoadingPath._get_inc_mac_load"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.LoadingPath.html#crate.ioput.readprocedures.LoadingPath._get_inc_mac_load">[docs]</a>    <span class="k">def</span> <span class="nf">_get_inc_mac_load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LoadingPath._get_inc_mac_load"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.LoadingPath.html#cratepy.ioput.readprocedures.LoadingPath._get_inc_mac_load">[docs]</a>    <span class="k">def</span> <span class="nf">_get_inc_mac_load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute current incremental loading.</span>
 
 <span class="sd">        Returns</span>
@@ -554,7 +554,7 @@
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="k">return</span> <span class="n">inc_mac_load</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="LoadingPath._remove_sym"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.LoadingPath.html#crate.ioput.readprocedures.LoadingPath._remove_sym">[docs]</a>    <span class="k">def</span> <span class="nf">_remove_sym</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span><span class="p">):</span>
+<div class="viewcode-block" id="LoadingPath._remove_sym"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.LoadingPath.html#cratepy.ioput.readprocedures.LoadingPath._remove_sym">[docs]</a>    <span class="k">def</span> <span class="nf">_remove_sym</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove the symmetric components of loading related objects.</span>
 
 <span class="sd">        Under an infinitesimal strain formulation, remove the symmetric</span>
@@ -590,7 +590,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_mac_load</span><span class="p">[</span><span class="n">ltype</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mac_load</span><span class="p">[</span><span class="n">ltype</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="n">n_sym</span><span class="p">,</span> <span class="p">:]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_mac_load_presctype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mac_load_presctype</span><span class="p">[:</span><span class="n">n_sym</span><span class="p">,</span> <span class="p">:]</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="LoadingPath._get_load_mf"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.LoadingPath.html#crate.ioput.readprocedures.LoadingPath._get_load_mf">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="LoadingPath._get_load_mf"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.LoadingPath.html#cratepy.ioput.readprocedures.LoadingPath._get_load_mf">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_load_mf</span><span class="p">(</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">,</span> <span class="n">load_vector</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get matricial form of load tensor given in vector form.</span>
 
@@ -1044,7 +1044,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                                         Loading path rewinder</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="IncrementRewinder"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.IncrementRewinder.html#crate.ioput.readprocedures.IncrementRewinder">[docs]</a><span class="k">class</span> <span class="nc">IncrementRewinder</span><span class="p">:</span>
+<div class="viewcode-block" id="IncrementRewinder"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.IncrementRewinder.html#cratepy.ioput.readprocedures.IncrementRewinder">[docs]</a><span class="k">class</span> <span class="nc">IncrementRewinder</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Rewind analysis to rewind state increment (initial instant).</span>
 
 <span class="sd">    Attributes</span>
@@ -1085,7 +1085,7 @@
 <span class="sd">                        ref_mat_output=None, voxels_output=None, \</span>
 <span class="sd">                        adapt_output=None, vtk_output=None)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="IncrementRewinder.__init__"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.IncrementRewinder.html#crate.ioput.readprocedures.IncrementRewinder.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rewind_inc</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">):</span>
+<div class="viewcode-block" id="IncrementRewinder.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.IncrementRewinder.html#cratepy.ioput.readprocedures.IncrementRewinder.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rewind_inc</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Increment rewinder constructor.</span>
 
 <span class="sd">        Parameters</span>
@@ -1110,7 +1110,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_global_strain_mf</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_farfield_strain_mf</span> <span class="o">=</span> <span class="kc">None</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="IncrementRewinder.get_rewind_inc"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.IncrementRewinder.html#crate.ioput.readprocedures.IncrementRewinder.get_rewind_inc">[docs]</a>    <span class="k">def</span> <span class="nf">get_rewind_inc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="IncrementRewinder.get_rewind_inc"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.IncrementRewinder.html#cratepy.ioput.readprocedures.IncrementRewinder.get_rewind_inc">[docs]</a>    <span class="k">def</span> <span class="nf">get_rewind_inc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get increment associated with the rewind state.</span>
 
 <span class="sd">        Returns</span>
@@ -1120,7 +1120,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rewind_inc</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="IncrementRewinder.save_loading_path"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.IncrementRewinder.html#crate.ioput.readprocedures.IncrementRewinder.save_loading_path">[docs]</a>    <span class="k">def</span> <span class="nf">save_loading_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loading_path</span><span class="p">):</span>
+<div class="viewcode-block" id="IncrementRewinder.save_loading_path"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.IncrementRewinder.html#cratepy.ioput.readprocedures.IncrementRewinder.save_loading_path">[docs]</a>    <span class="k">def</span> <span class="nf">save_loading_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loading_path</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Save loading path rewind state.</span>
 
 <span class="sd">        Parameters</span>
@@ -1130,7 +1130,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_loading_path</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">loading_path</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="IncrementRewinder.get_loading_path"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.IncrementRewinder.html#crate.ioput.readprocedures.IncrementRewinder.get_loading_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_loading_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="IncrementRewinder.get_loading_path"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.IncrementRewinder.html#cratepy.ioput.readprocedures.IncrementRewinder.get_loading_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_loading_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get loading path at rewind state.</span>
 
 <span class="sd">        Returns</span>
@@ -1140,7 +1140,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_loading_path</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="IncrementRewinder.save_material_state"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.IncrementRewinder.html#crate.ioput.readprocedures.IncrementRewinder.save_material_state">[docs]</a>    <span class="k">def</span> <span class="nf">save_material_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material_state</span><span class="p">):</span>
+<div class="viewcode-block" id="IncrementRewinder.save_material_state"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.IncrementRewinder.html#cratepy.ioput.readprocedures.IncrementRewinder.save_material_state">[docs]</a>    <span class="k">def</span> <span class="nf">save_material_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material_state</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Save material constitutive state at rewind state.</span>
 
 <span class="sd">        Parameters</span>
@@ -1150,7 +1150,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_material_state</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">material_state</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="IncrementRewinder.get_material_state"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.IncrementRewinder.html#crate.ioput.readprocedures.IncrementRewinder.get_material_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_material_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">):</span>
+<div class="viewcode-block" id="IncrementRewinder.get_material_state"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.IncrementRewinder.html#cratepy.ioput.readprocedures.IncrementRewinder.get_material_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_material_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get material constitutive state at rewind state.</span>
 
 <span class="sd">        Parameters</span>
@@ -1262,7 +1262,7 @@
             <span class="c1"># according to the update clustering</span>
             <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_material_state</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="IncrementRewinder.save_reference_material"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.IncrementRewinder.html#crate.ioput.readprocedures.IncrementRewinder.save_reference_material">[docs]</a>    <span class="k">def</span> <span class="nf">save_reference_material</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref_material</span><span class="p">):</span>
+<div class="viewcode-block" id="IncrementRewinder.save_reference_material"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.IncrementRewinder.html#cratepy.ioput.readprocedures.IncrementRewinder.save_reference_material">[docs]</a>    <span class="k">def</span> <span class="nf">save_reference_material</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref_material</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Save elastic reference material at rewind state.</span>
 
 <span class="sd">        Parameters</span>
@@ -1273,7 +1273,7 @@
         <span class="c1"># Save elastic reference material</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ref_material</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">ref_material</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="IncrementRewinder.get_reference_material"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.IncrementRewinder.html#crate.ioput.readprocedures.IncrementRewinder.get_reference_material">[docs]</a>    <span class="k">def</span> <span class="nf">get_reference_material</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="IncrementRewinder.get_reference_material"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.IncrementRewinder.html#cratepy.ioput.readprocedures.IncrementRewinder.get_reference_material">[docs]</a>    <span class="k">def</span> <span class="nf">get_reference_material</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get elastic reference material at rewind state.</span>
 
 <span class="sd">        Returns</span>
@@ -1283,7 +1283,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ref_material</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="IncrementRewinder.save_clusters_sct"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.IncrementRewinder.html#crate.ioput.readprocedures.IncrementRewinder.save_clusters_sct">[docs]</a>    <span class="k">def</span> <span class="nf">save_clusters_sct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clusters_sct_mf</span><span class="p">):</span>
+<div class="viewcode-block" id="IncrementRewinder.save_clusters_sct"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.IncrementRewinder.html#cratepy.ioput.readprocedures.IncrementRewinder.save_clusters_sct">[docs]</a>    <span class="k">def</span> <span class="nf">save_clusters_sct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clusters_sct_mf</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Save clusters strain concentration tensors at rewind state.</span>
 
 <span class="sd">        Parameters</span>
@@ -1296,7 +1296,7 @@
         <span class="c1"># Save clusters state variables</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_sct_mf</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">clusters_sct_mf</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="IncrementRewinder.get_clusters_sct"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.IncrementRewinder.html#crate.ioput.readprocedures.IncrementRewinder.get_clusters_sct">[docs]</a>    <span class="k">def</span> <span class="nf">get_clusters_sct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="IncrementRewinder.get_clusters_sct"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.IncrementRewinder.html#cratepy.ioput.readprocedures.IncrementRewinder.get_clusters_sct">[docs]</a>    <span class="k">def</span> <span class="nf">get_clusters_sct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get clusters strain concentration tensors at rewind state.</span>
 
 <span class="sd">        Returns</span>
@@ -1309,7 +1309,7 @@
         <span class="c1"># Save clusters state variables</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clusters_sct_mf</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="IncrementRewinder.save_asca_algorithmic_variables"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.IncrementRewinder.html#crate.ioput.readprocedures.IncrementRewinder.save_asca_algorithmic_variables">[docs]</a>    <span class="k">def</span> <span class="nf">save_asca_algorithmic_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">global_strain_mf</span><span class="p">,</span>
+<div class="viewcode-block" id="IncrementRewinder.save_asca_algorithmic_variables"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.IncrementRewinder.html#cratepy.ioput.readprocedures.IncrementRewinder.save_asca_algorithmic_variables">[docs]</a>    <span class="k">def</span> <span class="nf">save_asca_algorithmic_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">global_strain_mf</span><span class="p">,</span>
                                         <span class="n">farfield_strain_mf</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Save ASCA algorithmic variables at rewind state.</span>
 
@@ -1325,7 +1325,7 @@
         <span class="c1"># Save far-field strain tensor</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_farfield_strain_mf</span> <span class="o">=</span> <span class="n">farfield_strain_mf</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="IncrementRewinder.get_asca_algorithmic_variables"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.IncrementRewinder.html#crate.ioput.readprocedures.IncrementRewinder.get_asca_algorithmic_variables">[docs]</a>    <span class="k">def</span> <span class="nf">get_asca_algorithmic_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="IncrementRewinder.get_asca_algorithmic_variables"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.IncrementRewinder.html#cratepy.ioput.readprocedures.IncrementRewinder.get_asca_algorithmic_variables">[docs]</a>    <span class="k">def</span> <span class="nf">get_asca_algorithmic_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get ASCA algorithmic variables at rewind state.</span>
 
 <span class="sd">        Returns</span>
@@ -1338,7 +1338,7 @@
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_global_strain_mf</span><span class="p">),</span> \
             <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_farfield_strain_mf</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="IncrementRewinder.rewind_output_files"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.IncrementRewinder.html#crate.ioput.readprocedures.IncrementRewinder.rewind_output_files">[docs]</a>    <span class="k">def</span> <span class="nf">rewind_output_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hres_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">efftan_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="IncrementRewinder.rewind_output_files"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.IncrementRewinder.html#cratepy.ioput.readprocedures.IncrementRewinder.rewind_output_files">[docs]</a>    <span class="k">def</span> <span class="nf">rewind_output_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hres_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">efftan_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                             <span class="n">ref_mat_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">voxels_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                             <span class="n">adapt_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vtk_output</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Rewind output files to the rewind state.</span>
@@ -1372,7 +1372,7 @@
         <span class="k">if</span> <span class="n">vtk_output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">vtk_output</span><span class="o">.</span><span class="n">rewind_files</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rewind_inc</span><span class="p">)</span></div></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="RewindManager"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.RewindManager.html#crate.ioput.readprocedures.RewindManager">[docs]</a><span class="k">class</span> <span class="nc">RewindManager</span><span class="p">:</span>
+<div class="viewcode-block" id="RewindManager"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.RewindManager.html#cratepy.ioput.readprocedures.RewindManager">[docs]</a><span class="k">class</span> <span class="nc">RewindManager</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Manage analysis rewind operations and evaluate analysis rewind criteria.</span>
 
 <span class="sd">    Attributes</span>
@@ -1403,7 +1403,7 @@
 <span class="sd">    get_rewinding_criteria()</span>
 <span class="sd">        Get rewinding criteria and default parameters.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="RewindManager.__init__"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.RewindManager.html#crate.ioput.readprocedures.RewindManager.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rewind_state_criterion</span><span class="p">,</span> <span class="n">rewinding_criterion</span><span class="p">,</span>
+<div class="viewcode-block" id="RewindManager.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.RewindManager.html#cratepy.ioput.readprocedures.RewindManager.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rewind_state_criterion</span><span class="p">,</span> <span class="n">rewinding_criterion</span><span class="p">,</span>
                  <span class="n">max_n_rewinds</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Analysis rewind manager constructor.</span>
 
@@ -1424,7 +1424,7 @@
         <span class="c1"># Initialize total rewind time</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_rewind_time</span> <span class="o">=</span> <span class="mi">0</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="RewindManager.get_rewind_time"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.RewindManager.html#crate.ioput.readprocedures.RewindManager.get_rewind_time">[docs]</a>    <span class="k">def</span> <span class="nf">get_rewind_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="RewindManager.get_rewind_time"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.RewindManager.html#cratepy.ioput.readprocedures.RewindManager.get_rewind_time">[docs]</a>    <span class="k">def</span> <span class="nf">get_rewind_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get total time of rewind operations and deleted analysis increments.</span>
 
 <span class="sd">        Returns</span>
@@ -1434,7 +1434,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rewind_time</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="RewindManager.update_rewind_time"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.RewindManager.html#crate.ioput.readprocedures.RewindManager.update_rewind_time">[docs]</a>    <span class="k">def</span> <span class="nf">update_rewind_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="RewindManager.update_rewind_time"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.RewindManager.html#cratepy.ioput.readprocedures.RewindManager.update_rewind_time">[docs]</a>    <span class="k">def</span> <span class="nf">update_rewind_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update total rewind time.</span>
 
 <span class="sd">        Parameters</span>
@@ -1452,7 +1452,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown mode.&#39;</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="RewindManager.is_rewind_available"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.RewindManager.html#crate.ioput.readprocedures.RewindManager.is_rewind_available">[docs]</a>    <span class="k">def</span> <span class="nf">is_rewind_available</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="RewindManager.is_rewind_available"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.RewindManager.html#cratepy.ioput.readprocedures.RewindManager.is_rewind_available">[docs]</a>    <span class="k">def</span> <span class="nf">is_rewind_available</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate if rewind operations are available.</span>
 
 <span class="sd">        Returns</span>
@@ -1470,7 +1470,7 @@
         <span class="c1"># Return rewind operations availability</span>
         <span class="k">return</span> <span class="n">is_available</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="RewindManager.is_save_rewind_state"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.RewindManager.html#crate.ioput.readprocedures.RewindManager.is_save_rewind_state">[docs]</a>    <span class="k">def</span> <span class="nf">is_save_rewind_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inc</span><span class="p">):</span>
+<div class="viewcode-block" id="RewindManager.is_save_rewind_state"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.RewindManager.html#cratepy.ioput.readprocedures.RewindManager.is_save_rewind_state">[docs]</a>    <span class="k">def</span> <span class="nf">is_save_rewind_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inc</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate conditions to save rewind state.</span>
 
 <span class="sd">        Parameters</span>
@@ -1501,7 +1501,7 @@
         <span class="c1"># Return save rewind state flag</span>
         <span class="k">return</span> <span class="n">is_save_state</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="RewindManager.is_rewinding_criteria"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.RewindManager.html#crate.ioput.readprocedures.RewindManager.is_rewinding_criteria">[docs]</a>    <span class="k">def</span> <span class="nf">is_rewinding_criteria</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inc</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span>
+<div class="viewcode-block" id="RewindManager.is_rewinding_criteria"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.RewindManager.html#cratepy.ioput.readprocedures.RewindManager.is_rewinding_criteria">[docs]</a>    <span class="k">def</span> <span class="nf">is_rewinding_criteria</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inc</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span>
                               <span class="n">clusters_state</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check analysis rewinding criteria.</span>
 
@@ -1562,7 +1562,7 @@
         <span class="c1"># Return analysis rewinding flag</span>
         <span class="k">return</span> <span class="n">is_rewind</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="RewindManager.get_save_rewind_state_criteria"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.RewindManager.html#crate.ioput.readprocedures.RewindManager.get_save_rewind_state_criteria">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="RewindManager.get_save_rewind_state_criteria"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.RewindManager.html#cratepy.ioput.readprocedures.RewindManager.get_save_rewind_state_criteria">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_save_rewind_state_criteria</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get available rewind state storage criteria and default parameters.</span>
 
@@ -1578,7 +1578,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">available_save_rewind_state_criteria</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="RewindManager.get_rewinding_criteria"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.RewindManager.html#crate.ioput.readprocedures.RewindManager.get_rewinding_criteria">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="RewindManager.get_rewinding_criteria"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.RewindManager.html#cratepy.ioput.readprocedures.RewindManager.get_rewinding_criteria">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_rewinding_criteria</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get rewinding criteria and default parameters.</span>
 

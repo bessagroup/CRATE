@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Interface: Clustering feature &mdash; crate 1.0.0 documentation</title>
+  <title>Interface: Clustering feature &mdash; CRATE 1.0.3 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/readthedocs-custom.css" type="text/css" />
@@ -31,7 +31,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            crate
+            CRATE
           </a>
               <div class="version">
                 1.0
@@ -79,7 +79,7 @@
 <p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../reference/index.html">Index</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/crate.html">Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/cratepy.html">Code</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">License</span></p>
 <ul>
@@ -92,7 +92,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">crate</a>
+          <a href="../../index.html">CRATE</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -129,8 +129,8 @@
 <li><p><strong>Stage 1</strong> - Implement the new clustering feature algorithm:</p>
 <blockquote>
 <div><ul>
-<li><p><strong>Step 1.1</strong> - Create a Python module with the name of the clustering feature (e.g., <code class="code docutils literal notranslate"><span class="pre">new_feature_algorithm.py</span></code>) in the directory <code class="code docutils literal notranslate"><span class="pre">crate.clustering.features</span></code> (create directory if not existent);</p></li>
-<li><p><strong>Step 1.2</strong> - In <code class="code docutils literal notranslate"><span class="pre">new_feature_algorithm.py</span></code>, import the clustering feature algorithm interface (<a class="reference internal" href="../../_autosummary/crate.clustering.clusteringdata.FeatureAlgorithm.html#crate.clustering.clusteringdata.FeatureAlgorithm" title="crate.clustering.clusteringdata.FeatureAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureAlgorithm</span></code></a>), derive a class for the new clustering feature algorithm (e.g., <code class="code docutils literal notranslate"><span class="pre">NewFeatureAlgorithm</span></code>), and implement the abstract methods (look for the &#64;abstractmethod decorator) established by the clustering feature algorithm interface:</p>
+<li><p><strong>Step 1.1</strong> - Create a Python module with the name of the clustering feature (e.g., <code class="code docutils literal notranslate"><span class="pre">new_feature_algorithm.py</span></code>) in the directory <code class="code docutils literal notranslate"><span class="pre">cratepy.clustering.features</span></code> (create directory if not existent);</p></li>
+<li><p><strong>Step 1.2</strong> - In <code class="code docutils literal notranslate"><span class="pre">new_feature_algorithm.py</span></code>, import the clustering feature algorithm interface (<a class="reference internal" href="../../_autosummary/cratepy.clustering.clusteringdata.FeatureAlgorithm.html#cratepy.clustering.clusteringdata.FeatureAlgorithm" title="cratepy.clustering.clusteringdata.FeatureAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureAlgorithm</span></code></a>), derive a class for the new clustering feature algorithm (e.g., <code class="code docutils literal notranslate"><span class="pre">NewFeatureAlgorithm</span></code>), and implement the abstract methods (look for the &#64;abstractmethod decorator) established by the clustering feature algorithm interface:</p>
 <blockquote>
 <div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># clustering.features.new_feature_algorithm.py</span>
 
@@ -153,11 +153,11 @@
 <li><p><strong>Stage 2</strong> - Setup the new clustering feature descriptors:</p>
 <blockquote>
 <div><ul>
-<li><p><strong>Step 2.1</strong> - In <a class="reference internal" href="../../_autosummary/crate.clustering.clusteringdata.html#module-crate.clustering.clusteringdata" title="crate.clustering.clusteringdata"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.clustering.clusteringdata</span></code></a>, import the new clustering feature algorithm (<code class="code docutils literal notranslate"><span class="pre">NewFeatureAlgorithm</span></code>) implemented during Stage 1 in <code class="code docutils literal notranslate"><span class="pre">new_feature_algorithm.py</span></code>;</p></li>
-<li><p><strong>Step 2.2</strong> - In <a class="reference internal" href="../../_autosummary/crate.clustering.clusteringdata.html#module-crate.clustering.clusteringdata" title="crate.clustering.clusteringdata"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.clustering.clusteringdata</span></code></a>, check the already existent clustering features (read the documentation of <a class="reference internal" href="../../_autosummary/crate.clustering.clusteringdata.get_available_clustering_features.html#crate.clustering.clusteringdata.get_available_clustering_features" title="crate.clustering.clusteringdata.get_available_clustering_features"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_available_clustering_features()</span></code></a>) and choose a unique integer identifier <code class="code docutils literal notranslate"><span class="pre">id</span></code> for the new clustering feature;</p></li>
-<li><p><strong>Step 2.3</strong> - In <a class="reference internal" href="../../_autosummary/crate.clustering.clusteringdata.html#module-crate.clustering.clusteringdata" title="crate.clustering.clusteringdata"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.clustering.clusteringdata</span></code></a>, implement the descriptors of the new clustering feature (e.g., number of dimensions, feature algorithm, macro-scale loadings) in the function <a class="reference internal" href="../../_autosummary/crate.clustering.clusteringdata.get_available_clustering_features.html#crate.clustering.clusteringdata.get_available_clustering_features" title="crate.clustering.clusteringdata.get_available_clustering_features"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_available_clustering_features()</span></code></a>:</p>
+<li><p><strong>Step 2.1</strong> - In <a class="reference internal" href="../../_autosummary/cratepy.clustering.clusteringdata.html#module-cratepy.clustering.clusteringdata" title="cratepy.clustering.clusteringdata"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cratepy.clustering.clusteringdata</span></code></a>, import the new clustering feature algorithm (<code class="code docutils literal notranslate"><span class="pre">NewFeatureAlgorithm</span></code>) implemented during Stage 1 in <code class="code docutils literal notranslate"><span class="pre">new_feature_algorithm.py</span></code>;</p></li>
+<li><p><strong>Step 2.2</strong> - In <a class="reference internal" href="../../_autosummary/cratepy.clustering.clusteringdata.html#module-cratepy.clustering.clusteringdata" title="cratepy.clustering.clusteringdata"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cratepy.clustering.clusteringdata</span></code></a>, check the already existent clustering features (read the documentation of <a class="reference internal" href="../../_autosummary/cratepy.clustering.clusteringdata.get_available_clustering_features.html#cratepy.clustering.clusteringdata.get_available_clustering_features" title="cratepy.clustering.clusteringdata.get_available_clustering_features"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_available_clustering_features()</span></code></a>) and choose a unique integer identifier <code class="code docutils literal notranslate"><span class="pre">id</span></code> for the new clustering feature;</p></li>
+<li><p><strong>Step 2.3</strong> - In <a class="reference internal" href="../../_autosummary/cratepy.clustering.clusteringdata.html#module-cratepy.clustering.clusteringdata" title="cratepy.clustering.clusteringdata"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cratepy.clustering.clusteringdata</span></code></a>, implement the descriptors of the new clustering feature (e.g., number of dimensions, feature algorithm, macro-scale loadings) in the function <a class="reference internal" href="../../_autosummary/cratepy.clustering.clusteringdata.get_available_clustering_features.html#cratepy.clustering.clusteringdata.get_available_clustering_features" title="cratepy.clustering.clusteringdata.get_available_clustering_features"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_available_clustering_features()</span></code></a>:</p>
 <blockquote>
-<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># crate.clustering.clusteringdata.py</span>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># cratepy.clustering.clusteringdata.py</span>
 
 <span class="hll"><span class="kn">from</span> <span class="nn">clustering.features.new_feature_algorithm</span> <span class="kn">import</span> <span class="n">NewFeatureAlgorithm</span>
 </span>
@@ -183,7 +183,7 @@
 </div>
 </div></blockquote>
 </li>
-<li><p><strong>Step 2.4</strong> - In <a class="reference internal" href="../../_autosummary/crate.clustering.clusteringdata.html#module-crate.clustering.clusteringdata" title="crate.clustering.clusteringdata"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.clustering.clusteringdata</span></code></a>, add the documentation of the new clustering feature in the docstring of <a class="reference internal" href="../../_autosummary/crate.clustering.clusteringdata.get_available_clustering_features.html#crate.clustering.clusteringdata.get_available_clustering_features" title="crate.clustering.clusteringdata.get_available_clustering_features"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_available_clustering_features()</span></code></a>.</p></li>
+<li><p><strong>Step 2.4</strong> - In <a class="reference internal" href="../../_autosummary/cratepy.clustering.clusteringdata.html#module-cratepy.clustering.clusteringdata" title="cratepy.clustering.clusteringdata"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cratepy.clustering.clusteringdata</span></code></a>, add the documentation of the new clustering feature in the docstring of <a class="reference internal" href="../../_autosummary/cratepy.clustering.clusteringdata.get_available_clustering_features.html#cratepy.clustering.clusteringdata.get_available_clustering_features" title="cratepy.clustering.clusteringdata.get_available_clustering_features"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_available_clustering_features()</span></code></a>.</p></li>
 </ul>
 </div></blockquote>
 </li>
@@ -193,7 +193,7 @@
 <section id="recommendations">
 <h2>Recommendations<a class="headerlink" href="#recommendations" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
-<li><p>If you are not familiar with the implementation of a clustering feature in CRATE, it is <strong>recommended</strong> that you first take a look into the implementation of the clustering features already available (<a class="reference internal" href="../../_autosummary/crate.clustering.clusteringdata.get_available_clustering_features.html#crate.clustering.clusteringdata.get_available_clustering_features" title="crate.clustering.clusteringdata.get_available_clustering_features"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_available_clustering_features()</span></code></a>). Despite being embedded directly in <a class="reference internal" href="../../_autosummary/crate.clustering.clusteringdata.html#module-crate.clustering.clusteringdata" title="crate.clustering.clusteringdata"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.clustering.clusteringdata</span></code></a>, the fundamental implementation steps of these clustering features follows the steps previously outlined and are fully documented.</p></li>
+<li><p>If you are not familiar with the implementation of a clustering feature in CRATE, it is <strong>recommended</strong> that you first take a look into the implementation of the clustering features already available (<a class="reference internal" href="../../_autosummary/cratepy.clustering.clusteringdata.get_available_clustering_features.html#cratepy.clustering.clusteringdata.get_available_clustering_features" title="cratepy.clustering.clusteringdata.get_available_clustering_features"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_available_clustering_features()</span></code></a>). Despite being embedded directly in <a class="reference internal" href="../../_autosummary/cratepy.clustering.clusteringdata.html#module-cratepy.clustering.clusteringdata" title="cratepy.clustering.clusteringdata"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cratepy.clustering.clusteringdata</span></code></a>, the fundamental implementation steps of these clustering features follows the steps previously outlined and are fully documented.</p></li>
 </ul>
 </section>
 </section>

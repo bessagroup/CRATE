@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Step 3: Simulation &mdash; crate 1.0.0 documentation</title>
+  <title>Step 3: Simulation &mdash; CRATE 1.0.3 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/readthedocs-custom.css" type="text/css" />
@@ -31,7 +31,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            crate
+            CRATE
           </a>
               <div class="version">
                 1.0
@@ -74,7 +74,7 @@
 <p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../reference/index.html">Index</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/crate.html">Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/cratepy.html">Code</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">License</span></p>
 <ul>
@@ -87,7 +87,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">crate</a>
+          <a href="../../index.html">CRATE</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -110,7 +110,7 @@
 <p>Executing the CRATE simulator <strong>in a Python environment</strong> is a single-linear as illustrated in the following (pseudo-)script:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># python_script.py</span>
 
-<span class="kn">import</span> <span class="nn">crate</span>
+<span class="kn">import</span> <span class="nn">cratepy</span>
 
 <span class="c1"># Set input data file path (mandatory)</span>
 <span class="n">input_data_file_path</span> <span class="o">=</span> <span class="o">...</span>
@@ -121,14 +121,14 @@
 <span class="n">discret_file_dir</span> <span class="o">=</span> <span class="o">...</span>
 
 <span class="c1"># Perform CRATE simulation</span>
-<span class="n">crate</span><span class="o">.</span><span class="n">crate_simulation</span><span class="p">(</span><span class="n">input_data_file_path</span><span class="p">,</span> <span class="n">arg_discret_file_dir</span><span class="o">=</span><span class="n">discret_file_dir</span><span class="p">)</span>
+<span class="n">cratepy</span><span class="o">.</span><span class="n">crate_simulation</span><span class="p">(</span><span class="n">input_data_file_path</span><span class="p">,</span> <span class="n">arg_discret_file_dir</span><span class="o">=</span><span class="n">discret_file_dir</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The CRATE simulator can be also launched <strong>directly from the command line</strong> by executing CRATE’s main script (<code class="code docutils literal notranslate"><span class="pre">main.py</span></code> file) and passing the input data file as the <strong>first</strong> calling argument as:</p>
 <blockquote>
-<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">CRATE</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">crate</span><span class="o">/</span><span class="n">main</span><span class="o">.</span><span class="n">py</span> <span class="s2">&quot;/path/to/example_input_data_file.dat&quot;</span>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">CRATE</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">cratepy</span><span class="o">/</span><span class="n">main</span><span class="o">.</span><span class="n">py</span> <span class="s2">&quot;/path/to/example_input_data_file.dat&quot;</span>
 </pre></div>
 </div>
 </div></blockquote>

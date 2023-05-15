@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cratepy.ioput.incoutputfiles.interface.IncrementalOutputFile &mdash; CRATE 1.0.3 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="cratepy.ioput.incoutputfiles.refmatoutput" href="cratepy.ioput.incoutputfiles.refmatoutput.html" />
+    <link rel="prev" title="cratepy.ioput.incoutputfiles.interface.ABC" href="cratepy.ioput.incoutputfiles.interface.ABC.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            CRATE
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="cratepy.html">Code</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cratepy.crate_simulation.html">cratepy.crate_simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.clustering.html">cratepy.clustering</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="cratepy.ioput.html">cratepy.ioput</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cratepy.ioput.fileoperations.html">cratepy.ioput.fileoperations</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="cratepy.ioput.incoutputfiles.html">cratepy.ioput.incoutputfiles</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.incoutputfiles.efftanoutput.html">cratepy.ioput.incoutputfiles.efftanoutput</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.incoutputfiles.homresoutput.html">cratepy.ioput.incoutputfiles.homresoutput</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="cratepy.ioput.incoutputfiles.interface.html">cratepy.ioput.incoutputfiles.interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.incoutputfiles.refmatoutput.html">cratepy.ioput.incoutputfiles.refmatoutput</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.ioput.info.html">cratepy.ioput.info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.ioput.ioutilities.html">cratepy.ioput.ioutilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.ioput.miscoutputfiles.html">cratepy.ioput.miscoutputfiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.ioput.packager.html">cratepy.ioput.packager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.ioput.readinputdata.html">cratepy.ioput.readinputdata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.ioput.readprocedures.html">cratepy.ioput.readprocedures</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.main.html">cratepy.main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.material.html">cratepy.material</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.online.html">cratepy.online</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.optimization.html">cratepy.optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.tensor.html">cratepy.tensor</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CRATE</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="cratepy.html">cratepy</a></li>
+          <li class="breadcrumb-item"><a href="cratepy.ioput.html">cratepy.ioput</a></li>
+          <li class="breadcrumb-item"><a href="cratepy.ioput.incoutputfiles.html">cratepy.ioput.incoutputfiles</a></li>
+          <li class="breadcrumb-item"><a href="cratepy.ioput.incoutputfiles.interface.html">cratepy.ioput.incoutputfiles.interface</a></li>
+      <li class="breadcrumb-item active">cratepy.ioput.incoutputfiles.interface.IncrementalOutputFile</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cratepy-ioput-incoutputfiles-interface-incrementaloutputfile">
+<h1>cratepy.ioput.incoutputfiles.interface.IncrementalOutputFile<a class="headerlink" href="#cratepy-ioput-incoutputfiles-interface-incrementaloutputfile" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="cratepy.ioput.incoutputfiles.interface.IncrementalOutputFile">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">IncrementalOutputFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/ioput/incoutputfiles/interface.html#IncrementalOutputFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.ioput.incoutputfiles.interface.IncrementalOutputFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="cratepy.optimization.optimizer.ABC.html#cratepy.optimization.optimizer.ABC" title="abc.ABC"><code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></a></p>
+<p>Incremental output file interface.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cratepy.ioput.incoutputfiles.interface.IncrementalOutputFile._file_path">
+<span class="sig-name descname"><span class="pre">_file_path</span></span><a class="headerlink" href="#cratepy.ioput.incoutputfiles.interface.IncrementalOutputFile._file_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output file path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cratepy.ioput.incoutputfiles.interface.IncrementalOutputFile._header">
+<span class="sig-name descname"><span class="pre">_header</span></span><a class="headerlink" href="#cratepy.ioput.incoutputfiles.interface.IncrementalOutputFile._header" title="Permalink to this definition">¶</a></dt>
+<dd><p>List containing the header of each column (str).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cratepy.ioput.incoutputfiles.interface.IncrementalOutputFile._col_width">
+<span class="sig-name descname"><span class="pre">_col_width</span></span><a class="headerlink" href="#cratepy.ioput.incoutputfiles.interface.IncrementalOutputFile._col_width" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output file column width.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.ioput.incoutputfiles.interface.IncrementalOutputFile.init_file">
+<span class="sig-name descname"><span class="pre">init_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/ioput/incoutputfiles/interface.html#IncrementalOutputFile.init_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.ioput.incoutputfiles.interface.IncrementalOutputFile.init_file" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>abstract</em>: Open output file and write file header.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.ioput.incoutputfiles.interface.IncrementalOutputFile.write_file">
+<span class="sig-name descname"><span class="pre">write_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/ioput/incoutputfiles/interface.html#IncrementalOutputFile.write_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.ioput.incoutputfiles.interface.IncrementalOutputFile.write_file" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>abstract</em>: Write output file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.ioput.incoutputfiles.interface.IncrementalOutputFile.rewind_file">
+<span class="sig-name descname"><span class="pre">rewind_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rewind_inc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/ioput/incoutputfiles/interface.html#IncrementalOutputFile.rewind_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.ioput.incoutputfiles.interface.IncrementalOutputFile.rewind_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rewind output file.</p>
+</dd></dl>
+
+<p>Constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Output file path.</p>
+</dd>
+</dl>
+<p class="rubric">List of Public Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id0" title="cratepy.ioput.incoutputfiles.interface.IncrementalOutputFile.init_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init_file</span></code></a></p></td>
+<td><p>Open output file and write file header.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id1" title="cratepy.ioput.incoutputfiles.interface.IncrementalOutputFile.rewind_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rewind_file</span></code></a></p></td>
+<td><p>Rewind output file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id2" title="cratepy.ioput.incoutputfiles.interface.IncrementalOutputFile.write_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_file</span></code></a></p></td>
+<td><p>Write output file.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.ioput.incoutputfiles.interface.IncrementalOutputFile.__init__">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/ioput/incoutputfiles/interface.html#IncrementalOutputFile.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.ioput.incoutputfiles.interface.IncrementalOutputFile.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Output file path.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id0">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">init_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/ioput/incoutputfiles/interface.html#IncrementalOutputFile.init_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open output file and write file header.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">rewind_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rewind_inc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/ioput/incoutputfiles/interface.html#IncrementalOutputFile.rewind_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rewind output file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>rewind_inc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Increment associated with the rewind state.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id2">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">write_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/ioput/incoutputfiles/interface.html#IncrementalOutputFile.write_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write output file.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cratepy.ioput.incoutputfiles.interface.ABC.html" class="btn btn-neutral float-left" title="cratepy.ioput.incoutputfiles.interface.ABC" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cratepy.ioput.incoutputfiles.refmatoutput.html" class="btn btn-neutral float-right" title="cratepy.ioput.incoutputfiles.refmatoutput" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

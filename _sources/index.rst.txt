@@ -53,7 +53,7 @@ Useful Links
 
 * `GitHub repository <https://github.com/bessagroup/CRATE>`_ (source code);
 
-* `PyPI <https://pypi.org/project/crate-sim/>`_ (distribution package).
+* `PyPI <https://pypi.org/project/cratepy/>`_ (distribution package).
 
 ----
 
@@ -138,7 +138,7 @@ CRATE is a free and open-source software published under a :doc:`BSD 3-Clause Li
    :hidden:
 
    rst_doc_files/reference/index.rst
-   Code <_autosummary/crate>
+   Code <_autosummary/cratepy>
 
 .. toctree::
    :name: licensetoc

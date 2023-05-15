@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cratepy.material.models.stvenant_kirchhoff &mdash; CRATE 1.0.3 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            CRATE
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../_autosummary/cratepy.html">Code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">CRATE</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">cratepy.material.models.stvenant_kirchhoff</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for cratepy.material.models.stvenant_kirchhoff</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;St.Venant-Kirchhoff hyperelastic constitutive model.</span>
+
+<span class="sd">This module includes the implementation of the St.Venant-Kirchhoff hyperelastic</span>
+<span class="sd">constitutive model under general anisotropic elasticity. The constitutive</span>
+<span class="sd">formulation can be found in de Vieira de Carvalho et al. (2022) [#]_.</span>
+
+<span class="sd">.. [#] Vieira de Carvalho, M., de Bortoli, D., and Andrade Pires, F.M. (2022).</span>
+<span class="sd">       Consistent modeling of the coupling between crystallographic slip and</span>
+<span class="sd">       martensitic phase transformation for mechanically induced loadings.</span>
+<span class="sd">       Int J Numer Methods Eng. 123(14): 3179–3236 (see</span>
+<span class="sd">       `here &lt;https://onlinelibrary.wiley.com/doi/full/10.1002/nme.6962&gt;`_)</span>
+
+<span class="sd">Classes</span>
+<span class="sd">-------</span>
+<span class="sd">StVenantKirchhoff</span>
+<span class="sd">    St.Venant-Kirchhoff hyperelastic constitutive model.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#                                                                       Modules</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1"># Third-party</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="c1"># Local</span>
+<span class="kn">import</span> <span class="nn">tensor.tensoroperations</span> <span class="k">as</span> <span class="nn">top</span>
+<span class="kn">import</span> <span class="nn">tensor.matrixoperations</span> <span class="k">as</span> <span class="nn">mop</span>
+<span class="kn">from</span> <span class="nn">material.materialoperations</span> <span class="kn">import</span> <span class="n">first_piola_from_second_piola</span><span class="p">,</span> \
+                                        <span class="n">cauchy_from_second_piola</span><span class="p">,</span> \
+                                        <span class="n">material_from_spatial_tangent_modulus</span>
+<span class="kn">from</span> <span class="nn">material.models.interface</span> <span class="kn">import</span> <span class="n">ConstitutiveModel</span>
+<span class="kn">from</span> <span class="nn">material.models.elastic</span> <span class="kn">import</span> <span class="n">Elastic</span>
+<span class="c1">#</span>
+<span class="c1">#                                                          Authorship &amp; Credits</span>
+<span class="c1"># =============================================================================</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Bernardo Ferreira (bernardo_ferreira@brown.edu)&#39;</span>
+<span class="n">__credits__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Bernardo Ferreira&#39;</span><span class="p">,</span> <span class="p">]</span>
+<span class="n">__status__</span> <span class="o">=</span> <span class="s1">&#39;Stable&#39;</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="StVenantKirchhoff"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.stvenant_kirchhoff.StVenantKirchhoff.html#cratepy.material.models.stvenant_kirchhoff.StVenantKirchhoff">[docs]</a><span class="k">class</span> <span class="nc">StVenantKirchhoff</span><span class="p">(</span><span class="n">ConstitutiveModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;St.Venant-Kirchhoff hyperelastic constitutive model.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    _name : str</span>
+<span class="sd">        Constitutive model name.</span>
+<span class="sd">    _strain_type : {&#39;infinitesimal&#39;, &#39;finite&#39;, &#39;finite-kinext&#39;}</span>
+<span class="sd">        Constitutive model strain formulation: infinitesimal strain formulation</span>
+<span class="sd">        (&#39;infinitesimal&#39;), finite strain formulation (&#39;finite&#39;) or finite</span>
+<span class="sd">        strain formulation through kinematic extension (infinitesimal</span>
+<span class="sd">        constitutive formulation and purely finite strain kinematic extension -</span>
+<span class="sd">        &#39;finite-kinext&#39;).</span>
+<span class="sd">    _source : {&#39;crate&#39;, }</span>
+<span class="sd">        Material constitutive model source.</span>
+<span class="sd">    _ndim : int</span>
+<span class="sd">        Problem number of spatial dimensions.</span>
+<span class="sd">    _comp_order_sym : list</span>
+<span class="sd">        Strain/Stress components symmetric order.</span>
+<span class="sd">    _comp_order_nsym : list</span>
+<span class="sd">        Strain/Stress components nonsymmetric order.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    get_required_properties()</span>
+<span class="sd">        Get constitutive model material properties and constitutive options.</span>
+<span class="sd">    state_init(self)</span>
+<span class="sd">        Get initialized material constitutive model state variables.</span>
+<span class="sd">    state_update(self, inc_strain, state_variables_old, \</span>
+<span class="sd">                 su_max_n_iterations=20, su_conv_tol=1e-6)</span>
+<span class="sd">        Perform material constitutive model state update.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="StVenantKirchhoff.__init__"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.stvenant_kirchhoff.StVenantKirchhoff.html#cratepy.material.models.stvenant_kirchhoff.StVenantKirchhoff.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">material_properties</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constitutive model constructor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        strain_formulation: {&#39;infinitesimal&#39;, &#39;finite&#39;}</span>
+<span class="sd">            Problem strain formulation.</span>
+<span class="sd">        problem_type : int</span>
+<span class="sd">            Problem type: 2D plane strain (1), 2D plane stress (2),</span>
+<span class="sd">            2D axisymmetric (3) and 3D (4).</span>
+<span class="sd">        material_properties : dict</span>
+<span class="sd">            Constitutive model material properties (key, str) values</span>
+<span class="sd">            (item, {int, float, bool}).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="s1">&#39;stvenant_kirchhoff&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">=</span> <span class="n">strain_formulation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span> <span class="o">=</span> <span class="n">problem_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_material_properties</span> <span class="o">=</span> <span class="n">material_properties</span>
+        <span class="c1"># Set strain formulation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_strain_type</span> <span class="o">=</span> <span class="s1">&#39;finite&#39;</span>
+        <span class="c1"># Set source</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_source</span> <span class="o">=</span> <span class="s1">&#39;crate&#39;</span>
+        <span class="c1"># Get problem type parameters</span>
+        <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span> <span class="o">=</span> \
+            <span class="n">mop</span><span class="o">.</span><span class="n">get_problem_type_parameters</span><span class="p">(</span><span class="n">problem_type</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span> <span class="o">=</span> <span class="n">n_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_sym</span> <span class="o">=</span> <span class="n">comp_order_sym</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span> <span class="o">=</span> <span class="n">comp_order_nsym</span>
+        <span class="c1"># Get elastic symmetry</span>
+        <span class="n">elastic_symmetry</span> <span class="o">=</span> <span class="n">material_properties</span><span class="p">[</span><span class="s1">&#39;elastic_symmetry&#39;</span><span class="p">]</span>
+        <span class="c1"># Compute technical constants of elasticity</span>
+        <span class="k">if</span> <span class="n">elastic_symmetry</span> <span class="o">==</span> <span class="s1">&#39;isotropic&#39;</span><span class="p">:</span>
+            <span class="c1"># Compute technical constants of elasticity</span>
+            <span class="n">technical_constants</span> <span class="o">=</span> <span class="n">Elastic</span><span class="o">.</span><span class="n">get_technical_from_elastic_modulii</span><span class="p">(</span>
+                <span class="n">elastic_symmetry</span><span class="p">,</span> <span class="n">material_properties</span><span class="p">)</span>
+            <span class="c1"># Assemble technical constants of elasticity</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_material_properties</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">technical_constants</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="StVenantKirchhoff.get_required_properties"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.stvenant_kirchhoff.StVenantKirchhoff.html#cratepy.material.models.stvenant_kirchhoff.StVenantKirchhoff.get_required_properties">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_required_properties</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get constitutive model material properties and constitutive options.</span>
+
+<span class="sd">        *Input data file syntax*:</span>
+
+<span class="sd">        .. code-block:: text</span>
+
+<span class="sd">           elastic_symmetry &lt; option &gt; &lt; number_of_elastic_moduli &gt;</span>
+<span class="sd">               euler_angles &lt; value &gt; &lt; value &gt; &lt; value &gt;</span>
+<span class="sd">               Eijkl &lt; value &gt;</span>
+<span class="sd">               Eijkl &lt; value &gt;</span>
+<span class="sd">               ...</span>
+
+<span class="sd">        where</span>
+
+<span class="sd">        - ``elastic_symmetry`` - Elastic symmetry and number of elastic</span>
+<span class="sd">          moduli.</span>
+<span class="sd">        - ``euler_angles`` - Euler angles (degrees) sorted according with Bunge</span>
+<span class="sd">          convention. Not required if ``elastic_symmetry`` is set as</span>
+<span class="sd">          `isotropic`.</span>
+<span class="sd">        - ``Eijkl`` - Elastic moduli. Young&#39;s modulus (``E``) and Poisson&#39;s</span>
+<span class="sd">          coefficient (``v``) may be alternatively provided if</span>
+<span class="sd">          ``elastic_symmetry`` is set as `isotropic`.</span>
+
+<span class="sd">        ----</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        material_properties : list[str]</span>
+<span class="sd">            Constitutive model material properties names (str).</span>
+<span class="sd">        constitutive_options : dict</span>
+<span class="sd">            Constitutive options (key, str) and available specifications</span>
+<span class="sd">            (item, tuple[str]).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get available elastic symmetries and required elastic modulii</span>
+        <span class="n">elastic_symmetries</span> <span class="o">=</span> <span class="n">Elastic</span><span class="o">.</span><span class="n">get_available_elastic_symmetries</span><span class="p">()</span>
+        <span class="c1"># Set constitutive options and available specifications</span>
+        <span class="n">constitutive_options</span> <span class="o">=</span> \
+            <span class="p">{</span><span class="s1">&#39;elastic_symmetry&#39;</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">elastic_symmetries</span><span class="o">.</span><span class="n">keys</span><span class="p">())}</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Set material properties names</span>
+        <span class="n">material_properties</span> <span class="o">=</span> <span class="p">()</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">material_properties</span><span class="p">,</span> <span class="n">constitutive_options</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="StVenantKirchhoff.state_init"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.stvenant_kirchhoff.StVenantKirchhoff.html#cratepy.material.models.stvenant_kirchhoff.StVenantKirchhoff.state_init">[docs]</a>    <span class="k">def</span> <span class="nf">state_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get initialized material constitutive model state variables.</span>
+
+<span class="sd">        Constitutive model state variables:</span>
+
+<span class="sd">        * ``e_strain_mf``</span>
+
+<span class="sd">            * Elastic deformation gradient (matricial form).</span>
+
+<span class="sd">            * *Symbol*: :math:`\\boldsymbol{F}^{e}`</span>
+
+<span class="sd">        * ``strain_mf``</span>
+
+<span class="sd">            * Deformation gradient (matricial form).</span>
+
+<span class="sd">            * *Symbol*: :math:`\\boldsymbol{F}`</span>
+
+<span class="sd">        * ``stress_mf``</span>
+
+<span class="sd">            * First Piola-Kirchhoff stress tensor (matricial form).</span>
+
+<span class="sd">            * *Symbol*: :math:`\\boldsymbol{P}`</span>
+
+<span class="sd">        * ``is_su_fail``</span>
+
+<span class="sd">            * State update failure flag.</span>
+
+<span class="sd">        ----</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        state_variables_init : dict</span>
+<span class="sd">            Initialized constitutive model material state variables.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Initialize constitutive model state variables</span>
+        <span class="n">state_variables_init</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">state_variables_init</span><span class="p">[</span><span class="s1">&#39;e_strain_mf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_mf</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span><span class="p">)</span>
+        <span class="n">state_variables_init</span><span class="p">[</span><span class="s1">&#39;strain_mf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_mf</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span><span class="p">)</span>
+        <span class="n">state_variables_init</span><span class="p">[</span><span class="s1">&#39;stress_mf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_mf</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">)),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span><span class="p">)</span>
+        <span class="n">state_variables_init</span><span class="p">[</span><span class="s1">&#39;is_su_fail&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># Set additional out-of-plane strain and stress components</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">state_variables_init</span><span class="p">[</span><span class="s1">&#39;e_strain_33&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+            <span class="n">state_variables_init</span><span class="p">[</span><span class="s1">&#39;stress_33&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">state_variables_init</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="StVenantKirchhoff.state_update"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.stvenant_kirchhoff.StVenantKirchhoff.html#cratepy.material.models.stvenant_kirchhoff.StVenantKirchhoff.state_update">[docs]</a>    <span class="k">def</span> <span class="nf">state_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inc_strain</span><span class="p">,</span> <span class="n">state_variables_old</span><span class="p">,</span>
+                     <span class="n">su_max_n_iterations</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">su_conv_tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform constitutive model state update.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        inc_strain : numpy.ndarray (2d)</span>
+<span class="sd">            Incremental strain second-order tensor.</span>
+<span class="sd">        state_variables_old : dict</span>
+<span class="sd">            Last converged constitutive model material state variables.</span>
+<span class="sd">        su_max_n_iterations : int, default=20</span>
+<span class="sd">            State update maximum number of iterations.</span>
+<span class="sd">        su_conv_tol : float, default=1e-6</span>
+<span class="sd">            State update convergence tolerance.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        state_variables : dict</span>
+<span class="sd">            Material constitutive model state variables.</span>
+<span class="sd">        consistent_tangent_mf : numpy.ndarray (2d)</span>
+<span class="sd">            Material constitutive model consistent tangent modulus in</span>
+<span class="sd">            matricial form.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get last increment converged state variables</span>
+        <span class="n">e_strain_old_mf</span> <span class="o">=</span> <span class="n">state_variables_old</span><span class="p">[</span><span class="s1">&#39;e_strain_mf&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">e_strain_33_old</span> <span class="o">=</span> <span class="n">state_variables_old</span><span class="p">[</span><span class="s1">&#39;e_strain_33&#39;</span><span class="p">]</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Set state update failure flag</span>
+        <span class="n">is_su_fail</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1">#</span>
+        <span class="c1">#                                                          State update</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Build incremental deformation gradient matricial form</span>
+        <span class="n">inc_strain_mf</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_mf</span><span class="p">(</span><span class="n">inc_strain</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span>
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="c1">#                                                    2D &gt; 3D conversion</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># When the problem type corresponds to a 2D analysis, perform the state</span>
+        <span class="c1"># update and consistent tangent computation as in the 3D case,</span>
+        <span class="c1"># considering the appropriate out-of-plain strain and stress components</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">n_dim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span>
+            <span class="n">comp_order_sym</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_sym</span>
+            <span class="n">comp_order_nsym</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Set 3D problem parameters</span>
+            <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span> <span class="o">=</span> \
+                <span class="n">mop</span><span class="o">.</span><span class="n">get_problem_type_parameters</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+            <span class="c1"># Build deformation gradient tensors (matricial form) by including</span>
+            <span class="c1"># the appropriate out-of-plain components</span>
+            <span class="n">inc_strain_mf</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_state_3Dmf_from_2Dmf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span><span class="p">,</span>
+                                                         <span class="n">inc_strain_mf</span><span class="p">,</span>
+                                                         <span class="n">comp_33</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+            <span class="n">e_strain_old_mf</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_state_3Dmf_from_2Dmf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span><span class="p">,</span>
+                                                           <span class="n">e_strain_old_mf</span><span class="p">,</span>
+                                                           <span class="n">e_strain_33_old</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Build last converged and incremental deformation gradient tensors</span>
+        <span class="n">e_strain_old</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_from_mf</span><span class="p">(</span><span class="n">e_strain_old_mf</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span>
+                                              <span class="n">comp_order_nsym</span><span class="p">)</span>
+        <span class="n">inc_strain</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_from_mf</span><span class="p">(</span><span class="n">inc_strain_mf</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span>
+                                            <span class="n">comp_order_nsym</span><span class="p">)</span>
+        <span class="c1"># Update elastic deformation gradient tensor</span>
+        <span class="n">e_strain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">inc_strain</span><span class="p">,</span> <span class="n">e_strain_old</span><span class="p">)</span>
+        <span class="c1"># Build elastic deformationg gradient tensor matricial form</span>
+        <span class="n">e_strain_mf</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_mf</span><span class="p">(</span><span class="n">e_strain</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_nsym</span><span class="p">)</span>
+        <span class="c1"># Compute right Cauchy-Green strain tensor</span>
+        <span class="n">right_cauchy_green</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">e_strain</span><span class="p">),</span> <span class="n">e_strain</span><span class="p">)</span>
+        <span class="c1"># Compute Green-Lagrange strain tensor</span>
+        <span class="n">green_lagrange</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">right_cauchy_green</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n_dim</span><span class="p">))</span>
+        <span class="c1"># Compute 3D elasticity tensor (matricial form)</span>
+        <span class="n">elastic_tangent_mf</span> <span class="o">=</span> <span class="n">Elastic</span><span class="o">.</span><span class="n">elastic_tangent_modulus</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_material_properties</span><span class="p">,</span>
+            <span class="n">elastic_symmetry</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_material_properties</span><span class="p">[</span><span class="s1">&#39;elastic_symmetry&#39;</span><span class="p">])</span>
+        <span class="c1"># Compute second Piola-Kirchhoff stress tensor (matricial form)</span>
+        <span class="n">second_piola_stress_mf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span>
+            <span class="n">elastic_tangent_mf</span><span class="p">,</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_mf</span><span class="p">(</span><span class="n">green_lagrange</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span>
+                                                  <span class="n">comp_order_sym</span><span class="p">))</span>
+        <span class="c1"># Build second Piola-Kirchhoff stress tensor</span>
+        <span class="n">second_piola_stress</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_from_mf</span><span class="p">(</span><span class="n">second_piola_stress_mf</span><span class="p">,</span>
+                                                     <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">)</span>
+        <span class="c1"># Compute first Piola-Kirchhoff stress tensor</span>
+        <span class="n">first_piola_stress</span> <span class="o">=</span> <span class="n">first_piola_from_second_piola</span><span class="p">(</span><span class="n">e_strain</span><span class="p">,</span>
+                                                           <span class="n">second_piola_stress</span><span class="p">)</span>
+        <span class="c1"># Build first Piola-Kirchhoff stress tensor matricial form</span>
+        <span class="n">stress_mf</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_mf</span><span class="p">(</span><span class="n">first_piola_stress</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span>
+                                      <span class="n">comp_order_nsym</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Get the out-of-plane strain and stress components</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">e_strain_33</span> <span class="o">=</span> <span class="n">e_strain_mf</span><span class="p">[</span><span class="n">comp_order_nsym</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;33&#39;</span><span class="p">)]</span>
+            <span class="n">stress_33</span> <span class="o">=</span> <span class="n">stress_mf</span><span class="p">[</span><span class="n">comp_order_nsym</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;33&#39;</span><span class="p">)]</span>
+        <span class="c1">#</span>
+        <span class="c1">#                                                    3D &gt; 2D Conversion</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># When the problem type corresponds to a 2D analysis, build the</span>
+        <span class="c1"># 2D strain and stress tensors (matricial form) once the state update</span>
+        <span class="c1"># has been performed</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># Builds 2D strain and stress tensors (matricial form) from the</span>
+            <span class="c1"># associated 3D counterparts</span>
+            <span class="n">e_strain_mf</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_state_2Dmf_from_3Dmf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span><span class="p">,</span>
+                                                       <span class="n">e_strain_mf</span><span class="p">)</span>
+            <span class="n">stress_mf</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_state_2Dmf_from_3Dmf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span><span class="p">,</span>
+                                                     <span class="n">stress_mf</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="c1">#                                                Update state variables</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Initialize state variables dictionary</span>
+        <span class="n">state_variables</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_init</span><span class="p">()</span>
+        <span class="c1"># Store updated state variables</span>
+        <span class="n">state_variables</span><span class="p">[</span><span class="s1">&#39;e_strain_mf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">e_strain_mf</span>
+        <span class="n">state_variables</span><span class="p">[</span><span class="s1">&#39;strain_mf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">e_strain_mf</span>
+        <span class="n">state_variables</span><span class="p">[</span><span class="s1">&#39;stress_mf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stress_mf</span>
+        <span class="n">state_variables</span><span class="p">[</span><span class="s1">&#39;is_su_fail&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">is_su_fail</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">state_variables</span><span class="p">[</span><span class="s1">&#39;e_strain_33&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">e_strain_33</span>
+            <span class="n">state_variables</span><span class="p">[</span><span class="s1">&#39;stress_33&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stress_33</span>
+        <span class="c1">#</span>
+        <span class="c1">#                                            Consistent tangent modulus</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Set required identity tensors</span>
+        <span class="n">soid</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">top</span><span class="o">.</span><span class="n">get_id_operators</span><span class="p">(</span><span class="n">n_dim</span><span class="p">)</span>
+        <span class="c1"># Get Cauchy stress tensor</span>
+        <span class="n">cauchy_stress</span> <span class="o">=</span> <span class="n">cauchy_from_second_piola</span><span class="p">(</span><span class="n">e_strain</span><span class="p">,</span> <span class="n">second_piola_stress</span><span class="p">)</span>
+        <span class="c1"># Get 3D elasticity tensor</span>
+        <span class="n">elastic_tangent</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_from_mf</span><span class="p">(</span><span class="n">elastic_tangent_mf</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span>
+                                                 <span class="n">comp_order_sym</span><span class="p">)</span>
+        <span class="c1"># Compute derivative of Kirchhoff stress tensor in order to the elastic</span>
+        <span class="c1"># deformation gradient tensor</span>
+        <span class="n">der_kirchhoff_e_strain</span> <span class="o">=</span> \
+            <span class="n">top</span><span class="o">.</span><span class="n">dyad22_2</span><span class="p">(</span><span class="n">soid</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">e_strain</span><span class="p">,</span> <span class="n">second_piola_stress</span><span class="p">))</span> \
+            <span class="o">+</span> <span class="n">top</span><span class="o">.</span><span class="n">dyad22_3</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">e_strain</span><span class="p">,</span> <span class="n">second_piola_stress</span><span class="p">),</span> <span class="n">soid</span><span class="p">)</span> \
+            <span class="o">+</span> <span class="n">top</span><span class="o">.</span><span class="n">dot24_1</span><span class="p">(</span><span class="n">e_strain</span><span class="p">,</span> <span class="n">top</span><span class="o">.</span><span class="n">dot24_2</span><span class="p">(</span>
+                <span class="n">e_strain</span><span class="p">,</span> <span class="n">top</span><span class="o">.</span><span class="n">dot24_3</span><span class="p">(</span><span class="n">e_strain</span><span class="p">,</span> <span class="n">elastic_tangent</span><span class="p">)))</span>
+        <span class="c1"># Compute spatial consistent tangent modulus</span>
+        <span class="n">spatial_consistent_tangent</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">e_strain</span><span class="p">))</span> \
+            <span class="o">*</span> <span class="n">top</span><span class="o">.</span><span class="n">dot42_3</span><span class="p">(</span><span class="n">der_kirchhoff_e_strain</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">e_strain</span><span class="p">))</span> \
+            <span class="o">-</span> <span class="n">top</span><span class="o">.</span><span class="n">dyad22_3</span><span class="p">(</span><span class="n">cauchy_stress</span><span class="p">,</span> <span class="n">soid</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Compute material consistent tangent modulus (matricial form)</span>
+        <span class="n">material_consistent_tangent</span> <span class="o">=</span> <span class="n">material_from_spatial_tangent_modulus</span><span class="p">(</span>
+            <span class="n">spatial_consistent_tangent</span><span class="p">,</span> <span class="n">e_strain</span><span class="p">)</span>
+        <span class="n">consistent_tangent_mf</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_mf</span><span class="p">(</span><span class="n">material_consistent_tangent</span><span class="p">,</span>
+                                                  <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_nsym</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="c1">#                                                    3D &gt; 2D Conversion</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># When the problem type corresponds to a 2D analysis, build the</span>
+        <span class="c1"># 2D consistent tangent modulus (matricial form) from the</span>
+        <span class="c1"># 3D counterpart</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">consistent_tangent_mf</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_state_2Dmf_from_3Dmf</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span><span class="p">,</span> <span class="n">consistent_tangent_mf</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">state_variables</span><span class="p">,</span> <span class="n">consistent_tangent_mf</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

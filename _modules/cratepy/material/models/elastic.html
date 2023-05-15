@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cratepy.material.models.elastic &mdash; CRATE 1.0.3 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            CRATE
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../_autosummary/cratepy.html">Code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">CRATE</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">cratepy.material.models.elastic</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for cratepy.material.models.elastic</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Linear elastic constitutive model.</span>
+
+<span class="sd">This module includes the implementation of the linear elastic constitutive</span>
+<span class="sd">model under general anisotropic elasticity. The corresponding class also</span>
+<span class="sd">includes several methods to handle elastic anisotropy, namely to process the</span>
+<span class="sd">specification of the elastic moduli and the computation of the elasticity</span>
+<span class="sd">tensor.</span>
+
+<span class="sd">Classes</span>
+<span class="sd">-------</span>
+<span class="sd">Elastic</span>
+<span class="sd">    Elastic constitutive model.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#                                                                       Modules</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1"># Third-party</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="c1"># Local</span>
+<span class="kn">import</span> <span class="nn">tensor.matrixoperations</span> <span class="k">as</span> <span class="nn">mop</span>
+<span class="kn">from</span> <span class="nn">material.models.interface</span> <span class="kn">import</span> <span class="n">ConstitutiveModel</span>
+<span class="c1">#</span>
+<span class="c1">#                                                          Authorship &amp; Credits</span>
+<span class="c1"># =============================================================================</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Bernardo Ferreira (bernardo_ferreira@brown.edu)&#39;</span>
+<span class="n">__credits__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Bernardo Ferreira&#39;</span><span class="p">,</span> <span class="p">]</span>
+<span class="n">__status__</span> <span class="o">=</span> <span class="s1">&#39;Stable&#39;</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="Elastic"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.elastic.Elastic.html#cratepy.material.models.elastic.Elastic">[docs]</a><span class="k">class</span> <span class="nc">Elastic</span><span class="p">(</span><span class="n">ConstitutiveModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Linear elastic constitutive model.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    _name : str</span>
+<span class="sd">        Constitutive model name.</span>
+<span class="sd">    _strain_type : {&#39;infinitesimal&#39;, &#39;finite&#39;, &#39;finite-kinext&#39;}</span>
+<span class="sd">        Constitutive model strain formulation: infinitesimal strain formulation</span>
+<span class="sd">        (&#39;infinitesimal&#39;), finite strain formulation (&#39;finite&#39;) or finite</span>
+<span class="sd">        strain formulation through kinematic extension (infinitesimal</span>
+<span class="sd">        constitutive formulation and purely finite strain kinematic extension -</span>
+<span class="sd">        &#39;finite-kinext&#39;).</span>
+<span class="sd">    _source : {&#39;crate&#39;,}</span>
+<span class="sd">        Material constitutive model source.</span>
+<span class="sd">    _ndim : int</span>
+<span class="sd">        Problem number of spatial dimensions.</span>
+<span class="sd">    _comp_order_sym : list[str]</span>
+<span class="sd">        Strain/Stress components symmetric order.</span>
+<span class="sd">    _comp_order_nsym : list[str]</span>
+<span class="sd">        Strain/Stress components nonsymmetric order.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    get_required_properties()</span>
+<span class="sd">        Get constitutive model material properties and constitutive options.</span>
+<span class="sd">    state_init(self)</span>
+<span class="sd">        Get initialized material constitutive model state variables.</span>
+<span class="sd">    state_update(self, inc_strain, state_variables_old, \</span>
+<span class="sd">                 su_max_n_iterations=20, su_conv_tol=1e-6)</span>
+<span class="sd">        Perform constitutive model state update.</span>
+<span class="sd">    get_available_elastic_symmetries()</span>
+<span class="sd">        Get available elastic symmetries under general anisotropy.</span>
+<span class="sd">    elastic_tangent_modulus(elastic_properties, elastic_symmetry=&#39;isotropic&#39;)</span>
+<span class="sd">        Compute 3D elasticity tensor under general anisotropic elasticity.</span>
+<span class="sd">    get_technical_from_elastic_moduli(elastic_symmetry, elastic_properties)</span>
+<span class="sd">        Get technical constants of elasticity from elastic moduli.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Elastic.__init__"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.elastic.Elastic.html#cratepy.material.models.elastic.Elastic.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">material_properties</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        strain_formulation: {&#39;infinitesimal&#39;, &#39;finite&#39;}</span>
+<span class="sd">            Problem strain formulation.</span>
+<span class="sd">        problem_type : int</span>
+<span class="sd">            Problem type: 2D plane strain (1), 2D plane stress (2),</span>
+<span class="sd">            2D axisymmetric (3) and 3D (4).</span>
+<span class="sd">        material_properties : dict</span>
+<span class="sd">            Constitutive model material properties (key, str) values</span>
+<span class="sd">            (item, {int, float, bool}).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="s1">&#39;elastic&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">=</span> <span class="n">strain_formulation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span> <span class="o">=</span> <span class="n">problem_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_material_properties</span> <span class="o">=</span> <span class="n">material_properties</span>
+        <span class="c1"># Set strain formulation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_strain_type</span> <span class="o">=</span> <span class="s1">&#39;finite-kinext&#39;</span>
+        <span class="c1"># Set source</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_source</span> <span class="o">=</span> <span class="s1">&#39;crate&#39;</span>
+        <span class="c1"># Get problem type parameters</span>
+        <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span> <span class="o">=</span> \
+            <span class="n">mop</span><span class="o">.</span><span class="n">get_problem_type_parameters</span><span class="p">(</span><span class="n">problem_type</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span> <span class="o">=</span> <span class="n">n_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_sym</span> <span class="o">=</span> <span class="n">comp_order_sym</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span> <span class="o">=</span> <span class="n">comp_order_nsym</span>
+        <span class="c1"># Get elastic symmetry</span>
+        <span class="n">elastic_symmetry</span> <span class="o">=</span> <span class="n">material_properties</span><span class="p">[</span><span class="s1">&#39;elastic_symmetry&#39;</span><span class="p">]</span>
+        <span class="c1"># Check finite strains formulation</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;finite&#39;</span> <span class="ow">and</span> \
+                <span class="n">elastic_symmetry</span> <span class="o">!=</span> <span class="s1">&#39;isotropic&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;The elastic constitutive model is only &#39;</span>
+                               <span class="s1">&#39;available under finite strains for the &#39;</span>
+                               <span class="s1">&#39;elastic isotropic case.&#39;</span><span class="p">)</span>
+        <span class="c1"># Compute technical constants of elasticity</span>
+        <span class="k">if</span> <span class="n">elastic_symmetry</span> <span class="o">==</span> <span class="s1">&#39;isotropic&#39;</span><span class="p">:</span>
+            <span class="c1"># Compute technical constants of elasticity</span>
+            <span class="n">technical_constants</span> <span class="o">=</span> <span class="n">Elastic</span><span class="o">.</span><span class="n">get_technical_from_elastic_moduli</span><span class="p">(</span>
+                <span class="n">elastic_symmetry</span><span class="p">,</span> <span class="n">material_properties</span><span class="p">)</span>
+            <span class="c1"># Assemble technical constants of elasticity</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_material_properties</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">technical_constants</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="Elastic.get_required_properties"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.elastic.Elastic.html#cratepy.material.models.elastic.Elastic.get_required_properties">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_required_properties</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get constitutive model material properties and constitutive options.</span>
+
+<span class="sd">        *Input data file syntax*:</span>
+
+<span class="sd">        .. code-block:: text</span>
+
+<span class="sd">           elastic_symmetry &lt; option &gt; &lt; number_of_elastic_moduli &gt;</span>
+<span class="sd">               euler_angles &lt; value &gt; &lt; value &gt; &lt; value &gt;</span>
+<span class="sd">               Eijkl &lt; value &gt;</span>
+<span class="sd">               Eijkl &lt; value &gt;</span>
+<span class="sd">               ...</span>
+
+<span class="sd">        where</span>
+
+<span class="sd">        - ``elastic_symmetry`` - Elastic symmetry and number of elastic</span>
+<span class="sd">          moduli.</span>
+<span class="sd">        - ``euler_angles`` - Euler angles (degrees) sorted according with Bunge</span>
+<span class="sd">          convention. Not required if ``elastic_symmetry`` is set as</span>
+<span class="sd">          `isotropic`.</span>
+<span class="sd">        - ``Eijkl`` - Elastic moduli. Young&#39;s modulus (``E``) and Poisson&#39;s</span>
+<span class="sd">          coefficient (``v``) may be alternatively provided if</span>
+<span class="sd">          ``elastic_symmetry`` is set as `isotropic`.</span>
+
+<span class="sd">        ----</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        material_properties : list[str]</span>
+<span class="sd">            Constitutive model material properties names (str).</span>
+<span class="sd">        constitutive_options : dict</span>
+<span class="sd">            Constitutive options (key, str) and available specifications</span>
+<span class="sd">            (item, tuple[str]).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get available elastic symmetries and required elastic moduli</span>
+        <span class="n">elastic_symmetries</span> <span class="o">=</span> <span class="n">Elastic</span><span class="o">.</span><span class="n">get_available_elastic_symmetries</span><span class="p">()</span>
+        <span class="c1"># Set constitutive options and available specifications</span>
+        <span class="n">constitutive_options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;elastic_symmetry&#39;</span><span class="p">:</span>
+                                <span class="nb">tuple</span><span class="p">(</span><span class="n">elastic_symmetries</span><span class="o">.</span><span class="n">keys</span><span class="p">())}</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Set material properties names</span>
+        <span class="n">material_properties</span> <span class="o">=</span> <span class="p">()</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">material_properties</span><span class="p">,</span> <span class="n">constitutive_options</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="Elastic.state_init"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.elastic.Elastic.html#cratepy.material.models.elastic.Elastic.state_init">[docs]</a>    <span class="k">def</span> <span class="nf">state_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get initialized material constitutive model state variables.</span>
+
+<span class="sd">        Constitutive model state variables:</span>
+
+<span class="sd">        * ``e_strain_mf``</span>
+
+<span class="sd">            * *Infinitesimal strains*: Elastic infinitesimal strain tensor</span>
+<span class="sd">              (matricial form).</span>
+
+<span class="sd">            * *Finite strains*: Elastic spatial logarithmic strain tensor</span>
+<span class="sd">              (matricial form).</span>
+
+<span class="sd">            * *Symbol*: :math:`\\boldsymbol{\\varepsilon^{e}}` /</span>
+<span class="sd">              :math:`\\boldsymbol{\\varepsilon^{e}}`</span>
+
+<span class="sd">        * ``strain_mf``</span>
+
+<span class="sd">            * *Infinitesimal strains*: Infinitesimal strain tensor</span>
+<span class="sd">              (matricial form).</span>
+
+<span class="sd">            * *Finite strains*: Spatial logarithmic strain tensor</span>
+<span class="sd">              (matricial form).</span>
+
+<span class="sd">            * *Symbol*: :math:`\\boldsymbol{\\varepsilon}` /</span>
+<span class="sd">              :math:`\\boldsymbol{\\varepsilon}`</span>
+
+<span class="sd">        * ``stress_mf``</span>
+
+<span class="sd">            * *Infinitesimal strains*: Cauchy stress tensor (matricial form).</span>
+
+<span class="sd">            * *Finite strains*: Kirchhoff stress tensor (matricial form) within</span>
+<span class="sd">              :py:meth:`state_update`, first Piola-Kirchhoff stress tensor</span>
+<span class="sd">              (matricial form) otherwise.</span>
+
+<span class="sd">            * *Symbol*: :math:`\\boldsymbol{\\sigma}` /</span>
+<span class="sd">              (:math:`\\boldsymbol{\\tau}`, :math:`\\boldsymbol{P}`)</span>
+
+<span class="sd">        * ``is_su_fail``</span>
+
+<span class="sd">            * State update failure flag.</span>
+
+<span class="sd">        ----</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        state_variables_init : dict</span>
+<span class="sd">            Initialized constitutive model material state variables.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Initialize constitutive model state variables</span>
+        <span class="n">state_variables_init</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">state_variables_init</span><span class="p">[</span><span class="s1">&#39;e_strain_mf&#39;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_mf</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">)),</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_sym</span><span class="p">)</span>
+        <span class="n">state_variables_init</span><span class="p">[</span><span class="s1">&#39;strain_mf&#39;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_mf</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">)),</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_sym</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;infinitesimal&#39;</span><span class="p">:</span>
+            <span class="c1"># Cauchy stress tensor</span>
+            <span class="n">state_variables_init</span><span class="p">[</span><span class="s1">&#39;stress_mf&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_mf</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">)),</span>
+                                  <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_sym</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># First Piola-Kirchhoff stress tensor</span>
+            <span class="n">state_variables_init</span><span class="p">[</span><span class="s1">&#39;stress_mf&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_mf</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">)),</span>
+                                  <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span><span class="p">)</span>
+        <span class="n">state_variables_init</span><span class="p">[</span><span class="s1">&#39;is_plast&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">state_variables_init</span><span class="p">[</span><span class="s1">&#39;is_su_fail&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># Set additional out-of-plane strain and stress components</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">state_variables_init</span><span class="p">[</span><span class="s1">&#39;e_strain_33&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">state_variables_init</span><span class="p">[</span><span class="s1">&#39;stress_33&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">state_variables_init</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="Elastic.state_update"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.elastic.Elastic.html#cratepy.material.models.elastic.Elastic.state_update">[docs]</a>    <span class="k">def</span> <span class="nf">state_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inc_strain</span><span class="p">,</span> <span class="n">state_variables_old</span><span class="p">,</span>
+                     <span class="n">su_max_n_iterations</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">su_conv_tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform constitutive model state update.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        inc_strain : numpy.ndarray (2d)</span>
+<span class="sd">            Incremental strain second-order tensor.</span>
+<span class="sd">        state_variables_old : dict</span>
+<span class="sd">            Last converged constitutive model material state variables.</span>
+<span class="sd">        su_max_n_iterations : int, default=20</span>
+<span class="sd">            State update maximum number of iterations.</span>
+<span class="sd">        su_conv_tol : float, default=1e-6</span>
+<span class="sd">            State update convergence tolerance.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        state_variables : dict</span>
+<span class="sd">            Material constitutive model state variables.</span>
+<span class="sd">        consistent_tangent_mf : numpy.ndarray (2d)</span>
+<span class="sd">            Material constitutive model consistent tangent modulus in</span>
+<span class="sd">            matricial form.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get last increment converged state variables</span>
+        <span class="n">e_strain_old_mf</span> <span class="o">=</span> <span class="n">state_variables_old</span><span class="p">[</span><span class="s1">&#39;e_strain_mf&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">e_strain_33_old</span> <span class="o">=</span> <span class="n">state_variables_old</span><span class="p">[</span><span class="s1">&#39;e_strain_33&#39;</span><span class="p">]</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Set state update failure flag</span>
+        <span class="n">is_su_fail</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1">#</span>
+        <span class="c1">#                             State update &amp; Consistent tangent modulus</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Build incremental strain tensor matricial form</span>
+        <span class="n">inc_strain_mf</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_mf</span><span class="p">(</span><span class="n">inc_strain</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span>
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_sym</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="c1">#                                                    2D &gt; 3D conversion</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># When the problem type corresponds to a 2D analysis, perform the state</span>
+        <span class="c1"># update and consistent tangent computation as in the 3D case,</span>
+        <span class="c1"># considering the appropriate out-of-plain strain and stress components</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">n_dim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span>
+            <span class="n">comp_order_sym</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_sym</span>
+            <span class="n">comp_order_nsym</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Set 3D problem parameters</span>
+            <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span> <span class="o">=</span> \
+                <span class="n">mop</span><span class="o">.</span><span class="n">get_problem_type_parameters</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+            <span class="c1"># Build strain tensors (matricial form) by including the</span>
+            <span class="c1"># appropriate out-of-plain components</span>
+            <span class="n">inc_strain_mf</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_state_3Dmf_from_2Dmf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span><span class="p">,</span>
+                                                         <span class="n">inc_strain_mf</span><span class="p">,</span>
+                                                         <span class="n">comp_33</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+            <span class="n">e_strain_old_mf</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_state_3Dmf_from_2Dmf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span><span class="p">,</span>
+                                                           <span class="n">e_strain_old_mf</span><span class="p">,</span>
+                                                           <span class="n">e_strain_33_old</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Update elastic strain</span>
+        <span class="n">e_strain_mf</span> <span class="o">=</span> <span class="n">e_strain_old_mf</span> <span class="o">+</span> <span class="n">inc_strain_mf</span>
+        <span class="c1"># Compute 3D elasticity tensor (matricial form)</span>
+        <span class="n">consistent_tangent_mf</span> <span class="o">=</span> <span class="n">Elastic</span><span class="o">.</span><span class="n">elastic_tangent_modulus</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_material_properties</span><span class="p">,</span>
+            <span class="n">elastic_symmetry</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_material_properties</span><span class="p">[</span><span class="s1">&#39;elastic_symmetry&#39;</span><span class="p">])</span>
+        <span class="c1"># Update stress</span>
+        <span class="n">stress_mf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">consistent_tangent_mf</span><span class="p">,</span> <span class="n">e_strain_mf</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Get the out-of-plane strain and stress components</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">e_strain_33</span> <span class="o">=</span> <span class="n">e_strain_mf</span><span class="p">[</span><span class="n">comp_order_sym</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;33&#39;</span><span class="p">)]</span>
+            <span class="n">stress_33</span> <span class="o">=</span> <span class="n">stress_mf</span><span class="p">[</span><span class="n">comp_order_sym</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;33&#39;</span><span class="p">)]</span>
+        <span class="c1">#</span>
+        <span class="c1">#                                                    3D &gt; 2D Conversion</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># When the problem type corresponds to a 2D analysis, build the</span>
+        <span class="c1"># 2D strain and stress tensors (matricial form) once the state update</span>
+        <span class="c1"># has been performed</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># Builds 2D strain and stress tensors (matricial form) from the</span>
+            <span class="c1"># associated 3D counterparts</span>
+            <span class="n">e_strain_mf</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_state_2Dmf_from_3Dmf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span><span class="p">,</span>
+                                                       <span class="n">e_strain_mf</span><span class="p">)</span>
+            <span class="n">stress_mf</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_state_2Dmf_from_3Dmf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span><span class="p">,</span>
+                                                     <span class="n">stress_mf</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># When the problem type corresponds to a 2D analysis, build the</span>
+        <span class="c1"># 2D consistent tangent modulus (matricial form) from the</span>
+        <span class="c1"># 3D counterpart</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">consistent_tangent_mf</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_state_2Dmf_from_3Dmf</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span><span class="p">,</span> <span class="n">consistent_tangent_mf</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="c1">#                                                Update state variables</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Initialize state variables dictionary</span>
+        <span class="n">state_variables</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_init</span><span class="p">()</span>
+        <span class="c1"># Store updated state variables</span>
+        <span class="n">state_variables</span><span class="p">[</span><span class="s1">&#39;e_strain_mf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">e_strain_mf</span>
+        <span class="n">state_variables</span><span class="p">[</span><span class="s1">&#39;strain_mf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">e_strain_mf</span>
+        <span class="n">state_variables</span><span class="p">[</span><span class="s1">&#39;stress_mf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stress_mf</span>
+        <span class="n">state_variables</span><span class="p">[</span><span class="s1">&#39;is_su_fail&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">is_su_fail</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">state_variables</span><span class="p">[</span><span class="s1">&#39;e_strain_33&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">e_strain_33</span>
+            <span class="n">state_variables</span><span class="p">[</span><span class="s1">&#39;stress_33&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stress_33</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">state_variables</span><span class="p">,</span> <span class="n">consistent_tangent_mf</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="Elastic.get_available_elastic_symmetries"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.elastic.Elastic.html#cratepy.material.models.elastic.Elastic.get_available_elastic_symmetries">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_available_elastic_symmetries</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get available elastic symmetries under general anisotropy.</span>
+
+<span class="sd">        Available elastic symmetries:</span>
+
+<span class="sd">        * Isotropic:</span>
+
+<span class="sd">            *Input data file syntax*:</span>
+
+<span class="sd">            .. code-block:: text</span>
+
+<span class="sd">               elastic_symmetry isotropic 2</span>
+<span class="sd">                   E1111 &lt; value &gt;</span>
+<span class="sd">                   E1122 &lt; value &gt;</span>
+
+<span class="sd">            or</span>
+
+<span class="sd">            .. code-block:: text</span>
+
+<span class="sd">               elastic_symmetry isotropic 2</span>
+<span class="sd">                   E &lt; value &gt;</span>
+<span class="sd">                   v &lt; value &gt;</span>
+
+<span class="sd">            where</span>
+
+<span class="sd">            - ``elastic_symmetry`` - Elastic symmetry and number of elastic</span>
+<span class="sd">              moduli.</span>
+<span class="sd">            - ``Eijkl`` - Elastic moduli. Young&#39;s modulus (``E``) and Poisson&#39;s</span>
+<span class="sd">              coefficient (``v``) may be alternatively provided if</span>
+<span class="sd">              ``elastic_symmetry`` is set as `isotropic`.</span>
+
+<span class="sd">        ----</span>
+
+<span class="sd">        * Transverse isotropic (axis of symmetry 3):</span>
+
+<span class="sd">            *Input data file syntax*:</span>
+
+<span class="sd">            .. code-block:: text</span>
+
+<span class="sd">               elastic_symmetry transverse_isotropic 6</span>
+<span class="sd">                   euler_angles &lt; value &gt; &lt; value &gt; &lt; value &gt;</span>
+<span class="sd">                   Eijkl &lt; value &gt;</span>
+<span class="sd">                   ...</span>
+
+<span class="sd">            where</span>
+
+<span class="sd">            - ``elastic_symmetry`` - Elastic symmetry and number of elastic</span>
+<span class="sd">              moduli.</span>
+<span class="sd">            - ``euler_angles`` - Euler angles (degrees) sorted according with</span>
+<span class="sd">              Bunge convention.</span>
+<span class="sd">            - ``Eijkl`` - Elastic moduli.</span>
+
+<span class="sd">        ----</span>
+
+<span class="sd">        * Orthotropic (planes of symmetry 12 and 13):</span>
+
+<span class="sd">            *Input data file syntax*:</span>
+
+<span class="sd">            .. code-block:: text</span>
+
+<span class="sd">               elastic_symmetry orthotropic 10</span>
+<span class="sd">                   euler_angles &lt; value &gt; &lt; value &gt; &lt; value &gt;</span>
+<span class="sd">                   Eijkl &lt; value &gt;</span>
+<span class="sd">                   ...</span>
+
+<span class="sd">            where</span>
+
+<span class="sd">            - ``elastic_symmetry`` - Elastic symmetry and number of elastic</span>
+<span class="sd">              moduli.</span>
+<span class="sd">            - ``euler_angles`` - Euler angles (degrees) sorted according with</span>
+<span class="sd">              Bunge convention.</span>
+<span class="sd">            - ``Eijkl`` - Elastic moduli.</span>
+
+<span class="sd">        ----</span>
+
+<span class="sd">        * Monoclinic (plane of symmetry 12):</span>
+
+<span class="sd">            *Input data file syntax*:</span>
+
+<span class="sd">            .. code-block:: text</span>
+
+<span class="sd">               elastic_symmetry monoclinic 14</span>
+<span class="sd">                   euler_angles &lt; value &gt; &lt; value &gt; &lt; value &gt;</span>
+<span class="sd">                   Eijkl &lt; value &gt;</span>
+<span class="sd">                   ...</span>
+
+<span class="sd">            where</span>
+
+<span class="sd">            - ``elastic_symmetry`` - Elastic symmetry and number of elastic</span>
+<span class="sd">              moduli.</span>
+<span class="sd">            - ``euler_angles`` - Euler angles (degrees) sorted according with</span>
+<span class="sd">              Bunge convention.</span>
+<span class="sd">            - ``Eijkl`` - Elastic moduli.</span>
+
+<span class="sd">        ----</span>
+
+<span class="sd">        * Triclinic:</span>
+
+<span class="sd">            *Input data file syntax*:</span>
+
+<span class="sd">            .. code-block:: text</span>
+
+<span class="sd">               elastic_symmetry triclinic 22</span>
+<span class="sd">                   euler_angles &lt; value &gt; &lt; value &gt; &lt; value &gt;</span>
+<span class="sd">                   Eijkl &lt; value &gt;</span>
+<span class="sd">                   ...</span>
+
+<span class="sd">            where</span>
+
+<span class="sd">            - ``elastic_symmetry`` - Elastic symmetry and number of elastic</span>
+<span class="sd">              moduli.</span>
+<span class="sd">            - ``euler_angles`` - Euler angles (degrees) sorted according with</span>
+<span class="sd">              Bunge convention.</span>
+<span class="sd">            - ``Eijkl`` - Elastic moduli.</span>
+
+<span class="sd">        ----</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        elastic_symmetries : dict</span>
+<span class="sd">            Elastic moduli (item, tuple[str]) required for each available</span>
+<span class="sd">            elastic symmetry (key, str).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set available elastic symmetries and required elastic moduli</span>
+        <span class="n">elastic_symmetries</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;isotropic&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;E1111&#39;</span><span class="p">,</span> <span class="s1">&#39;E1122&#39;</span><span class="p">),</span>
+            <span class="s1">&#39;transverse_isotropic&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;E1111&#39;</span><span class="p">,</span> <span class="s1">&#39;E3333&#39;</span><span class="p">,</span> <span class="s1">&#39;E1122&#39;</span><span class="p">,</span> <span class="s1">&#39;E1133&#39;</span><span class="p">,</span>
+                                     <span class="s1">&#39;E2323&#39;</span><span class="p">),</span>
+            <span class="s1">&#39;orthotropic&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;E1111&#39;</span><span class="p">,</span> <span class="s1">&#39;E2222&#39;</span><span class="p">,</span> <span class="s1">&#39;E3333&#39;</span><span class="p">,</span> <span class="s1">&#39;E1122&#39;</span><span class="p">,</span> <span class="s1">&#39;E1133&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;E2233&#39;</span><span class="p">,</span> <span class="s1">&#39;E1212&#39;</span><span class="p">,</span> <span class="s1">&#39;E2323&#39;</span><span class="p">,</span> <span class="s1">&#39;E1313&#39;</span><span class="p">),</span>
+            <span class="s1">&#39;monoclinic&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;E1111&#39;</span><span class="p">,</span> <span class="s1">&#39;E2222&#39;</span><span class="p">,</span> <span class="s1">&#39;E3333&#39;</span><span class="p">,</span> <span class="s1">&#39;E1122&#39;</span><span class="p">,</span> <span class="s1">&#39;E1133&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;E2233&#39;</span><span class="p">,</span> <span class="s1">&#39;E1112&#39;</span><span class="p">,</span> <span class="s1">&#39;E2212&#39;</span><span class="p">,</span> <span class="s1">&#39;E3312&#39;</span><span class="p">,</span> <span class="s1">&#39;E1212&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;E2323&#39;</span><span class="p">,</span> <span class="s1">&#39;E1313&#39;</span><span class="p">,</span> <span class="s1">&#39;E2313&#39;</span><span class="p">),</span>
+            <span class="s1">&#39;triclinic&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;E1111&#39;</span><span class="p">,</span> <span class="s1">&#39;E1122&#39;</span><span class="p">,</span> <span class="s1">&#39;E1133&#39;</span><span class="p">,</span> <span class="s1">&#39;E1112&#39;</span><span class="p">,</span> <span class="s1">&#39;E1123&#39;</span><span class="p">,</span> <span class="s1">&#39;E1113&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;E2222&#39;</span><span class="p">,</span> <span class="s1">&#39;E2233&#39;</span><span class="p">,</span> <span class="s1">&#39;E2212&#39;</span><span class="p">,</span> <span class="s1">&#39;E2223&#39;</span><span class="p">,</span> <span class="s1">&#39;E2213&#39;</span><span class="p">,</span> <span class="s1">&#39;E3333&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;E3312&#39;</span><span class="p">,</span> <span class="s1">&#39;E3323&#39;</span><span class="p">,</span> <span class="s1">&#39;E3313&#39;</span><span class="p">,</span> <span class="s1">&#39;E1212&#39;</span><span class="p">,</span> <span class="s1">&#39;E1223&#39;</span><span class="p">,</span> <span class="s1">&#39;E1213&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;E2323&#39;</span><span class="p">,</span> <span class="s1">&#39;E2313&#39;</span><span class="p">,</span> <span class="s1">&#39;E1313&#39;</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">elastic_symmetries</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="Elastic.elastic_tangent_modulus"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.elastic.Elastic.html#cratepy.material.models.elastic.Elastic.elastic_tangent_modulus">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">elastic_tangent_modulus</span><span class="p">(</span><span class="n">elastic_properties</span><span class="p">,</span>
+                                <span class="n">elastic_symmetry</span><span class="o">=</span><span class="s1">&#39;isotropic&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute 3D elasticity tensor under general anisotropic elasticity.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        elastic_properties : dict</span>
+<span class="sd">            Elastic material properties (key, str) values (item, float).</span>
+<span class="sd">            Expecting independent elastic moduli (&#39;Eijkl&#39;) according to</span>
+<span class="sd">            elastic symmetries. Young modulus (&#39;E&#39;) and Poisson&#39;s ratio (&#39;v&#39;)</span>
+<span class="sd">            may alternatively provided under elastic isotropy.</span>
+<span class="sd">        elastic_symmetry : {&#39;isotropic&#39;, &#39;transverse_isotropic&#39;, \</span>
+<span class="sd">                            &#39;orthotropic&#39;, &#39;monoclinic&#39;, &#39;triclinic&#39;}, \</span>
+<span class="sd">                            default=&#39;isotropic&#39;</span>
+<span class="sd">            Elastic symmetries:</span>
+
+<span class="sd">            * &#39;triclinic&#39;:  assumes no elastic symmetries.</span>
+
+<span class="sd">            * &#39;monoclinic&#39;: assumes plane of symmetry 12.</span>
+
+<span class="sd">            * &#39;orthotropic&#39;: assumes planes of symmetry 12 and 13.</span>
+
+<span class="sd">            * &#39;transverse_isotropic&#39;: assumes axis of symmetry 3</span>
+
+<span class="sd">            * &#39;isotropic&#39;: assumes complete symmetry.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        elastic_tangent_mf : numpy.ndarray (2d)</span>
+<span class="sd">            3D elasticity tensor in matricial form.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get available elastic symmetries and required elastic moduli</span>
+        <span class="n">elastic_symmetries</span> <span class="o">=</span> <span class="n">Elastic</span><span class="o">.</span><span class="n">get_available_elastic_symmetries</span><span class="p">()</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Check elastic symmetry and required elastic moduli</span>
+        <span class="k">if</span> <span class="n">elastic_symmetry</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">elastic_symmetries</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unavailable elastic symmetry.&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Get required elastic moduli</span>
+            <span class="n">required_moduli</span> <span class="o">=</span> <span class="n">elastic_symmetries</span><span class="p">[</span><span class="n">elastic_symmetry</span><span class="p">]</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Conversion from technical constants to elastic moduli</span>
+            <span class="k">if</span> <span class="n">elastic_symmetry</span> <span class="o">==</span> <span class="s1">&#39;isotropic&#39;</span> <span class="ow">and</span> \
+                    <span class="p">{</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;v&#39;</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">elastic_properties</span><span class="o">.</span><span class="n">keys</span><span class="p">())):</span>
+                <span class="c1"># Get Young modulus and Poisson coefficient</span>
+                <span class="n">E</span> <span class="o">=</span> <span class="n">elastic_properties</span><span class="p">[</span><span class="s1">&#39;E&#39;</span><span class="p">]</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="n">elastic_properties</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">]</span>
+                <span class="c1"># Compute elastic moduli</span>
+                <span class="n">elastic_properties</span><span class="p">[</span><span class="s1">&#39;E1111&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="p">(</span><span class="n">E</span><span class="o">*</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">v</span><span class="p">))</span><span class="o">/</span><span class="p">((</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">v</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">v</span><span class="p">))</span>
+                <span class="n">elastic_properties</span><span class="p">[</span><span class="s1">&#39;E1122&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">E</span><span class="o">*</span><span class="n">v</span><span class="p">)</span><span class="o">/</span><span class="p">((</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">v</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">v</span><span class="p">))</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Initialize independent elastic moduli</span>
+            <span class="n">ind_moduli</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">modulus</span><span class="p">):</span> <span class="mf">0.0</span> <span class="k">for</span> <span class="n">modulus</span> <span class="ow">in</span>
+                          <span class="n">elastic_symmetries</span><span class="p">[</span><span class="s1">&#39;triclinic&#39;</span><span class="p">]}</span>
+            <span class="c1"># Loop over required elastic moduli</span>
+            <span class="k">for</span> <span class="n">modulus</span> <span class="ow">in</span> <span class="n">required_moduli</span><span class="p">:</span>
+                <span class="c1"># Set symmetric modulus</span>
+                <span class="n">sym_modulus</span> <span class="o">=</span> <span class="n">modulus</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span> <span class="o">+</span> <span class="n">modulus</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+                <span class="c1"># Check if requires elastic modulus has been provided</span>
+                <span class="k">if</span> <span class="n">modulus</span> <span class="ow">in</span> <span class="n">elastic_properties</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="n">ind_moduli</span><span class="p">[</span><span class="n">modulus</span><span class="p">]</span> <span class="o">=</span> <span class="n">elastic_properties</span><span class="p">[</span><span class="n">modulus</span><span class="p">]</span>
+                <span class="k">elif</span> <span class="n">sym_modulus</span> <span class="ow">in</span> <span class="n">elastic_properties</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="n">ind_moduli</span><span class="p">[</span><span class="n">modulus</span><span class="p">]</span> <span class="o">=</span> <span class="n">elastic_properties</span><span class="p">[</span><span class="n">sym_modulus</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Missing elastic moduli for &#39;</span>
+                                       <span class="o">+</span> <span class="n">elastic_symmetry</span> <span class="o">+</span> <span class="s1">&#39; material.&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Set all (non-symmetric) elastic moduli according to elastic symmetry</span>
+        <span class="n">all_moduli</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">modulus</span><span class="p">):</span> <span class="mf">0.0</span> <span class="k">for</span> <span class="n">modulus</span> <span class="ow">in</span> <span class="n">ind_moduli</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+        <span class="k">if</span> <span class="n">elastic_symmetry</span> <span class="o">==</span> <span class="s1">&#39;isotropic&#39;</span><span class="p">:</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1111&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E1111&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E2222&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1111&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E3333&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1111&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1122&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E1122&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1133&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1122&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E2233&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1122&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1212&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1111&#39;</span><span class="p">]</span>
+                                       <span class="o">-</span> <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1122&#39;</span><span class="p">])</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E2323&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1212&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1313&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1212&#39;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">elastic_symmetry</span> <span class="o">==</span> <span class="s1">&#39;transverse_isotropic&#39;</span><span class="p">:</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1111&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E1111&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E2222&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1111&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E3333&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E3333&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1122&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E1122&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1133&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E1133&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E2233&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1133&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1212&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1111&#39;</span><span class="p">]</span>
+                                       <span class="o">-</span> <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1122&#39;</span><span class="p">])</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E2323&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E2323&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1313&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E2323&#39;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">elastic_symmetry</span> <span class="o">==</span> <span class="s1">&#39;orthotropic&#39;</span><span class="p">:</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1111&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E1111&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E2222&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E2222&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E3333&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E3333&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1122&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E1122&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1133&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E1133&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E2233&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E2233&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1212&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E1212&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E2323&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E2323&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1313&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E1313&#39;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">elastic_symmetry</span> <span class="o">==</span> <span class="s1">&#39;monoclinic&#39;</span><span class="p">:</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1111&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E1111&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E2222&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E2222&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E3333&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E3333&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1122&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E1122&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1133&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E1133&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E2233&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E2233&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1212&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E1212&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E2323&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E2323&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1313&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E1313&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E1112&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E1112&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E2212&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E2212&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E3312&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E3312&#39;</span><span class="p">]</span>
+            <span class="n">all_moduli</span><span class="p">[</span><span class="s1">&#39;E2313&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E2313&#39;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">elastic_symmetry</span> <span class="o">==</span> <span class="s1">&#39;triclinic&#39;</span><span class="p">:</span>
+            <span class="n">all_moduli</span> <span class="o">=</span> <span class="n">ind_moduli</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Get 3D problem parameters</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_problem_type_parameters</span><span class="p">(</span><span class="n">problem_type</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Initialize elasticity tensor</span>
+        <span class="n">elastic_tangent_mf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order_sym</span><span class="p">),))</span>
+        <span class="c1"># Build elasticity tensor according with elastic symmetry</span>
+        <span class="k">for</span> <span class="n">modulus</span> <span class="ow">in</span> <span class="n">all_moduli</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="c1"># Get elastic modulus second-order indexes and associated kelvin</span>
+            <span class="c1"># factors</span>
+            <span class="n">idx_1</span> <span class="o">=</span> <span class="n">comp_order_sym</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">modulus</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span>
+            <span class="n">kf_1</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">kelvin_factor</span><span class="p">(</span><span class="n">idx_1</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">)</span>
+            <span class="n">idx_2</span> <span class="o">=</span> <span class="n">comp_order_sym</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">modulus</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">5</span><span class="p">])</span>
+            <span class="n">kf_2</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">kelvin_factor</span><span class="p">(</span><span class="n">idx_2</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">)</span>
+            <span class="c1"># Assemble elastic modulus in elasticity tensor matricial form</span>
+            <span class="n">elastic_tangent_mf</span><span class="p">[</span><span class="n">idx_1</span><span class="p">,</span> <span class="n">idx_2</span><span class="p">]</span> <span class="o">=</span> <span class="n">kf_1</span><span class="o">*</span><span class="n">kf_2</span><span class="o">*</span><span class="n">all_moduli</span><span class="p">[</span><span class="n">modulus</span><span class="p">]</span>
+            <span class="c1"># Set symmetric component of elasticity tensor</span>
+            <span class="k">if</span> <span class="n">idx_1</span> <span class="o">!=</span> <span class="n">idx_2</span><span class="p">:</span>
+                <span class="n">elastic_tangent_mf</span><span class="p">[</span><span class="n">idx_2</span><span class="p">,</span> <span class="n">idx_1</span><span class="p">]</span> <span class="o">=</span> <span class="n">elastic_tangent_mf</span><span class="p">[</span><span class="n">idx_1</span><span class="p">,</span>
+                                                                      <span class="n">idx_2</span><span class="p">]</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">elastic_tangent_mf</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="Elastic.get_technical_from_elastic_moduli"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.elastic.Elastic.html#cratepy.material.models.elastic.Elastic.get_technical_from_elastic_moduli">[docs]</a>    <span class="k">def</span> <span class="nf">get_technical_from_elastic_moduli</span><span class="p">(</span><span class="n">elastic_symmetry</span><span class="p">,</span>
+                                          <span class="n">elastic_properties</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get technical constants of elasticity from elastic moduli.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        elastic_symmetry : {&#39;isotropic&#39;, &#39;transverse_isotropic&#39;, \</span>
+<span class="sd">                            &#39;orthotropic&#39;, &#39;monoclinic&#39;, &#39;triclinic&#39;}, \</span>
+<span class="sd">                            default=&#39;isotropic&#39;</span>
+<span class="sd">            Elastic symmetries:</span>
+
+<span class="sd">            * &#39;triclinic&#39;:  assumes no elastic symmetries.</span>
+
+<span class="sd">            * &#39;monoclinic&#39;: assumes plane of symmetry 12.</span>
+
+<span class="sd">            * &#39;orthotropic&#39;: assumes planes of symmetry 12 and 13.</span>
+
+<span class="sd">            * &#39;transverse_isotropic&#39;: assumes axis of symmetry 3</span>
+
+<span class="sd">            * &#39;isotropic&#39;: assumes complete symmetry.</span>
+<span class="sd">        elastic_properties : dict</span>
+<span class="sd">            Elastic material properties (key, str) values (item, float).</span>
+<span class="sd">            Expecting independent elastic moduli (&#39;Eijkl&#39;) according to</span>
+<span class="sd">            elastic symmetries.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        technical_constants : dict</span>
+<span class="sd">            Technical constants of elasticity according with elastic</span>
+<span class="sd">            symmetries.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get available elastic symmetries and required elastic moduli</span>
+        <span class="n">elastic_symmetries</span> <span class="o">=</span> <span class="n">Elastic</span><span class="o">.</span><span class="n">get_available_elastic_symmetries</span><span class="p">()</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Check elastic symmetry and required elastic moduli</span>
+        <span class="k">if</span> <span class="n">elastic_symmetry</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">elastic_symmetries</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unavailable elastic symmetry.&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Get required elastic moduli</span>
+            <span class="n">required_moduli</span> <span class="o">=</span> <span class="n">elastic_symmetries</span><span class="p">[</span><span class="n">elastic_symmetry</span><span class="p">]</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Initialize independent elastic moduli</span>
+            <span class="n">ind_moduli</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">modulus</span><span class="p">):</span> <span class="mf">0.0</span> <span class="k">for</span> <span class="n">modulus</span> <span class="ow">in</span>
+                          <span class="n">elastic_symmetries</span><span class="p">[</span><span class="s1">&#39;triclinic&#39;</span><span class="p">]}</span>
+            <span class="c1"># Check elastic moduli</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">elastic_symmetry</span> <span class="o">==</span> <span class="s1">&#39;isotropic&#39;</span>
+                    <span class="ow">and</span> <span class="p">{</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;v&#39;</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">elastic_properties</span><span class="o">.</span><span class="n">keys</span><span class="p">()))):</span>
+                <span class="c1"># Loop over required elastic moduli</span>
+                <span class="k">for</span> <span class="n">modulus</span> <span class="ow">in</span> <span class="n">required_moduli</span><span class="p">:</span>
+                    <span class="c1"># Set symmetric modulus</span>
+                    <span class="n">sym_modulus</span> <span class="o">=</span> <span class="n">modulus</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span> <span class="o">+</span> <span class="n">modulus</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+                    <span class="c1"># Check if requires elastic modulus has been provided</span>
+                    <span class="k">if</span> <span class="n">modulus</span> <span class="ow">in</span> <span class="n">elastic_properties</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                        <span class="n">ind_moduli</span><span class="p">[</span><span class="n">modulus</span><span class="p">]</span> <span class="o">=</span> <span class="n">elastic_properties</span><span class="p">[</span><span class="n">modulus</span><span class="p">]</span>
+                    <span class="k">elif</span> <span class="n">sym_modulus</span> <span class="ow">in</span> <span class="n">elastic_properties</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                        <span class="n">ind_moduli</span><span class="p">[</span><span class="n">modulus</span><span class="p">]</span> <span class="o">=</span> <span class="n">elastic_properties</span><span class="p">[</span><span class="n">sym_modulus</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Missing elastic moduli for &#39;</span>
+                                           <span class="o">+</span> <span class="n">elastic_symmetry</span> <span class="o">+</span> <span class="s1">&#39; material.&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Initialize technical constants of elasticity</span>
+        <span class="n">technical_constants</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># Compute technical constants of elasticity according with elastic</span>
+        <span class="c1"># symmetries</span>
+        <span class="k">if</span> <span class="n">elastic_symmetry</span> <span class="o">==</span> <span class="s1">&#39;isotropic&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">{</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;v&#39;</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">elastic_properties</span><span class="o">.</span><span class="n">keys</span><span class="p">())):</span>
+                <span class="c1"># Assemble technical constants of elasticity</span>
+                <span class="n">technical_constants</span><span class="p">[</span><span class="s1">&#39;E&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">elastic_properties</span><span class="p">[</span><span class="s1">&#39;E&#39;</span><span class="p">]</span>
+                <span class="n">technical_constants</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">elastic_properties</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Get required elastic moduli</span>
+                <span class="n">E1111</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E1111&#39;</span><span class="p">]</span>
+                <span class="n">E1122</span> <span class="o">=</span> <span class="n">ind_moduli</span><span class="p">[</span><span class="s1">&#39;E1122&#39;</span><span class="p">]</span>
+                <span class="c1"># Compute Young&#39;s modulus</span>
+                <span class="n">E</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="n">E1111</span> <span class="o">+</span> <span class="n">E1122</span><span class="p">))</span><span class="o">*</span><span class="p">(</span><span class="n">E1111</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">E1111</span><span class="o">*</span><span class="n">E1122</span>
+                                           <span class="o">-</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">E1122</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+                <span class="c1"># Compute Poisson&#39;s coefficient</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="n">E1122</span><span class="o">/</span><span class="p">(</span><span class="n">E1111</span> <span class="o">+</span> <span class="n">E1122</span><span class="p">)</span>
+                <span class="c1"># Assemble technical constants of elasticity</span>
+                <span class="n">technical_constants</span><span class="p">[</span><span class="s1">&#39;E&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">E</span>
+                <span class="n">technical_constants</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Technical constants are not implemented for &#39;</span>
+                               <span class="o">+</span> <span class="n">elastic_symmetry</span> <span class="o">+</span> <span class="s1">&#39; material.&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">technical_constants</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

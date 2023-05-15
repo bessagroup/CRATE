@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>material.materialmodeling &mdash; crate 1.0.0 documentation</title>
+  <title>material.materialmodeling &mdash; CRATE 1.0.3 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/readthedocs-custom.css" type="text/css" />
@@ -28,7 +28,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            crate
+            CRATE
           </a>
               <div class="version">
                 1.0
@@ -71,7 +71,7 @@
 <p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/reference/index.html">Index</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/crate.html">Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/cratepy.html">Code</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">License</span></p>
 <ul>
@@ -84,7 +84,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">crate</a>
+          <a href="../../index.html">CRATE</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -151,7 +151,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                                                Material state</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="MaterialState"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState">[docs]</a><span class="k">class</span> <span class="nc">MaterialState</span><span class="p">:</span>
+<div class="viewcode-block" id="MaterialState"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState">[docs]</a><span class="k">class</span> <span class="nc">MaterialState</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;CRVE material constitutive state.</span>
 
 <span class="sd">    Attributes</span>
@@ -279,7 +279,7 @@
 <span class="sd">                                 adaptive_clustering_map)</span>
 <span class="sd">        Update cluster variables according to clustering adaptivity step.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="MaterialState.__init__"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span>
+<div class="viewcode-block" id="MaterialState.__init__"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span>
                  <span class="n">material_phases_properties</span><span class="p">,</span> <span class="n">material_phases_vf</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
 
@@ -327,7 +327,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_sym</span> <span class="o">=</span> <span class="n">comp_order_sym</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span> <span class="o">=</span> <span class="n">comp_order_nsym</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialState.init_constitutive_model"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.init_constitutive_model">[docs]</a>    <span class="k">def</span> <span class="nf">init_constitutive_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat_phase</span><span class="p">,</span> <span class="n">model_keyword</span><span class="p">,</span>
+<div class="viewcode-block" id="MaterialState.init_constitutive_model"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState.init_constitutive_model">[docs]</a>    <span class="k">def</span> <span class="nf">init_constitutive_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat_phase</span><span class="p">,</span> <span class="n">model_keyword</span><span class="p">,</span>
                                 <span class="n">model_source</span><span class="o">=</span><span class="s1">&#39;crate&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize material phase constitutive model.</span>
 
@@ -364,7 +364,7 @@
         <span class="c1"># Update material phases constitutive models</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_material_phases_models</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">]</span> <span class="o">=</span> <span class="n">constitutive_model</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialState.init_clusters_state"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.init_clusters_state">[docs]</a>    <span class="k">def</span> <span class="nf">init_clusters_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MaterialState.init_clusters_state"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState.init_clusters_state">[docs]</a>    <span class="k">def</span> <span class="nf">init_clusters_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize clusters state variables.&quot;&quot;&quot;</span>
         <span class="c1"># Initialize clusters state variables</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_state</span> <span class="o">=</span> <span class="p">{}</span>
@@ -397,7 +397,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">update_state_homogenization</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_converged_state</span><span class="p">()</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialState.set_phase_clusters"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.set_phase_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">set_phase_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span> <span class="n">clusters_vf</span><span class="p">):</span>
+<div class="viewcode-block" id="MaterialState.set_phase_clusters"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState.set_phase_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">set_phase_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span> <span class="n">clusters_vf</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set CRVE cluster labels and volume fractions of each material phase.</span>
 
 <span class="sd">        Parameters</span>
@@ -412,7 +412,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_phase_clusters</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">phase_clusters</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_vf</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">clusters_vf</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialState.get_clusters_inc_strain_mf"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_clusters_inc_strain_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_clusters_inc_strain_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">global_strain_mf</span><span class="p">):</span>
+<div class="viewcode-block" id="MaterialState.get_clusters_inc_strain_mf"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState.get_clusters_inc_strain_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_clusters_inc_strain_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">global_strain_mf</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get clusters incremental strain in matricial form.</span>
 
 <span class="sd">        *Infinitesimal strains*:</span>
@@ -525,7 +525,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">clusters_inc_strain_mf</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialState.update_clusters_state"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.update_clusters_state">[docs]</a>    <span class="k">def</span> <span class="nf">update_clusters_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clusters_inc_strain_mf</span><span class="p">):</span>
+<div class="viewcode-block" id="MaterialState.update_clusters_state"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState.update_clusters_state">[docs]</a>    <span class="k">def</span> <span class="nf">update_clusters_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clusters_inc_strain_mf</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update clusters state variables and consistent tangent modulus.</span>
 
 <span class="sd">        Parameters</span>
@@ -626,7 +626,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">su_fail_state</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialState.update_state_homogenization"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.update_state_homogenization">[docs]</a>    <span class="k">def</span> <span class="nf">update_state_homogenization</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MaterialState.update_state_homogenization"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState.update_state_homogenization">[docs]</a>    <span class="k">def</span> <span class="nf">update_state_homogenization</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update homogenized strain and stress tensors.</span>
 
 <span class="sd">        *Infinitesimal strains*:</span>
@@ -747,7 +747,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_hom_strain_33</span> <span class="o">=</span> <span class="mf">1.0</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_hom_stress_33</span> <span class="o">=</span> <span class="n">oop_hom_comp</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialState.update_converged_state"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.update_converged_state">[docs]</a>    <span class="k">def</span> <span class="nf">update_converged_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MaterialState.update_converged_state"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState.update_converged_state">[docs]</a>    <span class="k">def</span> <span class="nf">update_converged_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update last converged material state variables.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_def_gradient_old_mf</span> <span class="o">=</span> \
             <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clusters_def_gradient_mf</span><span class="p">)</span>
@@ -755,7 +755,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_hom_strain_old_mf</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hom_strain_mf</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_hom_stress_old_mf</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hom_stress_mf</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialState.set_rewind_state_updated_clustering"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.set_rewind_state_updated_clustering">[docs]</a>    <span class="k">def</span> <span class="nf">set_rewind_state_updated_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span> <span class="n">clusters_vf</span><span class="p">,</span>
+<div class="viewcode-block" id="MaterialState.set_rewind_state_updated_clustering"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState.set_rewind_state_updated_clustering">[docs]</a>    <span class="k">def</span> <span class="nf">set_rewind_state_updated_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span> <span class="n">clusters_vf</span><span class="p">,</span>
                                             <span class="n">clusters_state</span><span class="p">,</span>
                                             <span class="n">clusters_def_gradient_mf</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set rewind state variables according to updated clustering.</span>
@@ -781,7 +781,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_def_gradient_old_mf</span> <span class="o">=</span> \
             <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">clusters_def_gradient_mf</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialState.get_hom_strain_mf"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_hom_strain_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_hom_strain_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MaterialState.get_hom_strain_mf"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState.get_hom_strain_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_hom_strain_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get homogenized strain tensor (matricial form).</span>
 
 <span class="sd">        Returns</span>
@@ -791,7 +791,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hom_strain_mf</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialState.get_hom_stress_mf"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_hom_stress_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_hom_stress_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MaterialState.get_hom_stress_mf"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState.get_hom_stress_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_hom_stress_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get homogenized stress tensor (matricial form).</span>
 
 <span class="sd">        Returns</span>
@@ -801,7 +801,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hom_stress_mf</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialState.get_oop_hom_comp"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_oop_hom_comp">[docs]</a>    <span class="k">def</span> <span class="nf">get_oop_hom_comp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MaterialState.get_oop_hom_comp"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState.get_oop_hom_comp">[docs]</a>    <span class="k">def</span> <span class="nf">get_oop_hom_comp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get homogenized strain or stress tensor out-of-plane component.</span>
 
 <span class="sd">        Returns</span>
@@ -819,7 +819,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">oop_hom_comp</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialState.get_inc_hom_strain_mf"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_inc_hom_strain_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_inc_hom_strain_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MaterialState.get_inc_hom_strain_mf"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState.get_inc_hom_strain_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_inc_hom_strain_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get incremental homogenized strain tensor (matricial form).</span>
 
 <span class="sd">        *Infinitesimal strains*:</span>
@@ -882,7 +882,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">inc_hom_strain_mf</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialState.get_inc_hom_stress_mf"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_inc_hom_stress_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_inc_hom_stress_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MaterialState.get_inc_hom_stress_mf"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState.get_inc_hom_stress_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_inc_hom_stress_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get incremental homogenized stress tensor (matricial form).</span>
 
 <span class="sd">        *Infinitesimal strains*:</span>
@@ -929,7 +929,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">inc_hom_stress_mf</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialState.get_hom_strain_old_mf"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_hom_strain_old_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_hom_strain_old_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MaterialState.get_hom_strain_old_mf"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState.get_hom_strain_old_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_hom_strain_old_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get last converged homogenized strain tensor (matricial form).</span>
 
 <span class="sd">        Returns</span>
@@ -941,7 +941,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hom_strain_old_mf</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialState.get_hom_stress_old_mf"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_hom_stress_old_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_hom_stress_old_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MaterialState.get_hom_stress_old_mf"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState.get_hom_stress_old_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_hom_stress_old_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get last converged homogenized stress tensor (matricial form).</span>
 
 <span class="sd">        Returns</span>
@@ -953,7 +953,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hom_stress_old_mf</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialState.get_material_phases"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_material_phases">[docs]</a>    <span class="k">def</span> <span class="nf">get_material_phases</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MaterialState.get_material_phases"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState.get_material_phases">[docs]</a>    <span class="k">def</span> <span class="nf">get_material_phases</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get RVE material phases.</span>
 
 <span class="sd">        Returns</span>
@@ -963,7 +963,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_material_phases</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialState.get_material_phases_properties"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_material_phases_properties">[docs]</a>    <span class="k">def</span> <span class="nf">get_material_phases_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MaterialState.get_material_phases_properties"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState.get_material_phases_properties">[docs]</a>    <span class="k">def</span> <span class="nf">get_material_phases_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get RVE material phases constitutive properties.</span>
 
 <span class="sd">        Returns</span>
@@ -974,7 +974,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_material_phases_properties</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialState.get_material_phases_models"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_material_phases_models">[docs]</a>    <span class="k">def</span> <span class="nf">get_material_phases_models</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MaterialState.get_material_phases_models"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState.get_material_phases_models">[docs]</a>    <span class="k">def</span> <span class="nf">get_material_phases_models</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get RVE material phases constitutive models.</span>
 
 <span class="sd">        Returns</span>
@@ -985,7 +985,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_material_phases_models</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialState.get_material_phases_vf"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_material_phases_vf">[docs]</a>    <span class="k">def</span> <span class="nf">get_material_phases_vf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MaterialState.get_material_phases_vf"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState.get_material_phases_vf">[docs]</a>    <span class="k">def</span> <span class="nf">get_material_phases_vf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get RVE material phases volume fraction.</span>
 
 <span class="sd">        Returns</span>
@@ -996,7 +996,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_material_phases_vf</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialState.get_clusters_def_gradient_mf"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_clusters_def_gradient_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_clusters_def_gradient_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MaterialState.get_clusters_def_gradient_mf"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState.get_clusters_def_gradient_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_clusters_def_gradient_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get deformation gradient of each material cluster.</span>
 
 <span class="sd">        Returns</span>
@@ -1007,7 +1007,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clusters_def_gradient_mf</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialState.get_clusters_def_gradient_old_mf"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_clusters_def_gradient_old_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_clusters_def_gradient_old_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MaterialState.get_clusters_def_gradient_old_mf"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState.get_clusters_def_gradient_old_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_clusters_def_gradient_old_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get last converged deformation gradient of each material cluster.</span>
 
 <span class="sd">        Returns</span>
@@ -1019,7 +1019,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clusters_def_gradient_old_mf</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialState.get_clusters_state"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_clusters_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_clusters_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MaterialState.get_clusters_state"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState.get_clusters_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_clusters_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get material state variables of each material cluster.</span>
 
 <span class="sd">        Returns</span>
@@ -1030,7 +1030,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clusters_state</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialState.get_clusters_state_old"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_clusters_state_old">[docs]</a>    <span class="k">def</span> <span class="nf">get_clusters_state_old</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MaterialState.get_clusters_state_old"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState.get_clusters_state_old">[docs]</a>    <span class="k">def</span> <span class="nf">get_clusters_state_old</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get last converged material state variables of each mat. cluster.</span>
 
 <span class="sd">        Returns</span>
@@ -1041,7 +1041,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clusters_state_old</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialState.get_clusters_tangent_mf"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_clusters_tangent_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_clusters_tangent_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MaterialState.get_clusters_tangent_mf"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState.get_clusters_tangent_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_clusters_tangent_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get material consistent tangent modulus of each material cluster.</span>
 
 <span class="sd">        Returns</span>
@@ -1053,7 +1053,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clusters_tangent_mf</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialState._material_su_interface"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState._material_su_interface">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="MaterialState._material_su_interface"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState._material_su_interface">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_material_su_interface</span><span class="p">(</span><span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span>
                                <span class="n">constitutive_model</span><span class="p">,</span> <span class="n">def_gradient_old</span><span class="p">,</span>
                                <span class="n">inc_strain</span><span class="p">,</span> <span class="n">state_variables_old</span><span class="p">):</span>
@@ -1174,7 +1174,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">state_variables</span><span class="p">,</span> <span class="n">consistent_tangent_mf</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialState.compute_inc_log_strain"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.compute_inc_log_strain">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="MaterialState.compute_inc_log_strain"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState.compute_inc_log_strain">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">compute_inc_log_strain</span><span class="p">(</span><span class="n">e_log_strain_old</span><span class="p">,</span> <span class="n">inc_def_gradient</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute incremental spatial logarithmic strain.</span>
 
@@ -1259,7 +1259,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">inc_log_strain</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialState.compute_spatial_tangent_modulus"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.compute_spatial_tangent_modulus">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="MaterialState.compute_spatial_tangent_modulus"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState.compute_spatial_tangent_modulus">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">compute_spatial_tangent_modulus</span><span class="p">(</span><span class="n">e_log_strain_old</span><span class="p">,</span> <span class="n">def_gradient_old</span><span class="p">,</span>
                                         <span class="n">inc_def_gradient</span><span class="p">,</span> <span class="n">cauchy_stress</span><span class="p">,</span>
                                         <span class="n">inf_consistent_tangent</span><span class="p">):</span>
@@ -1353,7 +1353,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">spatial_consistent_tangent</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialState.clustering_adaptivity_update"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.clustering_adaptivity_update">[docs]</a>    <span class="k">def</span> <span class="nf">clustering_adaptivity_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span> <span class="n">clusters_vf</span><span class="p">,</span>
+<div class="viewcode-block" id="MaterialState.clustering_adaptivity_update"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState.clustering_adaptivity_update">[docs]</a>    <span class="k">def</span> <span class="nf">clustering_adaptivity_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span> <span class="n">clusters_vf</span><span class="p">,</span>
                                      <span class="n">adaptive_clustering_map</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update cluster variables according to clustering adaptivity step.</span>
 
@@ -1396,7 +1396,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                        Available material constitutive models</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="get_available_material_models"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readprocedures.get_available_material_models.html#crate.ioput.readinputdata.get_available_material_models">[docs]</a><span class="k">def</span> <span class="nf">get_available_material_models</span><span class="p">(</span><span class="n">model_source</span><span class="o">=</span><span class="s1">&#39;crate&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="get_available_material_models"><a class="viewcode-back" href="../../_autosummary/cratepy.ioput.readprocedures.get_available_material_models.html#cratepy.ioput.readinputdata.get_available_material_models">[docs]</a><span class="k">def</span> <span class="nf">get_available_material_models</span><span class="p">(</span><span class="n">model_source</span><span class="o">=</span><span class="s1">&#39;crate&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get available material constitutive models.</span>
 
 <span class="sd">    Parameters</span>

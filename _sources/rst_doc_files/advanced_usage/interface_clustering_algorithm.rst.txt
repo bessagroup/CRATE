@@ -20,9 +20,9 @@ Implementation steps
 
 The implementation of a **new clustering algorithm** in CRATE involves **five fundamental steps**:
 
-* **Step 1** - Create a Python module with the name of the new clustering algorithm (e.g., :code:`new_clustering_algorithm.py`) in the directory :code:`crate.clustering.algorithms` (create directory if not existent);
+* **Step 1** - Create a Python module with the name of the new clustering algorithm (e.g., :code:`new_clustering_algorithm.py`) in the directory :code:`cratepy.clustering.algorithms` (create directory if not existent);
 
-* **Step 2** - In :code:`new_clustering_algorithm.py`, import the clustering algorithm interface (:py:class:`~crate.clustering.clusteringalgs.ClusteringAlgorithm`) and derive a class for the new clustering algorithm (e.g., :code:`NewClusteringAlgorithm`):
+* **Step 2** - In :code:`new_clustering_algorithm.py`, import the clustering algorithm interface (:py:class:`~cratepy.clustering.clusteringalgs.ClusteringAlgorithm`) and derive a class for the new clustering algorithm (e.g., :code:`NewClusteringAlgorithm`):
 
     .. code-block:: python
 
@@ -33,7 +33,7 @@ The implementation of a **new clustering algorithm** in CRATE involves **five fu
        class NewClusteringAlgorithm(ClusteringAlgorithm):
            """New clustering algorithm."""
 
-* **Step 3** - In :py:mod:`crate.clustering.clusteringalgs`, check the already existent clustering algorithms (:py:attr:`~crate.clustering.clusteringalgs.ClusterAnalysis.available_clustering_alg`), choose a unique integer identifier :code:`id` for the new clustering algorithm and add it as a new item of :py:attr:`~crate.clustering.clusteringalgs.ClusterAnalysis.available_clustering_alg`:
+* **Step 3** - In :py:mod:`cratepy.clustering.clusteringalgs`, check the already existent clustering algorithms (:py:attr:`~cratepy.clustering.clusteringalgs.ClusterAnalysis.available_clustering_alg`), choose a unique integer identifier :code:`id` for the new clustering algorithm and add it as a new item of :py:attr:`~cratepy.clustering.clusteringalgs.ClusterAnalysis.available_clustering_alg`:
 
     .. code-block:: python
 
@@ -44,7 +44,7 @@ The implementation of a **new clustering algorithm** in CRATE involves **five fu
 
            available_clustering_alg = {'< id >': 'New clustering algorithm', }
 
-* **Step 4** - In :py:mod:`crate.clustering.clusteringalgs`, import and add the initialization of the new clustering algorithm in the :py:meth:`~crate.clustering.clusteringals.ClusterAnalysis.get_fitted_estimator` method of class :py:class:`~crate.clustering.clusteringals.ClusterAnalysis`:
+* **Step 4** - In :py:mod:`cratepy.clustering.clusteringalgs`, import and add the initialization of the new clustering algorithm in the :py:meth:`~cratepy.clustering.clusteringals.ClusterAnalysis.get_fitted_estimator` method of class :py:class:`~cratepy.clustering.clusteringals.ClusterAnalysis`:
 
     .. code-block:: python
        :emphasize-lines: 3, 12-14
@@ -67,15 +67,15 @@ The implementation of a **new clustering algorithm** in CRATE involves **five fu
                else:
                    raise RuntimeError('Unknown clustering algorithm.')
 
-* **Step 5** - Perform the complete implementation of the new clustering algorithm in :code:`new_clustering_algorithm.py` by developing the class :code:`NewClusteringAlgorithm` and implementing the abstract methods (look for the @abstractmethod decorator) established by the clustering algorithm interface (:py:class:`~crate.clustering.clusteringalgs.ClusteringAlgorithm`).
+* **Step 5** - Perform the complete implementation of the new clustering algorithm in :code:`new_clustering_algorithm.py` by developing the class :code:`NewClusteringAlgorithm` and implementing the abstract methods (look for the @abstractmethod decorator) established by the clustering algorithm interface (:py:class:`~cratepy.clustering.clusteringalgs.ClusteringAlgorithm`).
 
 ----
 
 Recommendations
 ---------------
 
-* If you are not familiar with the implementation of a clustering algorithm in CRATE, it is **recommended** that you first take a look into the implementation of the clustering algorithms already available (:py:mod:`crate.clustering.clusteringalgs`). Despite being embedded directly in :py:mod:`crate.clustering.clusteringalgs`, the fundamental implementation steps of these clustering algorithms follows the steps previously outlined and are fully documented;
+* If you are not familiar with the implementation of a clustering algorithm in CRATE, it is **recommended** that you first take a look into the implementation of the clustering algorithms already available (:py:mod:`cratepy.clustering.clusteringalgs`). Despite being embedded directly in :py:mod:`cratepy.clustering.clusteringalgs`, the fundamental implementation steps of these clustering algorithms follows the steps previously outlined and are fully documented;
 
-* In the particular case of a hierarchical agglomerative clustering algorithm and when access to the linkage matrix is required, derive a class for the new clustering algorithm (e.g., :code:`NewClusteringAlgorithm`) from the **hierarchical agglomerative clustering algorithm interface** (:py:class:`~crate.clustering.clusteringalgs.AgglomerativeAlgorithm`) instead;
+* In the particular case of a hierarchical agglomerative clustering algorithm and when access to the linkage matrix is required, derive a class for the new clustering algorithm (e.g., :code:`NewClusteringAlgorithm`) from the **hierarchical agglomerative clustering algorithm interface** (:py:class:`~cratepy.clustering.clusteringalgs.AgglomerativeAlgorithm`) instead;
 
-* Take advantage of the several Python **open-source libraries** (e.g., `SciPy <https://docs.scipy.org/doc/scipy/reference/cluster.html>`_, `Scikit-Learn <https://scikit-learn.org/stable/modules/clustering.html>`_) that provide many well-established clustering algorithms and implement a simple **wrapper class** compliant with the clustering algorithm interface (:py:class:`~crate.clustering.clusteringalgs.ClusteringAlgorithm`).
+* Take advantage of the several Python **open-source libraries** (e.g., `SciPy <https://docs.scipy.org/doc/scipy/reference/cluster.html>`_, `Scikit-Learn <https://scikit-learn.org/stable/modules/clustering.html>`_) that provide many well-established clustering algorithms and implement a simple **wrapper class** compliant with the clustering algorithm interface (:py:class:`~cratepy.clustering.clusteringalgs.ClusteringAlgorithm`).

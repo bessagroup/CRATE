@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Interface: Clustering algorithm &mdash; crate 1.0.0 documentation</title>
+  <title>Interface: Clustering algorithm &mdash; CRATE 1.0.3 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/readthedocs-custom.css" type="text/css" />
@@ -31,7 +31,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            crate
+            CRATE
           </a>
               <div class="version">
                 1.0
@@ -79,7 +79,7 @@
 <p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../reference/index.html">Index</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/crate.html">Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/cratepy.html">Code</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">License</span></p>
 <ul>
@@ -92,7 +92,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">crate</a>
+          <a href="../../index.html">CRATE</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -126,8 +126,8 @@
 <h2>Implementation steps<a class="headerlink" href="#implementation-steps" title="Permalink to this heading">¶</a></h2>
 <p>The implementation of a <strong>new clustering algorithm</strong> in CRATE involves <strong>five fundamental steps</strong>:</p>
 <ul>
-<li><p><strong>Step 1</strong> - Create a Python module with the name of the new clustering algorithm (e.g., <code class="code docutils literal notranslate"><span class="pre">new_clustering_algorithm.py</span></code>) in the directory <code class="code docutils literal notranslate"><span class="pre">crate.clustering.algorithms</span></code> (create directory if not existent);</p></li>
-<li><p><strong>Step 2</strong> - In <code class="code docutils literal notranslate"><span class="pre">new_clustering_algorithm.py</span></code>, import the clustering algorithm interface (<a class="reference internal" href="../../_autosummary/crate.clustering.clusteringalgs.ClusteringAlgorithm.html#crate.clustering.clusteringalgs.ClusteringAlgorithm" title="crate.clustering.clusteringalgs.ClusteringAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusteringAlgorithm</span></code></a>) and derive a class for the new clustering algorithm (e.g., <code class="code docutils literal notranslate"><span class="pre">NewClusteringAlgorithm</span></code>):</p>
+<li><p><strong>Step 1</strong> - Create a Python module with the name of the new clustering algorithm (e.g., <code class="code docutils literal notranslate"><span class="pre">new_clustering_algorithm.py</span></code>) in the directory <code class="code docutils literal notranslate"><span class="pre">cratepy.clustering.algorithms</span></code> (create directory if not existent);</p></li>
+<li><p><strong>Step 2</strong> - In <code class="code docutils literal notranslate"><span class="pre">new_clustering_algorithm.py</span></code>, import the clustering algorithm interface (<a class="reference internal" href="../../_autosummary/cratepy.clustering.clusteringalgs.ClusteringAlgorithm.html#cratepy.clustering.clusteringalgs.ClusteringAlgorithm" title="cratepy.clustering.clusteringalgs.ClusteringAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusteringAlgorithm</span></code></a>) and derive a class for the new clustering algorithm (e.g., <code class="code docutils literal notranslate"><span class="pre">NewClusteringAlgorithm</span></code>):</p>
 <blockquote>
 <div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># clustering.algorithms.new_clustering_algorithm.py</span>
 
@@ -139,7 +139,7 @@
 </div>
 </div></blockquote>
 </li>
-<li><p><strong>Step 3</strong> - In <a class="reference internal" href="../../_autosummary/crate.clustering.clusteringalgs.html#module-crate.clustering.clusteringalgs" title="crate.clustering.clusteringalgs"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.clustering.clusteringalgs</span></code></a>, check the already existent clustering algorithms (<code class="xref py py-attr docutils literal notranslate"><span class="pre">available_clustering_alg</span></code>), choose a unique integer identifier <code class="code docutils literal notranslate"><span class="pre">id</span></code> for the new clustering algorithm and add it as a new item of <code class="xref py py-attr docutils literal notranslate"><span class="pre">available_clustering_alg</span></code>:</p>
+<li><p><strong>Step 3</strong> - In <a class="reference internal" href="../../_autosummary/cratepy.clustering.clusteringalgs.html#module-cratepy.clustering.clusteringalgs" title="cratepy.clustering.clusteringalgs"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cratepy.clustering.clusteringalgs</span></code></a>, check the already existent clustering algorithms (<code class="xref py py-attr docutils literal notranslate"><span class="pre">available_clustering_alg</span></code>), choose a unique integer identifier <code class="code docutils literal notranslate"><span class="pre">id</span></code> for the new clustering algorithm and add it as a new item of <code class="xref py py-attr docutils literal notranslate"><span class="pre">available_clustering_alg</span></code>:</p>
 <blockquote>
 <div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># clustering.clusteringalgs.py</span>
 
@@ -151,7 +151,7 @@
 </div>
 </div></blockquote>
 </li>
-<li><p><strong>Step 4</strong> - In <a class="reference internal" href="../../_autosummary/crate.clustering.clusteringalgs.html#module-crate.clustering.clusteringalgs" title="crate.clustering.clusteringalgs"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.clustering.clusteringalgs</span></code></a>, import and add the initialization of the new clustering algorithm in the <code class="xref py py-meth docutils literal notranslate"><span class="pre">get_fitted_estimator()</span></code> method of class <code class="xref py py-class docutils literal notranslate"><span class="pre">ClusterAnalysis</span></code>:</p>
+<li><p><strong>Step 4</strong> - In <a class="reference internal" href="../../_autosummary/cratepy.clustering.clusteringalgs.html#module-cratepy.clustering.clusteringalgs" title="cratepy.clustering.clusteringalgs"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cratepy.clustering.clusteringalgs</span></code></a>, import and add the initialization of the new clustering algorithm in the <code class="xref py py-meth docutils literal notranslate"><span class="pre">get_fitted_estimator()</span></code> method of class <code class="xref py py-class docutils literal notranslate"><span class="pre">ClusterAnalysis</span></code>:</p>
 <blockquote>
 <div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># clustering.clusteringals.py</span>
 
@@ -174,16 +174,16 @@
 </div>
 </div></blockquote>
 </li>
-<li><p><strong>Step 5</strong> - Perform the complete implementation of the new clustering algorithm in <code class="code docutils literal notranslate"><span class="pre">new_clustering_algorithm.py</span></code> by developing the class <code class="code docutils literal notranslate"><span class="pre">NewClusteringAlgorithm</span></code> and implementing the abstract methods (look for the &#64;abstractmethod decorator) established by the clustering algorithm interface (<a class="reference internal" href="../../_autosummary/crate.clustering.clusteringalgs.ClusteringAlgorithm.html#crate.clustering.clusteringalgs.ClusteringAlgorithm" title="crate.clustering.clusteringalgs.ClusteringAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusteringAlgorithm</span></code></a>).</p></li>
+<li><p><strong>Step 5</strong> - Perform the complete implementation of the new clustering algorithm in <code class="code docutils literal notranslate"><span class="pre">new_clustering_algorithm.py</span></code> by developing the class <code class="code docutils literal notranslate"><span class="pre">NewClusteringAlgorithm</span></code> and implementing the abstract methods (look for the &#64;abstractmethod decorator) established by the clustering algorithm interface (<a class="reference internal" href="../../_autosummary/cratepy.clustering.clusteringalgs.ClusteringAlgorithm.html#cratepy.clustering.clusteringalgs.ClusteringAlgorithm" title="cratepy.clustering.clusteringalgs.ClusteringAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusteringAlgorithm</span></code></a>).</p></li>
 </ul>
 </section>
 <hr class="docutils" />
 <section id="recommendations">
 <h2>Recommendations<a class="headerlink" href="#recommendations" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
-<li><p>If you are not familiar with the implementation of a clustering algorithm in CRATE, it is <strong>recommended</strong> that you first take a look into the implementation of the clustering algorithms already available (<a class="reference internal" href="../../_autosummary/crate.clustering.clusteringalgs.html#module-crate.clustering.clusteringalgs" title="crate.clustering.clusteringalgs"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.clustering.clusteringalgs</span></code></a>). Despite being embedded directly in <a class="reference internal" href="../../_autosummary/crate.clustering.clusteringalgs.html#module-crate.clustering.clusteringalgs" title="crate.clustering.clusteringalgs"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.clustering.clusteringalgs</span></code></a>, the fundamental implementation steps of these clustering algorithms follows the steps previously outlined and are fully documented;</p></li>
-<li><p>In the particular case of a hierarchical agglomerative clustering algorithm and when access to the linkage matrix is required, derive a class for the new clustering algorithm (e.g., <code class="code docutils literal notranslate"><span class="pre">NewClusteringAlgorithm</span></code>) from the <strong>hierarchical agglomerative clustering algorithm interface</strong> (<a class="reference internal" href="../../_autosummary/crate.clustering.clusteringalgs.AgglomerativeAlgorithm.html#crate.clustering.clusteringalgs.AgglomerativeAlgorithm" title="crate.clustering.clusteringalgs.AgglomerativeAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">AgglomerativeAlgorithm</span></code></a>) instead;</p></li>
-<li><p>Take advantage of the several Python <strong>open-source libraries</strong> (e.g., <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/cluster.html">SciPy</a>, <a class="reference external" href="https://scikit-learn.org/stable/modules/clustering.html">Scikit-Learn</a>) that provide many well-established clustering algorithms and implement a simple <strong>wrapper class</strong> compliant with the clustering algorithm interface (<a class="reference internal" href="../../_autosummary/crate.clustering.clusteringalgs.ClusteringAlgorithm.html#crate.clustering.clusteringalgs.ClusteringAlgorithm" title="crate.clustering.clusteringalgs.ClusteringAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusteringAlgorithm</span></code></a>).</p></li>
+<li><p>If you are not familiar with the implementation of a clustering algorithm in CRATE, it is <strong>recommended</strong> that you first take a look into the implementation of the clustering algorithms already available (<a class="reference internal" href="../../_autosummary/cratepy.clustering.clusteringalgs.html#module-cratepy.clustering.clusteringalgs" title="cratepy.clustering.clusteringalgs"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cratepy.clustering.clusteringalgs</span></code></a>). Despite being embedded directly in <a class="reference internal" href="../../_autosummary/cratepy.clustering.clusteringalgs.html#module-cratepy.clustering.clusteringalgs" title="cratepy.clustering.clusteringalgs"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cratepy.clustering.clusteringalgs</span></code></a>, the fundamental implementation steps of these clustering algorithms follows the steps previously outlined and are fully documented;</p></li>
+<li><p>In the particular case of a hierarchical agglomerative clustering algorithm and when access to the linkage matrix is required, derive a class for the new clustering algorithm (e.g., <code class="code docutils literal notranslate"><span class="pre">NewClusteringAlgorithm</span></code>) from the <strong>hierarchical agglomerative clustering algorithm interface</strong> (<a class="reference internal" href="../../_autosummary/cratepy.clustering.clusteringalgs.AgglomerativeAlgorithm.html#cratepy.clustering.clusteringalgs.AgglomerativeAlgorithm" title="cratepy.clustering.clusteringalgs.AgglomerativeAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">AgglomerativeAlgorithm</span></code></a>) instead;</p></li>
+<li><p>Take advantage of the several Python <strong>open-source libraries</strong> (e.g., <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/cluster.html">SciPy</a>, <a class="reference external" href="https://scikit-learn.org/stable/modules/clustering.html">Scikit-Learn</a>) that provide many well-established clustering algorithms and implement a simple <strong>wrapper class</strong> compliant with the clustering algorithm interface (<a class="reference internal" href="../../_autosummary/cratepy.clustering.clusteringalgs.ClusteringAlgorithm.html#cratepy.clustering.clusteringalgs.ClusteringAlgorithm" title="cratepy.clustering.clusteringalgs.ClusteringAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusteringAlgorithm</span></code></a>).</p></li>
 </ul>
 </section>
 </section>

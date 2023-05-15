@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cratepy.ioput.readprocedures.AdaptivityManager &mdash; CRATE 1.0.3 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="cratepy.ioput.readprocedures.CRVE" href="cratepy.ioput.readprocedures.CRVE.html" />
+    <link rel="prev" title="cratepy.ioput.readprocedures.searchoptkeywordline" href="cratepy.ioput.readprocedures.searchoptkeywordline.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            CRATE
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="cratepy.html">Code</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cratepy.crate_simulation.html">cratepy.crate_simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.clustering.html">cratepy.clustering</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="cratepy.ioput.html">cratepy.ioput</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cratepy.ioput.fileoperations.html">cratepy.ioput.fileoperations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.ioput.incoutputfiles.html">cratepy.ioput.incoutputfiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.ioput.info.html">cratepy.ioput.info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.ioput.ioutilities.html">cratepy.ioput.ioutilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.ioput.miscoutputfiles.html">cratepy.ioput.miscoutputfiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.ioput.packager.html">cratepy.ioput.packager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.ioput.readinputdata.html">cratepy.ioput.readinputdata</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="cratepy.ioput.readprocedures.html">cratepy.ioput.readprocedures</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.readprocedures.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.readprocedures.check_clustering_scheme.html">cratepy.ioput.readprocedures.check_clustering_scheme</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.readprocedures.decode_increm_spec.html">cratepy.ioput.readprocedures.decode_increm_spec</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.readprocedures.get_available_material_models.html">cratepy.ioput.readprocedures.get_available_material_models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.readprocedures.get_formatted_parameter.html">cratepy.ioput.readprocedures.get_formatted_parameter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.readprocedures.read_adaptivity_frequency.html">cratepy.ioput.readprocedures.read_adaptivity_frequency</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.readprocedures.read_cluster_analysis_scheme.html">cratepy.ioput.readprocedures.read_cluster_analysis_scheme</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.readprocedures.read_clustering_scheme.html">cratepy.ioput.readprocedures.read_clustering_scheme</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.readprocedures.read_discretization_file_path.html">cratepy.ioput.readprocedures.read_discretization_file_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.readprocedures.read_mac_load_increm.html">cratepy.ioput.readprocedures.read_mac_load_increm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.readprocedures.read_macroscale_loading.html">cratepy.ioput.readprocedures.read_macroscale_loading</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.readprocedures.read_material_properties.html">cratepy.ioput.readprocedures.read_material_properties</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.readprocedures.read_phase_clustering.html">cratepy.ioput.readprocedures.read_phase_clustering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.readprocedures.read_rewind_state_parameters.html">cratepy.ioput.readprocedures.read_rewind_state_parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.readprocedures.read_rewinding_criterion_parameters.html">cratepy.ioput.readprocedures.read_rewinding_criterion_parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.readprocedures.read_rve_dimensions.html">cratepy.ioput.readprocedures.read_rve_dimensions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.readprocedures.read_self_consistent_scheme.html">cratepy.ioput.readprocedures.read_self_consistent_scheme</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.readprocedures.read_vtk_options.html">cratepy.ioput.readprocedures.read_vtk_options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.readprocedures.readtypeAkeyword.html">cratepy.ioput.readprocedures.readtypeAkeyword</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.readprocedures.readtypeBkeyword.html">cratepy.ioput.readprocedures.readtypeBkeyword</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.readprocedures.searchkeywordline.html">cratepy.ioput.readprocedures.searchkeywordline</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.readprocedures.searchoptkeywordline.html">cratepy.ioput.readprocedures.searchoptkeywordline</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">cratepy.ioput.readprocedures.AdaptivityManager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.readprocedures.CRVE.html">cratepy.ioput.readprocedures.CRVE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.readprocedures.Elastic.html">cratepy.ioput.readprocedures.Elastic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.readprocedures.ElasticReferenceMaterial.html">cratepy.ioput.readprocedures.ElasticReferenceMaterial</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.readprocedures.RewindManager.html">cratepy.ioput.readprocedures.RewindManager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.readprocedures.SCRMP.html">cratepy.ioput.readprocedures.SCRMP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.readprocedures.StVenantKirchhoff.html">cratepy.ioput.readprocedures.StVenantKirchhoff</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.ioput.readprocedures.VonMises.html">cratepy.ioput.readprocedures.VonMises</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.main.html">cratepy.main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.material.html">cratepy.material</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.online.html">cratepy.online</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.optimization.html">cratepy.optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.tensor.html">cratepy.tensor</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CRATE</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="cratepy.html">cratepy</a></li>
+          <li class="breadcrumb-item"><a href="cratepy.ioput.html">cratepy.ioput</a></li>
+          <li class="breadcrumb-item"><a href="cratepy.ioput.readprocedures.html">cratepy.ioput.readprocedures</a></li>
+      <li class="breadcrumb-item active">cratepy.ioput.readprocedures.AdaptivityManager</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cratepy-ioput-readprocedures-adaptivitymanager">
+<h1>cratepy.ioput.readprocedures.AdaptivityManager<a class="headerlink" href="#cratepy-ioput-readprocedures-adaptivitymanager" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="cratepy.ioput.readprocedures.AdaptivityManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AdaptivityManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strain_formulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adapt_material_phases</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptivity_control_feature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adapt_criterion_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clust_adapt_freq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/crve_adaptivity.html#AdaptivityManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.ioput.readprocedures.AdaptivityManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>CRVE clustering adaptivity manager.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cratepy.ioput.readprocedures.AdaptivityManager._n_dim">
+<span class="sig-name descname"><span class="pre">_n_dim</span></span><a class="headerlink" href="#cratepy.ioput.readprocedures.AdaptivityManager._n_dim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Problem number of spatial dimensions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cratepy.ioput.readprocedures.AdaptivityManager._comp_order_sym">
+<span class="sig-name descname"><span class="pre">_comp_order_sym</span></span><a class="headerlink" href="#cratepy.ioput.readprocedures.AdaptivityManager._comp_order_sym" title="Permalink to this definition">¶</a></dt>
+<dd><p>Strain/Stress components symmetric order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cratepy.ioput.readprocedures.AdaptivityManager._comp_order_nsym">
+<span class="sig-name descname"><span class="pre">_comp_order_nsym</span></span><a class="headerlink" href="#cratepy.ioput.readprocedures.AdaptivityManager._comp_order_nsym" title="Permalink to this definition">¶</a></dt>
+<dd><p>Strain/Stress components nonsymmetric order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cratepy.ioput.readprocedures.AdaptivityManager._adapt_phase_criterions">
+<span class="sig-name descname"><span class="pre">_adapt_phase_criterions</span></span><a class="headerlink" href="#cratepy.ioput.readprocedures.AdaptivityManager._adapt_phase_criterions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clustering adaptivity criterion instance (item, AdaptivityCriterion)
+associated with each material phase (key, str).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cratepy.ioput.readprocedures.AdaptivityManager._inc_adaptive_steps">
+<span class="sig-name descname"><span class="pre">_inc_adaptive_steps</span></span><a class="headerlink" href="#cratepy.ioput.readprocedures.AdaptivityManager._inc_adaptive_steps" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each macroscale loading increment (key, str), store the performed
+number of clustering adaptive steps (item, int).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cratepy.ioput.readprocedures.AdaptivityManager._adapt_ref_init_inc">
+<span class="sig-name descname"><span class="pre">_adapt_ref_init_inc</span></span><a class="headerlink" href="#cratepy.ioput.readprocedures.AdaptivityManager._adapt_ref_init_inc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clustering adaptivity reference initial increment (item, int)
+associated with each material phase (key, str).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cratepy.ioput.readprocedures.AdaptivityManager._adapt_feature_min_trigger">
+<span class="sig-name descname"><span class="pre">_adapt_feature_min_trigger</span></span><a class="headerlink" href="#cratepy.ioput.readprocedures.AdaptivityManager._adapt_feature_min_trigger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clustering adaptivity feature minimum significant value surpassed
+status (item, bool) associated with each material phase (key, str).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cratepy.ioput.readprocedures.AdaptivityManager.max_inc_adaptive_steps">
+<span class="sig-name descname"><span class="pre">max_inc_adaptive_steps</span></span><a class="headerlink" href="#cratepy.ioput.readprocedures.AdaptivityManager.max_inc_adaptive_steps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum number of clustering adaptive steps per macroscale loading
+increment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cratepy.ioput.readprocedures.AdaptivityManager.adaptive_evaluation_time">
+<span class="sig-name descname"><span class="pre">adaptive_evaluation_time</span></span><a class="headerlink" href="#cratepy.ioput.readprocedures.AdaptivityManager.adaptive_evaluation_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Total amount of time (s) spent in selecting target clusters for
+clustering adaptivity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cratepy.ioput.readprocedures.AdaptivityManager.adaptive_time">
+<span class="sig-name descname"><span class="pre">adaptive_time</span></span><a class="headerlink" href="#cratepy.ioput.readprocedures.AdaptivityManager.adaptive_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Total amount of time (s) spent in clustering adaptivity procedures.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.ioput.readprocedures.AdaptivityManager.get_adaptivity_criterions">
+<span class="sig-name descname"><span class="pre">get_adaptivity_criterions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/crve_adaptivity.html#AdaptivityManager.get_adaptivity_criterions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.ioput.readprocedures.AdaptivityManager.get_adaptivity_criterions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get available clustering adaptivity criterions.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.ioput.readprocedures.AdaptivityManager.get_target_clusters">
+<span class="sig-name descname"><span class="pre">get_target_clusters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxels_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_def_gradient_mf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_def_gradient_old_mf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_state_old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_sct_mf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_sct_old_mf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_residuals_mf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/crve_adaptivity.html#AdaptivityManager.get_target_clusters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.ioput.readprocedures.AdaptivityManager.get_target_clusters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get adaptive clustering target clusters.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.ioput.readprocedures.AdaptivityManager._get_adaptivity_data_matrix">
+<span class="sig-name descname"><span class="pre">_get_adaptivity_data_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adapt_control_feature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_def_gradient_mf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_def_gradient_old_mf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_state_old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_sct_mf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_sct_old_mf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_residuals_mf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/crve_adaptivity.html#AdaptivityManager._get_adaptivity_data_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.ioput.readprocedures.AdaptivityManager._get_adaptivity_data_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build adaptivity feature data matrix for target material phase.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.ioput.readprocedures.AdaptivityManager.adaptive_refinement">
+<span class="sig-name descname"><span class="pre">adaptive_refinement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crve</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_clusters_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">improved_init_guess</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/crve_adaptivity.html#AdaptivityManager.adaptive_refinement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.ioput.readprocedures.AdaptivityManager.adaptive_refinement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform CRVE adaptive clustering refinement.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.ioput.readprocedures.AdaptivityManager.check_inc_adaptive_steps">
+<span class="sig-name descname"><span class="pre">check_inc_adaptive_steps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/crve_adaptivity.html#AdaptivityManager.check_inc_adaptive_steps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.ioput.readprocedures.AdaptivityManager.check_inc_adaptive_steps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check number of adaptive steps performed in loading increment.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.ioput.readprocedures.AdaptivityManager.clear_inc_adaptive_steps">
+<span class="sig-name descname"><span class="pre">clear_inc_adaptive_steps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inc_threshold</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/crve_adaptivity.html#AdaptivityManager.clear_inc_adaptive_steps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.ioput.readprocedures.AdaptivityManager.clear_inc_adaptive_steps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset number of adaptive steps performed after threshold increment.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.ioput.readprocedures.AdaptivityManager.is_adapt_phase_activated">
+<span class="sig-name descname"><span class="pre">is_adapt_phase_activated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat_phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/crve_adaptivity.html#AdaptivityManager.is_adapt_phase_activated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.ioput.readprocedures.AdaptivityManager.is_adapt_phase_activated" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if material phase adaptivity procedures are activated.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.ioput.readprocedures.AdaptivityManager.reset_adapt_activation_parameters">
+<span class="sig-name descname"><span class="pre">reset_adapt_activation_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/crve_adaptivity.html#AdaptivityManager.reset_adapt_activation_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.ioput.readprocedures.AdaptivityManager.reset_adapt_activation_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset parameters associated with clustering adaptivity activation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.ioput.readprocedures.AdaptivityManager.get_adapt_vtk_array">
+<span class="sig-name descname"><span class="pre">get_adapt_vtk_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxels_clusters</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/crve_adaptivity.html#AdaptivityManager.get_adapt_vtk_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.ioput.readprocedures.AdaptivityManager.get_adapt_vtk_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get regular grid array with the adaptive level of each cluster.</p>
+</dd></dl>
+
+<p>Constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>strain_formulation</strong> (<em>{'infinitesimal'</em><em>, </em><em>'finite'}</em>) – Problem strain formulation.</p></li>
+<li><p><strong>problem_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Problem type identifier (1 - Plain strain (2D), 4- Tridimensional)</p></li>
+<li><p><strong>adapt_material_phases</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – RVE adaptive material phases labels (str).</p></li>
+<li><p><strong>phase_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clusters labels (item, list[int]) associated with each material
+phase (key, str).</p></li>
+<li><p><strong>adaptivity_control_feature</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clustering adaptivity control feature (item, str) associated with
+each material phase (key, str).</p></li>
+<li><p><strong>adapt_criterion_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clustering adaptivity criterion (item, dict) associated with each
+material phase (key, str). This dictionary contains the adaptivity
+criterion to be used and the required parameters.</p></li>
+<li><p><strong>clust_adapt_freq</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clustering adaptivity frequency (relative to the macroscale
+loading) (item, int, default=1) associated with each adaptive
+cluster-reduced material phase (key, str).</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">List of Public Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id1" title="cratepy.ioput.readprocedures.AdaptivityManager.adaptive_refinement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">adaptive_refinement</span></code></a></p></td>
+<td><p>Perform CRVE adaptive clustering refinement.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id2" title="cratepy.ioput.readprocedures.AdaptivityManager.check_inc_adaptive_steps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_inc_adaptive_steps</span></code></a></p></td>
+<td><p>Check number of adaptive steps performed in loading increment.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id3" title="cratepy.ioput.readprocedures.AdaptivityManager.clear_inc_adaptive_steps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear_inc_adaptive_steps</span></code></a></p></td>
+<td><p>Reset number of adaptive steps performed after threshold increment.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id4" title="cratepy.ioput.readprocedures.AdaptivityManager.get_adapt_vtk_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_adapt_vtk_array</span></code></a></p></td>
+<td><p>Get regular grid array with the adaptive level of each cluster.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id5" title="cratepy.ioput.readprocedures.AdaptivityManager.get_adaptivity_criterions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_adaptivity_criterions</span></code></a></p></td>
+<td><p>Get available clustering adaptivity criterions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id6" title="cratepy.ioput.readprocedures.AdaptivityManager.get_target_clusters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_target_clusters</span></code></a></p></td>
+<td><p>Get adaptive clustering target clusters.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id7" title="cratepy.ioput.readprocedures.AdaptivityManager.is_adapt_phase_activated"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_adapt_phase_activated</span></code></a></p></td>
+<td><p>Check if material phase adaptivity procedures are activated.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id8" title="cratepy.ioput.readprocedures.AdaptivityManager.reset_adapt_activation_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset_adapt_activation_parameters</span></code></a></p></td>
+<td><p>Reset parameters associated with clustering adaptivity activation.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.ioput.readprocedures.AdaptivityManager.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strain_formulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adapt_material_phases</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptivity_control_feature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adapt_criterion_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clust_adapt_freq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/crve_adaptivity.html#AdaptivityManager.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.ioput.readprocedures.AdaptivityManager.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>strain_formulation</strong> (<em>{'infinitesimal'</em><em>, </em><em>'finite'}</em>) – Problem strain formulation.</p></li>
+<li><p><strong>problem_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Problem type identifier (1 - Plain strain (2D), 4- Tridimensional)</p></li>
+<li><p><strong>adapt_material_phases</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – RVE adaptive material phases labels (str).</p></li>
+<li><p><strong>phase_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clusters labels (item, list[int]) associated with each material
+phase (key, str).</p></li>
+<li><p><strong>adaptivity_control_feature</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clustering adaptivity control feature (item, str) associated with
+each material phase (key, str).</p></li>
+<li><p><strong>adapt_criterion_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clustering adaptivity criterion (item, dict) associated with each
+material phase (key, str). This dictionary contains the adaptivity
+criterion to be used and the required parameters.</p></li>
+<li><p><strong>clust_adapt_freq</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clustering adaptivity frequency (relative to the macroscale
+loading) (item, int, default=1) associated with each adaptive
+cluster-reduced material phase (key, str).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">_get_adaptivity_data_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adapt_control_feature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_def_gradient_mf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_def_gradient_old_mf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_state_old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_sct_mf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_sct_old_mf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_residuals_mf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/crve_adaptivity.html#AdaptivityManager._get_adaptivity_data_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build adaptivity feature data matrix for target material phase.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target_phase</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Target adaptive material phase whose clusters adaptive feature data
+is collected or computed.</p></li>
+<li><p><strong>adapt_control_feature</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Scalar adaptivity feature available directly or indirectly from
+clusters state variables.</p></li>
+<li><p><strong>phase_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clusters labels (item, list[int]) associated with each material
+phase (key, str).</p></li>
+<li><p><strong>clusters_def_gradient_mf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Deformation gradient (item, numpy.ndarray (1d)) associated with
+each material cluster (key, str), stored in matricial form.</p></li>
+<li><p><strong>clusters_def_gradient_old_mf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Last converged deformation gradient (item, numpy.ndarray (1d))
+associated with each material cluster (key, str), stored in
+matricial form.</p></li>
+<li><p><strong>clusters_state</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Material constitutive model state variables (item, dict) associated
+with each material cluster (key, str).</p></li>
+<li><p><strong>clusters_state_old</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Last increment converged material constitutive model state
+variables (item, dict) associated with each material cluster
+(key, str).</p></li>
+<li><p><strong>clusters_sct_mf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Fourth-order strain concentration tensor (matricial form)
+(item, numpy.ndarray (2d)) associated with each material cluster
+(key, str).</p></li>
+<li><p><strong>clusters_sct_old_mf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Last increment converged fourth-order strain concentration tensor
+(matricial form) (item, numpy.ndarray (2d)) associated with each
+material cluster (key, str).</p></li>
+<li><p><strong>clusters_residuals_mf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Equilibrium residual second-order tensor (matricial form)
+(item, numpy.ndarray (1d)) associated with each material cluster
+(key, str).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>adapt_data_matrix</strong> – Adaptivity feature data matrix (numpy.ndarray of shape
+(adapt_phase_n_clusters, 2)) that, for the i-th cluster of the
+adaptive material phase, contains the cluster label in
+adapt_data_matrix[i, 0] and the associated adaptive feature value
+in adapt_data_matrix[i, 1].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (2d)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">adaptive_refinement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">crve</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_clusters_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">improved_init_guess</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/crve_adaptivity.html#AdaptivityManager.adaptive_refinement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform CRVE adaptive clustering refinement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>crve</strong> (<a class="reference internal" href="cratepy.ioput.readprocedures.CRVE.html#cratepy.ioput.readprocedures.CRVE" title="cratepy.ioput.readprocedures.CRVE"><em>CRVE</em></a>) – Cluster-Reduced Representative Volume Element.</p></li>
+<li><p><strong>material_state</strong> (<a class="reference internal" href="cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState" title="cratepy.ioput.readinputdata.MaterialState"><em>MaterialState</em></a>) – CRVE material constitutive state at rewind state.</p></li>
+<li><p><strong>target_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>]</em>) – List containing the labels (int) of clusters to be refined.</p></li>
+<li><p><strong>target_clusters_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – For each target cluster (key, str), store dictionary (item, dict)
+containing cluster associated parameters required for the adaptive
+procedures.</p></li>
+<li><p><strong>inc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Macroscale loading increment.</p></li>
+<li><p><strong>improved_init_guess</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>, </em><em>default=None</em>) – List that allows an improved initial iterative guess for the
+clusters incremental strain global vector (matricial form) after
+the clustering adaptivity is carried out. Index 0 contains a flag
+which is True if an improved initial iterative guess is to be
+computed, False otherwise. Index 1 contains the improved
+incremental strain global vector (matricial form) if computation
+flag is True, otherwise is None.</p></li>
+<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>default=False</em>) – Enable verbose output.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">check_inc_adaptive_steps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/crve_adaptivity.html#AdaptivityManager.check_inc_adaptive_steps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check number of adaptive steps performed in loading increment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Macroscale loading increment.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if maximum number of clustering adaptive steps has not been
+reached, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">clear_inc_adaptive_steps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inc_threshold</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/crve_adaptivity.html#AdaptivityManager.clear_inc_adaptive_steps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset number of adaptive steps performed after threshold increment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inc_threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Macroscale loading increment.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">get_adapt_vtk_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">voxels_clusters</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/crve_adaptivity.html#AdaptivityManager.get_adapt_vtk_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get regular grid array with the adaptive level of each cluster.</p>
+<p>A cluster adaptive level of 0 is associated with the base clustering
+and is increased by one whenever the cluster is refined.</p>
+<hr class="docutils" />
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>voxels_clusters</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – Regular grid of voxels (spatial discretization of the RVE), where
+each entry contains the cluster label (int) assigned to the
+corresponding pixel/voxel.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id5">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_adaptivity_criterions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/crve_adaptivity.html#AdaptivityManager.get_adaptivity_criterions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get available clustering adaptivity criterions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>available_adapt_criterions</strong> – Available clustering adaptivity criterions
+(item, AdaptivityCriterion) and associated identifiers (key, str).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">get_target_clusters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxels_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_def_gradient_mf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_def_gradient_old_mf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_state_old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_sct_mf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_sct_old_mf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_residuals_mf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/crve_adaptivity.html#AdaptivityManager.get_target_clusters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get adaptive clustering target clusters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>phase_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clusters labels (item, list[int]) associated with each material
+phase (key, str).</p></li>
+<li><p><strong>clusters_def_gradient_mf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Deformation gradient (item, numpy.ndarray (1d)) associated with
+each material cluster (key, str), stored in matricial form.</p></li>
+<li><p><strong>clusters_def_gradient_old_mf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Last converged deformation gradient (item, numpy.ndarray (1d))
+associated with each material cluster (key, str), stored in
+matricial form.</p></li>
+<li><p><strong>clusters_state</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Material constitutive model state variables (item, dict) associated
+with each material cluster (key, str).</p></li>
+<li><p><strong>clusters_state_old</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Last increment converged material constitutive model state
+variables (item, dict) associated with each material cluster
+(key, str).</p></li>
+<li><p><strong>clusters_sct_mf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Fourth-order strain concentration tensor (matricial form)
+(item, numpy.ndarray) associated with each material cluster
+(key, str).</p></li>
+<li><p><strong>clusters_sct_old_mf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Last increment converged fourth-order strain concentration tensor
+(matricial form) (item, numpy.ndarray) associated with each
+material cluster (key, str).</p></li>
+<li><p><strong>clusters_residuals_mf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Equilibrium residual second-order tensor (matricial form)
+(item, numpy.ndarray) associated with each material cluster
+(key, str).</p></li>
+<li><p><strong>inc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Incremental counter serving as a reference basis for the clustering
+adaptivity frequency control.</p></li>
+<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>default=False</em>) – Enable verbose output.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>is_trigger</strong> (<em>bool</em>) – True if clustering adaptivity is triggered, False otherwise.</p></li>
+<li><p><strong>target_clusters</strong> (<em>list[int]</em>) – List containing the labels (int) of clusters to be adapted.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">is_adapt_phase_activated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mat_phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/crve_adaptivity.html#AdaptivityManager.is_adapt_phase_activated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id7" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if material phase adaptivity procedures are activated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mat_phase</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Material phase label.</p></li>
+<li><p><strong>inc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Incremental counter serving as a reference basis for the clustering
+adaptivity frequency control.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>is_activated</strong> – True if material phase adaptivity procedures are activated, False
+otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id8">
+<span class="sig-name descname"><span class="pre">reset_adapt_activation_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/crve_adaptivity.html#AdaptivityManager.reset_adapt_activation_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id8" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset parameters associated with clustering adaptivity activation.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cratepy.ioput.readprocedures.searchoptkeywordline.html" class="btn btn-neutral float-left" title="cratepy.ioput.readprocedures.searchoptkeywordline" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cratepy.ioput.readprocedures.CRVE.html" class="btn btn-neutral float-right" title="cratepy.ioput.readprocedures.CRVE" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

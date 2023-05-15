@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>clustering.solution.dnshomogenization &mdash; crate 1.0.0 documentation</title>
+  <title>clustering.solution.dnshomogenization &mdash; CRATE 1.0.3 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
@@ -28,7 +28,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            crate
+            CRATE
           </a>
               <div class="version">
                 1.0
@@ -71,7 +71,7 @@
 <p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/reference/index.html">Index</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/crate.html">Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/cratepy.html">Code</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">License</span></p>
 <ul>
@@ -84,7 +84,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">crate</a>
+          <a href="../../../index.html">CRATE</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -128,7 +128,7 @@
 <span class="c1"># =============================================================================</span>
 <span class="c1">#</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="DNSHomogenizationMethod"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.solution.ffthombasicscheme.DNSHomogenizationMethod.html#crate.clustering.solution.ffthombasicscheme.DNSHomogenizationMethod">[docs]</a><span class="k">class</span> <span class="nc">DNSHomogenizationMethod</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<div class="viewcode-block" id="DNSHomogenizationMethod"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.solution.ffthombasicscheme.DNSHomogenizationMethod.html#cratepy.clustering.solution.ffthombasicscheme.DNSHomogenizationMethod">[docs]</a><span class="k">class</span> <span class="nc">DNSHomogenizationMethod</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;DNS homogenization-based multi-scale method interface.</span>
 
 <span class="sd">    Methods</span>
@@ -138,12 +138,12 @@
 <span class="sd">    get_hom_stress_strain(self)</span>
 <span class="sd">        *abstract*: Get the homogenized strain-stress material response.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="DNSHomogenizationMethod.__init__"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.solution.ffthombasicscheme.DNSHomogenizationMethod.html#crate.clustering.solution.ffthombasicscheme.DNSHomogenizationMethod.__init__">[docs]</a>    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="DNSHomogenizationMethod.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.solution.ffthombasicscheme.DNSHomogenizationMethod.html#cratepy.clustering.solution.ffthombasicscheme.DNSHomogenizationMethod.__init__">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="DNSHomogenizationMethod.compute_rve_local_response"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.solution.ffthombasicscheme.DNSHomogenizationMethod.html#crate.clustering.solution.ffthombasicscheme.DNSHomogenizationMethod.compute_rve_local_response">[docs]</a>    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="DNSHomogenizationMethod.compute_rve_local_response"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.solution.ffthombasicscheme.DNSHomogenizationMethod.html#cratepy.clustering.solution.ffthombasicscheme.DNSHomogenizationMethod.compute_rve_local_response">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">compute_rve_local_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mac_strain_id</span><span class="p">,</span> <span class="n">mac_strain</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute RVE local strain response.</span>
 
@@ -174,7 +174,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="DNSHomogenizationMethod.get_hom_stress_strain"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.solution.ffthombasicscheme.DNSHomogenizationMethod.html#crate.clustering.solution.ffthombasicscheme.DNSHomogenizationMethod.get_hom_stress_strain">[docs]</a>    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="DNSHomogenizationMethod.get_hom_stress_strain"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.solution.ffthombasicscheme.DNSHomogenizationMethod.html#cratepy.clustering.solution.ffthombasicscheme.DNSHomogenizationMethod.get_hom_stress_strain">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">get_hom_stress_strain</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the homogenized strain-stress material response.</span>
 

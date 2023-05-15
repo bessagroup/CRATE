@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Interface: Constitutive model &mdash; crate 1.0.0 documentation</title>
+  <title>Interface: Constitutive model &mdash; CRATE 1.0.3 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/readthedocs-custom.css" type="text/css" />
@@ -31,7 +31,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            crate
+            CRATE
           </a>
               <div class="version">
                 1.0
@@ -80,7 +80,7 @@
 <p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../reference/index.html">Index</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/crate.html">Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/cratepy.html">Code</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">License</span></p>
 <ul>
@@ -93,7 +93,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">crate</a>
+          <a href="../../index.html">CRATE</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -140,8 +140,8 @@
 <h2>Implementation steps<a class="headerlink" href="#implementation-steps" title="Permalink to this heading">¶</a></h2>
 <p>The implementation of a <strong>new constitutive model</strong> in CRATE involves <strong>four fundamental steps</strong>:</p>
 <ul>
-<li><p><strong>Step 1</strong> - Create a Python module with the name of the new constitutive model (e.g., <code class="code docutils literal notranslate"><span class="pre">new_model.py</span></code>) in <a class="reference internal" href="../../_autosummary/crate.material.models.html#module-crate.material.models" title="crate.material.models"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.material.models</span></code></a> directory;</p></li>
-<li><p><strong>Step 2</strong> - In <code class="code docutils literal notranslate"><span class="pre">new_model.py</span></code>, import the constitutive model interface (<a class="reference internal" href="../../_autosummary/crate.material.models.interface.ConstitutiveModel.html#crate.material.models.interface.ConstitutiveModel" title="crate.material.models.interface.ConstitutiveModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConstitutiveModel</span></code></a>), derive a class for the new constitutive model (e.g., <code class="code docutils literal notranslate"><span class="pre">NewConstitutiveModel</span></code>), and set the constitutive model name as an attribute (e.g., <code class="code docutils literal notranslate"><span class="pre">new_constitutive_model</span></code>):</p>
+<li><p><strong>Step 1</strong> - Create a Python module with the name of the new constitutive model (e.g., <code class="code docutils literal notranslate"><span class="pre">new_model.py</span></code>) in <a class="reference internal" href="../../_autosummary/cratepy.material.models.html#module-cratepy.material.models" title="cratepy.material.models"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cratepy.material.models</span></code></a> directory;</p></li>
+<li><p><strong>Step 2</strong> - In <code class="code docutils literal notranslate"><span class="pre">new_model.py</span></code>, import the constitutive model interface (<a class="reference internal" href="../../_autosummary/cratepy.material.models.interface.ConstitutiveModel.html#cratepy.material.models.interface.ConstitutiveModel" title="cratepy.material.models.interface.ConstitutiveModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConstitutiveModel</span></code></a>), derive a class for the new constitutive model (e.g., <code class="code docutils literal notranslate"><span class="pre">NewConstitutiveModel</span></code>), and set the constitutive model name as an attribute (e.g., <code class="code docutils literal notranslate"><span class="pre">new_constitutive_model</span></code>):</p>
 <blockquote>
 <div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># material.models.new_model.py</span>
 
@@ -163,9 +163,9 @@
 </div>
 </div></blockquote>
 </li>
-<li><p><strong>Step 3</strong> - In <a class="reference internal" href="../../_autosummary/crate.material.materialmodeling.html#module-crate.material.materialmodeling" title="crate.material.materialmodeling"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.material.materialmodeling</span></code></a>, import and add the initialization of the new constitutive model in the <a class="reference internal" href="../../_autosummary/crate.material.materialmodeling.MaterialState.html#id30" title="crate.material.materialmodeling.MaterialState.init_constitutive_model"><code class="xref py py-meth docutils literal notranslate"><span class="pre">init_constitutive_model()</span></code></a> method of class <a class="reference internal" href="../../_autosummary/crate.material.materialmodeling.MaterialState.html#crate.material.materialmodeling.MaterialState" title="crate.material.materialmodeling.MaterialState"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaterialState</span></code></a>:</p>
+<li><p><strong>Step 3</strong> - In <a class="reference internal" href="../../_autosummary/cratepy.material.materialmodeling.html#module-cratepy.material.materialmodeling" title="cratepy.material.materialmodeling"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cratepy.material.materialmodeling</span></code></a>, import and add the initialization of the new constitutive model in the <a class="reference internal" href="../../_autosummary/cratepy.material.materialmodeling.MaterialState.html#id30" title="cratepy.material.materialmodeling.MaterialState.init_constitutive_model"><code class="xref py py-meth docutils literal notranslate"><span class="pre">init_constitutive_model()</span></code></a> method of class <a class="reference internal" href="../../_autosummary/cratepy.material.materialmodeling.MaterialState.html#cratepy.material.materialmodeling.MaterialState" title="cratepy.material.materialmodeling.MaterialState"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaterialState</span></code></a>:</p>
 <blockquote>
-<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># crate.material.materialmodeling.py</span>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># cratepy.material.materialmodeling.py</span>
 
 <span class="hll"><span class="kn">from</span> <span class="nn">material.models.new_model</span> <span class="kn">import</span> <span class="n">NewConstitutiveModel</span>
 </span>
@@ -189,16 +189,16 @@
 </div>
 </div></blockquote>
 </li>
-<li><p><strong>Step 4</strong> - Perform the complete implementation of the new constitutive model in <code class="code docutils literal notranslate"><span class="pre">new_model.py</span></code> by developing the class <code class="code docutils literal notranslate"><span class="pre">NewConstitutiveModel</span></code> and implementing the abstract methods (look for the &#64;abstractmethod decorator) established by the constitutive model interface (<a class="reference internal" href="../../_autosummary/crate.material.models.interface.ConstitutiveModel.html#crate.material.models.interface.ConstitutiveModel" title="crate.material.models.interface.ConstitutiveModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConstitutiveModel</span></code></a>).</p></li>
+<li><p><strong>Step 4</strong> - Perform the complete implementation of the new constitutive model in <code class="code docutils literal notranslate"><span class="pre">new_model.py</span></code> by developing the class <code class="code docutils literal notranslate"><span class="pre">NewConstitutiveModel</span></code> and implementing the abstract methods (look for the &#64;abstractmethod decorator) established by the constitutive model interface (<a class="reference internal" href="../../_autosummary/cratepy.material.models.interface.ConstitutiveModel.html#cratepy.material.models.interface.ConstitutiveModel" title="cratepy.material.models.interface.ConstitutiveModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConstitutiveModel</span></code></a>).</p></li>
 </ul>
 </section>
 <hr class="docutils" />
 <section id="recommendations">
 <h2>Recommendations<a class="headerlink" href="#recommendations" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
-<li><p>If you are not familiar with the implementation of a constitutive model in CRATE, it is <strong>recommended</strong> that you first take a look into the implementation of the constitutive models already available (<a class="reference internal" href="../../_autosummary/crate.material.models.html#module-crate.material.models" title="crate.material.models"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.material.models</span></code></a>). The implementation of these models follows the steps previously outlined and are fully documented;</p></li>
-<li><p>Focus on the essential and don’t lose time implementing standard computations and operations in solid mechanics - make use of the <strong>extensive set of tools available</strong> in <a class="reference internal" href="../../_autosummary/crate.material.materialoperations.html#module-crate.material.materialoperations" title="crate.material.materialoperations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.material.materialoperations</span></code></a> and <a class="reference internal" href="../../_autosummary/crate.tensor.tensoroperations.html#module-crate.tensor.tensoroperations" title="crate.tensor.tensoroperations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.tensor.tensoroperations</span></code></a>;</p></li>
-<li><p>Avoid troublesome debugging processes by taking advantage of the <strong>matricial storage procedures</strong> of strain and stress related tensors available in <a class="reference internal" href="../../_autosummary/crate.tensor.matrixoperations.html#module-crate.tensor.matrixoperations" title="crate.tensor.matrixoperations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.tensor.matrixoperations</span></code></a> - such a toolkit ensures a systematic and consistent way of performing all the conversions between tensorial and matricial forms arising in your implementation.</p></li>
+<li><p>If you are not familiar with the implementation of a constitutive model in CRATE, it is <strong>recommended</strong> that you first take a look into the implementation of the constitutive models already available (<a class="reference internal" href="../../_autosummary/cratepy.material.models.html#module-cratepy.material.models" title="cratepy.material.models"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cratepy.material.models</span></code></a>). The implementation of these models follows the steps previously outlined and are fully documented;</p></li>
+<li><p>Focus on the essential and don’t lose time implementing standard computations and operations in solid mechanics - make use of the <strong>extensive set of tools available</strong> in <a class="reference internal" href="../../_autosummary/cratepy.material.materialoperations.html#module-cratepy.material.materialoperations" title="cratepy.material.materialoperations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cratepy.material.materialoperations</span></code></a> and <a class="reference internal" href="../../_autosummary/cratepy.tensor.tensoroperations.html#module-cratepy.tensor.tensoroperations" title="cratepy.tensor.tensoroperations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cratepy.tensor.tensoroperations</span></code></a>;</p></li>
+<li><p>Avoid troublesome debugging processes by taking advantage of the <strong>matricial storage procedures</strong> of strain and stress related tensors available in <a class="reference internal" href="../../_autosummary/cratepy.tensor.matrixoperations.html#module-cratepy.tensor.matrixoperations" title="cratepy.tensor.matrixoperations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cratepy.tensor.matrixoperations</span></code></a> - such a toolkit ensures a systematic and consistent way of performing all the conversions between tensorial and matricial forms arising in your implementation.</p></li>
 </ul>
 </section>
 </section>

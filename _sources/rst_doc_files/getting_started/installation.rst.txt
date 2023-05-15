@@ -2,7 +2,7 @@
 Installation
 ============
 
-CRATE is a simple **Python package** (`crate <https://pypi.org/project/crate-sim/>`_) available from the Python Package Index (`PyPI <https://pypi.org/>`_). This means that running CRATE requires solely a **Python 3 installation** and a few well-known Python packages used for scientific computing and data science.
+CRATE is a simple **Python package** (`cratepy <https://pypi.org/project/cratepy/>`_) available from the Python Package Index (`PyPI <https://pypi.org/>`_). This means that running CRATE requires solely a **Python 3 installation** and a few well-known Python packages used for scientific computing and data science.
 
 .. note::
     Whether you are using Linux, MacOS or Windows, Python can be easily installed by following the `Python Getting Started <https://www.python.org/about/gettingstarted/>`_ official webpage. Many other resources are available to help you install and setup Python (e.g., `Real Python <https://realpython.com/installing-python/>`_).
@@ -18,7 +18,7 @@ CRATE can be simply installed by running the following pip installation command:
 
 .. code-block::
 
-   pip install -U crate-sim
+   pip install -U cratepy
 
 By following this installation option, you will get CRATE most recent available version on PyPI, i.e., the latest distribution version of CRATE's main source code uploaded to PyPI. Note that, besides installing CRATE, pip also installs all the required Python package dependencies automatically.
 
@@ -75,4 +75,4 @@ To successfully import CRATE in your Python project, CRATE's source code directo
    if root_dir not in sys.path:
        sys.path.insert(0, root_dir)
 
-   import crate
+   import cratepy

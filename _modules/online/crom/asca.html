@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>online.crom.asca &mdash; crate 1.0.0 documentation</title>
+  <title>online.crom.asca &mdash; CRATE 1.0.3 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
@@ -28,7 +28,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            crate
+            CRATE
           </a>
               <div class="version">
                 1.0
@@ -71,7 +71,7 @@
 <p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/reference/index.html">Index</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/crate.html">Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/cratepy.html">Code</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">License</span></p>
 <ul>
@@ -84,7 +84,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">crate</a>
+          <a href="../../../index.html">CRATE</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -185,7 +185,7 @@
 <span class="c1"># =============================================================================</span>
 <span class="c1">#</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="ASCA"><a class="viewcode-back" href="../../../_autosummary/crate.main.ASCA.html#crate.ioput.readprocedures.ASCA">[docs]</a><span class="k">class</span> <span class="nc">ASCA</span><span class="p">:</span>
+<div class="viewcode-block" id="ASCA"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA">[docs]</a><span class="k">class</span> <span class="nc">ASCA</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Adaptive Self-Consistent Clustering Analysis (ASCA).</span>
 
 <span class="sd">    The detailed formulation of this method can be found in</span>
@@ -290,7 +290,7 @@
 <span class="sd">                      is_voxels_output=None)</span>
 <span class="sd">        Create and initialize output files.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="ASCA.__init__"><a class="viewcode-back" href="../../../_autosummary/crate.main.ASCA.html#crate.ioput.readprocedures.ASCA.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span>
+<div class="viewcode-block" id="ASCA.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span>
                  <span class="n">self_consistent_scheme</span><span class="o">=</span><span class="s1">&#39;regression&#39;</span><span class="p">,</span> <span class="n">scs_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">scs_max_n_iterations</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">scs_conv_tol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span>
                  <span class="n">max_n_iterations</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">conv_tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span> <span class="n">max_subinc_level</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
@@ -350,7 +350,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_effective_time</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_post_process_time</span> <span class="o">=</span> <span class="mf">0.0</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA.get_time_profile"><a class="viewcode-back" href="../../../_autosummary/crate.main.ASCA.html#crate.ioput.readprocedures.ASCA.get_time_profile">[docs]</a>    <span class="k">def</span> <span class="nf">get_time_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ASCA.get_time_profile"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA.get_time_profile">[docs]</a>    <span class="k">def</span> <span class="nf">get_time_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get time profile of online-stage.</span>
 
 <span class="sd">        Returns</span>
@@ -365,7 +365,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_total_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_effective_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post_process_time</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA.solve_equilibrium_problem"><a class="viewcode-back" href="../../../_autosummary/crate.main.ASCA.html#crate.ioput.readprocedures.ASCA.solve_equilibrium_problem">[docs]</a>    <span class="k">def</span> <span class="nf">solve_equilibrium_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">material_state</span><span class="p">,</span> <span class="n">mac_load</span><span class="p">,</span>
+<div class="viewcode-block" id="ASCA.solve_equilibrium_problem"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA.solve_equilibrium_problem">[docs]</a>    <span class="k">def</span> <span class="nf">solve_equilibrium_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">material_state</span><span class="p">,</span> <span class="n">mac_load</span><span class="p">,</span>
                                   <span class="n">mac_load_presctype</span><span class="p">,</span> <span class="n">mac_load_increm</span><span class="p">,</span>
                                   <span class="n">output_dir</span><span class="p">,</span> <span class="n">problem_name</span><span class="o">=</span><span class="s1">&#39;problem&#39;</span><span class="p">,</span>
                                   <span class="n">clust_adapt_freq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -1235,7 +1235,7 @@
                 <span class="c1"># Set increment initial time</span>
                 <span class="n">inc_init_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._init_global_strain_mf"><a class="viewcode-back" href="../../../_autosummary/crate.main.ASCA.html#crate.ioput.readprocedures.ASCA._init_global_strain_mf">[docs]</a>    <span class="k">def</span> <span class="nf">_init_global_strain_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;last_converged&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="ASCA._init_global_strain_mf"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._init_global_strain_mf">[docs]</a>    <span class="k">def</span> <span class="nf">_init_global_strain_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;last_converged&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set clusters strains initial iterative guess.</span>
 
 <span class="sd">        Parameters</span>
@@ -1260,7 +1260,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">global_strain_mf</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._init_global_inc_strain_mf"><a class="viewcode-back" href="../../../_autosummary/crate.main.ASCA.html#crate.ioput.readprocedures.ASCA._init_global_inc_strain_mf">[docs]</a>    <span class="k">def</span> <span class="nf">_init_global_inc_strain_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_total_clusters</span><span class="p">,</span>
+<div class="viewcode-block" id="ASCA._init_global_inc_strain_mf"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._init_global_inc_strain_mf">[docs]</a>    <span class="k">def</span> <span class="nf">_init_global_inc_strain_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_total_clusters</span><span class="p">,</span>
                                    <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;last_converged&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set clusters incremental strains initial iterative guess.</span>
 
@@ -1299,7 +1299,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">global_inc_strain_mf</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._init_farfield_strain_mf"><a class="viewcode-back" href="../../../_autosummary/crate.main.ASCA.html#crate.ioput.readprocedures.ASCA._init_farfield_strain_mf">[docs]</a>    <span class="k">def</span> <span class="nf">_init_farfield_strain_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;last_converged&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="ASCA._init_farfield_strain_mf"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._init_farfield_strain_mf">[docs]</a>    <span class="k">def</span> <span class="nf">_init_farfield_strain_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;last_converged&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set far-field strain initial iterative guess.</span>
 
 <span class="sd">        Parameters</span>
@@ -1324,7 +1324,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">farfield_strain_mf</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._init_inc_farfield_strain_mf"><a class="viewcode-back" href="../../../_autosummary/crate.main.ASCA.html#crate.ioput.readprocedures.ASCA._init_inc_farfield_strain_mf">[docs]</a>    <span class="k">def</span> <span class="nf">_init_inc_farfield_strain_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;last_converged&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="ASCA._init_inc_farfield_strain_mf"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._init_inc_farfield_strain_mf">[docs]</a>    <span class="k">def</span> <span class="nf">_init_inc_farfield_strain_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;last_converged&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set incremental far-field strain initial iterative guess.</span>
 
 <span class="sd">        Parameters</span>
@@ -1356,7 +1356,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">inc_farfield_strain_mf</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._build_residual"><a class="viewcode-back" href="../../../_autosummary/crate.main.ASCA.html#crate.ioput.readprocedures.ASCA._build_residual">[docs]</a>    <span class="k">def</span> <span class="nf">_build_residual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">material_state</span><span class="p">,</span> <span class="n">presc_strain_idxs</span><span class="p">,</span>
+<div class="viewcode-block" id="ASCA._build_residual"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._build_residual">[docs]</a>    <span class="k">def</span> <span class="nf">_build_residual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">material_state</span><span class="p">,</span> <span class="n">presc_strain_idxs</span><span class="p">,</span>
                         <span class="n">presc_stress_idxs</span><span class="p">,</span> <span class="n">applied_mac_load_mf</span><span class="p">,</span> <span class="n">ref_material</span><span class="p">,</span>
                         <span class="n">global_cit_mf</span><span class="p">,</span> <span class="n">global_strain_mf</span><span class="p">,</span> <span class="n">inc_mac_load_mf</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                         <span class="n">farfield_strain_mf</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">farfield_strain_old_mf</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -1799,7 +1799,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">residual</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._build_jacobian"><a class="viewcode-back" href="../../../_autosummary/crate.main.ASCA.html#crate.ioput.readprocedures.ASCA._build_jacobian">[docs]</a>    <span class="k">def</span> <span class="nf">_build_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">material_state</span><span class="p">,</span> <span class="n">presc_strain_idxs</span><span class="p">,</span>
+<div class="viewcode-block" id="ASCA._build_jacobian"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._build_jacobian">[docs]</a>    <span class="k">def</span> <span class="nf">_build_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">material_state</span><span class="p">,</span> <span class="n">presc_strain_idxs</span><span class="p">,</span>
                         <span class="n">presc_stress_idxs</span><span class="p">,</span> <span class="n">global_cit_diff_tangent_mf</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Build Lippmann-Schwinger equilibrium Jacobian matrix.</span>
 
@@ -2064,7 +2064,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">jacobian</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._build_global_cit_diff_tangent_mf"><a class="viewcode-back" href="../../../_autosummary/crate.main.ASCA.html#crate.ioput.readprocedures.ASCA._build_global_cit_diff_tangent_mf">[docs]</a>    <span class="k">def</span> <span class="nf">_build_global_cit_diff_tangent_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">global_cit_mf</span><span class="p">,</span>
+<div class="viewcode-block" id="ASCA._build_global_cit_diff_tangent_mf"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._build_global_cit_diff_tangent_mf">[docs]</a>    <span class="k">def</span> <span class="nf">_build_global_cit_diff_tangent_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">global_cit_mf</span><span class="p">,</span>
                                           <span class="n">material_state</span><span class="p">,</span> <span class="n">ref_material</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Build global cluster interaction - tangent modulus matrix.</span>
 
@@ -2158,7 +2158,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">global_cit_diff_tangent_mf</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._check_convergence"><a class="viewcode-back" href="../../../_autosummary/crate.main.ASCA.html#crate.ioput.readprocedures.ASCA._check_convergence">[docs]</a>    <span class="k">def</span> <span class="nf">_check_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">material_state</span><span class="p">,</span> <span class="n">presc_strain_idxs</span><span class="p">,</span>
+<div class="viewcode-block" id="ASCA._check_convergence"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._check_convergence">[docs]</a>    <span class="k">def</span> <span class="nf">_check_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">material_state</span><span class="p">,</span> <span class="n">presc_strain_idxs</span><span class="p">,</span>
                            <span class="n">presc_stress_idxs</span><span class="p">,</span> <span class="n">applied_mac_load_mf</span><span class="p">,</span> <span class="n">residual</span><span class="p">,</span>
                            <span class="n">applied_mix_strain_mf</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check Lippmann-Schwinger equilibrium convergence.</span>
@@ -2272,7 +2272,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">is_converged</span><span class="p">,</span> <span class="n">errors</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._crve_effective_tangent_modulus"><a class="viewcode-back" href="../../../_autosummary/crate.main.ASCA.html#crate.ioput.readprocedures.ASCA._crve_effective_tangent_modulus">[docs]</a>    <span class="k">def</span> <span class="nf">_crve_effective_tangent_modulus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">material_state</span><span class="p">,</span>
+<div class="viewcode-block" id="ASCA._crve_effective_tangent_modulus"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._crve_effective_tangent_modulus">[docs]</a>    <span class="k">def</span> <span class="nf">_crve_effective_tangent_modulus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">material_state</span><span class="p">,</span>
                                         <span class="n">global_cit_diff_tangent_mf</span><span class="p">,</span>
                                         <span class="n">global_strain_mf</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                         <span class="n">farfield_strain_mf</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -2561,7 +2561,7 @@
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="k">return</span> <span class="n">eff_tangent_mf</span><span class="p">,</span> <span class="n">clusters_sct_mf</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._validate_csct"><a class="viewcode-back" href="../../../_autosummary/crate.main.ASCA.html#crate.ioput.readprocedures.ASCA._validate_csct">[docs]</a>    <span class="k">def</span> <span class="nf">_validate_csct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span> <span class="n">global_csct_mf</span><span class="p">,</span>
+<div class="viewcode-block" id="ASCA._validate_csct"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._validate_csct">[docs]</a>    <span class="k">def</span> <span class="nf">_validate_csct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span> <span class="n">global_csct_mf</span><span class="p">,</span>
                        <span class="n">global_strain_mf</span><span class="p">,</span> <span class="n">farfield_strain_mf</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate clusters strain concentration tensors computation.</span>
 
@@ -2617,7 +2617,7 @@
                 <span class="n">i_init</span> <span class="o">=</span> <span class="n">i_init</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)</span>
                 <span class="n">i_end</span> <span class="o">=</span> <span class="n">i_init</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._init_clusters_sct"><a class="viewcode-back" href="../../../_autosummary/crate.main.ASCA.html#crate.ioput.readprocedures.ASCA._init_clusters_sct">[docs]</a>    <span class="k">def</span> <span class="nf">_init_clusters_sct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">):</span>
+<div class="viewcode-block" id="ASCA._init_clusters_sct"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._init_clusters_sct">[docs]</a>    <span class="k">def</span> <span class="nf">_init_clusters_sct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize cluster strain concentration tensors.</span>
 
 <span class="sd">        Parameters</span>
@@ -2657,7 +2657,7 @@
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="k">return</span> <span class="n">cluster_sct_mf</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._build_clusters_residuals"><a class="viewcode-back" href="../../../_autosummary/crate.main.ASCA.html#crate.ioput.readprocedures.ASCA._build_clusters_residuals">[docs]</a>    <span class="k">def</span> <span class="nf">_build_clusters_residuals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span>
+<div class="viewcode-block" id="ASCA._build_clusters_residuals"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._build_clusters_residuals">[docs]</a>    <span class="k">def</span> <span class="nf">_build_clusters_residuals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span>
                                   <span class="n">residual</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Build clusters equilibrium residuals dictionary.</span>
 
@@ -2712,7 +2712,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">clusters_residuals_mf</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._display_inc_data"><a class="viewcode-back" href="../../../_autosummary/crate.main.ASCA.html#crate.ioput.readprocedures.ASCA._display_inc_data">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="ASCA._display_inc_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._display_inc_data">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_display_inc_data</span><span class="p">(</span><span class="n">mac_load_path</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Display loading increment data.</span>
 
@@ -2732,7 +2732,7 @@
                          <span class="n">sp_total_lfact</span><span class="p">,</span> <span class="n">sp_total_time</span><span class="p">,</span> <span class="n">sp_inc</span><span class="p">,</span> <span class="n">sp_inc_lfact</span><span class="p">,</span>
                          <span class="n">sp_inc_time</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._display_scs_iter_data"><a class="viewcode-back" href="../../../_autosummary/crate.main.ASCA.html#crate.ioput.readprocedures.ASCA._display_scs_iter_data">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="ASCA._display_scs_iter_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._display_scs_iter_data">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_display_scs_iter_data</span><span class="p">(</span><span class="n">ref_material</span><span class="p">,</span> <span class="n">is_lock_prop_ref</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">,</span>
                                <span class="n">scs_iter_time</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Display reference material self-consistent scheme iteration data.</span>
@@ -2783,7 +2783,7 @@
                                      <span class="n">material_properties</span><span class="p">[</span><span class="s1">&#39;E&#39;</span><span class="p">],</span> <span class="n">norm_dE</span><span class="p">,</span>
                                      <span class="n">material_properties</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">],</span> <span class="n">norm_dv</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._display_nr_iter_data"><a class="viewcode-back" href="../../../_autosummary/crate.main.ASCA.html#crate.ioput.readprocedures.ASCA._display_nr_iter_data">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="ASCA._display_nr_iter_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._display_nr_iter_data">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_display_nr_iter_data</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">,</span> <span class="n">nr_iter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nr_iter_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                               <span class="n">errors</span><span class="o">=</span><span class="p">[]):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Display Newton-Raphson iteration data.</span>
@@ -2806,7 +2806,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">info</span><span class="o">.</span><span class="n">displayinfo</span><span class="p">(</span><span class="s1">&#39;9&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._set_output_files"><a class="viewcode-back" href="../../../_autosummary/crate.main.ASCA.html#crate.ioput.readprocedures.ASCA._set_output_files">[docs]</a>    <span class="k">def</span> <span class="nf">_set_output_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">problem_name</span><span class="o">=</span><span class="s1">&#39;problem&#39;</span><span class="p">,</span>
+<div class="viewcode-block" id="ASCA._set_output_files"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._set_output_files">[docs]</a>    <span class="k">def</span> <span class="nf">_set_output_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">problem_name</span><span class="o">=</span><span class="s1">&#39;problem&#39;</span><span class="p">,</span>
                           <span class="n">is_clust_adapt_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                           <span class="n">is_ref_material_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_vtk_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                           <span class="n">vtk_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_voxels_output</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -2914,7 +2914,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                   Reference (fictitious) homogeneous material</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.readprocedures.ElasticReferenceMaterial.html#crate.ioput.readprocedures.ElasticReferenceMaterial">[docs]</a><span class="k">class</span> <span class="nc">ElasticReferenceMaterial</span><span class="p">:</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial">[docs]</a><span class="k">class</span> <span class="nc">ElasticReferenceMaterial</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Elastic reference material.</span>
 
 <span class="sd">    Attributes</span>
@@ -2996,7 +2996,7 @@
 <span class="sd">    technical_from_lame(lam, miu)</span>
 <span class="sd">        Get Young modulus and Poisson ratio from Lamé parameters.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.__init__"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.readprocedures.ElasticReferenceMaterial.html#crate.ioput.readprocedures.ElasticReferenceMaterial.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span>
                  <span class="n">self_consistent_scheme</span><span class="p">,</span> <span class="n">conv_tol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
 
@@ -3031,7 +3031,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_sym</span> <span class="o">=</span> <span class="n">comp_order_sym</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span> <span class="o">=</span> <span class="n">comp_order_nsym</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.init_material_properties"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.readprocedures.ElasticReferenceMaterial.html#crate.ioput.readprocedures.ElasticReferenceMaterial.init_material_properties">[docs]</a>    <span class="k">def</span> <span class="nf">init_material_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.init_material_properties"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.init_material_properties">[docs]</a>    <span class="k">def</span> <span class="nf">init_material_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span>
                                  <span class="n">material_phases_properties</span><span class="p">,</span>
                                  <span class="n">material_phases_vf</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set initial guess of elastic reference material properties.</span>
@@ -3077,7 +3077,7 @@
         <span class="c1"># Update elastic tangent modulus and elastic compliance matrix</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_elastic_tangent</span><span class="p">()</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.update_material_properties"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.readprocedures.ElasticReferenceMaterial.html#crate.ioput.readprocedures.ElasticReferenceMaterial.update_material_properties">[docs]</a>    <span class="k">def</span> <span class="nf">update_material_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.update_material_properties"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.update_material_properties">[docs]</a>    <span class="k">def</span> <span class="nf">update_material_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update elastic reference material properties.</span>
 
 <span class="sd">        Parameters</span>
@@ -3094,12 +3094,12 @@
         <span class="c1"># Update elastic tangent modulus and elastic compliance matrix</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_elastic_tangent</span><span class="p">()</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.update_converged_material_properties"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.readprocedures.ElasticReferenceMaterial.html#crate.ioput.readprocedures.ElasticReferenceMaterial.update_converged_material_properties">[docs]</a>    <span class="k">def</span> <span class="nf">update_converged_material_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.update_converged_material_properties"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.update_converged_material_properties">[docs]</a>    <span class="k">def</span> <span class="nf">update_converged_material_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update converged elastic reference material properties.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_material_properties_old</span> <span class="o">=</span> \
             <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_material_properties</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.reset_material_properties"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.readprocedures.ElasticReferenceMaterial.html#crate.ioput.readprocedures.ElasticReferenceMaterial.reset_material_properties">[docs]</a>    <span class="k">def</span> <span class="nf">reset_material_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.reset_material_properties"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.reset_material_properties">[docs]</a>    <span class="k">def</span> <span class="nf">reset_material_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset material properties to last loading increment values.&quot;&quot;&quot;</span>
         <span class="c1"># Reset elastic reference material properties to last loading increment</span>
         <span class="c1"># values</span>
@@ -3109,12 +3109,12 @@
         <span class="c1"># Update elastic tangent modulus and elastic compliance matrix</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_elastic_tangent</span><span class="p">()</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.set_material_properties_scs_init"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.readprocedures.ElasticReferenceMaterial.html#crate.ioput.readprocedures.ElasticReferenceMaterial.set_material_properties_scs_init">[docs]</a>    <span class="k">def</span> <span class="nf">set_material_properties_scs_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.set_material_properties_scs_init"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.set_material_properties_scs_init">[docs]</a>    <span class="k">def</span> <span class="nf">set_material_properties_scs_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set material properties converged in the first loading increment.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_material_properties_scs_init</span> <span class="o">=</span> \
             <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_material_properties</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.get_material_properties"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.readprocedures.ElasticReferenceMaterial.html#crate.ioput.readprocedures.ElasticReferenceMaterial.get_material_properties">[docs]</a>    <span class="k">def</span> <span class="nf">get_material_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.get_material_properties"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.get_material_properties">[docs]</a>    <span class="k">def</span> <span class="nf">get_material_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get elastic reference material properties.</span>
 
 <span class="sd">        Returns</span>
@@ -3125,7 +3125,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_material_properties</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.get_elastic_tangent_mf"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.readprocedures.ElasticReferenceMaterial.html#crate.ioput.readprocedures.ElasticReferenceMaterial.get_elastic_tangent_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_elastic_tangent_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.get_elastic_tangent_mf"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.get_elastic_tangent_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_elastic_tangent_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get elastic tangent modulus in matricial form.</span>
 
 <span class="sd">        Returns</span>
@@ -3135,7 +3135,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_elastic_tangent_mf</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.get_elastic_compliance_matrix"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.readprocedures.ElasticReferenceMaterial.html#crate.ioput.readprocedures.ElasticReferenceMaterial.get_elastic_compliance_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">get_elastic_compliance_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.get_elastic_compliance_matrix"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.get_elastic_compliance_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">get_elastic_compliance_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get elastic compliance in matrix form.</span>
 
 <span class="sd">        Returns</span>
@@ -3145,15 +3145,15 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_elastic_compliance_matrix</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.init_scs_iter"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.readprocedures.ElasticReferenceMaterial.html#crate.ioput.readprocedures.ElasticReferenceMaterial.init_scs_iter">[docs]</a>    <span class="k">def</span> <span class="nf">init_scs_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.init_scs_iter"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.init_scs_iter">[docs]</a>    <span class="k">def</span> <span class="nf">init_scs_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize self-consistent scheme iteration counter.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_scs_iter</span> <span class="o">=</span> <span class="mi">0</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.update_scs_iter"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.readprocedures.ElasticReferenceMaterial.html#crate.ioput.readprocedures.ElasticReferenceMaterial.update_scs_iter">[docs]</a>    <span class="k">def</span> <span class="nf">update_scs_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.update_scs_iter"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.update_scs_iter">[docs]</a>    <span class="k">def</span> <span class="nf">update_scs_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update self-consistent scheme iteration counter.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_scs_iter</span> <span class="o">+=</span> <span class="mi">1</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.get_scs_iter"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.readprocedures.ElasticReferenceMaterial.html#crate.ioput.readprocedures.ElasticReferenceMaterial.get_scs_iter">[docs]</a>    <span class="k">def</span> <span class="nf">get_scs_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.get_scs_iter"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.get_scs_iter">[docs]</a>    <span class="k">def</span> <span class="nf">get_scs_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get self-consistent scheme iteration counter.</span>
 
 <span class="sd">        Returns</span>
@@ -3163,7 +3163,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scs_iter</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.get_norm_dE"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.readprocedures.ElasticReferenceMaterial.html#crate.ioput.readprocedures.ElasticReferenceMaterial.get_norm_dE">[docs]</a>    <span class="k">def</span> <span class="nf">get_norm_dE</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.get_norm_dE"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.get_norm_dE">[docs]</a>    <span class="k">def</span> <span class="nf">get_norm_dE</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get normalized iterative change of Young modulus.</span>
 
 <span class="sd">        Returns</span>
@@ -3174,7 +3174,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_norm_dE</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.get_norm_dv"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.readprocedures.ElasticReferenceMaterial.html#crate.ioput.readprocedures.ElasticReferenceMaterial.get_norm_dv">[docs]</a>    <span class="k">def</span> <span class="nf">get_norm_dv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.get_norm_dv"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.get_norm_dv">[docs]</a>    <span class="k">def</span> <span class="nf">get_norm_dv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get normalized iterative change of Poisson ratio.</span>
 
 <span class="sd">        Returns</span>
@@ -3185,7 +3185,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_norm_dv</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.self_consistent_update"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.readprocedures.ElasticReferenceMaterial.html#crate.ioput.readprocedures.ElasticReferenceMaterial.self_consistent_update">[docs]</a>    <span class="k">def</span> <span class="nf">self_consistent_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_mf</span><span class="p">,</span> <span class="n">strain_old_mf</span><span class="p">,</span> <span class="n">stress_mf</span><span class="p">,</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.self_consistent_update"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.self_consistent_update">[docs]</a>    <span class="k">def</span> <span class="nf">self_consistent_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_mf</span><span class="p">,</span> <span class="n">strain_old_mf</span><span class="p">,</span> <span class="n">stress_mf</span><span class="p">,</span>
                                <span class="n">stress_old_mf</span><span class="p">,</span> <span class="n">eff_tangent_mf</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute reference elastic properties through self-consistent scheme.</span>
 
@@ -3251,7 +3251,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">is_admissible</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">v</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial._update_elastic_tangent"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.readprocedures.ElasticReferenceMaterial.html#crate.ioput.readprocedures.ElasticReferenceMaterial._update_elastic_tangent">[docs]</a>    <span class="k">def</span> <span class="nf">_update_elastic_tangent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial._update_elastic_tangent"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial._update_elastic_tangent">[docs]</a>    <span class="k">def</span> <span class="nf">_update_elastic_tangent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update reference material elastic tangent modulus and compliance.</span>
 
 <span class="sd">        *Infinitesimal strains:*</span>
@@ -3369,7 +3369,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_elastic_tangent_mf</span> <span class="o">=</span> <span class="n">elastic_tangent_mf</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_elastic_compliance_matrix</span> <span class="o">=</span> <span class="n">elastic_compliance_matrix</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial._check_scs_solution"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.readprocedures.ElasticReferenceMaterial.html#crate.ioput.readprocedures.ElasticReferenceMaterial._check_scs_solution">[docs]</a>    <span class="k">def</span> <span class="nf">_check_scs_solution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial._check_scs_solution"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial._check_scs_solution">[docs]</a>    <span class="k">def</span> <span class="nf">_check_scs_solution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check admissibility of self-consistent scheme iterative solution.</span>
 
 <span class="sd">        Parameters</span>
@@ -3402,7 +3402,7 @@
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="k">return</span> <span class="n">is_admissible</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.check_scs_convergence"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.readprocedures.ElasticReferenceMaterial.html#crate.ioput.readprocedures.ElasticReferenceMaterial.check_scs_convergence">[docs]</a>    <span class="k">def</span> <span class="nf">check_scs_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.check_scs_convergence"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.check_scs_convergence">[docs]</a>    <span class="k">def</span> <span class="nf">check_scs_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check self-consistent scheme iterative solution convergence.</span>
 
 <span class="sd">        Parameters</span>
@@ -3438,7 +3438,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">is_converged</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.get_available_scs"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.readprocedures.ElasticReferenceMaterial.html#crate.ioput.readprocedures.ElasticReferenceMaterial.get_available_scs">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.get_available_scs"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.get_available_scs">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_available_scs</span><span class="p">(</span><span class="n">strain_formulation</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get available self-consistent schemes.</span>
 
@@ -3461,7 +3461,7 @@
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="k">return</span> <span class="n">available_scs</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.lame_from_technical"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.readprocedures.ElasticReferenceMaterial.html#crate.ioput.readprocedures.ElasticReferenceMaterial.lame_from_technical">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.lame_from_technical"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.lame_from_technical">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">lame_from_technical</span><span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get Lamé parameters from Young modulus and Poisson ratio.</span>
 
@@ -3486,7 +3486,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">lam</span><span class="p">,</span> <span class="n">miu</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.technical_from_lame"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.readprocedures.ElasticReferenceMaterial.html#crate.ioput.readprocedures.ElasticReferenceMaterial.technical_from_lame">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.technical_from_lame"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.technical_from_lame">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">technical_from_lame</span><span class="p">(</span><span class="n">lam</span><span class="p">,</span> <span class="n">miu</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get Young modulus and Poisson ratio from Lamé parameters.</span>
 

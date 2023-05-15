@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cratepy.material.models.interface.ConstitutiveModel &mdash; CRATE 1.0.3 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="cratepy.material.models.stvenant_kirchhoff" href="cratepy.material.models.stvenant_kirchhoff.html" />
+    <link rel="prev" title="cratepy.material.models.interface.ABC" href="cratepy.material.models.interface.ABC.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            CRATE
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="cratepy.html">Code</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cratepy.crate_simulation.html">cratepy.crate_simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.clustering.html">cratepy.clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.ioput.html">cratepy.ioput</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.main.html">cratepy.main</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="cratepy.material.html">cratepy.material</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cratepy.material.isotropichardlaw.html">cratepy.material.isotropichardlaw</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.material.materialmodeling.html">cratepy.material.materialmodeling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.material.materialoperations.html">cratepy.material.materialoperations</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="cratepy.material.models.html">cratepy.material.models</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="cratepy.material.models.elastic.html">cratepy.material.models.elastic</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="cratepy.material.models.interface.html">cratepy.material.models.interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.material.models.stvenant_kirchhoff.html">cratepy.material.models.stvenant_kirchhoff</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.material.models.von_mises.html">cratepy.material.models.von_mises</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.online.html">cratepy.online</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.optimization.html">cratepy.optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.tensor.html">cratepy.tensor</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CRATE</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="cratepy.html">cratepy</a></li>
+          <li class="breadcrumb-item"><a href="cratepy.material.html">cratepy.material</a></li>
+          <li class="breadcrumb-item"><a href="cratepy.material.models.html">cratepy.material.models</a></li>
+          <li class="breadcrumb-item"><a href="cratepy.material.models.interface.html">cratepy.material.models.interface</a></li>
+      <li class="breadcrumb-item active">cratepy.material.models.interface.ConstitutiveModel</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cratepy-material-models-interface-constitutivemodel">
+<h1>cratepy.material.models.interface.ConstitutiveModel<a class="headerlink" href="#cratepy-material-models-interface-constitutivemodel" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="cratepy.material.models.interface.ConstitutiveModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ConstitutiveModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strain_formulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_properties</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/material/models/interface.html#ConstitutiveModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.material.models.interface.ConstitutiveModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="cratepy.optimization.optimizer.ABC.html#cratepy.optimization.optimizer.ABC" title="abc.ABC"><code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></a></p>
+<p>Constitutive model interface.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cratepy.material.models.interface.ConstitutiveModel._name">
+<span class="sig-name descname"><span class="pre">_name</span></span><a class="headerlink" href="#cratepy.material.models.interface.ConstitutiveModel._name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constitutive model name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cratepy.material.models.interface.ConstitutiveModel._strain_type">
+<span class="sig-name descname"><span class="pre">_strain_type</span></span><a class="headerlink" href="#cratepy.material.models.interface.ConstitutiveModel._strain_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constitutive model strain formulation: infinitesimal strain formulation
+(‘infinitesimal’), finite strain formulation (‘finite’) or finite
+strain formulation through kinematic extension (infinitesimal
+constitutive formulation and purely finite strain kinematic
+extension - ‘finite-kinext’).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>{‘infinitesimal’, ‘finite’, ‘finite-kinext’}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cratepy.material.models.interface.ConstitutiveModel._source">
+<span class="sig-name descname"><span class="pre">_source</span></span><a class="headerlink" href="#cratepy.material.models.interface.ConstitutiveModel._source" title="Permalink to this definition">¶</a></dt>
+<dd><p>Material constitutive model source.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>{‘crate’,}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.material.models.interface.ConstitutiveModel.get_required_properties">
+<span class="sig-name descname"><span class="pre">get_required_properties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/material/models/interface.html#ConstitutiveModel.get_required_properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.material.models.interface.ConstitutiveModel.get_required_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>abstract</em>: Get constitutive model material properties and constitutive
+options.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.material.models.interface.ConstitutiveModel.state_init">
+<span class="sig-name descname"><span class="pre">state_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/material/models/interface.html#ConstitutiveModel.state_init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.material.models.interface.ConstitutiveModel.state_init" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>abstract</em>: Get initialized material constitutive model state
+variables.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.material.models.interface.ConstitutiveModel.state_update">
+<span class="sig-name descname"><span class="pre">state_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inc_strain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_variables_old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">su_max_n_iterations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">su_conv_tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-6</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/material/models/interface.html#ConstitutiveModel.state_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.material.models.interface.ConstitutiveModel.state_update" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>abstract</em>: Perform material constitutive model state update.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.material.models.interface.ConstitutiveModel.get_name">
+<span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/material/models/interface.html#ConstitutiveModel.get_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.material.models.interface.ConstitutiveModel.get_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get constitutive model name.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.material.models.interface.ConstitutiveModel.get_strain_type">
+<span class="sig-name descname"><span class="pre">get_strain_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/material/models/interface.html#ConstitutiveModel.get_strain_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.material.models.interface.ConstitutiveModel.get_strain_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get material constitutive model strain formulation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.material.models.interface.ConstitutiveModel.get_source">
+<span class="sig-name descname"><span class="pre">get_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/material/models/interface.html#ConstitutiveModel.get_source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.material.models.interface.ConstitutiveModel.get_source" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get material constitutive model source.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.material.models.interface.ConstitutiveModel.get_material_properties">
+<span class="sig-name descname"><span class="pre">get_material_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/material/models/interface.html#ConstitutiveModel.get_material_properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.material.models.interface.ConstitutiveModel.get_material_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constitutive model material properties.</p>
+</dd></dl>
+
+<p>Constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>strain_formulation</strong> (<em>{'infinitesimal'</em><em>, </em><em>'finite'}</em>) – Problem strain formulation.</p></li>
+<li><p><strong>problem_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Problem type: 2D plane strain (1), 2D plane stress (2),
+2D axisymmetric (3) and 3D (4).</p></li>
+<li><p><strong>material_properties</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Constitutive model material properties (key, str) values
+(item, {int, float, bool}).</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">List of Public Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id0" title="cratepy.material.models.interface.ConstitutiveModel.get_material_properties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_material_properties</span></code></a></p></td>
+<td><p>Constitutive model material properties.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id1" title="cratepy.material.models.interface.ConstitutiveModel.get_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_name</span></code></a></p></td>
+<td><p>Get constitutive model name.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id2" title="cratepy.material.models.interface.ConstitutiveModel.get_required_properties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_required_properties</span></code></a></p></td>
+<td><p>Get constitutive model material properties and constitutive options.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id3" title="cratepy.material.models.interface.ConstitutiveModel.get_source"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_source</span></code></a></p></td>
+<td><p>Get material constitutive model source.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id4" title="cratepy.material.models.interface.ConstitutiveModel.get_strain_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_strain_type</span></code></a></p></td>
+<td><p>Get material constitutive model strain formulation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id5" title="cratepy.material.models.interface.ConstitutiveModel.state_init"><code class="xref py py-obj docutils literal notranslate"><span class="pre">state_init</span></code></a></p></td>
+<td><p>Get initialized material constitutive model state variables.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id6" title="cratepy.material.models.interface.ConstitutiveModel.state_update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">state_update</span></code></a></p></td>
+<td><p>Perform material constitutive model state update.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cratepy.material.models.interface.ConstitutiveModel.__init__">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strain_formulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_properties</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/material/models/interface.html#ConstitutiveModel.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.material.models.interface.ConstitutiveModel.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>strain_formulation</strong> (<em>{'infinitesimal'</em><em>, </em><em>'finite'}</em>) – Problem strain formulation.</p></li>
+<li><p><strong>problem_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Problem type: 2D plane strain (1), 2D plane stress (2),
+2D axisymmetric (3) and 3D (4).</p></li>
+<li><p><strong>material_properties</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Constitutive model material properties (key, str) values
+(item, {int, float, bool}).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">get_material_properties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/material/models/interface.html#ConstitutiveModel.get_material_properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constitutive model material properties.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>material_properties</strong> – Constitutive model material properties (key, str) values
+(item, {int, float, bool}).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/material/models/interface.html#ConstitutiveModel.get_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get constitutive model name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – Constitutive model name.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id2">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_required_properties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/material/models/interface.html#ConstitutiveModel.get_required_properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get constitutive model material properties and constitutive options.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>material_properties</strong> (<em>list[str]</em>) – Constitutive model material properties names (str).</p></li>
+<li><p><strong>constitutive_options</strong> (<em>dict</em>) – Constitutive options (key, str) and available specifications
+(item, tuple[str]).</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">get_source</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/material/models/interface.html#ConstitutiveModel.get_source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get material constitutive model source.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>source</strong> – Material constitutive model source.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>{‘crate’,}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">get_strain_type</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/material/models/interface.html#ConstitutiveModel.get_strain_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get material constitutive model strain formulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>strain_type</strong> – Constitutive model strain formulation: infinitesimal strain
+formulation (‘infinitesimal’), finite strain formulation (‘finite’)
+or finite strain formulation through kinematic extension
+(infinitesimal constitutive formulation and purely finite strain
+kinematic extension - ‘finite-kinext’).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>{‘infinitesimal’, ‘finite’, ‘finite-kinext’}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id5">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/material/models/interface.html#ConstitutiveModel.state_init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get initialized material constitutive model state variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state_variables_init</strong> – Initialized material constitutive model state variables.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id6">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inc_strain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_variables_old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">su_max_n_iterations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">su_conv_tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/material/models/interface.html#ConstitutiveModel.state_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform material constitutive model state update.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inc_strain</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Incremental strain second-order tensor.</p></li>
+<li><p><strong>state_variables_old</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Last converged material constitutive model state variables.</p></li>
+<li><p><strong>su_max_n_iterations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=20</em>) – State update maximum number of iterations.</p></li>
+<li><p><strong>su_conv_tol</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><em>default=1e-6</em>) – State update convergence tolerance.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>state_variables</strong> (<em>dict</em>) – Material constitutive model state variables.</p></li>
+<li><p><strong>consistent_tangent_mf</strong> (<em>numpy.ndarray (2d)</em>) – Material constitutive model consistent tangent modulus in matricial
+form.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cratepy.material.models.interface.ABC.html" class="btn btn-neutral float-left" title="cratepy.material.models.interface.ABC" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cratepy.material.models.stvenant_kirchhoff.html" class="btn btn-neutral float-right" title="cratepy.material.models.stvenant_kirchhoff" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

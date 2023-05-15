@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>clustering.rveelasticdatabase &mdash; crate 1.0.0 documentation</title>
+  <title>clustering.rveelasticdatabase &mdash; CRATE 1.0.3 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/readthedocs-custom.css" type="text/css" />
@@ -28,7 +28,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            crate
+            CRATE
           </a>
               <div class="version">
                 1.0
@@ -71,7 +71,7 @@
 <p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/reference/index.html">Index</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/crate.html">Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/cratepy.html">Code</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">License</span></p>
 <ul>
@@ -84,7 +84,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">crate</a>
+          <a href="../../index.html">CRATE</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -137,7 +137,7 @@
 <span class="c1"># =============================================================================</span>
 <span class="c1">#</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="RVEElasticDatabase"><a class="viewcode-back" href="../../_autosummary/crate.clustering.clusteringdata.RVEElasticDatabase.html#crate.clustering.clusteringdata.RVEElasticDatabase">[docs]</a><span class="k">class</span> <span class="nc">RVEElasticDatabase</span><span class="p">:</span>
+<div class="viewcode-block" id="RVEElasticDatabase"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.clusteringdata.RVEElasticDatabase.html#cratepy.clustering.clusteringdata.RVEElasticDatabase">[docs]</a><span class="k">class</span> <span class="nc">RVEElasticDatabase</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;RVE local elastic response database class.</span>
 
 <span class="sd">    Attributes</span>
@@ -180,7 +180,7 @@
 <span class="sd">    get_eff_isotropic_elastic_constants(self):</span>
 <span class="sd">        Get isotropic elastic constants from effective tangent modulus.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="RVEElasticDatabase.__init__"><a class="viewcode-back" href="../../_autosummary/crate.clustering.clusteringdata.RVEElasticDatabase.html#crate.clustering.clusteringdata.RVEElasticDatabase.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">rve_dims</span><span class="p">,</span>
+<div class="viewcode-block" id="RVEElasticDatabase.__init__"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.clusteringdata.RVEElasticDatabase.html#cratepy.clustering.clusteringdata.RVEElasticDatabase.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">rve_dims</span><span class="p">,</span>
                  <span class="n">n_voxels_dims</span><span class="p">,</span> <span class="n">regular_grid</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span>
                  <span class="n">material_phases_properties</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
@@ -219,7 +219,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_eff_elastic_properties</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rve_global_response</span> <span class="o">=</span> <span class="kc">None</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="RVEElasticDatabase.compute_rve_response_database"><a class="viewcode-back" href="../../_autosummary/crate.clustering.clusteringdata.RVEElasticDatabase.html#crate.clustering.clusteringdata.RVEElasticDatabase.compute_rve_response_database">[docs]</a>    <span class="k">def</span> <span class="nf">compute_rve_response_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dns_method</span><span class="p">,</span> <span class="n">dns_method_data</span><span class="p">,</span>
+<div class="viewcode-block" id="RVEElasticDatabase.compute_rve_response_database"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.clusteringdata.RVEElasticDatabase.html#cratepy.clustering.clusteringdata.RVEElasticDatabase.compute_rve_response_database">[docs]</a>    <span class="k">def</span> <span class="nf">compute_rve_response_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dns_method</span><span class="p">,</span> <span class="n">dns_method_data</span><span class="p">,</span>
                                       <span class="n">mac_strains</span><span class="p">,</span> <span class="n">is_strain_sym</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute RVE&#39;s local elastic strain response database.</span>
 
@@ -288,7 +288,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_global_hom_stress_strain</span><span class="p">[</span><span class="n">mac_strain_id</span><span class="p">]</span> <span class="o">=</span> \
                 <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">homogenization_method</span><span class="o">.</span><span class="n">get_hom_stress_strain</span><span class="p">())</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="RVEElasticDatabase.compute_rve_elastic_tangent_modulus"><a class="viewcode-back" href="../../_autosummary/crate.clustering.clusteringdata.RVEElasticDatabase.html#crate.clustering.clusteringdata.RVEElasticDatabase.compute_rve_elastic_tangent_modulus">[docs]</a>    <span class="k">def</span> <span class="nf">compute_rve_elastic_tangent_modulus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_magnitude_factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+<div class="viewcode-block" id="RVEElasticDatabase.compute_rve_elastic_tangent_modulus"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.clusteringdata.RVEElasticDatabase.html#cratepy.clustering.clusteringdata.RVEElasticDatabase.compute_rve_elastic_tangent_modulus">[docs]</a>    <span class="k">def</span> <span class="nf">compute_rve_elastic_tangent_modulus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_magnitude_factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute RVE&#39;s elastic effective tangent modulus.</span>
 
 <span class="sd">        Parameters</span>
@@ -363,7 +363,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_elastic_eff_modulus_matrix</span> <span class="o">=</span> \
             <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">elastic_eff_modulus_matrix</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="RVEElasticDatabase.set_eff_isotropic_elastic_constants"><a class="viewcode-back" href="../../_autosummary/crate.clustering.clusteringdata.RVEElasticDatabase.html#crate.clustering.clusteringdata.RVEElasticDatabase.set_eff_isotropic_elastic_constants">[docs]</a>    <span class="k">def</span> <span class="nf">set_eff_isotropic_elastic_constants</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="RVEElasticDatabase.set_eff_isotropic_elastic_constants"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.clusteringdata.RVEElasticDatabase.html#cratepy.clustering.clusteringdata.RVEElasticDatabase.set_eff_isotropic_elastic_constants">[docs]</a>    <span class="k">def</span> <span class="nf">set_eff_isotropic_elastic_constants</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set isotropic elastic constants from effective tangent modulus.&quot;&quot;&quot;</span>
         <span class="c1"># Check if RVE&#39;s elastic effective tangent modulus is available</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elastic_eff_modulus_matrix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -387,7 +387,7 @@
         <span class="c1"># Update estimates of effective elastic properties</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_eff_elastic_properties</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;E&#39;</span><span class="p">:</span> <span class="n">E</span><span class="p">,</span> <span class="s1">&#39;v&#39;</span><span class="p">:</span> <span class="n">v</span><span class="p">}</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="RVEElasticDatabase.get_eff_isotropic_elastic_constants"><a class="viewcode-back" href="../../_autosummary/crate.clustering.clusteringdata.RVEElasticDatabase.html#crate.clustering.clusteringdata.RVEElasticDatabase.get_eff_isotropic_elastic_constants">[docs]</a>    <span class="k">def</span> <span class="nf">get_eff_isotropic_elastic_constants</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="RVEElasticDatabase.get_eff_isotropic_elastic_constants"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.clusteringdata.RVEElasticDatabase.html#cratepy.clustering.clusteringdata.RVEElasticDatabase.get_eff_isotropic_elastic_constants">[docs]</a>    <span class="k">def</span> <span class="nf">get_eff_isotropic_elastic_constants</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get isotropic elastic constants from effective tangent modulus.</span>
 
 <span class="sd">        Returns</span>

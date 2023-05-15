@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cratepy.clustering.citoperations &mdash; CRATE 1.0.3 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            CRATE
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/cratepy.html">Code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">CRATE</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">cratepy.clustering.citoperations</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for cratepy.clustering.citoperations</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Green operator and cluster interaction tensors related operations.</span>
+
+<span class="sd">This module includes several procedures required to compute the cluster</span>
+<span class="sd">interaction tensors, namely (1) the frequency discretization of the spatial</span>
+<span class="sd">domain and (2) the computation of the Green operator, as well as the assembly</span>
+<span class="sd">of the global cluster interaction matrix.</span>
+
+<span class="sd">Functions</span>
+<span class="sd">---------</span>
+<span class="sd">set_discrete_freqs</span>
+<span class="sd">    Perform frequency discretization of the spatial domain.</span>
+<span class="sd">gop_material_independent_terms</span>
+<span class="sd">    Compute Green operator material independent terms in frequency domain.</span>
+<span class="sd">assemble_cit</span>
+<span class="sd">    Assemble global cluster interaction matrix.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#                                                                       Modules</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1"># Standard</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">itertools</span> <span class="k">as</span> <span class="nn">it</span>
+<span class="c1"># Third-party</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy.matlib</span>
+<span class="c1"># Local</span>
+<span class="kn">import</span> <span class="nn">tensor.matrixoperations</span> <span class="k">as</span> <span class="nn">mop</span>
+<span class="c1">#</span>
+<span class="c1">#                                                          Authorship &amp; Credits</span>
+<span class="c1"># =============================================================================</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Bernardo Ferreira (bernardo_ferreira@brown.edu)&#39;</span>
+<span class="n">__credits__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Bernardo Ferreira&#39;</span><span class="p">,</span> <span class="p">]</span>
+<span class="n">__status__</span> <span class="o">=</span> <span class="s1">&#39;Stable&#39;</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#</span>
+<span class="c1">#                                                          Discrete frequencies</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="set_discrete_freqs"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.citoperations.set_discrete_freqs.html#cratepy.clustering.citoperations.set_discrete_freqs">[docs]</a><span class="k">def</span> <span class="nf">set_discrete_freqs</span><span class="p">(</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">rve_dims</span><span class="p">,</span> <span class="n">n_voxels_dims</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform frequency discretization of the spatial domain.</span>
+
+<span class="sd">    Perform frequency discretization by setting the spatial discrete</span>
+<span class="sd">    frequencies (rad/m) for each dimension.</span>
+
+<span class="sd">    *2D case*:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">       \\boldsymbol{\\zeta}_{s_{1}, s_{2}} =</span>
+<span class="sd">          \\left( \\dfrac{2\\pi}{(l_{\\mathrm{RVE}})_{1}} s_{1}, \\,</span>
+<span class="sd">          \\dfrac{2\\pi}{(l_{\\mathrm{RVE}})_{2}} s_{2} \\right) \\, ,</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">       s_{i}=0, 1, \\dots, n_{i}-1 \\, , \\quad i=1,2 \\, .</span>
+
+<span class="sd">    where :math:`\\boldsymbol{\\zeta}_{s_{1}, s_{2}} \\equiv</span>
+<span class="sd">    \\boldsymbol{\\zeta}(s_{1}, s_{2})` denotes a sampling angular frequency,</span>
+<span class="sd">    :math:`(l_{\\mathrm{RVE}})_{i}` is the RVE size in the :math:`i` th</span>
+<span class="sd">    dimension, and :math:`n_{i}` is the number of voxels in the :math:`i` th</span>
+<span class="sd">    dimension.</span>
+
+<span class="sd">    ----</span>
+
+<span class="sd">    *3D case*:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">       \\boldsymbol{\\zeta}_{s_{1}, s_{2}, s_{3}} =</span>
+<span class="sd">          \\left( \\dfrac{2\\pi}{(l_{\\mathrm{RVE}})_{1}} s_{1}, \\,</span>
+<span class="sd">          \\dfrac{2\\pi}{(l_{\\mathrm{RVE}})_{2}} s_{2}, \\,</span>
+<span class="sd">          \\dfrac{2\\pi}{(l_{\\mathrm{RVE}})_{3}} s_{3} \\right) \\, ,</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">       s_{i}=0, 1, \\dots, n_{i}-1 \\, , \\quad i=1,2,3 \\, .</span>
+
+<span class="sd">    where :math:`\\boldsymbol{\\zeta}_{s_{1}, s_{2}, s_{3}} \\equiv</span>
+<span class="sd">    \\boldsymbol{\\zeta}(s_{1}, s_{2}, s_{3})` denotes a sampling angular</span>
+<span class="sd">    frequency, :math:`(l_{\\mathrm{RVE}})_{i}` is the RVE size in the</span>
+<span class="sd">    :math:`i` th dimension, and :math:`n_{i}` is the number of voxels in the</span>
+<span class="sd">    :math:`i` th dimension.</span>
+
+<span class="sd">    ----</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_dim : int</span>
+<span class="sd">        Problem number of spatial dimensions.</span>
+<span class="sd">    rve_dims : list</span>
+<span class="sd">        RVE size in each dimension.</span>
+<span class="sd">    n_voxels_dims : list[int]</span>
+<span class="sd">        Number of voxels in each dimension of the regular grid (spatial</span>
+<span class="sd">        discretization of the RVE).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    freq_dims : list[numpy.ndarray (1d)]</span>
+<span class="sd">        List containing the sample frequencies (numpy.ndarray (1d) of shape</span>
+<span class="sd">        (n_voxels_dim,)) for each dimension.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">freqs_dims</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_dim</span><span class="p">):</span>
+        <span class="c1"># Set sampling spatial period</span>
+        <span class="n">sampling_period</span> <span class="o">=</span> <span class="n">rve_dims</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">/</span><span class="n">n_voxels_dims</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="c1"># Set discrete frequencies</span>
+        <span class="n">freqs_dims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftfreq</span><span class="p">(</span><span class="n">n_voxels_dims</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                                                 <span class="n">sampling_period</span><span class="p">))</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">freqs_dims</span></div>
+<span class="c1">#</span>
+<span class="c1">#                                                                Green operator</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="gop_material_independent_terms"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.citoperations.gop_material_independent_terms.html#cratepy.clustering.citoperations.gop_material_independent_terms">[docs]</a><span class="k">def</span> <span class="nf">gop_material_independent_terms</span><span class="p">(</span><span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">rve_dims</span><span class="p">,</span>
+                                   <span class="n">n_voxels_dims</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute Green operator material independent terms in frequency domain.</span>
+
+<span class="sd">    The Green operator is here assumed to be associated with an isotropic</span>
+<span class="sd">    elastic reference material.</span>
+
+<span class="sd">    The material independent terms of the Green operator are conveniently</span>
+<span class="sd">    computed to perform an efficient update of the Green operator if the</span>
+<span class="sd">    associated reference material elastic properties are updated by any means</span>
+<span class="sd">    (e.g., self-consistent scheme).</span>
+
+<span class="sd">    *Infinitesimal strains*:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">       (\\breve{\\Phi}^{0}_{1})_{klij} (\\boldsymbol{\\zeta}) =</span>
+<span class="sd">       \\dfrac{ \\delta_{ki} \\zeta_{j} \\zeta_{l}</span>
+<span class="sd">              + \\delta_{kj} \\zeta_{i} \\zeta_{l}</span>
+<span class="sd">              + \\delta_{li} \\zeta_{j} \\zeta_{k}</span>
+<span class="sd">              + \\delta_{lj} \\zeta_{i} \\zeta_{k}}</span>
+<span class="sd">              {||\\boldsymbol{\\zeta}||^{2}} \\, ,</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        (\\breve{\\Phi}^{0}_{2})_{klij} (\\boldsymbol{\\zeta}) =</span>
+<span class="sd">        - \\dfrac{\\zeta_{k}\\zeta_{l}\\zeta_{i}\\zeta_{j}}</span>
+<span class="sd">                 {||\\boldsymbol{\\zeta}||^{4}} \\, ,</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">       i,j,k,l =1, \\dots, n_{\\text{dim}} \\, ,</span>
+
+<span class="sd">    where :math:`(\\breve{\\Phi}^{0}_{1})_{klij}` and</span>
+<span class="sd">    :math:`(\\breve{\\Phi}^{0}_{2})_{klij}` are the first and second</span>
+<span class="sd">    fourth-order Green operator material independent terms, respectively,</span>
+<span class="sd">    :math:`\\boldsymbol{\\zeta}` is the frequency wave vector,</span>
+<span class="sd">    :math:`\\delta_{ij}` is the Kronecker delta, and :math:`n_{\\text{dim}}`</span>
+<span class="sd">    is the number of spatial dimensions.</span>
+
+<span class="sd">    ----</span>
+
+<span class="sd">    *Finite strains*:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">       (\\breve{\\Phi}^{0}_{1})_{klij} (\\boldsymbol{\\zeta}) =</span>
+<span class="sd">       \\dfrac{ \\delta_{ki} \\zeta_{j} \\zeta_{l}}</span>
+<span class="sd">              {||\\boldsymbol{\\zeta}||^{2}} \\, , \\qquad</span>
+<span class="sd">        (\\breve{\\Phi}^{0}_{2})_{klij} (\\boldsymbol{\\zeta}) =</span>
+<span class="sd">        - \\dfrac{\\zeta_{k}\\zeta_{l}\\zeta_{i}\\zeta_{j}}</span>
+<span class="sd">                 {||\\boldsymbol{\\zeta}||^{4}} \\, ,</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">       i,j,k,l =1, \\dots, n_{\\text{dim}} \\, .</span>
+
+<span class="sd">    where :math:`(\\breve{\\Phi}^{0}_{1})_{klij}` and</span>
+<span class="sd">    :math:`(\\breve{\\Phi}^{0}_{2})_{klij}` are the first and second</span>
+<span class="sd">    fourth-order Green operator material independent terms, respectively,</span>
+<span class="sd">    :math:`\\boldsymbol{\\zeta}` is the frequency wave vector,</span>
+<span class="sd">    :math:`\\delta_{ij}` is the Kronecker delta, and :math:`n_{\\text{dim}}`</span>
+<span class="sd">    is the number of spatial dimensions.</span>
+
+<span class="sd">    A detailed description of the computational implementation based on</span>
+<span class="sd">    Hadamard (element-wise) operations can be found in Section 4.6 of</span>
+<span class="sd">    Ferreira (2022) [#]_.</span>
+
+<span class="sd">    .. [#] Ferreira, B.P. (2022). *Towards Data-driven Multi-scale</span>
+<span class="sd">           Optimization of Thermoplastic Blends: Microstructural</span>
+<span class="sd">           Generation, Constitutive Development and Clustering-based</span>
+<span class="sd">           Reduced-Order Modeling.* PhD Thesis, University of Porto</span>
+<span class="sd">           (see `here &lt;https://repositorio-aberto.up.pt/handle/10216/</span>
+<span class="sd">           146900?locale=en&gt;`_)</span>
+
+<span class="sd">    ----</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    strain_formulation: {&#39;infinitesimal&#39;, &#39;finite&#39;}</span>
+<span class="sd">        Problem strain formulation.</span>
+<span class="sd">    problem_type : int</span>
+<span class="sd">        Problem type: 2D plane strain (1), 2D plane stress (2),</span>
+<span class="sd">        2D axisymmetric (3) and 3D (4).</span>
+<span class="sd">    rve_dims : list[float]</span>
+<span class="sd">        RVE size in each dimension.</span>
+<span class="sd">    n_voxels_dims : list[int]</span>
+<span class="sd">        Number of voxels in each dimension of the regular grid (spatial</span>
+<span class="sd">        discretization of the RVE).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    gop_1_dft_vox : dict</span>
+<span class="sd">        Regular grid shaped matrix (item, numpy.ndarray) containing each</span>
+<span class="sd">        fourth-order matricial form component (key, str) of the first Green</span>
+<span class="sd">        operator material independent term in the frequency domain (discrete</span>
+<span class="sd">        Fourier transform).</span>
+<span class="sd">    gop_2_dft_vox : dict</span>
+<span class="sd">        Regular grid shaped matrix (item, numpy.ndarray) containing each</span>
+<span class="sd">        fourth-order matricial form component (key, str) of the second Green</span>
+<span class="sd">        operator material independent term in the frequency domain (discrete</span>
+<span class="sd">        Fourier transform).</span>
+<span class="sd">    gop_0_freq_dft_vox : dict</span>
+<span class="sd">        Regular grid shaped matrix (item, numpy.ndarray) containing each</span>
+<span class="sd">        fourth-order matricial form component (key, str) of the Green operator</span>
+<span class="sd">        zero-frequency (material independent) term in the frequency domain</span>
+<span class="sd">        (discrete Fourier transform).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get problem type parameters</span>
+    <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span> <span class="o">=</span> \
+        <span class="n">mop</span><span class="o">.</span><span class="n">get_problem_type_parameters</span><span class="p">(</span><span class="n">problem_type</span><span class="p">)</span>
+    <span class="c1"># Set strain/stress components order according to problem strain</span>
+    <span class="c1"># formulation</span>
+    <span class="k">if</span> <span class="n">strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;infinitesimal&#39;</span><span class="p">:</span>
+        <span class="n">comp_order</span> <span class="o">=</span> <span class="n">comp_order_sym</span>
+    <span class="k">elif</span> <span class="n">strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;finite&#39;</span><span class="p">:</span>
+        <span class="n">comp_order</span> <span class="o">=</span> <span class="n">comp_order_nsym</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown problem strain formulation.&#39;</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Set discrete frequencies (rad/m) for each dimension</span>
+    <span class="n">freqs_dims</span> <span class="o">=</span> <span class="n">set_discrete_freqs</span><span class="p">(</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">rve_dims</span><span class="p">,</span> <span class="n">n_voxels_dims</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Set Green operator matricial form components</span>
+    <span class="n">comps</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">it</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">comp_order</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">))</span>
+    <span class="c1"># Set mapping between Green operator fourth-order tensor and matricial form</span>
+    <span class="c1"># components</span>
+    <span class="n">fo_indexes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="n">mf_indexes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">fo_indexes</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+                           <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">comps</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">comps</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])])</span>
+        <span class="n">mf_indexes</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="n">comp_order</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">comps</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span>
+                                       <span class="n">comp_order</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">comps</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])]])</span>
+    <span class="c1"># Set optimized variables</span>
+    <span class="n">var1</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="o">*</span><span class="n">freqs_dims</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s1">&#39;ij&#39;</span><span class="p">)]</span>
+    <span class="n">var2</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">fo_idx</span> <span class="ow">in</span> <span class="n">fo_indexes</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">var2</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">var2</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">3</span><span class="p">])]</span> <span class="o">=</span> \
+                <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">var1</span><span class="p">[</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">var1</span><span class="p">[</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">3</span><span class="p">]])</span>
+        <span class="k">if</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fo_idx</span><span class="p">])</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">var2</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">var2</span><span class="p">[</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fo_idx</span><span class="p">])]</span> <span class="o">=</span> \
+                <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">var1</span><span class="p">[</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">var1</span><span class="p">[</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]]),</span>
+                            <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">var1</span><span class="p">[</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span> <span class="n">var1</span><span class="p">[</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">3</span><span class="p">]]))</span>
+        <span class="k">if</span> <span class="n">strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;infinitesimal&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">var2</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">var2</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">2</span><span class="p">])]</span> <span class="o">=</span> \
+                    <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">var1</span><span class="p">[</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">var1</span><span class="p">[</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
+            <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">var2</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">var2</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">2</span><span class="p">])]</span> <span class="o">=</span> \
+                    <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">var1</span><span class="p">[</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">var1</span><span class="p">[</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
+            <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">var2</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">var2</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">3</span><span class="p">])]</span> <span class="o">=</span> \
+                    <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">var1</span><span class="p">[</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">var1</span><span class="p">[</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">3</span><span class="p">]])</span>
+    <span class="k">if</span> <span class="n">n_dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">var3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">var1</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">var1</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">var3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">var1</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">var1</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span>
+                              <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">var1</span><span class="p">[</span><span class="mi">2</span><span class="p">])))</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Initialize Green operator material independent terms</span>
+    <span class="n">gop_1_dft_vox</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">]):</span>
+                     <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">n_voxels_dims</span><span class="p">))</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">fo_indexes</span><span class="p">}</span>
+    <span class="n">gop_2_dft_vox</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">]):</span>
+                     <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">n_voxels_dims</span><span class="p">))</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">fo_indexes</span><span class="p">}</span>
+    <span class="n">gop_0_freq_dft_vox</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">]):</span>
+                          <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">n_voxels_dims</span><span class="p">))</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">fo_indexes</span><span class="p">}</span>
+    <span class="c1"># Compute Green operator matricial form components</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mf_indexes</span><span class="p">)):</span>
+        <span class="c1"># Get fourth-order tensor indexes</span>
+        <span class="n">fo_idx</span> <span class="o">=</span> <span class="n">fo_indexes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="c1"># Get Green operator component</span>
+        <span class="n">comp</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fo_idx</span><span class="p">])</span>
+        <span class="c1"># Set optimized variables</span>
+        <span class="n">var4</span> <span class="o">=</span> <span class="p">[</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+                <span class="n">fo_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
+        <span class="n">var5</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">3</span><span class="p">])]</span>
+        <span class="n">var4</span> <span class="o">=</span> <span class="p">[</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="p">]</span>
+        <span class="n">var5</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span> <span class="p">]</span>
+        <span class="k">if</span> <span class="n">strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;infinitesimal&#39;</span><span class="p">:</span>
+            <span class="n">var4</span> <span class="o">+=</span> <span class="p">[</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+                     <span class="n">fo_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">fo_idx</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
+            <span class="n">var5</span> <span class="o">+=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+                     <span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+                     <span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">fo_idx</span><span class="p">[</span><span class="mi">3</span><span class="p">])]</span>
+        <span class="c1"># Compute first material independent term of Green operator</span>
+        <span class="n">first_term</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">n_voxels_dims</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">var4</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">var4</span><span class="p">[</span><span class="n">j</span><span class="p">]:</span>
+                <span class="n">first_term</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">first_term</span><span class="p">,</span> <span class="n">var2</span><span class="p">[</span><span class="n">var5</span><span class="p">[</span><span class="n">j</span><span class="p">]])</span>
+        <span class="n">first_term</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">first_term</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">var3</span><span class="p">),</span>
+                               <span class="n">where</span><span class="o">=</span><span class="nb">abs</span><span class="p">(</span><span class="n">var3</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-10</span><span class="p">)</span>
+        <span class="n">gop_1_dft_vox</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">first_term</span><span class="p">)</span>
+        <span class="c1"># Compute second material independent term of Green operator</span>
+        <span class="n">gop_2_dft_vox</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span>
+            <span class="n">var2</span><span class="p">[</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fo_idx</span><span class="p">])],</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">var3</span><span class="p">)),</span> <span class="n">where</span><span class="o">=</span><span class="nb">abs</span><span class="p">(</span><span class="n">var3</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-10</span><span class="p">)</span>
+        <span class="c1"># Compute Green operator zero-frequency term</span>
+        <span class="n">gop_0_freq_dft_vox</span><span class="p">[</span><span class="n">comp</span><span class="p">][</span><span class="nb">tuple</span><span class="p">(</span><span class="n">n_dim</span><span class="o">*</span><span class="p">(</span><span class="mi">0</span><span class="p">,))]</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="k">return</span> <span class="n">gop_1_dft_vox</span><span class="p">,</span> <span class="n">gop_2_dft_vox</span><span class="p">,</span> <span class="n">gop_0_freq_dft_vox</span></div>
+<span class="c1">#</span>
+<span class="c1">#                                    Global cluster interaction matrix assembly</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="assemble_cit"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.citoperations.assemble_cit.html#cratepy.clustering.citoperations.assemble_cit">[docs]</a><span class="k">def</span> <span class="nf">assemble_cit</span><span class="p">(</span><span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">mat_prop_ref</span><span class="p">,</span>
+                 <span class="n">material_phases</span><span class="p">,</span> <span class="n">phase_n_clusters</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span> <span class="n">cit_1_mf</span><span class="p">,</span>
+                 <span class="n">cit_2_mf</span><span class="p">,</span> <span class="n">cit_0_freq_mf</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Assemble global cluster interaction matrix.</span>
+
+<span class="sd">    Update the cluster interaction tensors by taking into account the material</span>
+<span class="sd">    properties of the reference material and assemble them in the global</span>
+<span class="sd">    cluster interaction matrix.</span>
+
+<span class="sd">    The dependency on the material properties of the reference material stems</span>
+<span class="sd">    from the definition of the Green operator as shown below.</span>
+
+<span class="sd">    *Infinitesimal strains*:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        \\breve{\\mathbf{\\Phi}}^{0} (\\boldsymbol{\\zeta}) =</span>
+<span class="sd">        c_{1}(\\lambda^{0}, \\mu^{0}) \\, \\breve{\\mathbf{\\Phi}}^{0}_{1} +</span>
+<span class="sd">        c_{2}(\\lambda^{0}, \\mu^{0}) \\, \\breve{\\mathbf{\\Phi}}^{0}_{2}</span>
+<span class="sd">        \\, ,</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        c_{1}(\\lambda^{0}, \\mu^{0}) = \\dfrac{1}{4 \\mu^{0}} \\, , \\qquad</span>
+<span class="sd">        c_{2}(\\lambda^{0}, \\mu^{0}) = \\dfrac{\\lambda^{0} +</span>
+<span class="sd">        \\mu^{0}}{\\mu^{0}(\\lambda^{0} + 2 \\mu^{0})}</span>
+
+<span class="sd">    where :math:`\\breve{\\mathbf{\\Phi}}^{0}_{1}` and</span>
+<span class="sd">    :math:`\\breve{\\mathbf{\\Phi}}^{0}_{2}` are the first and second</span>
+<span class="sd">    fourth-order Green operator material independent terms, respectively,</span>
+<span class="sd">    and :math:`(\\lambda^{0}, \\mu^{0})` are the reference elastic (isotropic)</span>
+<span class="sd">    material Lamé parameters.</span>
+
+<span class="sd">    ----</span>
+
+<span class="sd">    *Finite strains*:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        \\breve{\\mathbf{\\Phi}}^{0} (\\boldsymbol{\\zeta}) =</span>
+<span class="sd">        c_{1}(\\lambda^{0}, \\mu^{0}) \\, \\breve{\\mathbf{\\Phi}}^{0}_{1} +</span>
+<span class="sd">        c_{2}(\\lambda^{0}, \\mu^{0}) \\, \\breve{\\mathbf{\\Phi}}^{0}_{2}</span>
+<span class="sd">        \\, ,</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        c_{1}(\\lambda^{0}, \\mu^{0}) = \\dfrac{1}{2 \\mu^{0}} \\, , \\qquad</span>
+<span class="sd">        c_{2}(\\lambda^{0}, \\mu^{0}) =</span>
+<span class="sd">        \\dfrac{\\lambda^{0}}{2 \\mu^{0}(\\lambda^{0} + 2 \\mu^{0})}</span>
+
+<span class="sd">    where :math:`\\breve{\\mathbf{\\Phi}}^{0}_{1}` and</span>
+<span class="sd">    :math:`\\breve{\\mathbf{\\Phi}}^{0}_{2}` are the first and second</span>
+<span class="sd">    fourth-order Green operator material independent terms, respectively,</span>
+<span class="sd">    and :math:`(\\lambda^{0}, \\mu^{0})` are the reference elastic (isotropic)</span>
+<span class="sd">    material Lamé parameters.</span>
+
+<span class="sd">    ----</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    strain_formulation: {&#39;infinitesimal&#39;, &#39;finite&#39;}</span>
+<span class="sd">        Problem strain formulation.</span>
+<span class="sd">    problem_type : int</span>
+<span class="sd">        Problem type: 2D plane strain (1), 2D plane stress (2),</span>
+<span class="sd">        2D axisymmetric (3) and 3D (4).</span>
+<span class="sd">    mat_prop_ref : dict</span>
+<span class="sd">        Reference material properties.</span>
+<span class="sd">    material_phases : list[str]</span>
+<span class="sd">        RVE material phases labels (str).</span>
+<span class="sd">    phase_n_clusters : dict</span>
+<span class="sd">        Number of clusters (item, int) prescribed for each material phase</span>
+<span class="sd">        (key, str).</span>
+<span class="sd">    phase_clusters : dict</span>
+<span class="sd">        Clusters labels (item, list[int]) associated to each material phase</span>
+<span class="sd">        (key, str).</span>
+<span class="sd">    cit_1_mf : dict</span>
+<span class="sd">        Cluster interaction tensors associated with the first Green operator</span>
+<span class="sd">        material independent term. Each tensor is stored in a dictionary</span>
+<span class="sd">        (item, dict) for each pair of material phases (key, str), which in turn</span>
+<span class="sd">        contains the corresponding matricial form (item, numpy.ndarray)</span>
+<span class="sd">        associated to each pair of clusters (key, str).</span>
+<span class="sd">    cit_2_mf : dict</span>
+<span class="sd">        Cluster interaction tensors associated with the second Green operator</span>
+<span class="sd">        material independent term. Each tensor is stored in a dictionary</span>
+<span class="sd">        (item, dict) for each pair of material phases (key, str), which in turn</span>
+<span class="sd">        contains the corresponding matricial form (item, numpy.ndarray)</span>
+<span class="sd">        associated to each pair of clusters (key, str).</span>
+<span class="sd">    cit_0_freq_mf : dict</span>
+<span class="sd">        Cluster interaction tensors associated with the zero-frequency Green</span>
+<span class="sd">        operator (material independent) term. Each tensor is stored in a</span>
+<span class="sd">        dictionary (item, dict) for each pair of material phases (key, str),</span>
+<span class="sd">        which in turn contains the corresponding matricial form</span>
+<span class="sd">        (item, numpy.ndarray) associated to each pair of clusters (key, str).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    global_cit_mf : numpy.ndarray</span>
+<span class="sd">        Global cluster interaction matrix. Assembly positions are assigned</span>
+<span class="sd">        according to the order of material_phases (1st) and phase_clusters</span>
+<span class="sd">        (2nd).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get problem type parameters</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span> <span class="o">=</span> \
+        <span class="n">mop</span><span class="o">.</span><span class="n">get_problem_type_parameters</span><span class="p">(</span><span class="n">problem_type</span><span class="p">)</span>
+    <span class="c1"># Set strain/stress components order according to problem strain</span>
+    <span class="c1"># formulation</span>
+    <span class="k">if</span> <span class="n">strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;infinitesimal&#39;</span><span class="p">:</span>
+        <span class="n">comp_order</span> <span class="o">=</span> <span class="n">comp_order_sym</span>
+    <span class="k">elif</span> <span class="n">strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;finite&#39;</span><span class="p">:</span>
+        <span class="n">comp_order</span> <span class="o">=</span> <span class="n">comp_order_nsym</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown problem strain formulation.&#39;</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Get total number of clusters</span>
+    <span class="n">n_total_clusters</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">phase_n_clusters</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">]</span>
+                            <span class="k">for</span> <span class="n">mat_phase</span> <span class="ow">in</span> <span class="n">material_phases</span><span class="p">])</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Get reference material Young modulus and Poisson ratio</span>
+    <span class="n">E_ref</span> <span class="o">=</span> <span class="n">mat_prop_ref</span><span class="p">[</span><span class="s1">&#39;E&#39;</span><span class="p">]</span>
+    <span class="n">v_ref</span> <span class="o">=</span> <span class="n">mat_prop_ref</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">]</span>
+    <span class="c1"># Compute reference material Lamé parameters</span>
+    <span class="n">lam_ref</span> <span class="o">=</span> <span class="p">(</span><span class="n">E_ref</span><span class="o">*</span><span class="n">v_ref</span><span class="p">)</span><span class="o">/</span><span class="p">((</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">v_ref</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">v_ref</span><span class="p">))</span>
+    <span class="n">miu_ref</span> <span class="o">=</span> <span class="n">E_ref</span><span class="o">/</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">v_ref</span><span class="p">))</span>
+    <span class="c1"># Compute Green operator&#39;s reference material coefficients</span>
+    <span class="k">if</span> <span class="n">strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;infinitesimal&#39;</span><span class="p">:</span>
+        <span class="n">gop_factor_1</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="mf">4.0</span><span class="o">*</span><span class="n">miu_ref</span><span class="p">)</span>
+        <span class="n">gop_factor_2</span> <span class="o">=</span> <span class="p">(</span><span class="n">lam_ref</span> <span class="o">+</span> <span class="n">miu_ref</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">miu_ref</span><span class="o">*</span><span class="p">(</span><span class="n">lam_ref</span> <span class="o">+</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">miu_ref</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">gop_factor_1</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">miu_ref</span><span class="p">)</span>
+        <span class="n">gop_factor_2</span> <span class="o">=</span> <span class="n">lam_ref</span><span class="o">/</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">miu_ref</span><span class="o">*</span><span class="p">(</span><span class="n">lam_ref</span> <span class="o">+</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">miu_ref</span><span class="p">))</span>
+    <span class="n">gop_factor_0_freq</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">matlib</span><span class="o">.</span><span class="n">repmat</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">))),</span> <span class="n">n_total_clusters</span><span class="p">,</span>
+        <span class="n">n_total_clusters</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Initialize global clustering interaction matrices</span>
+    <span class="n">dims</span> <span class="o">=</span> <span class="p">(</span><span class="n">n_total_clusters</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">),</span> <span class="n">n_total_clusters</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">))</span>
+    <span class="n">global_cit_1_mf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">dims</span><span class="p">)</span>
+    <span class="n">global_cit_2_mf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">dims</span><span class="p">)</span>
+    <span class="n">global_cit_0_freq_mf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">dims</span><span class="p">)</span>
+    <span class="c1"># Initialize column cluster index</span>
+    <span class="n">jclst</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1"># Loop over material phases</span>
+    <span class="k">for</span> <span class="n">mat_phase_B</span> <span class="ow">in</span> <span class="n">material_phases</span><span class="p">:</span>
+        <span class="c1"># Loop over material phase B clusters</span>
+        <span class="k">for</span> <span class="n">cluster_J</span> <span class="ow">in</span> <span class="n">phase_clusters</span><span class="p">[</span><span class="n">mat_phase_B</span><span class="p">]:</span>
+            <span class="c1"># Initialize row cluster index</span>
+            <span class="n">iclst</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="c1"># Loop over material phases</span>
+            <span class="k">for</span> <span class="n">mat_phase_A</span> <span class="ow">in</span> <span class="n">material_phases</span><span class="p">:</span>
+                <span class="c1"># Set material phase pair</span>
+                <span class="n">mat_phase_pair</span> <span class="o">=</span> <span class="n">mat_phase_A</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">mat_phase_B</span>
+                <span class="c1"># Loop over material phase A clusters</span>
+                <span class="k">for</span> <span class="n">cluster_I</span> <span class="ow">in</span> <span class="n">phase_clusters</span><span class="p">[</span><span class="n">mat_phase_A</span><span class="p">]:</span>
+                    <span class="c1"># Set cluster pair</span>
+                    <span class="n">cluster_pair</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">cluster_I</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">cluster_J</span><span class="p">)</span>
+                    <span class="c1"># Set assembling ranges</span>
+                    <span class="n">i_init</span> <span class="o">=</span> <span class="n">iclst</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)</span>
+                    <span class="n">i_end</span> <span class="o">=</span> <span class="n">i_init</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)</span>
+                    <span class="n">j_init</span> <span class="o">=</span> <span class="n">jclst</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)</span>
+                    <span class="n">j_end</span> <span class="o">=</span> <span class="n">j_init</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)</span>
+                    <span class="c1"># Assemble cluster interaction tensors</span>
+                    <span class="n">global_cit_1_mf</span><span class="p">[</span><span class="n">i_init</span><span class="p">:</span><span class="n">i_end</span><span class="p">,</span> <span class="n">j_init</span><span class="p">:</span><span class="n">j_end</span><span class="p">]</span> <span class="o">=</span> \
+                        <span class="n">cit_1_mf</span><span class="p">[</span><span class="n">mat_phase_pair</span><span class="p">][</span><span class="n">cluster_pair</span><span class="p">]</span>
+                    <span class="n">global_cit_2_mf</span><span class="p">[</span><span class="n">i_init</span><span class="p">:</span><span class="n">i_end</span><span class="p">,</span> <span class="n">j_init</span><span class="p">:</span><span class="n">j_end</span><span class="p">]</span> <span class="o">=</span> \
+                        <span class="n">cit_2_mf</span><span class="p">[</span><span class="n">mat_phase_pair</span><span class="p">][</span><span class="n">cluster_pair</span><span class="p">]</span>
+                    <span class="n">global_cit_0_freq_mf</span><span class="p">[</span><span class="n">i_init</span><span class="p">:</span><span class="n">i_end</span><span class="p">,</span> <span class="n">j_init</span><span class="p">:</span><span class="n">j_end</span><span class="p">]</span> <span class="o">=</span> \
+                        <span class="n">cit_0_freq_mf</span><span class="p">[</span><span class="n">mat_phase_pair</span><span class="p">][</span><span class="n">cluster_pair</span><span class="p">]</span>
+                    <span class="c1"># Increment row cluster index</span>
+                    <span class="n">iclst</span> <span class="o">=</span> <span class="n">iclst</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="c1"># Increment column cluster index</span>
+            <span class="n">jclst</span> <span class="o">=</span> <span class="n">jclst</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Assemble global cluster interaction matrix</span>
+    <span class="n">global_cit_mf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">gop_factor_1</span><span class="p">,</span> <span class="n">global_cit_1_mf</span><span class="p">),</span>
+               <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">gop_factor_2</span><span class="p">,</span> <span class="n">global_cit_2_mf</span><span class="p">)),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">gop_factor_0_freq</span><span class="p">,</span> <span class="n">global_cit_0_freq_mf</span><span class="p">))</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="k">return</span> <span class="n">global_cit_mf</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

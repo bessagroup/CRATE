@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ioput.incoutputfiles.refmatoutput &mdash; crate 1.0.0 documentation</title>
+  <title>ioput.incoutputfiles.refmatoutput &mdash; CRATE 1.0.3 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
@@ -28,7 +28,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            crate
+            CRATE
           </a>
               <div class="version">
                 1.0
@@ -71,7 +71,7 @@
 <p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/reference/index.html">Index</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/crate.html">Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/cratepy.html">Code</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">License</span></p>
 <ul>
@@ -84,7 +84,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">crate</a>
+          <a href="../../../index.html">CRATE</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -130,7 +130,7 @@
 <span class="c1"># =============================================================================</span>
 <span class="c1">#</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="RefMatOutput"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.RefMatOutput.html#crate.online.crom.asca.RefMatOutput">[docs]</a><span class="k">class</span> <span class="nc">RefMatOutput</span><span class="p">(</span><span class="n">IncrementalOutputFile</span><span class="p">):</span>
+<div class="viewcode-block" id="RefMatOutput"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.RefMatOutput.html#cratepy.online.crom.asca.RefMatOutput">[docs]</a><span class="k">class</span> <span class="nc">RefMatOutput</span><span class="p">(</span><span class="n">IncrementalOutputFile</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Output file: Homogeneous (fictitious) reference material data.</span>
 
 <span class="sd">    Attributes</span>
@@ -159,7 +159,7 @@
 <span class="sd">    rewind_file(self, rewind_inc)</span>
 <span class="sd">        Rewind reference material output file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="RefMatOutput.__init__"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.RefMatOutput.html#crate.online.crom.asca.RefMatOutput.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span>
+<div class="viewcode-block" id="RefMatOutput.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.RefMatOutput.html#cratepy.online.crom.asca.RefMatOutput.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span>
                  <span class="n">self_consistent_scheme</span><span class="o">=</span><span class="s1">&#39;regression&#39;</span><span class="p">,</span>
                  <span class="n">ref_output_mode</span><span class="o">=</span><span class="s1">&#39;converged&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
@@ -205,7 +205,7 @@
         <span class="c1"># Set column width</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_col_width</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_header</span><span class="p">])</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="RefMatOutput.init_file"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.RefMatOutput.html#crate.online.crom.asca.RefMatOutput.init_file">[docs]</a>    <span class="k">def</span> <span class="nf">init_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="RefMatOutput.init_file"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.RefMatOutput.html#cratepy.online.crom.asca.RefMatOutput.init_file">[docs]</a>    <span class="k">def</span> <span class="nf">init_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Open output file and write file header.&quot;&quot;&quot;</span>
         <span class="c1"># Set reference material elastic properties initial output</span>
         <span class="n">properties_init</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
@@ -236,7 +236,7 @@
         <span class="c1"># Close output file</span>
         <span class="n">refm_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="RefMatOutput.write_file"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.RefMatOutput.html#crate.online.crom.asca.RefMatOutput.write_file">[docs]</a>    <span class="k">def</span> <span class="nf">write_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inc</span><span class="p">,</span> <span class="n">ref_material</span><span class="p">,</span> <span class="n">hom_strain_mf</span><span class="p">,</span> <span class="n">hom_stress_mf</span><span class="p">,</span>
+<div class="viewcode-block" id="RefMatOutput.write_file"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.RefMatOutput.html#cratepy.online.crom.asca.RefMatOutput.write_file">[docs]</a>    <span class="k">def</span> <span class="nf">write_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inc</span><span class="p">,</span> <span class="n">ref_material</span><span class="p">,</span> <span class="n">hom_strain_mf</span><span class="p">,</span> <span class="n">hom_stress_mf</span><span class="p">,</span>
                    <span class="n">farfield_strain_mf</span><span class="p">,</span> <span class="n">applied_mac_load_strain_mf</span><span class="p">,</span>
                    <span class="n">eff_tangent_mf</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Write output file.</span>
@@ -362,7 +362,7 @@
         <span class="c1"># Open output file (write mode) and write data</span>
         <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">file_lines</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="RefMatOutput.rewind_file"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.RefMatOutput.html#crate.online.crom.asca.RefMatOutput.rewind_file">[docs]</a>    <span class="k">def</span> <span class="nf">rewind_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rewind_inc</span><span class="p">):</span>
+<div class="viewcode-block" id="RefMatOutput.rewind_file"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.RefMatOutput.html#cratepy.online.crom.asca.RefMatOutput.rewind_file">[docs]</a>    <span class="k">def</span> <span class="nf">rewind_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rewind_inc</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Rewind output file.</span>
 
 <span class="sd">        Parameters</span>

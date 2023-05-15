@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cratepy.clustering.clusteringdata &mdash; CRATE 1.0.3 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="cratepy.clustering.clusteringdata.abstractmethod" href="cratepy.clustering.clusteringdata.abstractmethod.html" />
+    <link rel="prev" title="cratepy.clustering.clusteringalgs.MiniBatchKMeansSK" href="cratepy.clustering.clusteringalgs.MiniBatchKMeansSK.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            CRATE
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="cratepy.html">Code</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cratepy.crate_simulation.html">cratepy.crate_simulation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="cratepy.clustering.html">cratepy.clustering</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cratepy.clustering.adaptivity.html">cratepy.clustering.adaptivity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.clustering.citoperations.html">cratepy.clustering.citoperations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.clustering.clusteringalgs.html">cratepy.clustering.clusteringalgs</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">cratepy.clustering.clusteringdata</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#classes">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.clustering.clusteringdata.abstractmethod.html">cratepy.clustering.clusteringdata.abstractmethod</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.clustering.clusteringdata.def_gradient_from_log_strain.html">cratepy.clustering.clusteringdata.def_gradient_from_log_strain</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.clustering.clusteringdata.get_available_clustering_features.html">cratepy.clustering.clusteringdata.get_available_clustering_features</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.clustering.clusteringdata.set_clustering_data.html">cratepy.clustering.clusteringdata.set_clustering_data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.clustering.clusteringdata.ABC.html">cratepy.clustering.clusteringdata.ABC</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.clustering.clusteringdata.ClusterAnalysisData.html">cratepy.clustering.clusteringdata.ClusterAnalysisData</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.clustering.clusteringdata.FeatureAlgorithm.html">cratepy.clustering.clusteringdata.FeatureAlgorithm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.clustering.clusteringdata.MinMaxScaler.html">cratepy.clustering.clusteringdata.MinMaxScaler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.clustering.clusteringdata.RVEElasticDatabase.html">cratepy.clustering.clusteringdata.RVEElasticDatabase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.clustering.clusteringdata.SpatialCoordinates.html">cratepy.clustering.clusteringdata.SpatialCoordinates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.clustering.clusteringdata.StandardScaler.html">cratepy.clustering.clusteringdata.StandardScaler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.clustering.clusteringdata.Standardizer.html">cratepy.clustering.clusteringdata.Standardizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cratepy.clustering.clusteringdata.StrainConcentrationTensor.html">cratepy.clustering.clusteringdata.StrainConcentrationTensor</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.clustering.clusteringphase.html">cratepy.clustering.clusteringphase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.clustering.crve.html">cratepy.clustering.crve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.clustering.rveelasticdatabase.html">cratepy.clustering.rveelasticdatabase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cratepy.clustering.solution.html">cratepy.clustering.solution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.ioput.html">cratepy.ioput</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.main.html">cratepy.main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.material.html">cratepy.material</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.online.html">cratepy.online</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.optimization.html">cratepy.optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cratepy.tensor.html">cratepy.tensor</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CRATE</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="cratepy.html">cratepy</a></li>
+          <li class="breadcrumb-item"><a href="cratepy.clustering.html">cratepy.clustering</a></li>
+      <li class="breadcrumb-item active">cratepy.clustering.clusteringdata</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-cratepy.clustering.clusteringdata">
+<span id="cratepy-clustering-clusteringdata"></span><h1>cratepy.clustering.clusteringdata<a class="headerlink" href="#module-cratepy.clustering.clusteringdata" title="Permalink to this heading">¶</a></h1>
+<p>Compute RVE clustering features data.</p>
+<p>This module includes all the required tools to compute the global clustering
+data matrix that is needed to perform the RVE cluster analysis. Besides the
+overall high-level management of such a computation, it includes the interface
+to implement different clustering features as well as an interface for data
+standardization algorithms.</p>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">¶</a></h2>
+<dl class="simple">
+<dt>ClusterAnalysisData</dt><dd><p>Features data required to perform the RVE cluster analysis.</p>
+</dd>
+<dt>FeatureAlgorithm</dt><dd><p>Feature computation algorithm interface.</p>
+</dd>
+<dt>StrainConcentrationTensor</dt><dd><p>Fourth-order elastic strain concentration tensor.</p>
+</dd>
+<dt>Standardizer</dt><dd><p>Data standardization algorithm interface.</p>
+</dd>
+<dt>MinMaxScaler:</dt><dd><p>Min-Max scaling algorithm (wrapper).</p>
+</dd>
+<dt>StandardScaler</dt><dd><p>Standard scaling algorithm (wrapper).</p>
+</dd>
+</dl>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">¶</a></h2>
+<dl class="simple">
+<dt>set_clustering_data</dt><dd><p>Compute the features data required to perform the RVE cluster analysis.</p>
+</dd>
+<dt>get_available_clustering_features</dt><dd><p>Get available clustering features and corresponding descriptors.</p>
+</dd>
+<dt>def_gradient_from_log_strain</dt><dd><p>Get deformation gradient from material logarithmic strain tensor.</p>
+</dd>
+</dl>
+</section>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="cratepy.clustering.clusteringdata.abstractmethod.html#cratepy.clustering.clusteringdata.abstractmethod" title="cratepy.clustering.clusteringdata.abstractmethod"><code class="xref py py-obj docutils literal notranslate"><span class="pre">abstractmethod</span></code></a>(funcobj)</p></td>
+<td><p>A decorator indicating abstract methods.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="cratepy.clustering.clusteringdata.def_gradient_from_log_strain.html#cratepy.clustering.clusteringdata.def_gradient_from_log_strain" title="cratepy.clustering.clusteringdata.def_gradient_from_log_strain"><code class="xref py py-obj docutils literal notranslate"><span class="pre">def_gradient_from_log_strain</span></code></a>(log_strain)</p></td>
+<td><p>Get deformation gradient from material logarithmic strain tensor.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="cratepy.clustering.clusteringdata.get_available_clustering_features.html#cratepy.clustering.clusteringdata.get_available_clustering_features" title="cratepy.clustering.clusteringdata.get_available_clustering_features"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_available_clustering_features</span></code></a>(...)</p></td>
+<td><p>Get available clustering features and corresponding descriptors.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="cratepy.clustering.clusteringdata.set_clustering_data.html#cratepy.clustering.clusteringdata.set_clustering_data" title="cratepy.clustering.clusteringdata.set_clustering_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_clustering_data</span></code></a>(strain_formulation, ...)</p></td>
+<td><p>Compute the features data required to perform the RVE cluster analysis.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="cratepy.clustering.clusteringdata.ABC.html#cratepy.clustering.clusteringdata.ABC" title="cratepy.clustering.clusteringdata.ABC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ABC</span></code></a>()</p></td>
+<td><p>Helper class that provides a standard way to create an ABC using inheritance.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="cratepy.clustering.clusteringdata.ClusterAnalysisData.html#cratepy.clustering.clusteringdata.ClusterAnalysisData" title="cratepy.clustering.clusteringdata.ClusterAnalysisData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClusterAnalysisData</span></code></a>(strain_formulation, ...)</p></td>
+<td><p>Features data required to perform the RVE cluster analysis.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="cratepy.clustering.clusteringdata.FeatureAlgorithm.html#cratepy.clustering.clusteringdata.FeatureAlgorithm" title="cratepy.clustering.clusteringdata.FeatureAlgorithm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeatureAlgorithm</span></code></a>()</p></td>
+<td><p>Feature computation algorithm interface.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="cratepy.clustering.clusteringdata.MinMaxScaler.html#cratepy.clustering.clusteringdata.MinMaxScaler" title="cratepy.clustering.clusteringdata.MinMaxScaler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MinMaxScaler</span></code></a>([feature_range])</p></td>
+<td><p>Min-Max scaling algorithm (wrapper).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="cratepy.clustering.clusteringdata.RVEElasticDatabase.html#cratepy.clustering.clusteringdata.RVEElasticDatabase" title="cratepy.clustering.clusteringdata.RVEElasticDatabase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RVEElasticDatabase</span></code></a>(strain_formulation, ...)</p></td>
+<td><p>RVE local elastic response database class.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="cratepy.clustering.clusteringdata.SpatialCoordinates.html#cratepy.clustering.clusteringdata.SpatialCoordinates" title="cratepy.clustering.clusteringdata.SpatialCoordinates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpatialCoordinates</span></code></a>()</p></td>
+<td><p>Spatial coordinates.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="cratepy.clustering.clusteringdata.StandardScaler.html#cratepy.clustering.clusteringdata.StandardScaler" title="cratepy.clustering.clusteringdata.StandardScaler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StandardScaler</span></code></a>()</p></td>
+<td><p>Standard scaling algorithm (wrapper).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="cratepy.clustering.clusteringdata.Standardizer.html#cratepy.clustering.clusteringdata.Standardizer" title="cratepy.clustering.clusteringdata.Standardizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Standardizer</span></code></a>()</p></td>
+<td><p>Data standardization algorithm interface.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="cratepy.clustering.clusteringdata.StrainConcentrationTensor.html#cratepy.clustering.clusteringdata.StrainConcentrationTensor" title="cratepy.clustering.clusteringdata.StrainConcentrationTensor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StrainConcentrationTensor</span></code></a>()</p></td>
+<td><p>Fourth-order elastic strain concentration tensor.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cratepy.clustering.clusteringalgs.MiniBatchKMeansSK.html" class="btn btn-neutral float-left" title="cratepy.clustering.clusteringalgs.MiniBatchKMeansSK" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cratepy.clustering.clusteringdata.abstractmethod.html" class="btn btn-neutral float-right" title="cratepy.clustering.clusteringdata.abstractmethod" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

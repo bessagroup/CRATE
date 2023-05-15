@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>clustering.clusteringalgs &mdash; crate 1.0.0 documentation</title>
+  <title>clustering.clusteringalgs &mdash; CRATE 1.0.3 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/readthedocs-custom.css" type="text/css" />
@@ -28,7 +28,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            crate
+            CRATE
           </a>
               <div class="version">
                 1.0
@@ -71,7 +71,7 @@
 <p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/reference/index.html">Index</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/crate.html">Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/cratepy.html">Code</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">License</span></p>
 <ul>
@@ -84,7 +84,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">crate</a>
+          <a href="../../index.html">CRATE</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -147,7 +147,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                                              Cluster Analysis</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="ClusterAnalysis"><a class="viewcode-back" href="../../_autosummary/crate.clustering.clusteringphase.ClusterAnalysis.html#crate.clustering.clusteringphase.ClusterAnalysis">[docs]</a><span class="k">class</span> <span class="nc">ClusterAnalysis</span><span class="p">:</span>
+<div class="viewcode-block" id="ClusterAnalysis"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.clusteringphase.ClusterAnalysis.html#cratepy.clustering.clusteringphase.ClusterAnalysis">[docs]</a><span class="k">class</span> <span class="nc">ClusterAnalysis</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Interface to perform a cluster analysis.</span>
 
 <span class="sd">    Attributes</span>
@@ -165,11 +165,11 @@
                                 <span class="s1">&#39;2&#39;</span><span class="p">:</span> <span class="s1">&#39;Mini-Batch K-Means (scikit-learn)&#39;</span><span class="p">,</span>
                                 <span class="s1">&#39;3&#39;</span><span class="p">:</span> <span class="s1">&#39;Agglomerative (scipy)&#39;</span><span class="p">,</span> <span class="p">}</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ClusterAnalysis.__init__"><a class="viewcode-back" href="../../_autosummary/crate.clustering.clusteringphase.ClusterAnalysis.html#crate.clustering.clusteringphase.ClusterAnalysis.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ClusterAnalysis.__init__"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.clusteringphase.ClusterAnalysis.html#cratepy.clustering.clusteringphase.ClusterAnalysis.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ClusterAnalysis.get_fitted_estimator"><a class="viewcode-back" href="../../_autosummary/crate.clustering.clusteringphase.ClusterAnalysis.html#crate.clustering.clusteringphase.ClusterAnalysis.get_fitted_estimator">[docs]</a>    <span class="k">def</span> <span class="nf">get_fitted_estimator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">,</span> <span class="n">clust_alg_id</span><span class="p">,</span> <span class="n">n_clusters</span><span class="p">):</span>
+<div class="viewcode-block" id="ClusterAnalysis.get_fitted_estimator"><a class="viewcode-back" href="../../_autosummary/cratepy.clustering.clusteringphase.ClusterAnalysis.html#cratepy.clustering.clusteringphase.ClusterAnalysis.get_fitted_estimator">[docs]</a>    <span class="k">def</span> <span class="nf">get_fitted_estimator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">,</span> <span class="n">clust_alg_id</span><span class="p">,</span> <span class="n">n_clusters</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get cluster labels and clustering fitted estimator.</span>
 
 <span class="sd">        Parameters</span>
