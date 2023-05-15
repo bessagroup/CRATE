@@ -1,0 +1,7 @@
+anytree==2.8.0
+colorama==0.4.6
+numpy==1.23.3
+scikit_learn==1.2.2
+scipy==1.10.0
+sphinx_rtd_theme==1.2.0
+sphinx-autodoc-typehints==1.22
