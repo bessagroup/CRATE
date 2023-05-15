@@ -48,6 +48,15 @@ To get a quick idea of what CRATE is all about, take a look into :doc:`GETTING S
 
 ----
 
+Useful Links
+------------
+
+* `GitHub repository <https://github.com/bessagroup/CRATE>`_ (source code);
+
+* `PyPI <https://pypi.org/project/crate-sim/>`_ (distribution package).
+
+----
+
 Community Support
 -----------------
 
@@ -72,7 +81,7 @@ Copyright 2020, Bernardo Ferreira
 
 All rights reserved.
 
-CRATE is a free and open-source software published under a BSD 3-Clause License.
+CRATE is a free and open-source software published under a :doc:`BSD 3-Clause License <../license>`.
 
 
 
