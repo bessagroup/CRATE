@@ -1,0 +1,38 @@
+#
+# Author: Bernardo Ferreira
+#
+# Example:
+#
+# 2D plane-strain finite strains simulation of a 2-phase heterogeneous material
+# characterized by randomly distributed circular particles
+# (volume fraction = 30%) embedded in a matrix (volume fraction = 70%).
+#
+# The matrix material phase constitutive behavior is governed by a
+# hyperelastic-based finite strain formulation of the von Mises isotropic
+# elasto-plastic constitutive model with isotropic hardening, whereas the
+# particle's material phase is governed by the Hencky isotropic hyperelastic
+# constitutive model.
+#
+# The 2D heterogeneous material RVE is subjected to five different macro-scale
+# strain-driven monotonic loading paths:
+#
+# - Uniaxial tension
+# - Pure shear
+# - Uniaxial compression
+# - Combined uniaxial tension - shear
+# - Combined uniaxial compression - shear
+#
+# The micro-scale equilibrium problem is solved with the finite strain
+# extension of the Self-Consistent Clustering Analysis (SCA) compatible with
+# multiplicative kinematics, keeping the homogeneous (fictitious) reference
+# material properties constant. This study aims to evaluate the influence of
+# the reference material properties on the solution under finite strains,
+# namely of the reference material Young modulus. The results are compared with
+# the solution obtained by means of the Finite Element Method (DNS solution).
+#
+#
+# Source: PhD Thesis
+#
+# Ferreira, B.P. (2022). Towards Data-driven Multi-scale Optimization of
+# Thermoplastic Blends: Microstructural Generation, Constitutive Development
+# and Clustering-based Reduced-Order Modeling. PhD Thesis, University of Porto

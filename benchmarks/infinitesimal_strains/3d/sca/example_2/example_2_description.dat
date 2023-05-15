@@ -1,0 +1,32 @@
+#
+# Author: Bernardo Ferreira
+#
+# Example:
+#
+# 3D infinitesimal strains simulation of a 2-phase heterogeneous material
+# characterized by randomly distributed spherical particles
+# (volume fraction = 20%) embedded in a matrix (volume fraction = 80%).
+#
+# The matrix material phase constitutive behavior is governed by the von Mises
+# isotropic elasto-plastic constitutive model with isotropic hardening, whereas
+# the particle's material phase is governed by the isotropic linear elastic
+# constitutive model.
+#
+# The 3D heterogeneous material RVE is subjected to two different macro-scale
+# strain and stress-driven monotonic loading paths:
+#
+# - Uniaxial tension
+# - Pure shear
+#
+# The micro-scale equilibrium problem is solved with the Self-Consistent
+# Clustering Analysis (SCA), considering CRVEs with a different number of
+# clusters. The results are compared with the solution obtained by means of
+# the Finite Element Method (DNS solution).
+#
+#
+# Source: Paper
+#
+# Liu, Z., Bessa, M., and Liu, W. K. (2016). Self-consistent clustering
+# analysis: An efficient multi-scale scheme for inelastic heterogeneous
+# materials. Computer Methods in Applied Mechanics and Engineering,
+# 306:319–341.

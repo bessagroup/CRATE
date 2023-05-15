@@ -1,0 +1,27 @@
+crate.clustering.clusteringdata.StrainConcentrationTensor
+=========================================================
+
+.. currentmodule:: crate.clustering.clusteringdata
+
+.. autoclass:: StrainConcentrationTensor
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: List of Public Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~StrainConcentrationTensor.get_feature_data_matrix
+   
+   
+
+   
+   
+   
+
+   .. rubric:: Methods
