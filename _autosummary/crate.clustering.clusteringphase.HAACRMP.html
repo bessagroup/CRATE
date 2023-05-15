@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>crate.clustering.clusteringphase.HAACRMP &mdash; crate 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="crate.clustering.clusteringphase.SCRMP" href="crate.clustering.clusteringphase.SCRMP.html" />
+    <link rel="prev" title="crate.clustering.clusteringphase.GACRMP" href="crate.clustering.clusteringphase.GACRMP.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            crate
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="crate.html">Code</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="crate.crate_simulation.html">crate.crate_simulation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="crate.clustering.html">crate.clustering</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="crate.clustering.adaptivity.html">crate.clustering.adaptivity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.clustering.citoperations.html">crate.clustering.citoperations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.clustering.clusteringalgs.html">crate.clustering.clusteringalgs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.clustering.clusteringdata.html">crate.clustering.clusteringdata</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="crate.clustering.clusteringphase.html">crate.clustering.clusteringphase</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="crate.clustering.clusteringphase.html#classes">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.clustering.clusteringphase.abstractmethod.html">crate.clustering.clusteringphase.abstractmethod</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.clustering.clusteringphase.ABC.html">crate.clustering.clusteringphase.ABC</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.clustering.clusteringphase.ACRMP.html">crate.clustering.clusteringphase.ACRMP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.clustering.clusteringphase.CRMP.html">crate.clustering.clusteringphase.CRMP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.clustering.clusteringphase.ClusterAnalysis.html">crate.clustering.clusteringphase.ClusterAnalysis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.clustering.clusteringphase.GACRMP.html">crate.clustering.clusteringphase.GACRMP</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">crate.clustering.clusteringphase.HAACRMP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.clustering.clusteringphase.SCRMP.html">crate.clustering.clusteringphase.SCRMP</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="crate.clustering.crve.html">crate.clustering.crve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.clustering.rveelasticdatabase.html">crate.clustering.rveelasticdatabase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.clustering.solution.html">crate.clustering.solution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="crate.ioput.html">crate.ioput</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.main.html">crate.main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.material.html">crate.material</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.online.html">crate.online</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.optimization.html">crate.optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.tensor.html">crate.tensor</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">crate</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="crate.html">crate</a></li>
+          <li class="breadcrumb-item"><a href="crate.clustering.html">crate.clustering</a></li>
+          <li class="breadcrumb-item"><a href="crate.clustering.clusteringphase.html">crate.clustering.clusteringphase</a></li>
+      <li class="breadcrumb-item active">crate.clustering.clusteringphase.HAACRMP</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="crate-clustering-clusteringphase-haacrmp">
+<h1>crate.clustering.clusteringphase.HAACRMP<a class="headerlink" href="#crate-clustering-clusteringphase-haacrmp" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="crate.clustering.clusteringphase.HAACRMP">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">HAACRMP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mat_phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_data_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptivity_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/clustering/clusteringphase.html#HAACRMP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.clusteringphase.HAACRMP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="crate.clustering.clusteringphase.ACRMP.html#crate.clustering.clusteringphase.ACRMP" title="crate.clustering.clusteringphase.ACRMP"><code class="xref py py-class docutils literal notranslate"><span class="pre">ACRMP</span></code></a></p>
+<p>Hierarchical Agglomerative Adaptive Cluster-Reduced Material Phase.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.clustering.clusteringphase.HAACRMP._clustering_type">
+<span class="sig-name descname"><span class="pre">_clustering_type</span></span><a class="headerlink" href="#crate.clustering.clusteringphase.HAACRMP._clustering_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type of cluster-reduced material phase.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.clustering.clusteringphase.HAACRMP._linkage_matrix">
+<span class="sig-name descname"><span class="pre">_linkage_matrix</span></span><a class="headerlink" href="#crate.clustering.clusteringphase.HAACRMP._linkage_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Linkage matrix associated with the hierarchical agglomerative
+clustering (numpy.ndarray of shape (n_phase_voxels - 1, 4)).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (2d)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.clustering.clusteringphase.HAACRMP._cluster_node_map">
+<span class="sig-name descname"><span class="pre">_cluster_node_map</span></span><a class="headerlink" href="#crate.clustering.clusteringphase.HAACRMP._cluster_node_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tree node id (item, int) associated with each cluster label (key, str).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.clustering.clusteringphase.HAACRMP._adaptive_step">
+<span class="sig-name descname"><span class="pre">_adaptive_step</span></span><a class="headerlink" href="#crate.clustering.clusteringphase.HAACRMP._adaptive_step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Counter of adaptive clustering steps, with 0 associated with the base
+clustering.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.clustering.clusteringphase.HAACRMP._adapt_split_factor">
+<span class="sig-name descname"><span class="pre">_adapt_split_factor</span></span><a class="headerlink" href="#crate.clustering.clusteringphase.HAACRMP._adapt_split_factor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adaptive clustering split factor. The adaptive clustering split factor
+must be contained between 0 and 1 (included). The lower bound (0)
+enforces a single split, i.e., 2 new clusters, while the upper bound
+(1) is associated with a maximum defined number of new voxels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.clustering.clusteringphase.HAACRMP._threshold_n_clusters">
+<span class="sig-name descname"><span class="pre">_threshold_n_clusters</span></span><a class="headerlink" href="#crate.clustering.clusteringphase.HAACRMP._threshold_n_clusters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Threshold number of adaptive material phase number of clusters. Once
+this threshold is surpassed, the adaptive procedures of the adaptive
+material phase are deactivated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.clustering.clusteringphase.HAACRMP._is_dynamic_split_factor">
+<span class="sig-name descname"><span class="pre">_is_dynamic_split_factor</span></span><a class="headerlink" href="#crate.clustering.clusteringphase.HAACRMP._is_dynamic_split_factor" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if adaptive clustering split factor is to be computed dynamically.
+Otherwise, the adaptive clustering split factor is always set equal to
+<cite>_adapt_split_factor</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.clustering.clusteringphase.HAACRMP.max_label">
+<span class="sig-name descname"><span class="pre">max_label</span></span><a class="headerlink" href="#crate.clustering.clusteringphase.HAACRMP.max_label" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clustering maximum label.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.clustering.clusteringphase.HAACRMP.cluster_labels">
+<span class="sig-name descname"><span class="pre">cluster_labels</span></span><a class="headerlink" href="#crate.clustering.clusteringphase.HAACRMP.cluster_labels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Material phase cluster labels (numpy.ndarray[int] of shape
+(n_phase_voxels,)).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (1d)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.clustering.clusteringphase.HAACRMP.adaptive_time">
+<span class="sig-name descname"><span class="pre">adaptive_time</span></span><a class="headerlink" href="#crate.clustering.clusteringphase.HAACRMP.adaptive_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Total amount of time (s) spent in the adaptive procedures.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.clustering.clusteringphase.HAACRMP.adaptivity_lock">
+<span class="sig-name descname"><span class="pre">adaptivity_lock</span></span><a class="headerlink" href="#crate.clustering.clusteringphase.HAACRMP.adaptivity_lock" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if the adaptive procedures are deactivated, False otherwise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.clusteringphase.HAACRMP.perform_base_clustering">
+<span class="sig-name descname"><span class="pre">perform_base_clustering</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_clustering_scheme</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/clustering/clusteringphase.html#HAACRMP.perform_base_clustering"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.clusteringphase.HAACRMP.perform_base_clustering" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform HAACRMP base clustering.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.clusteringphase.HAACRMP.perform_adaptive_clustering">
+<span class="sig-name descname"><span class="pre">perform_adaptive_clustering</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_clusters_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptive_clustering_scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/clustering/clusteringphase.html#HAACRMP.perform_adaptive_clustering"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.clusteringphase.HAACRMP.perform_adaptive_clustering" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform HAACRMP adaptive clustering step.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.clusteringphase.HAACRMP.add_to_tree_node_list">
+<span class="sig-name descname"><span class="pre">add_to_tree_node_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/clustering/clusteringphase.html#HAACRMP.add_to_tree_node_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.clusteringphase.HAACRMP.add_to_tree_node_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add node to tree node list and sort by descending linkage distance.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.clusteringphase.HAACRMP._check_adaptivity_lock">
+<span class="sig-name descname"><span class="pre">_check_adaptivity_lock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/clustering/clusteringphase.html#HAACRMP._check_adaptivity_lock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.clusteringphase.HAACRMP._check_adaptivity_lock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check ACRMP adaptivity locking conditions.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.clusteringphase.HAACRMP.print_adaptive_clustering">
+<span class="sig-name descname"><span class="pre">print_adaptive_clustering</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptive_clustering_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptive_tree_node_map</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/clustering/clusteringphase.html#HAACRMP.print_adaptive_clustering"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.clusteringphase.HAACRMP.print_adaptive_clustering" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.clusteringphase.HAACRMP.get_valid_clust_algs">
+<span class="sig-name descname"><span class="pre">get_valid_clust_algs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/clustering/clusteringphase.html#HAACRMP.get_valid_clust_algs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.clusteringphase.HAACRMP.get_valid_clust_algs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get valid clustering algorithms to compute the CRMP.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.clusteringphase.HAACRMP.get_n_clusters">
+<span class="sig-name descname"><span class="pre">get_n_clusters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/clustering/clusteringphase.html#HAACRMP.get_n_clusters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.clusteringphase.HAACRMP.get_n_clusters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get current number of clusters.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.clusteringphase.HAACRMP.get_clustering_type">
+<span class="sig-name descname"><span class="pre">get_clustering_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/clustering/clusteringphase.html#HAACRMP.get_clustering_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.clusteringphase.HAACRMP.get_clustering_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get cluster-reduced material phase adaptivity type.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.clusteringphase.HAACRMP.get_adaptivity_type_parameters">
+<span class="sig-name descname"><span class="pre">get_adaptivity_type_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/clustering/clusteringphase.html#HAACRMP.get_adaptivity_type_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.clusteringphase.HAACRMP.get_adaptivity_type_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get ACRMP mandatory and optional adaptivity type parameters.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.clusteringphase.HAACRMP._set_adaptivity_type_parameters">
+<span class="sig-name descname"><span class="pre">_set_adaptivity_type_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptivity_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/clustering/clusteringphase.html#HAACRMP._set_adaptivity_type_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.clusteringphase.HAACRMP._set_adaptivity_type_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set clustering adaptivity parameters.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.clusteringphase.HAACRMP.get_adaptive_output">
+<span class="sig-name descname"><span class="pre">get_adaptive_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/clustering/clusteringphase.html#HAACRMP.get_adaptive_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.clusteringphase.HAACRMP.get_adaptive_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get adaptivity metrics for clustering adaptivity output.</p>
+</dd></dl>
+
+<p>Constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mat_phase</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Material phase label.</p></li>
+<li><p><strong>cluster_data_matrix</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Data matrix (numpy.ndarray of shape
+(n_phase_voxels, n_features_dims)) containing the clustering
+features data to perform the material phase cluster analyses.</p></li>
+<li><p><strong>n_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Number of material phase clusters.</p></li>
+<li><p><strong>adaptivity_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clustering adaptivity parameters.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">List of Public Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id4" title="crate.clustering.clusteringphase.HAACRMP.add_to_tree_node_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_to_tree_node_list</span></code></a></p></td>
+<td><p>Add node to tree node list and sort by descending linkage distance.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id5" title="crate.clustering.clusteringphase.HAACRMP.get_adaptive_output"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_adaptive_output</span></code></a></p></td>
+<td><p>Get adaptivity metrics for clustering adaptivity output.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id6" title="crate.clustering.clusteringphase.HAACRMP.get_adaptivity_type_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_adaptivity_type_parameters</span></code></a></p></td>
+<td><p>Get ACRMP mandatory and optional adaptivity type parameters.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id7" title="crate.clustering.clusteringphase.HAACRMP.get_clustering_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_clustering_type</span></code></a></p></td>
+<td><p>Get cluster-reduced material phase adaptivity type.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id8" title="crate.clustering.clusteringphase.HAACRMP.get_n_clusters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_n_clusters</span></code></a></p></td>
+<td><p>Get current number of clusters.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id9" title="crate.clustering.clusteringphase.HAACRMP.get_valid_clust_algs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_valid_clust_algs</span></code></a></p></td>
+<td><p>Get valid clustering algorithms to compute the CRMP.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id10" title="crate.clustering.clusteringphase.HAACRMP.perform_adaptive_clustering"><code class="xref py py-obj docutils literal notranslate"><span class="pre">perform_adaptive_clustering</span></code></a></p></td>
+<td><p>Perform HAACRMP adaptive clustering step.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id11" title="crate.clustering.clusteringphase.HAACRMP.perform_base_clustering"><code class="xref py py-obj docutils literal notranslate"><span class="pre">perform_base_clustering</span></code></a></p></td>
+<td><p>Perform HAACRMP base clustering.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id12" title="crate.clustering.clusteringphase.HAACRMP.print_adaptive_clustering"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_adaptive_clustering</span></code></a></p></td>
+<td><p>Print hierarchical adaptive clustering report (validation).</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.clusteringphase.HAACRMP.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mat_phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_data_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptivity_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/clustering/clusteringphase.html#HAACRMP.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.clusteringphase.HAACRMP.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mat_phase</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Material phase label.</p></li>
+<li><p><strong>cluster_data_matrix</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Data matrix (numpy.ndarray of shape
+(n_phase_voxels, n_features_dims)) containing the clustering
+features data to perform the material phase cluster analyses.</p></li>
+<li><p><strong>n_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Number of material phase clusters.</p></li>
+<li><p><strong>adaptivity_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clustering adaptivity parameters.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">_check_adaptivity_lock</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/clustering/clusteringphase.html#HAACRMP._check_adaptivity_lock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check ACRMP adaptivity locking conditions.</p>
+<p>Check conditions that may deactivate the adaptive procedures in the
+ACRMP. Once the ACRMP adaptivity is locked, it is treated as a SCRMP
+for the remainder of the problem numerical solution.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.clusteringphase.HAACRMP._dynamic_split_factor">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_dynamic_split_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_split_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adapt_trigger_ratio</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">magnitude</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dynamic_amp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#crate.clustering.clusteringphase.HAACRMP._dynamic_split_factor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute dynamic adaptive clustering split factor.</p>
+<p>A detailed description of the dynamic adaptive clustering split factor
+can be found in Ferreira et. al (2022) <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id2" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Ferreira, B.P., Andrade Pires, F.M. and Bessa, M.A. (2022).
+<em>Adaptivity for clustering-based reduced-order modeling of
+localized history-dependent phenomena.</em> Comp Methods Appl M, 393
+(see <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0045782522000895?via%3Dihub">here</a>)</p>
+</aside>
+</aside>
+<hr class="docutils" />
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ref_split_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – Reference (centered) adaptive clustering split factor. The adaptive
+clustering split factor must be contained between 0 and 1
+(included). The lower bound (0) enforces a single split, while the
+upper bound (1) performs the maximum number splits of each cluster
+(leading to single-voxel clusters).</p></li>
+<li><p><strong>adapt_trigger_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – Threshold associated with the adaptivity trigger condition.</p></li>
+<li><p><strong>magnitude</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – Difference between cluster ratio and adaptive trigger ratio. Given
+that the cluster ratio ranges between 0 and 1 and only clusters
+with a ratio greater or equal than the adaptive trigger ratio are
+targeted, the magnitude ranges between 0 and 1 - trigger ratio.</p></li>
+<li><p><strong>dynamic_amp</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><em>default=0</em>) – Dynamic split factor amplitude centered around the reference
+adaptive clustering split factor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>adapt_split_factor</strong> – Adaptive clustering split factor. The adaptive clustering split
+factor must be contained between 0 and 1 (included). The lower
+bound (0) enforces a single split, i.e., 2 new clusters, while the
+upper bound (1) is associated with a maximum defined number of new
+voxels.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">_set_adaptivity_type_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adaptivity_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/clustering/clusteringphase.html#HAACRMP._set_adaptivity_type_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set clustering adaptivity parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>adaptivity_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clustering adaptivity parameters.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.clusteringphase.HAACRMP._update_cluster_labels">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_update_cluster_labels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#crate.clustering.clusteringphase.HAACRMP._update_cluster_labels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update cluster labels starting with the provided minimum label.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>labels</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Cluster labels (numpy.ndarray[int] of shape (n_items,)).</p></li>
+<li><p><strong>min_label</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=0</em>) – Minimum cluster label.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>new_labels</strong> (<em>numpy.ndarray (1d)</em>) – Updated cluster labels (numpy.ndarray[int] of shape (n_items,)).</p></li>
+<li><p><strong>max_label</strong> (<em>int</em>) – Maximum cluster label.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id4">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_to_tree_node_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/clustering/clusteringphase.html#HAACRMP.add_to_tree_node_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add node to tree node list and sort by descending linkage distance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><em>ClusterNode</em><em>]</em>) – List of ClusterNode instances.</p></li>
+<li><p><strong>node</strong> (<em>ClusterNode</em>) – ClusterNode to be added to list[ClusterNode].</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">get_adaptive_output</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/clustering/clusteringphase.html#HAACRMP.get_adaptive_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get adaptivity metrics for clustering adaptivity output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>adaptivity_output</strong> – List containing the adaptivity metrics associated with the
+clustering adaptivity output file.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id6">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_adaptivity_type_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/clustering/clusteringphase.html#HAACRMP.get_adaptivity_type_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get ACRMP mandatory and optional adaptivity type parameters.</p>
+<p>Besides returning the ACRMP mandatory and optional adaptivity type
+parameters, this method establishes the default values for the optional
+parameters.</p>
+<hr class="docutils" />
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>mandatory_parameters</strong> (<em>dict</em>) – Mandatory adaptivity type parameters (str) and associated type
+(item, type).</p></li>
+<li><p><strong>optional_parameters</strong> (<em>dict</em>) – Optional adaptivity type parameters (key, str) and associated
+default value (item).</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">get_clustering_type</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/clustering/clusteringphase.html#HAACRMP.get_clustering_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id7" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get cluster-reduced material phase adaptivity type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>clustering_type</strong> – Type of cluster-reduced material phase.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id8">
+<span class="sig-name descname"><span class="pre">get_n_clusters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/clustering/clusteringphase.html#HAACRMP.get_n_clusters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id8" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get current number of clusters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>n_clusters</strong> – Number of material phase clusters.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id9">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_valid_clust_algs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/clustering/clusteringphase.html#HAACRMP.get_valid_clust_algs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id9" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get valid clustering algorithms to compute the CRMP.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>clust_algs</strong> – Clustering algorithms identifiers (str).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id10">
+<span class="sig-name descname"><span class="pre">perform_adaptive_clustering</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_clusters_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptive_clustering_scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/clustering/clusteringphase.html#HAACRMP.perform_adaptive_clustering"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id10" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform HAACRMP adaptive clustering step.</p>
+<p>Refine the provided target clusters by splitting them according to the
+hierarchical agglomerative tree, prioritizing child nodes by descending
+order of linkage distance.</p>
+<hr class="docutils" />
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>]</em>) – List with the labels (int) of clusters to be adapted.</p></li>
+<li><p><strong>target_clusters_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – For each target cluster (key, str), store dictionary (item, dict)
+containing cluster associated parameters relevant for the adaptive
+procedures.</p></li>
+<li><p><strong>adaptive_clustering_scheme</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Prescribed adaptive clustering scheme (item, numpy.ndarray of shape
+(n_clusterings, 3)) for each material phase (key, str). Each row is
+associated with a unique clustering characterized by a clustering
+algorithm (col 1, int), a list of features (col 2, list[int]) and a
+list of the features data matrix’ indexes (col 3, list[int]).</p></li>
+<li><p><strong>min_label</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=0</em>) – Minimum cluster label.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>adaptive_clustering_map</strong> (<em>dict</em>) – List of new cluster labels (item, list[int]) resulting from the
+adaptivity of each target cluster (key, str).</p></li>
+<li><p><strong>adaptive_tree_node_map</strong> (<em>dict</em>) – List of new cluster tree node ids (item, list[int]) resulting from
+the split of each target cluster tree node id (key, str).
+Validation purposes only (not returned otherwise).</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id11">
+<span class="sig-name descname"><span class="pre">perform_base_clustering</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_clustering_scheme</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/clustering/clusteringphase.html#HAACRMP.perform_base_clustering"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id11" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform HAACRMP base clustering.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base_clustering_scheme</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Prescribed base clustering scheme (item, numpy.ndarray of shape
+(n_clusterings, 3)) for each material phase (key, str). Each row is
+associated with a unique clustering characterized by a clustering
+algorithm (col 1, int), a list of features (col 2, list[int]) and a
+list of the features data matrix’ indexes (col 3, list[int]).</p></li>
+<li><p><strong>min_label</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=0</em>) – Minimum cluster label.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id12">
+<span class="sig-name descname"><span class="pre">print_adaptive_clustering</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adaptive_clustering_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptive_tree_node_map</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/clustering/clusteringphase.html#HAACRMP.print_adaptive_clustering"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id12" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print hierarchical adaptive clustering report (validation).</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="crate.clustering.clusteringphase.GACRMP.html" class="btn btn-neutral float-left" title="crate.clustering.clusteringphase.GACRMP" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="crate.clustering.clusteringphase.SCRMP.html" class="btn btn-neutral float-right" title="crate.clustering.clusteringphase.SCRMP" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

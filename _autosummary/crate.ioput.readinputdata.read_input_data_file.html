@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>crate.ioput.readinputdata.read_input_data_file &mdash; crate 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="crate.ioput.readinputdata.read_output_minimization_option" href="crate.ioput.readinputdata.read_output_minimization_option.html" />
+    <link rel="prev" title="crate.ioput.readinputdata.get_available_clustering_features" href="crate.ioput.readinputdata.get_available_clustering_features.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            crate
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="crate.html">Code</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="crate.crate_simulation.html">crate.crate_simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.clustering.html">crate.clustering</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="crate.ioput.html">crate.ioput</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="crate.ioput.fileoperations.html">crate.ioput.fileoperations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.ioput.incoutputfiles.html">crate.ioput.incoutputfiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.ioput.info.html">crate.ioput.info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.ioput.ioutilities.html">crate.ioput.ioutilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.ioput.miscoutputfiles.html">crate.ioput.miscoutputfiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.ioput.packager.html">crate.ioput.packager</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="crate.ioput.readinputdata.html">crate.ioput.readinputdata</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="crate.ioput.readinputdata.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.ioput.readinputdata.get_available_clustering_features.html">crate.ioput.readinputdata.get_available_clustering_features</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">crate.ioput.readinputdata.read_input_data_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.ioput.readinputdata.read_output_minimization_option.html">crate.ioput.readinputdata.read_output_minimization_option</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.ioput.readinputdata.MaterialState.html">crate.ioput.readinputdata.MaterialState</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="crate.ioput.readprocedures.html">crate.ioput.readprocedures</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="crate.main.html">crate.main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.material.html">crate.material</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.online.html">crate.online</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.optimization.html">crate.optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.tensor.html">crate.tensor</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">crate</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="crate.html">crate</a></li>
+          <li class="breadcrumb-item"><a href="crate.ioput.html">crate.ioput</a></li>
+          <li class="breadcrumb-item"><a href="crate.ioput.readinputdata.html">crate.ioput.readinputdata</a></li>
+      <li class="breadcrumb-item active">crate.ioput.readinputdata.read_input_data_file</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="crate-ioput-readinputdata-read-input-data-file">
+<h1>crate.ioput.readinputdata.read_input_data_file<a class="headerlink" href="#crate-ioput-readinputdata-read-input-data-file" title="Permalink to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.read_input_data_file">
+<span class="sig-name descname"><span class="pre">read_input_data_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dirs_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_minimize_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/ioput/readinputdata.html#read_input_data_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.read_input_data_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read input data file and store data in suitable containers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_file</strong> (<em>file</em>) – Input data file.</p></li>
+<li><p><strong>dirs_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Container of output directories and files paths.</p></li>
+<li><p><strong>is_minimize_output</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>default=False</em>) – Output minimization flag.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>problem_dict</strong> (<em>dict</em>) – Container of data associated with the problem type.</p></li>
+<li><p><strong>mat_dict</strong> (<em>dict</em>) – Container of data associated with the material phases.</p></li>
+<li><p><strong>macload_dict</strong> (<em>dict</em>) – Container of data associated with the macroscale loading.</p></li>
+<li><p><strong>rg_dict</strong> (<em>dict</em>) – Container of data associated with the spatial discretization in a
+regular grid of voxels.</p></li>
+<li><p><strong>clst_dict</strong> (<em>dict</em>) – Container of data associated with the clustering-based domain
+decomposition.</p></li>
+<li><p><strong>scs_dict</strong> (<em>dict</em>) – Container of data associated with the self-consistent scheme.</p></li>
+<li><p><strong>algpar_dict</strong> (<em>dict</em>) – Container of data associated with algorithmic parameters underlying the
+equilibrium problem solution procedure.</p></li>
+<li><p><strong>vtk_dict</strong> (<em>dict</em>) – Container of data associated with the VTK output files.</p></li>
+<li><p><strong>output_dict</strong> (<em>dict</em>) – Container of data associated with general output files.</p></li>
+<li><p><strong>material_state</strong> (<em>MaterialState</em>) – CRVE material constitutive state.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="crate.ioput.readinputdata.get_available_clustering_features.html" class="btn btn-neutral float-left" title="crate.ioput.readinputdata.get_available_clustering_features" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="crate.ioput.readinputdata.read_output_minimization_option.html" class="btn btn-neutral float-right" title="crate.ioput.readinputdata.read_output_minimization_option" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

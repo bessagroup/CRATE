@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>clustering.clusteringdata &mdash; crate 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            crate
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/crate.html">Code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">crate</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">clustering.clusteringdata</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for clustering.clusteringdata</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Compute RVE clustering features data.</span>
+
+<span class="sd">This module includes all the required tools to compute the global clustering</span>
+<span class="sd">data matrix that is needed to perform the RVE cluster analysis. Besides the</span>
+<span class="sd">overall high-level management of such a computation, it includes the interface</span>
+<span class="sd">to implement different clustering features as well as an interface for data</span>
+<span class="sd">standardization algorithms.</span>
+
+<span class="sd">Classes</span>
+<span class="sd">-------</span>
+<span class="sd">ClusterAnalysisData</span>
+<span class="sd">    Features data required to perform the RVE cluster analysis.</span>
+<span class="sd">FeatureAlgorithm</span>
+<span class="sd">    Feature computation algorithm interface.</span>
+<span class="sd">StrainConcentrationTensor</span>
+<span class="sd">    Fourth-order elastic strain concentration tensor.</span>
+<span class="sd">Standardizer</span>
+<span class="sd">    Data standardization algorithm interface.</span>
+<span class="sd">MinMaxScaler:</span>
+<span class="sd">    Min-Max scaling algorithm (wrapper).</span>
+<span class="sd">StandardScaler</span>
+<span class="sd">    Standard scaling algorithm (wrapper).</span>
+
+<span class="sd">Functions</span>
+<span class="sd">---------</span>
+<span class="sd">set_clustering_data</span>
+<span class="sd">    Compute the features data required to perform the RVE cluster analysis.</span>
+<span class="sd">get_available_clustering_features</span>
+<span class="sd">    Get available clustering features and corresponding descriptors.</span>
+<span class="sd">def_gradient_from_log_strain</span>
+<span class="sd">    Get deformation gradient from material logarithmic strain tensor.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#                                                                       Modules</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1"># Standard</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="c1"># Third-party</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sklearn.preprocessing</span> <span class="k">as</span> <span class="nn">skpp</span>
+<span class="c1"># Local</span>
+<span class="kn">import</span> <span class="nn">ioput.info</span> <span class="k">as</span> <span class="nn">info</span>
+<span class="kn">import</span> <span class="nn">tensor.tensoroperations</span> <span class="k">as</span> <span class="nn">top</span>
+<span class="kn">import</span> <span class="nn">tensor.matrixoperations</span> <span class="k">as</span> <span class="nn">mop</span>
+<span class="kn">from</span> <span class="nn">clustering.rveelasticdatabase</span> <span class="kn">import</span> <span class="n">RVEElasticDatabase</span>
+<span class="c1">#</span>
+<span class="c1">#                                                          Authorship &amp; Credits</span>
+<span class="c1"># =============================================================================</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Bernardo Ferreira (bernardo_ferreira@brown.edu)&#39;</span>
+<span class="n">__credits__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Bernardo Ferreira&#39;</span><span class="p">,</span> <span class="p">]</span>
+<span class="n">__status__</span> <span class="o">=</span> <span class="s1">&#39;Stable&#39;</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="set_clustering_data"><a class="viewcode-back" href="../../_autosummary/crate.main.set_clustering_data.html#crate.ioput.readinputdata.set_clustering_data">[docs]</a><span class="k">def</span> <span class="nf">set_clustering_data</span><span class="p">(</span><span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">rve_dims</span><span class="p">,</span>
+                        <span class="n">n_voxels_dims</span><span class="p">,</span> <span class="n">regular_grid</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span>
+                        <span class="n">material_phases_properties</span><span class="p">,</span> <span class="n">dns_method</span><span class="p">,</span>
+                        <span class="n">dns_method_data</span><span class="p">,</span> <span class="n">standardization_method</span><span class="p">,</span>
+                        <span class="n">base_clustering_scheme</span><span class="p">,</span> <span class="n">adaptive_clustering_scheme</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the features data required to perform the RVE cluster analysis.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    strain_formulation: {&#39;infinitesimal&#39;, &#39;finite&#39;}</span>
+<span class="sd">        Problem strain formulation.</span>
+<span class="sd">    problem_type : int</span>
+<span class="sd">        Problem type: 2D plane strain (1), 2D plane stress (2),</span>
+<span class="sd">        2D axisymmetric (3) and 3D (4).</span>
+<span class="sd">    rve_dims : list[float]</span>
+<span class="sd">        RVE size in each dimension.</span>
+<span class="sd">    n_voxels_dims : list[int]</span>
+<span class="sd">        Number of voxels in each dimension of the regular grid (spatial</span>
+<span class="sd">        discretization of the RVE).</span>
+<span class="sd">    regular_grid : numpy.ndarray (2d or 3d)</span>
+<span class="sd">        Regular grid of voxels (spatial discretization of the RVE), where each</span>
+<span class="sd">        entry contains the material phase label (int) assigned to the</span>
+<span class="sd">        corresponding voxel.</span>
+<span class="sd">    material_phases : list[str]</span>
+<span class="sd">        RVE material phases labels (str).</span>
+<span class="sd">    material_phases_properties : dict</span>
+<span class="sd">        Constitutive model material properties (item, dict) associated to each</span>
+<span class="sd">        material phase (key, str).</span>
+<span class="sd">    dns_method : str</span>
+<span class="sd">        DNS homogenization-based multi-scale method.</span>
+<span class="sd">    dns_method_data : dict</span>
+<span class="sd">        Parameters of DNS homogenization-based multi-scale method.</span>
+<span class="sd">    standardization_method : int</span>
+<span class="sd">        Identifier of global cluster analysis data standardization algorithm.</span>
+<span class="sd">    base_clustering_scheme : dict</span>
+<span class="sd">        Prescribed base clustering scheme (item, numpy.ndarray of shape</span>
+<span class="sd">        (n_clusterings, 3)) for each material phase (key, str). Each row is</span>
+<span class="sd">        associated with a unique clustering characterized by a clustering</span>
+<span class="sd">        algorithm (col 1, int), a list of features (col 2, list[int]) and a</span>
+<span class="sd">        list of the features data matrix&#39; indexes (col 3, list[int]).</span>
+<span class="sd">    adaptive_clustering_scheme : dict</span>
+<span class="sd">        Prescribed adaptive clustering scheme (item, numpy.ndarray of shape</span>
+<span class="sd">        (n_clusterings, 3)) for each material phase (key, str). Each row is</span>
+<span class="sd">        associated with a unique clustering characterized by a clustering</span>
+<span class="sd">        algorithm (col 1, int), a list of features (col 2, list[int]) and a</span>
+<span class="sd">        list of the features data matrix&#39; indexes (col 3, list[int]).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    clustering_data : ClusterAnalysisData</span>
+<span class="sd">        Feature data required to perform the RVE cluster analysis.</span>
+<span class="sd">    rve_elastic_database : RVEElasticDatabase</span>
+<span class="sd">        RVE&#39;s local elastic response database.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="n">info</span><span class="o">.</span><span class="n">displayinfo</span><span class="p">(</span><span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;Setting cluster analysis</span><span class="se">\&#39;</span><span class="s1"> features...&#39;</span><span class="p">)</span>
+    <span class="c1"># Get available clustering features descriptors</span>
+    <span class="n">feature_descriptors</span> <span class="o">=</span> <span class="n">get_available_clustering_features</span><span class="p">(</span><span class="n">strain_formulation</span><span class="p">,</span>
+                                                            <span class="n">problem_type</span><span class="p">)</span>
+    <span class="c1"># Instatiante cluster analysis data</span>
+    <span class="n">clustering_data</span> <span class="o">=</span> <span class="n">ClusterAnalysisData</span><span class="p">(</span>
+        <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">rve_dims</span><span class="p">,</span> <span class="n">n_voxels_dims</span><span class="p">,</span>
+        <span class="n">base_clustering_scheme</span><span class="p">,</span> <span class="n">adaptive_clustering_scheme</span><span class="p">,</span>
+        <span class="n">feature_descriptors</span><span class="p">)</span>
+    <span class="c1"># Set prescribed clustering features</span>
+    <span class="n">clustering_data</span><span class="o">.</span><span class="n">set_prescribed_features</span><span class="p">()</span>
+    <span class="c1"># Set prescribed clustering features&#39; clustering global data matrix&#39;</span>
+    <span class="c1"># indexes</span>
+    <span class="n">clustering_data</span><span class="o">.</span><span class="n">set_feature_global_indexes</span><span class="p">()</span>
+    <span class="c1"># Set required macroscale strain loadings to compute clustering features</span>
+    <span class="n">clustering_data</span><span class="o">.</span><span class="n">set_clustering_mac_strains</span><span class="p">()</span>
+    <span class="n">mac_strains</span> <span class="o">=</span> <span class="n">clustering_data</span><span class="o">.</span><span class="n">get_clustering_mac_strains</span><span class="p">()</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="n">info</span><span class="o">.</span><span class="n">displayinfo</span><span class="p">(</span><span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;Computing RVE local elastic strain response &#39;</span>
+                     <span class="s1">&#39;database...&#39;</span><span class="p">)</span>
+    <span class="c1"># Instatiate RVE&#39;s local elastic response database</span>
+    <span class="n">rve_elastic_database</span> <span class="o">=</span> <span class="n">RVEElasticDatabase</span><span class="p">(</span><span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span>
+                                              <span class="n">rve_dims</span><span class="p">,</span> <span class="n">n_voxels_dims</span><span class="p">,</span>
+                                              <span class="n">regular_grid</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span>
+                                              <span class="n">material_phases_properties</span><span class="p">)</span>
+    <span class="c1"># Compute RVE&#39;s elastic response database</span>
+    <span class="n">rve_elastic_database</span><span class="o">.</span><span class="n">compute_rve_response_database</span><span class="p">(</span>
+        <span class="n">dns_method</span><span class="p">,</span> <span class="n">dns_method_data</span><span class="p">,</span> <span class="n">mac_strains</span><span class="p">,</span> <span class="n">is_strain_sym</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># Compute RVE&#39;s elastic effective tangent modulus if the elastic response</span>
+    <span class="c1"># database contains a suitable set of orthogonal macroscale strain loadings</span>
+    <span class="k">if</span> <span class="n">clustering_data</span><span class="o">.</span><span class="n">get_features</span><span class="p">()</span> <span class="o">==</span> <span class="p">{</span><span class="mi">1</span><span class="p">}:</span>
+        <span class="c1"># Get strain magnitude factor associated with orthogonal macroscale</span>
+        <span class="c1"># strain loadings</span>
+        <span class="n">strain_magnitude_factor</span> <span class="o">=</span> <span class="n">feature_descriptors</span><span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span>
+        <span class="c1"># Compute RVE&#39;s elastic effective tangent modulus</span>
+        <span class="n">rve_elastic_database</span><span class="o">.</span><span class="n">compute_rve_elastic_tangent_modulus</span><span class="p">(</span>
+            <span class="n">strain_magnitude_factor</span><span class="o">=</span><span class="n">strain_magnitude_factor</span><span class="p">)</span>
+        <span class="c1"># Estimate isotropic elastic constants from RVE&#39;s elastic effective</span>
+        <span class="c1"># tangent modulus</span>
+        <span class="n">rve_elastic_database</span><span class="o">.</span><span class="n">set_eff_isotropic_elastic_constants</span><span class="p">()</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="n">info</span><span class="o">.</span><span class="n">displayinfo</span><span class="p">(</span><span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;Computing cluster analysis global data matrix...&#39;</span><span class="p">)</span>
+    <span class="c1"># Compute clustering global data matrix containing all clustering features</span>
+    <span class="n">clustering_data</span><span class="o">.</span><span class="n">set_global_data_matrix</span><span class="p">(</span>
+        <span class="n">rve_elastic_database</span><span class="o">.</span><span class="n">rve_global_response</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="n">info</span><span class="o">.</span><span class="n">displayinfo</span><span class="p">(</span><span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;Standardizing cluster analysis global &#39;</span>
+                     <span class="s1">&#39;data matrix...&#39;</span><span class="p">)</span>
+    <span class="c1"># Instantiate standardization algorithm</span>
+    <span class="k">if</span> <span class="n">standardization_method</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">standardizer</span> <span class="o">=</span> <span class="n">MinMaxScaler</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">standardization_method</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">standardizer</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown standardization method.&#39;</span><span class="p">)</span>
+    <span class="c1"># Standardize clustering global data matrix</span>
+    <span class="n">clustering_data</span><span class="o">.</span><span class="n">_global_data_matrix</span> <span class="o">=</span> \
+        <span class="n">standardizer</span><span class="o">.</span><span class="n">get_standardized_data_matrix</span><span class="p">(</span>
+            <span class="n">clustering_data</span><span class="o">.</span><span class="n">_global_data_matrix</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">clustering_data</span><span class="p">,</span> <span class="n">rve_elastic_database</span></div>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="get_available_clustering_features"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.get_available_clustering_features.html#crate.ioput.readinputdata.get_available_clustering_features">[docs]</a><span class="k">def</span> <span class="nf">get_available_clustering_features</span><span class="p">(</span><span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get available clustering features and corresponding descriptors.</span>
+
+<span class="sd">    Available clustering features identifiers:</span>
+
+<span class="sd">    * Identifier: 1</span>
+
+<span class="sd">        * *Infinitesimal strains*: Fourth-order local elastic strain</span>
+<span class="sd">          concentration tensor based on the elastic infinitesimal strain</span>
+<span class="sd">          tensor,</span>
+
+<span class="sd">          .. math::</span>
+
+<span class="sd">             \\boldsymbol{\\varepsilon}_{\\mu}^{e}(\\boldsymbol{Y}) =</span>
+<span class="sd">             \\boldsymbol{\\mathsf{H}}^{e}(\\boldsymbol{Y}):</span>
+<span class="sd">             \\boldsymbol{\\varepsilon}^{e} (\\boldsymbol{X}) \\, , \\quad</span>
+<span class="sd">             \\forall \\boldsymbol{Y} \\in \\Omega_{\\mu,\\,0} \\, ,</span>
+
+<span class="sd">          where :math:`\\boldsymbol{\\mathsf{H}}^{e}` is the</span>
+<span class="sd">          fourth-order local elastic strain concentration tensor,</span>
+<span class="sd">          :math:`\\boldsymbol{\\varepsilon}_{\\mu}^{e}` is the</span>
+<span class="sd">          microscale elastic infinitesimal strain tensor,</span>
+<span class="sd">          :math:`\\boldsymbol{\\varepsilon}^{e}` is the</span>
+<span class="sd">          macroscale elastic infinitesimal strain tensor,</span>
+<span class="sd">          :math:`\\boldsymbol{Y}` is a point of the microscale reference</span>
+<span class="sd">          configuration (:math:`\\Omega_{\\mu,\\,0}`), and</span>
+<span class="sd">          :math:`\\boldsymbol{X}` is a point of the macroscale reference</span>
+<span class="sd">          configuration (:math:`\\Omega_{0}`).</span>
+
+<span class="sd">        * *Finite strains*: Fourth-order local elastic strain concentration</span>
+<span class="sd">          tensor based on the elastic material logarithmic strain tensor,</span>
+
+<span class="sd">          .. math::</span>
+
+<span class="sd">             \\boldsymbol{E}_{\\mu}^{e}(\\boldsymbol{Y}) =</span>
+<span class="sd">             \\boldsymbol{\\mathsf{H}}^{e}(\\boldsymbol{Y}):</span>
+<span class="sd">             \\boldsymbol{E}^{e} (\\boldsymbol{X}) \\, , \\quad</span>
+<span class="sd">             \\forall \\boldsymbol{Y} \\in \\Omega_{\\mu,\\,0} \\, ,</span>
+
+<span class="sd">          where :math:`\\boldsymbol{\\mathsf{H}}^{e}` is the</span>
+<span class="sd">          fourth-order local elastic strain concentration tensor,</span>
+<span class="sd">          :math:`\\boldsymbol{E}_{\\mu}^{e}` is the</span>
+<span class="sd">          microscale elastic material logarithmic strain tensor,</span>
+<span class="sd">          :math:`\\boldsymbol{E}^{e}` is the</span>
+<span class="sd">          macroscale elastic material logarithmic strain tensor,</span>
+<span class="sd">          :math:`\\boldsymbol{Y}` is a point of the microscale reference</span>
+<span class="sd">          configuration (:math:`\\Omega_{\\mu,\\,0}`), and</span>
+<span class="sd">          :math:`\\boldsymbol{X}` is a point of the macroscale reference</span>
+<span class="sd">          configuration (:math:`\\Omega_{0}`).</span>
+
+<span class="sd">    ----</span>
+
+<span class="sd">    * Identifier: 2</span>
+
+<span class="sd">        * Spatial coordinates first-order tensor in the reference</span>
+<span class="sd">          configuration, :math:`\\boldsymbol{Y}`.</span>
+
+<span class="sd">    ----</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    strain_formulation: {&#39;infinitesimal&#39;, &#39;finite&#39;}</span>
+<span class="sd">        Problem strain formulation.</span>
+<span class="sd">    problem_type : int</span>
+<span class="sd">        Problem type: 2D plane strain (1), 2D plane stress (2),</span>
+<span class="sd">        2D axisymmetric (3) and 3D (4).</span>
+<span class="sd">    n_dim: int</span>
+<span class="sd">        Number of spatial dimensions.</span>
+<span class="sd">    comp_order_sym: list[str]</span>
+<span class="sd">        Symmetric strain/stress components (str) order.</span>
+<span class="sd">    comp_order_nsym: list[str]</span>
+<span class="sd">        Nonsymmetric strain/stress components (str) order.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    features_descriptors : dict</span>
+<span class="sd">        Data (tuple structured as (number of feature dimensions (int), feature</span>
+<span class="sd">        computation algorithm (function), list of macroscale strain loadings</span>
+<span class="sd">        (list[numpy.ndarray (2d)]), strain magnitude factor (float)))</span>
+<span class="sd">        associated to each feature (key, str). The macroscale strain loading</span>
+<span class="sd">        is the infinitesimal strain tensor (infinitesimal strains) or the</span>
+<span class="sd">        deformation gradient (finite strains).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">features_descriptors</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Get problem type parameters</span>
+    <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span> <span class="o">=</span> \
+        <span class="n">mop</span><span class="o">.</span><span class="n">get_problem_type_parameters</span><span class="p">(</span><span class="n">problem_type</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Fourth-order local elastic strain concentration tensor:</span>
+    <span class="c1"># Set strain components order</span>
+    <span class="n">comp_order</span> <span class="o">=</span> <span class="n">comp_order_sym</span>
+    <span class="c1"># Set number of feature dimensions</span>
+    <span class="n">n_feature_dim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+    <span class="c1"># Set feature computation algorithm</span>
+    <span class="n">feature_algorithm</span> <span class="o">=</span> <span class="n">StrainConcentrationTensor</span><span class="p">()</span>
+    <span class="c1"># Set macroscale strain loadings required to compute feature</span>
+    <span class="n">mac_strains</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)):</span>
+        <span class="c1"># Get strain component and associated indexes</span>
+        <span class="n">comp</span> <span class="o">=</span> <span class="n">comp_order</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">so_idx</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">comp_order</span><span class="p">[</span><span class="n">i</span><span class="p">])])</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Set macroscale strain magnitude factor</span>
+        <span class="k">if</span> <span class="n">strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;finite&#39;</span><span class="p">:</span>
+            <span class="n">strain_magnitude_factor</span> <span class="o">=</span> <span class="mf">1.0e-6</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">strain_magnitude_factor</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Set orthogonal infinitesimal strain tensor (infinitesimal strains) or</span>
+        <span class="c1"># material logarithmic strain tensor (finite strains) according with</span>
+        <span class="c1"># Kelvin notation</span>
+        <span class="n">mac_strain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">))</span>
+        <span class="n">mac_strain</span><span class="p">[</span><span class="n">so_idx</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">strain_magnitude_factor</span><span class="o">*</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">mop</span><span class="o">.</span><span class="n">kelvin_factor</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">))</span><span class="o">*</span><span class="mf">1.0</span>
+        <span class="k">if</span> <span class="n">comp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">comp</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">mac_strain</span><span class="p">[</span><span class="n">so_idx</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">mac_strain</span><span class="p">[</span><span class="n">so_idx</span><span class="p">]</span>
+        <span class="c1"># Compute deformation gradient associated to the material logarithmic</span>
+        <span class="c1"># strain tensor</span>
+        <span class="k">if</span> <span class="n">strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;finite&#39;</span><span class="p">:</span>
+            <span class="n">mac_strain</span> <span class="o">=</span> <span class="n">def_gradient_from_log_strain</span><span class="p">(</span><span class="n">mac_strain</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Store macroscale strain loading</span>
+        <span class="n">mac_strains</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mac_strain</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Assemble to available clustering features</span>
+    <span class="n">features_descriptors</span><span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">n_feature_dim</span><span class="p">,</span> <span class="n">feature_algorithm</span><span class="p">,</span>
+                                 <span class="n">mac_strains</span><span class="p">,</span> <span class="n">strain_magnitude_factor</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Spatial coordinates:</span>
+    <span class="c1"># Set number of feature dimensions</span>
+    <span class="n">n_feature_dim</span> <span class="o">=</span> <span class="n">n_dim</span>
+    <span class="c1"># Set feature computation algorithm</span>
+    <span class="n">feature_algorithm</span> <span class="o">=</span> <span class="n">SpatialCoordinates</span><span class="p">()</span>
+    <span class="c1"># Set macroscale strain loadings required to compute feature</span>
+    <span class="n">mac_strains</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Set macroscale strain magnitude factor</span>
+    <span class="n">strain_magnitude_factor</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Assemble to available clustering features</span>
+    <span class="n">features_descriptors</span><span class="p">[</span><span class="s1">&#39;2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">n_feature_dim</span><span class="p">,</span> <span class="n">feature_algorithm</span><span class="p">,</span>
+                                 <span class="n">mac_strains</span><span class="p">,</span> <span class="n">strain_magnitude_factor</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">features_descriptors</span></div>
+<span class="c1"># =============================================================================</span>
+<span class="k">def</span> <span class="nf">def_gradient_from_log_strain</span><span class="p">(</span><span class="n">log_strain</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get deformation gradient from material logarithmic strain tensor.</span>
+
+<span class="sd">    Among the multitude of deformation gradients that may correspond to a given</span>
+<span class="sd">    material logarithmic strain tensor, a particular choice stems from assuming</span>
+<span class="sd">    that both tensors are coaxial, i.e., that the deformation gradient shares</span>
+<span class="sd">    the eigenvectors with the material logarithmic strain tensor. In this case,</span>
+<span class="sd">    the deformation gradient is symmetric and admits spectral decomposition as</span>
+<span class="sd">    shown below.</span>
+
+<span class="sd">    Given the spectral decomposition of the elastic material logarithmic strain</span>
+<span class="sd">    tensor</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">       \\boldsymbol{E}^{e} = \\sum_{i=1}^{3} \\lambda_{i}^{\\boldsymbol{E}} \\,</span>
+<span class="sd">       \\boldsymbol{l}_{i}^{\\boldsymbol{E}} \\otimes</span>
+<span class="sd">       \\boldsymbol{l}_{i}^{\\boldsymbol{E}} \\, ,</span>
+
+<span class="sd">    where :math:`\\boldsymbol{E}^{e}` is the elastic material logarithmic</span>
+<span class="sd">    strain tensor, and :math:`\\lambda_{i}^{\\boldsymbol{E}}` and</span>
+<span class="sd">    :math:`\\boldsymbol{l}_{i}^{\\boldsymbol{E}}`, :math:`i=1,2,3`, are the</span>
+<span class="sd">    eigenvalues and eigenvectors of :math:`\\boldsymbol{E}^{e}`, the coaxial</span>
+<span class="sd">    unique symmetric elastic deformation gradient comes</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">       \\boldsymbol{F}^{e} = \\sum_{i=1}^{3} \\lambda_{i}^{\\boldsymbol{F}} \\,</span>
+<span class="sd">       \\boldsymbol{l}_{i}^{\\boldsymbol{E}} \\otimes</span>
+<span class="sd">       \\boldsymbol{l}_{i}^{\\boldsymbol{E}} \\, ,</span>
+
+<span class="sd">    where :math:`\\boldsymbol{F}^{e}` is the elastic deformation gradient and</span>
+<span class="sd">    :math:`\\lambda_{i}^{\\boldsymbol{F}} =</span>
+<span class="sd">    \\exp \\left[\\lambda_{i}^{\\boldsymbol{E}}\\right], \\, i=1,2,3`, are the</span>
+<span class="sd">    corresponding eigenvalues.</span>
+
+<span class="sd">    ----</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    log_strain : numpy.ndarray (2d)</span>
+<span class="sd">        Material logarithmic strain tensor.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    def_gradient : numpy.ndarray (2d)</span>
+<span class="sd">        Deformation gradient.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Perform spectral decomposition of material logarithmic strain tensor</span>
+    <span class="n">log_eigenvalues</span><span class="p">,</span> <span class="n">log_eigenvectors</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> \
+        <span class="n">top</span><span class="o">.</span><span class="n">spectral_decomposition</span><span class="p">(</span><span class="n">log_strain</span><span class="p">)</span>
+    <span class="c1"># Compute deformation gradient eigenvalues</span>
+    <span class="n">dg_eigenvalues</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_eigenvalues</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Compute deformation gradient from spectral decomposition by assuming</span>
+    <span class="c1"># coaxility with the material logarithmic strain tensor</span>
+    <span class="n">def_gradient</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">log_eigenvectors</span><span class="p">,</span>
+                             <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">dg_eigenvalues</span><span class="p">),</span>
+                                       <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">log_eigenvectors</span><span class="p">)))</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">def_gradient</span>
+<span class="c1">#</span>
+<span class="c1">#                                                         Cluster analysis data</span>
+<span class="c1"># =============================================================================</span>
+<span class="k">class</span> <span class="nc">ClusterAnalysisData</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Features data required to perform the RVE cluster analysis.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    _features : set[int]</span>
+<span class="sd">        Set of prescribed features identifiers (int).</span>
+<span class="sd">    _features_idxs : dict</span>
+<span class="sd">        Global data matrix&#39;s indexes (item, list) associated to each feature</span>
+<span class="sd">        (key, str).</span>
+<span class="sd">    _feature_loads_ids :  dict</span>
+<span class="sd">        List of macroscale strain loadings identifiers (item, list[int])</span>
+<span class="sd">        associated to each feature (key, str).</span>
+<span class="sd">    _mac_strains : list[numpy.ndarray (2d)]</span>
+<span class="sd">        List of macroscale strain loadings required to compute the clustering</span>
+<span class="sd">        features. The macroscale strain loading is the infinitesimal strain</span>
+<span class="sd">        tensor (infinitesimal strains) and the deformation gradient (finite</span>
+<span class="sd">        strains).</span>
+<span class="sd">    _comp_order_sym : list[str]</span>
+<span class="sd">        Strain/Stress components symmetric order.</span>
+<span class="sd">    _comp_order_nsym : list[str]</span>
+<span class="sd">        Strain/Stress components nonsymmetric order.</span>
+<span class="sd">    _global_data_matrix : numpy.ndarray (2d)</span>
+<span class="sd">        Data matrix (numpy.ndarray of shape (n_voxels, n_features_dims))</span>
+<span class="sd">        containing the required clustering features&#39; data to perform all the</span>
+<span class="sd">        prescribed RVE clusterings.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    set_prescribed_features(self)</span>
+<span class="sd">        Set prescribed clustering features.</span>
+<span class="sd">    get_features(self)</span>
+<span class="sd">        Get prescribed clustering features.</span>
+<span class="sd">    set_feature_global_indexes(self)</span>
+<span class="sd">        Set prescribed clustering features global data matrix indexes.</span>
+<span class="sd">    set_clustering_mac_strains(self)</span>
+<span class="sd">        Set macroscale strain loadings to compute clustering features.</span>
+<span class="sd">    get_clustering_mac_strains(self)</span>
+<span class="sd">        Set macroscale strain loadings to compute clustering features.</span>
+<span class="sd">    set_global_data_matrix(self, rve_global_response)</span>
+<span class="sd">        Compute global data matrix containing all clustering features.</span>
+<span class="sd">    get_global_data_matrix(self)</span>
+<span class="sd">        Get global data matrix containing all clustering features.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">rve_dims</span><span class="p">,</span>
+                 <span class="n">n_voxels_dims</span><span class="p">,</span> <span class="n">base_clustering_scheme</span><span class="p">,</span>
+                 <span class="n">adaptive_clustering_scheme</span><span class="p">,</span> <span class="n">feature_descriptors</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        strain_formulation: {&#39;infinitesimal&#39;, &#39;finite&#39;}</span>
+<span class="sd">            Problem strain formulation.</span>
+<span class="sd">        problem_type : int</span>
+<span class="sd">            Problem type: 2D plane strain (1), 2D plane stress (2),</span>
+<span class="sd">            2D axisymmetric (3) and 3D (4).</span>
+<span class="sd">        rve_dims : list[float]</span>
+<span class="sd">            RVE size in each dimension.</span>
+<span class="sd">        n_voxels_dims : list[int]</span>
+<span class="sd">            Number of voxels in each dimension of the regular grid (spatial</span>
+<span class="sd">            discretization of the RVE).</span>
+<span class="sd">        base_clustering_scheme : dict</span>
+<span class="sd">            Prescribed base clustering scheme (item, numpy.ndarray of shape</span>
+<span class="sd">            (n_clusterings, 3)) for each material phase (key, str). Each row is</span>
+<span class="sd">            associated with a unique clustering characterized by a clustering</span>
+<span class="sd">            algorithm (col 1, int), a list of features (col 2, list[int]) and a</span>
+<span class="sd">            list of the features data matrix&#39; indexes (col 3, list[int]).</span>
+<span class="sd">        adaptive_clustering_scheme : dict</span>
+<span class="sd">            Prescribed adaptive clustering scheme (item, numpy.ndarray of shape</span>
+<span class="sd">            (n_clusterings, 3)) for each material phase (key, str). Each row is</span>
+<span class="sd">            associated with a unique clustering characterized by a clustering</span>
+<span class="sd">            algorithm (col 1, int), a list of features (col 2, list[int]) and a</span>
+<span class="sd">            list of the features data matrix&#39; indexes (col 3, list[int]).</span>
+<span class="sd">        features_descriptors : dict</span>
+<span class="sd">            Data (tuple structured as (number of feature dimensions (int),</span>
+<span class="sd">            feature computation algorithm (function), list of macroscale strain</span>
+<span class="sd">            loadings (list[numpy.ndarray (2d)]),</span>
+<span class="sd">            strain magnitude factor (float))) associated to each feature</span>
+<span class="sd">            (key, str). The macroscale strain loading is the infinitesimal</span>
+<span class="sd">            strain tensor (infinitesimal strains) or the deformation gradient</span>
+<span class="sd">            (finite strains).</span>
+<span class="sd">        n_voxels : int</span>
+<span class="sd">            Total number of voxels of the regular grid (spatial discretization</span>
+<span class="sd">            of the RVE).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">=</span> <span class="n">strain_formulation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span> <span class="o">=</span> <span class="n">problem_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rve_dims</span> <span class="o">=</span> <span class="n">rve_dims</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_voxels_dims</span> <span class="o">=</span> <span class="n">n_voxels_dims</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_base_clustering_scheme</span> <span class="o">=</span> <span class="n">base_clustering_scheme</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_adaptive_clustering_scheme</span> <span class="o">=</span> <span class="n">adaptive_clustering_scheme</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_feature_descriptors</span> <span class="o">=</span> <span class="n">feature_descriptors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_voxels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">n_voxels_dims</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_features</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_features_dims</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_features_idxs</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_features_loads_ids</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mac_strains</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_global_data_matrix</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># Get problem type parameters</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span> <span class="o">=</span> \
+            <span class="n">mop</span><span class="o">.</span><span class="n">get_problem_type_parameters</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_sym</span> <span class="o">=</span> <span class="n">comp_order_sym</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span> <span class="o">=</span> <span class="n">comp_order_nsym</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">set_prescribed_features</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set prescribed clustering features.&quot;&quot;&quot;</span>
+        <span class="c1"># Get material phases</span>
+        <span class="n">material_phases</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_clustering_scheme</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Initialize clustering features</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_features</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Loop over material phases&#39; prescribed clustering schemes and append</span>
+        <span class="c1"># associated clustering features</span>
+        <span class="k">for</span> <span class="n">mat_phase</span> <span class="ow">in</span> <span class="n">material_phases</span><span class="p">:</span>
+            <span class="c1"># Get material phase base clustering features</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_base_clustering_scheme</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_features</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_clustering_scheme</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="c1"># Get material phase adaptive clustering features</span>
+            <span class="k">if</span> <span class="n">mat_phase</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adaptive_clustering_scheme</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_adaptive_clustering_scheme</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_features</span> <span class="o">+=</span> \
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_adaptive_clustering_scheme</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Get set of unique prescribed clustering features</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_features</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_features</span><span class="p">)</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">get_features</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get prescribed clustering features.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        features : set[int]</span>
+<span class="sd">            Set of prescribed features identifiers (int).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_features</span><span class="p">)</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">set_feature_global_indexes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set prescribed clustering features global data matrix indexes.</span>
+
+<span class="sd">        Assign a list of global data matrix indexes to each clustering feature</span>
+<span class="sd">        according to the corresponding dimensionality. This list is essentialy</span>
+<span class="sd">        a unitary-step slice, i.e., described by initial and ending delimitary</span>
+<span class="sd">        indexes. The clustering scheme is also updated by assigning the global</span>
+<span class="sd">        data matrix&#39; indexes associated to each prescribed RVE clustering.</span>
+
+<span class="sd">        Return</span>
+<span class="sd">        ------</span>
+<span class="sd">        features_idxs: dict</span>
+<span class="sd">            Global data matrix indexes (item, list[range]) associated to each</span>
+<span class="sd">            feature (key, str).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">init</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_features_dims</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_features_idxs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># Loop over prescribed clustering features</span>
+        <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_features</span><span class="p">:</span>
+            <span class="c1"># Get feature dimensionality</span>
+            <span class="n">feature_dim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_feature_descriptors</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">feature</span><span class="p">)][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="c1"># Increment total number of features dimensions</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_n_features_dims</span> <span class="o">+=</span> <span class="n">feature_dim</span>
+            <span class="c1"># Assign data matrix&#39; indexes</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_features_idxs</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">feature</span><span class="p">)]</span> <span class="o">=</span> \
+                <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">init</span><span class="p">,</span> <span class="n">init</span> <span class="o">+</span> <span class="n">feature_dim</span><span class="p">))</span>
+            <span class="n">init</span> <span class="o">+=</span> <span class="n">feature_dim</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Get material phases</span>
+        <span class="n">material_phases</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_clustering_scheme</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="c1"># Loop over material phases&#39; prescribed clustering schemes and set</span>
+        <span class="c1"># associated clustering features data matrix indexes</span>
+        <span class="k">for</span> <span class="n">mat_phase</span> <span class="ow">in</span> <span class="n">material_phases</span><span class="p">:</span>
+            <span class="c1"># Loop over material phase base clustering scheme</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_base_clustering_scheme</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="n">indexes</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="c1"># Loop over prescribed clustering features</span>
+                <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_clustering_scheme</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
+                    <span class="n">indexes</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_features_idxs</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">feature</span><span class="p">)]</span>
+                <span class="c1"># Set clustering features data matrix&#39; indexes</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_base_clustering_scheme</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">indexes</span><span class="p">)</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Loop over material phase adaptive clustering scheme</span>
+            <span class="k">if</span> <span class="n">mat_phase</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adaptive_clustering_scheme</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_adaptive_clustering_scheme</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                    <span class="n">indexes</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="c1"># Loop over prescribed clustering features</span>
+                    <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> \
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_adaptive_clustering_scheme</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
+                        <span class="n">indexes</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_features_idxs</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">feature</span><span class="p">)]</span>
+                    <span class="c1"># Set clustering features data matrix&#39; indexes</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_adaptive_clustering_scheme</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> \
+                        <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">indexes</span><span class="p">)</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">set_clustering_mac_strains</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set macroscale strain loadings to compute clustering features.</span>
+
+<span class="sd">        List the required macroscale strain loadings to compute all the</span>
+<span class="sd">        prescribed clustering features. The macroscale strain loading is the</span>
+<span class="sd">        infinitesimal strain tensor (infinitesimal strains) or the deformation</span>
+<span class="sd">        gradient (finite strains). In addition, assign the macroscale strain</span>
+<span class="sd">        loadings identifiers (index in the previous list) associated to each</span>
+<span class="sd">        clustering feature.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mac_strains</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_features_loads_ids</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Loop over prescribed clustering features</span>
+        <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_features</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_features_loads_ids</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">feature</span><span class="p">)]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="c1"># Loop over clustering feature&#39;s required macroscale strain</span>
+            <span class="c1"># loadings</span>
+            <span class="k">for</span> <span class="n">mac_strain</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_feature_descriptors</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">feature</span><span class="p">)][</span><span class="mi">2</span><span class="p">]:</span>
+                <span class="n">is_new_mac_strain</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="c1"># Loop over already prescribed macroscale strain loadings</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mac_strains</span><span class="p">)):</span>
+                    <span class="n">array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mac_strains</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">mac_strain</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">):</span>
+                        <span class="c1"># Append macroscale strain loading identifier to</span>
+                        <span class="c1"># clustering feature</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_features_loads_ids</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">feature</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                        <span class="n">is_new_mac_strain</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="k">break</span>
+                <span class="c1"># Assemble new macroscale strain loading</span>
+                <span class="k">if</span> <span class="n">is_new_mac_strain</span><span class="p">:</span>
+                    <span class="c1"># Append macroscale strain loading identifier to clustering</span>
+                    <span class="c1"># feature</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_features_loads_ids</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">feature</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mac_strains</span><span class="p">))</span>
+                    <span class="c1"># Append macroscale strain loading</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_mac_strains</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mac_strain</span><span class="p">)</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">get_clustering_mac_strains</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set macroscale strain loadings to compute clustering features.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        mac_strains : list[numpy.ndarray (2d)]</span>
+<span class="sd">            List of macroscale strain loadings required to compute the</span>
+<span class="sd">            clustering features. The macroscale strain loading is the</span>
+<span class="sd">            infinitesimal strain tensor (infinitesimal strains) and the</span>
+<span class="sd">            deformation gradient (finite strains).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mac_strains</span><span class="p">)</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">set_global_data_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rve_global_response</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute global data matrix containing all clustering features.</span>
+
+<span class="sd">        Compute the data matrix required to perform all the RVE clusterings</span>
+<span class="sd">        prescribed in the clustering scheme. This involves the computation of</span>
+<span class="sd">        each clustering feature&#39;s data matrix (based on a RVE response</span>
+<span class="sd">        database) and post assembly to the clustering global data matrix.</span>
+
+<span class="sd">        ----</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        rve_global_response : numpy.ndarray (2d)</span>
+<span class="sd">            RVE local elastic strain response for a given set of macroscale</span>
+<span class="sd">            loadings, where each macroscale loading is associated with a set of</span>
+<span class="sd">            independent strain components (numpy.ndarray of shape</span>
+<span class="sd">            (n_voxels, n_mac_strains*n_strain_comps)). Each column is</span>
+<span class="sd">            associated with a independent strain component of the infinitesimal</span>
+<span class="sd">            strain tensor (infinitesimal strains) or material logarithmic</span>
+<span class="sd">            strain tensor (finite strains).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set strain/stress components order according to problem strain</span>
+        <span class="c1"># formulation</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;infinitesimal&#39;</span><span class="p">:</span>
+            <span class="n">comp_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_sym</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;finite&#39;</span><span class="p">:</span>
+            <span class="n">comp_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_sym</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown problem strain formulation.&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Initialize clustering global data matrix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_global_data_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_voxels</span><span class="p">,</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">_n_features_dims</span><span class="p">))</span>
+        <span class="c1"># Loop over prescribed clustering features</span>
+        <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_features</span><span class="p">:</span>
+            <span class="c1"># Get clustering feature macroscale strain loadings identifiers</span>
+            <span class="n">mac_loads_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_features_loads_ids</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">feature</span><span class="p">)]</span>
+            <span class="c1"># Get data from the RVE response database required to compute the</span>
+            <span class="c1"># clustering feature (data associated to the response to one or</span>
+            <span class="c1"># more macroscale strain loadings)</span>
+            <span class="n">rve_response</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_voxels</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">mac_load_id</span> <span class="ow">in</span> <span class="n">mac_loads_ids</span><span class="p">:</span>
+                <span class="n">j_init</span> <span class="o">=</span> <span class="n">mac_load_id</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)</span>
+                <span class="n">j_end</span> <span class="o">=</span> <span class="n">j_init</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)</span>
+                <span class="n">rve_response</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rve_response</span><span class="p">,</span>
+                                         <span class="n">rve_global_response</span><span class="p">[:,</span> <span class="n">j_init</span><span class="p">:</span><span class="n">j_end</span><span class="p">],</span>
+                                         <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="c1"># Get clustering feature&#39;s computation algorithm and compute</span>
+            <span class="c1"># associated data matrix</span>
+            <span class="n">feature_algorithm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_feature_descriptors</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">feature</span><span class="p">)][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">data_matrix</span> <span class="o">=</span> <span class="n">feature_algorithm</span><span class="o">.</span><span class="n">get_feature_data_matrix</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rve_dims</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_n_voxels_dims</span><span class="p">,</span> <span class="n">rve_response</span><span class="p">)</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Normalize data matrix according to strain magnitude factor</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">feature_algorithm</span><span class="p">)</span> <span class="o">==</span> <span class="n">StrainConcentrationTensor</span><span class="p">:</span>
+                <span class="c1"># Get macroscale strain magnitude factor</span>
+                <span class="n">strain_magnitude_factor</span> <span class="o">=</span> \
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_feature_descriptors</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">feature</span><span class="p">)][</span><span class="mi">3</span><span class="p">]</span>
+                <span class="c1"># Normalize data matrix</span>
+                <span class="n">data_matrix</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">strain_magnitude_factor</span><span class="p">)</span><span class="o">*</span><span class="n">data_matrix</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Assemble clustering feature&#39;s data matrix to clustering global</span>
+            <span class="c1"># data matrix</span>
+            <span class="n">j_init</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_features_idxs</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">feature</span><span class="p">)][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">j_end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_features_idxs</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">feature</span><span class="p">)][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_global_data_matrix</span><span class="p">[:,</span> <span class="n">j_init</span><span class="p">:</span><span class="n">j_end</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_matrix</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">get_global_data_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get global data matrix containing all clustering features.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        global_data_matrix : numpy.ndarray (2d)</span>
+<span class="sd">            Data matrix (numpy.ndarray of shape (n_voxels, n_features_dims))</span>
+<span class="sd">            containing the required clustering features data to perform all the</span>
+<span class="sd">            prescribed RVE clusterings.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_global_data_matrix</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="c1">#                           Interface: Clustering feature computation algorithm</span>
+<span class="c1"># =============================================================================</span>
+<span class="k">class</span> <span class="nc">FeatureAlgorithm</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Feature computation algorithm interface.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    get_feature_data_matrix(self, strain_formulation, problem_type, rve_dims, \</span>
+<span class="sd">                            n_voxels_dims, rve_response)</span>
+<span class="sd">        *abstract*: Compute data matrix associated to clustering feature.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_feature_data_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span>
+                                <span class="n">rve_dims</span><span class="p">,</span> <span class="n">n_voxels_dims</span><span class="p">,</span> <span class="n">rve_response</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute data matrix associated to clustering feature.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        strain_formulation: {&#39;infinitesimal&#39;, &#39;finite&#39;}</span>
+<span class="sd">            Problem strain formulation.</span>
+<span class="sd">        problem_type : int</span>
+<span class="sd">            Problem type: 2D plane strain (1), 2D plane stress (2),</span>
+<span class="sd">            2D axisymmetric (3) and 3D (4).</span>
+<span class="sd">        rve_dims : list[float]</span>
+<span class="sd">            RVE size in each dimension.</span>
+<span class="sd">        n_voxels_dims : list[int]</span>
+<span class="sd">            Number of voxels in each dimension of the regular grid (spatial</span>
+<span class="sd">            discretization of the RVE).</span>
+<span class="sd">        rve_response : numpy.ndarray (2d)</span>
+<span class="sd">            RVE elastic response for one or more macroscale loadings</span>
+<span class="sd">            (numpy.ndarray of shape (n_voxels, n_strain_comps)), where each</span>
+<span class="sd">            macroscale loading is associated with a set of independent strain</span>
+<span class="sd">            components.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        data_matrix : ndarray of shape (n_voxels, n_feature_dim)</span>
+<span class="sd">            Clustering features data matrix (numpy.ndarray of shape</span>
+<span class="sd">            (n_voxels, n_feature_dim)).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+<span class="c1">#</span>
+<span class="c1">#                                    Clustering features computation algorithms</span>
+<span class="c1"># =============================================================================</span>
+<span class="k">class</span> <span class="nc">StrainConcentrationTensor</span><span class="p">(</span><span class="n">FeatureAlgorithm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fourth-order elastic strain concentration tensor.</span>
+
+<span class="sd">    The fourth-order elastic strain concentration tensor is defined in terms of</span>
+<span class="sd">    the elastic infinitesimal strain tensor (infinitesimal strains) or the</span>
+<span class="sd">    elastic material logarithmic strain tensor (finite strains) as shown below.</span>
+<span class="sd">    Note that both strain tensors are symmetric and admit the reduced matricial</span>
+<span class="sd">    form (Kelvin notation).</span>
+
+<span class="sd">    * *Infinitesimal strains*: Fourth-order local elastic strain</span>
+<span class="sd">      concentration tensor based on the elastic infinitesimal strain</span>
+<span class="sd">      tensor.</span>
+
+<span class="sd">      .. math::</span>
+
+<span class="sd">         \\boldsymbol{\\varepsilon}_{\\mu}^{e}(\\boldsymbol{Y}) =</span>
+<span class="sd">         \\boldsymbol{\\mathsf{H}}^{e}(\\boldsymbol{Y}):</span>
+<span class="sd">         \\boldsymbol{\\varepsilon}^{e} (\\boldsymbol{X}) \\, , \\quad</span>
+<span class="sd">         \\forall \\boldsymbol{Y} \\in \\Omega_{\\mu,\\,0} \\, ,</span>
+
+<span class="sd">      where :math:`\\boldsymbol{\\mathsf{H}}^{e}` is the</span>
+<span class="sd">      fourth-order local elastic strain concentration tensor,</span>
+<span class="sd">      :math:`\\boldsymbol{\\varepsilon}_{\\mu}^{e}` is the</span>
+<span class="sd">      microscale elastic infinitesimal strain tensor,</span>
+<span class="sd">      :math:`\\boldsymbol{\\varepsilon}^{e}` is the</span>
+<span class="sd">      macroscale elastic infinitesimal strain tensor,</span>
+<span class="sd">      :math:`\\boldsymbol{Y}` is a point of the microscale reference</span>
+<span class="sd">      configuration (:math:`\\Omega_{\\mu,\\,0}`), and</span>
+<span class="sd">      :math:`\\boldsymbol{X}` is a point of the macroscale reference</span>
+<span class="sd">      configuration (:math:`\\Omega_{0}`).</span>
+
+<span class="sd">    * *Finite strains*: Fourth-order local elastic strain concentration</span>
+<span class="sd">      tensor based on the elastic material logarithmic strain tensor.</span>
+
+<span class="sd">      .. math::</span>
+
+<span class="sd">         \\boldsymbol{E}_{\\mu}^{e}(\\boldsymbol{Y}) =</span>
+<span class="sd">         \\boldsymbol{\\mathsf{H}}^{e}(\\boldsymbol{Y}):</span>
+<span class="sd">         \\boldsymbol{E}^{e} (\\boldsymbol{X}) \\, , \\quad</span>
+<span class="sd">         \\forall \\boldsymbol{Y} \\in \\Omega_{\\mu,\\,0} \\, ,</span>
+
+<span class="sd">      where :math:`\\boldsymbol{\\mathsf{H}}^{e}` is the</span>
+<span class="sd">      fourth-order local elastic strain concentration tensor,</span>
+<span class="sd">      :math:`\\boldsymbol{E}_{\\mu}^{e}` is the</span>
+<span class="sd">      microscale elastic material logarithmic strain tensor,</span>
+<span class="sd">      :math:`\\boldsymbol{E}^{e}` is the</span>
+<span class="sd">      macroscale elastic material logarithmic strain tensor,</span>
+<span class="sd">      :math:`\\boldsymbol{Y}` is a point of the microscale reference</span>
+<span class="sd">      configuration (:math:`\\Omega_{\\mu,\\,0}`), and</span>
+<span class="sd">      :math:`\\boldsymbol{X}` is a point of the macroscale reference</span>
+<span class="sd">      configuration (:math:`\\Omega_{0}`).</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    get_feature_data_matrix(self, strain_formulation, problem_type, rve_dims, \</span>
+<span class="sd">                            n_voxels_dims, rve_response)</span>
+<span class="sd">        Compute data matrix associated to clustering feature.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">get_feature_data_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span>
+                                <span class="n">rve_dims</span><span class="p">,</span> <span class="n">n_voxels_dims</span><span class="p">,</span> <span class="n">rve_response</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute data matrix associated to clustering feature.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        strain_formulation: {&#39;infinitesimal&#39;, &#39;finite&#39;}</span>
+<span class="sd">            Problem strain formulation.</span>
+<span class="sd">        problem_type : int</span>
+<span class="sd">            Problem type: 2D plane strain (1), 2D plane stress (2),</span>
+<span class="sd">            2D axisymmetric (3) and 3D (4).</span>
+<span class="sd">        rve_dims : list[float]</span>
+<span class="sd">            RVE size in each dimension.</span>
+<span class="sd">        n_voxels_dims : list[int]</span>
+<span class="sd">            Number of voxels in each dimension of the regular grid (spatial</span>
+<span class="sd">            discretization of the RVE).</span>
+<span class="sd">        rve_response : numpy.ndarray (2d)</span>
+<span class="sd">            RVE elastic response for one or more macroscale loadings</span>
+<span class="sd">            (numpy.ndarray of shape (n_voxels, n_strain_comps)), where each</span>
+<span class="sd">            macroscale loading is associated with a set of independent strain</span>
+<span class="sd">            components.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        data_matrix : numpy.ndarray (2d)</span>
+<span class="sd">            Clustering feature data matrix (numpy.ndarray of shape</span>
+<span class="sd">            (n_voxels, n_feature_dim)).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get problem type parameters</span>
+        <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span> <span class="o">=</span> \
+            <span class="n">mop</span><span class="o">.</span><span class="n">get_problem_type_parameters</span><span class="p">(</span><span class="n">problem_type</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Initialize clustering feature&#39;s data matrix</span>
+        <span class="n">data_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">rve_response</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="c1"># Initialize storage index</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Loop over macroscale loadings</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order_sym</span><span class="p">)):</span>
+            <span class="c1"># Get Kelvin factor associated with macroscale strain loading</span>
+            <span class="c1"># strain component</span>
+            <span class="n">kf_i</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">kelvin_factor</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">)</span>
+            <span class="c1"># Loop over strain components</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order_sym</span><span class="p">)):</span>
+                <span class="c1"># Get Kelvin factor associated with strain component</span>
+                <span class="n">kf_j</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">kelvin_factor</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">)</span>
+                <span class="c1"># Assemble fourth-order elastic strain concentration tensor</span>
+                <span class="c1"># component (accounting for the Kelvin notation coefficients)</span>
+                <span class="n">data_matrix</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">kf_j</span><span class="o">*</span><span class="n">rve_response</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span>
+                <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                <span class="c1"># Remove Kelvin coefficient</span>
+                <span class="n">data_matrix</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">kf_i</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">kf_j</span><span class="p">)</span><span class="o">*</span><span class="n">data_matrix</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span>
+                <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                <span class="c1"># Update storage index</span>
+                <span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">data_matrix</span>
+<span class="c1"># =============================================================================</span>
+<span class="k">class</span> <span class="nc">SpatialCoordinates</span><span class="p">(</span><span class="n">FeatureAlgorithm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Spatial coordinates.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    get_feature_data_matrix(self, strain_formulation, problem_type, rve_dims, \</span>
+<span class="sd">                            n_voxels_dims, rve_response)</span>
+<span class="sd">        Compute data matrix associated to clustering feature.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">get_feature_data_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span>
+                                <span class="n">rve_dims</span><span class="p">,</span> <span class="n">n_voxels_dims</span><span class="p">,</span> <span class="n">rve_response</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute data matrix associated to clustering feature.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        strain_formulation: {&#39;infinitesimal&#39;, &#39;finite&#39;}</span>
+<span class="sd">            Problem strain formulation.</span>
+<span class="sd">        problem_type : int</span>
+<span class="sd">            Problem type: 2D plane strain (1), 2D plane stress (2),</span>
+<span class="sd">            2D axisymmetric (3) and 3D (4).</span>
+<span class="sd">        rve_response : numpy.ndarray (2d)</span>
+<span class="sd">            RVE elastic response for one or more macroscale loadings</span>
+<span class="sd">            (numpy.ndarray of shape (n_voxels, n_strain_comps)), where each</span>
+<span class="sd">            macroscale loading is associated with a set of independent strain</span>
+<span class="sd">            components.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        data_matrix : numpy.ndarray (2d)</span>
+<span class="sd">            Clustering feature data matrix (numpy.ndarray of shape</span>
+<span class="sd">            (n_voxels, n_feature_dim)).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get problem number of spatial dimensions</span>
+        <span class="n">n_dim</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_problem_type_parameters</span><span class="p">(</span><span class="n">problem_type</span><span class="p">)</span>
+        <span class="c1"># Compute total number of voxels</span>
+        <span class="n">n_voxels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">n_voxels_dims</span><span class="p">)</span>
+        <span class="c1"># Set sampling spatial periods</span>
+        <span class="n">sampling_periods</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">rve_dims</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">/</span><span class="n">n_voxels_dims</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                                  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_dim</span><span class="p">)])</span>
+        <span class="c1"># Set coordinate axes offset</span>
+        <span class="n">offsets</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="mf">0.5</span><span class="o">*</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">sampling_periods</span><span class="p">])</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Initialize voxels coordinates global data matrix</span>
+        <span class="n">data_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_voxels</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">))</span>
+        <span class="c1"># Initialize voxel row index</span>
+        <span class="n">i_voxel</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">n_dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># Loop over voxels</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_voxels_dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="c1"># Loop over voxels</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_voxels_dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                    <span class="c1"># Compute voxel coordinates</span>
+                    <span class="n">voxel_coord</span> <span class="o">=</span> <span class="p">(</span><span class="n">sampling_periods</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">i</span> <span class="o">+</span> <span class="n">offsets</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                   <span class="n">sampling_periods</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">j</span> <span class="o">+</span> <span class="n">offsets</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="c1"># Store voxel coordinates in global data matrix</span>
+                    <span class="n">data_matrix</span><span class="p">[</span><span class="n">i_voxel</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">voxel_coord</span><span class="p">)</span>
+                    <span class="c1"># Update voxel row index</span>
+                    <span class="n">i_voxel</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Loop over voxels</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_voxels_dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="c1"># Loop over voxels</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_voxels_dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                    <span class="c1"># Loop over voxels</span>
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_voxels_dims</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+                        <span class="c1"># Compute voxel coordinates</span>
+                        <span class="n">voxel_coord</span> <span class="o">=</span> <span class="p">(</span><span class="n">sampling_periods</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">i</span> <span class="o">+</span> <span class="n">offsets</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                       <span class="n">sampling_periods</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">j</span> <span class="o">+</span> <span class="n">offsets</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                       <span class="n">sampling_periods</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">k</span> <span class="o">+</span> <span class="n">offsets</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                        <span class="c1"># Store voxel coordinates in global data matrix</span>
+                        <span class="n">data_matrix</span><span class="p">[</span><span class="n">i_voxel</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">voxel_coord</span><span class="p">)</span>
+                        <span class="c1"># Update voxel row index</span>
+                        <span class="n">i_voxel</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">data_matrix</span>
+<span class="c1">#</span>
+<span class="c1">#                                     Interface: Data standardization algorithm</span>
+<span class="c1"># =============================================================================</span>
+<span class="k">class</span> <span class="nc">Standardizer</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Data standardization algorithm interface.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    get_standardized_data_matrix(self, data_matrix)</span>
+<span class="sd">        *abstract*: Standardize provided data matrix.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_standardized_data_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Standardize provided data matrix.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data_matrix : numpy.ndarray (2d)</span>
+<span class="sd">            Data matrix to be standardized (numpy.ndarray of shape</span>
+<span class="sd">            (n_items, n_features)).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        data_matrix : numpy.ndarray (2d)</span>
+<span class="sd">            Transformed data matrix (numpy.ndarrayndarray of shape</span>
+<span class="sd">            (n_items, n_features)).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+<span class="c1">#</span>
+<span class="c1">#                                               Data standardization algorithms</span>
+<span class="c1"># =============================================================================</span>
+<span class="k">class</span> <span class="nc">MinMaxScaler</span><span class="p">(</span><span class="n">Standardizer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Min-Max scaling algorithm (wrapper).</span>
+
+<span class="sd">    Transform features by scaling each feature to a given min-max range.</span>
+
+<span class="sd">    Documentation: see `here &lt;https://scikit-learn.org/stable/modules/</span>
+<span class="sd">    generated/sklearn.preprocessing.MinMaxScaler.html#sklearn.preprocessing.</span>
+<span class="sd">    MinMaxScaler&gt;`_.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    _feature_range : tuple[float], default=(0, 1)</span>
+<span class="sd">        Desired range of transformed data (tuple(min, max)).</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    get_standardized_data_matrix(self, data_matrix)</span>
+<span class="sd">        Standardize provided data matrix.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Standardization algorithm constructor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        feature_range : tuple[float], default=(0, 1)</span>
+<span class="sd">            Desired range of transformed data (tuple(min, max)).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_feature_range</span> <span class="o">=</span> <span class="n">feature_range</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">get_standardized_data_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Standardize provided data matrix.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data_matrix : numpy.ndarray (2d)</span>
+<span class="sd">            Data matrix to be standardized (numpy.ndarray of shape</span>
+<span class="sd">            (n_items, n_features)).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        data_matrix : numpy.ndarray (2d)</span>
+<span class="sd">            Transformed data matrix (numpy.ndarray of shape</span>
+<span class="sd">            (n_items, n_features)).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Instatiante standardizer</span>
+        <span class="n">standardizer</span> <span class="o">=</span> <span class="n">skpp</span><span class="o">.</span><span class="n">MinMaxScaler</span><span class="p">(</span><span class="n">feature_range</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_feature_range</span><span class="p">,</span>
+                                         <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="c1"># Fit scaling parameters and transform data</span>
+        <span class="n">data_matrix</span> <span class="o">=</span> <span class="n">standardizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data_matrix</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="k">return</span> <span class="n">data_matrix</span>
+<span class="c1"># =============================================================================</span>
+<span class="k">class</span> <span class="nc">StandardScaler</span><span class="p">(</span><span class="n">Standardizer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Standard scaling algorithm (wrapper).</span>
+
+<span class="sd">    Transform features by removing the mean and scaling to unit variance</span>
+<span class="sd">    (standard normal distribution).</span>
+
+<span class="sd">    Documentation: see `here &lt;https://scikit-learn.org/stable/modules/</span>
+<span class="sd">    generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.</span>
+<span class="sd">    StandardScaler&gt;`_.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    get_standardized_data_matrix(self, data_matrix)</span>
+<span class="sd">        Standardize provided data matrix.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Standardization algorithm constructor.&quot;&quot;&quot;</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">get_standardized_data_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Standardize provided data matrix.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data_matrix : numpy.ndarray (2d)</span>
+<span class="sd">            Data matrix to be standardized (numpy.ndarray of shape</span>
+<span class="sd">            (n_items, n_features)).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        data_matrix : numpy.ndarray (2d)</span>
+<span class="sd">            Transformed data matrix (numpy.ndarray of shape</span>
+<span class="sd">            (n_items, n_features)).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Instatiante standardizer</span>
+        <span class="n">standardizer</span> <span class="o">=</span> <span class="n">skpp</span><span class="o">.</span><span class="n">StandardScaler</span><span class="p">(</span><span class="n">with_mean</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">with_std</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                           <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="c1"># Fit scaling parameters and transform data</span>
+        <span class="n">data_matrix</span> <span class="o">=</span> <span class="n">standardizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data_matrix</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="k">return</span> <span class="n">data_matrix</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

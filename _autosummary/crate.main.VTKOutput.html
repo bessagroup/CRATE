@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>crate.main.VTKOutput &mdash; crate 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="crate.material" href="crate.material.html" />
+    <link rel="prev" title="crate.main.CRVE" href="crate.main.CRVE.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            crate
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="crate.html">Code</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="crate.crate_simulation.html">crate.crate_simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.clustering.html">crate.clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.ioput.html">crate.ioput</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="crate.main.html">crate.main</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="crate.main.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.main.crate_simulation.html">crate.main.crate_simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.main.set_clustering_data.html">crate.main.set_clustering_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.main.ASCA.html">crate.main.ASCA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.main.CRVE.html">crate.main.CRVE</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">crate.main.VTKOutput</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="crate.material.html">crate.material</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.online.html">crate.online</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.optimization.html">crate.optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.tensor.html">crate.tensor</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">crate</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="crate.html">crate</a></li>
+          <li class="breadcrumb-item"><a href="crate.main.html">crate.main</a></li>
+      <li class="breadcrumb-item active">crate.main.VTKOutput</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="crate-main-vtkoutput">
+<h1>crate.main.VTKOutput<a class="headerlink" href="#crate-main-vtkoutput" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="crate.main.VTKOutput">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">VTKOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">byte_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vtk_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pvd_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ioput/miscoutputfiles/vtkoutput.html#VTKOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.main.VTKOutput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>VTK output.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.main.VTKOutput._vtk_collection">
+<span class="sig-name descname"><span class="pre">_vtk_collection</span></span><a class="headerlink" href="#crate.main.VTKOutput._vtk_collection" title="Permalink to this definition">¶</a></dt>
+<dd><p>VTK collection output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="crate.ioput.miscoutputfiles.vtkoutput.VTKCollection.html#crate.ioput.miscoutputfiles.vtkoutput.VTKCollection" title="crate.ioput.miscoutputfiles.vtkoutput.VTKCollection">VTKCollection</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.main.VTKOutput.write_vtk_file_clustering">
+<span class="sig-name descname"><span class="pre">write_vtk_file_clustering</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crve</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ioput/miscoutputfiles/vtkoutput.html#VTKOutput.write_vtk_file_clustering"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.main.VTKOutput.write_vtk_file_clustering" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write VTK file associated with the CRVE clustering.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.main.VTKOutput.write_vtk_file_time_step">
+<span class="sig-name descname"><span class="pre">write_vtk_file_time_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strain_formulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crve</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vtk_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptivity_manager</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ioput/miscoutputfiles/vtkoutput.html#VTKOutput.write_vtk_file_time_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.main.VTKOutput.write_vtk_file_time_step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write VTK file associated with time step (increment).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.main.VTKOutput.rewind_files">
+<span class="sig-name descname"><span class="pre">rewind_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rewind_inc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ioput/miscoutputfiles/vtkoutput.html#VTKOutput.rewind_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.main.VTKOutput.rewind_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rewind VTK output files.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.main.VTKOutput._set_image_data_parameters">
+<span class="sig-name descname"><span class="pre">_set_image_data_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rve_dims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_voxels_dims</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ioput/miscoutputfiles/vtkoutput.html#VTKOutput._set_image_data_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.main.VTKOutput._set_image_data_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set ImageData dataset parameters.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.main.VTKOutput._set_cell_data_name">
+<span class="sig-name descname"><span class="pre">_set_cell_data_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp_order_sym</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp_order_nsym</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ioput/miscoutputfiles/vtkoutput.html#VTKOutput._set_cell_data_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.main.VTKOutput._set_cell_data_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set variable cell data array name.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.main.VTKOutput._set_state_var_descriptors">
+<span class="sig-name descname"><span class="pre">_set_state_var_descriptors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp_order_sym</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp_order_nsym</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_state_variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ioput/miscoutputfiles/vtkoutput.html#VTKOutput._set_state_var_descriptors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.main.VTKOutput._set_state_var_descriptors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set state variable descriptors required to output cell data array.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.main.VTKOutput._state_var_cell_data_array">
+<span class="sig-name descname"><span class="pre">_state_var_cell_data_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp_order_sym</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp_order_nsym</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_phases</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_phases_models</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxels_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ioput/miscoutputfiles/vtkoutput.html#VTKOutput._state_var_cell_data_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.main.VTKOutput._state_var_cell_data_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build state variable cell data array.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.main.VTKOutput._reset_labels_from_zero">
+<span class="sig-name descname"><span class="pre">_reset_labels_from_zero</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array_1d</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ioput/miscoutputfiles/vtkoutput.html#VTKOutput._reset_labels_from_zero"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.main.VTKOutput._reset_labels_from_zero" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset 1d array of integers starting from zero.</p>
+</dd></dl>
+
+<p>Constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – VTK file type.</p></li>
+<li><p><strong>version</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – VTK version.</p></li>
+<li><p><strong>byte_order</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – VTK byte order.</p></li>
+<li><p><strong>format</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – VTK file format.</p></li>
+<li><p><strong>precision</strong> (<em>{'SinglePrecision'</em><em>, </em><em>'DoublePrecision'}</em>) – VTK file data precision.</p></li>
+<li><p><strong>header_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – VTK header type.</p></li>
+<li><p><strong>base_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Base name of VTK files.</p></li>
+<li><p><strong>vtk_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Directory where VTK files are stored.</p></li>
+<li><p><strong>pvd_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>default=None</em>) – Directory where PVD file is stored.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">List of Public Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id13" title="crate.main.VTKOutput.rewind_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rewind_files</span></code></a></p></td>
+<td><p>Rewind VTK output files.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id14" title="crate.main.VTKOutput.write_vtk_file_clustering"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_vtk_file_clustering</span></code></a></p></td>
+<td><p>Write VTK file associated with the CRVE clustering.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id15" title="crate.main.VTKOutput.write_vtk_file_time_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_vtk_file_time_step</span></code></a></p></td>
+<td><p>Write VTK file associated with time step (increment).</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.main.VTKOutput.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">byte_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vtk_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pvd_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ioput/miscoutputfiles/vtkoutput.html#VTKOutput.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.main.VTKOutput.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – VTK file type.</p></li>
+<li><p><strong>version</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – VTK version.</p></li>
+<li><p><strong>byte_order</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – VTK byte order.</p></li>
+<li><p><strong>format</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – VTK file format.</p></li>
+<li><p><strong>precision</strong> (<em>{'SinglePrecision'</em><em>, </em><em>'DoublePrecision'}</em>) – VTK file data precision.</p></li>
+<li><p><strong>header_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – VTK header type.</p></li>
+<li><p><strong>base_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Base name of VTK files.</p></li>
+<li><p><strong>vtk_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Directory where VTK files are stored.</p></li>
+<li><p><strong>pvd_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>default=None</em>) – Directory where PVD file is stored.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id0">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_reset_labels_from_zero</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array_1d</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ioput/miscoutputfiles/vtkoutput.html#VTKOutput._reset_labels_from_zero"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset 1d array of integers starting from zero.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>array_1d</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – 1d array of integers.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>array_1d_new</strong> – Relabeled 1d array of integers.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (1d)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">_set_cell_data_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">comp_order_sym</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp_order_nsym</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ioput/miscoutputfiles/vtkoutput.html#VTKOutput._set_cell_data_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set variable cell data array name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>comp_order_sym</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – Strain/Stress components (str) order (symmetric).</p></li>
+<li><p><strong>comp_order_nsym</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – Strain/Stress components (str) order (non-symmetric).</p></li>
+<li><p><strong>var_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Variable name.</p></li>
+<li><p><strong>var_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Variable type.</p></li>
+<li><p><strong>idx</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>default=None</em>) – Component index.</p></li>
+<li><p><strong>model_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>default=None</em>) – Material constitutive model name. If provided, the model name is
+included as a prefix in the variable cell data array name.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id2">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_set_image_data_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rve_dims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_voxels_dims</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ioput/miscoutputfiles/vtkoutput.html#VTKOutput._set_image_data_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set ImageData dataset parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rve_dims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>]</em>) – RVE size in each dimension.</p></li>
+<li><p><strong>n_voxels_dims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>]</em>) – Number of voxels in each dimension of the regular grid (spatial
+discretization of the RVE).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>dataset_parameters</strong> (<em>dict</em>) – ImageData dataset parameters.</p></li>
+<li><p><strong>dataset_parameters</strong> (<em>dict</em>) – ImageData dataset piece parameters.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">_set_state_var_descriptors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp_order_sym</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp_order_nsym</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_state_variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ioput/miscoutputfiles/vtkoutput.html#VTKOutput._set_state_var_descriptors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set state variable descriptors required to output cell data array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Problem dimension.</p></li>
+<li><p><strong>comp_order_sym</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – Strain/Stress components (str) order (symmetric).</p></li>
+<li><p><strong>comp_order_nsym</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – Strain/Stress components (str) order (non-symmetric).</p></li>
+<li><p><strong>var_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – State variable name.</p></li>
+<li><p><strong>source</strong> (<em>{'model_state_variables'</em><em>, </em><em>'clusters_state'}</em>) – Source where state variable is stored.</p></li>
+<li><p><strong>model_state_variables</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>, </em><em>default=None</em>) – Material model state variables (required if
+<a href="#id4"><span class="problematic" id="id5">`</span></a>source`=’model_state_variables’).</p></li>
+<li><p><strong>cluster</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Cluster label (required if <a href="#id6"><span class="problematic" id="id7">`</span></a>source`=’clusters_state’).</p></li>
+<li><p><strong>clusters_state</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>, </em><em>default=None</em>) – Material constitutive model state variables (item, dict) associated
+with each material cluster (key, str) (required if
+<a href="#id8"><span class="problematic" id="id9">`</span></a>source`=’clusters_state’).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>var</strong> (<em>{int, float, bool,  array}</em>) – State variable.</p></li>
+<li><p><strong>var_type</strong> (<em>str</em>) – State variable type.</p></li>
+<li><p><strong>var_n_comp</strong> (<em>int</em>) – State variable number of components.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id10">
+<span class="sig-name descname"><span class="pre">_state_var_cell_data_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp_order_sym</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp_order_nsym</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_phases</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_phases_models</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxels_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ioput/miscoutputfiles/vtkoutput.html#VTKOutput._state_var_cell_data_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id10" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build state variable cell data array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Problem dimension.</p></li>
+<li><p><strong>comp_order_sym</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – Strain/Stress components (str) order (symmetric).</p></li>
+<li><p><strong>comp_order_nsym</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – Strain/Stress components (str) order (non-symmetric).</p></li>
+<li><p><strong>material_phases</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – CRVE material phases labels (str).</p></li>
+<li><p><strong>material_phases_models</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Material constitutive model (item, ConstitutiveModel) associated
+with each material phase (key, str).</p></li>
+<li><p><strong>phase_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clusters labels (item, list of int) associated with each material
+phase (key, str).</p></li>
+<li><p><strong>voxels_clusters</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – Regular grid of voxels (spatial discretization of the RVE), where
+each entry contains the cluster label (int) assigned to the
+corresponding voxel.</p></li>
+<li><p><strong>clusters_state</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Material constitutive model state variables (item, dict) associated
+with each material cluster (key, str) (required if
+<a href="#id11"><span class="problematic" id="id12">`</span></a>source`=’clusters_state’).</p></li>
+<li><p><strong>var_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – State variable name.</p></li>
+<li><p><strong>var_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – State variable type.</p></li>
+<li><p><strong>comp_idx</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>default=None</em>) – Tensorial component index.</p></li>
+<li><p><strong>model_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>default=None</em>) – Material constitutive model name. If not provided, it is assumed
+that the state variable is common to all material phases and
+associated constitutive models.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>rg_array</strong> – Array of state variable component of shape equal to RVE regular
+grid discretization array.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (2d or 3d)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id13">
+<span class="sig-name descname"><span class="pre">rewind_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rewind_inc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ioput/miscoutputfiles/vtkoutput.html#VTKOutput.rewind_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id13" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rewind VTK output files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>rewind_inc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Increment associated with the rewind state.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id14">
+<span class="sig-name descname"><span class="pre">write_vtk_file_clustering</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">crve</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ioput/miscoutputfiles/vtkoutput.html#VTKOutput.write_vtk_file_clustering"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id14" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write VTK file associated with the CRVE clustering.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>crve</strong> (<a class="reference internal" href="crate.main.CRVE.html#crate.main.CRVE" title="crate.main.CRVE"><em>CRVE</em></a>) – Cluster-Reduced Representative Volume Element.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id15">
+<span class="sig-name descname"><span class="pre">write_vtk_file_time_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strain_formulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crve</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vtk_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptivity_manager</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ioput/miscoutputfiles/vtkoutput.html#VTKOutput.write_vtk_file_time_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id15" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write VTK file associated with time step (increment).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time_step</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Time step.</p></li>
+<li><p><strong>strain_formulation</strong> (<em>{'infinitesimal'</em><em>, </em><em>'finite'}</em>) – Problem strain formulation.</p></li>
+<li><p><strong>problem_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Problem type: 2D plane strain (1), 2D plane stress (2),
+2D axisymmetric (3) and 3D (4).</p></li>
+<li><p><strong>crve</strong> (<a class="reference internal" href="crate.main.CRVE.html#crate.main.CRVE" title="crate.main.CRVE"><em>CRVE</em></a>) – Cluster-Reduced Representative Volume Element.</p></li>
+<li><p><strong>material_state</strong> (<a class="reference internal" href="crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState" title="crate.ioput.readinputdata.MaterialState"><em>MaterialState</em></a>) – CRVE material constitutive state.</p></li>
+<li><p><strong>vtk_vars</strong> (<em>{'all'</em><em>, </em><em>'common'}</em><em>, </em><em>default='all'</em>) – If ‘common’, only state variables common to all material phases
+constitutive models are output. Otherwise, all state variables are
+output.</p></li>
+<li><p><strong>adaptivity_manager</strong> (<a class="reference internal" href="crate.clustering.adaptivity.crve_adaptivity.AdaptivityManager.html#crate.clustering.adaptivity.crve_adaptivity.AdaptivityManager" title="crate.clustering.adaptivity.crve_adaptivity.AdaptivityManager"><em>AdaptivityManager</em></a>) – CRVE clustering adaptivity manager.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="crate.main.CRVE.html" class="btn btn-neutral float-left" title="crate.main.CRVE" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="crate.material.html" class="btn btn-neutral float-right" title="crate.material" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

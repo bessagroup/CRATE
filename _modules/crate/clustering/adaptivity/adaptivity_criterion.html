@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>crate.clustering.adaptivity.adaptivity_criterion &mdash; crate 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            crate
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../_autosummary/crate.html">Code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">crate</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">crate.clustering.adaptivity.adaptivity_criterion</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for crate.clustering.adaptivity.adaptivity_criterion</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Clustering adaptivity criterion.</span>
+
+<span class="sd">This module includes the interface to implement any clustering adaptivity</span>
+<span class="sd">criterion and some clustering adaptivity criteria.</span>
+
+<span class="sd">The concept of clustering adaptivity criterion arises in the context of</span>
+<span class="sd">adaptive clustering-based reduced order modeling proposed by</span>
+<span class="sd">Ferreira et. al (2022) [#]_.</span>
+
+<span class="sd">.. [#] Ferreira, B.P., Andrade Pires, F.M. and Bessa, M.A. (2022).</span>
+<span class="sd">       *Adaptivity for clustering-based reduced-order modeling of</span>
+<span class="sd">       localized history-dependent phenomena.* Comp Methods Appl M, 393</span>
+<span class="sd">       (see `here &lt;https://www.sciencedirect.com/science/article/pii/</span>
+<span class="sd">       S0045782522000895?via%3Dihub&gt;`_)</span>
+
+<span class="sd">Classes</span>
+<span class="sd">-------</span>
+<span class="sd">AdaptivityCriterion(ABC)</span>
+<span class="sd">    Clustering adaptivity criterion interface.</span>
+<span class="sd">AdaptiveClusterGrouping(AdaptivityCriterion)</span>
+<span class="sd">    Clustering adaptivity cluster grouping criterion.</span>
+<span class="sd">SpatialDiscontinuities(AdaptivityCriterion)</span>
+<span class="sd">    Clustering adaptivity spatial discontinuities criterion.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#                                                                       Modules</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1"># Standard</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="c1"># Third-party</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="c1"># Local</span>
+<span class="kn">import</span> <span class="nn">ioput.ioutilities</span> <span class="k">as</span> <span class="nn">ioutil</span>
+<span class="c1">#</span>
+<span class="c1">#                                                          Authorship &amp; Credits</span>
+<span class="c1"># =============================================================================</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Bernardo Ferreira (bernardo_ferreira@brown.edu)&#39;</span>
+<span class="n">__credits__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Bernardo Ferreira&#39;</span><span class="p">,</span> <span class="p">]</span>
+<span class="n">__status__</span> <span class="o">=</span> <span class="s1">&#39;Stable&#39;</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#</span>
+<span class="c1">#                                    Interface: Clustering adaptivity criterion</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="AdaptivityCriterion"><a class="viewcode-back" href="../../../../_autosummary/crate.clustering.adaptivity.adaptivity_criterion.AdaptivityCriterion.html#crate.clustering.adaptivity.adaptivity_criterion.AdaptivityCriterion">[docs]</a><span class="k">class</span> <span class="nc">AdaptivityCriterion</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Clustering adaptivity criterion interface.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    get_parameters()</span>
+<span class="sd">        *abstract*: Get clustering adaptivity criterion parameters.</span>
+<span class="sd">    get_target_clusters(self)</span>
+<span class="sd">        *abstract*: Get clustering adaptivity target clusters ans associated</span>
+<span class="sd">        data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="AdaptivityCriterion.__init__"><a class="viewcode-back" href="../../../../_autosummary/crate.clustering.adaptivity.adaptivity_criterion.AdaptivityCriterion.html#crate.clustering.adaptivity.adaptivity_criterion.AdaptivityCriterion.__init__">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="AdaptivityCriterion.get_parameters"><a class="viewcode-back" href="../../../../_autosummary/crate.clustering.adaptivity.adaptivity_criterion.AdaptivityCriterion.html#crate.clustering.adaptivity.adaptivity_criterion.AdaptivityCriterion.get_parameters">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_parameters</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get clustering adaptivity criterion parameters.</span>
+
+<span class="sd">        Besides returning the mandatory and optional adaptivity criterion</span>
+<span class="sd">        parameters, this method establishes the default values for the optional</span>
+<span class="sd">        parameters.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        mandatory_parameters : dict</span>
+<span class="sd">            Mandatory adaptivity type parameters (str) and associated type</span>
+<span class="sd">            (item, type).</span>
+<span class="sd">        optional_parameters : dict</span>
+<span class="sd">            Optional adaptivity type parameters (key, str) and associated</span>
+<span class="sd">            default value (item).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="AdaptivityCriterion.get_target_clusters"><a class="viewcode-back" href="../../../../_autosummary/crate.clustering.adaptivity.adaptivity_criterion.AdaptivityCriterion.html#crate.clustering.adaptivity.adaptivity_criterion.AdaptivityCriterion.get_target_clusters">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_target_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get clustering adaptivity target clusters ans associated data.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        target_clusters : list[int]</span>
+<span class="sd">            List containing the labels (int) of clusters to be adapted.</span>
+<span class="sd">        target_clusters_data : dict</span>
+<span class="sd">            For each target cluster (key, str), store dictionary (item, dict)</span>
+<span class="sd">            containing cluster associated parameters required for the adaptive</span>
+<span class="sd">            procedures.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div></div>
+<span class="c1">#</span>
+<span class="c1">#                                                           Adaptivity criteria</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="AdaptiveClusterGrouping"><a class="viewcode-back" href="../../../../_autosummary/crate.clustering.adaptivity.adaptivity_criterion.AdaptiveClusterGrouping.html#crate.clustering.adaptivity.adaptivity_criterion.AdaptiveClusterGrouping">[docs]</a><span class="k">class</span> <span class="nc">AdaptiveClusterGrouping</span><span class="p">(</span><span class="n">AdaptivityCriterion</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Clustering adaptivity cluster grouping criterion.</span>
+
+<span class="sd">    This adaptivity clustering criterion is not formally documented.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    _adapt_groups : dict</span>
+<span class="sd">        Store the cluster labels (item, list[int]) associated with each</span>
+<span class="sd">        adaptive cluster group (key, int).</span>
+<span class="sd">    _groups_adapt_level : dict</span>
+<span class="sd">        Store adaptive level (item, int) of each adaptive cluster group</span>
+<span class="sd">        (key, int).</span>
+<span class="sd">    _target_groups_ids : list</span>
+<span class="sd">        Target adaptive cluster groups (item, list[int]) whose clusters are to</span>
+<span class="sd">        be adapted.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    get_parameters()</span>
+<span class="sd">        Get clustering adaptivity criterion parameters.</span>
+<span class="sd">    get_target_clusters(self, adapt_data_matrix, voxels_clusters)</span>
+<span class="sd">        Get clustering adaptivity target clusters.</span>
+<span class="sd">    update_group_clusters(self, adaptive_clustering_map)</span>
+<span class="sd">        Update adaptive cluster groups after adaptive procedures.</span>
+<span class="sd">    get_adapt_groups(self)</span>
+<span class="sd">        Get adaptive cluster groups.</span>
+<span class="sd">    get_groups_adapt_level(self)</span>
+<span class="sd">        Get adaptive cluster groups adaptive level.</span>
+<span class="sd">    get_min_adapt_feature_val(self)</span>
+<span class="sd">        Get minimum significant value of clustering adaptivity feature.</span>
+<span class="sd">    _adaptivity_trigger_condition(self, adapt_data_matrix)</span>
+<span class="sd">        Evaluate adaptive cluster group adaptivity trigger condition.</span>
+<span class="sd">    _adaptivity_selection_criterion(self, adapt_data_matrix)</span>
+<span class="sd">        Select target clusters from adaptive cluster group.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="AdaptiveClusterGrouping.__init__"><a class="viewcode-back" href="../../../../_autosummary/crate.clustering.adaptivity.adaptivity_criterion.AdaptiveClusterGrouping.html#crate.clustering.adaptivity.adaptivity_criterion.AdaptiveClusterGrouping.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapt_mat_phase</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span>
+                 <span class="n">adapt_trigger_ratio</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">adapt_split_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">adapt_max_level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">adapt_min_voxels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">is_merge_adapt_groups</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_adapt_feature_val</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        adapt_mat_phase : str</span>
+<span class="sd">            Adaptive material phase label.</span>
+<span class="sd">        phase_clusters : dict</span>
+<span class="sd">            Clusters labels (item, list[int]) associated with each material</span>
+<span class="sd">            phase (key, str).</span>
+<span class="sd">        adapt_trigger_ratio : float, default=None</span>
+<span class="sd">            Threshold associated with the adaptivity trigger condition,</span>
+<span class="sd">            defining the value of the relative ratio (max - avg)/avg above</span>
+<span class="sd">            which the adaptive cluster group is set to be adapted, where `max`</span>
+<span class="sd">            and `avg` are the maximum and average adaptivity feature values in</span>
+<span class="sd">            the adaptive cluster group, respectively.</span>
+<span class="sd">        adapt_split_threshold : float, default=None</span>
+<span class="sd">            Threshold associated with the adaptivity selection criterion,</span>
+<span class="sd">            defining the split boundary of each adaptive cluster group</span>
+<span class="sd">            according to the associated position in terms of the adaptivity</span>
+<span class="sd">            value range within the group. For instance, a</span>
+<span class="sd">            `adapt_split_threshold` of 0.8 means that the split boundary</span>
+<span class="sd">            divides the clusters whose adaptivity feature value is above</span>
+<span class="sd">            min + 0.8*(max - min) (top 20% of the value range) from the</span>
+<span class="sd">            remaining clusters.</span>
+<span class="sd">        adapt_max_level : int, default=None</span>
+<span class="sd">            Maximum adaptive cluster group adaptive level.</span>
+<span class="sd">        adapt_min_voxels : int, default=None</span>
+<span class="sd">            Minimum number of voxels that cluster must contain to be targeted</span>
+<span class="sd">            for adaptivity.</span>
+<span class="sd">        is_merge_adapt_groups : bool, default=None</span>
+<span class="sd">            True if the adaptive cluster groups of the same adaptive level are</span>
+<span class="sd">            to be merged, False if each adaptive cluster group follows an</span>
+<span class="sd">            independent hierarchy.</span>
+<span class="sd">        min_adapt_feature_val : float, default=None</span>
+<span class="sd">            Minimum significant value of clustering adaptivity control feature.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set initial adaptive clusters group (labeled as group &#39;0&#39;) and</span>
+        <span class="c1"># initialize associated adaptive level</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_groups</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_groups_adapt_level</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_groups</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">phase_clusters</span><span class="p">[</span><span class="n">adapt_mat_phase</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_groups_adapt_level</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Get optional parameters</span>
+        <span class="n">optional_parameters</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_parameters</span><span class="p">()</span>
+        <span class="c1"># Get adaptivity trigger ratio</span>
+        <span class="k">if</span> <span class="n">adapt_trigger_ratio</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_trigger_ratio</span> <span class="o">=</span> \
+                <span class="n">optional_parameters</span><span class="p">[</span><span class="s1">&#39;adapt_trigger_ratio&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_trigger_ratio</span> <span class="o">=</span> <span class="n">adapt_trigger_ratio</span>
+        <span class="c1"># Get adaptivity split threshold</span>
+        <span class="k">if</span> <span class="n">adapt_split_threshold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_split_threshold</span> <span class="o">=</span> \
+                <span class="n">optional_parameters</span><span class="p">[</span><span class="s1">&#39;adapt_split_threshold&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_split_threshold</span> <span class="o">=</span> <span class="n">adapt_split_threshold</span>
+        <span class="c1"># Get maximum adaptive cluster group adaptive level</span>
+        <span class="k">if</span> <span class="n">adapt_max_level</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_max_level</span> <span class="o">=</span> <span class="n">optional_parameters</span><span class="p">[</span><span class="s1">&#39;adapt_max_level&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_max_level</span> <span class="o">=</span> <span class="n">adapt_max_level</span>
+        <span class="c1"># Get minimum number of voxels that cluster must contain to be targeted</span>
+        <span class="c1"># for adaptivity</span>
+        <span class="k">if</span> <span class="n">adapt_min_voxels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_min_voxels</span> <span class="o">=</span> <span class="n">optional_parameters</span><span class="p">[</span><span class="s1">&#39;adapt_min_voxels&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_min_voxels</span> <span class="o">=</span> <span class="n">adapt_min_voxels</span>
+        <span class="c1"># Set merge adaptive cluster groups flag</span>
+        <span class="k">if</span> <span class="n">is_merge_adapt_groups</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_is_merge_adapt_groups</span> <span class="o">=</span> \
+                <span class="nb">bool</span><span class="p">(</span><span class="n">optional_parameters</span><span class="p">[</span><span class="s1">&#39;is_merge_adapt_groups&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_is_merge_adapt_groups</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">is_merge_adapt_groups</span><span class="p">)</span>
+        <span class="c1"># Set minimum significant value of clustering adaptivity control</span>
+        <span class="c1"># feature</span>
+        <span class="k">if</span> <span class="n">min_adapt_feature_val</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_min_adapt_feature_val</span> <span class="o">=</span> \
+                <span class="n">optional_parameters</span><span class="p">[</span><span class="s1">&#39;min_adapt_feature_val&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_min_adapt_feature_val</span> <span class="o">=</span> <span class="n">min_adapt_feature_val</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="AdaptiveClusterGrouping.get_parameters"><a class="viewcode-back" href="../../../../_autosummary/crate.clustering.adaptivity.adaptivity_criterion.AdaptiveClusterGrouping.html#crate.clustering.adaptivity.adaptivity_criterion.AdaptiveClusterGrouping.get_parameters">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_parameters</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get clustering adaptivity criterion parameters.</span>
+
+<span class="sd">        Besides returning the mandatory and optional adaptivity criterion</span>
+<span class="sd">        parameters, this method establishes the default values for the optional</span>
+<span class="sd">        parameters.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        mandatory_parameters : dict</span>
+<span class="sd">            Mandatory adaptivity type parameters (str) and associated type</span>
+<span class="sd">            (item, type).</span>
+<span class="sd">        optional_parameters : dict</span>
+<span class="sd">            Optional adaptivity type parameters (key, str) and associated</span>
+<span class="sd">            default value (item).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set mandatory adaptivity criterion parameters</span>
+        <span class="n">mandatory_parameters</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># Set optional adaptivity criterion parameters and associated default</span>
+        <span class="c1"># values</span>
+        <span class="n">optional_parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;adapt_trigger_ratio&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+                               <span class="s1">&#39;adapt_split_threshold&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+                               <span class="s1">&#39;adapt_max_level&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+                               <span class="s1">&#39;adapt_min_voxels&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                               <span class="s1">&#39;is_merge_adapt_groups&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                               <span class="s1">&#39;min_adapt_feature_val&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">mandatory_parameters</span><span class="p">,</span> <span class="n">optional_parameters</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="AdaptiveClusterGrouping.get_target_clusters"><a class="viewcode-back" href="../../../../_autosummary/crate.clustering.adaptivity.adaptivity_criterion.AdaptiveClusterGrouping.html#crate.clustering.adaptivity.adaptivity_criterion.AdaptiveClusterGrouping.get_target_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">get_target_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapt_data_matrix</span><span class="p">,</span> <span class="n">voxels_clusters</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get clustering adaptivity target clusters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        adapt_data_matrix : numpy.ndarray (2d)</span>
+<span class="sd">            Adaptivity feature data matrix (numpy.ndarray of shape</span>
+<span class="sd">            (adapt_phase_n_clusters, 2)) that, for the i-th cluster of the</span>
+<span class="sd">            adaptive material phase, contains the cluster label in</span>
+<span class="sd">            adapt_data_matrix[i, 0] and the associated adaptive feature value</span>
+<span class="sd">            in adapt_data_matrix[i, 1].</span>
+<span class="sd">        voxels_clusters : numpy.ndarray (2d or 3d)</span>
+<span class="sd">            Regular grid of voxels (spatial discretization of the RVE), where</span>
+<span class="sd">            each entry contains the cluster label (int) assigned to the</span>
+<span class="sd">            corresponding voxel.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        target_clusters : list[int]</span>
+<span class="sd">            List containing the labels (int) of clusters to be adapted.</span>
+<span class="sd">        target_clusters_data : dict</span>
+<span class="sd">            For each target cluster (key, str), store dictionary (item, dict)</span>
+<span class="sd">            containing cluster associated parameters required for the adaptive</span>
+<span class="sd">            procedures.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Initialize target clusters list</span>
+        <span class="n">target_clusters</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Initialize target clusters data</span>
+        <span class="n">target_clusters_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># Initialize target cluster groups</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_target_groups_ids</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Get adaptive material phase cluster groups</span>
+        <span class="n">adapt_groups_old</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_adapt_groups</span><span class="p">)</span>
+        <span class="n">adapt_groups_ids_old</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">adapt_groups_old</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">groups_adapt_level_old</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_groups_adapt_level</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Loop over adaptive cluster groups</span>
+        <span class="k">for</span> <span class="n">group_id</span> <span class="ow">in</span> <span class="n">adapt_groups_ids_old</span><span class="p">:</span>
+            <span class="c1"># Check if adaptive cluster group can be further adapted and,</span>
+            <span class="c1"># if not, skip to the next one</span>
+            <span class="k">if</span> <span class="n">groups_adapt_level_old</span><span class="p">[</span><span class="n">group_id</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_max_level</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="c1"># Get adaptive cluster group clusters and current adaptive level</span>
+            <span class="n">adapt_group</span> <span class="o">=</span> <span class="n">adapt_groups_old</span><span class="p">[</span><span class="n">group_id</span><span class="p">]</span>
+            <span class="n">base_adapt_level</span> <span class="o">=</span> <span class="n">groups_adapt_level_old</span><span class="p">[</span><span class="n">group_id</span><span class="p">]</span>
+            <span class="c1"># Get adaptivity data matrix row indexes associated with the</span>
+            <span class="c1"># adaptive cluster group clusters</span>
+            <span class="n">adapt_group_idxs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">in1d</span><span class="p">(</span><span class="n">adapt_data_matrix</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
+                                        <span class="n">adapt_group</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Check adaptive cluster group adaptivity trigger condition</span>
+            <span class="n">is_trigger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adaptivity_trigger_condition</span><span class="p">(</span>
+                <span class="n">adapt_data_matrix</span><span class="p">[</span><span class="n">adapt_group_idxs</span><span class="p">,</span> <span class="p">:])</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Get adaptive cluster group target clusters and assemble them to</span>
+            <span class="c1"># the global target clusters list</span>
+            <span class="k">if</span> <span class="n">is_trigger</span><span class="p">:</span>
+                <span class="c1"># Get target clusters according to adaptivity selection</span>
+                <span class="c1"># criterion</span>
+                <span class="n">group_target_clusters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adaptivity_selection_criterion</span><span class="p">(</span>
+                    <span class="n">adapt_data_matrix</span><span class="p">[</span><span class="n">adapt_group_idxs</span><span class="p">,</span> <span class="p">:])</span>
+                <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_merge_adapt_groups</span><span class="p">:</span>
+                    <span class="c1"># Add target clusters to adaptive cluster group according</span>
+                    <span class="c1"># to the current adaptive level</span>
+                    <span class="n">target_group_id</span> <span class="o">=</span> <span class="n">base_adapt_level</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="k">if</span> <span class="n">target_group_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_groups</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_groups</span><span class="p">[</span><span class="n">target_group_id</span><span class="p">]</span> <span class="o">+=</span> \
+                            <span class="n">group_target_clusters</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_groups</span><span class="p">[</span><span class="n">target_group_id</span><span class="p">]</span> <span class="o">=</span> \
+                            <span class="n">group_target_clusters</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_groups_adapt_level</span><span class="p">[</span><span class="n">target_group_id</span><span class="p">]</span> <span class="o">=</span> \
+                            <span class="n">target_group_id</span>
+                    <span class="c1"># Update target adaptive cluster groups</span>
+                    <span class="k">if</span> <span class="n">target_group_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_target_groups_ids</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_target_groups_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target_group_id</span><span class="p">)</span>
+                    <span class="c1"># Remove target clusters from old adaptive cluster group</span>
+                    <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">group_target_clusters</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_groups</span><span class="p">[</span><span class="n">group_id</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Get maximum adaptive cluster group id</span>
+                    <span class="n">max_group_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+                                           <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_groups</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+                    <span class="c1"># Set child adaptive cluster group to be adapted (set id,</span>
+                    <span class="c1"># set clusters and increment adaptive level relative to</span>
+                    <span class="c1"># parent cluster group)</span>
+                    <span class="n">child_group_1_id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">max_group_id</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_groups</span><span class="p">[</span><span class="n">child_group_1_id</span><span class="p">]</span> <span class="o">=</span> \
+                        <span class="n">group_target_clusters</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_groups_adapt_level</span><span class="p">[</span><span class="n">child_group_1_id</span><span class="p">]</span> <span class="o">=</span> \
+                        <span class="n">base_adapt_level</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_target_groups_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child_group_1_id</span><span class="p">)</span>
+                    <span class="c1"># Set child adaptive cluster group to be left unchanged</span>
+                    <span class="c1"># (set id, set clusters and set adaptive level equal to the</span>
+                    <span class="c1"># parent cluster group)</span>
+                    <span class="n">child_group_2_id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">max_group_id</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_groups</span><span class="p">[</span><span class="n">child_group_2_id</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+                        <span class="nb">set</span><span class="p">(</span><span class="n">adapt_group</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">group_target_clusters</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_groups_adapt_level</span><span class="p">[</span><span class="n">child_group_2_id</span><span class="p">]</span> <span class="o">=</span> \
+                        <span class="n">base_adapt_level</span>
+                    <span class="c1"># Remove parent adaptive cluster group</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_groups</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">group_id</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_groups_adapt_level</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">group_id</span><span class="p">)</span>
+                <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                <span class="c1"># Assemble target clusters</span>
+                <span class="n">target_clusters</span> <span class="o">+=</span> <span class="n">group_target_clusters</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Loop over target clusters</span>
+        <span class="n">target_clusters_copy</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">target_clusters</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">target_clusters_copy</span><span class="p">:</span>
+            <span class="c1"># Evaluate target conditions</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_min_voxels</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># Evaluate target cluster number of voxels</span>
+                <span class="n">n_cluster_voxels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">voxels_clusters</span> <span class="o">==</span> <span class="n">cluster</span><span class="p">)</span>
+                <span class="n">is_cond</span> <span class="o">=</span> <span class="n">n_cluster_voxels</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_min_voxels</span>
+                <span class="c1"># Untarget cluster if number of voxels is lower or equal than</span>
+                <span class="c1"># minimum, then proceed to the next target cluster</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">is_cond</span><span class="p">:</span>
+                    <span class="n">target_clusters</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span>
+                    <span class="k">continue</span>
+            <span class="c1"># Build target cluster data dictionary</span>
+            <span class="n">target_clusters_data</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span> <span class="o">=</span> \
+                <span class="p">{</span><span class="s1">&#39;is_dynamic_split_factor&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="k">return</span> <span class="n">target_clusters</span><span class="p">,</span> <span class="n">target_clusters_data</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="AdaptiveClusterGrouping.update_group_clusters"><a class="viewcode-back" href="../../../../_autosummary/crate.clustering.adaptivity.adaptivity_criterion.AdaptiveClusterGrouping.html#crate.clustering.adaptivity.adaptivity_criterion.AdaptiveClusterGrouping.update_group_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">update_group_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptive_clustering_map</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update adaptive cluster groups after adaptive procedures.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        adaptive_clustering_map : dict</span>
+<span class="sd">            List of new cluster labels (item, list[int]) resulting from the</span>
+<span class="sd">            adaptive procedures over each target cluster (key, str).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Loop over adaptive cluster groups</span>
+        <span class="k">for</span> <span class="n">group_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_target_groups_ids</span><span class="p">:</span>
+            <span class="c1"># Get parent adaptive cluster group clusters</span>
+            <span class="n">old_clusters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_groups</span><span class="p">[</span><span class="n">group_id</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="c1"># Loop over adaptive cluster group clusters</span>
+            <span class="k">for</span> <span class="n">old_cluster</span> <span class="ow">in</span> <span class="n">old_clusters</span><span class="p">:</span>
+                <span class="c1"># If cluster has been adapted, then update adaptive cluster</span>
+                <span class="c1"># group</span>
+                <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">old_cluster</span><span class="p">)</span> <span class="ow">in</span> <span class="n">adaptive_clustering_map</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="c1"># Remove parent cluster from group</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_groups</span><span class="p">[</span><span class="n">group_id</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">old_cluster</span><span class="p">)</span>
+                    <span class="c1"># Add child clusters to group</span>
+                    <span class="n">new_clusters</span> <span class="o">=</span> <span class="n">adaptive_clustering_map</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">old_cluster</span><span class="p">)]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_groups</span><span class="p">[</span><span class="n">group_id</span><span class="p">]</span> <span class="o">+=</span> <span class="n">new_clusters</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="AdaptiveClusterGrouping.get_adapt_groups"><a class="viewcode-back" href="../../../../_autosummary/crate.clustering.adaptivity.adaptivity_criterion.AdaptiveClusterGrouping.html#crate.clustering.adaptivity.adaptivity_criterion.AdaptiveClusterGrouping.get_adapt_groups">[docs]</a>    <span class="k">def</span> <span class="nf">get_adapt_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get adaptive cluster groups.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        adapt_groups : dict</span>
+<span class="sd">            Store the cluster labels (item, list[int]) associated with each</span>
+<span class="sd">            adaptive cluster group (key, int).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_adapt_groups</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="AdaptiveClusterGrouping.get_groups_adapt_level"><a class="viewcode-back" href="../../../../_autosummary/crate.clustering.adaptivity.adaptivity_criterion.AdaptiveClusterGrouping.html#crate.clustering.adaptivity.adaptivity_criterion.AdaptiveClusterGrouping.get_groups_adapt_level">[docs]</a>    <span class="k">def</span> <span class="nf">get_groups_adapt_level</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get adaptive cluster groups adaptive level.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        groups_adapt_level : dict</span>
+<span class="sd">            Store adaptive level (item, int) of each adaptive cluster group</span>
+<span class="sd">            (key, int).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_groups_adapt_level</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="AdaptiveClusterGrouping.get_min_adapt_feature_val"><a class="viewcode-back" href="../../../../_autosummary/crate.clustering.adaptivity.adaptivity_criterion.AdaptiveClusterGrouping.html#crate.clustering.adaptivity.adaptivity_criterion.AdaptiveClusterGrouping.get_min_adapt_feature_val">[docs]</a>    <span class="k">def</span> <span class="nf">get_min_adapt_feature_val</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get minimum significant value of clustering adaptivity feature.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        min_adapt_feature_val : float</span>
+<span class="sd">            Minimum significant value of clustering adaptivity control feature.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_adapt_feature_val</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="AdaptiveClusterGrouping._adaptivity_trigger_condition"><a class="viewcode-back" href="../../../../_autosummary/crate.clustering.adaptivity.adaptivity_criterion.AdaptiveClusterGrouping.html#crate.clustering.adaptivity.adaptivity_criterion.AdaptiveClusterGrouping._adaptivity_trigger_condition">[docs]</a>    <span class="k">def</span> <span class="nf">_adaptivity_trigger_condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapt_data_matrix</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate adaptive cluster group adaptivity trigger condition.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        adapt_data_matrix : numpy.ndarray (2d)</span>
+<span class="sd">            Adaptivity feature data matrix (numpy.ndarray of shape</span>
+<span class="sd">            (adapt_phase_n_clusters, 2)) that, for the i-th cluster of the</span>
+<span class="sd">            adaptive material phase, contains the cluster label in</span>
+<span class="sd">            adapt_data_matrix[i, 0] and the associated adaptive feature value</span>
+<span class="sd">            in adapt_data_matrix[i, 1].</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            True if clustering adaptivity is triggered in the adaptive cluster</span>
+<span class="sd">            group, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Compute average and maximum values of adaptivity feature</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">adapt_data_matrix</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">adapt_data_matrix</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="c1"># Compute adaptivity ratio</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-10</span><span class="p">:</span>
+            <span class="n">adapt_ratio</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">adapt_ratio</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span><span class="o">/</span><span class="nb">abs</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Check adaptivity trigger condition</span>
+        <span class="k">if</span> <span class="n">adapt_ratio</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_trigger_ratio</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="AdaptiveClusterGrouping._adaptivity_selection_criterion"><a class="viewcode-back" href="../../../../_autosummary/crate.clustering.adaptivity.adaptivity_criterion.AdaptiveClusterGrouping.html#crate.clustering.adaptivity.adaptivity_criterion.AdaptiveClusterGrouping._adaptivity_selection_criterion">[docs]</a>    <span class="k">def</span> <span class="nf">_adaptivity_selection_criterion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapt_data_matrix</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Select target clusters from adaptive cluster group.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        adapt_data_matrix : numpy.ndarray (2d)</span>
+<span class="sd">            Adaptivity feature data matrix (numpy.ndarray of shape</span>
+<span class="sd">            (adapt_phase_n_clusters, 2)) that, for the i-th cluster of the</span>
+<span class="sd">            adaptive material phase, contains the cluster label in</span>
+<span class="sd">            adapt_data_matrix[i, 0] and the associated adaptive feature value</span>
+<span class="sd">            in adapt_data_matrix[i, 1].</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        target_clusters : list</span>
+<span class="sd">            List containing the labels (int) of clusters to be adapted.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check threshold</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ioutil</span><span class="o">.</span><span class="n">is_between</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_adapt_split_threshold</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                 <span class="n">upper_bound</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Clustering adaptivity selection criterion</span><span class="se">\&#39;</span><span class="s1">s &#39;</span>
+                               <span class="s1">&#39;threshold must be between 0 and 1 (included).&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Get split boundary adaptivity feature value</span>
+        <span class="n">adapt_boundary</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">adapt_data_matrix</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span> \
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_split_threshold</span><span class="o">*</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">adapt_data_matrix</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+                                           <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">adapt_data_matrix</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]))</span>
+        <span class="c1"># Get indexes of clusters whose adaptivity feature value is greater or</span>
+        <span class="c1"># equal than the split boundary value</span>
+        <span class="n">idxs</span> <span class="o">=</span> <span class="n">adapt_data_matrix</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">adapt_boundary</span>
+        <span class="c1"># Get target clusters</span>
+        <span class="n">target_clusters</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">adapt_data_matrix</span><span class="p">[</span><span class="n">idxs</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="k">return</span> <span class="n">target_clusters</span></div></div>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="SpatialDiscontinuities"><a class="viewcode-back" href="../../../../_autosummary/crate.clustering.adaptivity.adaptivity_criterion.SpatialDiscontinuities.html#crate.clustering.adaptivity.adaptivity_criterion.SpatialDiscontinuities">[docs]</a><span class="k">class</span> <span class="nc">SpatialDiscontinuities</span><span class="p">(</span><span class="n">AdaptivityCriterion</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Clustering adaptivity spatial discontinuities criterion.</span>
+
+<span class="sd">    The detailed description of the clustering adaptivity spatial</span>
+<span class="sd">    discontinuities criterion can be found in Ferreira et. al (2022) [#]_.</span>
+
+<span class="sd">    .. [#] Ferreira, B.P., Andrade Pires, F.M. and Bessa, M.A. (2022).</span>
+<span class="sd">           *Adaptivity for clustering-based reduced-order modeling of</span>
+<span class="sd">           localized history-dependent phenomena.* Comp Methods Appl M, 393</span>
+<span class="sd">           (see `here &lt;https://www.sciencedirect.com/science/article/pii/</span>
+<span class="sd">           S0045782522000895?via%3Dihub&gt;`_)</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    _clusters_adapt_level : dict</span>
+<span class="sd">        Adaptive level (item, int) of each cluster (key, str).</span>
+<span class="sd">    _swipe_dims_every : list[int], default=None</span>
+<span class="sd">        Swipe frequency (item, int) of each spatial dimension. First and last</span>
+<span class="sd">        (boundary) voxels are always considered, irrespective of the swipe</span>
+<span class="sd">        frequency.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    get_parameters()</span>
+<span class="sd">        Get clustering adaptivity criterion parameters.</span>
+<span class="sd">    get_target_clusters(self, adapt_data_matrix, voxels_clusters)</span>
+<span class="sd">        Get clustering adaptivity target clusters.</span>
+<span class="sd">    update_clusters_adapt_level(self, adaptive_clustering_map)</span>
+<span class="sd">        Update clusters adaptive level after adaptive procedures.</span>
+<span class="sd">    get_clusters_adapt_level(self)</span>
+<span class="sd">        Get clusters adaptive level.</span>
+<span class="sd">    get_min_adapt_feature_val(self)</span>
+<span class="sd">        Get minimum significant value of clustering adaptivity feature.</span>
+<span class="sd">    _swipe_dimension(self, adapt_data_matrix, voxels_clusters, \</span>
+<span class="sd">                     target_clusters, target_clusters_data, dim_loops)</span>
+<span class="sd">        Evaluate spatial discontinuities along a given dimension.</span>
+<span class="sd">    _update_swipe_dims_init_idx(self)</span>
+<span class="sd">        Randomly update the dimensions swipe frequency initial index.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="SpatialDiscontinuities.__init__"><a class="viewcode-back" href="../../../../_autosummary/crate.clustering.adaptivity.adaptivity_criterion.SpatialDiscontinuities.html#crate.clustering.adaptivity.adaptivity_criterion.SpatialDiscontinuities.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapt_mat_phase</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span>
+                 <span class="n">adapt_trigger_ratio</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">adapt_max_level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">adapt_min_voxels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">adapt_level_max_diff</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">swipe_dim_1_every</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">swipe_dim_2_every</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">swipe_dim_3_every</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_adapt_feature_val</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">magnitude_lower_factor</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        adapt_mat_phase : str</span>
+<span class="sd">            Adaptive material phase label.</span>
+<span class="sd">        phase_clusters : dict</span>
+<span class="sd">            Clusters labels (item, list[int]) associated with each material</span>
+<span class="sd">            phase (key, str).</span>
+<span class="sd">        adapt_trigger_ratio : float, default=None</span>
+<span class="sd">            Threshold associated with the adaptivity trigger condition.</span>
+<span class="sd">        adapt_max_level : int, default=None</span>
+<span class="sd">            Maximum cluster adaptive level.</span>
+<span class="sd">        adapt_min_voxels : int, default=None</span>
+<span class="sd">            Minimum number of voxels that cluster must contain to be targeted</span>
+<span class="sd">            for adaptivity.</span>
+<span class="sd">        adapt_level_max_diff : int, default=None</span>
+<span class="sd">            Maximum adaptive level difference when targeting clusters of</span>
+<span class="sd">            adjacent voxels.</span>
+<span class="sd">        swipe_dim_1_every : int, default=None</span>
+<span class="sd">            Swipe frequency of spatial dimension 1. First and last (boundary)</span>
+<span class="sd">            voxels are always considered.</span>
+<span class="sd">        swipe_dim_2_every : int, default=None</span>
+<span class="sd">            Swipe frequency of spatial dimension 2. First and last (boundary)</span>
+<span class="sd">            voxels are always considered.</span>
+<span class="sd">        swipe_dim_3_every : int, default=None</span>
+<span class="sd">            Swipe frequency of spatial dimension 3. First and last (boundary)</span>
+<span class="sd">            voxels are always considered.</span>
+<span class="sd">        min_adapt_feature_val : float, default=None</span>
+<span class="sd">            Minimum significant value of clustering adaptivity control feature.</span>
+<span class="sd">        magnitude_lower_factor : float, default=None</span>
+<span class="sd">            Factor which affects the maximum stored magnitude associated with</span>
+<span class="sd">            the lower valued targeted cluster.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Initialize clusters adaptive level</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_adapt_level</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">):</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span>
+                                      <span class="n">phase_clusters</span><span class="p">[</span><span class="n">adapt_mat_phase</span><span class="p">]}</span>
+        <span class="c1"># Get optional parameters</span>
+        <span class="n">optional_parameters</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_parameters</span><span class="p">()</span>
+        <span class="c1"># Get adaptivity trigger ratio</span>
+        <span class="k">if</span> <span class="n">adapt_trigger_ratio</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_trigger_ratio</span> <span class="o">=</span> \
+                <span class="n">optional_parameters</span><span class="p">[</span><span class="s1">&#39;adapt_trigger_ratio&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_trigger_ratio</span> <span class="o">=</span> <span class="n">adapt_trigger_ratio</span>
+        <span class="c1"># Get maximum cluster adaptive level</span>
+        <span class="k">if</span> <span class="n">adapt_max_level</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_max_level</span> <span class="o">=</span> <span class="n">optional_parameters</span><span class="p">[</span><span class="s1">&#39;adapt_max_level&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_max_level</span> <span class="o">=</span> <span class="n">adapt_max_level</span>
+        <span class="c1"># Get minimum number of voxels that cluster must contain to be targeted</span>
+        <span class="c1"># for adaptivity</span>
+        <span class="k">if</span> <span class="n">adapt_min_voxels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_min_voxels</span> <span class="o">=</span> <span class="n">optional_parameters</span><span class="p">[</span><span class="s1">&#39;adapt_min_voxels&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_min_voxels</span> <span class="o">=</span> <span class="n">adapt_min_voxels</span>
+        <span class="c1"># Get cluster adaptive level maximum difference</span>
+        <span class="k">if</span> <span class="n">adapt_max_level</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_level_max_diff</span> <span class="o">=</span> \
+                <span class="n">optional_parameters</span><span class="p">[</span><span class="s1">&#39;adapt_level_max_diff&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_level_max_diff</span> <span class="o">=</span> <span class="n">adapt_level_max_diff</span>
+        <span class="c1"># Get spatial dimensions swipe frequencies</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_swipe_dims_every</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">swipe_dim_1_every</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_swipe_dims_every</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">optional_parameters</span><span class="p">[</span><span class="s1">&#39;swipe_dim_1_every&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_swipe_dims_every</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">swipe_dim_1_every</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">swipe_dim_2_every</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_swipe_dims_every</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">optional_parameters</span><span class="p">[</span><span class="s1">&#39;swipe_dim_2_every&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_swipe_dims_every</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">swipe_dim_2_every</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">swipe_dim_3_every</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_swipe_dims_every</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">optional_parameters</span><span class="p">[</span><span class="s1">&#39;swipe_dim_3_every&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_swipe_dims_every</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">swipe_dim_3_every</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="c1"># Set minimum significant value of clustering adaptivity control</span>
+        <span class="c1"># feature</span>
+        <span class="k">if</span> <span class="n">min_adapt_feature_val</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_min_adapt_feature_val</span> <span class="o">=</span> \
+                <span class="n">optional_parameters</span><span class="p">[</span><span class="s1">&#39;min_adapt_feature_val&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_min_adapt_feature_val</span> <span class="o">=</span> <span class="n">min_adapt_feature_val</span>
+        <span class="c1"># Set magnitude factor associated with lower valued targeted cluster</span>
+        <span class="k">if</span> <span class="n">magnitude_lower_factor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_magnitude_lower_factor</span> <span class="o">=</span> \
+                <span class="n">optional_parameters</span><span class="p">[</span><span class="s1">&#39;magnitude_lower_factor&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_magnitude_lower_factor</span> <span class="o">=</span> <span class="n">magnitude_lower_factor</span>
+        <span class="c1"># Initialize spatial dimensions swipe frequency initial index</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_swipe_dims_init_idx</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="SpatialDiscontinuities.get_parameters"><a class="viewcode-back" href="../../../../_autosummary/crate.clustering.adaptivity.adaptivity_criterion.SpatialDiscontinuities.html#crate.clustering.adaptivity.adaptivity_criterion.SpatialDiscontinuities.get_parameters">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_parameters</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get clustering adaptivity criterion parameters.</span>
+
+<span class="sd">        Besides returning the mandatory and optional adaptivity criterion</span>
+<span class="sd">        parameters, this method establishes the default values for the optional</span>
+<span class="sd">        parameters.</span>
+
+<span class="sd">        ----</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        mandatory_parameters : dict</span>
+<span class="sd">            Mandatory adaptivity type parameters (str) and associated type</span>
+<span class="sd">            (item, type).</span>
+<span class="sd">        optional_parameters : dict</span>
+<span class="sd">            Optional adaptivity type parameters (key, str) and associated</span>
+<span class="sd">            default value (item).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set mandatory adaptivity criterion parameters</span>
+        <span class="n">mandatory_parameters</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># Set optional adaptivity criterion parameters and associated default</span>
+        <span class="c1"># values</span>
+        <span class="n">optional_parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;adapt_trigger_ratio&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+                               <span class="s1">&#39;adapt_max_level&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+                               <span class="s1">&#39;adapt_min_voxels&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                               <span class="s1">&#39;adapt_level_max_diff&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                               <span class="s1">&#39;swipe_dim_1_every&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                               <span class="s1">&#39;swipe_dim_2_every&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                               <span class="s1">&#39;swipe_dim_3_every&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                               <span class="s1">&#39;min_adapt_feature_val&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                               <span class="s1">&#39;magnitude_lower_factor&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">}</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">mandatory_parameters</span><span class="p">,</span> <span class="n">optional_parameters</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="SpatialDiscontinuities.get_target_clusters"><a class="viewcode-back" href="../../../../_autosummary/crate.clustering.adaptivity.adaptivity_criterion.SpatialDiscontinuities.html#crate.clustering.adaptivity.adaptivity_criterion.SpatialDiscontinuities.get_target_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">get_target_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapt_data_matrix</span><span class="p">,</span> <span class="n">voxels_clusters</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get clustering adaptivity target clusters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        adapt_data_matrix : numpy.ndarray (2d)</span>
+<span class="sd">            Adaptivity feature data matrix (numpy.ndarray of shape</span>
+<span class="sd">            (adapt_phase_n_clusters, 2)) that, for the i-th cluster of the</span>
+<span class="sd">            adaptive material phase, contains the cluster label in</span>
+<span class="sd">            adapt_data_matrix[i, 0] and the associated adaptive feature value</span>
+<span class="sd">            in adapt_data_matrix[i, 1].</span>
+<span class="sd">        voxels_clusters : numpy.ndarray (2d or 3d)</span>
+<span class="sd">            Regular grid of voxels (spatial discretization of the RVE), where</span>
+<span class="sd">            each entry contains the cluster label (int) assigned to the</span>
+<span class="sd">            corresponding voxel.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        target_clusters : list[int]</span>
+<span class="sd">            List containing the labels (int) of clusters to be adapted.</span>
+<span class="sd">        target_clusters_data : dict</span>
+<span class="sd">            For each target cluster (key, str), store dictionary (item, dict)</span>
+<span class="sd">            containing cluster associated parameters required for the adaptive</span>
+<span class="sd">            procedures.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Initialize target clusters list</span>
+        <span class="n">target_clusters</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Initialize target clusters data</span>
+        <span class="n">target_clusters_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Randomly update the spatial dimensions swipe frequency initial index</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_swipe_dims_init_idx</span><span class="p">()</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Perform required spatial evaluations, update list of target clusters</span>
+        <span class="c1"># and associated data</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">voxels_clusters</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_swipe_dimension</span><span class="p">(</span><span class="n">adapt_data_matrix</span><span class="p">,</span> <span class="n">voxels_clusters</span><span class="p">,</span>
+                                  <span class="n">target_clusters</span><span class="p">,</span> <span class="n">target_clusters_data</span><span class="p">,</span> <span class="s1">&#39;12&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_swipe_dimension</span><span class="p">(</span><span class="n">adapt_data_matrix</span><span class="p">,</span> <span class="n">voxels_clusters</span><span class="p">,</span>
+                                  <span class="n">target_clusters</span><span class="p">,</span> <span class="n">target_clusters_data</span><span class="p">,</span> <span class="s1">&#39;21&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">voxels_clusters</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_swipe_dimension</span><span class="p">(</span><span class="n">adapt_data_matrix</span><span class="p">,</span> <span class="n">voxels_clusters</span><span class="p">,</span>
+                                  <span class="n">target_clusters</span><span class="p">,</span> <span class="n">target_clusters_data</span><span class="p">,</span> <span class="s1">&#39;123&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_swipe_dimension</span><span class="p">(</span><span class="n">adapt_data_matrix</span><span class="p">,</span> <span class="n">voxels_clusters</span><span class="p">,</span>
+                                  <span class="n">target_clusters</span><span class="p">,</span> <span class="n">target_clusters_data</span><span class="p">,</span> <span class="s1">&#39;213&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_swipe_dimension</span><span class="p">(</span><span class="n">adapt_data_matrix</span><span class="p">,</span> <span class="n">voxels_clusters</span><span class="p">,</span>
+                                  <span class="n">target_clusters</span><span class="p">,</span> <span class="n">target_clusters_data</span><span class="p">,</span> <span class="s1">&#39;312&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="k">return</span> <span class="n">target_clusters</span><span class="p">,</span> <span class="n">target_clusters_data</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="SpatialDiscontinuities.update_clusters_adapt_level"><a class="viewcode-back" href="../../../../_autosummary/crate.clustering.adaptivity.adaptivity_criterion.SpatialDiscontinuities.html#crate.clustering.adaptivity.adaptivity_criterion.SpatialDiscontinuities.update_clusters_adapt_level">[docs]</a>    <span class="k">def</span> <span class="nf">update_clusters_adapt_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptive_clustering_map</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update clusters adaptive level after adaptive procedures.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        adaptive_clustering_map : dict</span>
+<span class="sd">            List of new cluster labels (item, list[int]) resulting from the</span>
+<span class="sd">            adaptive procedures over each target cluster (key, str).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">old_cluster</span> <span class="ow">in</span> <span class="n">adaptive_clustering_map</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="c1"># Get parent cluster adaptive level</span>
+            <span class="n">old_cluster_adapt_level</span> <span class="o">=</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_adapt_level</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">old_cluster</span><span class="p">)]</span>
+            <span class="c1"># Update child clusters adaptive level</span>
+            <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">adaptive_clustering_map</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">old_cluster</span><span class="p">)]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_adapt_level</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span> <span class="o">=</span> \
+                    <span class="n">old_cluster_adapt_level</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="c1"># Remove parent cluster</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_adapt_level</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">old_cluster</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="SpatialDiscontinuities.get_clusters_adapt_level"><a class="viewcode-back" href="../../../../_autosummary/crate.clustering.adaptivity.adaptivity_criterion.SpatialDiscontinuities.html#crate.clustering.adaptivity.adaptivity_criterion.SpatialDiscontinuities.get_clusters_adapt_level">[docs]</a>    <span class="k">def</span> <span class="nf">get_clusters_adapt_level</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get clusters adaptive level.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        clusters_adapt_level : dict</span>
+<span class="sd">            Adaptive level (item, int) of each cluster (key, str).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clusters_adapt_level</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="SpatialDiscontinuities.get_min_adapt_feature_val"><a class="viewcode-back" href="../../../../_autosummary/crate.clustering.adaptivity.adaptivity_criterion.SpatialDiscontinuities.html#crate.clustering.adaptivity.adaptivity_criterion.SpatialDiscontinuities.get_min_adapt_feature_val">[docs]</a>    <span class="k">def</span> <span class="nf">get_min_adapt_feature_val</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get minimum significant value of clustering adaptivity feature.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        min_adapt_feature_val : float</span>
+<span class="sd">            Minimum significant value of clustering adaptivity control feature.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_adapt_feature_val</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="SpatialDiscontinuities._swipe_dimension"><a class="viewcode-back" href="../../../../_autosummary/crate.clustering.adaptivity.adaptivity_criterion.SpatialDiscontinuities.html#crate.clustering.adaptivity.adaptivity_criterion.SpatialDiscontinuities._swipe_dimension">[docs]</a>    <span class="k">def</span> <span class="nf">_swipe_dimension</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapt_data_matrix</span><span class="p">,</span> <span class="n">voxels_clusters</span><span class="p">,</span>
+                         <span class="n">target_clusters</span><span class="p">,</span> <span class="n">target_clusters_data</span><span class="p">,</span> <span class="n">dim_loops</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate spatial discontinuities along a given dimension.</span>
+
+<span class="sd">        The spatial dimensions are cycled according to the code provided in</span>
+<span class="sd">        `dim_loops`. The dimension where the spatial discontinuities are</span>
+<span class="sd">        evaluated is always the first dimension specified in this code (assumed</span>
+<span class="sd">        dimension i), while the others cycle the remainder dimensions (assumed</span>
+<span class="sd">        dimensions j and k). During this process, both the list of target</span>
+<span class="sd">        clusters and the dictionary containing associated data are updated.</span>
+
+<span class="sd">        ----</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        adapt_data_matrix : numpy.ndarray (2d)</span>
+<span class="sd">            Adaptivity feature data matrix (numpy.ndarray of shape</span>
+<span class="sd">            (adapt_phase_n_clusters, 2)) that, for the i-th cluster of the</span>
+<span class="sd">            adaptive material phase, contains the cluster label in</span>
+<span class="sd">            adapt_data_matrix[i, 0] and the associated adaptive feature value</span>
+<span class="sd">            in adapt_data_matrix[i, 1].</span>
+<span class="sd">        voxels_clusters : numpy.ndarray (2d or 3d)</span>
+<span class="sd">            Regular grid of voxels (spatial discretization of the RVE), where</span>
+<span class="sd">            each entry contains the cluster label (int) assigned to the</span>
+<span class="sd">            corresponding voxel.</span>
+<span class="sd">        target_clusters : list[int]</span>
+<span class="sd">            List containing the labels (int) of clusters to be adapted.</span>
+<span class="sd">        target_clusters_data : dict</span>
+<span class="sd">            For each target cluster (key, str), store dictionary (item, dict)</span>
+<span class="sd">            containing cluster associated parameters required for the adaptive</span>
+<span class="sd">            procedures.</span>
+<span class="sd">        dim_loops : str</span>
+<span class="sd">            Ordered specification of dimension cycles, being the spatial</span>
+<span class="sd">            discontinuities evaluated along dimension `dim_loops[0]`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get material phase clusters</span>
+        <span class="n">phase_clusters</span> <span class="o">=</span> <span class="n">adapt_data_matrix</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># Get number of voxels in each dimension</span>
+        <span class="n">n_voxels_dims</span> <span class="o">=</span> <span class="p">[</span><span class="n">voxels_clusters</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span>
+                         <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">voxels_clusters</span><span class="o">.</span><span class="n">shape</span><span class="p">))]</span>
+        <span class="c1"># Set numbers of voxels associated with dimension cycles</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">n_voxels_dims</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">dim_loops</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;12&#39;</span><span class="p">,</span> <span class="s1">&#39;21&#39;</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Invalid dimension cycles code.&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Set cycling dimensions map (ordered as i, j)</span>
+                <span class="n">cycle_spatial_map</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">dim_loops</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                                     <span class="nb">int</span><span class="p">(</span><span class="n">dim_loops</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="c1"># Set cycling dimensions numbers of voxels</span>
+                <span class="n">n_voxels_i</span> <span class="o">=</span> <span class="n">n_voxels_dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">n_voxels_j</span> <span class="o">=</span> <span class="n">n_voxels_dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">n_voxels_k</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">n_voxels_dims</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">dim_loops</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;123&#39;</span><span class="p">,</span> <span class="s1">&#39;132&#39;</span><span class="p">,</span> <span class="s1">&#39;213&#39;</span><span class="p">,</span> <span class="s1">&#39;231&#39;</span><span class="p">,</span> <span class="s1">&#39;312&#39;</span><span class="p">,</span> <span class="s1">&#39;321&#39;</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Invalid dimension cycles code.&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Set cycling dimensions map (ordered as i, j, k)</span>
+                <span class="n">cycle_spatial_map</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">dim_loops</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                                     <span class="nb">int</span><span class="p">(</span><span class="n">dim_loops</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                                     <span class="nb">int</span><span class="p">(</span><span class="n">dim_loops</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="c1"># Set cycling dimensions numbers of voxels</span>
+                <span class="n">n_voxels_i</span> <span class="o">=</span> <span class="n">n_voxels_dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">n_voxels_j</span> <span class="o">=</span> <span class="n">n_voxels_dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">n_voxels_k</span> <span class="o">=</span> <span class="n">n_voxels_dims</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Invalid number of dimensions.&#39;</span><span class="p">)</span>
+        <span class="c1"># Set spatial dimensions map (ordered as 1, 2 [, 3])</span>
+        <span class="n">spatial_cycle_map</span> <span class="o">=</span> <span class="p">[</span><span class="n">cycle_spatial_map</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">n_voxels_dims</span><span class="p">))]</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Set cycling dimensions swipe frequencies</span>
+        <span class="n">swipe_dim_i_every</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_swipe_dims_every</span><span class="p">[</span><span class="n">cycle_spatial_map</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="n">swipe_dim_j_every</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_swipe_dims_every</span><span class="p">[</span><span class="n">cycle_spatial_map</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cycle_spatial_map</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">swipe_dim_k_every</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_swipe_dims_every</span><span class="p">[</span><span class="n">cycle_spatial_map</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">swipe_dim_k_every</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="c1"># Set cycling dimensions swipe frequency initial index</span>
+        <span class="n">swipe_dim_i_init</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_swipe_dims_init_idx</span><span class="p">[</span><span class="n">cycle_spatial_map</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="n">swipe_dim_j_init</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_swipe_dims_init_idx</span><span class="p">[</span><span class="n">cycle_spatial_map</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cycle_spatial_map</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">swipe_dim_k_init</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_swipe_dims_init_idx</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">swipe_dim_k_init</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Get minimum and maximum value of adaptivity feature</span>
+        <span class="n">min_feature_val</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">adapt_data_matrix</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="n">max_feature_val</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">adapt_data_matrix</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="c1"># Get absolute value of maximum range of adaptivity feature</span>
+        <span class="n">norm_factor</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">max_feature_val</span> <span class="o">-</span> <span class="n">min_feature_val</span><span class="p">)</span>
+        <span class="c1"># If the maximum range of the adaptivity feature is null, then its</span>
+        <span class="c1"># value is uniform in the adaptive material phase</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">norm_factor</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-10</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Loop over voxels of dimension k</span>
+        <span class="k">for</span> <span class="n">voxel_k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_voxels_k</span><span class="p">):</span>
+            <span class="c1"># Proceed according swiping frequency of dimension k. First and</span>
+            <span class="c1"># last voxels are always considered</span>
+            <span class="k">if</span> <span class="n">voxel_k</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">voxel_k</span> <span class="o">==</span> <span class="n">n_voxels_k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="n">voxel_k</span> <span class="o">-</span> <span class="n">swipe_dim_k_init</span><span class="p">)</span> <span class="o">%</span> <span class="n">swipe_dim_k_every</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="c1"># Loop over voxels of dimension j</span>
+            <span class="k">for</span> <span class="n">voxel_j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_voxels_j</span><span class="p">):</span>
+                <span class="c1"># Proceed according swiping frequency of dimension j. First and</span>
+                <span class="c1"># last voxels are always considered</span>
+                <span class="k">if</span> <span class="n">voxel_j</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">voxel_j</span> <span class="o">==</span> <span class="n">n_voxels_j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                <span class="k">elif</span> <span class="p">(</span><span class="n">voxel_j</span> <span class="o">-</span> <span class="n">swipe_dim_j_init</span><span class="p">)</span> <span class="o">%</span> <span class="n">swipe_dim_j_every</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="c1"># Loop over voxels of dimension i (evaluation of spatial</span>
+                <span class="c1"># discontinuities)</span>
+                <span class="k">for</span> <span class="n">voxel_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_voxels_i</span><span class="p">):</span>
+                    <span class="c1"># Proceed according swiping frequency of dimension i. First</span>
+                    <span class="c1"># and last voxels are always considered</span>
+                    <span class="k">if</span> <span class="n">voxel_i</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">voxel_i</span> <span class="o">==</span> <span class="n">n_voxels_i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="k">pass</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="n">voxel_i</span> <span class="o">-</span> <span class="n">swipe_dim_i_init</span><span class="p">)</span> <span class="o">%</span> <span class="n">swipe_dim_i_every</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="c1"># Get voxel (i) ordered spatial indexes</span>
+                    <span class="n">idxs</span> <span class="o">=</span> <span class="p">[(</span><span class="n">voxel_i</span><span class="p">,</span> <span class="n">voxel_j</span><span class="p">,</span> <span class="n">voxel_k</span><span class="p">)[</span><span class="n">i</span><span class="p">]</span>
+                            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">spatial_cycle_map</span><span class="p">]</span>
+                    <span class="c1"># Get cluster label of voxel (i)</span>
+                    <span class="n">cluster</span> <span class="o">=</span> <span class="n">voxels_clusters</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">idxs</span><span class="p">)]</span>
+                    <span class="c1"># Get next voxel (i+1) ordered spatial indexes. If voxel</span>
+                    <span class="c1"># (i) is the last one, then the next voxel (i+1) is the</span>
+                    <span class="c1"># first one</span>
+                    <span class="k">if</span> <span class="n">voxel_i</span> <span class="o">==</span> <span class="n">n_voxels_i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">idxs</span><span class="p">[</span><span class="n">cycle_spatial_map</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">idxs</span><span class="p">[</span><span class="n">cycle_spatial_map</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="c1"># Get cluster labels of next voxel (i+1)</span>
+                    <span class="n">cluster_next</span> <span class="o">=</span> <span class="n">voxels_clusters</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">idxs</span><span class="p">)]</span>
+                    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                    <span class="c1"># Skip computations if at least one of the clusters does</span>
+                    <span class="c1"># not belong to the adaptive material phase associated with</span>
+                    <span class="c1"># the criterion instance</span>
+                    <span class="k">if</span> <span class="n">cluster</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">phase_clusters</span> \
+                            <span class="ow">or</span> <span class="n">cluster_next</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">phase_clusters</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="c1"># Skip computations if voxels belong to the same cluster</span>
+                    <span class="k">if</span> <span class="n">cluster</span> <span class="o">==</span> <span class="n">cluster_next</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                    <span class="c1"># Get clusters number of voxels</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_min_voxels</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">n_cluster_voxels</span> <span class="o">=</span> \
+                            <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">voxels_clusters</span> <span class="o">==</span> <span class="n">cluster</span><span class="p">)</span>
+                        <span class="n">n_cluster_next_voxels</span> <span class="o">=</span> \
+                            <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">voxels_clusters</span> <span class="o">==</span> <span class="n">cluster_next</span><span class="p">)</span>
+                    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                    <span class="c1"># Evaluate clusters adaptive level</span>
+                    <span class="n">is_cond_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_adapt_level</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span> \
+                        <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_max_level</span>
+                    <span class="n">is_cond_next_1</span> <span class="o">=</span> \
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_adapt_level</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster_next</span><span class="p">)]</span> \
+                        <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_max_level</span>
+                    <span class="c1"># Evaluate clusters number of voxels</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_min_voxels</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">is_cond_2</span> <span class="o">=</span> <span class="n">n_cluster_voxels</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_min_voxels</span>
+                        <span class="n">is_cond_next_2</span> <span class="o">=</span> <span class="n">n_cluster_next_voxels</span> \
+                            <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_min_voxels</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">is_cond_2</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="n">is_cond_next_2</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="c1"># Evaluate target conditions</span>
+                    <span class="n">is_cluster_targetable</span> <span class="o">=</span> <span class="n">is_cond_1</span> <span class="ow">and</span> <span class="n">is_cond_2</span>
+                    <span class="n">is_cluster_next_targetable</span> <span class="o">=</span> <span class="n">is_cond_next_1</span> \
+                        <span class="ow">and</span> <span class="n">is_cond_next_2</span>
+                    <span class="c1"># Skip computations if both clusters are untargetable</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_cluster_targetable</span> \
+                            <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_cluster_next_targetable</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                    <span class="c1"># Get cluster index and feature value</span>
+                    <span class="n">cluster_idx</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">adapt_data_matrix</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">adapt_data_matrix</span><span class="p">[</span><span class="n">cluster_idx</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+                    <span class="c1"># Get cluster of next voxel and feature value</span>
+                    <span class="n">cluster_next_idx</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+                        <span class="n">adapt_data_matrix</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">cluster_next</span><span class="p">)</span>
+                    <span class="n">value_next</span> <span class="o">=</span> <span class="n">adapt_data_matrix</span><span class="p">[</span><span class="n">cluster_next_idx</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+                    <span class="c1"># Compute normalized spatial discontinuity along</span>
+                    <span class="c1"># dimension i</span>
+                    <span class="n">ratio</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">value_next</span> <span class="o">-</span> <span class="n">value</span><span class="p">)</span><span class="o">/</span><span class="n">norm_factor</span>
+                    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                    <span class="c1"># Skip computations if normalized spatial discontinuity is</span>
+                    <span class="c1"># lower than prescribed threshold. Otherwise, compute</span>
+                    <span class="c1"># associated magnitude</span>
+                    <span class="k">if</span> <span class="n">ratio</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_trigger_ratio</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">magnitude</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ratio</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_trigger_ratio</span><span class="p">)</span>
+                    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                    <span class="c1"># Evaluate if clusters have already been targeted</span>
+                    <span class="n">is_cluster_targeted</span> <span class="o">=</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">target_clusters</span>
+                    <span class="n">is_cluster_next_targeted</span> <span class="o">=</span> <span class="n">cluster_next</span> <span class="ow">in</span> <span class="n">target_clusters</span>
+                    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                    <span class="c1"># Update previously targeted clusters data</span>
+                    <span class="k">if</span> <span class="n">is_cluster_targeted</span><span class="p">:</span>
+                        <span class="n">max_magn</span> <span class="o">=</span> \
+                            <span class="n">target_clusters_data</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)][</span><span class="s1">&#39;max_magnitude&#39;</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;=</span> <span class="n">value_next</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">magnitude</span> <span class="o">&gt;</span> <span class="n">max_magn</span><span class="p">:</span>
+                                <span class="n">target_clusters_data</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)][</span>
+                                    <span class="s1">&#39;max_magnitude&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">magnitude</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magnitude_lower_factor</span><span class="o">*</span><span class="n">magnitude</span> \
+                                    <span class="o">&gt;</span> <span class="n">max_magn</span><span class="p">:</span>
+                                <span class="n">target_clusters_data</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)][</span>
+                                    <span class="s1">&#39;max_magnitude&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">_magnitude_lower_factor</span><span class="o">*</span><span class="n">magnitude</span>
+                    <span class="k">if</span> <span class="n">is_cluster_next_targeted</span><span class="p">:</span>
+                        <span class="n">max_magn</span> <span class="o">=</span> <span class="n">target_clusters_data</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster_next</span><span class="p">)][</span>
+                            <span class="s1">&#39;max_magnitude&#39;</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="n">value_next</span> <span class="o">&gt;</span> <span class="n">value</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">magnitude</span> <span class="o">&gt;</span> <span class="n">max_magn</span><span class="p">:</span>
+                                <span class="n">target_clusters_data</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster_next</span><span class="p">)][</span>
+                                    <span class="s1">&#39;max_magnitude&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">magnitude</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magnitude_lower_factor</span><span class="o">*</span><span class="n">magnitude</span> \
+                                    <span class="o">&gt;</span> <span class="n">max_magn</span><span class="p">:</span>
+                                <span class="n">target_clusters_data</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster_next</span><span class="p">)][</span>
+                                    <span class="s1">&#39;max_magnitude&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">_magnitude_lower_factor</span><span class="o">*</span><span class="n">magnitude</span>
+                    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                    <span class="c1"># Update target clusters list and associated data</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">is_cluster_targeted</span> <span class="ow">and</span> <span class="n">is_cluster_next_targeted</span><span class="p">):</span>
+                        <span class="c1"># Evaluate clusters adaptive level</span>
+                        <span class="n">cluster_adapt_level</span> <span class="o">=</span> \
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_adapt_level</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span>
+                        <span class="n">cluster_next_adapt_level</span> <span class="o">=</span> \
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_adapt_level</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster_next</span><span class="p">)]</span>
+                        <span class="c1"># Compute differences of clusters adaptive level</span>
+                        <span class="n">diff_1</span> <span class="o">=</span> <span class="n">cluster_next_adapt_level</span> <span class="o">-</span> <span class="n">cluster_adapt_level</span>
+                        <span class="n">diff_2</span> <span class="o">=</span> <span class="n">cluster_adapt_level</span> <span class="o">-</span> <span class="n">cluster_next_adapt_level</span>
+                        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                        <span class="c1"># Update target clusters list according to associated</span>
+                        <span class="c1"># adaptive and update data of new targeted clusters</span>
+                        <span class="k">if</span> <span class="n">diff_1</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_level_max_diff</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="ow">not</span> <span class="n">is_cluster_targeted</span> \
+                                    <span class="ow">and</span> <span class="n">is_cluster_targetable</span><span class="p">:</span>
+                                <span class="n">target_clusters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span>
+                                <span class="n">target_clusters_data</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span> <span class="o">=</span> <span class="p">{}</span>
+                                <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="n">value_next</span><span class="p">:</span>
+                                    <span class="n">target_clusters_data</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)][</span>
+                                        <span class="s1">&#39;max_magnitude&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">magnitude</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="n">target_clusters_data</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)][</span>
+                                        <span class="s1">&#39;max_magnitude&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">_magnitude_lower_factor</span><span class="o">*</span><span class="n">magnitude</span>
+                        <span class="k">elif</span> <span class="n">diff_2</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_level_max_diff</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="ow">not</span> <span class="n">is_cluster_next_targeted</span> \
+                                    <span class="ow">and</span> <span class="n">is_cluster_next_targetable</span><span class="p">:</span>
+                                <span class="n">target_clusters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cluster_next</span><span class="p">)</span>
+                                <span class="n">target_clusters_data</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster_next</span><span class="p">)]</span> <span class="o">=</span> <span class="p">{}</span>
+                                <span class="k">if</span> <span class="n">value_next</span> <span class="o">&gt;</span> <span class="n">value</span><span class="p">:</span>
+                                    <span class="n">target_clusters_data</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster_next</span><span class="p">)][</span>
+                                        <span class="s1">&#39;max_magnitude&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">magnitude</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="n">target_clusters_data</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster_next</span><span class="p">)][</span>
+                                        <span class="s1">&#39;max_magnitude&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">_magnitude_lower_factor</span><span class="o">*</span><span class="n">magnitude</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="ow">not</span> <span class="n">is_cluster_targeted</span> \
+                                    <span class="ow">and</span> <span class="n">is_cluster_targetable</span><span class="p">:</span>
+                                <span class="n">target_clusters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span>
+                                <span class="n">target_clusters_data</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span> <span class="o">=</span> <span class="p">{}</span>
+                                <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="n">value_next</span><span class="p">:</span>
+                                    <span class="n">target_clusters_data</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)][</span>
+                                        <span class="s1">&#39;max_magnitude&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">magnitude</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="n">target_clusters_data</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)][</span>
+                                        <span class="s1">&#39;max_magnitude&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">_magnitude_lower_factor</span><span class="o">*</span><span class="n">magnitude</span>
+                            <span class="k">if</span> <span class="ow">not</span> <span class="n">is_cluster_next_targeted</span> \
+                                    <span class="ow">and</span> <span class="n">is_cluster_next_targetable</span><span class="p">:</span>
+                                <span class="n">target_clusters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cluster_next</span><span class="p">)</span>
+                                <span class="n">target_clusters_data</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster_next</span><span class="p">)]</span> <span class="o">=</span> <span class="p">{}</span>
+                                <span class="k">if</span> <span class="n">value_next</span> <span class="o">&gt;</span> <span class="n">value</span><span class="p">:</span>
+                                    <span class="n">target_clusters_data</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster_next</span><span class="p">)][</span>
+                                        <span class="s1">&#39;max_magnitude&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">magnitude</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="n">target_clusters_data</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster_next</span><span class="p">)][</span>
+                                        <span class="s1">&#39;max_magnitude&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">_magnitude_lower_factor</span><span class="o">*</span><span class="n">magnitude</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Loop over target clusters</span>
+        <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">target_clusters</span><span class="p">:</span>
+            <span class="c1"># Store adaptive trigger ratio for each target cluster</span>
+            <span class="n">target_clusters_data</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)][</span><span class="s1">&#39;adapt_trigger_ratio&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_trigger_ratio</span>
+            <span class="c1"># Set dynamic adaptive clustering split factor flag</span>
+            <span class="n">target_clusters_data</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)][</span><span class="s1">&#39;is_dynamic_split_factor&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="kc">True</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="SpatialDiscontinuities._update_swipe_dims_init_idx"><a class="viewcode-back" href="../../../../_autosummary/crate.clustering.adaptivity.adaptivity_criterion.SpatialDiscontinuities.html#crate.clustering.adaptivity.adaptivity_criterion.SpatialDiscontinuities._update_swipe_dims_init_idx">[docs]</a>    <span class="k">def</span> <span class="nf">_update_swipe_dims_init_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Randomly update the dimensions swipe frequency initial index.</span>
+
+<span class="sd">        The detailed description of this procedure can be found in</span>
+<span class="sd">        Ferreira et. al (2022) [#]_.</span>
+
+<span class="sd">        .. [#] Ferreira, B.P., Andrade Pires, F.M. and Bessa, M.A. (2022).</span>
+<span class="sd">               *Adaptivity for clustering-based reduced-order modeling of</span>
+<span class="sd">               localized history-dependent phenomena.* Comp Methods Appl M, 393</span>
+<span class="sd">               (see `here &lt;https://www.sciencedirect.com/science/article/pii/</span>
+<span class="sd">               S0045782522000895?via%3Dihub&gt;`_)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_swipe_dims_every</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_swipe_dims_every</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_swipe_dims_init_idx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_swipe_dims_every</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

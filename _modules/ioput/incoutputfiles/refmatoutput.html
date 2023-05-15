@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ioput.incoutputfiles.refmatoutput &mdash; crate 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            crate
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/crate.html">Code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">crate</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ioput.incoutputfiles.refmatoutput</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ioput.incoutputfiles.refmatoutput</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Output file: Homogeneous (fictitious) reference material.</span>
+
+<span class="sd">This module includes the class associated with the output file where data</span>
+<span class="sd">associated with the homogeneous (fictitious) reference material is stored.</span>
+
+<span class="sd">Classes</span>
+<span class="sd">-------</span>
+<span class="sd">RefMatOutput</span>
+<span class="sd">    Output file: Homogeneous (fictitious) reference material data</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#                                                                       Modules</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1"># Third-party</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="c1"># Local</span>
+<span class="kn">from</span> <span class="nn">ioput.incoutputfiles.interface</span> <span class="kn">import</span> <span class="n">IncrementalOutputFile</span>
+<span class="kn">import</span> <span class="nn">tensor.matrixoperations</span> <span class="k">as</span> <span class="nn">mop</span>
+<span class="c1">#</span>
+<span class="c1">#                                                          Authorship &amp; Credits</span>
+<span class="c1"># =============================================================================</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Bernardo Ferreira (bernardo_ferreira@brown.edu)&#39;</span>
+<span class="n">__credits__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Bernardo Ferreira&#39;</span><span class="p">,</span> <span class="p">]</span>
+<span class="n">__status__</span> <span class="o">=</span> <span class="s1">&#39;Stable&#39;</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="RefMatOutput"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.RefMatOutput.html#crate.online.crom.asca.RefMatOutput">[docs]</a><span class="k">class</span> <span class="nc">RefMatOutput</span><span class="p">(</span><span class="n">IncrementalOutputFile</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Output file: Homogeneous (fictitious) reference material data.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    _file_path : str</span>
+<span class="sd">        Output file path.</span>
+<span class="sd">    _header : list[str]</span>
+<span class="sd">        List containing the header of each column (str).</span>
+<span class="sd">    _col_width : int</span>
+<span class="sd">        Output file column width.</span>
+<span class="sd">    _n_dim : int</span>
+<span class="sd">        Problem number of spatial dimensions.</span>
+<span class="sd">    _comp_order_sym : list[str]</span>
+<span class="sd">        Strain/Stress components symmetric order.</span>
+<span class="sd">    _comp_order_nsym : list[str]</span>
+<span class="sd">        Strain/Stress components nonsymmetric order.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    init_file(self)</span>
+<span class="sd">        Open reference material output file and write file header.</span>
+<span class="sd">    write_mat(self, inc, ref_material, hom_strain_mf, hom_stress_mf, \</span>
+<span class="sd">              eff_tangent_mf=None, farfield_strain_mf=None, \</span>
+<span class="sd">              applied_mac_load_strain_mf=None)</span>
+<span class="sd">        Write reference material output file.</span>
+<span class="sd">    rewind_file(self, rewind_inc)</span>
+<span class="sd">        Rewind reference material output file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="RefMatOutput.__init__"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.RefMatOutput.html#crate.online.crom.asca.RefMatOutput.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span>
+                 <span class="n">self_consistent_scheme</span><span class="o">=</span><span class="s1">&#39;regression&#39;</span><span class="p">,</span>
+                 <span class="n">ref_output_mode</span><span class="o">=</span><span class="s1">&#39;converged&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        file_path : str</span>
+<span class="sd">            Output file path.</span>
+<span class="sd">        strain_formulation: {&#39;infinitesimal&#39;, &#39;finite&#39;}</span>
+<span class="sd">            Problem strain formulation.</span>
+<span class="sd">        problem_type : int</span>
+<span class="sd">            Problem type: 2D plane strain (1), 2D plane stress (2),</span>
+<span class="sd">            2D axisymmetric (3) and 3D (4).</span>
+<span class="sd">        self_consistent_scheme : {&#39;regression&#39;,}, default=&#39;regression&#39;</span>
+<span class="sd">            Self-consistent scheme to update the elastic reference material</span>
+<span class="sd">            properties.</span>
+<span class="sd">        ref_output_mode : {&#39;iterative&#39;, &#39;converged&#39;}, default=&#39;converged&#39;</span>
+<span class="sd">            Output mode:</span>
+
+<span class="sd">            * &#39;iterative&#39; : outputs the reference material quantities at \</span>
+<span class="sd">                            every self-consistent scheme iteration</span>
+<span class="sd">            * &#39;converged&#39; : outputs the reference material quantities that \</span>
+<span class="sd">                            converged at each loading increment</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file_path</span> <span class="o">=</span> <span class="n">file_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">=</span> <span class="n">strain_formulation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span> <span class="o">=</span> <span class="n">problem_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_self_consistent_scheme</span> <span class="o">=</span> <span class="n">self_consistent_scheme</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ref_output_mode</span> <span class="o">=</span> <span class="n">ref_output_mode</span>
+        <span class="c1"># Get problem type parameters</span>
+        <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span> <span class="o">=</span> \
+            <span class="n">mop</span><span class="o">.</span><span class="n">get_problem_type_parameters</span><span class="p">(</span><span class="n">problem_type</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span> <span class="o">=</span> <span class="n">n_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_sym</span> <span class="o">=</span> <span class="n">comp_order_sym</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span> <span class="o">=</span> <span class="n">comp_order_nsym</span>
+        <span class="c1"># Set reference material output file header</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_header</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Increment&#39;</span><span class="p">,</span> <span class="s1">&#39;SCS Iteration&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;E_ref&#39;</span><span class="p">,</span> <span class="s1">&#39;v_ref&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;strain0_11&#39;</span><span class="p">,</span> <span class="s1">&#39;strain0_21&#39;</span><span class="p">,</span> <span class="s1">&#39;strain0_31&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;strain0_12&#39;</span><span class="p">,</span> <span class="s1">&#39;strain0_22&#39;</span><span class="p">,</span> <span class="s1">&#39;strain0_32&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;strain0_13&#39;</span><span class="p">,</span> <span class="s1">&#39;strain0_23&#39;</span><span class="p">,</span> <span class="s1">&#39;strain0_33&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;strain_0_rdiff&#39;</span><span class="p">,</span> <span class="s1">&#39;rel_scs_cost&#39;</span><span class="p">,</span> <span class="s1">&#39;tangent_rdiff&#39;</span><span class="p">]</span>
+        <span class="c1"># Set column width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_col_width</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_header</span><span class="p">])</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="RefMatOutput.init_file"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.RefMatOutput.html#crate.online.crom.asca.RefMatOutput.init_file">[docs]</a>    <span class="k">def</span> <span class="nf">init_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Open output file and write file header.&quot;&quot;&quot;</span>
+        <span class="c1"># Set reference material elastic properties initial output</span>
+        <span class="n">properties_init</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="c1"># Set far-field strain initial output</span>
+        <span class="n">strain_init</span> <span class="o">=</span> <span class="mi">9</span><span class="o">*</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;finite&#39;</span><span class="p">:</span>
+            <span class="n">strain_init</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+            <span class="n">strain_init</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+            <span class="n">strain_init</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Open output file (write mode)</span>
+        <span class="n">refm_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="c1"># Set output file header format structure</span>
+        <span class="n">write_list</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;</span><span class="si">{:&gt;9s}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_header</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;  &#39;</span>
+            <span class="o">+</span> <span class="s1">&#39;</span><span class="si">{:&gt;13s}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_header</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="o">+</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([(</span><span class="s1">&#39;{:&gt;&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_col_width</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;s}&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+                       <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_header</span><span class="p">[</span><span class="mi">2</span><span class="p">:]]),</span>
+            <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">{:&gt;9d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;  &#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">{:&gt;13d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="o">+</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([(</span><span class="s1">&#39;{:&gt;&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_col_width</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.8e}&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+                       <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">properties_init</span><span class="p">])</span>
+            <span class="o">+</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([(</span><span class="s1">&#39;{:&gt;&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_col_width</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.8e}&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+                       <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">strain_init</span><span class="p">])</span>
+            <span class="o">+</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([(</span><span class="s1">&#39;{:&gt;&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_col_width</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.8e}&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                       <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_header</span><span class="p">[</span><span class="mi">13</span><span class="p">:]]),</span> <span class="p">]</span>
+        <span class="c1"># Write output file header</span>
+        <span class="n">refm_file</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">write_list</span><span class="p">)</span>
+        <span class="c1"># Close output file</span>
+        <span class="n">refm_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="RefMatOutput.write_file"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.RefMatOutput.html#crate.online.crom.asca.RefMatOutput.write_file">[docs]</a>    <span class="k">def</span> <span class="nf">write_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inc</span><span class="p">,</span> <span class="n">ref_material</span><span class="p">,</span> <span class="n">hom_strain_mf</span><span class="p">,</span> <span class="n">hom_stress_mf</span><span class="p">,</span>
+                   <span class="n">farfield_strain_mf</span><span class="p">,</span> <span class="n">applied_mac_load_strain_mf</span><span class="p">,</span>
+                   <span class="n">eff_tangent_mf</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write output file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        inc : int</span>
+<span class="sd">            Loading increment.</span>
+<span class="sd">        ref_material : ElasticReferenceMaterial</span>
+<span class="sd">            Elastic reference material.</span>
+<span class="sd">        hom_strain_mf : numpy.ndarray (1d)</span>
+<span class="sd">            Homogenized strain tensor (matricial form): infinitesimal strain</span>
+<span class="sd">            tensor (infinitesimal strains) or deformation gradient (finite</span>
+<span class="sd">            strains).</span>
+<span class="sd">        hom_stress_mf : numpy.ndarray (1d)</span>
+<span class="sd">            Homogenized stress tensor (matricial form): Cauchy stress tensor</span>
+<span class="sd">            (infinitesimal strains) or first Piola-Kirchhoff stress tensor</span>
+<span class="sd">            (finite strains).</span>
+<span class="sd">        farfield_strain_mf : numpy.ndarray (1d)</span>
+<span class="sd">            Far-field strain tensor (matricial form).</span>
+<span class="sd">        applied_mac_load_strain_mf : numpy.ndarray (1d)</span>
+<span class="sd">            Prescribed loading strain tensor (matricial form).</span>
+<span class="sd">        eff_tangent_mf : numpy.ndarray (2d), default=None</span>
+<span class="sd">            CRVE effective material tangent modulus (matricial form).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set strain/stress components order according to problem strain</span>
+        <span class="c1"># formulation</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;infinitesimal&#39;</span><span class="p">:</span>
+            <span class="n">comp_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_sym</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;finite&#39;</span><span class="p">:</span>
+            <span class="n">comp_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown problem strain formulation.&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Get self-consistent scheme iteration counter</span>
+        <span class="n">scs_iter</span> <span class="o">=</span> <span class="n">ref_material</span><span class="o">.</span><span class="n">get_scs_iter</span><span class="p">()</span>
+        <span class="c1"># Get elastic reference material properties</span>
+        <span class="n">ref_material_properties</span> <span class="o">=</span> <span class="n">ref_material</span><span class="o">.</span><span class="n">get_material_properties</span><span class="p">()</span>
+        <span class="c1"># Get elastic reference material tangent modulus (matricial form)</span>
+        <span class="n">ref_elastic_tangent_mf</span> <span class="o">=</span> <span class="n">ref_material</span><span class="o">.</span><span class="n">get_elastic_tangent_mf</span><span class="p">()</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># When the problem type corresponds to a 2D analysis, build the 3D</span>
+        <span class="c1"># far-field strain tensor considering the appropriate out-of-plane</span>
+        <span class="c1"># strain component (output purpose only).</span>
+        <span class="n">farfield_strain</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_from_mf</span><span class="p">(</span><span class="n">farfield_strain_mf</span><span class="p">,</span>
+                                                 <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">)</span>
+        <span class="n">out_farfield_strain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">out_farfield_strain</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">farfield_strain</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;finite&#39;</span><span class="p">:</span>
+                <span class="n">out_farfield_strain</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">out_farfield_strain</span><span class="p">[:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">farfield_strain</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Compute norm of difference between the far-field strain tensor and</span>
+        <span class="c1"># prescribed loading strain tensor and then normalize it to obtain</span>
+        <span class="c1"># relative measure</span>
+        <span class="n">diff_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">farfield_strain_mf</span>
+                                   <span class="o">-</span> <span class="n">applied_mac_load_strain_mf</span><span class="p">)</span>
+        <span class="n">rel_diff_farfield</span> <span class="o">=</span> \
+            <span class="n">diff_norm</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">applied_mac_load_strain_mf</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Compute self-consistent scheme normalized cost function</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_self_consistent_scheme</span> <span class="o">==</span> <span class="s1">&#39;regression&#39;</span><span class="p">:</span>
+            <span class="c1"># Compute regression-based scheme cost function</span>
+            <span class="n">scs_cost</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">hom_stress_mf</span>
+                                      <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">ref_elastic_tangent_mf</span><span class="p">,</span>
+                                                  <span class="n">hom_strain_mf</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span>
+            <span class="c1"># Normalize cost function</span>
+            <span class="n">rel_scs_cost</span> <span class="o">=</span> <span class="n">scs_cost</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">hom_stress_mf</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># If self-consistent scheme cost function computation is not</span>
+            <span class="c1"># implemented, output normalized cost function value as infinite</span>
+            <span class="n">rel_scs_cost</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Compute norm of difference between the effective tangent modulus and</span>
+        <span class="c1"># the reference material tangent modulus and then normalize it to</span>
+        <span class="c1"># obtain a relative measure</span>
+        <span class="k">if</span> <span class="n">eff_tangent_mf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">diff_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">ref_elastic_tangent_mf</span> <span class="o">-</span> <span class="n">eff_tangent_mf</span><span class="p">)</span>
+            <span class="n">rel_diff_tangent</span> <span class="o">=</span> <span class="n">diff_norm</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">eff_tangent_mf</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rel_diff_tangent</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Set reference material format structure</span>
+        <span class="n">inc_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">inc</span><span class="p">,</span> <span class="n">scs_iter</span><span class="p">,</span>
+                    <span class="n">ref_material_properties</span><span class="p">[</span><span class="s1">&#39;E&#39;</span><span class="p">],</span> <span class="n">ref_material_properties</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">],</span>
+                    <span class="n">out_farfield_strain</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">out_farfield_strain</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                    <span class="n">out_farfield_strain</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">out_farfield_strain</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                    <span class="n">out_farfield_strain</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">out_farfield_strain</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                    <span class="n">out_farfield_strain</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">out_farfield_strain</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+                    <span class="n">out_farfield_strain</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+                    <span class="n">rel_diff_farfield</span><span class="p">,</span> <span class="n">rel_scs_cost</span><span class="p">,</span> <span class="n">rel_diff_tangent</span><span class="p">]</span>
+        <span class="n">write_list</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">{:&gt;9d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">inc</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;  &#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">{:&gt;13d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scs_iter</span><span class="p">)</span>
+            <span class="o">+</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([(</span><span class="s1">&#39;{:&gt;&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_col_width</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.8e}&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+                       <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">inc_data</span><span class="p">[</span><span class="mi">2</span><span class="p">:]])]</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Open reference material output file and read lines (read)</span>
+        <span class="n">file_lines</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        <span class="c1"># Update reference material output file according to output mode</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ref_output_mode</span> <span class="o">==</span> <span class="s1">&#39;iterative&#39;</span><span class="p">:</span>
+            <span class="c1"># If loading increment is being repeated for some reason, then</span>
+            <span class="c1"># clear the associated data and append the first iteration.</span>
+            <span class="c1"># Otherwise append iteration belonging to the current loading</span>
+            <span class="c1"># increment</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_lines</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">file_lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="n">inc</span> \
+                    <span class="ow">and</span> <span class="ow">not</span> <span class="n">scs_iter</span> <span class="o">&gt;</span> <span class="nb">int</span><span class="p">(</span><span class="n">file_lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="c1"># If loading increment is being repeated for some reason, then</span>
+                <span class="c1"># clear the associated data</span>
+                <span class="k">del</span> <span class="n">file_lines</span><span class="p">[</span><span class="o">-</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">file_lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):]</span>
+                <span class="n">file_lines</span> <span class="o">+=</span> <span class="n">write_list</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">file_lines</span> <span class="o">+=</span> <span class="n">write_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># If is the same loading increment, then replace the last</span>
+            <span class="c1"># iteration. Otherwise append iteration belonging to new loading</span>
+            <span class="c1"># increment</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_lines</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">file_lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="n">inc</span><span class="p">:</span>
+                <span class="n">file_lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">write_list</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">file_lines</span> <span class="o">+=</span> <span class="n">write_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># Open output file (write mode) and write data</span>
+        <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">file_lines</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="RefMatOutput.rewind_file"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.RefMatOutput.html#crate.online.crom.asca.RefMatOutput.rewind_file">[docs]</a>    <span class="k">def</span> <span class="nf">rewind_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rewind_inc</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Rewind output file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        rewind_inc : int</span>
+<span class="sd">            Increment associated with the rewind state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Open reference material output file and read lines (read)</span>
+        <span class="n">file_lines</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        <span class="c1"># Rewind reference material output file according to output mode</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ref_output_mode</span> <span class="o">==</span> <span class="s1">&#39;iterative&#39;</span><span class="p">:</span>
+            <span class="c1"># Loop over file lines</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_lines</span><span class="p">)):</span>
+                <span class="c1"># Get file line</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">file_lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="c1"># Check for increment after increment associated with rewind</span>
+                <span class="c1"># state</span>
+                <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="n">rewind_inc</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="c1"># Set output file last line</span>
+                    <span class="n">last_line</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span>
+                    <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Set output file last line</span>
+            <span class="n">last_line</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">rewind_inc</span>
+        <span class="c1"># Remove next line character</span>
+        <span class="n">file_lines</span><span class="p">[</span><span class="n">last_line</span><span class="p">]</span> <span class="o">=</span> <span class="n">file_lines</span><span class="p">[</span><span class="n">last_line</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># Open output file (write mode) and write data</span>
+        <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">file_lines</span><span class="p">[:</span> <span class="n">last_line</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

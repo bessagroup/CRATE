@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>crate.clustering.rveelasticdatabase.FFTBasicScheme &mdash; crate 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="crate.clustering.rveelasticdatabase.RVEElasticDatabase" href="crate.clustering.rveelasticdatabase.RVEElasticDatabase.html" />
+    <link rel="prev" title="crate.clustering.rveelasticdatabase.compute_rotation_tensor" href="crate.clustering.rveelasticdatabase.compute_rotation_tensor.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            crate
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="crate.html">Code</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="crate.crate_simulation.html">crate.crate_simulation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="crate.clustering.html">crate.clustering</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="crate.clustering.adaptivity.html">crate.clustering.adaptivity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.clustering.citoperations.html">crate.clustering.citoperations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.clustering.clusteringalgs.html">crate.clustering.clusteringalgs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.clustering.clusteringdata.html">crate.clustering.clusteringdata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.clustering.clusteringphase.html">crate.clustering.clusteringphase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.clustering.crve.html">crate.clustering.crve</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="crate.clustering.rveelasticdatabase.html">crate.clustering.rveelasticdatabase</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="crate.clustering.rveelasticdatabase.html#classes">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.clustering.rveelasticdatabase.compute_rotation_tensor.html">crate.clustering.rveelasticdatabase.compute_rotation_tensor</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">crate.clustering.rveelasticdatabase.FFTBasicScheme</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.clustering.rveelasticdatabase.RVEElasticDatabase.html">crate.clustering.rveelasticdatabase.RVEElasticDatabase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="crate.clustering.solution.html">crate.clustering.solution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="crate.ioput.html">crate.ioput</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.main.html">crate.main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.material.html">crate.material</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.online.html">crate.online</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.optimization.html">crate.optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.tensor.html">crate.tensor</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">crate</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="crate.html">crate</a></li>
+          <li class="breadcrumb-item"><a href="crate.clustering.html">crate.clustering</a></li>
+          <li class="breadcrumb-item"><a href="crate.clustering.rveelasticdatabase.html">crate.clustering.rveelasticdatabase</a></li>
+      <li class="breadcrumb-item active">crate.clustering.rveelasticdatabase.FFTBasicScheme</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="crate-clustering-rveelasticdatabase-fftbasicscheme">
+<h1>crate.clustering.rveelasticdatabase.FFTBasicScheme<a class="headerlink" href="#crate-clustering-rveelasticdatabase-fftbasicscheme" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="crate.clustering.rveelasticdatabase.FFTBasicScheme">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FFTBasicScheme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strain_formulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rve_dims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_voxels_dims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regular_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_phases</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_phases_properties</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/solution/ffthombasicscheme.html#FFTBasicScheme"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.rveelasticdatabase.FFTBasicScheme" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="crate.clustering.solution.ffthombasicscheme.DNSHomogenizationMethod.html#crate.clustering.solution.ffthombasicscheme.DNSHomogenizationMethod" title="clustering.solution.dnshomogenization.DNSHomogenizationMethod"><code class="xref py py-class docutils literal notranslate"><span class="pre">DNSHomogenizationMethod</span></code></a></p>
+<p>FFT-based homogenization basic scheme.</p>
+<p>FFT-based homogenization basic scheme proposed by Moulinec and Suquet
+(1998) <a class="footnote-reference brackets" href="#id4" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> for the solution of micro-scale equilibrium problems of linear
+elastic heterogeneous materials. In particular, for a given RVE discretized
+in a regular grid of voxels, the method solves the microscale equilibrium
+problem when the RVE is subjected to a macroscale strain tensor and is
+constrained by periodic boundary conditions. Finite strain extension
+is also available, following the formulation of Kabel and coworkers
+(2022) <a class="footnote-reference brackets" href="#id5" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> and adopting the Hencky hyperelastic constitutive model.</p>
+<p>A detailed description of the computational implementation can be found
+in Appendix B (infinitesimal strains) and Section 4.6 (finite strains)
+of Ferreira (2022) <a class="footnote-reference brackets" href="#id7" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id4" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Moulinec, H. and Suquet, P. (1998). <em>A numerical method for
+computing the overall response of nonlinear composites with complex
+microstructure.</em> Comp Methods Appl M, 157:69-94 (see <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0045782597002181">here</a>)</p>
+</aside>
+<aside class="footnote brackets" id="id5" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>Kabel, M., Bohlke, T., and Schneider, M. (2014). <em>Efficient fixed
+point and Newton-Krylov solver for FFT-based homogenization of
+elasticity at large deformations.</em> Comp Methods Appl M, 54:1497-1514
+(see <a class="reference external" href="https://link.springer.com/article/10.1007/s00466-014-1071-8">here</a>)</p>
+</aside>
+<aside class="footnote brackets" id="id7" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<p>Ferreira, B.P. (2022). <em>Towards Data-driven Multi-scale Optimization
+of Thermoplastic Blends: Microstructural Generation, Constitutive
+Development and Clustering-based Reduced-Order Modeling.</em>
+PhD Thesis, University of Porto (see <a class="reference external" href="https://repositorio-aberto.up.pt/handle/10216/146900?locale=en">here</a>)</p>
+</aside>
+</aside>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.clustering.rveelasticdatabase.FFTBasicScheme._n_dim">
+<span class="sig-name descname"><span class="pre">_n_dim</span></span><a class="headerlink" href="#crate.clustering.rveelasticdatabase.FFTBasicScheme._n_dim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Problem number of spatial dimensions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.clustering.rveelasticdatabase.FFTBasicScheme._comp_order_sym">
+<span class="sig-name descname"><span class="pre">_comp_order_sym</span></span><a class="headerlink" href="#crate.clustering.rveelasticdatabase.FFTBasicScheme._comp_order_sym" title="Permalink to this definition">¶</a></dt>
+<dd><p>Strain/Stress components symmetric order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.clustering.rveelasticdatabase.FFTBasicScheme._comp_order_nsym">
+<span class="sig-name descname"><span class="pre">_comp_order_nsym</span></span><a class="headerlink" href="#crate.clustering.rveelasticdatabase.FFTBasicScheme._comp_order_nsym" title="Permalink to this definition">¶</a></dt>
+<dd><p>Strain/Stress components nonsymmetric order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.clustering.rveelasticdatabase.FFTBasicScheme._max_n_iterations">
+<span class="sig-name descname"><span class="pre">_max_n_iterations</span></span><a class="headerlink" href="#crate.clustering.rveelasticdatabase.FFTBasicScheme._max_n_iterations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum number of iterations to convergence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.clustering.rveelasticdatabase.FFTBasicScheme._conv_criterion">
+<span class="sig-name descname"><span class="pre">_conv_criterion</span></span><a class="headerlink" href="#crate.clustering.rveelasticdatabase.FFTBasicScheme._conv_criterion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convergence criterion: ‘stress_div’ is the original convergence
+criterion based on the evaluation of the divergence of the stress
+tensor; ‘avg_stress_norm’ is based on the iterative change of the
+average stress norm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>{‘stress_div’, ‘avg_stress_norm’}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.clustering.rveelasticdatabase.FFTBasicScheme._conv_tol">
+<span class="sig-name descname"><span class="pre">_conv_tol</span></span><a class="headerlink" href="#crate.clustering.rveelasticdatabase.FFTBasicScheme._conv_tol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convergence tolerance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.clustering.rveelasticdatabase.FFTBasicScheme._max_subinc_level">
+<span class="sig-name descname"><span class="pre">_max_subinc_level</span></span><a class="headerlink" href="#crate.clustering.rveelasticdatabase.FFTBasicScheme._max_subinc_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum level of macroscale loading subincrementation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.clustering.rveelasticdatabase.FFTBasicScheme._max_cinc_cuts">
+<span class="sig-name descname"><span class="pre">_max_cinc_cuts</span></span><a class="headerlink" href="#crate.clustering.rveelasticdatabase.FFTBasicScheme._max_cinc_cuts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum number of consecutive macroscale loading increment cuts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.clustering.rveelasticdatabase.FFTBasicScheme._hom_stress_strain">
+<span class="sig-name descname"><span class="pre">_hom_stress_strain</span></span><a class="headerlink" href="#crate.clustering.rveelasticdatabase.FFTBasicScheme._hom_stress_strain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Homogenized stress-strain material response. The homogenized strain and
+homogenized stress tensor components of the i-th loading increment are
+stored columnwise in the i-th row, sorted respectively. Infinitesimal
+strain tensor and Cauchy stress tensor (infinitesimal strains) or
+Deformation gradient and first Piola-Kirchhoff stress tensor (finite
+strains).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (2d)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.rveelasticdatabase.FFTBasicScheme.compute_rve_local_response">
+<span class="sig-name descname"><span class="pre">compute_rve_local_response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mac_strain_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mac_strain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/solution/ffthombasicscheme.html#FFTBasicScheme.compute_rve_local_response"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.rveelasticdatabase.FFTBasicScheme.compute_rve_local_response" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute RVE local elastic strain response.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.rveelasticdatabase.FFTBasicScheme._elastic_constitutive_model">
+<span class="sig-name descname"><span class="pre">_elastic_constitutive_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strain_vox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evar1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evar2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evar3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finite_strains_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'stvenant-kirchhoff'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_optimized</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/solution/ffthombasicscheme.html#FFTBasicScheme._elastic_constitutive_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.rveelasticdatabase.FFTBasicScheme._elastic_constitutive_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Elastic or hyperelastic material constitutive model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.rveelasticdatabase.FFTBasicScheme.stress_div_conv_criterion">
+<span class="sig-name descname"><span class="pre">stress_div_conv_criterion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freqs_dims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stress_DFT_vox</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#crate.clustering.rveelasticdatabase.FFTBasicScheme.stress_div_conv_criterion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convergence criterion based on the divergence of the stress tensor.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.rveelasticdatabase.FFTBasicScheme.compute_avg_state_vox">
+<span class="sig-name descname"><span class="pre">compute_avg_state_vox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_vox</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#crate.clustering.rveelasticdatabase.FFTBasicScheme.compute_avg_state_vox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute average norm of strain or stress local field.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.rveelasticdatabase.FFTBasicScheme._compute_homogenized_field">
+<span class="sig-name descname"><span class="pre">_compute_homogenized_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_vox</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/solution/ffthombasicscheme.html#FFTBasicScheme._compute_homogenized_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.rveelasticdatabase.FFTBasicScheme._compute_homogenized_field" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform homogenization over regular grid spatial discretization.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.rveelasticdatabase.FFTBasicScheme.get_hom_stress_strain">
+<span class="sig-name descname"><span class="pre">get_hom_stress_strain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/solution/ffthombasicscheme.html#FFTBasicScheme.get_hom_stress_strain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.rveelasticdatabase.FFTBasicScheme.get_hom_stress_strain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get homogenized strain-stress material response.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.rveelasticdatabase.FFTBasicScheme._display_greetings">
+<span class="sig-name descname"><span class="pre">_display_greetings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/solution/ffthombasicscheme.html#FFTBasicScheme._display_greetings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.rveelasticdatabase.FFTBasicScheme._display_greetings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output greetings.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.rveelasticdatabase.FFTBasicScheme._display_increment_init">
+<span class="sig-name descname"><span class="pre">_display_increment_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subinc_level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_lfact</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inc_lfact</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/solution/ffthombasicscheme.html#FFTBasicScheme._display_increment_init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.rveelasticdatabase.FFTBasicScheme._display_increment_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output increment initial data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.rveelasticdatabase.FFTBasicScheme._display_increment_end">
+<span class="sig-name descname"><span class="pre">_display_increment_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strain_formulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hom_strain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hom_stress</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inc_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/solution/ffthombasicscheme.html#FFTBasicScheme._display_increment_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.rveelasticdatabase.FFTBasicScheme._display_increment_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output increment end data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.rveelasticdatabase.FFTBasicScheme._display_iteration">
+<span class="sig-name descname"><span class="pre">_display_iteration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iter_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discrete_error</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/solution/ffthombasicscheme.html#FFTBasicScheme._display_iteration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.rveelasticdatabase.FFTBasicScheme._display_iteration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output iteration data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.rveelasticdatabase.FFTBasicScheme._display_increment_cut">
+<span class="sig-name descname"><span class="pre">_display_increment_cut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cut_msg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/solution/ffthombasicscheme.html#FFTBasicScheme._display_increment_cut"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.rveelasticdatabase.FFTBasicScheme._display_increment_cut" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output increment cut data.</p>
+</dd></dl>
+
+<p>Constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>strain_formulation</strong> (<em>{'infinitesimal'</em><em>, </em><em>'finite'}</em>) – Problem strain formulation.</p></li>
+<li><p><strong>problem_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Problem type: 2D plane strain (1), 2D plane stress (2),
+2D axisymmetric (3) and 3D (4).</p></li>
+<li><p><strong>rve_dims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>]</em>) – RVE size in each dimension.</p></li>
+<li><p><strong>n_voxels_dims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>]</em>) – Number of voxels in each dimension of the regular grid (spatial
+discretization of the RVE).</p></li>
+<li><p><strong>regular_grid</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – Regular grid of voxels (spatial discretization of the RVE), where
+each entry contains the material phase label (int) assigned to the
+corresponding voxel.</p></li>
+<li><p><strong>material_phases</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – RVE material phases labels (str).</p></li>
+<li><p><strong>material_phases_properties</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Constitutive model material properties (item, dict) associated to
+each material phase (key, str).</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">List of Public Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id21" title="crate.clustering.rveelasticdatabase.FFTBasicScheme.compute_rve_local_response"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_rve_local_response</span></code></a></p></td>
+<td><p>Compute RVE local elastic strain response.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id22" title="crate.clustering.rveelasticdatabase.FFTBasicScheme.get_hom_stress_strain"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_hom_stress_strain</span></code></a></p></td>
+<td><p>Get homogenized strain-stress material response.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.rveelasticdatabase.FFTBasicScheme.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strain_formulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rve_dims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_voxels_dims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regular_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_phases</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_phases_properties</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/solution/ffthombasicscheme.html#FFTBasicScheme.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.rveelasticdatabase.FFTBasicScheme.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>strain_formulation</strong> (<em>{'infinitesimal'</em><em>, </em><em>'finite'}</em>) – Problem strain formulation.</p></li>
+<li><p><strong>problem_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Problem type: 2D plane strain (1), 2D plane stress (2),
+2D axisymmetric (3) and 3D (4).</p></li>
+<li><p><strong>rve_dims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>]</em>) – RVE size in each dimension.</p></li>
+<li><p><strong>n_voxels_dims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>]</em>) – Number of voxels in each dimension of the regular grid (spatial
+discretization of the RVE).</p></li>
+<li><p><strong>regular_grid</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – Regular grid of voxels (spatial discretization of the RVE), where
+each entry contains the material phase label (int) assigned to the
+corresponding voxel.</p></li>
+<li><p><strong>material_phases</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – RVE material phases labels (str).</p></li>
+<li><p><strong>material_phases_properties</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Constitutive model material properties (item, dict) associated to
+each material phase (key, str).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.rveelasticdatabase.FFTBasicScheme._compute_avg_state_vox">
+<span class="sig-name descname"><span class="pre">_compute_avg_state_vox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state_vox</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/solution/ffthombasicscheme.html#FFTBasicScheme._compute_avg_state_vox"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.rveelasticdatabase.FFTBasicScheme._compute_avg_state_vox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute average norm of strain or stress local field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state_vox</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Local strain or stress response (item, numpy.ndarray of shape equal
+to RVE regular grid discretization) for each strain or stress
+component (key, str).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>avg_state_norm</strong> – Average norm of strain or stress local field.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">_compute_homogenized_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state_vox</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/solution/ffthombasicscheme.html#FFTBasicScheme._compute_homogenized_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform homogenization over regular grid spatial discretization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state_vox</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Local strain or stress response (item, numpy.ndarray of shape equal
+to RVE regular grid discretization) for each strain or stress
+component (key, str).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>hom_state</strong> – Homogenized strain or stress tensor.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (2d)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id9">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_display_greetings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/solution/ffthombasicscheme.html#FFTBasicScheme._display_greetings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id9" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output greetings.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id10">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_display_increment_cut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cut_msg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/solution/ffthombasicscheme.html#FFTBasicScheme._display_increment_cut"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id10" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output increment cut data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cut_msg</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Increment cut output message.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id11">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_display_increment_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strain_formulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hom_strain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hom_stress</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inc_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/solution/ffthombasicscheme.html#FFTBasicScheme._display_increment_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id11" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output increment end data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>strain_formulation</strong> (<em>{'infinitesimal'</em><em>, </em><em>'finite'}</em>) – Problem strain formulation.</p></li>
+<li><p><strong>hom_strain</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Homogenized strain tensor.</p></li>
+<li><p><strong>hom_stress</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Homogenized stress tensor.</p></li>
+<li><p><strong>inc_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – Increment running time.</p></li>
+<li><p><strong>total_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – Total running time.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id12">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_display_increment_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subinc_level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_lfact</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inc_lfact</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/solution/ffthombasicscheme.html#FFTBasicScheme._display_increment_init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id12" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output increment initial data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Increment number.</p></li>
+<li><p><strong>subinc_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Subincrementation level.</p></li>
+<li><p><strong>total_lfact</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – Total load factor.</p></li>
+<li><p><strong>inc_lfact</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – Incremental load factor.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id13">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_display_iteration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iter_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discrete_error</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/solution/ffthombasicscheme.html#FFTBasicScheme._display_iteration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id13" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output iteration data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>iter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Iteration number.</p></li>
+<li><p><strong>iter_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – Iteration running time.</p></li>
+<li><p><strong>discrete_error</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – Discrete error associated to convergence criterion.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id14">
+<span class="sig-name descname"><span class="pre">_elastic_constitutive_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strain_vox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evar1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evar2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evar3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finite_strains_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'stvenant-kirchhoff'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_optimized</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/solution/ffthombasicscheme.html#FFTBasicScheme._elastic_constitutive_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id14" title="Permalink to this definition">¶</a></dt>
+<dd><p>Elastic or hyperelastic material constitutive model.</p>
+<p>Available constitutive models:</p>
+<p><em>Infinitesimal strains</em>:</p>
+<ul>
+<li><p>Isotropic linear elastic constitutive model:</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\boldsymbol{\sigma} = \boldsymbol{\mathsf{D}}^{e} :
+                        \boldsymbol{\varepsilon}\]</div>
+</div></blockquote>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{\sigma}\)</span> is the Cauchyevar1 stress tensor,
+<span class="math notranslate nohighlight">\(\boldsymbol{\mathsf{D}}^{e}\)</span> is the elasticity tensor, and
+<span class="math notranslate nohighlight">\(\boldsymbol{\varepsilon}\)</span> is the infinitesimal strain
+tensor.</p>
+</li>
+</ul>
+<hr class="docutils" />
+<p><em>Finite strains</em>:</p>
+<ul>
+<li><p>Hencky hyperelastic (isotropic) constitutive model:</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\boldsymbol{\tau} = \boldsymbol{\mathsf{D}}^{e} :
+                      \boldsymbol{\varepsilon}\]</div>
+</div></blockquote>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{\tau}\)</span> is the Kirchhoff stress tensor,
+<span class="math notranslate nohighlight">\(\boldsymbol{\mathsf{D}}^{e}\)</span> is the elasticity tensor, and
+<span class="math notranslate nohighlight">\(\boldsymbol{\varepsilon}\)</span> is the spatial logarithmic strain
+tensor.</p>
+</li>
+<li><p>St.Venant-Kirchhoff hyperelastic (isotropic) constitutive model:</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\boldsymbol{S} = \boldsymbol{\mathsf{D}}^{e} :
+                  \boldsymbol{E}^{(2)}\]</div>
+</div></blockquote>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{S}\)</span> is the second Piola-Kirchhoff stress
+tensor, <span class="math notranslate nohighlight">\(\boldsymbol{\mathsf{D}}^{e}\)</span> is the elasticity
+tensor, and <span class="math notranslate nohighlight">\(\boldsymbol{E}^{(2)}\)</span> is the Green-Lagrange
+strain tensor.</p>
+</li>
+</ul>
+<p>A detailed description of the computational implementation based on
+Hadamard (element-wise) operations can be found in Section 4.6 of
+Ferreira (2022) <a class="footnote-reference brackets" href="#id16" id="id15" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>.</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id16" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id15">4</a><span class="fn-bracket">]</span></span>
+<p>Ferreira, B.P. (2022). <em>Towards Data-driven Multi-scale
+Optimization of Thermoplastic Blends: Microstructural
+Generation, Constitutive Development and Clustering-based
+Reduced-Order Modeling.</em> PhD Thesis, University of Porto
+(see <a class="reference external" href="https://repositorio-aberto.up.pt/handle/10216/146900?locale=en">here</a>)</p>
+</aside>
+</aside>
+<hr class="docutils" />
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>strain_vox</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Local strain response (item, numpy.ndarray of shape equal to RVE
+regular grid discretization) for each strain component (key, str).
+Infinitesimal strain tensor (infinitesimal strains) or deformation
+gradient (finite strains).</p></li>
+<li><p><strong>evar1</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – <p>Auxiliar elastic properties array (numpy.ndarray of shape equal to
+RVE regular grid discretization) containing an elastic
+properties-related quantity associated to each voxel,</p>
+<div class="math notranslate nohighlight">
+\[\dfrac{E \nu}{(1 + \nu)(1 - 2 \nu)} \, ,\]</div>
+<p>where <span class="math notranslate nohighlight">\(E\)</span> and <span class="math notranslate nohighlight">\(\nu\)</span> are the Young’s Modulus and
+Poisson’s ratio, respectively.</p>
+</p></li>
+<li><p><strong>evar2</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – <p>Auxiliar elastic properties array (numpy.ndarray of shape equal to
+RVE regular grid discretization) containing an elastic
+properties-related quantity associated to each voxel,</p>
+<div class="math notranslate nohighlight">
+\[\dfrac{E}{1 + \nu} \, ,\]</div>
+<p>where <span class="math notranslate nohighlight">\(E\)</span> and <span class="math notranslate nohighlight">\(\nu\)</span> are the Young’s Modulus and
+Poisson’s ratio, respectively.</p>
+</p></li>
+<li><p><strong>evar3</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – <p>Auxiliar elastic properties array (numpy.ndarray of shape equal to
+RVE regular grid discretization) containing an elastic
+properties-related quantity associated to each voxel,</p>
+<div class="math notranslate nohighlight">
+\[\dfrac{E \nu}{(1 + \nu)(1 - 2 \nu)} -
+\dfrac{E}{1 + \nu} \, ,\]</div>
+<p>where <span class="math notranslate nohighlight">\(E\)</span> and <span class="math notranslate nohighlight">\(\nu\)</span> are the Young’s Modulus and
+Poisson’s ratio, respectively.</p>
+</p></li>
+<li><p><strong>finite_strains_model</strong> (<em>{'hencky'</em><em>, </em><em>'stvenant-kirchhoff'}</em><em>,                                </em><em>default='hencky'</em>) – Finite strains hyperelastic isotropic constitutive model.</p></li>
+<li><p><strong>is_optimized</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Optimization flag (minimizes loops over spatial discretization
+voxels).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>stress_vox</strong> – Local stress response (item, numpy.ndarray of shape equal to RVE
+regular grid discretization) for each stress component (key, str).
+Cauchy stress tensor (infinitesimal strains) or first
+Piola-Kirchhoff stress tensor (finite strains).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.rveelasticdatabase.FFTBasicScheme._stress_div_conv_criterion">
+<span class="sig-name descname"><span class="pre">_stress_div_conv_criterion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">freqs_dims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stress_DFT_vox</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/solution/ffthombasicscheme.html#FFTBasicScheme._stress_div_conv_criterion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.rveelasticdatabase.FFTBasicScheme._stress_div_conv_criterion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convergence criterion based on the divergence of the stress tensor.</p>
+<p>Convergence criterion proposed by Moulinec and Suquet (1998) <a class="footnote-reference brackets" href="#id19" id="id18" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>.</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id19" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id18">5</a><span class="fn-bracket">]</span></span>
+<p>Moulinec, H. and Suquet, P. (1998). <em>A numerical method for
+computing the overall response of nonlinear composites with
+complex microstructure.</em> Comp Methods Appl M, 157:69-94 (see
+<a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0045782597002181">here</a>)</p>
+</aside>
+</aside>
+<hr class="docutils" />
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>freqs_dims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em><em>]</em>) – List of discrete frequencies (numpy.ndarray (1d)) associated to
+each spatial dimension.</p></li>
+<li><p><strong>stress_DFT_vox</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Discrete Fourier Transform of local stress response (item,
+numpy.ndarray of shape equal to RVE regular grid discretization)
+for each stress component (key, str). Cauchy stress tensor
+(infinitesimal strains) or First Piola-Kirchhoff stress tensor
+(finite strains).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>discrete_error</strong> – Discrete error associated to the convergence criterion.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id21">
+<span class="sig-name descname"><span class="pre">compute_rve_local_response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mac_strain_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mac_strain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/solution/ffthombasicscheme.html#FFTBasicScheme.compute_rve_local_response"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id21" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute RVE local elastic strain response.</p>
+<p>Compute the RVE local strain response (solution of microscale
+equilibrium problem) when subjected to a given macroscale strain
+loading, namely a macroscale infinitesimal strain tensor (infinitesimal
+strains) or a macroscale deformation gradient (finite strains). It is
+assumed that the RVE is spatially discretized in a regular grid of
+voxels.</p>
+<hr class="docutils" />
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mac_strain_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Macroscale strain second-order tensor identifier.</p></li>
+<li><p><strong>mac_strain</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Macroscale strain second-order tensor. Infinitesimal strain tensor
+(infinitesimal strains) or deformation gradient (finite strains).</p></li>
+<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>default=False</em>) – Enable verbose output.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>strain_vox</strong> – RVE local strain response (item, numpy.ndarray of shape equal to
+RVE regular grid discretization) for each strain component
+(key, str). Infinitesimal strain tensor (infinitesimal strains) or
+material logarithmic strain tensor (finite strains).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id22">
+<span class="sig-name descname"><span class="pre">get_hom_stress_strain</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/solution/ffthombasicscheme.html#FFTBasicScheme.get_hom_stress_strain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id22" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get homogenized strain-stress material response.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>_hom_stress_strain</strong> – RVE homogenized stress-strain response (item, numpy.ndarray (2d))
+for each macroscale strain loading identifier (key, int). The
+homogenized strain and homogenized stress tensor components of the
+i-th loading increment are stored columnwise in the i-th row,
+sorted respectively. Infinitesimal strain tensor and Cauchy stress
+tensor (infinitesimal strains) or Deformation gradient and first
+Piola-Kirchhoff stress tensor (finite strains).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (2d)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="crate.clustering.rveelasticdatabase.compute_rotation_tensor.html" class="btn btn-neutral float-left" title="crate.clustering.rveelasticdatabase.compute_rotation_tensor" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="crate.clustering.rveelasticdatabase.RVEElasticDatabase.html" class="btn btn-neutral float-right" title="crate.clustering.rveelasticdatabase.RVEElasticDatabase" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

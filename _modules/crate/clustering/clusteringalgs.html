@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>crate.clustering.clusteringalgs &mdash; crate 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            crate
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/crate.html">Code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">crate</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">crate.clustering.clusteringalgs</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for crate.clustering.clusteringalgs</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Clustering analysis and algorithms.</span>
+
+<span class="sd">This module includes the interface to perform a cluster analysis as well as</span>
+<span class="sd">the interface to implement any clustering algorithm. It also includes several</span>
+<span class="sd">wrappers over clustering algorithms available on open-source libraries (e.g.,</span>
+<span class="sd">`SciPy &lt;https://docs.scipy.org/doc/scipy/reference/cluster.html#&gt;`_,</span>
+<span class="sd">`Scikit-Learn &lt;https://scikit-learn.org/stable/modules/clustering.html&gt;`_).</span>
+
+<span class="sd">Classes</span>
+<span class="sd">-------</span>
+<span class="sd">ClusterAnalysis</span>
+<span class="sd">    Interface to perform a cluster analysis.</span>
+<span class="sd">ClusteringAlgorithm</span>
+<span class="sd">    Clustering algorithm interface.</span>
+<span class="sd">AgglomerativeAlgorithm</span>
+<span class="sd">    Hierarchical agglomerative interface.</span>
+<span class="sd">KMeansSK</span>
+<span class="sd">    K-Means clustering algorithm (wrapper).</span>
+<span class="sd">MiniBatchKMeansSK</span>
+<span class="sd">    Mini-Batch K-Means clustering algorithm (wrapper).</span>
+<span class="sd">AgglomerativeSP</span>
+<span class="sd">    Agglomerative clustering algorithm (wrapper).</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#                                                                       Modules</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1"># Standard</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="c1"># Third-party</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sklearn.cluster</span> <span class="k">as</span> <span class="nn">skclst</span>
+<span class="kn">import</span> <span class="nn">scipy.cluster.hierarchy</span> <span class="k">as</span> <span class="nn">sciclst</span>
+<span class="c1">#</span>
+<span class="c1">#                                                          Authorship &amp; Credits</span>
+<span class="c1"># =============================================================================</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Bernardo Ferreira (bernardo_ferreira@brown.edu)&#39;</span>
+<span class="n">__credits__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Bernardo Ferreira&#39;</span><span class="p">,</span> <span class="p">]</span>
+<span class="n">__status__</span> <span class="o">=</span> <span class="s1">&#39;Stable&#39;</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#</span>
+<span class="c1">#                                                              Cluster Analysis</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="ClusterAnalysis"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.clusteringalgs.ClusterAnalysis.html#crate.clustering.clusteringalgs.ClusterAnalysis">[docs]</a><span class="k">class</span> <span class="nc">ClusterAnalysis</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interface to perform a cluster analysis.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    available_clust_alg : dict</span>
+<span class="sd">        Available clustering algorithms (item, str) and associated identifiers</span>
+<span class="sd">        (key, str).</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    get_fitted_estimator(self, data_matrix, clust_alg_id, n_clusters):</span>
+<span class="sd">        Get cluster labels and clustering fitted estimator.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">available_clustering_alg</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;1&#39;</span><span class="p">:</span> <span class="s1">&#39;K-Means (scikit-learn)&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;2&#39;</span><span class="p">:</span> <span class="s1">&#39;Mini-Batch K-Means (scikit-learn)&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;3&#39;</span><span class="p">:</span> <span class="s1">&#39;Agglomerative (scipy)&#39;</span><span class="p">,</span> <span class="p">}</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="ClusterAnalysis.__init__"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.clusteringalgs.ClusterAnalysis.html#crate.clustering.clusteringalgs.ClusterAnalysis.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="ClusterAnalysis.get_fitted_estimator"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.clusteringalgs.ClusterAnalysis.html#crate.clustering.clusteringalgs.ClusterAnalysis.get_fitted_estimator">[docs]</a>    <span class="k">def</span> <span class="nf">get_fitted_estimator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">,</span> <span class="n">clust_alg_id</span><span class="p">,</span> <span class="n">n_clusters</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get cluster labels and clustering fitted estimator.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data_matrix : numpy.ndarray (2d)</span>
+<span class="sd">            Data matrix containing the required data to perform the cluster</span>
+<span class="sd">            analysis (numpy.ndarray of shape (n_items, n_features)).</span>
+<span class="sd">        clust_alg_id : str</span>
+<span class="sd">            Clustering algorithm identifier.</span>
+<span class="sd">        n_clusters : int</span>
+<span class="sd">            The number of clusters to find.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        cluster_labels : numpy.ndarray (1d)</span>
+<span class="sd">            Cluster label (int) assigned to each dataset item.</span>
+<span class="sd">        clust_alg : function</span>
+<span class="sd">            Clustering fitted estimator.</span>
+<span class="sd">        is_n_clusters_satisfied : bool</span>
+<span class="sd">            True if the number of clusters obtained from the cluster analysis</span>
+<span class="sd">            matches the prescribed number of clusters, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get number of dataset items</span>
+        <span class="n">n_items</span> <span class="o">=</span> <span class="n">data_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># Initialize clustering</span>
+        <span class="n">cluster_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n_items</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Instantiate clustering algorithm</span>
+        <span class="k">if</span> <span class="n">clust_alg_id</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span>
+            <span class="c1"># Set number of full batch K-Means clusterings (with different</span>
+            <span class="c1"># initializations)</span>
+            <span class="n">n_init</span> <span class="o">=</span> <span class="mi">10</span>
+            <span class="c1"># Instantiate K-Means</span>
+            <span class="n">clust_alg</span> <span class="o">=</span> <span class="n">KMeansSK</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="s1">&#39;k-means++&#39;</span><span class="p">,</span> <span class="n">n_init</span><span class="o">=</span><span class="n">n_init</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+                                 <span class="n">tol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                 <span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;lloyd&#39;</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">=</span><span class="n">n_clusters</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="k">elif</span> <span class="n">clust_alg_id</span> <span class="o">==</span> <span class="s1">&#39;2&#39;</span><span class="p">:</span>
+            <span class="c1"># Set size of the mini-batches</span>
+            <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">100</span>
+            <span class="c1"># Set number of random initializations</span>
+            <span class="n">n_init</span> <span class="o">=</span> <span class="mi">3</span>
+            <span class="c1"># Intantiate Mini-Batch K-Means</span>
+            <span class="n">clust_alg</span> <span class="o">=</span> <span class="n">MiniBatchKMeansSK</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="s1">&#39;k-means++&#39;</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                                          <span class="n">tol</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                          <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+                                          <span class="n">max_no_improvement</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                                          <span class="n">init_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_init</span><span class="o">=</span><span class="n">n_init</span><span class="p">,</span>
+                                          <span class="n">reassignment_ratio</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+                                          <span class="n">n_clusters</span><span class="o">=</span><span class="n">n_clusters</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="k">elif</span> <span class="n">clust_alg_id</span> <span class="o">==</span> <span class="s1">&#39;3&#39;</span><span class="p">:</span>
+            <span class="c1"># Instatiate Agglomerative clustering</span>
+            <span class="n">clust_alg</span> <span class="o">=</span> <span class="n">AgglomerativeSP</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;ward&#39;</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;euclidean&#39;</span><span class="p">,</span>
+                                        <span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;maxclust&#39;</span><span class="p">,</span>
+                                        <span class="n">n_clusters</span><span class="o">=</span><span class="n">n_clusters</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown clustering algorithm.&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Perform cluster analysis</span>
+        <span class="n">cluster_labels</span> <span class="o">=</span> <span class="n">clust_alg</span><span class="o">.</span><span class="n">perform_clustering</span><span class="p">(</span><span class="n">data_matrix</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Check if all the dataset items have been labeled</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">cluster_labels</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;At least one dataset item has not been &#39;</span>
+                               <span class="s1">&#39;labeled during the cluster analysis.&#39;</span><span class="p">)</span>
+        <span class="c1"># Check number of clusters formed</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">cluster_labels</span><span class="p">))</span> <span class="o">!=</span> <span class="n">n_clusters</span><span class="p">:</span>
+            <span class="n">is_n_clusters_satisfied</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">is_n_clusters_satisfied</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="k">return</span> <span class="n">cluster_labels</span><span class="p">,</span> <span class="n">clust_alg</span><span class="p">,</span> <span class="n">is_n_clusters_satisfied</span></div></div>
+<span class="c1">#</span>
+<span class="c1">#                                               Interface: Clustering algorithm</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="ClusteringAlgorithm"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.clusteringalgs.ClusteringAlgorithm.html#crate.clustering.clusteringalgs.ClusteringAlgorithm">[docs]</a><span class="k">class</span> <span class="nc">ClusteringAlgorithm</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Clustering algorithm interface.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    perform_clustering(self, data_matrix):</span>
+<span class="sd">        *abstract*: Perform cluster analysis and get cluster label of each</span>
+<span class="sd">        dataset item.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ClusteringAlgorithm.__init__"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.clusteringalgs.ClusteringAlgorithm.html#crate.clustering.clusteringalgs.ClusteringAlgorithm.__init__">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="ClusteringAlgorithm.perform_clustering"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.clusteringalgs.ClusteringAlgorithm.html#crate.clustering.clusteringalgs.ClusteringAlgorithm.perform_clustering">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">perform_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform cluster analysis and get cluster label of each dataset item.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data_matrix : numpy.ndarray (2d)</span>
+<span class="sd">            Data matrix containing the required data to perform the cluster</span>
+<span class="sd">            analysis (numpy.ndarray of shape (n_items, n_features)).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        cluster_labels : numpy.ndarray (1d)</span>
+<span class="sd">            Cluster label (int) assigned to each dataset item.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div></div>
+<span class="c1"># -----------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="AgglomerativeAlgorithm"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.clusteringalgs.AgglomerativeAlgorithm.html#crate.clustering.clusteringalgs.AgglomerativeAlgorithm">[docs]</a><span class="k">class</span> <span class="nc">AgglomerativeAlgorithm</span><span class="p">(</span><span class="n">ClusteringAlgorithm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Hierarchical agglomerative interface.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    get_linkage_matrix(self):</span>
+<span class="sd">        *abstract*: Get hierarchical agglomerative clustering linkage matrix.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="AgglomerativeAlgorithm.get_linkage_matrix"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.clusteringalgs.AgglomerativeAlgorithm.html#crate.clustering.clusteringalgs.AgglomerativeAlgorithm.get_linkage_matrix">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_linkage_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get hierarchical agglomerative clustering linkage matrix.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        linkage_matrix : numpy.ndarray (2d)</span>
+<span class="sd">            Linkage matrix associated with the hierarchical agglomerative</span>
+<span class="sd">            clustering (numpy.ndarray of shape (n-1, 4)). At the i-th iteration</span>
+<span class="sd">            the clusterings with indices Z[i, 0] and Z[i, 1], with distance</span>
+<span class="sd">            Z[i, 2], are merged, forming a new cluster that contains Z[i, 3]</span>
+<span class="sd">            original dataset items. All cluster indices j &gt;= n refer to the</span>
+<span class="sd">            cluster formed in Z[j-n, :].</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The hierarchical agglomerative clustering linkage matrix follows the</span>
+<span class="sd">        definition of `SciPy &lt;https://docs.scipy.org/&gt;`_ agglomerative</span>
+<span class="sd">        clustering algorithm (see `here &lt;https://docs.scipy.org/doc/scipy/</span>
+<span class="sd">        reference/generated/scipy.cluster.hierarchy.linkage.html#scipy.</span>
+<span class="sd">        cluster.hierarchy.linkage&gt;`_).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div></div>
+<span class="c1">#</span>
+<span class="c1">#                                                         Clustering algorithms</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="KMeansSK"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.clusteringalgs.KMeansSK.html#crate.clustering.clusteringalgs.KMeansSK">[docs]</a><span class="k">class</span> <span class="nc">KMeansSK</span><span class="p">(</span><span class="n">ClusteringAlgorithm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;K-Means clustering algorithm (wrapper).</span>
+
+<span class="sd">    Documentation: see `here &lt;https://scikit-learn.org/stable/modules/</span>
+<span class="sd">    generated/sklearn.cluster.KMeans.html#sklearn.cluster.KMeans&gt;`_.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    perform_clustering(self, data_matrix):</span>
+<span class="sd">        Perform cluster analysis and get cluster label of each dataset item.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="KMeansSK.__init__"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.clusteringalgs.KMeansSK.html#crate.clustering.clusteringalgs.KMeansSK.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="s1">&#39;k-means++&#39;</span><span class="p">,</span> <span class="n">n_init</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span>
+                 <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;lloyd&#39;</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        n_clusters : int, default=None</span>
+<span class="sd">            Number of clusters to find.</span>
+<span class="sd">        init : {‘k-means++’, ‘random’, ndarray, callable}, default=’k-means++’</span>
+<span class="sd">            Method for centroid initialization.</span>
+<span class="sd">        n_init : int, default=10</span>
+<span class="sd">            Number of times K-Means is run with different centroid seeds.</span>
+<span class="sd">        max_iter : int, default=300</span>
+<span class="sd">            Maximum number of iterations.</span>
+<span class="sd">        tol : float, default=1e-4</span>
+<span class="sd">            Convergence tolerance (based on Frobenius norm of the different in</span>
+<span class="sd">            the cluster centers of two consecutive iterations).</span>
+<span class="sd">        random_state : {int, RandomState}, default=None</span>
+<span class="sd">            Determines random number generation for centroid initialization.</span>
+<span class="sd">            Use an int to make the randomness deterministic.</span>
+<span class="sd">        algorithm : {&#39;lloyd&#39;, &#39;elkan&#39;}, default=&#39;lloyd&#39;</span>
+<span class="sd">            K-Means algorithm to use. &#39;lloyd&#39; is the classical EM-style</span>
+<span class="sd">            algorithm, &#39;elkan&#39; uses the triangle inequality to speed up</span>
+<span class="sd">            convergence.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_clusters</span> <span class="o">=</span> <span class="n">n_clusters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init</span> <span class="o">=</span> <span class="n">init</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_init</span> <span class="o">=</span> <span class="n">n_init</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_iter</span> <span class="o">=</span> <span class="n">max_iter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tol</span> <span class="o">=</span> <span class="n">tol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_random_state</span> <span class="o">=</span> <span class="n">random_state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_algorithm</span> <span class="o">=</span> <span class="n">algorithm</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="KMeansSK.perform_clustering"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.clusteringalgs.KMeansSK.html#crate.clustering.clusteringalgs.KMeansSK.perform_clustering">[docs]</a>    <span class="k">def</span> <span class="nf">perform_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform cluster analysis and get cluster label of each dataset item.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data_matrix : numpy.ndarray (2d)</span>
+<span class="sd">            Data matrix containing the required data to perform the cluster</span>
+<span class="sd">            analysis (numpy.ndarray of shape (n_items, n_features)).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        cluster_labels : numpy.ndarray (1d)</span>
+<span class="sd">            Cluster label (int) assigned to each dataset item.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Instantiate scikit-learn K-Means clustering algorithm</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clst_alg</span> <span class="o">=</span> <span class="n">skclst</span><span class="o">.</span><span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_clusters</span><span class="p">,</span>
+                                       <span class="n">init</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_init</span><span class="p">,</span> <span class="n">n_init</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_init</span><span class="p">,</span>
+                                       <span class="n">max_iter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_iter</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_tol</span><span class="p">,</span>
+                                       <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_random_state</span><span class="p">,</span>
+                                       <span class="n">algorithm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_algorithm</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Compute cluster centers (fitted estimator) and predict cluster label</span>
+        <span class="c1"># (prediction) for each dataset item</span>
+        <span class="n">cluster_labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clst_alg</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">data_matrix</span><span class="p">,</span>
+                                                    <span class="n">sample_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="k">return</span> <span class="n">cluster_labels</span></div></div>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="MiniBatchKMeansSK"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.clusteringalgs.MiniBatchKMeansSK.html#crate.clustering.clusteringalgs.MiniBatchKMeansSK">[docs]</a><span class="k">class</span> <span class="nc">MiniBatchKMeansSK</span><span class="p">(</span><span class="n">ClusteringAlgorithm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mini-Batch K-Means clustering algorithm (wrapper).</span>
+
+<span class="sd">    Documentation: see `here &lt;https://scikit-learn.org/stable/modules/</span>
+<span class="sd">    generated/sklearn.cluster.MiniBatchKMeans.html#sklearn.cluster.</span>
+<span class="sd">    MiniBatchKMeans&gt;`_.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    perform_clustering(self, data_matrix):</span>
+<span class="sd">        Perform cluster analysis and get cluster label of each dataset item.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The Mini-Batch K-Means clustering algorithm is taken from scikit-learn</span>
+<span class="sd">    (https://scikit-learn.org). Further information can be found in there.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="MiniBatchKMeansSK.__init__"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.clusteringalgs.MiniBatchKMeansSK.html#crate.clustering.clusteringalgs.MiniBatchKMeansSK.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="s1">&#39;k-means++&#39;</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                 <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_no_improvement</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                 <span class="n">init_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_init</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">reassignment_ratio</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+                 <span class="n">n_clusters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        n_clusters : int, default=None</span>
+<span class="sd">            Number of clusters to find.</span>
+<span class="sd">        init: {‘k-means++’, ‘random’, numpy.ndarray, callable}, \</span>
+<span class="sd">              default=’k-means++’</span>
+<span class="sd">            Method for centroid initialization.</span>
+<span class="sd">        n_init : int, default=10</span>
+<span class="sd">            Number of times K-Means is run with different centroid seeds.</span>
+<span class="sd">        max_iter : int, default=300</span>
+<span class="sd">            Maximum number of iterations.</span>
+<span class="sd">        tol : float, default=1e-4</span>
+<span class="sd">            Convergence tolerance (based on Frobenius norm of the different in</span>
+<span class="sd">            the cluster centers of two consecutive iterations).</span>
+<span class="sd">        random_state : int, RandomState instance, default=None</span>
+<span class="sd">            Determines random number generation for centroid initialization.</span>
+<span class="sd">            Use an int to make the randomness deterministic.</span>
+<span class="sd">        init_size : int, default=None</span>
+<span class="sd">            Number of samples to randomly sample for speeding up the</span>
+<span class="sd">            initialization (sometimes at the expense of accuracy): the only</span>
+<span class="sd">            algorithm is initialized by running a batch KMeans on a random</span>
+<span class="sd">            subset of the data.</span>
+<span class="sd">        n_init : int, default=3</span>
+<span class="sd">            Number of random initializations that are tried (best of</span>
+<span class="sd">            initializations is used to run the algorithm).</span>
+<span class="sd">        reassignment_ratio : float, default=0.01</span>
+<span class="sd">            Control the fraction of the maximum number of counts for a center</span>
+<span class="sd">            to be reassigned.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_clusters</span> <span class="o">=</span> <span class="n">n_clusters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init</span> <span class="o">=</span> <span class="n">init</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_init</span> <span class="o">=</span> <span class="n">n_init</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_iter</span> <span class="o">=</span> <span class="n">max_iter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tol</span> <span class="o">=</span> <span class="n">tol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_random_state</span> <span class="o">=</span> <span class="n">random_state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_size</span> <span class="o">=</span> <span class="n">init_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reassignment_ratio</span> <span class="o">=</span> <span class="n">reassignment_ratio</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="MiniBatchKMeansSK.perform_clustering"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.clusteringalgs.MiniBatchKMeansSK.html#crate.clustering.clusteringalgs.MiniBatchKMeansSK.perform_clustering">[docs]</a>    <span class="k">def</span> <span class="nf">perform_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform cluster analysis and get cluster label of each dataset item.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data_matrix : numpy.ndarray (2d)</span>
+<span class="sd">            Data matrix containing the required data to perform the cluster</span>
+<span class="sd">            analysis (numpy.ndarray of shape (n_items, n_features)).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        cluster_labels : numpy.ndarray (1d)</span>
+<span class="sd">            Cluster label (int) assigned to each dataset item.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Instantiate scikit-learn Mini-Batch K-Means clustering algorithm</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clst_alg</span> <span class="o">=</span> <span class="n">skclst</span><span class="o">.</span><span class="n">MiniBatchKMeans</span><span class="p">(</span>
+            <span class="n">n_clusters</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_clusters</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_init</span><span class="p">,</span> <span class="n">n_init</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_init</span><span class="p">,</span>
+            <span class="n">max_iter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_iter</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_tol</span><span class="p">,</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_random_state</span><span class="p">,</span> <span class="n">init_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_init_size</span><span class="p">,</span>
+            <span class="n">reassignment_ratio</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_reassignment_ratio</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Compute cluster centers (fitted estimator) and predict cluster label</span>
+        <span class="c1"># (prediction) for each dataset item</span>
+        <span class="n">cluster_labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clst_alg</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">data_matrix</span><span class="p">,</span>
+                                                    <span class="n">sample_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="k">return</span> <span class="n">cluster_labels</span></div></div>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="AgglomerativeSP"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.clusteringalgs.AgglomerativeSP.html#crate.clustering.clusteringalgs.AgglomerativeSP">[docs]</a><span class="k">class</span> <span class="nc">AgglomerativeSP</span><span class="p">(</span><span class="n">AgglomerativeAlgorithm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Agglomerative clustering algorithm (wrapper).</span>
+
+<span class="sd">    Documentation: see `here &lt;https://docs.scipy.org/doc/scipy/reference/</span>
+<span class="sd">    cluster.hierarchy.html&gt;`_.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    perform_clustering(self, data_matrix):</span>
+<span class="sd">        Perform cluster analysis and get cluster label of each dataset item.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    _linkage_matrix : numpy.ndarray (2d)</span>
+<span class="sd">        Linkage matrix associated with the hierarchical agglomerative</span>
+<span class="sd">        clustering (numpy.ndarray of shape (n-1, 4)). At the i-th iteration</span>
+<span class="sd">        the clusterings with indices Z[i, 0] and Z[i, 1], with distance</span>
+<span class="sd">        Z[i, 2], are merged, forming a new cluster that contains Z[i, 3]</span>
+<span class="sd">        original dataset items. All cluster indices j &gt;= n refer to the</span>
+<span class="sd">        cluster formed in Z[j-n, :].</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="AgglomerativeSP.__init__"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.clusteringalgs.AgglomerativeSP.html#crate.clustering.clusteringalgs.AgglomerativeSP.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;ward&#39;</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;euclidean&#39;</span><span class="p">,</span>
+                 <span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;maxclust&#39;</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        n_clusters : int, default=None</span>
+<span class="sd">            The number of clusters to find.</span>
+<span class="sd">        t : {int, float}</span>
+<span class="sd">            Scalar parameter associated to the criterion used to form a flat</span>
+<span class="sd">            clustering. Threshold (float) with criterion in {&#39;inconsistent&#39;,</span>
+<span class="sd">            &#39;distance&#39;, &#39;monocrit&#39;} or maximum number of clusters with</span>
+<span class="sd">            criterion in {&#39;maxclust&#39;, &#39;maxclust_monocrit&#39;}.</span>
+<span class="sd">        method : {&#39;single&#39;, &#39;complete&#39;, &#39;average&#39;, &#39;weighted&#39;, &#39;centroid&#39;, \</span>
+<span class="sd">                  &#39;median&#39;, &#39;ward&#39;}, default=&#39;ward&#39;</span>
+<span class="sd">            Linkage criterion.</span>
+<span class="sd">        metric : {str, function}, default=&#39;euclidean&#39;</span>
+<span class="sd">            Distance metric to use when the input data matrix is a</span>
+<span class="sd">            numpy.ndarray of observation vectors, otherwise ignored. Options:</span>
+<span class="sd">            {&#39;cityblock&#39;, &#39;euclidean&#39;, &#39;cosine&#39;, ...}.</span>
+<span class="sd">        criterion : str, {&#39;inconsistent&#39;, &#39;distance&#39;, &#39;maxclust&#39;, &#39;monocrit&#39;, \</span>
+<span class="sd">                          &#39;maxclust_monocrit&#39;}, default=&#39;maxclust&#39;</span>
+<span class="sd">            Criterion used to form a flat clustering (i.e., perform a</span>
+<span class="sd">            horizontal cut in the hierarchical tree).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_t</span> <span class="o">=</span> <span class="n">t</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_clusters</span> <span class="o">=</span> <span class="n">n_clusters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_method</span> <span class="o">=</span> <span class="n">method</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_metric</span> <span class="o">=</span> <span class="n">metric</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_criterion</span> <span class="o">=</span> <span class="n">criterion</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_linkage_matrix</span> <span class="o">=</span> <span class="kc">None</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="AgglomerativeSP.perform_clustering"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.clusteringalgs.AgglomerativeSP.html#crate.clustering.clusteringalgs.AgglomerativeSP.perform_clustering">[docs]</a>    <span class="k">def</span> <span class="nf">perform_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform cluster analysis and get cluster label of each dataset item.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data_matrix : numpy.ndarray (2d)</span>
+<span class="sd">            Data matrix containing the required data to perform the cluster</span>
+<span class="sd">            analysis (numpy.ndarray of shape (n_items, n_features)).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        cluster_labels : numpy.ndarray (1d)</span>
+<span class="sd">            Cluster label (int) assigned to each dataset item.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Perform hierarchical clustering and encode it in a linkage matrix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_linkage_matrix</span> <span class="o">=</span> <span class="n">sciclst</span><span class="o">.</span><span class="n">linkage</span><span class="p">(</span><span class="n">data_matrix</span><span class="p">,</span>
+                                               <span class="n">method</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_method</span><span class="p">,</span>
+                                               <span class="n">metric</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_metric</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Perform horizontal cut in hierarchical tree and return cluster labels</span>
+        <span class="c1"># (form a flat clustering)</span>
+        <span class="n">cluster_labels</span> <span class="o">=</span> <span class="n">sciclst</span><span class="o">.</span><span class="n">fcluster</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_linkage_matrix</span><span class="p">,</span>
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">n_clusters</span><span class="p">,</span>
+                                          <span class="n">criterion</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_criterion</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="k">return</span> <span class="n">cluster_labels</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="AgglomerativeSP.get_linkage_matrix"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.clusteringalgs.AgglomerativeSP.html#crate.clustering.clusteringalgs.AgglomerativeSP.get_linkage_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">get_linkage_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get hierarchical agglomerative clustering linkage matrix.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        linkage_matrix : numpy.ndarray (2d)</span>
+<span class="sd">            Linkage matrix associated with the hierarchical agglomerative</span>
+<span class="sd">            clustering (numpy.ndarray of shape (n-1, 4)). At the i-th iteration</span>
+<span class="sd">            the clusterings with indices Z[i, 0] and Z[i, 1], with distance</span>
+<span class="sd">            Z[i, 2], are merged, forming a new cluster that contains Z[i, 3]</span>
+<span class="sd">            original dataset items. All cluster indices j &gt;= n refer to the</span>
+<span class="sd">            cluster formed in Z[j-n, :].</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The hierarchical agglomerative clustering linkage matrix follows the</span>
+<span class="sd">        definition of `SciPy &lt;https://docs.scipy.org/&gt;`_ agglomerative</span>
+<span class="sd">        clustering algorithm (see `here &lt;https://docs.scipy.org/doc/scipy/</span>
+<span class="sd">        reference/generated/scipy.cluster.hierarchy.linkage.html#scipy.</span>
+<span class="sd">        cluster.hierarchy.linkage&gt;`_).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_linkage_matrix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Hierarchical agglomerative clustering linkage &#39;</span>
+                             <span class="s1">&#39;matrix has not been computed yet.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_linkage_matrix</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

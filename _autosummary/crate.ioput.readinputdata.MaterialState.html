@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>crate.ioput.readinputdata.MaterialState &mdash; crate 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="crate.ioput.readprocedures" href="crate.ioput.readprocedures.html" />
+    <link rel="prev" title="crate.ioput.readinputdata.read_output_minimization_option" href="crate.ioput.readinputdata.read_output_minimization_option.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            crate
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="crate.html">Code</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="crate.crate_simulation.html">crate.crate_simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.clustering.html">crate.clustering</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="crate.ioput.html">crate.ioput</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="crate.ioput.fileoperations.html">crate.ioput.fileoperations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.ioput.incoutputfiles.html">crate.ioput.incoutputfiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.ioput.info.html">crate.ioput.info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.ioput.ioutilities.html">crate.ioput.ioutilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.ioput.miscoutputfiles.html">crate.ioput.miscoutputfiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.ioput.packager.html">crate.ioput.packager</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="crate.ioput.readinputdata.html">crate.ioput.readinputdata</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="crate.ioput.readinputdata.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.ioput.readinputdata.get_available_clustering_features.html">crate.ioput.readinputdata.get_available_clustering_features</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.ioput.readinputdata.read_input_data_file.html">crate.ioput.readinputdata.read_input_data_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.ioput.readinputdata.read_output_minimization_option.html">crate.ioput.readinputdata.read_output_minimization_option</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">crate.ioput.readinputdata.MaterialState</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="crate.ioput.readprocedures.html">crate.ioput.readprocedures</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="crate.main.html">crate.main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.material.html">crate.material</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.online.html">crate.online</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.optimization.html">crate.optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.tensor.html">crate.tensor</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">crate</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="crate.html">crate</a></li>
+          <li class="breadcrumb-item"><a href="crate.ioput.html">crate.ioput</a></li>
+          <li class="breadcrumb-item"><a href="crate.ioput.readinputdata.html">crate.ioput.readinputdata</a></li>
+      <li class="breadcrumb-item active">crate.ioput.readinputdata.MaterialState</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="crate-ioput-readinputdata-materialstate">
+<h1>crate.ioput.readinputdata.MaterialState<a class="headerlink" href="#crate-ioput-readinputdata-materialstate" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MaterialState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strain_formulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_phases</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_phases_properties</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_phases_vf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>CRVE material constitutive state.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState._n_dim">
+<span class="sig-name descname"><span class="pre">_n_dim</span></span><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState._n_dim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Problem number of spatial dimensions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState._comp_order_sym">
+<span class="sig-name descname"><span class="pre">_comp_order_sym</span></span><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState._comp_order_sym" title="Permalink to this definition">¶</a></dt>
+<dd><p>Strain/Stress components symmetric order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState._comp_order_nsym">
+<span class="sig-name descname"><span class="pre">_comp_order_nsym</span></span><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState._comp_order_nsym" title="Permalink to this definition">¶</a></dt>
+<dd><p>Strain/Stress components nonsymmetric order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState._material_phases_models">
+<span class="sig-name descname"><span class="pre">_material_phases_models</span></span><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState._material_phases_models" title="Permalink to this definition">¶</a></dt>
+<dd><p>Material constitutive model (item, ConstitutiveModel) associated to
+each material phase (key, str).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState._phase_clusters">
+<span class="sig-name descname"><span class="pre">_phase_clusters</span></span><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState._phase_clusters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clusters labels (item, list[int]) associated to each material phase
+(key, str).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState._clusters_vf">
+<span class="sig-name descname"><span class="pre">_clusters_vf</span></span><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState._clusters_vf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Volume fraction (item, float) associated to each material cluster
+(key, str).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState._clusters_def_gradient_mf">
+<span class="sig-name descname"><span class="pre">_clusters_def_gradient_mf</span></span><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState._clusters_def_gradient_mf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deformation gradient (item, numpy.darray (1d)) associated to each
+material cluster (key, str), stored in matricial form.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState._clusters_def_gradient_old_mf">
+<span class="sig-name descname"><span class="pre">_clusters_def_gradient_old_mf</span></span><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState._clusters_def_gradient_old_mf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Last converged deformation gradient (item, numpy.darray (1d))
+associated to each material cluster (key, str), stored in matricial
+form.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState._clusters_state">
+<span class="sig-name descname"><span class="pre">_clusters_state</span></span><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState._clusters_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Material constitutive model state variables (item, dict) associated to
+each material cluster (key, str).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState._clusters_state_old">
+<span class="sig-name descname"><span class="pre">_clusters_state_old</span></span><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState._clusters_state_old" title="Permalink to this definition">¶</a></dt>
+<dd><p>Last converged material constitutive model state variables (item, dict)
+associated to each material cluster (key, str).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState._clusters_tangent_mf">
+<span class="sig-name descname"><span class="pre">_clusters_tangent_mf</span></span><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState._clusters_tangent_mf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Material consistent tangent modulus (item, numpy.ndarray) associated to
+each material cluster (key, str), stored in matricial form.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState._hom_strain_mf">
+<span class="sig-name descname"><span class="pre">_hom_strain_mf</span></span><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState._hom_strain_mf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Homogenized strain tensor stored in matricial form: infinitesimal
+strain tensor (infinitesimal strains) or deformation gradient (finite
+strains).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (1d)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState._hom_strain_33">
+<span class="sig-name descname"><span class="pre">_hom_strain_33</span></span><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState._hom_strain_33" title="Permalink to this definition">¶</a></dt>
+<dd><p>Homogenized strain tensor out-of-plane component: infinitesimal strain
+tensor (infinitesimal strains) or deformation gradient (finite
+strains).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState._hom_stress_mf">
+<span class="sig-name descname"><span class="pre">_hom_stress_mf</span></span><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState._hom_stress_mf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Homogenized stress tensor stored in matricial form: Cauchy stress
+tensor (infinitesimal strains) or first Piola-Kirchhoff stress tensor
+(finite strains).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (1d)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState._hom_stress_33">
+<span class="sig-name descname"><span class="pre">_hom_stress_33</span></span><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState._hom_stress_33" title="Permalink to this definition">¶</a></dt>
+<dd><p>Homogenized stress tensor out-of-plane component: Cauchy stress tensor
+(infinitesimal strains) or first Piola-Kirchhoff stress tensor (finite
+strains).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState._hom_strain_old_mf">
+<span class="sig-name descname"><span class="pre">_hom_strain_old_mf</span></span><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState._hom_strain_old_mf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Last converged homogenized strain tensor stored in matricial form:
+infinitesimal strain tensor (infinitesimal strains) or deformation
+gradient (finite strains).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (1d)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState._hom_stress_old_mf">
+<span class="sig-name descname"><span class="pre">_hom_stress_old_mf</span></span><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState._hom_stress_old_mf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Last converged homogenized stress tensor stored in matricial form:
+Cauchy stress tensor (infinitesimal strains) or first Piola-Kirchhoff
+stress tensor (finite strains).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (1d)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState.init_constitutive_model">
+<span class="sig-name descname"><span class="pre">init_constitutive_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat_phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_keyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'crate'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.init_constitutive_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState.init_constitutive_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize material phase constitutive model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState.init_clusters_state">
+<span class="sig-name descname"><span class="pre">init_clusters_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.init_clusters_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState.init_clusters_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize clusters state variables.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState.set_phase_clusters">
+<span class="sig-name descname"><span class="pre">set_phase_clusters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_vf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.set_phase_clusters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState.set_phase_clusters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set CRVE cluster labels and volume fractions of each material phase.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState.get_clusters_inc_strain_mf">
+<span class="sig-name descname"><span class="pre">get_clusters_inc_strain_mf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">global_strain_mf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_clusters_inc_strain_mf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState.get_clusters_inc_strain_mf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get clusters incremental strain in matricial form.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState.update_clusters_state">
+<span class="sig-name descname"><span class="pre">update_clusters_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_inc_strain_mf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.update_clusters_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState.update_clusters_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update clusters state variables and consistent tangent modulus.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState.update_state_homogenization">
+<span class="sig-name descname"><span class="pre">update_state_homogenization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.update_state_homogenization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState.update_state_homogenization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update homogenized strain and stress tensors.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState.update_converged_state">
+<span class="sig-name descname"><span class="pre">update_converged_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.update_converged_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState.update_converged_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update last converged material state variables.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState.set_rewind_state_updated_clustering">
+<span class="sig-name descname"><span class="pre">set_rewind_state_updated_clustering</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_vf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_def_gradient_mf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.set_rewind_state_updated_clustering"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState.set_rewind_state_updated_clustering" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set rewind state variables according to updated clustering.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState.get_hom_strain_mf">
+<span class="sig-name descname"><span class="pre">get_hom_strain_mf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_hom_strain_mf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState.get_hom_strain_mf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get homogenized strain tensor (matricial form).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState.get_hom_stress_mf">
+<span class="sig-name descname"><span class="pre">get_hom_stress_mf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_hom_stress_mf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState.get_hom_stress_mf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get homogenized stress tensor (matricial form).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState.get_oop_hom_comp">
+<span class="sig-name descname"><span class="pre">get_oop_hom_comp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_oop_hom_comp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState.get_oop_hom_comp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get homogenized strain or stress tensor out-of-plane component.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState.get_inc_hom_strain_mf">
+<span class="sig-name descname"><span class="pre">get_inc_hom_strain_mf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_inc_hom_strain_mf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState.get_inc_hom_strain_mf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get incremental homogenized strain tensor (matricial form).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState.get_inc_hom_stress_mf">
+<span class="sig-name descname"><span class="pre">get_inc_hom_stress_mf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_inc_hom_stress_mf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState.get_inc_hom_stress_mf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get incremental homogenized stress tensor (matricial form).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState.get_hom_strain_old_mf">
+<span class="sig-name descname"><span class="pre">get_hom_strain_old_mf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_hom_strain_old_mf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState.get_hom_strain_old_mf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get last converged homogenized strain tensor (matricial form).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState.get_hom_stress_old_mf">
+<span class="sig-name descname"><span class="pre">get_hom_stress_old_mf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_hom_stress_old_mf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState.get_hom_stress_old_mf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get last converged homogenized stress tensor (matricial form).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState.get_material_phases">
+<span class="sig-name descname"><span class="pre">get_material_phases</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_material_phases"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState.get_material_phases" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get RVE material phases.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState.get_material_phases_properties">
+<span class="sig-name descname"><span class="pre">get_material_phases_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_material_phases_properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState.get_material_phases_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get RVE material phases constitutive properties.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState.get_material_phases_models">
+<span class="sig-name descname"><span class="pre">get_material_phases_models</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_material_phases_models"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState.get_material_phases_models" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get RVE material phases constitutive models.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState.get_material_phases_vf">
+<span class="sig-name descname"><span class="pre">get_material_phases_vf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_material_phases_vf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState.get_material_phases_vf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get RVE material phases volume fraction.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState.get_clusters_def_gradient_mf">
+<span class="sig-name descname"><span class="pre">get_clusters_def_gradient_mf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_clusters_def_gradient_mf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState.get_clusters_def_gradient_mf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get deformation gradient of each material cluster.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState.get_clusters_def_gradient_old_mf">
+<span class="sig-name descname"><span class="pre">get_clusters_def_gradient_old_mf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_clusters_def_gradient_old_mf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState.get_clusters_def_gradient_old_mf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get last converged deformation gradient of each material cluster.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState.get_clusters_state">
+<span class="sig-name descname"><span class="pre">get_clusters_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_clusters_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState.get_clusters_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get material state variables of each material cluster.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState.get_clusters_state_old">
+<span class="sig-name descname"><span class="pre">get_clusters_state_old</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_clusters_state_old"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState.get_clusters_state_old" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get last converged material state variables of each material cluster.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState.get_clusters_tangent_mf">
+<span class="sig-name descname"><span class="pre">get_clusters_tangent_mf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_clusters_tangent_mf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState.get_clusters_tangent_mf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get material consistent tangent modulus of each material cluster.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState._material_su_interface">
+<span class="sig-name descname"><span class="pre">_material_su_interface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strain_formulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constitutive_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">def_gradient_old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inc_strain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_variables_old</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState._material_su_interface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState._material_su_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Material constitutive state update interface.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState.compute_inc_log_strain">
+<span class="sig-name descname"><span class="pre">compute_inc_log_strain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e_log_strain_old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inc_def_gradient</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.compute_inc_log_strain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState.compute_inc_log_strain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute incremental spatial logarithmic strain.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState.compute_spatial_tangent_modulus">
+<span class="sig-name descname"><span class="pre">compute_spatial_tangent_modulus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e_log_strain_old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">def_gradient_old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inc_def_gradient</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cauchy_stress</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inf_consistent_tangent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.compute_spatial_tangent_modulus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState.compute_spatial_tangent_modulus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute finite strain spatial consistent tangent modulus.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState.clustering_adaptivity_update">
+<span class="sig-name descname"><span class="pre">clustering_adaptivity_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_vf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptive_clustering_map</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.clustering_adaptivity_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState.clustering_adaptivity_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update cluster variables according to clustering adaptivity step.</p>
+</dd></dl>
+
+<p>Constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>strain_formulation</strong> (<em>{'infinitesimal'</em><em>, </em><em>'finite'}</em>) – Problem strain formulation.</p></li>
+<li><p><strong>problem_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Problem type: 2D plane strain (1), 2D plane stress (2),
+2D axisymmetric (3) and 3D (4).</p></li>
+<li><p><strong>material_phases</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – RVE material phases labels (str).</p></li>
+<li><p><strong>material_phases_properties</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Constitutive model material properties (item, dict) associated to
+each material phase (key, str).</p></li>
+<li><p><strong>material_phases_vf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Volume fraction (item, float) associated to each material phase
+(key, str).</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">List of Public Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id3" title="crate.ioput.readinputdata.MaterialState.clustering_adaptivity_update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clustering_adaptivity_update</span></code></a></p></td>
+<td><p>Update cluster variables according to clustering adaptivity step.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id4" title="crate.ioput.readinputdata.MaterialState.compute_inc_log_strain"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_inc_log_strain</span></code></a></p></td>
+<td><p>Compute incremental spatial logarithmic strain.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id8" title="crate.ioput.readinputdata.MaterialState.compute_spatial_tangent_modulus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_spatial_tangent_modulus</span></code></a></p></td>
+<td><p>Compute finite strain spatial consistent tangent modulus.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id12" title="crate.ioput.readinputdata.MaterialState.get_clusters_def_gradient_mf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_clusters_def_gradient_mf</span></code></a></p></td>
+<td><p>Get deformation gradient of each material cluster.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id13" title="crate.ioput.readinputdata.MaterialState.get_clusters_def_gradient_old_mf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_clusters_def_gradient_old_mf</span></code></a></p></td>
+<td><p>Get last converged deformation gradient of each material cluster.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id14" title="crate.ioput.readinputdata.MaterialState.get_clusters_inc_strain_mf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_clusters_inc_strain_mf</span></code></a></p></td>
+<td><p>Get clusters incremental strain in matricial form.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id15" title="crate.ioput.readinputdata.MaterialState.get_clusters_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_clusters_state</span></code></a></p></td>
+<td><p>Get material state variables of each material cluster.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id16" title="crate.ioput.readinputdata.MaterialState.get_clusters_state_old"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_clusters_state_old</span></code></a></p></td>
+<td><p>Get last converged material state variables of each mat.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id17" title="crate.ioput.readinputdata.MaterialState.get_clusters_tangent_mf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_clusters_tangent_mf</span></code></a></p></td>
+<td><p>Get material consistent tangent modulus of each material cluster.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id18" title="crate.ioput.readinputdata.MaterialState.get_hom_strain_mf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_hom_strain_mf</span></code></a></p></td>
+<td><p>Get homogenized strain tensor (matricial form).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id19" title="crate.ioput.readinputdata.MaterialState.get_hom_strain_old_mf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_hom_strain_old_mf</span></code></a></p></td>
+<td><p>Get last converged homogenized strain tensor (matricial form).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id20" title="crate.ioput.readinputdata.MaterialState.get_hom_stress_mf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_hom_stress_mf</span></code></a></p></td>
+<td><p>Get homogenized stress tensor (matricial form).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id21" title="crate.ioput.readinputdata.MaterialState.get_hom_stress_old_mf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_hom_stress_old_mf</span></code></a></p></td>
+<td><p>Get last converged homogenized stress tensor (matricial form).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id22" title="crate.ioput.readinputdata.MaterialState.get_inc_hom_strain_mf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_inc_hom_strain_mf</span></code></a></p></td>
+<td><p>Get incremental homogenized strain tensor (matricial form).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id23" title="crate.ioput.readinputdata.MaterialState.get_inc_hom_stress_mf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_inc_hom_stress_mf</span></code></a></p></td>
+<td><p>Get incremental homogenized stress tensor (matricial form).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id24" title="crate.ioput.readinputdata.MaterialState.get_material_phases"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_material_phases</span></code></a></p></td>
+<td><p>Get RVE material phases.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id25" title="crate.ioput.readinputdata.MaterialState.get_material_phases_models"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_material_phases_models</span></code></a></p></td>
+<td><p>Get RVE material phases constitutive models.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id26" title="crate.ioput.readinputdata.MaterialState.get_material_phases_properties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_material_phases_properties</span></code></a></p></td>
+<td><p>Get RVE material phases constitutive properties.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id27" title="crate.ioput.readinputdata.MaterialState.get_material_phases_vf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_material_phases_vf</span></code></a></p></td>
+<td><p>Get RVE material phases volume fraction.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id28" title="crate.ioput.readinputdata.MaterialState.get_oop_hom_comp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_oop_hom_comp</span></code></a></p></td>
+<td><p>Get homogenized strain or stress tensor out-of-plane component.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id29" title="crate.ioput.readinputdata.MaterialState.init_clusters_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init_clusters_state</span></code></a></p></td>
+<td><p>Initialize clusters state variables.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id30" title="crate.ioput.readinputdata.MaterialState.init_constitutive_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init_constitutive_model</span></code></a></p></td>
+<td><p>Initialize material phase constitutive model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id31" title="crate.ioput.readinputdata.MaterialState.set_phase_clusters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_phase_clusters</span></code></a></p></td>
+<td><p>Set CRVE cluster labels and volume fractions of each material phase.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id32" title="crate.ioput.readinputdata.MaterialState.set_rewind_state_updated_clustering"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_rewind_state_updated_clustering</span></code></a></p></td>
+<td><p>Set rewind state variables according to updated clustering.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id33" title="crate.ioput.readinputdata.MaterialState.update_clusters_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_clusters_state</span></code></a></p></td>
+<td><p>Update clusters state variables and consistent tangent modulus.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id34" title="crate.ioput.readinputdata.MaterialState.update_converged_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_converged_state</span></code></a></p></td>
+<td><p>Update last converged material state variables.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id35" title="crate.ioput.readinputdata.MaterialState.update_state_homogenization"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_state_homogenization</span></code></a></p></td>
+<td><p>Update homogenized strain and stress tensors.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.readinputdata.MaterialState.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strain_formulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_phases</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_phases_properties</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_phases_vf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.readinputdata.MaterialState.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>strain_formulation</strong> (<em>{'infinitesimal'</em><em>, </em><em>'finite'}</em>) – Problem strain formulation.</p></li>
+<li><p><strong>problem_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Problem type: 2D plane strain (1), 2D plane stress (2),
+2D axisymmetric (3) and 3D (4).</p></li>
+<li><p><strong>material_phases</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – RVE material phases labels (str).</p></li>
+<li><p><strong>material_phases_properties</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Constitutive model material properties (item, dict) associated to
+each material phase (key, str).</p></li>
+<li><p><strong>material_phases_vf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Volume fraction (item, float) associated to each material phase
+(key, str).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id0">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_material_su_interface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strain_formulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constitutive_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">def_gradient_old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inc_strain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_variables_old</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState._material_su_interface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Material constitutive state update interface.</p>
+<p>This material constitutive state update interface contemplates three
+different families of constitutive models: (1) infinitesimal strains
+constitutive models, (2) finite strains constitutive models, and
+(3) isotropic hyperelastic-based finite strain constitutive models
+whose finite strain extension (from infinitesimal counterpart) is
+purely kinematical.</p>
+<p>This interface is schematically illustrated in Figure 5.3 of
+Ferreira (2022) <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>, and the last family of constitutive models is
+described on Appendix F.</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id2" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Ferreira, B.P. (2022). <em>Towards Data-driven Multi-scale
+Optimization of Thermoplastic Blends: Microstructural
+Generation, Constitutive Development and Clustering-based
+Reduced-Order Modeling.</em> PhD Thesis, University of Porto
+(see <a class="reference external" href="https://repositorio-aberto.up.pt/handle/10216/146900?locale=en">here</a>)</p>
+</aside>
+</aside>
+<hr class="docutils" />
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>strain_formulation</strong> (<em>{'infinitesimal'</em><em>, </em><em>'finite'}</em>) – Problem strain formulation.</p></li>
+<li><p><strong>problem_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Problem type: 2D plane strain (1), 2D plane stress (2),
+2D axisymmetric (3) and 3D (4).</p></li>
+<li><p><strong>constitutive_model</strong> (<a class="reference internal" href="crate.material.models.elastic.ConstitutiveModel.html#crate.material.models.elastic.ConstitutiveModel" title="crate.material.models.elastic.ConstitutiveModel"><em>ConstitutiveModel</em></a>) – Material constitutive model.</p></li>
+<li><p><strong>def_gradient_old</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Last converged deformation gradient.</p></li>
+<li><p><strong>inc_strain</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Incremental strain second-order tensor.</p></li>
+<li><p><strong>state_variables_old</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Last converged material constitutive model state variables.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>state_variables</strong> (<em>dict</em>) – Material constitutive model state variables.</p></li>
+<li><p><strong>consistent_tangent_mf</strong> (<em>ndarray</em>) – Material constitutive model material consistent tangent modulus in
+matricial form.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">clustering_adaptivity_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_vf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptive_clustering_map</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.clustering_adaptivity_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update cluster variables according to clustering adaptivity step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>phase_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clusters labels (item, list[int]) associated to each material
+phase (key, str).</p></li>
+<li><p><strong>clusters_vf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Volume fraction (item, float) associated to each material cluster
+(key, str).</p></li>
+<li><p><strong>adaptive_clustering_map</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Adaptive clustering map (item, dict with list of new cluster labels
+(item, list[int]) resulting from the refinement of each target
+cluster (key, str)) for each material phase (key, str).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id4">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_inc_log_strain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e_log_strain_old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inc_def_gradient</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.compute_inc_log_strain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute incremental spatial logarithmic strain.</p>
+<p><em>Incremental spatial logarithmic strain</em>:</p>
+<div class="math notranslate nohighlight">
+\[\Delta \boldsymbol{\varepsilon}_{n + 1} =
+    \boldsymbol{\varepsilon}_{n + 1}^{e, \, \text{trial}} -
+    \boldsymbol{\varepsilon}_{n}^{e}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Delta \boldsymbol{\varepsilon}\)</span> is the incremental
+spatial logarithmic strain tensor,
+<span class="math notranslate nohighlight">\(\boldsymbol{\varepsilon}^{e, \, \text{trial}}\)</span> is the
+elastic trial spatial logarithmic strain tensor,
+<span class="math notranslate nohighlight">\(\boldsymbol{\varepsilon}^{e}\)</span> is the elastic spatial
+logarithmic strain tensor, <span class="math notranslate nohighlight">\(n+1\)</span> denotes
+the current increment, and <span class="math notranslate nohighlight">\(n\)</span> denotes the last converged
+increment.</p>
+<hr class="docutils" />
+<p><em>Elastic trial left Cauchy-Green strain tensor</em>:</p>
+<div class="math notranslate nohighlight">
+\[\boldsymbol{\varepsilon}_{n + 1}^{e, \, \text{trial}} =
+    \dfrac{1}{2} \ln ( \boldsymbol{B}^{e, \,
+    \text{trial}}_{n+1} )
+    = \dfrac{1}{2} \ln \Big( (\boldsymbol{F}_{\Delta})_{n+1}
+    \boldsymbol{B}^{e}_{n} (\boldsymbol{F}_{\Delta})_{n+1}^{T}
+    \Big)\]</div>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{\varepsilon}^{e, \, \text{trial}}\)</span> is the
+elastic trial spatial logarithmic strain tensor,
+<span class="math notranslate nohighlight">\(\boldsymbol{B}^{e, \, \text{trial}}\)</span> is the elastic trial
+left Cauchy-Green strain tensor,
+<span class="math notranslate nohighlight">\(\boldsymbol{F}_{\Delta}\)</span> is the incremental deformation
+gradient, <span class="math notranslate nohighlight">\(\boldsymbol{B}^{e}\)</span> is the elastic left Cauchy-Green
+strain tensor, <span class="math notranslate nohighlight">\(n+1\)</span> denotes the current increment, and <span class="math notranslate nohighlight">\(n\)</span>
+denotes the last converged increment.</p>
+<p>The definition of the elastic trial spatial logarithmic strain tensor
+can be found in Appendix F.4 of Ferreira (2022) <a class="footnote-reference brackets" href="#id6" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> (see Equations
+(F.14) and (F.15)).</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id6" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">2</a><span class="fn-bracket">]</span></span>
+<p>Ferreira, B.P. (2022). <em>Towards Data-driven Multi-scale
+Optimization of Thermoplastic Blends: Microstructural
+Generation, Constitutive Development and Clustering-based
+Reduced-Order Modeling.</em> PhD Thesis, University of Porto
+(see <a class="reference external" href="https://repositorio-aberto.up.pt/handle/10216/146900?locale=en">here</a>)</p>
+</aside>
+</aside>
+<hr class="docutils" />
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>e_log_strain_old</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Last converged elastic spatial logarithmic strain tensor.</p></li>
+<li><p><strong>inc_def_gradient</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Incremental deformation gradient.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>inc_log_strain</strong> – Incremental spatial logarithmic strain.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (2d)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id8">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_spatial_tangent_modulus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e_log_strain_old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">def_gradient_old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inc_def_gradient</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cauchy_stress</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inf_consistent_tangent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.compute_spatial_tangent_modulus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id8" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute finite strain spatial consistent tangent modulus.</p>
+<div class="math notranslate nohighlight">
+\[\mathsf{a}_{ijkl} = \dfrac{1}{2 \det (\boldsymbol{F})} \,
+                     \left[ \mathsf{D} : \mathsf{L} : \mathsf{B}
+                     \right]_{ijkl} - \sigma_{il} \delta_{jk}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{\mathsf{a}}\)</span> is the spatial consistent tangent
+modulus, <span class="math notranslate nohighlight">\(\mathbf{\mathsf{D}}\)</span> is the derivative of the
+Kirchhoff stress tensor with respect to the spatial logarithmic strain
+tensor, <span class="math notranslate nohighlight">\(\mathbf{\mathsf{L}}\)</span> is the derivative of the tensor
+logarithm function evaluated at the elastic trial left Cauchy-Green
+strain tensor, <span class="math notranslate nohighlight">\(\mathbf{\mathsf{B}}\)</span> is computed from the
+elastic trial left Cauchy-Green strain tensor components,
+<span class="math notranslate nohighlight">\(\boldsymbol{\sigma}\)</span> is the Cauchy stress tensor, and
+<span class="math notranslate nohighlight">\(\delta_{ij}\)</span> is the Kronecker delta.</p>
+<p>The detailed definition of the finite strain spatial consistent tangent
+modulus of isotropic hyperelastic-based finite strain elastoplastic
+constitutive models whose finite strain formalism is purely kinematical
+can be found in Appendix F.4 of Ferreira (2022) <a class="footnote-reference brackets" href="#id10" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> (see Equation
+(F.18)).</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id10" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">3</a><span class="fn-bracket">]</span></span>
+<p>Ferreira, B.P. (2022). <em>Towards Data-driven Multi-scale
+Optimization of Thermoplastic Blends: Microstructural
+Generation, Constitutive Development and Clustering-based
+Reduced-Order Modeling.</em> PhD Thesis, University of Porto
+(see <a class="reference external" href="https://repositorio-aberto.up.pt/handle/10216/146900?locale=en">here</a>)</p>
+</aside>
+</aside>
+<hr class="docutils" />
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>e_log_strain_old</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Last converged elastic spatial logarithmic strain tensor.</p></li>
+<li><p><strong>def_gradient_old</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Last converged deformation gradient.</p></li>
+<li><p><strong>inc_def_gradient</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Incremental deformation gradient.</p></li>
+<li><p><strong>cauchy_stress</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Cauchy stress tensor.</p></li>
+<li><p><strong>inf_consistent_tangent</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>4d</em><em>)</em>) – Infinitesimal consistent tangent modulus.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>spatial_consistent_tangent</strong> – Spatial consistent tangent modulus.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (4d)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id12">
+<span class="sig-name descname"><span class="pre">get_clusters_def_gradient_mf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_clusters_def_gradient_mf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id12" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get deformation gradient of each material cluster.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>clusters_def_gradient_mf</strong> – Deformation gradient (item, numpy.ndarray (1d)) associated to each
+material cluster (key, str), stored in matricial form.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id13">
+<span class="sig-name descname"><span class="pre">get_clusters_def_gradient_old_mf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_clusters_def_gradient_old_mf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id13" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get last converged deformation gradient of each material cluster.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>clusters_def_gradient_old_mf</strong> – Last converged deformation gradient (item, numpy.ndarray (1d))
+associated to each material cluster (key, str), stored in matricial
+form.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id14">
+<span class="sig-name descname"><span class="pre">get_clusters_inc_strain_mf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">global_strain_mf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_clusters_inc_strain_mf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id14" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get clusters incremental strain in matricial form.</p>
+<p><em>Infinitesimal strains</em>:</p>
+<div class="math notranslate nohighlight">
+\[\Delta \boldsymbol{\varepsilon}_{\mu, n + 1}^{(I)} =
+    \boldsymbol{\varepsilon}_{\mu, n + 1}^{(I)} -
+    \boldsymbol{\varepsilon}_{\mu, n}^{(I)} \, ,
+    \quad I=1,\dots, n_{c}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Delta \boldsymbol{\varepsilon}_{\mu}^{(I)}\)</span> is the
+<span class="math notranslate nohighlight">\(I\)</span> th material cluster incremental infinitesimal strain tensor,
+<span class="math notranslate nohighlight">\(\boldsymbol{\varepsilon}_{\mu}^{(I)}\)</span> is the
+<span class="math notranslate nohighlight">\(I\)</span> th material cluster infinitesimal strain tensor,
+<span class="math notranslate nohighlight">\(n_{c}\)</span> is the number of material clusters, <span class="math notranslate nohighlight">\(n+1\)</span> denotes
+the current increment, and <span class="math notranslate nohighlight">\(n\)</span> denotes the last converged
+increment.</p>
+<hr class="docutils" />
+<p><em>Finite strains</em>:</p>
+<div class="math notranslate nohighlight">
+\[(\boldsymbol{F}_{\Delta})_{\mu, n + 1}^{(I)} =
+    \boldsymbol{F}_{\mu, n + 1}^{(I)}
+    ( \boldsymbol{F}_{\mu, n}^{(I)})^{-1} \, ,
+    \quad I=1,\dots, n_{c}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Delta \boldsymbol{F}_{\mu}^{(I)}\)</span> is the
+<span class="math notranslate nohighlight">\(I\)</span> th material cluster incremental deformation gradient
+<span class="math notranslate nohighlight">\(\boldsymbol{F}_{\mu}^{(I)}\)</span> is the <span class="math notranslate nohighlight">\(I\)</span> th material
+cluster deformation gradient, <span class="math notranslate nohighlight">\(n_{c}\)</span> is the number of material
+clusters, <span class="math notranslate nohighlight">\(n+1\)</span> denotes the current increment, and <span class="math notranslate nohighlight">\(n\)</span>
+denotes the last converged increment.</p>
+<hr class="docutils" />
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>global_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Global vector of clusters strains stored in matricial form.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>clusters_inc_strain_mf</strong> – Incremental strain (item, dict) associated to each material cluster
+(key, str), stored in matricial form.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id15">
+<span class="sig-name descname"><span class="pre">get_clusters_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_clusters_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id15" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get material state variables of each material cluster.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>clusters_state</strong> – Material constitutive model state variables (item, dict) associated
+to each material cluster (key, str).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id16">
+<span class="sig-name descname"><span class="pre">get_clusters_state_old</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_clusters_state_old"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id16" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get last converged material state variables of each mat. cluster.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>clusters_state_old</strong> – Last converged material constitutive model state variables
+(item, dict) associated to each material cluster (key, str).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id17">
+<span class="sig-name descname"><span class="pre">get_clusters_tangent_mf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_clusters_tangent_mf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id17" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get material consistent tangent modulus of each material cluster.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>clusters_tangent_mf</strong> – Material consistent tangent modulus (item, numpy.ndarray)
+associated to each material cluster (key, str), stored in matricial
+form.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id18">
+<span class="sig-name descname"><span class="pre">get_hom_strain_mf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_hom_strain_mf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id18" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get homogenized strain tensor (matricial form).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hom_strain_mf</strong> – Homogenized strain tensor stored in matricial form.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (1d)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id19">
+<span class="sig-name descname"><span class="pre">get_hom_strain_old_mf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_hom_strain_old_mf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id19" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get last converged homogenized strain tensor (matricial form).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hom_strain_old_mf</strong> – Last converged homogenized strain tensor stored in matricial form:
+infinitesimal strain tensor (infinitesimal strains) or deformation
+gradient (finite strains).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (1d)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id20">
+<span class="sig-name descname"><span class="pre">get_hom_stress_mf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_hom_stress_mf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id20" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get homogenized stress tensor (matricial form).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hom_stress_mf</strong> – Homogenized stress tensor stored in matricial form.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (1d)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id21">
+<span class="sig-name descname"><span class="pre">get_hom_stress_old_mf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_hom_stress_old_mf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id21" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get last converged homogenized stress tensor (matricial form).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hom_stress_old_mf</strong> – Last converged homogenized stress tensor stored in matricial form:
+Cauchy stress tensor (infinitesimal strains) or first
+Piola-Kirchhoff stress tensor (finite strains).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (1d)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id22">
+<span class="sig-name descname"><span class="pre">get_inc_hom_strain_mf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_inc_hom_strain_mf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id22" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get incremental homogenized strain tensor (matricial form).</p>
+<p><em>Infinitesimal strains</em>:</p>
+<div class="math notranslate nohighlight">
+\[\Delta \boldsymbol{\varepsilon}_{n + 1} =
+    \boldsymbol{\varepsilon}_{n + 1} -
+    \boldsymbol{\varepsilon}_{n}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Delta \boldsymbol{\varepsilon}\)</span> is the incremental
+homogenized infinitesimal strain tensor,
+<span class="math notranslate nohighlight">\(\boldsymbol{\varepsilon}\)</span> is the homogenized infinitesimal
+strain tensor, <span class="math notranslate nohighlight">\(n+1\)</span> denotes the current increment, and
+<span class="math notranslate nohighlight">\(n\)</span> denotes the last converged increment.</p>
+<hr class="docutils" />
+<p><em>Finite strains</em>:</p>
+<div class="math notranslate nohighlight">
+\[(\boldsymbol{F}_{\Delta})_{n + 1} =
+    \boldsymbol{F}_{n + 1}
+    (\boldsymbol{F}_{n})^{-1}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{F}_{\Delta}\)</span> is the homogenized incremental
+deformation gradient, <span class="math notranslate nohighlight">\(\boldsymbol{F}\)</span> is the homogenized
+deformation gradient, <span class="math notranslate nohighlight">\(n+1\)</span> denotes the current increment,
+and <span class="math notranslate nohighlight">\(n\)</span> denotes the last converged increment.</p>
+<hr class="docutils" />
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inc_hom_strain_mf</strong> – Incremental homogenized strain tensor stored in matricial form:
+infinitesimal strain tensor (infinitesimal strains) or deformation
+gradient (finite strains).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (1d)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id23">
+<span class="sig-name descname"><span class="pre">get_inc_hom_stress_mf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_inc_hom_stress_mf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id23" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get incremental homogenized stress tensor (matricial form).</p>
+<p><em>Infinitesimal strains</em>:</p>
+<div class="math notranslate nohighlight">
+\[\Delta \boldsymbol{\sigma}_{n + 1} =
+    \boldsymbol{\sigma}_{n + 1} -
+    \boldsymbol{\sigma}_{n}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Delta \boldsymbol{\sigma}\)</span> is the incremental
+homogenized Cauchy stress tensor, <span class="math notranslate nohighlight">\(\boldsymbol{\sigma}\)</span> is the
+homogenized Cauchy stress tensor, <span class="math notranslate nohighlight">\(n+1\)</span> denotes the current
+increment, and <span class="math notranslate nohighlight">\(n\)</span> denotes the last converged increment.</p>
+<hr class="docutils" />
+<p><em>Finite strains</em>:</p>
+<div class="math notranslate nohighlight">
+\[\Delta \boldsymbol{P}_{n + 1} =
+    \boldsymbol{P}_{n + 1} -
+    \boldsymbol{P}_{n}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Delta \boldsymbol{P}\)</span> is the incremental homogenized
+first Piola-Kirchhoff stress tensor, <span class="math notranslate nohighlight">\(\boldsymbol{P}\)</span> is the
+homogenized first Piola-Kirchhoff stress tensor, <span class="math notranslate nohighlight">\(n+1\)</span> denotes
+the current increment, and <span class="math notranslate nohighlight">\(n\)</span> denotes the last converged
+increment.</p>
+<hr class="docutils" />
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inc_hom_stress_mf</strong> – Incremental homogenized stress tensor stored in matricial form:
+Cauchy stress tensor (infinitesimal strains) or first
+Piola-Kirchhoff stress tensor (finite strains).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (1d)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id24">
+<span class="sig-name descname"><span class="pre">get_material_phases</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_material_phases"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id24" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get RVE material phases.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>material_phases</strong> – RVE material phases labels (str).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id25">
+<span class="sig-name descname"><span class="pre">get_material_phases_models</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_material_phases_models"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id25" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get RVE material phases constitutive models.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>_material_phases_models</strong> – Material constitutive model (item, ConstitutiveModel) associated to
+each material phase (key, str).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id26">
+<span class="sig-name descname"><span class="pre">get_material_phases_properties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_material_phases_properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id26" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get RVE material phases constitutive properties.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>material_phases_properties</strong> – Constitutive model material properties (item, dict) associated to
+each material phase (key, str).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id27">
+<span class="sig-name descname"><span class="pre">get_material_phases_vf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_material_phases_vf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id27" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get RVE material phases volume fraction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>material_phases_vf</strong> – Volume fraction (item, float) associated to each material phase
+(key, str).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id28">
+<span class="sig-name descname"><span class="pre">get_oop_hom_comp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.get_oop_hom_comp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id28" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get homogenized strain or stress tensor out-of-plane component.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>oop_hom_comp</strong> – Homogenized strain or stress tensor out-of-plane component.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id29">
+<span class="sig-name descname"><span class="pre">init_clusters_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.init_clusters_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id29" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize clusters state variables.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id30">
+<span class="sig-name descname"><span class="pre">init_constitutive_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mat_phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_keyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'crate'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.init_constitutive_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id30" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize material phase constitutive model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mat_phase</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Material phase label.</p></li>
+<li><p><strong>model_keyword</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Material constitutive model input data file keyword.</p></li>
+<li><p><strong>model_source</strong> (<em>{'crate'</em><em>,</em><em>}</em><em>, </em><em>default='crate'</em>) – Material constitutive model source.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id31">
+<span class="sig-name descname"><span class="pre">set_phase_clusters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_vf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.set_phase_clusters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id31" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set CRVE cluster labels and volume fractions of each material phase.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>phase_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clusters labels (item, list[int]) associated to each material
+phase (key, str).</p></li>
+<li><p><strong>clusters_vf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Volume fraction (item, float) associated to each material cluster
+(key, str).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id32">
+<span class="sig-name descname"><span class="pre">set_rewind_state_updated_clustering</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_vf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_def_gradient_mf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.set_rewind_state_updated_clustering"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id32" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set rewind state variables according to updated clustering.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>phase_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clusters labels (item, list[int]) associated to each material
+phase (key, str).</p></li>
+<li><p><strong>clusters_vf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Volume fraction (item, float) associated to each material cluster
+(key, str).</p></li>
+<li><p><strong>clusters_state</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Material constitutive model state variables (item, dict) associated
+to each material cluster (key, str).</p></li>
+<li><p><strong>clusters_def_gradient_mf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Deformation gradient (item, numpy.darray (1d)) associated to each
+material cluster (key, str), stored in matricial form.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id33">
+<span class="sig-name descname"><span class="pre">update_clusters_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clusters_inc_strain_mf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.update_clusters_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id33" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update clusters state variables and consistent tangent modulus.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>clusters_inc_strain_mf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Incremental strain (item, numpy.ndarray) associated to each
+material cluster (key, str), stored in matricial form.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>su_fail_state</strong> – State update failure state.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id34">
+<span class="sig-name descname"><span class="pre">update_converged_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.update_converged_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id34" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update last converged material state variables.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id35">
+<span class="sig-name descname"><span class="pre">update_state_homogenization</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/material/materialmodeling.html#MaterialState.update_state_homogenization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id35" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update homogenized strain and stress tensors.</p>
+<p><em>Infinitesimal strains</em>:</p>
+<div class="math notranslate nohighlight">
+\[\boldsymbol{\varepsilon}_{n + 1} =
+    \sum_{I=1}^{n_{c}} f^{(I)}
+    \boldsymbol{\varepsilon}_{\mu, n + 1}^{(I)}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{\varepsilon}\)</span> is the homogenized
+infinitesimal strain tensor, <span class="math notranslate nohighlight">\(f^{(I)}\)</span> is the <span class="math notranslate nohighlight">\(I\)</span> th
+material cluster volume fraction,
+<span class="math notranslate nohighlight">\(\boldsymbol{\varepsilon}_{\mu}^{(I)}\)</span> is the <span class="math notranslate nohighlight">\(I\)</span> th
+material cluster infinitesimal strain tensor, <span class="math notranslate nohighlight">\(n_{c}\)</span> is the
+number of material clusters, and <span class="math notranslate nohighlight">\(n+1\)</span> denotes the current
+increment.</p>
+<div class="math notranslate nohighlight">
+\[\boldsymbol{\sigma}_{n + 1} =
+    \sum_{I=1}^{n_{c}} f^{(I)}
+    \boldsymbol{\sigma}_{\mu, n + 1}^{(I)}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{\sigma}\)</span> is the homogenized Cauchy stress
+tensor, <span class="math notranslate nohighlight">\(f^{(I)}\)</span> is the <span class="math notranslate nohighlight">\(I\)</span> th material cluster volume
+fraction, <span class="math notranslate nohighlight">\(\boldsymbol{\sigma}_{\mu}^{(I)}\)</span> is the
+<span class="math notranslate nohighlight">\(I\)</span> th material cluster Cauchy stress tensor, <span class="math notranslate nohighlight">\(n_{c}\)</span> is
+the number of material clusters, and <span class="math notranslate nohighlight">\(n+1\)</span> denotes the current
+increment.</p>
+<hr class="docutils" />
+<p><em>Finite strains</em>:</p>
+<div class="math notranslate nohighlight">
+\[\boldsymbol{F}_{n + 1} =
+    \sum_{I=1}^{n_{c}} f^{(I)}
+    \boldsymbol{F}_{\mu, n + 1}^{(I)}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{F}\)</span> is the homogenized deformation gradient,
+<span class="math notranslate nohighlight">\(f^{(I)}\)</span> is the <span class="math notranslate nohighlight">\(I\)</span> th material cluster volume fraction,
+<span class="math notranslate nohighlight">\(\boldsymbol{F}_{\mu}^{(I)}\)</span> is the <span class="math notranslate nohighlight">\(I\)</span> th material
+cluster deformation gradient, <span class="math notranslate nohighlight">\(n_{c}\)</span> is the number of material
+clusters, and <span class="math notranslate nohighlight">\(n+1\)</span> denotes the current increment.</p>
+<div class="math notranslate nohighlight">
+\[\boldsymbol{P}_{n + 1} =
+    \sum_{I=1}^{n_{c}} f^{(I)}
+    \boldsymbol{P}_{\mu, n + 1}^{(I)}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{P}\)</span> is the homogenized first Piola-Kirchhoff
+stress tensor, <span class="math notranslate nohighlight">\(f^{(I)}\)</span> is the <span class="math notranslate nohighlight">\(I\)</span> th material cluster
+volume fraction, <span class="math notranslate nohighlight">\(\boldsymbol{P}_{\mu}^{(I)}\)</span> is the
+<span class="math notranslate nohighlight">\(I\)</span> th material cluster first Piola-Kirchhoff stress tensor,
+<span class="math notranslate nohighlight">\(n_{c}\)</span> is the number of material clusters, and <span class="math notranslate nohighlight">\(n+1\)</span>
+denotes the current increment.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="crate.ioput.readinputdata.read_output_minimization_option.html" class="btn btn-neutral float-left" title="crate.ioput.readinputdata.read_output_minimization_option" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="crate.ioput.readprocedures.html" class="btn btn-neutral float-right" title="crate.ioput.readprocedures" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,1626 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>crate.online.loading.macloadincrem &mdash; crate 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            crate
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../_autosummary/crate.html">Code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">crate</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">crate.online.loading.macloadincrem</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for crate.online.loading.macloadincrem</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Loading path enforcement and incrementation.</span>
+
+<span class="sd">This module includes several classes that control the general loading</span>
+<span class="sd">incrementation flow, namely two classes that allow the enforcement of a</span>
+<span class="sd">general non-mononotic loading path (composed of mononotic loading subpaths)</span>
+<span class="sd">and two classes that allow rewinding the solution to a past loading increment.</span>
+
+<span class="sd">Classes</span>
+<span class="sd">-------</span>
+<span class="sd">LoadingPath</span>
+<span class="sd">    Loading incrementation flow.</span>
+<span class="sd">LoadingSubpath</span>
+<span class="sd">    Loading subpath.</span>
+<span class="sd">IncrementRewinder</span>
+<span class="sd">    Rewind analysis to rewind state increment (initial instant).</span>
+<span class="sd">RewindManager</span>
+<span class="sd">    Manage analysis rewind operations and evaluate analysis rewind criteria.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#                                                                       Modules</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1"># Standard</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="c1"># Third-party</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">anytree.walker</span>
+<span class="c1"># Local</span>
+<span class="kn">import</span> <span class="nn">ioput.info</span> <span class="k">as</span> <span class="nn">info</span>
+<span class="kn">import</span> <span class="nn">ioput.ioutilities</span> <span class="k">as</span> <span class="nn">ioutil</span>
+<span class="kn">import</span> <span class="nn">tensor.matrixoperations</span> <span class="k">as</span> <span class="nn">mop</span>
+<span class="c1">#</span>
+<span class="c1">#                                                          Authorship &amp; Credits</span>
+<span class="c1"># =============================================================================</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Bernardo Ferreira (bernardo_ferreira@brown.edu)&#39;</span>
+<span class="n">__credits__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Bernardo Ferreira&#39;</span><span class="p">,</span> <span class="p">]</span>
+<span class="n">__status__</span> <span class="o">=</span> <span class="s1">&#39;Stable&#39;</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#</span>
+<span class="c1">#                                                      Loading path and subpath</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="LoadingPath"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.LoadingPath.html#crate.online.loading.macloadincrem.LoadingPath">[docs]</a><span class="k">class</span> <span class="nc">LoadingPath</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Loading incrementation flow.</span>
+
+<span class="sd">    This class contains a collection of loading subpaths, the current loading</span>
+<span class="sd">    state and a set of methods to control the loading incrementation flow.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    _n_dim : int</span>
+<span class="sd">        Problem number of spatial dimensions.</span>
+<span class="sd">    _comp_order_sym : list[str]</span>
+<span class="sd">        Strain/Stress components symmetric order.</span>
+<span class="sd">    _comp_order_nsym : list[str]</span>
+<span class="sd">        Strain/Stress components nonsymmetric order.</span>
+<span class="sd">    _n_load_subpaths : int</span>
+<span class="sd">        Number of loading subpaths.</span>
+<span class="sd">    _load_subpaths : list</span>
+<span class="sd">        List of LoadingSubpath.</span>
+<span class="sd">    _conv_hom_state : dict</span>
+<span class="sd">        Converged homogenized state (item, numpy.ndarray of shape (n_comps,))</span>
+<span class="sd">        for key in {&#39;strain&#39;, &#39;stress&#39;}.</span>
+<span class="sd">    _is_last_inc : bool</span>
+<span class="sd">        Loading last increment flag.</span>
+<span class="sd">    _n_cinc_cuts : int</span>
+<span class="sd">        Consecutive loading increment cuts counter.</span>
+<span class="sd">    _increm_state : dict</span>
+<span class="sd">        Increment state: key `inc` contains the current increment number (int),</span>
+<span class="sd">        key `subpath_id` contains the current loading subpath index (int).</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    new_load_increment(self)</span>
+<span class="sd">        Setup new loading increment and get associated data.</span>
+<span class="sd">    increment_cut(self, n_dim, comp_order)</span>
+<span class="sd">        Perform loading increment cut and setup new increment.</span>
+<span class="sd">    update_hom_state(self, hom_strain_mf, hom_stress_mf)</span>
+<span class="sd">        Update converged homogenized state.</span>
+<span class="sd">    get_subpath_state(self)</span>
+<span class="sd">        Get current loading subpath state.</span>
+<span class="sd">    get_increm_state(self)</span>
+<span class="sd">        Get incremental state.</span>
+<span class="sd">    _new_subpath(self)</span>
+<span class="sd">        Add a new loading subpath to the loading path.</span>
+<span class="sd">    _get_load_subpath(self)</span>
+<span class="sd">        Get current loading subpath.</span>
+<span class="sd">    _update_inc(self)</span>
+<span class="sd">        Update loading increment counters.</span>
+<span class="sd">    _get_applied_mac_load(self)</span>
+<span class="sd">        Compute current applied loading.</span>
+<span class="sd">    _get_inc_mac_load(self)</span>
+<span class="sd">        Compute current incremental loading.</span>
+<span class="sd">    _remove_sym(self, comp_order_sym, comp_order_nsym)</span>
+<span class="sd">        Remove the symmetric components of loading related objects.</span>
+<span class="sd">    _get_load_mf(n_dim, comp_order, load_vector)</span>
+<span class="sd">        Get matricial form of load tensor given in vector form.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="LoadingPath.__init__"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.LoadingPath.html#crate.online.loading.macloadincrem.LoadingPath.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">mac_load</span><span class="p">,</span>
+                 <span class="n">mac_load_presctype</span><span class="p">,</span> <span class="n">mac_load_increm</span><span class="p">,</span> <span class="n">max_subinc_level</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                 <span class="n">max_cinc_cuts</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        strain_formulation: {&#39;infinitesimal&#39;, &#39;finite&#39;}</span>
+<span class="sd">            Problem strain formulation.</span>
+<span class="sd">        problem_type : int</span>
+<span class="sd">            Problem type: 2D plane strain (1), 2D plane stress (2),</span>
+<span class="sd">            2D axisymmetric (3) and 3D (4).</span>
+<span class="sd">        mac_load : dict</span>
+<span class="sd">            For each loading nature type (key, {&#39;strain&#39;, &#39;stress&#39;}), stores</span>
+<span class="sd">            the loading constraints for each loading subpath in a</span>
+<span class="sd">            numpy.ndarray (2d), where the i-th row is associated with the i-th</span>
+<span class="sd">            strain/stress component and the j-th column is associated with the</span>
+<span class="sd">            j-th loading subpath.</span>
+<span class="sd">        mac_load_presctype : numpy.ndarray (2d)</span>
+<span class="sd">            Loading nature type ({&#39;strain&#39;, &#39;stress&#39;}) associated with each</span>
+<span class="sd">            loading constraint (numpy.ndarrayndarray of shape</span>
+<span class="sd">            (n_comps, n_load_subpaths)), where the i-th row is associated with</span>
+<span class="sd">            the i-th strain/stress component and the j-th column is associated</span>
+<span class="sd">            with the j-th loading subpath.</span>
+<span class="sd">        mac_load_increm : dict</span>
+<span class="sd">            For each loading subpath id (key, str), stores a numpy.ndarray of</span>
+<span class="sd">            shape (n_load_increments, 2) where each row is associated with a</span>
+<span class="sd">            prescribed loading increment, and the columns 0 and 1 contain the</span>
+<span class="sd">            corresponding incremental load factor and incremental time,</span>
+<span class="sd">            respectively.</span>
+<span class="sd">        max_subinc_level : int, default=5</span>
+<span class="sd">            Maximum level of loading subincrementation.</span>
+<span class="sd">        max_cinc_cuts : int, default=5</span>
+<span class="sd">            Maximum number of consecutive load increment cuts.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">=</span> <span class="n">strain_formulation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span> <span class="o">=</span> <span class="n">problem_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mac_load</span> <span class="o">=</span> <span class="n">mac_load</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mac_load_presctype</span> <span class="o">=</span> <span class="n">mac_load_presctype</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mac_load_increm</span> <span class="o">=</span> <span class="n">mac_load_increm</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_subinc_level</span> <span class="o">=</span> <span class="n">max_subinc_level</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_cinc_cuts</span> <span class="o">=</span> <span class="n">max_cinc_cuts</span>
+        <span class="c1"># Get problem type parameters</span>
+        <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span> <span class="o">=</span> \
+            <span class="n">mop</span><span class="o">.</span><span class="n">get_problem_type_parameters</span><span class="p">(</span><span class="n">problem_type</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span> <span class="o">=</span> <span class="n">n_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_sym</span> <span class="o">=</span> <span class="n">comp_order_sym</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span> <span class="o">=</span> <span class="n">comp_order_nsym</span>
+        <span class="c1"># Remove symmetric components under an infinitesimal strain formulation</span>
+        <span class="k">if</span> <span class="n">strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;infinitesimal&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_remove_sym</span><span class="p">(</span><span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span><span class="p">)</span>
+        <span class="c1"># Set total number of loading subpaths</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_load_subpaths</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mac_load_increm</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="c1"># Initialize list of loading subpaths</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load_subpaths</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Initialize increment state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_increm_state</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;inc&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;subpath_id&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">}</span>
+        <span class="c1"># Initialize converged homogenized state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conv_hom_state</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;strain&#39;</span><span class="p">,</span> <span class="s1">&#39;stress&#39;</span><span class="p">]}</span>
+        <span class="c1"># Initialize loading last increment flag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_is_last_inc</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># Initialize consecutive increment cuts counter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_cinc_cuts</span> <span class="o">=</span> <span class="mi">0</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="LoadingPath.new_load_increment"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.LoadingPath.html#crate.online.loading.macloadincrem.LoadingPath.new_load_increment">[docs]</a>    <span class="k">def</span> <span class="nf">new_load_increment</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Setup new loading increment and get associated data.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        applied_mac_load_mf : dict</span>
+<span class="sd">            For each prescribed loading nature type</span>
+<span class="sd">            (key, {&#39;strain&#39;, &#39;stress&#39;}), stores the current applied loading</span>
+<span class="sd">            constraints in a numpy.ndarray of shape (n_comps,).</span>
+<span class="sd">        inc_mac_load_mf : dict</span>
+<span class="sd">            For each loading nature type (key, {&#39;strain&#39;, &#39;stress&#39;}), stores</span>
+<span class="sd">            the incremental loading constraint matricial form in a</span>
+<span class="sd">            numpy.ndarray of shape (n_comps,).</span>
+<span class="sd">        n_presc_strain : int</span>
+<span class="sd">            Number of prescribed loading strain components.</span>
+<span class="sd">        presc_strain_idxs : list[int]</span>
+<span class="sd">            Prescribed loading strain components indexes.</span>
+<span class="sd">        n_presc_stress : int</span>
+<span class="sd">            Number of prescribed loading stress components.</span>
+<span class="sd">        presc_stress_idxs : list[int]</span>
+<span class="sd">            Prescribed loading stress components indexes.</span>
+<span class="sd">        is_last_inc : bool</span>
+<span class="sd">            Loading last increment flag.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set strain/stress components order according to problem strain</span>
+        <span class="c1"># formulation</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;infinitesimal&#39;</span><span class="p">:</span>
+            <span class="n">comp_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_sym</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;finite&#39;</span><span class="p">:</span>
+            <span class="n">comp_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown problem strain formulation.&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Reset consecutive loading increment cuts counter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_cinc_cuts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Add a new loading subpath to the loading path if either first load</span>
+        <span class="c1"># increment or current loading subpath is completed</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_increm_state</span><span class="p">[</span><span class="s1">&#39;inc&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> \
+                <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_load_subpath</span><span class="p">()</span><span class="o">.</span><span class="n">_is_last_subpath_inc</span><span class="p">:</span>
+            <span class="c1"># Add a new loading subpath</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_new_subpath</span><span class="p">()</span>
+        <span class="c1"># Get current loading subpath</span>
+        <span class="n">load_subpath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_load_subpath</span><span class="p">()</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Update loading increment</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_inc</span><span class="p">()</span>
+        <span class="c1"># Check if last loading increment</span>
+        <span class="k">if</span> <span class="n">load_subpath</span><span class="o">.</span><span class="n">_id</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_load_subpaths</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">and</span> \
+                <span class="n">load_subpath</span><span class="o">.</span><span class="n">_is_last_subpath_inc</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_is_last_inc</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Compute current applied loading</span>
+        <span class="n">applied_mac_load</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_applied_mac_load</span><span class="p">()</span>
+        <span class="n">applied_mac_load_mf</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">ltype</span> <span class="ow">in</span> <span class="n">applied_mac_load</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">applied_mac_load_mf</span><span class="p">[</span><span class="n">ltype</span><span class="p">]</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_get_load_mf</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">,</span> <span class="n">applied_mac_load</span><span class="p">[</span><span class="n">ltype</span><span class="p">])</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Compute current incremental loading</span>
+        <span class="n">inc_mac_load</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_inc_mac_load</span><span class="p">()</span>
+        <span class="n">inc_mac_load_mf</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">ltype</span> <span class="ow">in</span> <span class="n">inc_mac_load</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">inc_mac_load_mf</span><span class="p">[</span><span class="n">ltype</span><span class="p">]</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_get_load_mf</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">,</span> <span class="n">inc_mac_load</span><span class="p">[</span><span class="n">ltype</span><span class="p">])</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">applied_mac_load_mf</span><span class="p">,</span> <span class="n">inc_mac_load_mf</span><span class="p">,</span> \
+            <span class="n">load_subpath</span><span class="o">.</span><span class="n">_n_presc_strain</span><span class="p">,</span> <span class="n">load_subpath</span><span class="o">.</span><span class="n">_presc_strain_idxs</span><span class="p">,</span> \
+            <span class="n">load_subpath</span><span class="o">.</span><span class="n">_n_presc_stress</span><span class="p">,</span> <span class="n">load_subpath</span><span class="o">.</span><span class="n">_presc_stress_idxs</span><span class="p">,</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">_is_last_inc</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="LoadingPath.increment_cut"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.LoadingPath.html#crate.online.loading.macloadincrem.LoadingPath.increment_cut">[docs]</a>    <span class="k">def</span> <span class="nf">increment_cut</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform loading increment cut and setup new increment.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        n_dim : int</span>
+<span class="sd">            Problem dimension.</span>
+<span class="sd">        comp_order : list[str]</span>
+<span class="sd">            Strain/Stress components (str) order.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        applied_mac_load_mf : dict</span>
+<span class="sd">            For each prescribed loading nature type</span>
+<span class="sd">            (key, {&#39;strain&#39;, &#39;stress&#39;}), stores the current applied loading</span>
+<span class="sd">            constraints in a numpy.ndarray of shape (n_comps,).</span>
+<span class="sd">        inc_mac_load_mf : dict</span>
+<span class="sd">            For each loading nature type (key, {&#39;strain&#39;, &#39;stress&#39;}), stores</span>
+<span class="sd">            the incremental loading constraint matricial form in a</span>
+<span class="sd">            numpy.ndarray of shape (n_comps,).</span>
+<span class="sd">        n_presc_strain : int</span>
+<span class="sd">            Number of prescribed macroscale loading strain components.</span>
+<span class="sd">        presc_strain_idxs : list[int]</span>
+<span class="sd">            Prescribed macroscale loading strain components indexes.</span>
+<span class="sd">        n_presc_stress : int</span>
+<span class="sd">            Number of prescribed macroscale loading stress components.</span>
+<span class="sd">        presc_stress_idxs : list[int]</span>
+<span class="sd">            Prescribed macroscale loading stress components indexes.</span>
+<span class="sd">        is_last_inc : bool</span>
+<span class="sd">            Loading last increment flag.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get display features</span>
+        <span class="n">indent</span> <span class="o">=</span> <span class="n">ioutil</span><span class="o">.</span><span class="n">setdisplayfeatures</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Get current loading subpath</span>
+        <span class="n">load_subpath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_load_subpath</span><span class="p">()</span>
+        <span class="c1"># Perform loading increment</span>
+        <span class="n">load_subpath</span><span class="o">.</span><span class="n">increment_cut</span><span class="p">()</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Set last macroscale loading increment flag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_is_last_inc</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># Increment (+1) consecutive loading increment cuts counter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_cinc_cuts</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="c1"># Check if maximum number of consecutive loading increment cuts is</span>
+        <span class="c1"># surpassed</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_cinc_cuts</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_cinc_cuts</span><span class="p">:</span>
+            <span class="n">summary</span> <span class="o">=</span> <span class="s1">&#39;Maximum number of consecutive loading increment cuts&#39;</span>
+            <span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;Maximum number of macroscale loading consecutive &#39;</span> \
+                <span class="o">+</span> <span class="s1">&#39;increment cuts (</span><span class="si">{}</span><span class="s1">) has been reached&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> \
+                <span class="o">+</span> <span class="n">indent</span> <span class="o">+</span> <span class="s1">&#39;without solution convergence.&#39;</span>
+            <span class="n">info</span><span class="o">.</span><span class="n">displayinfo</span><span class="p">(</span><span class="s1">&#39;4&#39;</span><span class="p">,</span> <span class="n">summary</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_cinc_cuts</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Compute current applied loading</span>
+        <span class="n">applied_mac_load</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_applied_mac_load</span><span class="p">()</span>
+        <span class="n">applied_mac_load_mf</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">ltype</span> <span class="ow">in</span> <span class="n">applied_mac_load</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">applied_mac_load_mf</span><span class="p">[</span><span class="n">ltype</span><span class="p">]</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_get_load_mf</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">,</span> <span class="n">applied_mac_load</span><span class="p">[</span><span class="n">ltype</span><span class="p">])</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Compute incremental loading</span>
+        <span class="n">inc_mac_load</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_inc_mac_load</span><span class="p">()</span>
+        <span class="n">inc_mac_load_mf</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">ltype</span> <span class="ow">in</span> <span class="n">inc_mac_load</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">inc_mac_load_mf</span><span class="p">[</span><span class="n">ltype</span><span class="p">]</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_get_load_mf</span><span class="p">(</span>
+                <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">,</span> <span class="n">inc_mac_load</span><span class="p">[</span><span class="n">ltype</span><span class="p">])</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="k">return</span> <span class="n">applied_mac_load_mf</span><span class="p">,</span> <span class="n">inc_mac_load_mf</span><span class="p">,</span> \
+            <span class="n">load_subpath</span><span class="o">.</span><span class="n">_n_presc_strain</span><span class="p">,</span> <span class="n">load_subpath</span><span class="o">.</span><span class="n">_presc_strain_idxs</span><span class="p">,</span> \
+            <span class="n">load_subpath</span><span class="o">.</span><span class="n">_n_presc_stress</span><span class="p">,</span> <span class="n">load_subpath</span><span class="o">.</span><span class="n">_presc_stress_idxs</span><span class="p">,</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">_is_last_inc</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="LoadingPath.update_hom_state"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.LoadingPath.html#crate.online.loading.macloadincrem.LoadingPath.update_hom_state">[docs]</a>    <span class="k">def</span> <span class="nf">update_hom_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hom_strain_mf</span><span class="p">,</span> <span class="n">hom_stress_mf</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update converged homogenized state.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        hom_strain_mf : numpy.ndarray (1d)</span>
+<span class="sd">            Homogenized strain tensor stored in matricial form.</span>
+<span class="sd">        hom_stress_mf : numpy.ndarray (1d)</span>
+<span class="sd">            Homogenized stress tensor stored in matricial form.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set strain/stress components order according to problem strain</span>
+        <span class="c1"># formulation</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;infinitesimal&#39;</span><span class="p">:</span>
+            <span class="n">comp_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_sym</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;finite&#39;</span><span class="p">:</span>
+            <span class="n">comp_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown problem strain formulation.&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Build homogenized strain tensor</span>
+        <span class="n">hom_strain</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_from_mf</span><span class="p">(</span><span class="n">hom_strain_mf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span>
+                                            <span class="n">comp_order</span><span class="p">)</span>
+        <span class="c1"># Build homogenized stress tensor</span>
+        <span class="n">hom_stress</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_from_mf</span><span class="p">(</span><span class="n">hom_stress_mf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span>
+                                            <span class="n">comp_order</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Initialize converged homogenized strain and stress tensors vector</span>
+        <span class="c1"># form</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conv_hom_state</span><span class="p">[</span><span class="s1">&#39;strain&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conv_hom_state</span><span class="p">[</span><span class="s1">&#39;stress&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">))</span>
+        <span class="c1"># Loop over strain/stress components</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)):</span>
+            <span class="c1"># Get strain/stress component</span>
+            <span class="n">comp</span> <span class="o">=</span> <span class="n">comp_order</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+            <span class="c1"># Get component indexes</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">comp</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">comp</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="c1"># Build converged homogenized strain and stress tensors vector form</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_conv_hom_state</span><span class="p">[</span><span class="s1">&#39;strain&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">hom_strain</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_conv_hom_state</span><span class="p">[</span><span class="s1">&#39;stress&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">hom_stress</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="LoadingPath.get_subpath_state"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.LoadingPath.html#crate.online.loading.macloadincrem.LoadingPath.get_subpath_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_subpath_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current loading subpath state.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        id : int</span>
+<span class="sd">            Loading subpath id.</span>
+<span class="sd">        inc : int</span>
+<span class="sd">            Current loading subpath increment counter.</span>
+<span class="sd">        total_lfact : float</span>
+<span class="sd">            Current loading subpath current total load factor.</span>
+<span class="sd">        inc_lfact : float</span>
+<span class="sd">            Current loading subpath current incremental load factor.</span>
+<span class="sd">        total_time : float</span>
+<span class="sd">            Current loading subpath current total time.</span>
+<span class="sd">        inc_time : float</span>
+<span class="sd">            Current loading subpath current incremental time.</span>
+<span class="sd">        sub_inc_level : int</span>
+<span class="sd">            Current loading subpath current subincrementation level.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get current loading subpath</span>
+        <span class="n">load_subpath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_load_subpath</span><span class="p">()</span>
+        <span class="c1"># Return loading subpath state</span>
+        <span class="k">return</span> <span class="n">load_subpath</span><span class="o">.</span><span class="n">get_state</span><span class="p">()</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="LoadingPath.get_increm_state"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.LoadingPath.html#crate.online.loading.macloadincrem.LoadingPath.get_increm_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_increm_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get incremental state.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        increm_state : dict</span>
+<span class="sd">            Increment state: key `inc` contains the current increment number,</span>
+<span class="sd">            key `subpath_id` contains the current loading subpath index.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_increm_state</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="LoadingPath._new_subpath"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.LoadingPath.html#crate.online.loading.macloadincrem.LoadingPath._new_subpath">[docs]</a>    <span class="k">def</span> <span class="nf">_new_subpath</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a new loading subpath to the loading path.&quot;&quot;&quot;</span>
+        <span class="c1"># Increment (+1) loading subpath id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_increm_state</span><span class="p">[</span><span class="s1">&#39;subpath_id&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">subpath_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_increm_state</span><span class="p">[</span><span class="s1">&#39;subpath_id&#39;</span><span class="p">]</span>
+        <span class="c1"># Get load and prescription types of the current loading subpath</span>
+        <span class="n">presctype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mac_load_presctype</span><span class="p">[:,</span> <span class="n">subpath_id</span><span class="p">]</span>
+        <span class="n">load</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mac_load</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mac_load</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">presctype</span><span class="p">}</span>
+        <span class="k">for</span> <span class="n">ltype</span> <span class="ow">in</span> <span class="n">load</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">load</span><span class="p">[</span><span class="n">ltype</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mac_load</span><span class="p">[</span><span class="n">ltype</span><span class="p">][:,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">subpath_id</span><span class="p">]</span>
+        <span class="c1"># Get loading subpath incremental load factors and incremental times</span>
+        <span class="n">inc_lfacts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mac_load_increm</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">subpath_id</span><span class="p">)][:,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="n">inc_times</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mac_load_increm</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">subpath_id</span><span class="p">)][:,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="c1"># Add a new loading subpath</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load_subpaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">LoadingSubpath</span><span class="p">(</span><span class="n">subpath_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span><span class="p">,</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conv_hom_state</span><span class="p">,</span>
+                           <span class="n">load</span><span class="p">,</span> <span class="n">presctype</span><span class="p">,</span> <span class="n">inc_lfacts</span><span class="p">,</span> <span class="n">inc_times</span><span class="p">,</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">_max_subinc_level</span><span class="p">))</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="LoadingPath._get_load_subpath"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.LoadingPath.html#crate.online.loading.macloadincrem.LoadingPath._get_load_subpath">[docs]</a>    <span class="k">def</span> <span class="nf">_get_load_subpath</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current loading subpath.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        load_subpath : LoadingSubpath</span>
+<span class="sd">            Current loading subpath.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_subpaths</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_increm_state</span><span class="p">[</span><span class="s1">&#39;subpath_id&#39;</span><span class="p">]]</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="LoadingPath._update_inc"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.LoadingPath.html#crate.online.loading.macloadincrem.LoadingPath._update_inc">[docs]</a>    <span class="k">def</span> <span class="nf">_update_inc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update loading increment counters.&quot;&quot;&quot;</span>
+        <span class="c1"># Increment (+1) global increment counter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_increm_state</span><span class="p">[</span><span class="s1">&#39;inc&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="c1"># Increment (+1) loading subpath increment counter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_get_load_subpath</span><span class="p">()</span><span class="o">.</span><span class="n">update_inc</span><span class="p">()</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="LoadingPath._get_applied_mac_load"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.LoadingPath.html#crate.online.loading.macloadincrem.LoadingPath._get_applied_mac_load">[docs]</a>    <span class="k">def</span> <span class="nf">_get_applied_mac_load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute current applied loading.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        applied_mac_load : dict</span>
+<span class="sd">            For each prescribed loading nature type</span>
+<span class="sd">            (key, {&#39;strain&#39;, &#39;stress&#39;}), stores the current applied loading</span>
+<span class="sd">            constraints in a numpy.ndarray of shape (n_comps,).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get current applied loading</span>
+        <span class="n">applied_mac_load</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_load_subpath</span><span class="p">()</span><span class="o">.</span><span class="n">get_applied_load</span><span class="p">()</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="k">return</span> <span class="n">applied_mac_load</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="LoadingPath._get_inc_mac_load"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.LoadingPath.html#crate.online.loading.macloadincrem.LoadingPath._get_inc_mac_load">[docs]</a>    <span class="k">def</span> <span class="nf">_get_inc_mac_load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute current incremental loading.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        inc_mac_load : dict</span>
+<span class="sd">            For each loading nature type (key, {&#39;strain&#39;, &#39;stress&#39;}), stores</span>
+<span class="sd">            the incremental loading constraint in a numpy.ndarray of shape</span>
+<span class="sd">            (n_comps,).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get current incremental loading</span>
+        <span class="n">inc_mac_load</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_load_subpath</span><span class="p">()</span><span class="o">.</span><span class="n">get_inc_applied_load</span><span class="p">()</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="k">return</span> <span class="n">inc_mac_load</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="LoadingPath._remove_sym"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.LoadingPath.html#crate.online.loading.macloadincrem.LoadingPath._remove_sym">[docs]</a>    <span class="k">def</span> <span class="nf">_remove_sym</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove the symmetric components of loading related objects.</span>
+
+<span class="sd">        Under an infinitesimal strain formulation, remove the symmetric</span>
+<span class="sd">        strain/stress components of loading related objects. In addition, the</span>
+<span class="sd">        remaining independent components are sorted according to the problem</span>
+<span class="sd">        strain/stress symmetric component order.</span>
+
+<span class="sd">        ----</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        comp_order_sym : list[str]</span>
+<span class="sd">            Symmetric strain/stress components (str) order.</span>
+<span class="sd">        comp_order_nsym : list[str]</span>
+<span class="sd">            Nonsymmetric strain/stress components (str) order.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Copy loading objects</span>
+        <span class="n">mac_load_cp</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mac_load</span><span class="p">)</span>
+        <span class="n">mac_load_presctype_cp</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mac_load_presctype</span><span class="p">)</span>
+        <span class="c1"># Loop over symmetric components indexes</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order_sym</span><span class="p">)):</span>
+            <span class="c1"># Get non-symmetric component index</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">comp_order_nsym</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">comp_order_sym</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="c1"># Assemble symmetric components</span>
+            <span class="k">for</span> <span class="n">ltype</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mac_load</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">ltype</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mac_load_presctype</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_mac_load</span><span class="p">[</span><span class="n">ltype</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">mac_load_cp</span><span class="p">[</span><span class="n">ltype</span><span class="p">][</span><span class="n">j</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mac_load_presctype</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">mac_load_presctype_cp</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="c1"># Remove (non-symmetric) additional components</span>
+        <span class="n">n_sym</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order_sym</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ltype</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mac_load</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">ltype</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mac_load_presctype</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_mac_load</span><span class="p">[</span><span class="n">ltype</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mac_load</span><span class="p">[</span><span class="n">ltype</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="n">n_sym</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mac_load_presctype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mac_load_presctype</span><span class="p">[:</span><span class="n">n_sym</span><span class="p">,</span> <span class="p">:]</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="LoadingPath._get_load_mf"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.LoadingPath.html#crate.online.loading.macloadincrem.LoadingPath._get_load_mf">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_get_load_mf</span><span class="p">(</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">,</span> <span class="n">load_vector</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get matricial form of load tensor given in vector form.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        comp_order : list[str]</span>
+<span class="sd">            Strain/Stress components (str) order.</span>
+<span class="sd">        load_vector : numpy.ndarray (1d)</span>
+<span class="sd">            Loading tensor in vector form (numpy.ndarray of shape (n_comps,)).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        load_mf : numpy.ndarray (1d)</span>
+<span class="sd">            Loading tensor matricial form (numpy.ndarray of shape (n_comps,)).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Initialize incremental macroscale load tensor</span>
+        <span class="n">load_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">))</span>
+        <span class="c1"># Build incremental macroscale load tensor</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_dim</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">load_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="n">load_vector</span><span class="p">[</span><span class="n">comp_order</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))]</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">j</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">n_dim</span><span class="o">**</span><span class="mi">2</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">):</span>
+                        <span class="n">load_matrix</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">load_vector</span><span class="p">[</span>
+                            <span class="n">comp_order</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">load_matrix</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">load_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+        <span class="c1"># Set incremental macroscopic load matricial form</span>
+        <span class="n">load_mf</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_mf</span><span class="p">(</span><span class="n">load_matrix</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="k">return</span> <span class="n">load_mf</span></div></div>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="LoadingSubpath"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.LoadingSubpath.html#crate.online.loading.macloadincrem.LoadingSubpath">[docs]</a><span class="k">class</span> <span class="nc">LoadingSubpath</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Loading subpath.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    _n_dim : int</span>
+<span class="sd">        Problem number of spatial dimensions.</span>
+<span class="sd">    _comp_order_sym : list[str]</span>
+<span class="sd">        Strain/Stress components symmetric order.</span>
+<span class="sd">    _comp_order_nsym : list[str]</span>
+<span class="sd">        Strain/Stress components nonsymmetric order.</span>
+<span class="sd">    _inc : int</span>
+<span class="sd">        Loading subpath increment counter.</span>
+<span class="sd">    _total_lfact : float</span>
+<span class="sd">        Loading subpath total load factor.</span>
+<span class="sd">    _total_time : float</span>
+<span class="sd">        Loading subpath total time.</span>
+<span class="sd">    _n_presc_strain : int</span>
+<span class="sd">        Number of prescribed loading strain components.</span>
+<span class="sd">    _n_presc_stress : int</span>
+<span class="sd">        Number of prescribed loading stress components.</span>
+<span class="sd">    _presc_strain_idxs : list[int]</span>
+<span class="sd">        Prescribed loading strain components indexes.</span>
+<span class="sd">    _presc_stress_idxs : list[int]</span>
+<span class="sd">        Prescribed loading stress components indexes.</span>
+<span class="sd">    _applied_load : dict</span>
+<span class="sd">        For each prescribed loading nature type (key, {&#39;strain&#39;, &#39;stress&#39;}),</span>
+<span class="sd">        stores the current applied loading constraints in a numpy.ndarray of</span>
+<span class="sd">        shape (n_comps,).</span>
+<span class="sd">    _inc_applied_load : dict</span>
+<span class="sd">        For each prescribed loading nature type (key, {&#39;strain&#39;, &#39;stress&#39;}),</span>
+<span class="sd">        stores the current incremental applied loading constraints in a</span>
+<span class="sd">        numpy.ndarray of shape (n_comps,).</span>
+<span class="sd">    _is_last_subpath_inc : bool</span>
+<span class="sd">        Loading subpath last increment flag.</span>
+<span class="sd">    _sub_inc_levels : list</span>
+<span class="sd">        History of subincrementation levels.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    get_state(self)</span>
+<span class="sd">        Get loading subpath state data.</span>
+<span class="sd">    update_inc(self)</span>
+<span class="sd">        Update increment counter, total load factor and applied loading.</span>
+<span class="sd">    increment_cut(self)</span>
+<span class="sd">        Perform loading increment cut.</span>
+<span class="sd">    get_applied_load(self)</span>
+<span class="sd">        Get current applied loading.</span>
+<span class="sd">    get_inc_applied_load(self)</span>
+<span class="sd">        Get current incremental applied loading.</span>
+<span class="sd">    _update_inc_applied_load(self)</span>
+<span class="sd">        Update current incremental applied loading.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="LoadingSubpath.__init__"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.LoadingSubpath.html#crate.online.loading.macloadincrem.LoadingSubpath.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span>
+                 <span class="n">init_conv_hom_state</span><span class="p">,</span> <span class="n">load</span><span class="p">,</span> <span class="n">presctype</span><span class="p">,</span> <span class="n">inc_lfacts</span><span class="p">,</span> <span class="n">inc_times</span><span class="p">,</span>
+                 <span class="n">max_subinc_level</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        id : int</span>
+<span class="sd">            Loading subpath id.</span>
+<span class="sd">        strain_formulation: {&#39;infinitesimal&#39;, &#39;finite&#39;}</span>
+<span class="sd">            Problem strain formulation.</span>
+<span class="sd">        problem_type : int</span>
+<span class="sd">            Problem type: 2D plane strain (1), 2D plane stress (2),</span>
+<span class="sd">            2D axisymmetric (3) and 3D (4).</span>
+<span class="sd">        init_conv_hom_state : dict</span>
+<span class="sd">            Converged homogenized state (item, numpy.ndarray of shape</span>
+<span class="sd">            (n_comps,)) for key in {&#39;strain&#39;, &#39;stress&#39;} at the beginning of</span>
+<span class="sd">            loading subpath.</span>
+<span class="sd">        load : dict</span>
+<span class="sd">            For each prescribed loading nature type</span>
+<span class="sd">            (key, {&#39;strain&#39;, &#39;stress&#39;}), stores the loading constraints in a</span>
+<span class="sd">            numpy.ndarray of shape (n_comps,).</span>
+<span class="sd">        presctype : numpy.ndarray (1d)</span>
+<span class="sd">            Loading nature type ({&#39;strain&#39;, &#39;stress&#39;}) associated with</span>
+<span class="sd">            each macroscale loading constraint (numpy.ndarray of shape</span>
+<span class="sd">            (n_comps,)).</span>
+<span class="sd">        inc_lfacts : numpy.ndarray (1d)</span>
+<span class="sd">            Loading subpath incremental load factors (numpy.ndarray of shape</span>
+<span class="sd">            (n_increments,)).</span>
+<span class="sd">        inc_times : numpy.ndarray (1d)</span>
+<span class="sd">            Loading subpath incremental times (numpy.ndarray of shape</span>
+<span class="sd">            (n_increments,)).</span>
+<span class="sd">        max_subinc_level : int</span>
+<span class="sd">            Maximum level of loading subincrementation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="nb">id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">=</span> <span class="n">strain_formulation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span> <span class="o">=</span> <span class="n">problem_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_conv_hom_state</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">init_conv_hom_state</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">load</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_presctype</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">presctype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_inc_lfacts</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">inc_lfacts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_inc_times</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">inc_times</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_subinc_level</span> <span class="o">=</span> <span class="n">max_subinc_level</span>
+        <span class="c1"># Get problem type parameters</span>
+        <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span> <span class="o">=</span> \
+            <span class="n">mop</span><span class="o">.</span><span class="n">get_problem_type_parameters</span><span class="p">(</span><span class="n">problem_type</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span> <span class="o">=</span> <span class="n">n_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_sym</span> <span class="o">=</span> <span class="n">comp_order_sym</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span> <span class="o">=</span> <span class="n">comp_order_nsym</span>
+        <span class="c1"># Initialize loading subpath increment counter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_inc</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Initialize loading subpath total load factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_total_lfact</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Initialize loading subpath total time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_total_time</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Set number of prescribed loading strain and stress components and</span>
+        <span class="c1"># associated indexes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_presc_strain</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">x</span> <span class="o">==</span> <span class="s1">&#39;strain&#39;</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_presctype</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_presc_stress</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">x</span> <span class="o">==</span> <span class="s1">&#39;stress&#39;</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_presctype</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_presc_strain_idxs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_presc_stress_idxs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">presctype</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">presctype</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;strain&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_presc_strain_idxs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_presc_stress_idxs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="c1"># Initialize current applied and incremental applied loading</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_applied_load</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">load</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                              <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">load</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_inc_applied_load</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">load</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                                  <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">load</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+        <span class="c1"># Initialize loading subpath last increment flag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_is_last_subpath_inc</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># Initialize subincrementation levels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sub_inc_levels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_inc_lfacts</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="LoadingSubpath.get_state"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.LoadingSubpath.html#crate.online.loading.macloadincrem.LoadingSubpath.get_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get loading subpath state data.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        id : int</span>
+<span class="sd">            Loading subpath id.</span>
+<span class="sd">        inc : int</span>
+<span class="sd">            Loading subpath increment counter.</span>
+<span class="sd">        total_lfact : float</span>
+<span class="sd">            Loading subpath current total load factor.</span>
+<span class="sd">        inc_lfact : float</span>
+<span class="sd">            Loading subpath current incremental load factor.</span>
+<span class="sd">        total_time : float</span>
+<span class="sd">            Loading subpath current total time.</span>
+<span class="sd">        inc_time : float</span>
+<span class="sd">            Loading subpath current incremental time.</span>
+<span class="sd">        sub_inc_level : int</span>
+<span class="sd">            Loading subpath current subincrementation level.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get loading subpath current increment index</span>
+        <span class="n">inc_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inc</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_total_lfact</span><span class="p">,</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">_inc_lfacts</span><span class="p">[</span><span class="n">inc_idx</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_total_time</span><span class="p">,</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">_inc_times</span><span class="p">[</span><span class="n">inc_idx</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sub_inc_levels</span><span class="p">[</span><span class="n">inc_idx</span><span class="p">]</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="LoadingSubpath.update_inc"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.LoadingSubpath.html#crate.online.loading.macloadincrem.LoadingSubpath.update_inc">[docs]</a>    <span class="k">def</span> <span class="nf">update_inc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update increment counter, total load factor and applied loading.&quot;&quot;&quot;</span>
+        <span class="c1"># Increment (+1) loading subpath increment counter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_inc</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="c1"># Get loading subpath current increment index</span>
+        <span class="n">inc_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inc</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Procedure related with the loading subincrementation: upon</span>
+        <span class="c1"># convergence of a given increment, guarantee that the following</span>
+        <span class="c1"># increment magnitude is at most one (subincrementation) level above.</span>
+        <span class="c1"># The increment cut procedure is performed the required number of times</span>
+        <span class="c1"># in order to ensure this progressive recovery towards the prescribed</span>
+        <span class="c1"># incrementation</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inc</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sub_inc_levels</span><span class="p">[</span><span class="n">inc_idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> \
+                    <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sub_inc_levels</span><span class="p">[</span><span class="n">inc_idx</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">increment_cut</span><span class="p">()</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Update total load factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_total_lfact</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_inc_lfacts</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">_inc</span><span class="p">])</span>
+        <span class="c1"># Update total time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_total_time</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_inc_times</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">_inc</span><span class="p">])</span>
+        <span class="c1"># Update current incremental applied loading</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_inc_applied_load</span><span class="p">()</span>
+        <span class="c1"># Check if last increment</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inc</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_inc_lfacts</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_is_last_subpath_inc</span> <span class="o">=</span> <span class="kc">True</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="LoadingSubpath.increment_cut"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.LoadingSubpath.html#crate.online.loading.macloadincrem.LoadingSubpath.increment_cut">[docs]</a>    <span class="k">def</span> <span class="nf">increment_cut</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform loading increment cut.&quot;&quot;&quot;</span>
+        <span class="c1"># Get display features</span>
+        <span class="n">indent</span> <span class="o">=</span> <span class="n">ioutil</span><span class="o">.</span><span class="n">setdisplayfeatures</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Get loading subpath current increment index</span>
+        <span class="n">inc_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inc</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="c1"># Update subincrementation level</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sub_inc_levels</span><span class="p">[</span><span class="n">inc_idx</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sub_inc_levels</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">inc_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sub_inc_levels</span><span class="p">[</span><span class="n">inc_idx</span><span class="p">])</span>
+        <span class="c1"># Check if maximum subincrementation level is surpassed</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sub_inc_levels</span><span class="p">[</span><span class="n">inc_idx</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_subinc_level</span><span class="p">:</span>
+            <span class="n">summary</span> <span class="o">=</span> <span class="s1">&#39;Maximum loading subincrementation level&#39;</span>
+            <span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;The maximum macroscale loading subincrementation &#39;</span> \
+                <span class="o">+</span> <span class="s1">&#39;level (</span><span class="si">{}</span><span class="s1">) has been reached without&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> \
+                <span class="o">+</span> <span class="n">indent</span> <span class="o">+</span> <span class="s1">&#39;solution convergence.&#39;</span>
+            <span class="n">info</span><span class="o">.</span><span class="n">displayinfo</span><span class="p">(</span><span class="s1">&#39;4&#39;</span><span class="p">,</span> <span class="n">summary</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_subinc_level</span><span class="p">)</span>
+        <span class="c1"># Get current incremental load factor and associated incremental time</span>
+        <span class="n">inc_lfact</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inc_lfacts</span><span class="p">[</span><span class="n">inc_idx</span><span class="p">]</span>
+        <span class="n">inc_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inc_times</span><span class="p">[</span><span class="n">inc_idx</span><span class="p">]</span>
+        <span class="c1"># Cut load increment in half</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_inc_lfacts</span><span class="p">[</span><span class="n">inc_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">inc_lfact</span><span class="o">/</span><span class="mf">2.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_inc_lfacts</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">inc_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inc_lfacts</span><span class="p">[</span><span class="n">inc_idx</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_inc_times</span><span class="p">[</span><span class="n">inc_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">inc_time</span><span class="o">/</span><span class="mf">2.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_inc_times</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">inc_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inc_times</span><span class="p">[</span><span class="n">inc_idx</span><span class="p">])</span>
+        <span class="c1"># Update total load factor and total time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_total_lfact</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_inc_lfacts</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">_inc</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_total_time</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_inc_times</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">_inc</span><span class="p">])</span>
+        <span class="c1"># Update current incremental applied loading</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_inc_applied_load</span><span class="p">()</span>
+        <span class="c1"># Set loading subpath last increment flag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_is_last_subpath_inc</span> <span class="o">=</span> <span class="kc">False</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="LoadingSubpath.get_applied_load"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.LoadingSubpath.html#crate.online.loading.macloadincrem.LoadingSubpath.get_applied_load">[docs]</a>    <span class="k">def</span> <span class="nf">get_applied_load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current applied loading.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        applied_load : dict</span>
+<span class="sd">            For each prescribed loading nature type</span>
+<span class="sd">            (key, {&#39;strain&#39;, &#39;stress&#39;}), stores the current applied loading</span>
+<span class="sd">            constraints in a numpy.ndarray of shape (n_comps,).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_applied_load</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="LoadingSubpath.get_inc_applied_load"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.LoadingSubpath.html#crate.online.loading.macloadincrem.LoadingSubpath.get_inc_applied_load">[docs]</a>    <span class="k">def</span> <span class="nf">get_inc_applied_load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current incremental applied loading.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        inc_applied_load : dict</span>
+<span class="sd">            For each prescribed loading nature type</span>
+<span class="sd">            (key, {&#39;strain&#39;, &#39;stress&#39;}), stores the current incremental applied</span>
+<span class="sd">            loading constraints in a numpy.ndarray of shape (n_comps,).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_inc_applied_load</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="LoadingSubpath._update_inc_applied_load"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.LoadingSubpath.html#crate.online.loading.macloadincrem.LoadingSubpath._update_inc_applied_load">[docs]</a>    <span class="k">def</span> <span class="nf">_update_inc_applied_load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update current incremental applied loading.</span>
+
+<span class="sd">        *Infinitesimal strains:*</span>
+
+<span class="sd">            .. math::</span>
+
+<span class="sd">               \\boldsymbol{\\varepsilon}_{n+1} =</span>
+<span class="sd">               \\boldsymbol{\\varepsilon}_{0} + \\lambda_{n+1}</span>
+<span class="sd">               (\\boldsymbol{\\varepsilon}^{\\text{total}} -</span>
+<span class="sd">               \\boldsymbol{\\varepsilon}_{0})</span>
+
+<span class="sd">            .. math::</span>
+
+<span class="sd">               \\Delta \\boldsymbol{\\varepsilon}_{n+1} =</span>
+<span class="sd">               \\Delta \\lambda_{n+1} (\\boldsymbol{\\varepsilon}^{</span>
+<span class="sd">               \\text{total}} - \\boldsymbol{\\varepsilon}_{0})</span>
+
+<span class="sd">            where :math:`\\boldsymbol{\\varepsilon}_{n+1}` is the current</span>
+<span class="sd">            applied infinitesimal strain tensor, :math:`\\lambda_{n+1}` is the</span>
+<span class="sd">            current load factor,</span>
+<span class="sd">            :math:`\\boldsymbol{\\varepsilon}^{\\text{total}}` is the total</span>
+<span class="sd">            infinitesimal strain tensor prescribed in the mononotic loading</span>
+<span class="sd">            path, :math:`\\boldsymbol{\\varepsilon}_{0}` is the infinitesimal</span>
+<span class="sd">            strain tensor at the beginning of the mononotic loading path,</span>
+<span class="sd">            :math:`\\Delta \\boldsymbol{\\varepsilon}_{n+1}` is the</span>
+<span class="sd">            incremental infinitesimal strain tensor,</span>
+<span class="sd">            :math:`\\Delta \\lambda_{n+1}` is the incremental load factor, and</span>
+<span class="sd">            :math:`n+1` denotes the current increment.</span>
+
+<span class="sd">            .. math::</span>
+
+<span class="sd">               \\boldsymbol{\\sigma}_{n+1} = \\boldsymbol{\\sigma}_{0} +</span>
+<span class="sd">               \\lambda_{n+1} (\\boldsymbol{\\sigma}^{\\text{total}} -</span>
+<span class="sd">               \\boldsymbol{\\sigma}_{0})</span>
+
+<span class="sd">            .. math::</span>
+
+<span class="sd">               \\Delta \\boldsymbol{\\sigma}_{n+1} = \\Delta \\lambda_{n+1}</span>
+<span class="sd">               (\\boldsymbol{\\sigma}^{\\text{total}} -</span>
+<span class="sd">               \\boldsymbol{\\sigma}_{0})</span>
+
+<span class="sd">            where :math:`\\boldsymbol{\\sigma}_{n+1}` is the current applied</span>
+<span class="sd">            Cauchy stress tensor, :math:`\\lambda_{n+1}` is the current load</span>
+<span class="sd">            factor, :math:`\\boldsymbol{\\sigma}^{\\text{total}}` is the total</span>
+<span class="sd">            Cauchy stress tensor prescribed in the mononotic loading path,</span>
+<span class="sd">            :math:`\\boldsymbol{\\sigma}_{0}` is the Cauchy stress tensor at</span>
+<span class="sd">            the beginning of the mononotic loading path,</span>
+<span class="sd">            :math:`\\Delta \\boldsymbol{\\sigma}_{n+1}` is the incremental</span>
+<span class="sd">            Cauchy stress tensor, :math:`\\Delta \\lambda_{n+1}` is the</span>
+<span class="sd">            incremental load factor, and :math:`n+1` denotes the current</span>
+<span class="sd">            increment.</span>
+
+<span class="sd">        ----</span>
+
+<span class="sd">        *Finite strains:*</span>
+
+<span class="sd">            .. math::</span>
+
+<span class="sd">               \\boldsymbol{F}_{n+1} = \\exp (\\lambda_{n+1} \\ln (</span>
+<span class="sd">               \\boldsymbol{F}^{\\text{total}} \\boldsymbol{F}_{0}^{-1}))</span>
+<span class="sd">               \\boldsymbol{F}_{0}</span>
+
+<span class="sd">            .. math::</span>
+
+<span class="sd">               \\boldsymbol{F}_{\\Delta, n+1} = \\exp (\\Delta \\lambda_{n+1}</span>
+<span class="sd">               \\ln ( \\boldsymbol{F}^{\\text{total}}</span>
+<span class="sd">               \\boldsymbol{F}_{0}^{-1}))</span>
+
+<span class="sd">            where :math:`\\boldsymbol{F}_{n+1}` is the current applied</span>
+<span class="sd">            deformation gradient, :math:`\\lambda_{n+1}` is the current load</span>
+<span class="sd">            factor, :math:`\\boldsymbol{F}_{\\text{total}}` is the total</span>
+<span class="sd">            deformation gradient prescribed in the mononotic loading path, and</span>
+<span class="sd">            :math:`\\boldsymbol{F}_{0}` is the deformation gradient</span>
+<span class="sd">            at the beginning of the mononotic loading path,</span>
+<span class="sd">            :math:`\\boldsymbol{F}_{\\Delta, n+1}` is the incremental</span>
+<span class="sd">            deformation gradient, :math:`\\Delta \\lambda_{n+1}` is the</span>
+<span class="sd">            incremental load factor, and :math:`n+1` denotes the current</span>
+<span class="sd">            increment.</span>
+
+<span class="sd">            .. math::</span>
+
+<span class="sd">               \\boldsymbol{P}_{n+1} = \\boldsymbol{P}_{0} + \\lambda_{n+1}</span>
+<span class="sd">               (\\boldsymbol{P}^{\\text{total}} - \\boldsymbol{P}_{0})</span>
+
+<span class="sd">            .. math::</span>
+
+<span class="sd">               \\Delta \\boldsymbol{P}_{n+1} = \\Delta \\lambda_{n+1}</span>
+<span class="sd">               (\\boldsymbol{P}^{\\text{total}} - \\boldsymbol{P}_{0})</span>
+
+<span class="sd">            where :math:`\\boldsymbol{P}_{n+1}` is the current applied first</span>
+<span class="sd">            Piola-Kirchhoff stress tensor, :math:`\\lambda_{n+1}` is the</span>
+<span class="sd">            current load factor, :math:`\\boldsymbol{P}^{\\text{total}}` is the</span>
+<span class="sd">            total first Piola-Kirchhoff stress tensor prescribed in the</span>
+<span class="sd">            mononotic loading path, :math:`\\boldsymbol{P}_{0}` is the first</span>
+<span class="sd">            Piola-Kirchhoff stress tensor at the beginning of the mononotic</span>
+<span class="sd">            loading path, :math:`\\Delta \\boldsymbol{P}_{n+1}` is the</span>
+<span class="sd">            incremental first Piola-Kirchhoff stress tensor,</span>
+<span class="sd">            :math:`\\Delta \\lambda_{n+1}` is the incremental load factor, and</span>
+<span class="sd">            :math:`n+1` denotes the current increment.</span>
+
+<span class="sd">            **Remark**: It is not straightforward how to perform a</span>
+<span class="sd">            component-wise multiplicative decomposition of the deformation</span>
+<span class="sd">            gradient in the case of a mixed strain-stress loading prescription.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get loading subpath current increment index</span>
+        <span class="n">inc_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inc</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="c1"># Get current incremental load factor and associated incremental time</span>
+        <span class="n">inc_lfact</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inc_lfacts</span><span class="p">[</span><span class="n">inc_idx</span><span class="p">]</span>
+        <span class="c1"># Evaluate prescription type</span>
+        <span class="n">is_strain_only</span> <span class="o">=</span> <span class="s1">&#39;stress&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inc_applied_load</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Update current incremental applied loading</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;finite&#39;</span> <span class="ow">and</span> <span class="n">is_strain_only</span><span class="p">:</span>
+            <span class="c1"># Initialize initial and total deformation gradient</span>
+            <span class="n">def_gradient_init</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">))</span>
+            <span class="n">def_gradient_total</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">))</span>
+            <span class="c1"># Build initial and total deformation gradient</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span><span class="p">)):</span>
+                <span class="c1"># Get component second-order index</span>
+                <span class="n">so_idx</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+                                <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span><span class="p">[</span><span class="n">i</span><span class="p">])])</span>
+                <span class="c1"># Build initial and total deformation gradient</span>
+                <span class="n">def_gradient_init</span><span class="p">[</span><span class="n">so_idx</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_init_conv_hom_state</span><span class="p">[</span><span class="s1">&#39;strain&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">def_gradient_total</span><span class="p">[</span><span class="n">so_idx</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load</span><span class="p">[</span><span class="s1">&#39;strain&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+            <span class="c1"># Compute total incremental deformation gradient (multiplicative</span>
+            <span class="c1"># decomposition)</span>
+            <span class="n">inc_def_gradient_total</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span>
+                <span class="n">def_gradient_total</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">def_gradient_init</span><span class="p">))</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Compute incremental deformation gradient relative to initial</span>
+            <span class="c1"># deformation gradient (multiplicative decomposition)</span>
+            <span class="n">inc_init_def_gradient</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">matrix_root</span><span class="p">(</span><span class="n">inc_def_gradient_total</span><span class="p">,</span>
+                                                    <span class="bp">self</span><span class="o">.</span><span class="n">_total_lfact</span><span class="p">)</span>
+            <span class="c1"># Compute current applied deformation gradient</span>
+            <span class="n">applied_def_gradient</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">inc_init_def_gradient</span><span class="p">,</span>
+                                             <span class="n">def_gradient_init</span><span class="p">)</span>
+            <span class="c1"># Store current applied deformation gradient components</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span><span class="p">)):</span>
+                <span class="c1"># Get component second-order index</span>
+                <span class="n">so_idx</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+                                <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span><span class="p">[</span><span class="n">i</span><span class="p">])])</span>
+                <span class="c1"># Store current applied deformation gradient component</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_applied_load</span><span class="p">[</span><span class="s1">&#39;strain&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">applied_def_gradient</span><span class="p">[</span><span class="n">so_idx</span><span class="p">]</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Compute current incremental deformation gradient (multiplicative</span>
+            <span class="c1"># decomposition)</span>
+            <span class="n">inc_def_gradient</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">matrix_root</span><span class="p">(</span><span class="n">inc_def_gradient_total</span><span class="p">,</span>
+                                               <span class="n">inc_lfact</span><span class="p">)</span>
+            <span class="c1"># Store current incremental deformation gradient components</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span><span class="p">)):</span>
+                <span class="c1"># Get component second-order index</span>
+                <span class="n">so_idx</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+                                <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span><span class="p">[</span><span class="n">i</span><span class="p">])])</span>
+                <span class="c1"># Store incremental deformation gradient component</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_inc_applied_load</span><span class="p">[</span><span class="s1">&#39;strain&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">inc_def_gradient</span><span class="p">[</span><span class="n">so_idx</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Loop over prescription types</span>
+            <span class="k">for</span> <span class="n">ltype</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inc_applied_load</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="c1"># Loop over loading components</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_inc_applied_load</span><span class="p">[</span><span class="n">ltype</span><span class="p">])):</span>
+                    <span class="c1"># Compute current applied and incremental loading component</span>
+                    <span class="c1"># (additive decomposition)</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_presctype</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">ltype</span><span class="p">:</span>
+                        <span class="c1"># Compute current applied loading component</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_applied_load</span><span class="p">[</span><span class="n">ltype</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> \
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_init_conv_hom_state</span><span class="p">[</span><span class="n">ltype</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> \
+                            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_total_lfact</span><span class="o">*</span><span class="p">(</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_load</span><span class="p">[</span><span class="n">ltype</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+                                <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_conv_hom_state</span><span class="p">[</span><span class="n">ltype</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
+                        <span class="c1"># Compute current incremental loading component</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_inc_applied_load</span><span class="p">[</span><span class="n">ltype</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> \
+                            <span class="n">inc_lfact</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_load</span><span class="p">[</span><span class="n">ltype</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+                                       <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_conv_hom_state</span><span class="p">[</span><span class="n">ltype</span><span class="p">][</span><span class="n">i</span><span class="p">])</span></div></div>
+<span class="c1">#</span>
+<span class="c1">#                                                         Loading path rewinder</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="IncrementRewinder"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.IncrementRewinder.html#crate.online.loading.macloadincrem.IncrementRewinder">[docs]</a><span class="k">class</span> <span class="nc">IncrementRewinder</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rewind analysis to rewind state increment (initial instant).</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    _rewind_inc : int</span>
+<span class="sd">        Increment associated with the rewind state.</span>
+<span class="sd">    _loading_path : LoadingPath</span>
+<span class="sd">        Loading path instance rewind state.</span>
+<span class="sd">    _material_state : MaterialState</span>
+<span class="sd">        CRVE material constitutive state at rewind state.</span>
+<span class="sd">    _clusters_sct_mf : dict</span>
+<span class="sd">        Fourth-order strain concentration tensor (matricial form)</span>
+<span class="sd">        (item, numpy.ndarray (2d)) associated with each material cluster</span>
+<span class="sd">        (key, str).</span>
+<span class="sd">    _ref_material : ElasticReferenceMaterial</span>
+<span class="sd">        Elastic reference material at rewind state.</span>
+<span class="sd">    _global_strain_mf : numpy.ndarray (1d)</span>
+<span class="sd">        Global vector of clusters strain tensors (matricial form).</span>
+<span class="sd">    _farfield_strain_mf : numpy.ndarray (1d)</span>
+<span class="sd">        Far-field strain tensor (matricial form).</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    get_rewind_inc(self)</span>
+<span class="sd">        Get increment associated with the rewind state.</span>
+<span class="sd">    save_loading_path(self, loading_path)</span>
+<span class="sd">        Save loading path rewind state.</span>
+<span class="sd">    get_loading_path(self)</span>
+<span class="sd">        Get loading path at rewind state.</span>
+<span class="sd">    save_material_state(self, material_state)</span>
+<span class="sd">        Save material constitutive state at rewind state.</span>
+<span class="sd">    save_asca_algorithmic_variables(self, global_strain_mf, \</span>
+<span class="sd">                                    farfield_strain_mf)</span>
+<span class="sd">        Save ASCA algorithmic variables at rewind state.</span>
+<span class="sd">    get_asca_algorithmic_variables(self)</span>
+<span class="sd">        Get ASCA algorithmic variables at rewind state.</span>
+<span class="sd">    rewind_output_files(self, hres_output=None, efftan_output=None, \</span>
+<span class="sd">                        ref_mat_output=None, voxels_output=None, \</span>
+<span class="sd">                        adapt_output=None, vtk_output=None)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="IncrementRewinder.__init__"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.IncrementRewinder.html#crate.online.loading.macloadincrem.IncrementRewinder.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rewind_inc</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Increment rewinder constructor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        rewind_inc : int</span>
+<span class="sd">            Increment associated with the rewind state.</span>
+<span class="sd">        phase_clusters : dict</span>
+<span class="sd">            Clusters labels (item, list[int]) associated with each material</span>
+<span class="sd">            phase (key, str).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rewind_inc</span> <span class="o">=</span> <span class="n">rewind_inc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_phase_clusters</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">phase_clusters</span><span class="p">)</span>
+        <span class="c1"># Initialize loading path at rewind state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_loading_path</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># Initialize material constitutive state at rewind state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_material_state</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># Initialize elastic reference material at rewind state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ref_material</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># Initialize clusters strain concentration tensors at rewind state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_sct_mf</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># Initialize ASCA algorithmic variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_global_strain_mf</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_farfield_strain_mf</span> <span class="o">=</span> <span class="kc">None</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="IncrementRewinder.get_rewind_inc"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.IncrementRewinder.html#crate.online.loading.macloadincrem.IncrementRewinder.get_rewind_inc">[docs]</a>    <span class="k">def</span> <span class="nf">get_rewind_inc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get increment associated with the rewind state.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        rewind_inc : int</span>
+<span class="sd">            Increment associated with the rewind state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rewind_inc</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="IncrementRewinder.save_loading_path"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.IncrementRewinder.html#crate.online.loading.macloadincrem.IncrementRewinder.save_loading_path">[docs]</a>    <span class="k">def</span> <span class="nf">save_loading_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loading_path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save loading path rewind state.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        loading_path : LoadingPath</span>
+<span class="sd">            LoadingPath instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_loading_path</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">loading_path</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="IncrementRewinder.get_loading_path"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.IncrementRewinder.html#crate.online.loading.macloadincrem.IncrementRewinder.get_loading_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_loading_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get loading path at rewind state.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        loading_path : LoadingPath</span>
+<span class="sd">            Loading path instance rewind state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_loading_path</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="IncrementRewinder.save_material_state"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.IncrementRewinder.html#crate.online.loading.macloadincrem.IncrementRewinder.save_material_state">[docs]</a>    <span class="k">def</span> <span class="nf">save_material_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material_state</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save material constitutive state at rewind state.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        material_state : MaterialState</span>
+<span class="sd">            CRVE material constitutive state at rewind state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_material_state</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">material_state</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="IncrementRewinder.get_material_state"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.IncrementRewinder.html#crate.online.loading.macloadincrem.IncrementRewinder.get_material_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_material_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get material constitutive state at rewind state.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        crve : CRVE</span>
+<span class="sd">            Cluster-Reduced Representative Volume Element.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        material_state : MaterialState</span>
+<span class="sd">            CRVE material constitutive state at rewind state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># If the current CRVE clustering is coincident with the CRVE clustering</span>
+        <span class="c1"># at the rewind state, simply return the material constitutive state</span>
+        <span class="c1"># stored at rewind state. Otherwise, perform a suitable transfer of</span>
+        <span class="c1"># state variables between the rewind state CRVE clustering and the</span>
+        <span class="c1"># current CRVE clustering</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phase_clusters</span> <span class="o">==</span> <span class="n">crve</span><span class="o">.</span><span class="n">get_cluster_phases</span><span class="p">():</span>
+            <span class="c1"># Return material constitutive state stored at rewind state</span>
+            <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_material_state</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Get clusters state variables at rewind state</span>
+            <span class="n">clusters_state_rew</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_material_state</span><span class="o">.</span><span class="n">get_clusters_state</span><span class="p">()</span>
+            <span class="c1"># Get clusters deformation gradient at rewind state</span>
+            <span class="n">clusters_def_gradient_rew_mf</span> <span class="o">=</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">_material_state</span><span class="o">.</span><span class="n">get_clusters_def_gradient_mf</span><span class="p">()</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Initialize clusters state variables</span>
+            <span class="n">clusters_state</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="c1"># Initialize clusters deformation gradient</span>
+            <span class="n">clusters_def_gradient_mf</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Get material phases</span>
+            <span class="n">material_phases</span> <span class="o">=</span> <span class="n">crve</span><span class="o">.</span><span class="n">get_material_phases</span><span class="p">()</span>
+            <span class="c1"># Get cluster-reduced material phases</span>
+            <span class="n">cluster_phases</span> <span class="o">=</span> <span class="n">crve</span><span class="o">.</span><span class="n">get_cluster_phases</span><span class="p">()</span>
+            <span class="c1"># Get clusters associated with each material phase</span>
+            <span class="n">phase_clusters</span> <span class="o">=</span> <span class="n">crve</span><span class="o">.</span><span class="n">get_phase_clusters</span><span class="p">()</span>
+            <span class="c1"># Get clusters volume fraction</span>
+            <span class="n">clusters_vf</span> <span class="o">=</span> <span class="n">crve</span><span class="o">.</span><span class="n">get_clusters_vf</span><span class="p">()</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Loop over material phases</span>
+            <span class="k">for</span> <span class="n">mat_phase</span> <span class="ow">in</span> <span class="n">material_phases</span><span class="p">:</span>
+                <span class="c1"># Get cluster-reduced material phase</span>
+                <span class="n">crmp</span> <span class="o">=</span> <span class="n">cluster_phases</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">]</span>
+                <span class="c1"># Get clustering type</span>
+                <span class="n">clustering_type</span> <span class="o">=</span> <span class="n">crmp</span><span class="o">.</span><span class="n">get_clustering_type</span><span class="p">()</span>
+                <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                <span class="c1"># Proceed according to clustering type</span>
+                <span class="k">if</span> <span class="n">clustering_type</span> <span class="o">==</span> <span class="s1">&#39;static&#39;</span><span class="p">:</span>
+                    <span class="c1"># Loop over material phase clusters</span>
+                    <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">phase_clusters</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">]:</span>
+                        <span class="c1"># Set cluster state variables</span>
+                        <span class="n">clusters_state</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span> <span class="o">=</span> \
+                            <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">clusters_state_rew</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)])</span>
+                        <span class="c1"># Set cluster deformation gradient</span>
+                        <span class="n">clusters_def_gradient_mf</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span>
+                            <span class="n">clusters_def_gradient_rew_mf</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)])</span>
+                <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                <span class="k">elif</span> <span class="n">clustering_type</span> <span class="o">==</span> <span class="s1">&#39;adaptive&#39;</span><span class="p">:</span>
+                    <span class="c1"># Get cluster-reduced material phase clustering tree nodes</span>
+                    <span class="n">clustering_tree_nodes</span><span class="p">,</span> <span class="n">root_cluster_node</span> <span class="o">=</span> \
+                        <span class="n">crmp</span><span class="o">.</span><span class="n">get_clustering_tree_nodes</span><span class="p">()</span>
+                    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                    <span class="c1"># Get rewind state cluster nodes</span>
+                    <span class="n">rewind_clusters_nodes</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phase_clusters</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">]:</span>
+                        <span class="n">rewind_clusters_nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                            <span class="n">clustering_tree_nodes</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)])</span>
+                    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                    <span class="c1"># Initialize node walker</span>
+                    <span class="n">node_walker</span> <span class="o">=</span> <span class="n">anytree</span><span class="o">.</span><span class="n">walker</span><span class="o">.</span><span class="n">Walker</span><span class="p">()</span>
+                    <span class="c1"># Loop over material phase clusters</span>
+                    <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">phase_clusters</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">]:</span>
+                        <span class="c1"># Get cluster node</span>
+                        <span class="n">cluster_node</span> <span class="o">=</span> <span class="n">clustering_tree_nodes</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span>
+                        <span class="c1"># Build walk from cluster node up to the root node</span>
+                        <span class="n">node_walk_to_root</span> <span class="o">=</span> <span class="n">node_walker</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">cluster_node</span><span class="p">,</span>
+                                                             <span class="n">root_cluster_node</span><span class="p">)</span>
+                        <span class="c1"># Loop over walk nodes</span>
+                        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">node_walk_to_root</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                            <span class="c1"># Find hierarchicaly closest rewind state cluster</span>
+                            <span class="c1"># node</span>
+                            <span class="k">if</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">rewind_clusters_nodes</span><span class="p">:</span>
+                                <span class="c1"># Get node cluster</span>
+                                <span class="n">parent_cluster</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                                <span class="c1"># Set cluster state variables</span>
+                                <span class="n">clusters_state</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span>
+                                    <span class="n">clusters_state_rew</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">parent_cluster</span><span class="p">)])</span>
+                                <span class="c1"># Set cluster deformation gradient</span>
+                                <span class="n">clusters_def_gradient_mf</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span> <span class="o">=</span> \
+                                    <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">clusters_def_gradient_rew_mf</span><span class="p">[</span>
+                                        <span class="nb">str</span><span class="p">(</span><span class="n">parent_cluster</span><span class="p">)])</span>
+                                <span class="c1"># Skip to the following cluster</span>
+                                <span class="k">break</span>
+                <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown material phase clustering &#39;</span>
+                                       <span class="s1">&#39;type.&#39;</span><span class="p">)</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Set material constitutive state at rewind state according to the</span>
+            <span class="c1"># current clustering</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_material_state</span><span class="o">.</span><span class="n">set_rewind_state_updated_clustering</span><span class="p">(</span>
+                <span class="n">phase_clusters</span><span class="p">,</span> <span class="n">clusters_vf</span><span class="p">,</span> <span class="n">clusters_state</span><span class="p">,</span>
+                <span class="n">clusters_def_gradient_mf</span><span class="p">)</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Return material constitutive state stored at rewind state</span>
+            <span class="c1"># according to the update clustering</span>
+            <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_material_state</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="IncrementRewinder.save_reference_material"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.IncrementRewinder.html#crate.online.loading.macloadincrem.IncrementRewinder.save_reference_material">[docs]</a>    <span class="k">def</span> <span class="nf">save_reference_material</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref_material</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save elastic reference material at rewind state.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ref_material : ElasticReferenceMaterial</span>
+<span class="sd">            Elastic reference material at rewind state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Save elastic reference material</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ref_material</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">ref_material</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="IncrementRewinder.get_reference_material"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.IncrementRewinder.html#crate.online.loading.macloadincrem.IncrementRewinder.get_reference_material">[docs]</a>    <span class="k">def</span> <span class="nf">get_reference_material</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get elastic reference material at rewind state.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ref_material : ElasticReferenceMaterial</span>
+<span class="sd">            Elastic reference material at rewind state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ref_material</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="IncrementRewinder.save_clusters_sct"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.IncrementRewinder.html#crate.online.loading.macloadincrem.IncrementRewinder.save_clusters_sct">[docs]</a>    <span class="k">def</span> <span class="nf">save_clusters_sct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clusters_sct_mf</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save clusters strain concentration tensors at rewind state.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        clusters_sct_mf : dict</span>
+<span class="sd">            Fourth-order strain concentration tensor (matricial form)</span>
+<span class="sd">            (item, numpy.ndarray (2d)) associated with each material cluster</span>
+<span class="sd">            (key, str).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Save clusters state variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_sct_mf</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">clusters_sct_mf</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="IncrementRewinder.get_clusters_sct"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.IncrementRewinder.html#crate.online.loading.macloadincrem.IncrementRewinder.get_clusters_sct">[docs]</a>    <span class="k">def</span> <span class="nf">get_clusters_sct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get clusters strain concentration tensors at rewind state.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        clusters_sct_mf : dict</span>
+<span class="sd">            Fourth-order strain concentration tensor (matricial form)</span>
+<span class="sd">            (item, numpy.ndarray (2d)) associated with each material cluster</span>
+<span class="sd">            (key, str).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Save clusters state variables</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clusters_sct_mf</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="IncrementRewinder.save_asca_algorithmic_variables"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.IncrementRewinder.html#crate.online.loading.macloadincrem.IncrementRewinder.save_asca_algorithmic_variables">[docs]</a>    <span class="k">def</span> <span class="nf">save_asca_algorithmic_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">global_strain_mf</span><span class="p">,</span>
+                                        <span class="n">farfield_strain_mf</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save ASCA algorithmic variables at rewind state.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        global_strain_mf : numpy.ndarray (1d)</span>
+<span class="sd">            Global vector of clusters strain tensors (matricial form).</span>
+<span class="sd">        farfield_strain_mf : numpy.ndarray (1d), default=None</span>
+<span class="sd">            Far-field strain tensor (matricial form).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Save global vector of clusters strain tensors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_global_strain_mf</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">global_strain_mf</span><span class="p">)</span>
+        <span class="c1"># Save far-field strain tensor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_farfield_strain_mf</span> <span class="o">=</span> <span class="n">farfield_strain_mf</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="IncrementRewinder.get_asca_algorithmic_variables"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.IncrementRewinder.html#crate.online.loading.macloadincrem.IncrementRewinder.get_asca_algorithmic_variables">[docs]</a>    <span class="k">def</span> <span class="nf">get_asca_algorithmic_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get ASCA algorithmic variables at rewind state.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        global_strain_mf : numpy.ndarray (1d)</span>
+<span class="sd">            Global vector of clusters strain tensors (matricial form).</span>
+<span class="sd">        farfield_strain_mf : numpy.ndarray (1d), default=None</span>
+<span class="sd">            Far-field strain tensor (matricial form).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_global_strain_mf</span><span class="p">),</span> \
+            <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_farfield_strain_mf</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="IncrementRewinder.rewind_output_files"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.IncrementRewinder.html#crate.online.loading.macloadincrem.IncrementRewinder.rewind_output_files">[docs]</a>    <span class="k">def</span> <span class="nf">rewind_output_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hres_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">efftan_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                            <span class="n">ref_mat_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">voxels_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                            <span class="n">adapt_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vtk_output</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Rewind output files to the rewind state.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        hres_output : HomResOutput</span>
+<span class="sd">            Output associated with the homogenized results.</span>
+<span class="sd">        efftan_output : EffTanOutput</span>
+<span class="sd">            Output associated with the CRVE effective tangent modulus.</span>
+<span class="sd">        ref_mat_output : RefMatOutput</span>
+<span class="sd">            Output associated with the reference material.</span>
+<span class="sd">        voxels_output : VoxelsOutput</span>
+<span class="sd">            Output associated with voxels material-related quantities.</span>
+<span class="sd">        adapt_output : ClusteringAdaptivityOutput</span>
+<span class="sd">            Output associated with the clustering adaptivity procedures.</span>
+<span class="sd">        vtk_output : VTKOutput</span>
+<span class="sd">            Output associated with the VTK files.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Rewind output files</span>
+        <span class="k">if</span> <span class="n">hres_output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">hres_output</span><span class="o">.</span><span class="n">rewind_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rewind_inc</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">efftan_output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">efftan_output</span><span class="o">.</span><span class="n">rewind_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rewind_inc</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ref_mat_output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ref_mat_output</span><span class="o">.</span><span class="n">rewind_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rewind_inc</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">voxels_output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">voxels_output</span><span class="o">.</span><span class="n">rewind_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rewind_inc</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">adapt_output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">adapt_output</span><span class="o">.</span><span class="n">rewind_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rewind_inc</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">vtk_output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">vtk_output</span><span class="o">.</span><span class="n">rewind_files</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rewind_inc</span><span class="p">)</span></div></div>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="RewindManager"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.RewindManager.html#crate.online.loading.macloadincrem.RewindManager">[docs]</a><span class="k">class</span> <span class="nc">RewindManager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Manage analysis rewind operations and evaluate analysis rewind criteria.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    _n_rewinds : int</span>
+<span class="sd">        Number of rewind operations.</span>
+<span class="sd">    _rewind_time : float</span>
+<span class="sd">        Total time spent in rewind operations and in deleted analysis</span>
+<span class="sd">        increments.</span>
+<span class="sd">    _init_time : float</span>
+<span class="sd">        Reference time.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    get_rewind_time(self)</span>
+<span class="sd">        Get total time of rewind operations and deleted analysis increments.</span>
+<span class="sd">    update_rewind_time(self, mode=&#39;init&#39;)</span>
+<span class="sd">        Update total rewind time.</span>
+<span class="sd">    is_rewind_available(self)</span>
+<span class="sd">        Evaluate if rewind operations are available.</span>
+<span class="sd">    is_save_rewind_state(self, inc)</span>
+<span class="sd">        Evaluate conditions to save rewind state.</span>
+<span class="sd">    is_rewinding_criteria(self, inc, material_phases, phase_clusters, \</span>
+<span class="sd">                          clusters_state)</span>
+<span class="sd">        Check analysis rewinding criteria.</span>
+<span class="sd">    get_save_rewind_state_criteria()</span>
+<span class="sd">        Get available rewind state storage criteria and default parameters.</span>
+<span class="sd">    get_rewinding_criteria()</span>
+<span class="sd">        Get rewinding criteria and default parameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="RewindManager.__init__"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.RewindManager.html#crate.online.loading.macloadincrem.RewindManager.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rewind_state_criterion</span><span class="p">,</span> <span class="n">rewinding_criterion</span><span class="p">,</span>
+                 <span class="n">max_n_rewinds</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Analysis rewind manager constructor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        rewind_state_criterion : tuple</span>
+<span class="sd">            Rewind state storage criterion [0] and associated parameter [1].</span>
+<span class="sd">        rewinding_criterion : tuple</span>
+<span class="sd">            Rewinding criterion [0] and associated parameter [1].</span>
+<span class="sd">        max_n_rewinds : int, default=1</span>
+<span class="sd">            Maximum number of rewind operations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rewind_state_criterion</span> <span class="o">=</span> <span class="n">rewind_state_criterion</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rewinding_criterion</span> <span class="o">=</span> <span class="n">rewinding_criterion</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_n_rewinds</span> <span class="o">=</span> <span class="n">max_n_rewinds</span>
+        <span class="c1"># Initialize number of rewind operations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_rewinds</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Initialize total rewind time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rewind_time</span> <span class="o">=</span> <span class="mi">0</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="RewindManager.get_rewind_time"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.RewindManager.html#crate.online.loading.macloadincrem.RewindManager.get_rewind_time">[docs]</a>    <span class="k">def</span> <span class="nf">get_rewind_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get total time of rewind operations and deleted analysis increments.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        rewind_time : float</span>
+<span class="sd">            Total time of rewind operations and in deleted analysis increments.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rewind_time</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="RewindManager.update_rewind_time"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.RewindManager.html#crate.online.loading.macloadincrem.RewindManager.update_rewind_time">[docs]</a>    <span class="k">def</span> <span class="nf">update_rewind_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update total rewind time.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        mode : {&#39;init&#39;, &#39;update&#39;}, default=&#39;init&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;init&#39;</span><span class="p">:</span>
+            <span class="c1"># Set reference initial time</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_init_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;update&#39;</span><span class="p">:</span>
+            <span class="c1"># Update total rewind time</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rewind_time</span> <span class="o">+=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_time</span>
+            <span class="c1"># Set reference initial time</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_init_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown mode.&#39;</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="RewindManager.is_rewind_available"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.RewindManager.html#crate.online.loading.macloadincrem.RewindManager.is_rewind_available">[docs]</a>    <span class="k">def</span> <span class="nf">is_rewind_available</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate if rewind operations are available.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        is_available : bool</span>
+<span class="sd">            True if rewind operations are available, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Initialize rewind operations availability</span>
+        <span class="n">is_available</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Evaluate maximum number of rewind operations</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_rewinds</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_n_rewinds</span><span class="p">:</span>
+            <span class="n">is_available</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return rewind operations availability</span>
+        <span class="k">return</span> <span class="n">is_available</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="RewindManager.is_save_rewind_state"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.RewindManager.html#crate.online.loading.macloadincrem.RewindManager.is_save_rewind_state">[docs]</a>    <span class="k">def</span> <span class="nf">is_save_rewind_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inc</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate conditions to save rewind state.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        inc : int</span>
+<span class="sd">            Macroscale loading increment.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        is_save_state : bool</span>
+<span class="sd">            True if conditions to save rewind state are satisfied, False</span>
+<span class="sd">            otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Initialize save rewind state flag</span>
+        <span class="n">is_save_state</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Get rewind state criterion</span>
+        <span class="n">criterion</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rewind_state_criterion</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># Evaluate rewind state criterion</span>
+        <span class="k">if</span> <span class="n">criterion</span> <span class="o">==</span> <span class="s1">&#39;increment_number&#39;</span><span class="p">:</span>
+            <span class="c1"># Evaluate increment number</span>
+            <span class="k">if</span> <span class="n">inc</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rewind_state_criterion</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">is_save_state</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown rewind state criterion.&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return save rewind state flag</span>
+        <span class="k">return</span> <span class="n">is_save_state</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="RewindManager.is_rewinding_criteria"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.RewindManager.html#crate.online.loading.macloadincrem.RewindManager.is_rewinding_criteria">[docs]</a>    <span class="k">def</span> <span class="nf">is_rewinding_criteria</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inc</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span>
+                              <span class="n">clusters_state</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check analysis rewinding criteria.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        inc : int</span>
+<span class="sd">            Macroscale loading increment.</span>
+<span class="sd">        material_phases : list[str]</span>
+<span class="sd">            CRVE material phases labels (str).</span>
+<span class="sd">        phase_clusters : dict</span>
+<span class="sd">            Clusters labels (item, list[int]) associated with each material</span>
+<span class="sd">            phase (key, str).</span>
+<span class="sd">        clusters_state : dict</span>
+<span class="sd">            Material constitutive model state variables (item, dict) associated</span>
+<span class="sd">            with each material cluster (key, str).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        is_rewind : bool</span>
+<span class="sd">            True if analysis rewinding criteria are satisfied, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Initialize analysis rewind flag</span>
+        <span class="n">is_rewind</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Get rewinding criterion</span>
+        <span class="n">criterion</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rewinding_criterion</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># Evaluate analysis rewinding criterion</span>
+        <span class="k">if</span> <span class="n">criterion</span> <span class="o">==</span> <span class="s1">&#39;increment_number&#39;</span><span class="p">:</span>
+            <span class="c1"># Evaluate increment number</span>
+            <span class="n">is_rewind</span> <span class="o">=</span> <span class="n">inc</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rewinding_criterion</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="k">elif</span> <span class="n">criterion</span> <span class="o">==</span> <span class="s1">&#39;max_acc_p_strain&#39;</span><span class="p">:</span>
+            <span class="c1"># Evaluate accumulated plastic strain threshold</span>
+            <span class="k">for</span> <span class="n">mat_phase</span> <span class="ow">in</span> <span class="n">material_phases</span><span class="p">:</span>
+                <span class="c1"># Loop over material phase clusters</span>
+                <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">phase_clusters</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">]:</span>
+                    <span class="c1"># Get cluster state variables</span>
+                    <span class="n">state_variables</span> <span class="o">=</span> <span class="n">clusters_state</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span>
+                    <span class="c1"># Check if accumulated plastic strain is cluster state</span>
+                    <span class="c1"># variable</span>
+                    <span class="k">if</span> <span class="s1">&#39;acc_p_strain&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">state_variables</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="c1"># Evaluate accumulated plastic strain</span>
+                    <span class="k">if</span> <span class="n">state_variables</span><span class="p">[</span><span class="s1">&#39;acc_p_strain&#39;</span><span class="p">]</span> \
+                            <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rewinding_criterion</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                        <span class="n">is_rewind</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="k">break</span>
+                <span class="k">if</span> <span class="n">is_rewind</span><span class="p">:</span>
+                    <span class="k">break</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown rewinding criterion.&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Increment number of rewind operations</span>
+        <span class="k">if</span> <span class="n">is_rewind</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_n_rewinds</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return analysis rewinding flag</span>
+        <span class="k">return</span> <span class="n">is_rewind</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="RewindManager.get_save_rewind_state_criteria"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.RewindManager.html#crate.online.loading.macloadincrem.RewindManager.get_save_rewind_state_criteria">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_save_rewind_state_criteria</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get available rewind state storage criteria and default parameters.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        available_save_rewind_state_criteria : dict</span>
+<span class="sd">            Available rewind state storage criteria (key, str) and associated</span>
+<span class="sd">            default parameters (item).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set available rewind state storage criteria</span>
+        <span class="n">available_save_rewind_state_criteria</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;increment_number&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="p">}</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">available_save_rewind_state_criteria</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="RewindManager.get_rewinding_criteria"><a class="viewcode-back" href="../../../../_autosummary/crate.online.loading.macloadincrem.RewindManager.html#crate.online.loading.macloadincrem.RewindManager.get_rewinding_criteria">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_rewinding_criteria</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get rewinding criteria and default parameters.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        available_rewinding_criteria : dict</span>
+<span class="sd">            Available rewinding criteria (key, str) and associated default</span>
+<span class="sd">            parameters (item).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set available rewinding criteria</span>
+        <span class="n">available_rewinding_criteria</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;increment_number&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                                        <span class="s1">&#39;max_acc_p_strain&#39;</span><span class="p">:</span> <span class="mf">1.0e-10</span><span class="p">}</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">available_rewinding_criteria</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

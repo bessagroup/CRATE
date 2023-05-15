@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>material.materialmodeling &mdash; crate 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            crate
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/crate.html">Code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">crate</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">material.materialmodeling</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for material.materialmodeling</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Constitutive modeling of CRVE material clusters and homogenization.</span>
+
+<span class="sd">This module includes the class that contains the data associated with the</span>
+<span class="sd">CRVE&#39;s material clusters constitutive state and homogenized strain and stress</span>
+<span class="sd">tensors, as well as the required methods to perform the material clusters</span>
+<span class="sd">constitutive state update, the computation of the material clusters consistent</span>
+<span class="sd">tangent modulus, and the computational homogenization of the material clusters</span>
+<span class="sd">strain and stress tensors.</span>
+
+<span class="sd">Classes</span>
+<span class="sd">-------</span>
+<span class="sd">MaterialState</span>
+<span class="sd">    CRVE material constitutive state.</span>
+
+<span class="sd">Functions</span>
+<span class="sd">---------</span>
+<span class="sd">get_available_material_models</span>
+<span class="sd">    Get available material constitutive models.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#                                                                       Modules</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1"># Standard</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">itertools</span> <span class="k">as</span> <span class="nn">it</span>
+<span class="c1"># Third-party</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="c1"># Local</span>
+<span class="kn">import</span> <span class="nn">tensor.tensoroperations</span> <span class="k">as</span> <span class="nn">top</span>
+<span class="kn">import</span> <span class="nn">tensor.matrixoperations</span> <span class="k">as</span> <span class="nn">mop</span>
+<span class="kn">from</span> <span class="nn">material.materialoperations</span> <span class="kn">import</span> <span class="n">cauchy_from_kirchhoff</span><span class="p">,</span> \
+                                        <span class="n">first_piola_from_kirchhoff</span><span class="p">,</span> \
+                                        <span class="n">material_from_spatial_tangent_modulus</span>
+<span class="kn">from</span> <span class="nn">material.models.elastic</span> <span class="kn">import</span> <span class="n">Elastic</span>
+<span class="kn">from</span> <span class="nn">material.models.von_mises</span> <span class="kn">import</span> <span class="n">VonMises</span>
+<span class="kn">from</span> <span class="nn">material.models.stvenant_kirchhoff</span> <span class="kn">import</span> <span class="n">StVenantKirchhoff</span>
+<span class="c1">#</span>
+<span class="c1">#                                                          Authorship &amp; Credits</span>
+<span class="c1"># =============================================================================</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Bernardo Ferreira (bernardo_ferreira@brown.edu)&#39;</span>
+<span class="n">__credits__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Bernardo Ferreira&#39;</span><span class="p">,</span> <span class="p">]</span>
+<span class="n">__status__</span> <span class="o">=</span> <span class="s1">&#39;Stable&#39;</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#</span>
+<span class="c1">#                                                                Material state</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="MaterialState"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState">[docs]</a><span class="k">class</span> <span class="nc">MaterialState</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;CRVE material constitutive state.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    _n_dim : int</span>
+<span class="sd">        Problem number of spatial dimensions.</span>
+<span class="sd">    _comp_order_sym : list[str]</span>
+<span class="sd">        Strain/Stress components symmetric order.</span>
+<span class="sd">    _comp_order_nsym : list[str]</span>
+<span class="sd">        Strain/Stress components nonsymmetric order.</span>
+<span class="sd">    _material_phases_models : dict</span>
+<span class="sd">        Material constitutive model (item, ConstitutiveModel) associated to</span>
+<span class="sd">        each material phase (key, str).</span>
+<span class="sd">    _phase_clusters : dict</span>
+<span class="sd">        Clusters labels (item, list[int]) associated to each material phase</span>
+<span class="sd">        (key, str).</span>
+<span class="sd">    _clusters_vf : dict</span>
+<span class="sd">        Volume fraction (item, float) associated to each material cluster</span>
+<span class="sd">        (key, str).</span>
+<span class="sd">    _clusters_def_gradient_mf : dict</span>
+<span class="sd">        Deformation gradient (item, numpy.darray (1d)) associated to each</span>
+<span class="sd">        material cluster (key, str), stored in matricial form.</span>
+<span class="sd">    _clusters_def_gradient_old_mf : dict</span>
+<span class="sd">        Last converged deformation gradient (item, numpy.darray (1d))</span>
+<span class="sd">        associated to each material cluster (key, str), stored in matricial</span>
+<span class="sd">        form.</span>
+<span class="sd">    _clusters_state : dict</span>
+<span class="sd">        Material constitutive model state variables (item, dict) associated to</span>
+<span class="sd">        each material cluster (key, str).</span>
+<span class="sd">    _clusters_state_old : dict</span>
+<span class="sd">        Last converged material constitutive model state variables (item, dict)</span>
+<span class="sd">        associated to each material cluster (key, str).</span>
+<span class="sd">    _clusters_tangent_mf : dict</span>
+<span class="sd">        Material consistent tangent modulus (item, numpy.ndarray) associated to</span>
+<span class="sd">        each material cluster (key, str), stored in matricial form.</span>
+<span class="sd">    _hom_strain_mf : numpy.ndarray (1d)</span>
+<span class="sd">        Homogenized strain tensor stored in matricial form: infinitesimal</span>
+<span class="sd">        strain tensor (infinitesimal strains) or deformation gradient (finite</span>
+<span class="sd">        strains).</span>
+<span class="sd">    _hom_strain_33 : float</span>
+<span class="sd">        Homogenized strain tensor out-of-plane component: infinitesimal strain</span>
+<span class="sd">        tensor (infinitesimal strains) or deformation gradient (finite</span>
+<span class="sd">        strains).</span>
+<span class="sd">    _hom_stress_mf : numpy.ndarray (1d)</span>
+<span class="sd">        Homogenized stress tensor stored in matricial form: Cauchy stress</span>
+<span class="sd">        tensor (infinitesimal strains) or first Piola-Kirchhoff stress tensor</span>
+<span class="sd">        (finite strains).</span>
+<span class="sd">    _hom_stress_33 : float</span>
+<span class="sd">        Homogenized stress tensor out-of-plane component: Cauchy stress tensor</span>
+<span class="sd">        (infinitesimal strains) or first Piola-Kirchhoff stress tensor (finite</span>
+<span class="sd">        strains).</span>
+<span class="sd">    _hom_strain_old_mf : numpy.ndarray (1d)</span>
+<span class="sd">        Last converged homogenized strain tensor stored in matricial form:</span>
+<span class="sd">        infinitesimal strain tensor (infinitesimal strains) or deformation</span>
+<span class="sd">        gradient (finite strains).</span>
+<span class="sd">    _hom_stress_old_mf : numpy.ndarray (1d)</span>
+<span class="sd">        Last converged homogenized stress tensor stored in matricial form:</span>
+<span class="sd">        Cauchy stress tensor (infinitesimal strains) or first Piola-Kirchhoff</span>
+<span class="sd">        stress tensor (finite strains).</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    init_constitutive_model(self, mat_phase, model_keyword, \</span>
+<span class="sd">                            model_source=&#39;crate&#39;)</span>
+<span class="sd">        Initialize material phase constitutive model.</span>
+<span class="sd">    init_clusters_state(self)</span>
+<span class="sd">        Initialize clusters state variables.</span>
+<span class="sd">    set_phase_clusters(self, phase_clusters, clusters_vf)</span>
+<span class="sd">        Set CRVE cluster labels and volume fractions of each material phase.</span>
+<span class="sd">    get_clusters_inc_strain_mf(self, global_strain_mf)</span>
+<span class="sd">        Get clusters incremental strain in matricial form.</span>
+<span class="sd">    update_clusters_state(self, clusters_inc_strain_mf)</span>
+<span class="sd">        Update clusters state variables and consistent tangent modulus.</span>
+<span class="sd">    update_state_homogenization(self)</span>
+<span class="sd">        Update homogenized strain and stress tensors.</span>
+<span class="sd">    update_converged_state(self)</span>
+<span class="sd">        Update last converged material state variables.</span>
+<span class="sd">    set_rewind_state_updated_clustering(self, phase_clusters, clusters_vf, \</span>
+<span class="sd">                                        clusters_state, \</span>
+<span class="sd">                                        clusters_def_gradient_mf)</span>
+<span class="sd">        Set rewind state variables according to updated clustering.</span>
+<span class="sd">    get_hom_strain_mf(self)</span>
+<span class="sd">        Get homogenized strain tensor (matricial form).</span>
+<span class="sd">    get_hom_stress_mf(self)</span>
+<span class="sd">        Get homogenized stress tensor (matricial form).</span>
+<span class="sd">    get_oop_hom_comp(self)</span>
+<span class="sd">        Get homogenized strain or stress tensor out-of-plane component.</span>
+<span class="sd">    get_inc_hom_strain_mf(self)</span>
+<span class="sd">        Get incremental homogenized strain tensor (matricial form).</span>
+<span class="sd">    get_inc_hom_stress_mf(self)</span>
+<span class="sd">        Get incremental homogenized stress tensor (matricial form).</span>
+<span class="sd">    get_hom_strain_old_mf(self)</span>
+<span class="sd">        Get last converged homogenized strain tensor (matricial form).</span>
+<span class="sd">    get_hom_stress_old_mf(self)</span>
+<span class="sd">        Get last converged homogenized stress tensor (matricial form).</span>
+<span class="sd">    get_material_phases(self)</span>
+<span class="sd">        Get RVE material phases.</span>
+<span class="sd">    get_material_phases_properties(self)</span>
+<span class="sd">        Get RVE material phases constitutive properties.</span>
+<span class="sd">    get_material_phases_models(self)</span>
+<span class="sd">        Get RVE material phases constitutive models.</span>
+<span class="sd">    get_material_phases_vf(self)</span>
+<span class="sd">        Get RVE material phases volume fraction.</span>
+<span class="sd">    get_clusters_def_gradient_mf(self)</span>
+<span class="sd">        Get deformation gradient of each material cluster.</span>
+<span class="sd">    get_clusters_def_gradient_old_mf(self)</span>
+<span class="sd">        Get last converged deformation gradient of each material cluster.</span>
+<span class="sd">    get_clusters_state(self)</span>
+<span class="sd">        Get material state variables of each material cluster.</span>
+<span class="sd">    get_clusters_state_old(self)</span>
+<span class="sd">        Get last converged material state variables of each material cluster.</span>
+<span class="sd">    get_clusters_tangent_mf(self)</span>
+<span class="sd">        Get material consistent tangent modulus of each material cluster.</span>
+<span class="sd">    _material_su_interface(strain_formulation, problem_type, \</span>
+<span class="sd">                           constitutive_model, def_gradient_old, inc_strain, \</span>
+<span class="sd">                           state_variables_old)</span>
+<span class="sd">        Material constitutive state update interface.</span>
+<span class="sd">    compute_inc_log_strain(e_log_strain_old, inc_def_gradient)</span>
+<span class="sd">        Compute incremental spatial logarithmic strain.</span>
+<span class="sd">    compute_spatial_tangent_modulus(e_log_strain_old, def_gradient_old, \</span>
+<span class="sd">                                    inc_def_gradient, cauchy_stress, \</span>
+<span class="sd">                                    inf_consistent_tangent)</span>
+<span class="sd">        Compute finite strain spatial consistent tangent modulus.</span>
+<span class="sd">    clustering_adaptivity_update(self, phase_clusters, clusters_vf, \</span>
+<span class="sd">                                 adaptive_clustering_map)</span>
+<span class="sd">        Update cluster variables according to clustering adaptivity step.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="MaterialState.__init__"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span>
+                 <span class="n">material_phases_properties</span><span class="p">,</span> <span class="n">material_phases_vf</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        strain_formulation: {&#39;infinitesimal&#39;, &#39;finite&#39;}</span>
+<span class="sd">            Problem strain formulation.</span>
+<span class="sd">        problem_type : int</span>
+<span class="sd">            Problem type: 2D plane strain (1), 2D plane stress (2),</span>
+<span class="sd">            2D axisymmetric (3) and 3D (4).</span>
+<span class="sd">        material_phases : list[str]</span>
+<span class="sd">            RVE material phases labels (str).</span>
+<span class="sd">        material_phases_properties : dict</span>
+<span class="sd">            Constitutive model material properties (item, dict) associated to</span>
+<span class="sd">            each material phase (key, str).</span>
+<span class="sd">        material_phases_vf : dict</span>
+<span class="sd">            Volume fraction (item, float) associated to each material phase</span>
+<span class="sd">            (key, str).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">=</span> <span class="n">strain_formulation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span> <span class="o">=</span> <span class="n">problem_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_material_phases</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">material_phases</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_material_phases_properties</span> <span class="o">=</span> \
+            <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">material_phases_properties</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_material_phases_vf</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">material_phases_vf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_phase_clusters</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_vf</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_material_phases_models</span> <span class="o">=</span> <span class="p">{</span><span class="n">mat_phase</span><span class="p">:</span> <span class="kc">None</span>
+                                        <span class="k">for</span> <span class="n">mat_phase</span> <span class="ow">in</span> <span class="n">material_phases</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_def_gradient_mf</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_def_gradient_old_mf</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_state</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_state_old</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_tangent_mf</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hom_strain_mf</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hom_strain_33</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hom_stress_mf</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hom_stress_33</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hom_strain_old_mf</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hom_stress_old_mf</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># Get problem type parameters</span>
+        <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span> <span class="o">=</span> \
+            <span class="n">mop</span><span class="o">.</span><span class="n">get_problem_type_parameters</span><span class="p">(</span><span class="n">problem_type</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span> <span class="o">=</span> <span class="n">n_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_sym</span> <span class="o">=</span> <span class="n">comp_order_sym</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span> <span class="o">=</span> <span class="n">comp_order_nsym</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="MaterialState.init_constitutive_model"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.init_constitutive_model">[docs]</a>    <span class="k">def</span> <span class="nf">init_constitutive_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat_phase</span><span class="p">,</span> <span class="n">model_keyword</span><span class="p">,</span>
+                                <span class="n">model_source</span><span class="o">=</span><span class="s1">&#39;crate&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize material phase constitutive model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        mat_phase : str</span>
+<span class="sd">            Material phase label.</span>
+<span class="sd">        model_keyword : str</span>
+<span class="sd">            Material constitutive model input data file keyword.</span>
+<span class="sd">        model_source : {&#39;crate&#39;,}, default=&#39;crate&#39;</span>
+<span class="sd">            Material constitutive model source.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Initialize material phase constitutive model</span>
+        <span class="k">if</span> <span class="n">model_source</span> <span class="o">==</span> <span class="s1">&#39;crate&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">model_keyword</span> <span class="o">==</span> <span class="s1">&#39;elastic&#39;</span><span class="p">:</span>
+                <span class="n">constitutive_model</span> <span class="o">=</span> <span class="n">Elastic</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_material_phases_properties</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">model_keyword</span> <span class="o">==</span> <span class="s1">&#39;von_mises&#39;</span><span class="p">:</span>
+                <span class="n">constitutive_model</span> <span class="o">=</span> <span class="n">VonMises</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_material_phases_properties</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">model_keyword</span> <span class="o">==</span> <span class="s1">&#39;stvenant_kirchhoff&#39;</span><span class="p">:</span>
+                <span class="n">constitutive_model</span> <span class="o">=</span> <span class="n">StVenantKirchhoff</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_material_phases_properties</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown constitutive model from CRATE</span><span class="se">\&#39;</span><span class="s1">s &#39;</span>
+                                   <span class="s1">&#39;source.&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown material constitutive model source.&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Update material phases constitutive models</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_material_phases_models</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">]</span> <span class="o">=</span> <span class="n">constitutive_model</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="MaterialState.init_clusters_state"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.init_clusters_state">[docs]</a>    <span class="k">def</span> <span class="nf">init_clusters_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize clusters state variables.&quot;&quot;&quot;</span>
+        <span class="c1"># Initialize clusters state variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_state</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_state_old</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># Initialize clusters deformation gradient</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_def_gradient_mf</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_def_gradient_old_mf</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Set second-order identity tensor matricial form</span>
+        <span class="n">soid_mf</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_mf</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Loop over material phases</span>
+        <span class="k">for</span> <span class="n">mat_phase</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_material_phases</span><span class="p">:</span>
+            <span class="c1"># Get material phase constitutive model</span>
+            <span class="n">constitutive_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_material_phases_models</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">]</span>
+            <span class="c1"># Initialize material constitutive model state variables</span>
+            <span class="n">state_variables</span> <span class="o">=</span> <span class="n">constitutive_model</span><span class="o">.</span><span class="n">state_init</span><span class="p">()</span>
+            <span class="n">state_variables_old</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">state_variables</span><span class="p">)</span>
+            <span class="c1"># Loop over material phase clusters</span>
+            <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phase_clusters</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">]:</span>
+                <span class="c1"># Initialize clusters state variables</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_state</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span> <span class="o">=</span> <span class="n">state_variables</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_state_old</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span> <span class="o">=</span> <span class="n">state_variables_old</span>
+                <span class="c1"># Initialize clusters deformation gradient</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_def_gradient_mf</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span> <span class="o">=</span> <span class="n">soid_mf</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_def_gradient_old_mf</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span> <span class="o">=</span> <span class="n">soid_mf</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Compute initial state homogenized strain and stress tensors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_state_homogenization</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_converged_state</span><span class="p">()</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="MaterialState.set_phase_clusters"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.set_phase_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">set_phase_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span> <span class="n">clusters_vf</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set CRVE cluster labels and volume fractions of each material phase.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        phase_clusters : dict</span>
+<span class="sd">            Clusters labels (item, list[int]) associated to each material</span>
+<span class="sd">            phase (key, str).</span>
+<span class="sd">        clusters_vf : dict</span>
+<span class="sd">            Volume fraction (item, float) associated to each material cluster</span>
+<span class="sd">            (key, str).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_phase_clusters</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">phase_clusters</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_vf</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">clusters_vf</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="MaterialState.get_clusters_inc_strain_mf"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_clusters_inc_strain_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_clusters_inc_strain_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">global_strain_mf</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get clusters incremental strain in matricial form.</span>
+
+<span class="sd">        *Infinitesimal strains*:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           \\Delta \\boldsymbol{\\varepsilon}_{\\mu, n + 1}^{(I)} =</span>
+<span class="sd">               \\boldsymbol{\\varepsilon}_{\\mu, n + 1}^{(I)} -</span>
+<span class="sd">               \\boldsymbol{\\varepsilon}_{\\mu, n}^{(I)} \\, ,</span>
+<span class="sd">               \\quad I=1,\\dots, n_{c}</span>
+
+<span class="sd">        where :math:`\\Delta \\boldsymbol{\\varepsilon}_{\\mu}^{(I)}` is the</span>
+<span class="sd">        :math:`I` th material cluster incremental infinitesimal strain tensor,</span>
+<span class="sd">        :math:`\\boldsymbol{\\varepsilon}_{\\mu}^{(I)}` is the</span>
+<span class="sd">        :math:`I` th material cluster infinitesimal strain tensor,</span>
+<span class="sd">        :math:`n_{c}` is the number of material clusters, :math:`n+1` denotes</span>
+<span class="sd">        the current increment, and :math:`n` denotes the last converged</span>
+<span class="sd">        increment.</span>
+
+<span class="sd">        ----</span>
+
+<span class="sd">        *Finite strains*:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           (\\boldsymbol{F}_{\\Delta})_{\\mu, n + 1}^{(I)} =</span>
+<span class="sd">               \\boldsymbol{F}_{\\mu, n + 1}^{(I)}</span>
+<span class="sd">               ( \\boldsymbol{F}_{\\mu, n}^{(I)})^{-1} \\, ,</span>
+<span class="sd">               \\quad I=1,\\dots, n_{c}</span>
+
+<span class="sd">        where :math:`\\Delta \\boldsymbol{F}_{\\mu}^{(I)}` is the</span>
+<span class="sd">        :math:`I` th material cluster incremental deformation gradient</span>
+<span class="sd">        :math:`\\boldsymbol{F}_{\\mu}^{(I)}` is the :math:`I` th material</span>
+<span class="sd">        cluster deformation gradient, :math:`n_{c}` is the number of material</span>
+<span class="sd">        clusters, :math:`n+1` denotes the current increment, and :math:`n`</span>
+<span class="sd">        denotes the last converged increment.</span>
+
+<span class="sd">        ----</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        global_strain_mf : numpy.ndarray (1d)</span>
+<span class="sd">            Global vector of clusters strains stored in matricial form.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        clusters_inc_strain_mf : dict</span>
+<span class="sd">            Incremental strain (item, dict) associated to each material cluster</span>
+<span class="sd">            (key, str), stored in matricial form.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set strain components according to problem strain formulation</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;infinitesimal&#39;</span><span class="p">:</span>
+            <span class="n">comp_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_sym</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">comp_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Initialize dictionary of clusters incremental strain</span>
+        <span class="n">clusters_inc_strain_mf</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Initialize material cluster strain range indexes</span>
+        <span class="n">i_init</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">i_end</span> <span class="o">=</span> <span class="n">i_init</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)</span>
+        <span class="c1"># Loop over material phases</span>
+        <span class="k">for</span> <span class="n">mat_phase</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_material_phases</span><span class="p">:</span>
+            <span class="c1"># Loop over material phase clusters</span>
+            <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phase_clusters</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">]:</span>
+                <span class="c1"># Get material cluster last converged infinitesimal strain</span>
+                <span class="c1"># tensor (infinitesimal strains) or deformation gradient tensor</span>
+                <span class="c1"># (finite strains)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;infinitesimal&#39;</span><span class="p">:</span>
+                    <span class="n">strain_old_mf</span> <span class="o">=</span> \
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_state_old</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)][</span><span class="s1">&#39;strain_mf&#39;</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">def_gradient_old_mf</span> <span class="o">=</span> \
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_def_gradient_old_mf</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span>
+                <span class="c1"># Get material cluster infinitesimal strain tensor</span>
+                <span class="c1"># (infinitesimal strains) or deformation gradient tensor</span>
+                <span class="c1"># (finite strains) from global vector of clusters strains</span>
+                <span class="n">strain_mf</span> <span class="o">=</span> <span class="n">global_strain_mf</span><span class="p">[</span><span class="n">i_init</span><span class="p">:</span><span class="n">i_end</span><span class="p">]</span>
+                <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                <span class="c1"># Compute material cluster incremental infinitesimal strain</span>
+                <span class="c1"># tensor (infinitesimal strains) or deformation gradient tensor</span>
+                <span class="c1"># (finite strains)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;infinitesimal&#39;</span><span class="p">:</span>
+                    <span class="n">inc_strain_mf</span> <span class="o">=</span> <span class="n">strain_mf</span> <span class="o">-</span> <span class="n">strain_old_mf</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Build last converged deformation gradient tensor</span>
+                    <span class="n">def_gradient_old</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_from_mf</span><span class="p">(</span>
+                        <span class="n">def_gradient_old_mf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">)</span>
+                    <span class="c1"># Build deformation gradient tensor</span>
+                    <span class="n">def_gradient</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_from_mf</span><span class="p">(</span>
+                        <span class="n">strain_mf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">)</span>
+                    <span class="c1"># Compute material cluster incremental deformation gradient</span>
+                    <span class="c1"># tensor</span>
+                    <span class="n">inc_def_gradient</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span>
+                        <span class="n">def_gradient</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">def_gradient_old</span><span class="p">))</span>
+                    <span class="c1"># Build material cluster incremental deformation gradient</span>
+                    <span class="c1"># tensor (matricial form)</span>
+                    <span class="n">inc_strain_mf</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_mf</span><span class="p">(</span><span class="n">inc_def_gradient</span><span class="p">,</span>
+                                                      <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">)</span>
+                <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                <span class="c1"># Store material cluster incremental strain (matricial form)</span>
+                <span class="n">clusters_inc_strain_mf</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span> <span class="o">=</span> \
+                    <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">inc_strain_mf</span><span class="p">)</span>
+                <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                <span class="c1"># Update material cluster strain range indexes</span>
+                <span class="n">i_init</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)</span>
+                <span class="n">i_end</span> <span class="o">=</span> <span class="n">i_init</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">clusters_inc_strain_mf</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="MaterialState.update_clusters_state"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.update_clusters_state">[docs]</a>    <span class="k">def</span> <span class="nf">update_clusters_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clusters_inc_strain_mf</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update clusters state variables and consistent tangent modulus.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        clusters_inc_strain_mf : dict</span>
+<span class="sd">            Incremental strain (item, numpy.ndarray) associated to each</span>
+<span class="sd">            material cluster (key, str), stored in matricial form.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        su_fail_state : dict</span>
+<span class="sd">            State update failure state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Initialize state update failure state</span>
+        <span class="n">su_fail_state</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;is_su_fail&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;mat_phase&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                         <span class="s1">&#39;cluster&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Initialize clusters deformation gradient</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;finite&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_def_gradient_mf</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># Initialize clusters state variables and material consistent tangent</span>
+        <span class="c1"># modulus</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_state</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_tangent_mf</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Loop over material phases</span>
+        <span class="k">for</span> <span class="n">mat_phase</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_material_phases</span><span class="p">:</span>
+            <span class="c1"># Get material phase constitutive model</span>
+            <span class="n">constitutive_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_material_phases_models</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">]</span>
+            <span class="c1"># Get material constitutive model source</span>
+            <span class="n">source</span> <span class="o">=</span> <span class="n">constitutive_model</span><span class="o">.</span><span class="n">get_source</span><span class="p">()</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Loop over material phase clusters</span>
+            <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phase_clusters</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">]:</span>
+                <span class="c1"># Get material cluster incremental strain tensor (matricial</span>
+                <span class="c1"># form)</span>
+                <span class="n">inc_strain_mf</span> <span class="o">=</span> <span class="n">clusters_inc_strain_mf</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;infinitesimal&#39;</span><span class="p">:</span>
+                    <span class="c1"># Infinitesimal strain tensor (symmetric)</span>
+                    <span class="n">comp_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_sym</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Deformation gradient tensor (nonsymmetric)</span>
+                    <span class="n">comp_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span>
+                <span class="n">inc_strain</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_from_mf</span><span class="p">(</span><span class="n">inc_strain_mf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span>
+                                                    <span class="n">comp_order</span><span class="p">)</span>
+                <span class="c1"># Get material cluster last converged state variables</span>
+                <span class="n">state_variables_old</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_state_old</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span>
+                <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                <span class="c1"># Get material cluster last converged deformation gradient</span>
+                <span class="c1"># tensor</span>
+                <span class="n">def_gradient_old_mf</span> <span class="o">=</span> \
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_def_gradient_old_mf</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span>
+                <span class="n">def_gradient_old</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_from_mf</span><span class="p">(</span>
+                    <span class="n">def_gradient_old_mf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span><span class="p">)</span>
+                <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                <span class="c1"># Perform state update through the suitable material interface</span>
+                <span class="k">if</span> <span class="n">source</span> <span class="o">==</span> <span class="s1">&#39;crate&#39;</span><span class="p">:</span>
+                    <span class="n">state_variables</span><span class="p">,</span> <span class="n">consistent_tangent_mf</span> <span class="o">=</span> \
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_material_su_interface</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span><span class="p">,</span>
+                            <span class="n">constitutive_model</span><span class="p">,</span>
+                            <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">def_gradient_old</span><span class="p">),</span>
+                            <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">inc_strain</span><span class="p">),</span>
+                            <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">state_variables_old</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">state_variables</span><span class="p">,</span> <span class="n">consistent_tangent_mf</span> <span class="o">=</span> \
+                        <span class="n">constitutive_model</span><span class="o">.</span><span class="n">state_update</span><span class="p">(</span>
+                            <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">inc_strain</span><span class="p">),</span>
+                            <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">state_variables_old</span><span class="p">),</span>
+                            <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">def_gradient_old</span><span class="p">))</span>
+                <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                <span class="c1"># Check state update failure status</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">state_variables</span><span class="p">[</span><span class="s1">&#39;is_su_fail&#39;</span><span class="p">]:</span>
+                        <span class="c1"># Update state update failure status</span>
+                        <span class="n">su_fail_state</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;is_su_fail&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                                         <span class="s1">&#39;mat_phase&#39;</span><span class="p">:</span> <span class="n">mat_phase</span><span class="p">,</span>
+                                         <span class="s1">&#39;cluster&#39;</span><span class="p">:</span> <span class="n">cluster</span><span class="p">}</span>
+                        <span class="c1"># Return</span>
+                        <span class="k">return</span> <span class="n">su_fail_state</span>
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Material constitutive model state &#39;</span>
+                                       <span class="s1">&#39;variables must include the state &#39;</span>
+                                       <span class="s1">&#39;update failure flag &#39;</span>
+                                       <span class="s1">&#39;(</span><span class="se">\&#39;</span><span class="s1">is_su_fail</span><span class="se">\&#39;</span><span class="s1">: bool).&#39;</span><span class="p">)</span>
+                <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                <span class="c1"># Update cluster deformation gradient</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;finite&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_def_gradient_mf</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span> <span class="o">=</span> \
+                        <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_mf</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">inc_strain</span><span class="p">,</span>
+                                                    <span class="n">def_gradient_old</span><span class="p">),</span>
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span><span class="p">)</span>
+                <span class="c1"># Update cluster state variables and material consistent</span>
+                <span class="c1"># tangent modulus</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_state</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span> <span class="o">=</span> <span class="n">state_variables</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_tangent_mf</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span> <span class="o">=</span> <span class="n">consistent_tangent_mf</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">su_fail_state</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="MaterialState.update_state_homogenization"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.update_state_homogenization">[docs]</a>    <span class="k">def</span> <span class="nf">update_state_homogenization</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update homogenized strain and stress tensors.</span>
+
+<span class="sd">        *Infinitesimal strains*:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           \\boldsymbol{\\varepsilon}_{n + 1} =</span>
+<span class="sd">               \\sum_{I=1}^{n_{c}} f^{(I)}</span>
+<span class="sd">               \\boldsymbol{\\varepsilon}_{\\mu, n + 1}^{(I)}</span>
+
+<span class="sd">        where :math:`\\boldsymbol{\\varepsilon}` is the homogenized</span>
+<span class="sd">        infinitesimal strain tensor, :math:`f^{(I)}` is the :math:`I` th</span>
+<span class="sd">        material cluster volume fraction,</span>
+<span class="sd">        :math:`\\boldsymbol{\\varepsilon}_{\\mu}^{(I)}` is the :math:`I` th</span>
+<span class="sd">        material cluster infinitesimal strain tensor, :math:`n_{c}` is the</span>
+<span class="sd">        number of material clusters, and :math:`n+1` denotes the current</span>
+<span class="sd">        increment.</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           \\boldsymbol{\\sigma}_{n + 1} =</span>
+<span class="sd">               \\sum_{I=1}^{n_{c}} f^{(I)}</span>
+<span class="sd">               \\boldsymbol{\\sigma}_{\\mu, n + 1}^{(I)}</span>
+
+<span class="sd">        where :math:`\\boldsymbol{\\sigma}` is the homogenized Cauchy stress</span>
+<span class="sd">        tensor, :math:`f^{(I)}` is the :math:`I` th material cluster volume</span>
+<span class="sd">        fraction, :math:`\\boldsymbol{\\sigma}_{\\mu}^{(I)}` is the</span>
+<span class="sd">        :math:`I` th material cluster Cauchy stress tensor, :math:`n_{c}` is</span>
+<span class="sd">        the number of material clusters, and :math:`n+1` denotes the current</span>
+<span class="sd">        increment.</span>
+
+<span class="sd">        ----</span>
+
+<span class="sd">        *Finite strains*:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           \\boldsymbol{F}_{n + 1} =</span>
+<span class="sd">               \\sum_{I=1}^{n_{c}} f^{(I)}</span>
+<span class="sd">               \\boldsymbol{F}_{\\mu, n + 1}^{(I)}</span>
+
+<span class="sd">        where :math:`\\boldsymbol{F}` is the homogenized deformation gradient,</span>
+<span class="sd">        :math:`f^{(I)}` is the :math:`I` th material cluster volume fraction,</span>
+<span class="sd">        :math:`\\boldsymbol{F}_{\\mu}^{(I)}` is the :math:`I` th material</span>
+<span class="sd">        cluster deformation gradient, :math:`n_{c}` is the number of material</span>
+<span class="sd">        clusters, and :math:`n+1` denotes the current increment.</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           \\boldsymbol{P}_{n + 1} =</span>
+<span class="sd">               \\sum_{I=1}^{n_{c}} f^{(I)}</span>
+<span class="sd">               \\boldsymbol{P}_{\\mu, n + 1}^{(I)}</span>
+
+<span class="sd">        where :math:`\\boldsymbol{P}` is the homogenized first Piola-Kirchhoff</span>
+<span class="sd">        stress tensor, :math:`f^{(I)}` is the :math:`I` th material cluster</span>
+<span class="sd">        volume fraction, :math:`\\boldsymbol{P}_{\\mu}^{(I)}` is the</span>
+<span class="sd">        :math:`I` th material cluster first Piola-Kirchhoff stress tensor,</span>
+<span class="sd">        :math:`n_{c}` is the number of material clusters, and :math:`n+1`</span>
+<span class="sd">        denotes the current increment.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set strain components according to problem strain formulation</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;infinitesimal&#39;</span><span class="p">:</span>
+            <span class="n">comp_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_sym</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">comp_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Initialize incremental homogenized strain and stress tensors</span>
+        <span class="c1"># (matricial form)</span>
+        <span class="n">hom_strain_mf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">))</span>
+        <span class="n">hom_stress_mf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">))</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Loop over material phases</span>
+        <span class="k">for</span> <span class="n">mat_phase</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_material_phases</span><span class="p">:</span>
+            <span class="c1"># Loop over material phase clusters</span>
+            <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phase_clusters</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">]:</span>
+                <span class="c1"># Get material cluster strain tensor (matricial form)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;infinitesimal&#39;</span><span class="p">:</span>
+                    <span class="n">strain_mf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_state</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)][</span><span class="s1">&#39;strain_mf&#39;</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">strain_mf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_def_gradient_mf</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span>
+                <span class="c1"># Get material cluster stress tensor (matricial form)</span>
+                <span class="n">stress_mf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_state</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)][</span><span class="s1">&#39;stress_mf&#39;</span><span class="p">]</span>
+                <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                <span class="c1"># Add material cluster contribution to homogenized strain and</span>
+                <span class="c1"># stress tensors (matricial form)</span>
+                <span class="n">hom_strain_mf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                    <span class="n">hom_strain_mf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_vf</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span><span class="o">*</span><span class="n">strain_mf</span><span class="p">)</span>
+                <span class="n">hom_stress_mf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                    <span class="n">hom_stress_mf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_vf</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span><span class="o">*</span><span class="n">stress_mf</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Update homogenized strain and stress tensors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hom_strain_mf</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">hom_strain_mf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hom_stress_mf</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">hom_stress_mf</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># Set out-of-plane stress component (2D plane strain problem)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">comp_name</span> <span class="o">=</span> <span class="s1">&#39;stress_33&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unavailable plane problem type.&#39;</span><span class="p">)</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Initialize homogenized out-of-plane component</span>
+            <span class="n">oop_hom_comp</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="c1"># Loop over material phases</span>
+            <span class="k">for</span> <span class="n">mat_phase</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_material_phases</span><span class="p">:</span>
+                <span class="c1"># Loop over material phase clusters</span>
+                <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phase_clusters</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">]:</span>
+                    <span class="c1"># Add material cluster contribution to the homogenized</span>
+                    <span class="c1"># out-of-plane component component</span>
+                    <span class="n">oop_hom_comp</span> <span class="o">=</span> <span class="n">oop_hom_comp</span> \
+                        <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_vf</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span> \
+                        <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_state</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)][</span><span class="n">comp_name</span><span class="p">]</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Update out-of-plane stress or strain component</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;infinitesimal&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_hom_strain_33</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_hom_strain_33</span> <span class="o">=</span> <span class="mf">1.0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hom_stress_33</span> <span class="o">=</span> <span class="n">oop_hom_comp</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="MaterialState.update_converged_state"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.update_converged_state">[docs]</a>    <span class="k">def</span> <span class="nf">update_converged_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update last converged material state variables.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_def_gradient_old_mf</span> <span class="o">=</span> \
+            <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clusters_def_gradient_mf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_state_old</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clusters_state</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hom_strain_old_mf</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hom_strain_mf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hom_stress_old_mf</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hom_stress_mf</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="MaterialState.set_rewind_state_updated_clustering"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.set_rewind_state_updated_clustering">[docs]</a>    <span class="k">def</span> <span class="nf">set_rewind_state_updated_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span> <span class="n">clusters_vf</span><span class="p">,</span>
+                                            <span class="n">clusters_state</span><span class="p">,</span>
+                                            <span class="n">clusters_def_gradient_mf</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set rewind state variables according to updated clustering.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        phase_clusters : dict</span>
+<span class="sd">            Clusters labels (item, list[int]) associated to each material</span>
+<span class="sd">            phase (key, str).</span>
+<span class="sd">        clusters_vf : dict</span>
+<span class="sd">            Volume fraction (item, float) associated to each material cluster</span>
+<span class="sd">            (key, str).</span>
+<span class="sd">        clusters_state : dict</span>
+<span class="sd">            Material constitutive model state variables (item, dict) associated</span>
+<span class="sd">            to each material cluster (key, str).</span>
+<span class="sd">        clusters_def_gradient_mf : dict</span>
+<span class="sd">            Deformation gradient (item, numpy.darray (1d)) associated to each</span>
+<span class="sd">            material cluster (key, str), stored in matricial form.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_phase_clusters</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">phase_clusters</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_vf</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">clusters_vf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_state_old</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">clusters_state</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_def_gradient_old_mf</span> <span class="o">=</span> \
+            <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">clusters_def_gradient_mf</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="MaterialState.get_hom_strain_mf"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_hom_strain_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_hom_strain_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get homogenized strain tensor (matricial form).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        hom_strain_mf : numpy.ndarray (1d)</span>
+<span class="sd">            Homogenized strain tensor stored in matricial form.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hom_strain_mf</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="MaterialState.get_hom_stress_mf"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_hom_stress_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_hom_stress_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get homogenized stress tensor (matricial form).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        hom_stress_mf : numpy.ndarray (1d)</span>
+<span class="sd">            Homogenized stress tensor stored in matricial form.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hom_stress_mf</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="MaterialState.get_oop_hom_comp"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_oop_hom_comp">[docs]</a>    <span class="k">def</span> <span class="nf">get_oop_hom_comp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get homogenized strain or stress tensor out-of-plane component.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        oop_hom_comp : float</span>
+<span class="sd">            Homogenized strain or stress tensor out-of-plane component.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">oop_hom_comp</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hom_stress_33</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">oop_hom_comp</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hom_strain_33</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">oop_hom_comp</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">oop_hom_comp</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="MaterialState.get_inc_hom_strain_mf"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_inc_hom_strain_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_inc_hom_strain_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get incremental homogenized strain tensor (matricial form).</span>
+
+<span class="sd">        *Infinitesimal strains*:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           \\Delta \\boldsymbol{\\varepsilon}_{n + 1} =</span>
+<span class="sd">               \\boldsymbol{\\varepsilon}_{n + 1} -</span>
+<span class="sd">               \\boldsymbol{\\varepsilon}_{n}</span>
+
+<span class="sd">        where :math:`\\Delta \\boldsymbol{\\varepsilon}` is the incremental</span>
+<span class="sd">        homogenized infinitesimal strain tensor,</span>
+<span class="sd">        :math:`\\boldsymbol{\\varepsilon}` is the homogenized infinitesimal</span>
+<span class="sd">        strain tensor, :math:`n+1` denotes the current increment, and</span>
+<span class="sd">        :math:`n` denotes the last converged increment.</span>
+
+<span class="sd">        ----</span>
+
+<span class="sd">        *Finite strains*:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           (\\boldsymbol{F}_{\\Delta})_{n + 1} =</span>
+<span class="sd">               \\boldsymbol{F}_{n + 1}</span>
+<span class="sd">               (\\boldsymbol{F}_{n})^{-1}</span>
+
+<span class="sd">        where :math:`\\boldsymbol{F}_{\\Delta}` is the homogenized incremental</span>
+<span class="sd">        deformation gradient, :math:`\\boldsymbol{F}` is the homogenized</span>
+<span class="sd">        deformation gradient, :math:`n+1` denotes the current increment,</span>
+<span class="sd">        and :math:`n` denotes the last converged increment.</span>
+
+<span class="sd">        ----</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        inc_hom_strain_mf : numpy.ndarray (1d)</span>
+<span class="sd">            Incremental homogenized strain tensor stored in matricial form:</span>
+<span class="sd">            infinitesimal strain tensor (infinitesimal strains) or deformation</span>
+<span class="sd">            gradient (finite strains).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Compute incremental homogenized strain tensor</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;infinitesimal&#39;</span><span class="p">:</span>
+            <span class="c1"># Additive decomposition of infinitesimal strain tensor</span>
+            <span class="n">inc_hom_strain_mf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hom_strain_mf</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hom_strain_old_mf</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Build homogenized deformation gradient</span>
+            <span class="n">hom_strain</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_from_mf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hom_strain_mf</span><span class="p">,</span>
+                                                <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span>
+                                                <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span><span class="p">)</span>
+            <span class="n">hom_strain_old</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_from_mf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hom_strain_old_mf</span><span class="p">,</span>
+                                                    <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span>
+                                                    <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span><span class="p">)</span>
+            <span class="c1"># Multiplicative decomposition of deformation gradient</span>
+            <span class="n">inc_hom_strain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">hom_strain</span><span class="p">,</span>
+                                       <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">hom_strain_old</span><span class="p">))</span>
+            <span class="c1"># Get deformation gradient (matricial form)</span>
+            <span class="n">inc_hom_strain_mf</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_mf</span><span class="p">(</span><span class="n">inc_hom_strain</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span>
+                                                  <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">inc_hom_strain_mf</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="MaterialState.get_inc_hom_stress_mf"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_inc_hom_stress_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_inc_hom_stress_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get incremental homogenized stress tensor (matricial form).</span>
+
+<span class="sd">        *Infinitesimal strains*:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           \\Delta \\boldsymbol{\\sigma}_{n + 1} =</span>
+<span class="sd">               \\boldsymbol{\\sigma}_{n + 1} -</span>
+<span class="sd">               \\boldsymbol{\\sigma}_{n}</span>
+
+<span class="sd">        where :math:`\\Delta \\boldsymbol{\\sigma}` is the incremental</span>
+<span class="sd">        homogenized Cauchy stress tensor, :math:`\\boldsymbol{\\sigma}` is the</span>
+<span class="sd">        homogenized Cauchy stress tensor, :math:`n+1` denotes the current</span>
+<span class="sd">        increment, and :math:`n` denotes the last converged increment.</span>
+
+<span class="sd">        ----</span>
+
+<span class="sd">        *Finite strains*:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           \\Delta \\boldsymbol{P}_{n + 1} =</span>
+<span class="sd">               \\boldsymbol{P}_{n + 1} -</span>
+<span class="sd">               \\boldsymbol{P}_{n}</span>
+
+<span class="sd">        where :math:`\\Delta \\boldsymbol{P}` is the incremental homogenized</span>
+<span class="sd">        first Piola-Kirchhoff stress tensor, :math:`\\boldsymbol{P}` is the</span>
+<span class="sd">        homogenized first Piola-Kirchhoff stress tensor, :math:`n+1` denotes</span>
+<span class="sd">        the current increment, and :math:`n` denotes the last converged</span>
+<span class="sd">        increment.</span>
+
+<span class="sd">        ----</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        inc_hom_stress_mf : numpy.ndarray (1d)</span>
+<span class="sd">            Incremental homogenized stress tensor stored in matricial form:</span>
+<span class="sd">            Cauchy stress tensor (infinitesimal strains) or first</span>
+<span class="sd">            Piola-Kirchhoff stress tensor (finite strains).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Compute incremental homogenized stress tensor</span>
+        <span class="n">inc_hom_stress_mf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hom_stress_mf</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hom_stress_old_mf</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">inc_hom_stress_mf</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="MaterialState.get_hom_strain_old_mf"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_hom_strain_old_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_hom_strain_old_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get last converged homogenized strain tensor (matricial form).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        hom_strain_old_mf : numpy.ndarray (1d)</span>
+<span class="sd">            Last converged homogenized strain tensor stored in matricial form:</span>
+<span class="sd">            infinitesimal strain tensor (infinitesimal strains) or deformation</span>
+<span class="sd">            gradient (finite strains).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hom_strain_old_mf</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="MaterialState.get_hom_stress_old_mf"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_hom_stress_old_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_hom_stress_old_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get last converged homogenized stress tensor (matricial form).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        hom_stress_old_mf : numpy.ndarray (1d)</span>
+<span class="sd">            Last converged homogenized stress tensor stored in matricial form:</span>
+<span class="sd">            Cauchy stress tensor (infinitesimal strains) or first</span>
+<span class="sd">            Piola-Kirchhoff stress tensor (finite strains).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hom_stress_old_mf</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="MaterialState.get_material_phases"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_material_phases">[docs]</a>    <span class="k">def</span> <span class="nf">get_material_phases</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get RVE material phases.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        material_phases : list[str]</span>
+<span class="sd">            RVE material phases labels (str).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_material_phases</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="MaterialState.get_material_phases_properties"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_material_phases_properties">[docs]</a>    <span class="k">def</span> <span class="nf">get_material_phases_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get RVE material phases constitutive properties.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        material_phases_properties : dict</span>
+<span class="sd">            Constitutive model material properties (item, dict) associated to</span>
+<span class="sd">            each material phase (key, str).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_material_phases_properties</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="MaterialState.get_material_phases_models"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_material_phases_models">[docs]</a>    <span class="k">def</span> <span class="nf">get_material_phases_models</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get RVE material phases constitutive models.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        _material_phases_models : dict</span>
+<span class="sd">            Material constitutive model (item, ConstitutiveModel) associated to</span>
+<span class="sd">            each material phase (key, str).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_material_phases_models</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="MaterialState.get_material_phases_vf"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_material_phases_vf">[docs]</a>    <span class="k">def</span> <span class="nf">get_material_phases_vf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get RVE material phases volume fraction.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        material_phases_vf : dict</span>
+<span class="sd">            Volume fraction (item, float) associated to each material phase</span>
+<span class="sd">            (key, str).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_material_phases_vf</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="MaterialState.get_clusters_def_gradient_mf"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_clusters_def_gradient_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_clusters_def_gradient_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get deformation gradient of each material cluster.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        clusters_def_gradient_mf : dict</span>
+<span class="sd">            Deformation gradient (item, numpy.ndarray (1d)) associated to each</span>
+<span class="sd">            material cluster (key, str), stored in matricial form.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clusters_def_gradient_mf</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="MaterialState.get_clusters_def_gradient_old_mf"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_clusters_def_gradient_old_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_clusters_def_gradient_old_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get last converged deformation gradient of each material cluster.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        clusters_def_gradient_old_mf : dict</span>
+<span class="sd">            Last converged deformation gradient (item, numpy.ndarray (1d))</span>
+<span class="sd">            associated to each material cluster (key, str), stored in matricial</span>
+<span class="sd">            form.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clusters_def_gradient_old_mf</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="MaterialState.get_clusters_state"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_clusters_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_clusters_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get material state variables of each material cluster.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        clusters_state : dict</span>
+<span class="sd">            Material constitutive model state variables (item, dict) associated</span>
+<span class="sd">            to each material cluster (key, str).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clusters_state</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="MaterialState.get_clusters_state_old"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_clusters_state_old">[docs]</a>    <span class="k">def</span> <span class="nf">get_clusters_state_old</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get last converged material state variables of each mat. cluster.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        clusters_state_old : dict</span>
+<span class="sd">            Last converged material constitutive model state variables</span>
+<span class="sd">            (item, dict) associated to each material cluster (key, str).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clusters_state_old</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="MaterialState.get_clusters_tangent_mf"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.get_clusters_tangent_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_clusters_tangent_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get material consistent tangent modulus of each material cluster.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        clusters_tangent_mf : dict</span>
+<span class="sd">            Material consistent tangent modulus (item, numpy.ndarray)</span>
+<span class="sd">            associated to each material cluster (key, str), stored in matricial</span>
+<span class="sd">            form.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clusters_tangent_mf</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="MaterialState._material_su_interface"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState._material_su_interface">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_material_su_interface</span><span class="p">(</span><span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span>
+                               <span class="n">constitutive_model</span><span class="p">,</span> <span class="n">def_gradient_old</span><span class="p">,</span>
+                               <span class="n">inc_strain</span><span class="p">,</span> <span class="n">state_variables_old</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Material constitutive state update interface.</span>
+
+<span class="sd">        This material constitutive state update interface contemplates three</span>
+<span class="sd">        different families of constitutive models: (1) infinitesimal strains</span>
+<span class="sd">        constitutive models, (2) finite strains constitutive models, and</span>
+<span class="sd">        (3) isotropic hyperelastic-based finite strain constitutive models</span>
+<span class="sd">        whose finite strain extension (from infinitesimal counterpart) is</span>
+<span class="sd">        purely kinematical.</span>
+
+<span class="sd">        This interface is schematically illustrated in Figure 5.3 of</span>
+<span class="sd">        Ferreira (2022) [1]_, and the last family of constitutive models is</span>
+<span class="sd">        described on Appendix F.</span>
+
+<span class="sd">        .. [1] Ferreira, B.P. (2022). *Towards Data-driven Multi-scale</span>
+<span class="sd">               Optimization of Thermoplastic Blends: Microstructural</span>
+<span class="sd">               Generation, Constitutive Development and Clustering-based</span>
+<span class="sd">               Reduced-Order Modeling.* PhD Thesis, University of Porto</span>
+<span class="sd">               (see `here &lt;https://repositorio-aberto.up.pt/handle/10216/</span>
+<span class="sd">               146900?locale=en&gt;`_)</span>
+
+<span class="sd">        ----</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        strain_formulation: {&#39;infinitesimal&#39;, &#39;finite&#39;}</span>
+<span class="sd">            Problem strain formulation.</span>
+<span class="sd">        problem_type : int</span>
+<span class="sd">            Problem type: 2D plane strain (1), 2D plane stress (2),</span>
+<span class="sd">            2D axisymmetric (3) and 3D (4).</span>
+<span class="sd">        constitutive_model : ConstitutiveModel</span>
+<span class="sd">            Material constitutive model.</span>
+<span class="sd">        def_gradient_old : numpy.ndarray (2d)</span>
+<span class="sd">            Last converged deformation gradient.</span>
+<span class="sd">        inc_strain : numpy.ndarray (2d)</span>
+<span class="sd">            Incremental strain second-order tensor.</span>
+<span class="sd">        state_variables_old : dict</span>
+<span class="sd">            Last converged material constitutive model state variables.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        state_variables : dict</span>
+<span class="sd">            Material constitutive model state variables.</span>
+<span class="sd">        consistent_tangent_mf : ndarray</span>
+<span class="sd">            Material constitutive model material consistent tangent modulus in</span>
+<span class="sd">            matricial form.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get problem type parameters</span>
+        <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span> <span class="o">=</span> \
+            <span class="n">mop</span><span class="o">.</span><span class="n">get_problem_type_parameters</span><span class="p">(</span><span class="n">problem_type</span><span class="p">)</span>
+        <span class="c1"># Get material phase constitutive model strain type</span>
+        <span class="n">strain_type</span> <span class="o">=</span> <span class="n">constitutive_model</span><span class="o">.</span><span class="n">get_strain_type</span><span class="p">()</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Compute incremental spatial logarithmic strain tensor</span>
+        <span class="k">if</span> <span class="n">strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;finite&#39;</span> <span class="ow">and</span> <span class="n">strain_type</span> <span class="o">==</span> <span class="s1">&#39;finite-kinext&#39;</span><span class="p">:</span>
+            <span class="c1"># Save incremental deformation gradient</span>
+            <span class="n">inc_def_gradient</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">inc_strain</span><span class="p">)</span>
+            <span class="c1"># Compute deformation gradient</span>
+            <span class="n">def_gradient</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">inc_def_gradient</span><span class="p">,</span> <span class="n">def_gradient_old</span><span class="p">)</span>
+            <span class="c1"># Get last converged elastic spatial logarithmic strain tensor</span>
+            <span class="n">e_log_strain_old_mf</span> <span class="o">=</span> <span class="n">state_variables_old</span><span class="p">[</span><span class="s1">&#39;e_strain_mf&#39;</span><span class="p">]</span>
+            <span class="n">e_log_strain_old</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_from_mf</span><span class="p">(</span><span class="n">e_log_strain_old_mf</span><span class="p">,</span>
+                                                      <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">)</span>
+            <span class="c1"># Compute incremental spatial logarithmic strain tensor</span>
+            <span class="n">inc_strain</span> <span class="o">=</span> <span class="n">MaterialState</span><span class="o">.</span><span class="n">compute_inc_log_strain</span><span class="p">(</span>
+                <span class="n">e_log_strain_old</span><span class="p">,</span> <span class="n">inc_def_gradient</span><span class="o">=</span><span class="n">inc_def_gradient</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Perform state update and compute material consistent tangent modulus</span>
+        <span class="n">state_variables</span><span class="p">,</span> <span class="n">consistent_tangent_mf</span> <span class="o">=</span> \
+            <span class="n">constitutive_model</span><span class="o">.</span><span class="n">state_update</span><span class="p">(</span><span class="n">inc_strain</span><span class="p">,</span> <span class="n">state_variables_old</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Compute Cauchy stress tensor and material consistent tangent modulus</span>
+        <span class="k">if</span> <span class="n">strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;finite&#39;</span> <span class="ow">and</span> <span class="n">strain_type</span> <span class="o">==</span> <span class="s1">&#39;finite-kinext&#39;</span><span class="p">:</span>
+            <span class="c1"># Get Kirchhoff stress tensor (matricial form)</span>
+            <span class="n">kirchhoff_stress_mf</span> <span class="o">=</span> <span class="n">state_variables</span><span class="p">[</span><span class="s1">&#39;stress_mf&#39;</span><span class="p">]</span>
+            <span class="c1"># Build Kirchhoff stress tensor</span>
+            <span class="n">kirchhoff_stress</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_from_mf</span><span class="p">(</span><span class="n">kirchhoff_stress_mf</span><span class="p">,</span>
+                                                      <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">)</span>
+            <span class="c1"># Compute first Piola-Kirchhoff stress tensor</span>
+            <span class="n">first_piola_stress</span> <span class="o">=</span> <span class="n">first_piola_from_kirchhoff</span><span class="p">(</span><span class="n">def_gradient</span><span class="p">,</span>
+                                                            <span class="n">kirchhoff_stress</span><span class="p">)</span>
+            <span class="c1"># Get first Piola-Kirchhoff stress tensor (matricial form)</span>
+            <span class="n">first_piola_stress_mf</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_mf</span><span class="p">(</span><span class="n">first_piola_stress</span><span class="p">,</span>
+                                                      <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_nsym</span><span class="p">)</span>
+            <span class="c1"># Get first Piola-Kirchhoff stress tensor out-of-plane component</span>
+            <span class="k">if</span> <span class="n">problem_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">first_piola_stress_33</span> <span class="o">=</span> <span class="n">state_variables</span><span class="p">[</span><span class="s1">&#39;stress_33&#39;</span><span class="p">]</span>
+            <span class="c1"># Update stress tensor</span>
+            <span class="n">state_variables</span><span class="p">[</span><span class="s1">&#39;stress_mf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">first_piola_stress_mf</span>
+            <span class="k">if</span> <span class="n">problem_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">state_variables</span><span class="p">[</span><span class="s1">&#39;stress_33&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">first_piola_stress_33</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Get last converged elastic spatial logarithmic strain tensor</span>
+            <span class="n">e_log_strain_old_mf</span> <span class="o">=</span> <span class="n">state_variables_old</span><span class="p">[</span><span class="s1">&#39;e_strain_mf&#39;</span><span class="p">]</span>
+            <span class="n">e_log_strain_old</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_from_mf</span><span class="p">(</span><span class="n">e_log_strain_old_mf</span><span class="p">,</span>
+                                                      <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">)</span>
+            <span class="c1"># Compute Cauchy stress tensor (matricial form)</span>
+            <span class="n">cauchy_stress</span> <span class="o">=</span> <span class="n">cauchy_from_kirchhoff</span><span class="p">(</span><span class="n">def_gradient</span><span class="p">,</span>
+                                                  <span class="n">kirchhoff_stress</span><span class="p">)</span>
+            <span class="c1"># Get infinitesimal strains consistent tangent modulus</span>
+            <span class="n">inf_consistent_tangent</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_from_mf</span><span class="p">(</span>
+                <span class="n">consistent_tangent_mf</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">)</span>
+            <span class="c1"># Compute spatial consistent tangent modulus</span>
+            <span class="n">spatial_consistent_tangent</span> <span class="o">=</span> \
+                <span class="n">MaterialState</span><span class="o">.</span><span class="n">compute_spatial_tangent_modulus</span><span class="p">(</span>
+                    <span class="n">e_log_strain_old</span><span class="p">,</span> <span class="n">def_gradient_old</span><span class="p">,</span> <span class="n">inc_def_gradient</span><span class="p">,</span>
+                    <span class="n">cauchy_stress</span><span class="p">,</span> <span class="n">inf_consistent_tangent</span><span class="p">)</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Compute material consistent tangent modulus (matricial form)</span>
+            <span class="n">material_consistent_tangent</span> <span class="o">=</span> \
+                <span class="n">material_from_spatial_tangent_modulus</span><span class="p">(</span>
+                    <span class="n">spatial_consistent_tangent</span><span class="p">,</span> <span class="n">def_gradient</span><span class="p">)</span>
+            <span class="n">consistent_tangent_mf</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_mf</span><span class="p">(</span>
+                <span class="n">material_consistent_tangent</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_nsym</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">state_variables</span><span class="p">,</span> <span class="n">consistent_tangent_mf</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="MaterialState.compute_inc_log_strain"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.compute_inc_log_strain">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">compute_inc_log_strain</span><span class="p">(</span><span class="n">e_log_strain_old</span><span class="p">,</span> <span class="n">inc_def_gradient</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute incremental spatial logarithmic strain.</span>
+
+<span class="sd">        *Incremental spatial logarithmic strain*:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           \\Delta \\boldsymbol{\\varepsilon}_{n + 1} =</span>
+<span class="sd">               \\boldsymbol{\\varepsilon}_{n + 1}^{e, \\, \\text{trial}} -</span>
+<span class="sd">               \\boldsymbol{\\varepsilon}_{n}^{e}</span>
+
+<span class="sd">        where :math:`\\Delta \\boldsymbol{\\varepsilon}` is the incremental</span>
+<span class="sd">        spatial logarithmic strain tensor,</span>
+<span class="sd">        :math:`\\boldsymbol{\\varepsilon}^{e, \\, \\text{trial}}` is the</span>
+<span class="sd">        elastic trial spatial logarithmic strain tensor,</span>
+<span class="sd">        :math:`\\boldsymbol{\\varepsilon}^{e}` is the elastic spatial</span>
+<span class="sd">        logarithmic strain tensor, :math:`n+1` denotes</span>
+<span class="sd">        the current increment, and :math:`n` denotes the last converged</span>
+<span class="sd">        increment.</span>
+
+<span class="sd">        ----</span>
+
+<span class="sd">        *Elastic trial left Cauchy-Green strain tensor*:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           \\boldsymbol{\\varepsilon}_{n + 1}^{e, \\, \\text{trial}} =</span>
+<span class="sd">               \\dfrac{1}{2} \\ln ( \\boldsymbol{B}^{e, \\,</span>
+<span class="sd">               \\text{trial}}_{n+1} )</span>
+<span class="sd">               = \\dfrac{1}{2} \\ln \\Big( (\\boldsymbol{F}_{\\Delta})_{n+1}</span>
+<span class="sd">               \\boldsymbol{B}^{e}_{n} (\\boldsymbol{F}_{\\Delta})_{n+1}^{T}</span>
+<span class="sd">               \\Big)</span>
+
+<span class="sd">        where :math:`\\boldsymbol{\\varepsilon}^{e, \\, \\text{trial}}` is the</span>
+<span class="sd">        elastic trial spatial logarithmic strain tensor,</span>
+<span class="sd">        :math:`\\boldsymbol{B}^{e, \\, \\text{trial}}` is the elastic trial</span>
+<span class="sd">        left Cauchy-Green strain tensor,</span>
+<span class="sd">        :math:`\\boldsymbol{F}_{\\Delta}` is the incremental deformation</span>
+<span class="sd">        gradient, :math:`\\boldsymbol{B}^{e}` is the elastic left Cauchy-Green</span>
+<span class="sd">        strain tensor, :math:`n+1` denotes the current increment, and :math:`n`</span>
+<span class="sd">        denotes the last converged increment.</span>
+
+<span class="sd">        The definition of the elastic trial spatial logarithmic strain tensor</span>
+<span class="sd">        can be found in Appendix F.4 of Ferreira (2022) [#]_ (see Equations</span>
+<span class="sd">        (F.14) and (F.15)).</span>
+
+<span class="sd">        .. [#] Ferreira, B.P. (2022). *Towards Data-driven Multi-scale</span>
+<span class="sd">               Optimization of Thermoplastic Blends: Microstructural</span>
+<span class="sd">               Generation, Constitutive Development and Clustering-based</span>
+<span class="sd">               Reduced-Order Modeling.* PhD Thesis, University of Porto</span>
+<span class="sd">               (see `here &lt;https://repositorio-aberto.up.pt/handle/10216/</span>
+<span class="sd">               146900?locale=en&gt;`_)</span>
+
+<span class="sd">        ----</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        e_log_strain_old : numpy.ndarray (2d)</span>
+<span class="sd">            Last converged elastic spatial logarithmic strain tensor.</span>
+<span class="sd">        inc_def_gradient : numpy.ndarray (2d)</span>
+<span class="sd">            Incremental deformation gradient.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        inc_log_strain : numpy.ndarray (2d)</span>
+<span class="sd">            Incremental spatial logarithmic strain.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Compute last converged elastic left Cauchy-Green strain tensor</span>
+        <span class="n">e_cauchy_green_old</span> <span class="o">=</span> <span class="n">top</span><span class="o">.</span><span class="n">isotropic_tensor</span><span class="p">(</span><span class="s1">&#39;exp&#39;</span><span class="p">,</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">e_log_strain_old</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Compute elastic trial left Cauchy-Green strain tensor</span>
+        <span class="n">e_trial_cauchy_green</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span>
+            <span class="n">inc_def_gradient</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">e_cauchy_green_old</span><span class="p">,</span>
+                                        <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">inc_def_gradient</span><span class="p">)))</span>
+        <span class="c1"># Compute elastic trial spatial logarithmic strain</span>
+        <span class="n">e_trial_log_strain</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">top</span><span class="o">.</span><span class="n">isotropic_tensor</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">,</span>
+                                                      <span class="n">e_trial_cauchy_green</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Compute incremental spatial logarithmic strain</span>
+        <span class="n">inc_log_strain</span> <span class="o">=</span> <span class="n">e_trial_log_strain</span> <span class="o">-</span> <span class="n">e_log_strain_old</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">inc_log_strain</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="MaterialState.compute_spatial_tangent_modulus"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.compute_spatial_tangent_modulus">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">compute_spatial_tangent_modulus</span><span class="p">(</span><span class="n">e_log_strain_old</span><span class="p">,</span> <span class="n">def_gradient_old</span><span class="p">,</span>
+                                        <span class="n">inc_def_gradient</span><span class="p">,</span> <span class="n">cauchy_stress</span><span class="p">,</span>
+                                        <span class="n">inf_consistent_tangent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute finite strain spatial consistent tangent modulus.</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           \\mathsf{a}_{ijkl} = \\dfrac{1}{2 \\det (\\boldsymbol{F})} \\,</span>
+<span class="sd">                                \\left[ \\mathsf{D} : \\mathsf{L} : \\mathsf{B}</span>
+<span class="sd">                                \\right]_{ijkl} - \\sigma_{il} \\delta_{jk}</span>
+
+<span class="sd">        where :math:`\\mathbf{\\mathsf{a}}` is the spatial consistent tangent</span>
+<span class="sd">        modulus, :math:`\\mathbf{\\mathsf{D}}` is the derivative of the</span>
+<span class="sd">        Kirchhoff stress tensor with respect to the spatial logarithmic strain</span>
+<span class="sd">        tensor, :math:`\\mathbf{\\mathsf{L}}` is the derivative of the tensor</span>
+<span class="sd">        logarithm function evaluated at the elastic trial left Cauchy-Green</span>
+<span class="sd">        strain tensor, :math:`\\mathbf{\\mathsf{B}}` is computed from the</span>
+<span class="sd">        elastic trial left Cauchy-Green strain tensor components,</span>
+<span class="sd">        :math:`\\boldsymbol{\\sigma}` is the Cauchy stress tensor, and</span>
+<span class="sd">        :math:`\\delta_{ij}` is the Kronecker delta.</span>
+
+<span class="sd">        The detailed definition of the finite strain spatial consistent tangent</span>
+<span class="sd">        modulus of isotropic hyperelastic-based finite strain elastoplastic</span>
+<span class="sd">        constitutive models whose finite strain formalism is purely kinematical</span>
+<span class="sd">        can be found in Appendix F.4 of Ferreira (2022) [#]_ (see Equation</span>
+<span class="sd">        (F.18)).</span>
+
+<span class="sd">        .. [#] Ferreira, B.P. (2022). *Towards Data-driven Multi-scale</span>
+<span class="sd">               Optimization of Thermoplastic Blends: Microstructural</span>
+<span class="sd">               Generation, Constitutive Development and Clustering-based</span>
+<span class="sd">               Reduced-Order Modeling.* PhD Thesis, University of Porto</span>
+<span class="sd">               (see `here &lt;https://repositorio-aberto.up.pt/handle/10216/</span>
+<span class="sd">               146900?locale=en&gt;`_)</span>
+
+<span class="sd">        ----</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        e_log_strain_old : numpy.ndarray (2d)</span>
+<span class="sd">            Last converged elastic spatial logarithmic strain tensor.</span>
+<span class="sd">        def_gradient_old : numpy.ndarray (2d)</span>
+<span class="sd">            Last converged deformation gradient.</span>
+<span class="sd">        inc_def_gradient : numpy.ndarray (2d)</span>
+<span class="sd">            Incremental deformation gradient.</span>
+<span class="sd">        cauchy_stress : numpy.ndarray (2d)</span>
+<span class="sd">            Cauchy stress tensor.</span>
+<span class="sd">        inf_consistent_tangent : numpy.ndarray (4d)</span>
+<span class="sd">            Infinitesimal consistent tangent modulus.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        spatial_consistent_tangent : numpy.ndarray (4d)</span>
+<span class="sd">            Spatial consistent tangent modulus.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get problem number of spatial dimensions</span>
+        <span class="n">n_dim</span> <span class="o">=</span> <span class="n">inc_def_gradient</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Compute deformation gradient</span>
+        <span class="n">def_gradient</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">inc_def_gradient</span><span class="p">,</span> <span class="n">def_gradient_old</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Compute last converged elastic left Cauchy-Green strain tensor</span>
+        <span class="n">e_cauchy_green_old</span> <span class="o">=</span> <span class="n">top</span><span class="o">.</span><span class="n">isotropic_tensor</span><span class="p">(</span><span class="s1">&#39;exp&#39;</span><span class="p">,</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">e_log_strain_old</span><span class="p">)</span>
+        <span class="c1"># Compute elastic trial left Cauchy-Green strain tensor</span>
+        <span class="n">e_trial_cauchy_green</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span>
+            <span class="n">inc_def_gradient</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">e_cauchy_green_old</span><span class="p">,</span>
+                                        <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">inc_def_gradient</span><span class="p">)))</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Initialize Cauchy-Green-related fourth-order tensor</span>
+        <span class="n">fo_cauchy_green</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="p">(</span><span class="n">n_dim</span><span class="p">,))</span>
+        <span class="c1"># Compute Cauchy-Green-related fourth-order tensor</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">it</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_dim</span><span class="p">),</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+            <span class="n">fo_cauchy_green</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="n">top</span><span class="o">.</span><span class="n">dd</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span><span class="o">*</span><span class="n">e_trial_cauchy_green</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span> \
+                <span class="o">+</span> <span class="n">top</span><span class="o">.</span><span class="n">dd</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span><span class="o">*</span><span class="n">e_trial_cauchy_green</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Compute derivative of tensor logarithm evaluated at elastic trial</span>
+        <span class="c1"># left Cauchy-Green strain tensor</span>
+        <span class="n">fo_log_derivative</span> <span class="o">=</span> \
+            <span class="n">top</span><span class="o">.</span><span class="n">derivative_isotropic_tensor</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">e_trial_cauchy_green</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Initialize spatial consistent tangent modulus</span>
+        <span class="n">spatial_consistent_tangent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="p">(</span><span class="n">n_dim</span><span class="p">,))</span>
+        <span class="c1"># Compute spatial consistent tangent modulus</span>
+        <span class="n">spatial_consistent_tangent</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">def_gradient</span><span class="p">)))</span> \
+            <span class="o">*</span> <span class="p">(</span><span class="n">top</span><span class="o">.</span><span class="n">ddot44_1</span><span class="p">(</span><span class="n">inf_consistent_tangent</span><span class="p">,</span>
+                            <span class="n">top</span><span class="o">.</span><span class="n">ddot44_1</span><span class="p">(</span><span class="n">fo_log_derivative</span><span class="p">,</span> <span class="n">fo_cauchy_green</span><span class="p">)))</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">it</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_dim</span><span class="p">),</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+            <span class="n">spatial_consistent_tangent</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span> <span class="o">+=</span> \
+                <span class="o">-</span><span class="mf">1.0</span><span class="o">*</span><span class="n">cauchy_stress</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span><span class="o">*</span><span class="n">top</span><span class="o">.</span><span class="n">dd</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">spatial_consistent_tangent</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="MaterialState.clustering_adaptivity_update"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readinputdata.MaterialState.html#crate.ioput.readinputdata.MaterialState.clustering_adaptivity_update">[docs]</a>    <span class="k">def</span> <span class="nf">clustering_adaptivity_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span> <span class="n">clusters_vf</span><span class="p">,</span>
+                                     <span class="n">adaptive_clustering_map</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update cluster variables according to clustering adaptivity step.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        phase_clusters : dict</span>
+<span class="sd">            Clusters labels (item, list[int]) associated to each material</span>
+<span class="sd">            phase (key, str).</span>
+<span class="sd">        clusters_vf : dict</span>
+<span class="sd">            Volume fraction (item, float) associated to each material cluster</span>
+<span class="sd">            (key, str).</span>
+<span class="sd">        adaptive_clustering_map : dict</span>
+<span class="sd">            Adaptive clustering map (item, dict with list of new cluster labels</span>
+<span class="sd">            (item, list[int]) resulting from the refinement of each target</span>
+<span class="sd">            cluster (key, str)) for each material phase (key, str).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Update CRVE material state clusters labels and volume fraction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_phase_clusters</span><span class="p">(</span><span class="n">phase_clusters</span><span class="p">,</span> <span class="n">clusters_vf</span><span class="p">)</span>
+        <span class="c1"># Group cluster-related dictionaries</span>
+        <span class="n">cluster_dicts</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_clusters_def_gradient_mf</span><span class="p">,</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_def_gradient_old_mf</span><span class="p">,</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_state_old</span><span class="p">,</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_tangent_mf</span><span class="p">]</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Loop over adaptive material phases</span>
+        <span class="k">for</span> <span class="n">mat_phase</span> <span class="ow">in</span> <span class="n">adaptive_clustering_map</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="c1"># Loop over material phase target clusters</span>
+            <span class="k">for</span> <span class="n">target_cluster</span> <span class="ow">in</span> <span class="n">adaptive_clustering_map</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="c1"># Get list of target&#39;s child clusters</span>
+                <span class="n">child_clusters</span> <span class="o">=</span> \
+                    <span class="n">adaptive_clustering_map</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">][</span><span class="n">target_cluster</span><span class="p">]</span>
+                <span class="c1"># Loop over cluster-keyd dictionaries</span>
+                <span class="k">for</span> <span class="n">cluster_dict</span> <span class="ow">in</span> <span class="n">cluster_dicts</span><span class="p">:</span>
+                    <span class="c1"># Loop over child clusters and build their items</span>
+                    <span class="k">for</span> <span class="n">child_cluster</span> <span class="ow">in</span> <span class="n">child_clusters</span><span class="p">:</span>
+                        <span class="n">cluster_dict</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">child_cluster</span><span class="p">)]</span> <span class="o">=</span> \
+                            <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">cluster_dict</span><span class="p">[</span><span class="n">target_cluster</span><span class="p">])</span>
+                    <span class="c1"># Remove target cluster item</span>
+                    <span class="n">cluster_dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">target_cluster</span><span class="p">)</span></div></div>
+<span class="c1">#</span>
+<span class="c1">#                                        Available material constitutive models</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="get_available_material_models"><a class="viewcode-back" href="../../_autosummary/crate.ioput.readprocedures.get_available_material_models.html#crate.ioput.readinputdata.get_available_material_models">[docs]</a><span class="k">def</span> <span class="nf">get_available_material_models</span><span class="p">(</span><span class="n">model_source</span><span class="o">=</span><span class="s1">&#39;crate&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get available material constitutive models.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model_source : {&#39;crate&#39;,}, default=&#39;crate&#39;</span>
+<span class="sd">        Material constitutive model source.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    available_mat_models : list[str]</span>
+<span class="sd">        Available material constitutive models.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Set the available material constitutive models from a given source</span>
+    <span class="k">if</span> <span class="n">model_source</span> <span class="o">==</span> <span class="s1">&#39;crate&#39;</span><span class="p">:</span>
+        <span class="c1"># CRATE material constitutive models</span>
+        <span class="n">available_mat_models</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;elastic&#39;</span><span class="p">,</span> <span class="s1">&#39;von_mises&#39;</span><span class="p">,</span> <span class="s1">&#39;stvenant_kirchhoff&#39;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown material constitutive model source.&#39;</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">available_mat_models</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

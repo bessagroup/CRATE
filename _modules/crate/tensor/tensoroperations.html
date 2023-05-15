@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>crate.tensor.tensoroperations &mdash; crate 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            crate
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/crate.html">Code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">crate</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">crate.tensor.tensoroperations</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for crate.tensor.tensoroperations</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Algebraic tensorial operations and standard tensorial operators.</span>
+
+<span class="sd">This module is essentially a toolkit containing the definition of several</span>
+<span class="sd">standard tensorial operators (e.g., Kronecker delta, second- and fourth-order</span>
+<span class="sd">identity tensors, rotation tensor) and tensorial operations (e.g., tensorial</span>
+<span class="sd">product, tensorial contraction, spectral decomposition) arising in</span>
+<span class="sd">computational mechanics.</span>
+
+<span class="sd">Functions</span>
+<span class="sd">---------</span>
+<span class="sd">dyad11</span>
+<span class="sd">    Dyadic product: :math:`i \\otimes j \\rightarrow ij`.</span>
+<span class="sd">dyad22_1</span>
+<span class="sd">    Dyadic product: :math:`ij \\otimes kl \\rightarrow ijkl`.</span>
+<span class="sd">dyad22_2</span>
+<span class="sd">    Dyadic product: :math:`ik \\otimes jl \\rightarrow ijkl`.</span>
+<span class="sd">dyad22_3</span>
+<span class="sd">    Dyadic product: :math:`il \\otimes jk \\rightarrow ijkl`.</span>
+<span class="sd">dot21_1</span>
+<span class="sd">    Single contraction: :math:`ij \\cdot j \\rightarrow i`.</span>
+<span class="sd">dot12_1</span>
+<span class="sd">    Single contraction: :math:`i \\cdot ij \\rightarrow j`.</span>
+<span class="sd">dot42_1</span>
+<span class="sd">    Single contraction: :math:`ijkm \\cdot lm \\rightarrow ijkl`.</span>
+<span class="sd">dot42_2</span>
+<span class="sd">    Single contraction: :math:`ipkl \\cdot jp \\rightarrow ijkl`.</span>
+<span class="sd">dot42_3</span>
+<span class="sd">    Single contraction: :math:`ijkm \\cdot ml \\rightarrow ijkl`.</span>
+<span class="sd">dot24_1</span>
+<span class="sd">    Single contraction: :math:`im \\cdot mjkl \\rightarrow ijkl`.</span>
+<span class="sd">dot24_2</span>
+<span class="sd">    Single contraction: :math:`jm \\cdot imkl \\rightarrow ijkl`.</span>
+<span class="sd">dot24_3</span>
+<span class="sd">    Single contraction: :math:`km \\cdot ijml \\rightarrow ijkl`.</span>
+<span class="sd">dot24_4</span>
+<span class="sd">    Single contraction: :math:`lm \\cdot ijkm \\rightarrow ijkl`.</span>
+<span class="sd">ddot22_1</span>
+<span class="sd">    Double contraction: :math:`ij : ij \\rightarrow \\text{scalar}`.</span>
+<span class="sd">ddot42_1</span>
+<span class="sd">    Double contraction: :math:`ijkl : kl \\rightarrow ij`.</span>
+<span class="sd">ddot44_1</span>
+<span class="sd">    Double contraction: :math:`ijmn : mnkl \\rightarrow ijkl`.</span>
+<span class="sd">dd</span>
+<span class="sd">    Kronecker delta function.</span>
+<span class="sd">get_id_operators</span>
+<span class="sd">    Set common second- and fourth-order identity operators.</span>
+<span class="sd">spectral_decomposition</span>
+<span class="sd">    Perform spectral decomposition of symmetric second-order tensor.</span>
+<span class="sd">isotropic_tensor</span>
+<span class="sd">    Isotropic symmetric tensor-valued function of symmetric tensor.</span>
+<span class="sd">derivative_isotropic_tensor</span>
+<span class="sd">    Derivative of isotropic tensor-valued function of symmetric tensor.</span>
+<span class="sd">diso_scalars</span>
+<span class="sd">    Auxiliar scalars of derivative of isotropic tensor-valued function.</span>
+<span class="sd">rotate_tensor</span>
+<span class="sd">    Rotation of :math:`n`-dimensional tensor.</span>
+<span class="sd">rotation_tensor_from_euler_angles</span>
+<span class="sd">    Set rotation tensor from Euler angles (Bunge convention).</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#                                                                       Modules</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1"># Standard</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">itertools</span> <span class="k">as</span> <span class="nn">it</span>
+<span class="c1"># Third-party</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="c1">#</span>
+<span class="c1">#                                                          Authorship &amp; Credits</span>
+<span class="c1"># =============================================================================</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Bernardo Ferreira (bernardo_ferreira@brown.edu)&#39;</span>
+<span class="n">__credits__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Bernardo Ferreira&#39;</span><span class="p">,</span> <span class="p">]</span>
+<span class="n">__status__</span> <span class="o">=</span> <span class="s1">&#39;Stable&#39;</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#</span>
+<span class="c1">#                                                          Tensorial operations</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1"># Tensorial products</span>
+<span class="n">dyad11</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a1</span><span class="p">,</span> <span class="n">b1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;i,j -&gt; ij&#39;</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">b1</span><span class="p">)</span>
+<span class="n">dyad22_1</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a2</span><span class="p">,</span> <span class="n">b2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ij,kl -&gt; ijkl&#39;</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">b2</span><span class="p">)</span>
+<span class="n">dyad22_2</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a2</span><span class="p">,</span> <span class="n">b2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ik,jl -&gt; ijkl&#39;</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">b2</span><span class="p">)</span>
+<span class="n">dyad22_3</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a2</span><span class="p">,</span> <span class="n">b2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;il,jk -&gt; ijkl&#39;</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">b2</span><span class="p">)</span>
+<span class="c1"># Tensorial single contractions</span>
+<span class="n">dot21_1</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a2</span><span class="p">,</span> <span class="n">b1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ij,j -&gt; i&#39;</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">b1</span><span class="p">)</span>
+<span class="n">dot12_1</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a1</span><span class="p">,</span> <span class="n">b2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;i,ij -&gt; j&#39;</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">b2</span><span class="p">)</span>
+<span class="n">dot42_1</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a4</span><span class="p">,</span> <span class="n">b2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ijkm,lm -&gt; ijkl&#39;</span><span class="p">,</span> <span class="n">a4</span><span class="p">,</span> <span class="n">b2</span><span class="p">)</span>
+<span class="n">dot42_2</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a4</span><span class="p">,</span> <span class="n">b2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ipkl,jp -&gt; ijkl&#39;</span><span class="p">,</span> <span class="n">a4</span><span class="p">,</span> <span class="n">b2</span><span class="p">)</span>
+<span class="n">dot42_3</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a4</span><span class="p">,</span> <span class="n">b2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ijkm,ml -&gt; ijkl&#39;</span><span class="p">,</span> <span class="n">a4</span><span class="p">,</span> <span class="n">b2</span><span class="p">)</span>
+<span class="n">dot24_1</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a2</span><span class="p">,</span> <span class="n">b4</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;im,mjkl -&gt; ijkl&#39;</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">b4</span><span class="p">)</span>
+<span class="n">dot24_2</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a2</span><span class="p">,</span> <span class="n">b4</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;jm,imkl -&gt; ijkl&#39;</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">b4</span><span class="p">)</span>
+<span class="n">dot24_3</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a2</span><span class="p">,</span> <span class="n">b4</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;km,ijml -&gt; ijkl&#39;</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">b4</span><span class="p">)</span>
+<span class="n">dot24_4</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a2</span><span class="p">,</span> <span class="n">b4</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;lm,ijkm -&gt; ijkl&#39;</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">b4</span><span class="p">)</span>
+<span class="c1"># Tensorial double contractions</span>
+<span class="n">ddot22_1</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a2</span><span class="p">,</span> <span class="n">b2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ij,ij&#39;</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">b2</span><span class="p">)</span>
+<span class="n">ddot42_1</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a4</span><span class="p">,</span> <span class="n">b2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ijkl,kl -&gt; ij&#39;</span><span class="p">,</span> <span class="n">a4</span><span class="p">,</span> <span class="n">b2</span><span class="p">)</span>
+<span class="n">ddot44_1</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a4</span><span class="p">,</span> <span class="n">b4</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ijmn,mnkl -&gt; ijkl&#39;</span><span class="p">,</span> <span class="n">a4</span><span class="p">,</span> <span class="n">b4</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="c1">#                                                                     Operators</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="dd"><a class="viewcode-back" href="../../../_autosummary/crate.tensor.tensoroperations.dd.html#crate.tensor.tensoroperations.dd">[docs]</a><span class="k">def</span> <span class="nf">dd</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Kronecker delta function.</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">       \\delta_{ij} =</span>
+<span class="sd">           \\begin{cases}</span>
+<span class="sd">                   1, &amp;         \\text{if } i=j, \\\\</span>
+<span class="sd">                   0, &amp;         \\text{if } i\\neq j.</span>
+<span class="sd">           \\end{cases}</span>
+
+<span class="sd">    ----</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    i : int</span>
+<span class="sd">        First index.</span>
+<span class="sd">    j : int</span>
+<span class="sd">        Second index.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    value : int (0 or 1)</span>
+<span class="sd">        Kronecker delta.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">))</span> <span class="ow">or</span> \
+            <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;The Kronecker delta function only accepts two &#39;</span>
+                           <span class="o">+</span> <span class="s1">&#39;integer indexes as arguments.&#39;</span><span class="p">)</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="n">value</span></div>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="get_id_operators"><a class="viewcode-back" href="../../../_autosummary/crate.tensor.tensoroperations.get_id_operators.html#crate.tensor.tensoroperations.get_id_operators">[docs]</a><span class="k">def</span> <span class="nf">get_id_operators</span><span class="p">(</span><span class="n">n_dim</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set common second- and fourth-order identity operators.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_dim : int</span>
+<span class="sd">        Number of dimensions.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    soid : numpy.ndarray (2d)</span>
+<span class="sd">        Second-order identity tensor:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           I_{ij} = \\delta_{ij}</span>
+<span class="sd">    foid : numpy.ndarray (4d)</span>
+<span class="sd">        Fourth-order identity tensor:</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">           I_{ijkl} = \\delta_{ik}\\delta_{jl}</span>
+<span class="sd">    fotransp : numpy.ndarray (4d)</span>
+<span class="sd">        Fourth-order transposition tensor:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           I_{ijkl} = \\delta_{il}\\delta_{jk}</span>
+<span class="sd">    fosym : numpy.ndarray (4d)</span>
+<span class="sd">        Fourth-order symmetric projection tensor:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           I_{ij} = 0.5(\\delta_{ik}\\delta_{jl} +</span>
+<span class="sd">                    \\delta_{il}\\delta_{jk})</span>
+<span class="sd">    fodiagtrace : numpy.ndarray (4d)</span>
+<span class="sd">        Fourth-order &#39;diagonal trace&#39; tensor:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           I_{ijkl} = \\delta_{ij}\\delta_{kl}</span>
+<span class="sd">    fodevproj : numpy.ndarray (4d)</span>
+<span class="sd">        Fourth-order deviatoric projection tensor:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           I_{ijkl} = \\delta_{ik}\\delta_{jl}</span>
+<span class="sd">                      - \\dfrac{1}{3} \\delta_{ij}\\delta_{kl}</span>
+<span class="sd">    fodevprojsym : numpy.ndarray (4d)</span>
+<span class="sd">        Fourth-order deviatoric projection tensor (second-order symmetric</span>
+<span class="sd">        tensors):</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           I_{ijkl} = 0.5(\\delta_{ik}\\delta_{jl}</span>
+<span class="sd">                      + \\delta_{il}\\delta_{jk})</span>
+<span class="sd">                      - \\dfrac{1}{3} \\delta_{ij}\\delta_{kl}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Set second-order identity tensor</span>
+    <span class="n">soid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n_dim</span><span class="p">)</span>
+    <span class="c1"># Set fourth-order identity tensor and fourth-order transposition tensor</span>
+    <span class="n">foid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">))</span>
+    <span class="n">fotransp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_dim</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_dim</span><span class="p">):</span>
+            <span class="n">foid</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+            <span class="n">fotransp</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="c1"># Set fourth-order symmetric projection tensor</span>
+    <span class="n">fosym</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">foid</span> <span class="o">+</span> <span class="n">fotransp</span><span class="p">)</span>
+    <span class="c1"># Set fourth-order &#39;diagonal trace&#39; tensor</span>
+    <span class="n">fodiagtrace</span> <span class="o">=</span> <span class="n">dyad22_1</span><span class="p">(</span><span class="n">soid</span><span class="p">,</span> <span class="n">soid</span><span class="p">)</span>
+    <span class="c1"># Set fourth-order deviatoric projection tensor</span>
+    <span class="n">fodevproj</span> <span class="o">=</span> <span class="n">foid</span> <span class="o">-</span> <span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">3.0</span><span class="p">)</span><span class="o">*</span><span class="n">fodiagtrace</span>
+    <span class="c1"># Set fourth-order deviatoric projection tensor (second order symmetric</span>
+    <span class="c1"># tensors)</span>
+    <span class="n">fodevprojsym</span> <span class="o">=</span> <span class="n">fosym</span> <span class="o">-</span> <span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">3.0</span><span class="p">)</span><span class="o">*</span><span class="n">fodiagtrace</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">soid</span><span class="p">,</span> <span class="n">foid</span><span class="p">,</span> <span class="n">fotransp</span><span class="p">,</span> <span class="n">fosym</span><span class="p">,</span> <span class="n">fodiagtrace</span><span class="p">,</span> <span class="n">fodevproj</span><span class="p">,</span> <span class="n">fodevprojsym</span></div>
+<span class="c1">#</span>
+<span class="c1">#                                                        Spectral decomposition</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="spectral_decomposition"><a class="viewcode-back" href="../../../_autosummary/crate.tensor.tensoroperations.spectral_decomposition.html#crate.tensor.tensoroperations.spectral_decomposition">[docs]</a><span class="k">def</span> <span class="nf">spectral_decomposition</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform spectral decomposition of symmetric second-order tensor.</span>
+
+<span class="sd">    The computational implementation of the spectral decomposition follows the</span>
+<span class="sd">    Appendix A of Computational Methods for Plasticity [#]_.</span>
+
+<span class="sd">    .. [#] de Souza Neto, E. A., Peri, D., and Owen, D. R. J. (2008).</span>
+<span class="sd">           Computational Methods for Plasticity. John Wiley &amp; Sons, Ltd,</span>
+<span class="sd">           Chichester, UK (see `here &lt;https://onlinelibrary.wiley.com/doi/</span>
+<span class="sd">           book/10.1002/9780470694626&gt;`_)</span>
+
+<span class="sd">    ----</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : numpy.ndarray (2d)</span>
+<span class="sd">        Second-order tensor (square array) whose eigenvalues and eigenvectors</span>
+<span class="sd">        are computed.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    eigenvals : numpy.ndarray (1d)</span>
+<span class="sd">        Eigenvalues of second-order tensor sorted in descending order.</span>
+<span class="sd">    eigenvectors : numpy.ndarray (2d)</span>
+<span class="sd">        Eigenvectors of second-order tensor stored columnwise according with</span>
+<span class="sd">        eigenvalues.</span>
+<span class="sd">    eig_multiplicity : dict</span>
+<span class="sd">        Multiplicity (item, int) of the eigenvalue stored at given index</span>
+<span class="sd">        (key, str).</span>
+<span class="sd">    eigenprojections : list[tuple]</span>
+<span class="sd">        Eigenprojections of second-order tensor stored as tuples (item) as</span>
+<span class="sd">        (eigenvalue, eigenprojection) and sorted in descending order of</span>
+<span class="sd">        eigenvalues. Only available for 2x2 and 3x3 second-order tensors,</span>
+<span class="sd">        otherwise an empty list is returned.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check if second-order tensor is symmetric</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Second-order tensor must be symmetric to perform &#39;</span>
+                           <span class="s1">&#39;spectral decomposition.&#39;</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Perform spectral decomposition</span>
+    <span class="n">eigenvalues</span><span class="p">,</span> <span class="n">eigenvectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Get eigenvalues sorted in descending order</span>
+    <span class="n">sort_idxs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1"># Sort eigenvalues in descending order and eigenvectors accordingly</span>
+    <span class="n">eigenvalues</span> <span class="o">=</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="n">sort_idxs</span><span class="p">]</span>
+    <span class="n">eigenvectors</span> <span class="o">=</span> <span class="n">eigenvectors</span><span class="p">[:,</span> <span class="n">sort_idxs</span><span class="p">]</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Get square array dimensions</span>
+    <span class="n">n_dim</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># Set eigenvalue multiplicity tolerance</span>
+    <span class="n">eig_toler</span> <span class="o">=</span> <span class="mf">1e-10</span>
+    <span class="c1"># Compute eigenprojections</span>
+    <span class="k">if</span> <span class="n">n_dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="c1"># Set eigenvalue normalization factor</span>
+        <span class="n">eig_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">))</span>
+        <span class="c1"># Check eigenvalues multiplicity</span>
+        <span class="k">if</span> <span class="n">eig_norm</span> <span class="o">&lt;</span> <span class="n">eig_toler</span><span class="p">:</span>
+            <span class="n">eig_mult</span> <span class="o">=</span> <span class="p">[(</span><span class="n">eigenvalues</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">eig_toler</span><span class="p">,</span> <span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">eig_mult</span> <span class="o">=</span> \
+                <span class="p">[(</span><span class="n">eigenvalues</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="n">eig_norm</span> <span class="o">&lt;</span> <span class="n">eig_toler</span><span class="p">,</span> <span class="p">]</span>
+        <span class="c1"># Get distinct eigenvalues</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">eig_mult</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">n_eig_distinct</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="n">eig_multiplicity</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;0&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">n_eig_distinct</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">eig_multiplicity</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;0&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Initialize eigenprojections</span>
+        <span class="n">eigenprojections</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Compute eigenprojections according with eigenvalues multiplicity</span>
+        <span class="k">if</span> <span class="n">n_eig_distinct</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">eig</span> <span class="o">=</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">eigenprojections</span> <span class="o">=</span> <span class="p">[(</span><span class="n">eig</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n_dim</span><span class="p">)),</span> <span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Compute first principal invariant of second-order tensor</span>
+            <span class="n">pinv_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="c1"># Compute eigenprojections</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+                <span class="c1"># Get eigenvalue</span>
+                <span class="n">eig</span> <span class="o">=</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="c1"># Compute eigenprojection</span>
+                <span class="n">eigenprojections</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">eig</span><span class="p">,</span> <span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">eig</span> <span class="o">-</span> <span class="n">pinv_1</span><span class="p">))</span><span class="o">*</span><span class="p">(</span><span class="n">x</span>
+                                         <span class="o">+</span> <span class="p">(</span><span class="n">eig</span> <span class="o">-</span> <span class="n">pinv_1</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n_dim</span><span class="p">))))</span>
+    <span class="k">elif</span> <span class="n">n_dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="c1"># Set eigenvalue normalization factor</span>
+        <span class="n">eig_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">))</span>
+        <span class="c1"># Check eigenvalues multiplicity</span>
+        <span class="k">if</span> <span class="n">eig_norm</span> <span class="o">&lt;</span> <span class="n">eig_toler</span><span class="p">:</span>
+            <span class="n">eig_mult</span> <span class="o">=</span> <span class="p">[(</span><span class="n">eigenvalues</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">eig_toler</span><span class="p">,</span>
+                        <span class="p">(</span><span class="n">eigenvalues</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">eig_toler</span><span class="p">,</span>
+                        <span class="p">(</span><span class="n">eigenvalues</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">eig_toler</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">eig_mult</span> <span class="o">=</span> <span class="p">[(</span><span class="n">eigenvalues</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="n">eig_norm</span> <span class="o">&lt;</span> <span class="n">eig_toler</span><span class="p">,</span>
+                        <span class="p">(</span><span class="n">eigenvalues</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span><span class="o">/</span><span class="n">eig_norm</span> <span class="o">&lt;</span> <span class="n">eig_toler</span><span class="p">,</span>
+                        <span class="p">(</span><span class="n">eigenvalues</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span><span class="o">/</span><span class="n">eig_norm</span> <span class="o">&lt;</span> <span class="n">eig_toler</span><span class="p">]</span>
+        <span class="c1"># Get distinct eigenvalues</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">eig_mult</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">n_eig_distinct</span> <span class="o">=</span> <span class="mi">3</span>
+            <span class="n">eig_multiplicity</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;0&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+        <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">eig_mult</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">n_eig_distinct</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="k">if</span> <span class="n">eig_mult</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">eig_multiplicity</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;0&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+            <span class="k">elif</span> <span class="n">eig_mult</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">eig_multiplicity</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;0&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">eig_multiplicity</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;0&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">n_eig_distinct</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">eig_multiplicity</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;0&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Initialize eigenprojections</span>
+        <span class="n">eigenprojections</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Compute eigenprojections according with eigenvalues multiplicity</span>
+        <span class="k">if</span> <span class="n">n_eig_distinct</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">eig</span> <span class="o">=</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">eigenprojections</span> <span class="o">=</span> <span class="p">[(</span><span class="n">eig</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n_dim</span><span class="p">)),</span> <span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Compute principal invariants of second-order tensor</span>
+            <span class="n">pinv_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">pinv_3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="c1"># Compute eigenprojections</span>
+            <span class="k">if</span> <span class="n">n_eig_distinct</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="c1"># Compute first eigenprojection</span>
+                <span class="n">idxa</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span>
+                        <span class="n">eig_multiplicity</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">val</span> <span class="o">==</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">eig</span> <span class="o">=</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="n">idxa</span><span class="p">]</span>
+                <span class="n">eigenprojections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">(</span><span class="n">eig</span><span class="p">,</span> <span class="p">(</span><span class="n">eig</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">eig</span><span class="o">**</span><span class="mi">3</span> <span class="o">-</span> <span class="n">pinv_1</span><span class="o">*</span><span class="n">eig</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">pinv_3</span><span class="p">))</span><span class="o">*</span><span class="p">(</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">matrix_power</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">pinv_1</span> <span class="o">-</span> <span class="n">eig</span><span class="p">)</span><span class="o">*</span><span class="n">x</span>
+                        <span class="o">+</span> <span class="p">(</span><span class="n">pinv_3</span><span class="o">/</span><span class="n">eig</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n_dim</span><span class="p">))))</span>
+                <span class="c1"># Compute second eigenprojection</span>
+                <span class="n">idxc</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span>
+                        <span class="n">eig_multiplicity</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">val</span> <span class="o">==</span> <span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">eig</span> <span class="o">=</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="n">idxc</span><span class="p">]</span>
+                <span class="n">eigenprojections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">(</span><span class="n">eig</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n_dim</span><span class="p">)</span> <span class="o">-</span> <span class="n">eigenprojections</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Compute eigenprojections</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+                    <span class="c1"># Get eigenvalue</span>
+                    <span class="n">eig</span> <span class="o">=</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="c1"># Compute eigenprojection</span>
+                    <span class="n">eigenprojections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="p">(</span><span class="n">eig</span><span class="p">,</span> <span class="p">(</span><span class="n">eig</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">eig</span><span class="o">**</span><span class="mi">3</span> <span class="o">-</span> <span class="n">pinv_1</span><span class="o">*</span><span class="n">eig</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">pinv_3</span><span class="p">))</span><span class="o">*</span><span class="p">(</span>
+                            <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">matrix_power</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">pinv_1</span> <span class="o">-</span> <span class="n">eig</span><span class="p">)</span><span class="o">*</span><span class="n">x</span>
+                            <span class="o">+</span> <span class="p">(</span><span class="n">pinv_3</span><span class="o">/</span><span class="n">eig</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n_dim</span><span class="p">))))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">eigenprojections</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">eigenvalues</span><span class="p">,</span> <span class="n">eigenvectors</span><span class="p">,</span> <span class="n">eig_multiplicity</span><span class="p">,</span> <span class="n">eigenprojections</span></div>
+<span class="c1">#</span>
+<span class="c1">#                                             Isotropic tensor-valued functions</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="isotropic_tensor"><a class="viewcode-back" href="../../../_autosummary/crate.tensor.tensoroperations.isotropic_tensor.html#crate.tensor.tensoroperations.isotropic_tensor">[docs]</a><span class="k">def</span> <span class="nf">isotropic_tensor</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Isotropic symmetric tensor-valued function of symmetric tensor.</span>
+
+<span class="sd">    The computational implementation to compute the isotropic symmetric</span>
+<span class="sd">    tensor-valued function of a symmetric tensor follows the Appendix A of</span>
+<span class="sd">    Computational Methods for Plasticity [#]_.</span>
+
+<span class="sd">    .. [#] de Souza Neto, E. A., Peri, D., and Owen, D. R. J. (2008).</span>
+<span class="sd">           Computational Methods for Plasticity. John Wiley &amp; Sons, Ltd,</span>
+<span class="sd">           Chichester, UK (see `here &lt;https://onlinelibrary.wiley.com/doi/</span>
+<span class="sd">           book/10.1002/9780470694626&gt;`_)</span>
+
+<span class="sd">    ----</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mode : {&#39;log&#39;, &#39;exp&#39;}</span>
+<span class="sd">        Scalar function with single argument associated to the symmetric</span>
+<span class="sd">        tensor-valued function (particular classe of isotropic tensor-valued</span>
+<span class="sd">        functions).</span>
+<span class="sd">    x : numpy.ndarray (2d)</span>
+<span class="sd">        Second-order tensor at which isotropic tensor-valued function is</span>
+<span class="sd">        evaluated.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    y : numpy.ndarray (2d)</span>
+<span class="sd">        Isotropic symmetric tensor-valued function evaluated at x.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Set scalar function with single argument</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;log&#39;</span><span class="p">:</span>
+        <span class="n">fun</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;exp&#39;</span><span class="p">:</span>
+        <span class="n">fun</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown scalar function.&#39;</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Perform spectral decomposition</span>
+    <span class="n">eigenvalues</span><span class="p">,</span> <span class="n">eigenvectors</span><span class="p">,</span> <span class="n">eig_multiplicity</span><span class="p">,</span> <span class="n">eigenprojections</span> <span class="o">=</span> \
+        <span class="n">spectral_decomposition</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Initialize isotropic symmetric tensor-valued function</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="c1"># Compute isotropic symmetric tensor-valued function</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">eigenprojections</span><span class="p">)):</span>
+        <span class="n">y</span> <span class="o">+=</span> <span class="n">fun</span><span class="p">(</span><span class="n">eigenprojections</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">eigenprojections</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">y</span></div>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="derivative_isotropic_tensor"><a class="viewcode-back" href="../../../_autosummary/crate.tensor.tensoroperations.derivative_isotropic_tensor.html#crate.tensor.tensoroperations.derivative_isotropic_tensor">[docs]</a><span class="k">def</span> <span class="nf">derivative_isotropic_tensor</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Derivative of isotropic tensor-valued function of symmetric tensor.</span>
+
+<span class="sd">    The computational implementation to compute the derivative of an isotropic</span>
+<span class="sd">    tensor-valued function of a symmetric tensor follows the Appendix A of</span>
+<span class="sd">    Computational Methods for Plasticity [#]_.</span>
+
+<span class="sd">    .. [#] de Souza Neto, E. A., Peri, D., and Owen, D. R. J. (2008).</span>
+<span class="sd">           Computational Methods for Plasticity. John Wiley &amp; Sons, Ltd,</span>
+<span class="sd">           Chichester, UK (see `here &lt;https://onlinelibrary.wiley.com/doi/</span>
+<span class="sd">           book/10.1002/9780470694626&gt;`_)</span>
+
+<span class="sd">    ----</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mode : {&#39;log&#39;, &#39;exp&#39;}</span>
+<span class="sd">        Scalar function with single argument associated to the symmetric</span>
+<span class="sd">        tensor-valued function (particular classe of isotropic tensor-valued</span>
+<span class="sd">        functions).</span>
+<span class="sd">    x : numpy.ndarray (2d)</span>
+<span class="sd">        Second-order tensor at which isotropic tensor-valued function is</span>
+<span class="sd">        evaluated.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    y : numpy.ndarray (4d)</span>
+<span class="sd">        Derivative of isotropic symmetric tensor-valued function evaluated</span>
+<span class="sd">        at x.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get square array dimensions</span>
+    <span class="n">n_dim</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Set required second-order and fourth-order identity tensors</span>
+    <span class="n">soid</span><span class="p">,</span> <span class="n">foid</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">fosym</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_id_operators</span><span class="p">(</span><span class="n">n_dim</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Set scalar function with single argument and associated derivative</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;log&#39;</span><span class="p">:</span>
+        <span class="n">fun</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">fund</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">x</span>
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;exp&#39;</span><span class="p">:</span>
+        <span class="n">fun</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">fund</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown scalar function.&#39;</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Perform spectral decomposition</span>
+    <span class="n">eigenvalues</span><span class="p">,</span> <span class="n">eigenvectors</span><span class="p">,</span> <span class="n">eig_multiplicity</span><span class="p">,</span> <span class="n">eigenprojections</span> <span class="o">=</span> \
+        <span class="n">spectral_decomposition</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="c1"># Compute number of distinct eigenvalues</span>
+    <span class="n">n_eig_distinct</span> <span class="o">=</span> <span class="n">n_dim</span> <span class="o">-</span> \
+        <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([</span><span class="mi">1</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">eig_multiplicity</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">val</span> <span class="o">==</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Initialize derivative of isotropic symmetric tensor-valued function</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="c1"># Compute derivative of isotropic symmetric tensor-valued function</span>
+    <span class="k">if</span> <span class="n">n_eig_distinct</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">fund</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">fosym</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">n_dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># Set eigenvalues and eigenprojections</span>
+            <span class="n">eig1</span> <span class="o">=</span> <span class="n">eigenprojections</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">eigproj1</span> <span class="o">=</span> <span class="n">eigenprojections</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">eig2</span> <span class="o">=</span> <span class="n">eigenprojections</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">eigproj2</span> <span class="o">=</span> <span class="n">eigenprojections</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="c1"># Evaluate scalar function and derivative</span>
+            <span class="n">fun1</span> <span class="o">=</span> <span class="n">fun</span><span class="p">(</span><span class="n">eig1</span><span class="p">)</span>
+            <span class="n">fund1</span> <span class="o">=</span> <span class="n">fund</span><span class="p">(</span><span class="n">eig1</span><span class="p">)</span>
+            <span class="n">fun2</span> <span class="o">=</span> <span class="n">fun</span><span class="p">(</span><span class="n">eig2</span><span class="p">)</span>
+            <span class="n">fund2</span> <span class="o">=</span> <span class="n">fund</span><span class="p">(</span><span class="n">eig2</span><span class="p">)</span>
+            <span class="c1"># Compute derivative of isotropic symmetric tensor-valued function</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="p">((</span><span class="n">fun1</span> <span class="o">-</span> <span class="n">fun2</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">eig1</span> <span class="o">-</span> <span class="n">eig2</span><span class="p">))</span><span class="o">*</span><span class="p">(</span>
+                <span class="n">fosym</span> <span class="o">-</span> <span class="n">dyad22_1</span><span class="p">(</span><span class="n">eigproj1</span><span class="p">,</span> <span class="n">eigproj1</span><span class="p">)</span>
+                <span class="o">-</span> <span class="n">dyad22_1</span><span class="p">(</span><span class="n">eigproj2</span><span class="p">,</span> <span class="n">eigproj2</span><span class="p">))</span> \
+                <span class="o">+</span> <span class="n">fund1</span><span class="o">*</span><span class="n">dyad22_1</span><span class="p">(</span><span class="n">eigproj1</span><span class="p">,</span> <span class="n">eigproj1</span><span class="p">)</span> \
+                <span class="o">+</span> <span class="n">fund2</span><span class="o">*</span><span class="n">dyad22_1</span><span class="p">(</span><span class="n">eigproj2</span><span class="p">,</span> <span class="n">eigproj2</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">n_dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="c1"># Compute derivative of square symmetric tensor</span>
+            <span class="n">dx2dx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="p">(</span><span class="n">n_dim</span><span class="p">,))</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">it</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_dim</span><span class="p">),</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+                <span class="n">dx2dx</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">dd</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="n">l</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">dd</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+                                         <span class="o">+</span> <span class="n">dd</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">dd</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">l</span><span class="p">])</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="k">if</span> <span class="n">n_eig_distinct</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="c1"># Set eigenvalues evaluation triplet (a != b = c)</span>
+                <span class="n">idxa</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span>
+                        <span class="n">eig_multiplicity</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">val</span> <span class="o">==</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">idxb</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span>
+                        <span class="n">eig_multiplicity</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">val</span> <span class="o">==</span> <span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">idxc</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span>
+                        <span class="n">eig_multiplicity</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">val</span> <span class="o">==</span> <span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">eig_abc</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">idxa</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">idxb</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">idxc</span><span class="p">)</span>
+                <span class="c1"># Compute convenient scalars</span>
+                <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">s3</span><span class="p">,</span> <span class="n">s4</span><span class="p">,</span> <span class="n">s5</span><span class="p">,</span> <span class="n">s6</span> <span class="o">=</span> <span class="n">diso_scalars</span><span class="p">(</span><span class="n">eig_abc</span><span class="p">,</span> <span class="n">eigenvalues</span><span class="p">,</span>
+                                                      <span class="n">fun</span><span class="p">,</span> <span class="n">fund</span><span class="p">)</span>
+                <span class="c1"># Compute derivative of isotropic symmetric tensor-valued</span>
+                <span class="c1"># function</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">s1</span><span class="o">*</span><span class="n">dx2dx</span> <span class="o">-</span> <span class="n">s2</span><span class="o">*</span><span class="n">fosym</span> <span class="o">-</span> <span class="n">s3</span><span class="o">*</span><span class="n">dyad22_1</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> \
+                    <span class="o">+</span> <span class="n">s4</span><span class="o">*</span><span class="n">dyad22_1</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">soid</span><span class="p">)</span> <span class="o">+</span> <span class="n">s5</span><span class="o">*</span><span class="n">dyad22_1</span><span class="p">(</span><span class="n">soid</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> \
+                    <span class="o">-</span> <span class="n">s6</span><span class="o">*</span><span class="n">dyad22_1</span><span class="p">(</span><span class="n">soid</span><span class="p">,</span> <span class="n">soid</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Initialize derivative of isotropic symmetric tensor-valued</span>
+                <span class="c1"># function</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="p">(</span><span class="n">n_dim</span><span class="p">,))</span>
+                <span class="c1"># Set eigenvalues cyclic permutations</span>
+                <span class="n">eig_cyclic</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span>
+                <span class="c1"># Compute derivative of isotropic symmetric tensor-valued</span>
+                <span class="c1"># function</span>
+                <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_dim</span><span class="p">):</span>
+                    <span class="c1"># Set eigenvalues evaluation order</span>
+                    <span class="n">eiga</span> <span class="o">=</span> <span class="n">eigenprojections</span><span class="p">[</span><span class="n">eig_cyclic</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="mi">0</span><span class="p">]][</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">eigproja</span> <span class="o">=</span> <span class="n">eigenprojections</span><span class="p">[</span><span class="n">eig_cyclic</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="mi">0</span><span class="p">]][</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">eigb</span> <span class="o">=</span> <span class="n">eigenprojections</span><span class="p">[</span><span class="n">eig_cyclic</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="mi">1</span><span class="p">]][</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">eigprojb</span> <span class="o">=</span> <span class="n">eigenprojections</span><span class="p">[</span><span class="n">eig_cyclic</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="mi">1</span><span class="p">]][</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">eigc</span> <span class="o">=</span> <span class="n">eigenprojections</span><span class="p">[</span><span class="n">eig_cyclic</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="mi">2</span><span class="p">]][</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">eigprojc</span> <span class="o">=</span> <span class="n">eigenprojections</span><span class="p">[</span><span class="n">eig_cyclic</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="mi">2</span><span class="p">]][</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="c1"># Evaluate scalar function and derivative</span>
+                    <span class="n">funa</span> <span class="o">=</span> <span class="n">fun</span><span class="p">(</span><span class="n">eiga</span><span class="p">)</span>
+                    <span class="n">funda</span> <span class="o">=</span> <span class="n">fund</span><span class="p">(</span><span class="n">eiga</span><span class="p">)</span>
+                    <span class="c1"># Assemble derivative of isotropic symmetric tensor-valued</span>
+                    <span class="c1"># function</span>
+                    <span class="n">y</span> <span class="o">+=</span> <span class="p">(</span><span class="n">funa</span><span class="o">/</span><span class="p">((</span><span class="n">eiga</span> <span class="o">-</span> <span class="n">eigb</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">eiga</span> <span class="o">-</span> <span class="n">eigc</span><span class="p">)))</span><span class="o">*</span><span class="p">(</span>
+                        <span class="n">dx2dx</span>
+                        <span class="o">-</span> <span class="p">(</span><span class="n">eigb</span> <span class="o">+</span> <span class="n">eigc</span><span class="p">)</span><span class="o">*</span><span class="n">fosym</span>
+                        <span class="o">-</span> <span class="p">((</span><span class="n">eiga</span> <span class="o">-</span> <span class="n">eigb</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">eiga</span> <span class="o">-</span> <span class="n">eigc</span><span class="p">))</span>
+                        <span class="o">*</span> <span class="n">dyad22_1</span><span class="p">(</span><span class="n">eigproja</span><span class="p">,</span> <span class="n">eigproja</span><span class="p">)</span>
+                        <span class="o">-</span> <span class="p">(</span><span class="n">eigb</span> <span class="o">-</span> <span class="n">eigc</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">dyad22_1</span><span class="p">(</span><span class="n">eigprojb</span><span class="p">,</span> <span class="n">eigprojb</span><span class="p">)</span>
+                                         <span class="o">-</span> <span class="n">dyad22_1</span><span class="p">(</span><span class="n">eigprojc</span><span class="p">,</span> <span class="n">eigprojc</span><span class="p">)))</span> \
+                        <span class="o">+</span> <span class="n">funda</span><span class="o">*</span><span class="n">dyad22_1</span><span class="p">(</span><span class="n">eigproja</span><span class="p">,</span> <span class="n">eigproja</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">y</span></div>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="diso_scalars"><a class="viewcode-back" href="../../../_autosummary/crate.tensor.tensoroperations.diso_scalars.html#crate.tensor.tensoroperations.diso_scalars">[docs]</a><span class="k">def</span> <span class="nf">diso_scalars</span><span class="p">(</span><span class="n">abc</span><span class="p">,</span> <span class="n">eigenvalues</span><span class="p">,</span> <span class="n">fun</span><span class="p">,</span> <span class="n">fund</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Auxiliar scalars of derivative of isotropic tensor-valued function.</span>
+
+<span class="sd">    The auxilar scalars to compute the derivative of an isotropic</span>
+<span class="sd">    tensor-valued function of a symmetric tensor are defined in Equation (A.47)</span>
+<span class="sd">    of Computational Methods for Plasticity [#]_.</span>
+
+<span class="sd">    .. [#] de Souza Neto, E. A., Peri, D., and Owen, D. R. J. (2008).</span>
+<span class="sd">           Computational Methods for Plasticity. John Wiley &amp; Sons, Ltd,</span>
+<span class="sd">           Chichester, UK (see `here &lt;https://onlinelibrary.wiley.com/doi/</span>
+<span class="sd">           book/10.1002/9780470694626&gt;`_)</span>
+
+<span class="sd">    ----</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    abc : {&#39;012&#39;, &#39;210&#39;, &#39;102&#39;, &#39;021&#39;, &#39;102&#39;, &#39;120&#39;, &#39;201&#39;}</span>
+<span class="sd">        Triplet containing the eigenvalues evaluation order. The first and last</span>
+<span class="sd">        are assumed to be the distinct eigenvalues.</span>
+<span class="sd">    eigenvals : numpy.ndarray (1d)</span>
+<span class="sd">        Eigenvalues of second-order tensor sorted in descending order.</span>
+<span class="sd">    fun : function</span>
+<span class="sd">        Scalar function with single argument associated to the symmetric</span>
+<span class="sd">        tensor-valued function.</span>
+<span class="sd">    fund: function</span>
+<span class="sd">        Derivative of scalar function with single argument associated to the</span>
+<span class="sd">        symmetric tensor-valued function.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    s : list</span>
+<span class="sd">        List of convenient scalars (float).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check eigenvalues order triplet validity</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s1">&#39;^[0-2]</span><span class="si">{3}</span><span class="s1">$&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">abc</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Invalid triplet.&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">set</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">abc</span><span class="p">])</span> <span class="o">!=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">}:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Invalid triplet.&#39;</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Set eigenvalues according to triplet order</span>
+    <span class="n">eiga</span> <span class="o">=</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">abc</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+    <span class="n">eigc</span> <span class="o">=</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">abc</span><span class="p">[</span><span class="mi">2</span><span class="p">])]</span>
+    <span class="c1"># Evaluate scalar function and derivative</span>
+    <span class="n">funa</span> <span class="o">=</span> <span class="n">fun</span><span class="p">(</span><span class="n">eiga</span><span class="p">)</span>
+    <span class="n">funda</span> <span class="o">=</span> <span class="n">fund</span><span class="p">(</span><span class="n">eiga</span><span class="p">)</span>
+    <span class="n">func</span> <span class="o">=</span> <span class="n">fun</span><span class="p">(</span><span class="n">eigc</span><span class="p">)</span>
+    <span class="n">fundc</span> <span class="o">=</span> <span class="n">fund</span><span class="p">(</span><span class="n">eigc</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Compute convenient scalars</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">funa</span> <span class="o">-</span> <span class="n">func</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">eiga</span> <span class="o">-</span> <span class="n">eigc</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">fundc</span><span class="o">/</span><span class="p">(</span><span class="n">eiga</span> <span class="o">-</span> <span class="n">eigc</span><span class="p">))</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">eigc</span><span class="o">*</span><span class="p">((</span><span class="n">funa</span> <span class="o">-</span> <span class="n">func</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">eiga</span> <span class="o">-</span> <span class="n">eigc</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+             <span class="o">-</span> <span class="p">((</span><span class="n">eiga</span> <span class="o">+</span> <span class="n">eigc</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">eiga</span> <span class="o">-</span> <span class="n">eigc</span><span class="p">))</span><span class="o">*</span><span class="n">fundc</span><span class="p">)</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="p">((</span><span class="n">funa</span> <span class="o">-</span> <span class="n">func</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">eiga</span> <span class="o">-</span> <span class="n">eigc</span><span class="p">)</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+             <span class="o">-</span> <span class="p">((</span><span class="n">funda</span> <span class="o">+</span> <span class="n">fundc</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">eiga</span> <span class="o">-</span> <span class="n">eigc</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">eigc</span><span class="p">)</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">eigc</span><span class="p">)</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">eigc</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">s</span></div>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="rotate_tensor"><a class="viewcode-back" href="../../../_autosummary/crate.tensor.tensoroperations.rotate_tensor.html#crate.tensor.tensoroperations.rotate_tensor">[docs]</a><span class="k">def</span> <span class="nf">rotate_tensor</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rotation of :math:`n`-dimensional tensor.</span>
+
+<span class="sd">    The rotation of the :math:`n`-dimensional tensor is here defined as</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">       A^{r}_{i_{1}i_{2}\\dots i_{n}} = R_{i_{1}j_{1}} R_{i_{2}j_{2}} \\dots</span>
+<span class="sd">       R_{i_{n}j_{n}} A_{j_{1}j_{2} \\dots j_{n}}</span>
+
+<span class="sd">    where :math:`\\mathbf{R}` denotes the rotation tensor, :math:`\\mathbf{A}`</span>
+<span class="sd">    denotes the original tensor, and :math:`\\mathbf{A}^{r}` denotes the</span>
+<span class="sd">    rotated tensor.</span>
+
+<span class="sd">    ----</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    tensor : numpy.ndarray</span>
+<span class="sd">        Tensor.</span>
+<span class="sd">    r : numpy.ndarray (2d)</span>
+<span class="sd">        Rotation tensor (for given rotation angle theta, active transformation</span>
+<span class="sd">        (+ theta) and passive transformation (- theta)).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    rtensor : numpy.ndarray</span>
+<span class="sd">        Rotated tensor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get number of spatial dimensions</span>
+    <span class="n">n_dim</span> <span class="o">=</span> <span class="n">tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># Get number of tensor dimensions</span>
+    <span class="n">tensor_dim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Initialize rotated tensor</span>
+    <span class="n">rtensor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="k">if</span> <span class="n">tensor_dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># Compute rotation of first-order tensor</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">it</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_dim</span><span class="p">),</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+            <span class="n">rtensor</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">rtensor</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span><span class="o">*</span><span class="n">tensor</span><span class="p">[</span><span class="n">p</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">tensor_dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="c1"># Compute rotation of second-order tensor</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">it</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_dim</span><span class="p">),</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+            <span class="n">rtensor</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">rtensor</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span><span class="o">*</span><span class="n">r</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">q</span><span class="p">]</span><span class="o">*</span><span class="n">tensor</span><span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">tensor_dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="c1"># Compute rotation of third-order tensor</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">it</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_dim</span><span class="p">),</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
+            <span class="n">rtensor</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">rtensor</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> \
+                               <span class="o">+</span> <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span><span class="o">*</span><span class="n">r</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">q</span><span class="p">]</span><span class="o">*</span><span class="n">r</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">r</span><span class="p">]</span><span class="o">*</span><span class="n">tensor</span><span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">tensor_dim</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="c1"># Compute rotation of fourth-order tensor</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">it</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_dim</span><span class="p">),</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
+            <span class="n">rtensor</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span> <span class="o">=</span> <span class="n">rtensor</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span> \
+                <span class="o">+</span> <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span><span class="o">*</span><span class="n">r</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">q</span><span class="p">]</span><span class="o">*</span><span class="n">r</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">r</span><span class="p">]</span><span class="o">*</span><span class="n">r</span><span class="p">[</span><span class="n">l</span><span class="p">,</span> <span class="n">s</span><span class="p">]</span><span class="o">*</span><span class="n">tensor</span><span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">s</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;The rotation tensor is not available for &#39;</span>
+                           <span class="o">+</span> <span class="s1">&#39;tensor order greater than 4.&#39;</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">rtensor</span></div>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="rotation_tensor_from_euler_angles"><a class="viewcode-back" href="../../../_autosummary/crate.tensor.tensoroperations.rotation_tensor_from_euler_angles.html#crate.tensor.tensoroperations.rotation_tensor_from_euler_angles">[docs]</a><span class="k">def</span> <span class="nf">rotation_tensor_from_euler_angles</span><span class="p">(</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">euler_deg</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set rotation tensor from Euler angles (Bunge convention).</span>
+
+<span class="sd">    The rotation tensor is defined as</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">       \\mathbf{R} =</span>
+<span class="sd">           \\begin{bmatrix}</span>
+<span class="sd">               c_1 c_3 - c_2 s_1 s_3 &amp; -c_1 s_3 - c_2 c_3 s_1 &amp; s_1 s_2 \\\\</span>
+<span class="sd">               c_3 s_1 + c_1 c_2 s_3 &amp; c_1 c_2 c_3 - s_1 s_3 &amp; - c_1 s_2 \\\\</span>
+<span class="sd">               s_2 s_3 &amp; c_3 s_2 &amp; c_2</span>
+<span class="sd">           \\end{bmatrix}</span>
+
+<span class="sd">    where</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">       \\begin{align}</span>
+<span class="sd">           c_1 = \\cos(\\alpha) \\qquad s_1 = \\sin(\\alpha) \\\\</span>
+<span class="sd">           c_2 = \\cos(\\beta) \\qquad s_2 = \\sin(\\beta) \\\\</span>
+<span class="sd">           c_3 = \\cos(\\gamma) \\qquad s_3 = \\sin(\\gamma)</span>
+<span class="sd">        \\end{align}</span>
+
+<span class="sd">    and :math:`(\\alpha, \\beta, \\gamma)` are the Euler angles corresponding</span>
+<span class="sd">    to the Bunge convention (Z1-X2-Z3).</span>
+
+<span class="sd">    ----</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_dim : int</span>
+<span class="sd">        Number of spatial dimensions.</span>
+<span class="sd">    euler_deg : tuple</span>
+<span class="sd">        Euler angles (degrees) sorted according to Bunge convention (Z1-X2-Z3).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    r : numpy.ndarray (2d)</span>
+<span class="sd">        Rotation tensor (for given rotation angle theta, active transformation</span>
+<span class="sd">        (+ theta) and passive transformation (- theta)).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Convert euler angles to radians</span>
+    <span class="n">euler_rad</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">euler_deg</span><span class="p">)</span>
+    <span class="c1"># Compute convenient sins and cosines</span>
+    <span class="n">s1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">euler_rad</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">s2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">euler_rad</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">s3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">euler_rad</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">c1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">euler_rad</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">c2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">euler_rad</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">c3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">euler_rad</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Initialize rotation tensor</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">))</span>
+    <span class="c1"># Build rotation tensor</span>
+    <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">c1</span><span class="o">*</span><span class="n">c3</span> <span class="o">-</span> <span class="n">c2</span><span class="o">*</span><span class="n">s1</span><span class="o">*</span><span class="n">s3</span>
+    <span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">c3</span><span class="o">*</span><span class="n">s1</span> <span class="o">+</span> <span class="n">c1</span><span class="o">*</span><span class="n">c2</span><span class="o">*</span><span class="n">s3</span>
+    <span class="n">r</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">s2</span><span class="o">*</span><span class="n">s3</span>
+    <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">c1</span><span class="o">*</span><span class="n">s3</span> <span class="o">-</span> <span class="n">c2</span><span class="o">*</span><span class="n">c3</span><span class="o">*</span><span class="n">s1</span>
+    <span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">c1</span><span class="o">*</span><span class="n">c2</span><span class="o">*</span><span class="n">c3</span> <span class="o">-</span> <span class="n">s1</span><span class="o">*</span><span class="n">s3</span>
+    <span class="n">r</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">c3</span><span class="o">*</span><span class="n">s2</span>
+    <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">s1</span><span class="o">*</span><span class="n">s2</span>
+    <span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">c1</span><span class="o">*</span><span class="n">s2</span>
+    <span class="n">r</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">c2</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">r</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

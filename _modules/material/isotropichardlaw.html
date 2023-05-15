@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>material.isotropichardlaw &mdash; crate 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            crate
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/crate.html">Code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">crate</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">material.isotropichardlaw</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for material.isotropichardlaw</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Isotropic strain hardening laws.</span>
+
+<span class="sd">This module includes the definition of several types of isotropic strain</span>
+<span class="sd">hardening laws and the suitable processing of the associated parameters.</span>
+
+<span class="sd">Functions</span>
+<span class="sd">---------</span>
+<span class="sd">get_available_hardening_types</span>
+<span class="sd">    Get available isotropic hardening laws.</span>
+<span class="sd">build_hardening_parameters</span>
+<span class="sd">    Build hardening parameters according with isotropic hardening type.</span>
+<span class="sd">get_hardening_law</span>
+<span class="sd">    Get isotropic hardening law to compute yield stress and hardening slope.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#                                                                       Modules</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1"># Third-party</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="c1">#</span>
+<span class="c1">#                                                          Authorship &amp; Credits</span>
+<span class="c1"># =============================================================================</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Bernardo Ferreira (bernardo_ferreira@brown.edu)&#39;</span>
+<span class="n">__credits__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Bernardo Ferreira&#39;</span><span class="p">,</span> <span class="p">]</span>
+<span class="n">__status__</span> <span class="o">=</span> <span class="s1">&#39;Stable&#39;</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="get_available_hardening_types"><a class="viewcode-back" href="../../_autosummary/crate.material.models.von_mises.get_available_hardening_types.html#crate.material.models.von_mises.get_available_hardening_types">[docs]</a><span class="k">def</span> <span class="nf">get_available_hardening_types</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get available isotropic hardening laws.</span>
+
+<span class="sd">    The isotropic hardening law is specified in the input data file as a</span>
+<span class="sd">    material property of the constitutive model.</span>
+
+<span class="sd">    Available isotropic hardening laws:</span>
+
+<span class="sd">    * Piecewise linear hardening</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           \\{\\bar{\\varepsilon}^{p}_{i}, \\, \\sigma_{y, i}\\},</span>
+<span class="sd">           \\quad i = 1, \\dots, n_{\\text{points}}</span>
+
+<span class="sd">        *Input data file syntax*:</span>
+
+<span class="sd">        .. code-block:: text</span>
+
+<span class="sd">           isotropic_hardening piecewise_linear &lt; n_points &gt;</span>
+<span class="sd">               hp_1 &lt; value &gt; &lt; value &gt;</span>
+<span class="sd">               hp_2 &lt; value &gt; &lt; value &gt;</span>
+<span class="sd">               ...</span>
+
+<span class="sd">        where</span>
+
+<span class="sd">        - ``isotropic_hardening`` - Isotropic strain hardening type and number</span>
+<span class="sd">          of parameters.</span>
+<span class="sd">        - ``hp_i`` - Hardening point with coordinates</span>
+<span class="sd">          (:math:`\\bar{\\varepsilon}^{p}`, :math:`\\sigma_{y}`).</span>
+
+<span class="sd">    ----</span>
+
+<span class="sd">    * Linear hardening</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           \\sigma_{y}(\\bar{\\varepsilon}^{p}) = \\sigma_{y, 0}</span>
+<span class="sd">           + a \\bar{\\varepsilon}^{p}</span>
+
+<span class="sd">        *Input data file syntax*:</span>
+
+<span class="sd">        .. code-block:: text</span>
+
+<span class="sd">           isotropic_hardening linear 2</span>
+<span class="sd">               s0 &lt; value &gt;</span>
+<span class="sd">               a  &lt; value &gt;</span>
+
+<span class="sd">        where</span>
+
+<span class="sd">        - ``isotropic_hardening`` - Isotropic strain hardening type and number</span>
+<span class="sd">          of parameters.</span>
+<span class="sd">        - ``s0`` - Initial yielding stress (:math:`\\sigma_{y, 0}`).</span>
+<span class="sd">        - ``a`` - Hardening law parameter (:math:`a`).</span>
+
+<span class="sd">    ----</span>
+
+<span class="sd">    * Nadai-Ludwik hardening:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           \\sigma_{y}(\\bar{\\varepsilon}^{p}) = \\sigma_{y, 0}</span>
+<span class="sd">           + a (\\bar{\\varepsilon}^{p}_{0} + \\bar{\\varepsilon}^{p})^{b}</span>
+
+<span class="sd">        *Input data file syntax*:</span>
+
+<span class="sd">        .. code-block:: text</span>
+
+<span class="sd">           isotropic_hardening nadai_ludwik 4</span>
+<span class="sd">               s0  &lt; value &gt;</span>
+<span class="sd">               a   &lt; value &gt;</span>
+<span class="sd">               b   &lt; value &gt;</span>
+<span class="sd">               ep0 &lt; value &gt;</span>
+
+<span class="sd">        where</span>
+
+<span class="sd">        - ``isotropic_hardening`` - Isotropic strain hardening type and number</span>
+<span class="sd">          of parameters.</span>
+<span class="sd">        - ``s0`` - Initial yielding stress (:math:`\\sigma_{y, 0}`).</span>
+<span class="sd">        - ``a`` - Hardening law parameter (:math:`a`).</span>
+<span class="sd">        - ``b`` - Hardening law parameter (:math:`b`).</span>
+<span class="sd">        - ``ep0`` - Accumulated plastic strain corresponding to initial \</span>
+<span class="sd">                    yielding stress (:math:`\\bar{\\varepsilon}^{p}_{0}`)</span>
+
+<span class="sd">    ----</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    available_hardening_types : tuple[str]</span>
+<span class="sd">        List of available isotropic hardening laws (str).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Set available isotropic hardening types</span>
+    <span class="n">available_hardening_types</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;piecewise_linear&#39;</span><span class="p">,</span> <span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="s1">&#39;nadai_ludwik&#39;</span><span class="p">)</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">available_hardening_types</span></div>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="build_hardening_parameters"><a class="viewcode-back" href="../../_autosummary/crate.material.models.von_mises.build_hardening_parameters.html#crate.material.models.von_mises.build_hardening_parameters">[docs]</a><span class="k">def</span> <span class="nf">build_hardening_parameters</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">material_properties</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build hardening parameters according with isotropic hardening type.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    type : str</span>
+<span class="sd">        Isotropic hardening law.</span>
+<span class="sd">    material_properties : dict</span>
+<span class="sd">        Constitutive model material properties (key, str) values</span>
+<span class="sd">        (item, {int, float, bool}).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    hardening_parameters : dict</span>
+<span class="sd">        Isotropic hardening law parameters (key, str) values (item, float).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Initialize hardening parameters</span>
+    <span class="n">hardening_parameters</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="c1"># Build hardening parameters according with isotropic hardening type</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;piecewise_linear&#39;</span><span class="p">:</span>
+            <span class="n">hardening_parameters</span><span class="p">[</span><span class="s1">&#39;hardening_points&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="n">material_properties</span><span class="p">[</span><span class="s1">&#39;hardening_points&#39;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;linear&#39;</span><span class="p">:</span>
+            <span class="n">hardening_parameters</span><span class="p">[</span><span class="s1">&#39;s0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">material_properties</span><span class="p">[</span><span class="s1">&#39;s0&#39;</span><span class="p">]</span>
+            <span class="n">hardening_parameters</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">material_properties</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;nadai_ludwik&#39;</span><span class="p">:</span>
+            <span class="n">hardening_parameters</span><span class="p">[</span><span class="s1">&#39;s0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">material_properties</span><span class="p">[</span><span class="s1">&#39;s0&#39;</span><span class="p">]</span>
+            <span class="n">hardening_parameters</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">material_properties</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span>
+            <span class="n">hardening_parameters</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">material_properties</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">]</span>
+            <span class="c1"># Tolerance to avoid overflow when computing hardening slope at</span>
+            <span class="c1"># null accumulated plastic strain</span>
+            <span class="n">ep0_tol</span> <span class="o">=</span> <span class="mf">1e-8</span>
+            <span class="n">hardening_parameters</span><span class="p">[</span><span class="s1">&#39;ep0&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">material_properties</span><span class="p">[</span><span class="s1">&#39;ep0&#39;</span><span class="p">],</span> <span class="n">ep0_tol</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown isotropic hardening type.&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;Missing hardening parameter: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">hardening_parameters</span></div>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="get_hardening_law"><a class="viewcode-back" href="../../_autosummary/crate.material.models.von_mises.get_hardening_law.html#crate.material.models.von_mises.get_hardening_law">[docs]</a><span class="k">def</span> <span class="nf">get_hardening_law</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get isotropic hardening law to compute yield stress and hardening slope.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    type : str</span>
+<span class="sd">        Isotropic hardening law.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    hardening_law : function</span>
+<span class="sd">        Isotropic hardening law.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Piecewise linear isotropic hardening</span>
+    <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;piecewise_linear&#39;</span><span class="p">:</span>
+        <span class="c1"># Set piecewise linear isotropic hardening law</span>
+        <span class="k">def</span> <span class="nf">hardening_law</span><span class="p">(</span><span class="n">hardening_parameters</span><span class="p">,</span> <span class="n">acc_p_strain</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Piecewise linear isotropic hardening law.</span>
+
+<span class="sd">            Provided the required isotropic hardening law parameters and a</span>
+<span class="sd">            given value of accumulated plastic strain, return the corresponding</span>
+<span class="sd">            material yield stress and hardening slope.</span>
+
+<span class="sd">            ----</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            hardening_parameters : dict</span>
+<span class="sd">                Isotropic hardening law required parameters:</span>
+
+<span class="sd">                hardening_points : numpy.ndarray (2d), where each row (i, 0:2)</span>
+<span class="sd">                sets a hardening point characterized by an accumulated plastic</span>
+<span class="sd">                strain value (i, 0) and the associated yield stress (i, 1).</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            yield_stress : float</span>
+<span class="sd">                Material yield stress.</span>
+<span class="sd">            H : float</span>
+<span class="sd">                Material hardening slope.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="c1"># Get hardening curve points array</span>
+            <span class="n">hardening_points</span> <span class="o">=</span> <span class="n">hardening_parameters</span><span class="p">[</span><span class="s1">&#39;hardening_points&#39;</span><span class="p">]</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Build lists with the accumulated plastic strain points and</span>
+            <span class="c1"># associated yield stress values</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">hardening_points</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">hardening_points</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="c1"># Check if the accumulated plastic strain list is correctly sorted</span>
+            <span class="c1"># in ascending order</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Points of piecewise linear isotropic &#39;</span>
+                                   <span class="s1">&#39;hardening law must be specified in &#39;</span>
+                                   <span class="s1">&#39;ascending order of accumulated &#39;</span>
+                                   <span class="s1">&#39;plastic strain.&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">([</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">a</span><span class="p">]):</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Points of piecewise linear isotropic &#39;</span>
+                                   <span class="s1">&#39;hardening law must be associated with &#39;</span>
+                                   <span class="s1">&#39;non-negative accumulated plastic strain &#39;</span>
+                                   <span class="s1">&#39;values.&#39;</span><span class="p">)</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># If the value of the accumulated plastic strain is either below or</span>
+            <span class="c1"># above the provided hardening curve points, then simply assume the</span>
+            <span class="c1"># yield stress associated with the first or last provided points,</span>
+            <span class="c1"># respectively. Otherwise, perform linear interpolation to compute</span>
+            <span class="c1"># the yield stress</span>
+            <span class="n">yield_stress</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">acc_p_strain</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="c1"># Get hardening slope</span>
+            <span class="k">if</span> <span class="n">acc_p_strain</span> <span class="o">&lt;</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">acc_p_strain</span> <span class="o">&gt;=</span> <span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">H</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Get hardening curve interval</span>
+                <span class="n">x0</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">acc_p_strain</span><span class="p">,</span> <span class="n">a</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]))[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">y0</span> <span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">x0</span><span class="p">)]</span>
+                <span class="n">x1</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">acc_p_strain</span><span class="p">,</span> <span class="n">a</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">y1</span> <span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">x1</span><span class="p">)]</span>
+                <span class="c1"># Compute hardening slope</span>
+                <span class="n">H</span> <span class="o">=</span> <span class="p">(</span><span class="n">y1</span> <span class="o">-</span> <span class="n">y0</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">x1</span> <span class="o">-</span> <span class="n">x0</span><span class="p">)</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Return</span>
+            <span class="k">return</span> <span class="n">yield_stress</span><span class="p">,</span> <span class="n">H</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Linear isotropic hardening</span>
+    <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;linear&#39;</span><span class="p">:</span>
+        <span class="c1"># Set linear isotropic hardening law</span>
+        <span class="k">def</span> <span class="nf">hardening_law</span><span class="p">(</span><span class="n">hardening_parameters</span><span class="p">,</span> <span class="n">acc_p_strain</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Linear isotropic hardening law.</span>
+
+<span class="sd">            Provided the required isotropic hardening law parameters and a</span>
+<span class="sd">            given value of accumulated plastic strain, return the corresponding</span>
+<span class="sd">            material yield stress and hardening slope.</span>
+
+<span class="sd">            ----</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            hardening_parameters : dict</span>
+<span class="sd">                Isotropic hardening law required parameters:</span>
+
+<span class="sd">                s0 : float, initial yield stress</span>
+
+<span class="sd">                a : float, hardening law parameter</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            yield_stress : float</span>
+<span class="sd">                Material yield stress.</span>
+<span class="sd">            H : float</span>
+<span class="sd">                Material hardening slope.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="c1"># Get initial yield stress and hardening slope</span>
+            <span class="n">yield_stress_init</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">hardening_parameters</span><span class="p">[</span><span class="s1">&#39;s0&#39;</span><span class="p">])</span>
+            <span class="n">H</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">hardening_parameters</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">])</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Compute yield stress</span>
+            <span class="n">yield_stress</span> <span class="o">=</span> <span class="n">yield_stress_init</span> <span class="o">+</span> <span class="n">H</span><span class="o">*</span><span class="n">acc_p_strain</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Return</span>
+            <span class="k">return</span> <span class="n">yield_stress</span><span class="p">,</span> <span class="n">H</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Nadai-Ludwik isotropic hardening</span>
+    <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;nadai_ludwik&#39;</span><span class="p">:</span>
+        <span class="c1"># Set Nadai-Ludwik isotropic hardening law</span>
+        <span class="k">def</span> <span class="nf">hardening_law</span><span class="p">(</span><span class="n">hardening_parameters</span><span class="p">,</span> <span class="n">acc_p_strain</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Nadai-Ludwik isotropic hardening law.</span>
+
+<span class="sd">            Provided the required isotropic hardening law parameters and a</span>
+<span class="sd">            given value of accumulated plastic strain, return the corresponding</span>
+<span class="sd">            material yield stress and hardening slope.</span>
+
+<span class="sd">            ----</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            hardening_parameters : dict</span>
+<span class="sd">                Isotropic hardening law required parameters:</span>
+
+<span class="sd">                s0 : float, initial yield stress</span>
+
+<span class="sd">                a : float, hardening law parameter</span>
+
+<span class="sd">                b : float, hardening law parameter</span>
+
+<span class="sd">                ep0 : float, accumulated plastic strain corresponding to \\</span>
+<span class="sd">                      initial yielding stress</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            yield_stress : float</span>
+<span class="sd">                Material yield stress.</span>
+<span class="sd">            H : float</span>
+<span class="sd">                Material hardening slope.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="c1"># Get initial yield stress and parameters</span>
+            <span class="n">yield_stress_init</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">hardening_parameters</span><span class="p">[</span><span class="s1">&#39;s0&#39;</span><span class="p">])</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">hardening_parameters</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">])</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">hardening_parameters</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">])</span>
+            <span class="n">ep0</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">hardening_parameters</span><span class="p">[</span><span class="s1">&#39;ep0&#39;</span><span class="p">])</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Consider minimum non-negative accumulated plastic strain</span>
+            <span class="n">acc_p_strain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">acc_p_strain</span><span class="p">)</span>
+            <span class="c1"># Compute yield stress</span>
+            <span class="n">yield_stress</span> <span class="o">=</span> <span class="n">yield_stress_init</span> <span class="o">+</span> <span class="n">a</span><span class="o">*</span><span class="p">((</span><span class="n">acc_p_strain</span> <span class="o">+</span> <span class="n">ep0</span><span class="p">)</span><span class="o">**</span><span class="n">b</span><span class="p">)</span>
+            <span class="c1"># Compute hardening slope</span>
+            <span class="n">H</span> <span class="o">=</span> <span class="n">a</span><span class="o">*</span><span class="n">b</span><span class="o">*</span><span class="p">(</span><span class="n">acc_p_strain</span> <span class="o">+</span> <span class="n">ep0</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Return</span>
+            <span class="k">return</span> <span class="n">yield_stress</span><span class="p">,</span> <span class="n">H</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Unknown isotropic hardening type</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown type of isotropic hardening law.&#39;</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">hardening_law</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

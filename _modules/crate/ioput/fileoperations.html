@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>crate.ioput.fileoperations &mdash; crate 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            crate
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/crate.html">Code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">crate</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">crate.ioput.fileoperations</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for crate.ioput.fileoperations</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;File and directory operations.</span>
+
+<span class="sd">This module includes several functions to handle files and directories, as well</span>
+<span class="sd">as the functions that process the problem input data file and set the problem</span>
+<span class="sd">output directory.</span>
+
+<span class="sd">Functions</span>
+<span class="sd">---------</span>
+<span class="sd">make_directory</span>
+<span class="sd">    Create new directory.</span>
+<span class="sd">remove_dirs</span>
+<span class="sd">    Remove unrequired directories and files in target directory.</span>
+<span class="sd">set_input_datafile_path</span>
+<span class="sd">    Process input data file path.</span>
+<span class="sd">set_problem_dirs</span>
+<span class="sd">    Set output directory structure and output files paths.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#                                                                       Modules</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1"># Standard</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="c1"># Local</span>
+<span class="kn">import</span> <span class="nn">ioput.info</span> <span class="k">as</span> <span class="nn">info</span>
+<span class="kn">import</span> <span class="nn">ioput.ioutilities</span> <span class="k">as</span> <span class="nn">ioutil</span>
+<span class="c1">#</span>
+<span class="c1">#                                                          Authorship &amp; Credits</span>
+<span class="c1"># =============================================================================</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Bernardo Ferreira (bernardo_ferreira@brown.edu)&#39;</span>
+<span class="n">__credits__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Bernardo Ferreira&#39;</span><span class="p">,</span> <span class="p">]</span>
+<span class="n">__status__</span> <span class="o">=</span> <span class="s1">&#39;Stable&#39;</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#</span>
+<span class="c1">#                                                          Directory operations</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="make_directory"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.fileoperations.make_directory.html#crate.ioput.fileoperations.make_directory">[docs]</a><span class="k">def</span> <span class="nf">make_directory</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="n">option</span><span class="o">=</span><span class="s1">&#39;no_overwrite&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create new directory.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dir : str</span>
+<span class="sd">        Path of new directory.</span>
+<span class="sd">    option : {&#39;no_overwrite&#39;, &#39;overwrite&#39;}, default=&#39;no_overwrite&#39;</span>
+<span class="sd">        Either to overwrite or not an existing path.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">option</span> <span class="o">==</span> <span class="s1">&#39;no_overwrite&#39;</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">option</span> <span class="o">==</span> <span class="s1">&#39;overwrite&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="nb">dir</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown option.&#39;</span><span class="p">)</span></div>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="remove_dirs"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.fileoperations.remove_dirs.html#crate.ioput.fileoperations.remove_dirs">[docs]</a><span class="k">def</span> <span class="nf">remove_dirs</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">required_dirnames</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove unrequired directories and files in target directory.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    target_dir : str</span>
+<span class="sd">        Path of target directory.</span>
+<span class="sd">    required_dirnames : list[str]</span>
+<span class="sd">        Paths that are to be preserved in target directory.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dirnames</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">target_dir</span><span class="p">)</span>
+    <span class="k">for</span> <span class="nb">dir</span> <span class="ow">in</span> <span class="n">dirnames</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">dir</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">required_dirnames</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">target_dir</span> <span class="o">+</span> <span class="nb">dir</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
+<span class="c1">#</span>
+<span class="c1">#                                                               Input data file</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="set_input_datafile_path"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.fileoperations.set_input_datafile_path.html#crate.ioput.fileoperations.set_input_datafile_path">[docs]</a><span class="k">def</span> <span class="nf">set_input_datafile_path</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Process input data file path.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path : str</span>
+<span class="sd">        Path of input data file.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    input_file_name : str</span>
+<span class="sd">        Input data file name.</span>
+<span class="sd">    input_file_path : str</span>
+<span class="sd">        Input data file path.</span>
+<span class="sd">    input_file_dir : str</span>
+<span class="sd">        Input data file directory path.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Set input data file path, directory, name and extension</span>
+    <span class="n">input_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">input_file_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">input_file_path</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span>
+    <span class="n">input_file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">input_file_path</span><span class="p">))[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">input_file_ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">input_file_path</span><span class="p">))[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1"># Check if the input data file has the required &#39;.dat&#39; extension</span>
+    <span class="k">if</span> <span class="n">input_file_ext</span> <span class="o">!=</span> <span class="s1">&#39;.dat&#39;</span><span class="p">:</span>
+        <span class="n">summary</span> <span class="o">=</span> <span class="s1">&#39;Input data file extension&#39;</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;The input data file must have </span><span class="se">\&#39;</span><span class="s1">.dat</span><span class="se">\&#39;</span><span class="s1"> extension.&#39;</span>
+        <span class="n">info</span><span class="o">.</span><span class="n">displayinfo</span><span class="p">(</span><span class="s1">&#39;4&#39;</span><span class="p">,</span> <span class="n">summary</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span>
+    <span class="c1"># Check if the input data file name only contains numbers, letters or</span>
+    <span class="c1"># underscores</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ioutil</span><span class="o">.</span><span class="n">checkvalidname</span><span class="p">(</span><span class="n">input_file_name</span><span class="p">):</span>
+        <span class="n">summary</span> <span class="o">=</span> <span class="s1">&#39;Input data file name&#39;</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;The input data file name can only contain letters, &#39;</span> \
+            <span class="o">+</span> <span class="s1">&#39;numbers or underscores.&#39;</span>
+        <span class="n">info</span><span class="o">.</span><span class="n">displayinfo</span><span class="p">(</span><span class="s1">&#39;4&#39;</span><span class="p">,</span> <span class="n">summary</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">input_file_name</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">input_file_dir</span></div>
+<span class="c1">#</span>
+<span class="c1">#                                                             Results directory</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="set_problem_dirs"><a class="viewcode-back" href="../../../_autosummary/crate.ioput.fileoperations.set_problem_dirs.html#crate.ioput.fileoperations.set_problem_dirs">[docs]</a><span class="k">def</span> <span class="nf">set_problem_dirs</span><span class="p">(</span><span class="n">input_file_name</span><span class="p">,</span> <span class="n">input_file_dir</span><span class="p">,</span>
+                     <span class="n">is_minimize_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_null_stdout</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set output directory structure.</span>
+
+<span class="sd">    *Output directory structure:*</span>
+
+<span class="sd">    .. code-block :: text</span>
+
+<span class="sd">       example.dat</span>
+<span class="sd">       microstructure_regular_grid.rgmsh</span>
+<span class="sd">       example/</span>
+<span class="sd">            |-----example.screen</span>
+<span class="sd">            |---- microstructure_regular_grid.rgmsh</span>
+<span class="sd">            |---- example.hres</span>
+<span class="sd">            |---- example.efftan</span>
+<span class="sd">            |---- example.refm</span>
+<span class="sd">            |---- example.adapt</span>
+<span class="sd">            |---- offline_stage/</span>
+<span class="sd">            |           |---- example.crve</span>
+<span class="sd">            |           |---- example_clusters.vti</span>
+<span class="sd">            |</span>
+<span class="sd">            |---- post_process/</span>
+<span class="sd">                        |---- example.pvd</span>
+<span class="sd">                        |---- VTK/</span>
+<span class="sd">                        |---- example.voxout</span>
+
+<span class="sd">    ----</span>
+
+<span class="sd">    *Glossary: Files and directories*</span>
+
+<span class="sd">    * **example.dat**</span>
+<span class="sd">        Input data file.</span>
+
+<span class="sd">    * **regular_grid_mesh.rgmsh**</span>
+<span class="sd">        Spatial discretization file (regular grid of voxels, where each voxel \</span>
+<span class="sd">        is associated with a given material phase ID).</span>
+
+<span class="sd">    * **example/**</span>
+<span class="sd">        Output directory.</span>
+
+<span class="sd">        * **example.screen**</span>
+<span class="sd">            File where all the data printed to the default standard output \</span>
+<span class="sd">            device is stored.</span>
+
+<span class="sd">        * **regular_grid_mesh.rgmsh**</span>
+<span class="sd">            Copy of spatial discretization file.</span>
+
+<span class="sd">        * **example.hres**</span>
+<span class="sd">            File where the homogenized strain/stress results are stored.</span>
+
+<span class="sd">        * **example.efftan**</span>
+<span class="sd">            File where the CRVE effective material consistent tangent modulus</span>
+<span class="sd">            is stored.</span>
+
+<span class="sd">        * **example.refm**</span>
+<span class="sd">            File where data associated with the homogeneous (fictitious)</span>
+<span class="sd">            reference material is stored.</span>
+
+<span class="sd">        * **example.adapt**</span>
+<span class="sd">            File where the adaptive material phases&#39; number of clusters and \</span>
+<span class="sd">            adaptivity steps are stored (only if clustering adaptivity is \</span>
+<span class="sd">            activated).</span>
+
+<span class="sd">        * **offline_stage/**</span>
+<span class="sd">            Clustering-based model reduction (offline-stage) directory.</span>
+
+<span class="sd">            * **example.crve**</span>
+<span class="sd">                File that contains the CRVE instance obtained from the \</span>
+<span class="sd">                clustering-based model reduction (offline-stage), accounting \</span>
+<span class="sd">                for the base clustering and the cluster interaction tensors.</span>
+
+<span class="sd">            * **example_clusters.vti**</span>
+<span class="sd">                VTK XML file containing spatial (voxelwise) data \</span>
+<span class="sd">                characterizing the CRVE after the clustering-based model \</span>
+<span class="sd">                reduction (offline-stage), namely the material phases and the \</span>
+<span class="sd">                base material clusters.</span>
+
+<span class="sd">        * **post_processing/**</span>
+<span class="sd">            Post-processing directory.</span>
+
+<span class="sd">            * **example.pvd**</span>
+<span class="sd">                VTK XML collection file containing the paths to all the VTK \</span>
+<span class="sd">                snapshots taken during the problem solution.</span>
+
+<span class="sd">            * **VTK/**</span>
+<span class="sd">                VTK XML files directory containing all the snapshots taken \</span>
+<span class="sd">                during the problem solution.</span>
+
+<span class="sd">            * **example.voxout**</span>
+<span class="sd">                File where material-related quantities defined at the voxel \</span>
+<span class="sd">                level are stored.</span>
+
+<span class="sd">    ----</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input_file_name : str</span>
+<span class="sd">        Problem input data file name.</span>
+<span class="sd">    input_file_dir : str</span>
+<span class="sd">        Problem input data file directory path.</span>
+<span class="sd">    is_minimize_output : bool, default=False</span>
+<span class="sd">        Output minimization flag.</span>
+<span class="sd">    is_null_stdout : bool, default=False</span>
+<span class="sd">        Suppress execution output to stdout.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    problem_name : str</span>
+<span class="sd">        Problem name.</span>
+<span class="sd">    problem_dir : str</span>
+<span class="sd">        Problem output directory path.</span>
+<span class="sd">    offline_stage_dir : str</span>
+<span class="sd">        Problem output offline-stage subdirectory path.</span>
+<span class="sd">    postprocess_dir : str</span>
+<span class="sd">        Problem output post-processing subdirectory path.</span>
+<span class="sd">    is_same_offstage : bool</span>
+<span class="sd">        `True` if an already existing offline-stage data file is to be</span>
+<span class="sd">        considered, `False` otherwise.</span>
+<span class="sd">    crve_file_path : str</span>
+<span class="sd">        Problem &#39;.crve&#39; output file path.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get display features</span>
+    <span class="n">indent</span> <span class="o">=</span> <span class="n">ioutil</span><span class="o">.</span><span class="n">setdisplayfeatures</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Set problem name and output directory</span>
+    <span class="n">problem_name</span> <span class="o">=</span> <span class="n">input_file_name</span>
+    <span class="n">problem_dir</span> <span class="o">=</span> <span class="n">input_file_dir</span> <span class="o">+</span> <span class="n">problem_name</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span>
+    <span class="c1"># Set offline-stage and post-processing subdirectories</span>
+    <span class="n">offline_stage_dir</span> <span class="o">=</span> <span class="n">problem_dir</span> <span class="o">+</span> <span class="s1">&#39;offline_stage&#39;</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span>
+    <span class="n">postprocess_dir</span> <span class="o">=</span> <span class="n">problem_dir</span> <span class="o">+</span> <span class="s1">&#39;post_processing&#39;</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span>
+    <span class="c1"># Set &#39;.screen&#39; output file path (delete existing file)</span>
+    <span class="n">ioutil</span><span class="o">.</span><span class="n">screen_file_path</span> <span class="o">=</span> <span class="n">problem_dir</span> <span class="o">+</span> <span class="n">input_file_name</span> <span class="o">+</span> <span class="s1">&#39;.screen&#39;</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">ioutil</span><span class="o">.</span><span class="n">screen_file_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">ioutil</span><span class="o">.</span><span class="n">screen_file_path</span><span class="p">)</span>
+    <span class="c1"># Set &#39;.crve&#39; output file path</span>
+    <span class="n">crve_file_path</span> <span class="o">=</span> <span class="n">offline_stage_dir</span> <span class="o">+</span> <span class="n">input_file_name</span> <span class="o">+</span> <span class="s1">&#39;.crve&#39;</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Disable user prompts</span>
+    <span class="n">is_user_prompts</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">is_null_stdout</span> <span class="ow">or</span> <span class="n">is_minimize_output</span><span class="p">:</span>
+        <span class="n">is_user_prompts</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># Check if the problem output directory exists</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">problem_dir</span><span class="p">):</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Create problem output directory and subdirectories</span>
+        <span class="n">make_directory</span><span class="p">(</span><span class="n">problem_dir</span><span class="p">)</span>
+        <span class="k">for</span> <span class="nb">dir</span> <span class="ow">in</span> <span class="p">[</span><span class="n">offline_stage_dir</span><span class="p">,</span> <span class="n">postprocess_dir</span><span class="p">]:</span>
+            <span class="n">make_directory</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
+        <span class="c1"># No previously computed offline-stage data available</span>
+        <span class="n">is_same_offstage</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ioutil</span><span class="o">.</span><span class="n">print2</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Warning: The problem output directory for the &#39;</span>
+                      <span class="s1">&#39;specified input data file already exists.&#39;</span><span class="p">)</span>
+        <span class="c1"># Ask user if the purpose is to consider previously computed</span>
+        <span class="c1"># offline-stage data (&#39;.crve&#39; output file)</span>
+        <span class="k">if</span> <span class="n">is_user_prompts</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">crve_file_path</span><span class="p">):</span>
+                <span class="n">is_same_offstage</span> <span class="o">=</span> <span class="n">ioutil</span><span class="o">.</span><span class="n">query_yn</span><span class="p">(</span>
+                    <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Do you wish to consider the already existent &#39;</span>
+                    <span class="s1">&#39;offline-stage </span><span class="se">\&#39;</span><span class="s1">.crve</span><span class="se">\&#39;</span><span class="s1"> data file?&#39;</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">is_same_offstage</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Consider existent offline-stage data by default</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">offline_stage_dir</span><span class="p">)</span> \
+                    <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">crve_file_path</span><span class="p">):</span>
+                <span class="n">is_same_offstage</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">is_same_offstage</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="k">if</span> <span class="n">is_same_offstage</span><span class="p">:</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="c1"># Raise error if offline-stage subdirectory does not exist</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">offline_stage_dir</span><span class="p">):</span>
+                <span class="n">summary</span> <span class="o">=</span> <span class="s1">&#39;Missing offline-stage subdirectory&#39;</span>
+                <span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;The subdirectory with the previously computed &#39;</span>\
+                    <span class="o">+</span> <span class="s1">&#39;offline-stage data files could not be found:&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span> \
+                    <span class="o">+</span> <span class="n">indent</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span>
+                <span class="n">info</span><span class="o">.</span><span class="n">displayinfo</span><span class="p">(</span><span class="s1">&#39;4&#39;</span><span class="p">,</span> <span class="n">summary</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">offline_stage_dir</span><span class="p">)</span>
+            <span class="c1"># Remove all the existent subdirectories and files except the</span>
+            <span class="c1"># offline-stage subdirectory and the &#39;.screen&#39; output file</span>
+            <span class="n">required_dirnames</span> <span class="o">=</span> <span class="p">[</span><span class="n">input_file_name</span> <span class="o">+</span> <span class="s1">&#39;.screen&#39;</span><span class="p">,</span> <span class="s1">&#39;offline_stage&#39;</span><span class="p">]</span>
+            <span class="n">remove_dirs</span><span class="p">(</span><span class="n">problem_dir</span><span class="p">,</span> <span class="n">required_dirnames</span><span class="p">)</span>
+            <span class="c1"># Create post-processing subdirectory</span>
+            <span class="n">make_directory</span><span class="p">(</span><span class="n">postprocess_dir</span><span class="p">,</span> <span class="s1">&#39;overwrite&#39;</span><span class="p">)</span>
+            <span class="c1"># Warn user to potential compatibility issues between the problem</span>
+            <span class="c1"># input data file and the existent offline-stage &#39;.crve&#39; data file</span>
+            <span class="k">if</span> <span class="n">is_user_prompts</span><span class="p">:</span>
+                <span class="n">ioutil</span><span class="o">.</span><span class="n">useraction</span><span class="p">(</span>
+                    <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">Warning: Please make sure that the problem &#39;</span>
+                    <span class="s1">&#39;input data file is consistent with the already&#39;</span>
+                    <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="s1">&#39;Warning: &#39;</span><span class="p">)</span><span class="o">*</span><span class="s1">&#39; &#39;</span>
+                    <span class="o">+</span> <span class="s1">&#39;existent offline-stage </span><span class="se">\&#39;</span><span class="s1">.crve</span><span class="se">\&#39;</span><span class="s1"> data file &#39;</span>
+                    <span class="s1">&#39;(stored in offline_stage/) to avoid &#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+                    <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="s1">&#39;Warning: &#39;</span><span class="p">)</span><span class="o">*</span><span class="s1">&#39; &#39;</span>
+                    <span class="o">+</span> <span class="s1">&#39;unexpected errors or misleading conclusions.&#39;</span>
+                    <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="s1">&#39;Press any key to continue or type &#39;</span>
+                    <span class="s1">&#39;</span><span class="se">\&#39;</span><span class="s1">exit</span><span class="se">\&#39;</span><span class="s1"> to leave: &#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Ask user if existent problem output directory should be</span>
+            <span class="c1"># overwritten</span>
+            <span class="k">if</span> <span class="n">is_user_prompts</span><span class="p">:</span>
+                <span class="n">is_overwrite</span> <span class="o">=</span> <span class="n">ioutil</span><span class="o">.</span><span class="n">query_yn</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Do you wish to overwrite &#39;</span>
+                                               <span class="s1">&#39;the existing problem output &#39;</span>
+                                               <span class="s1">&#39;directory?&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Overwrite by default</span>
+                <span class="n">is_overwrite</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="k">if</span> <span class="n">is_overwrite</span><span class="p">:</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="mi">2</span>
+                <span class="c1"># Remove all existent subdirectories and files except the</span>
+                <span class="c1"># &#39;.screen&#39; output file</span>
+                <span class="n">required_dirnames</span> <span class="o">=</span> <span class="p">[</span><span class="n">input_file_name</span> <span class="o">+</span> <span class="s1">&#39;.screen&#39;</span><span class="p">]</span>
+                <span class="n">remove_dirs</span><span class="p">(</span><span class="n">problem_dir</span><span class="p">,</span> <span class="n">required_dirnames</span><span class="p">)</span>
+                <span class="c1"># Create problem output directory subdirectories</span>
+                <span class="k">for</span> <span class="nb">dir</span> <span class="ow">in</span> <span class="p">[</span><span class="n">offline_stage_dir</span><span class="p">,</span> <span class="n">postprocess_dir</span><span class="p">]:</span>
+                    <span class="n">make_directory</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="s1">&#39;overwrite&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="c1"># Display information about the problem directory and status</span>
+        <span class="n">info</span><span class="o">.</span><span class="n">displayinfo</span><span class="p">(</span><span class="s1">&#39;-1&#39;</span><span class="p">,</span> <span class="n">problem_dir</span><span class="p">,</span> <span class="n">status</span><span class="p">)</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">problem_name</span><span class="p">,</span> <span class="n">problem_dir</span><span class="p">,</span> <span class="n">offline_stage_dir</span><span class="p">,</span> <span class="n">postprocess_dir</span><span class="p">,</span> \
+        <span class="n">is_same_offstage</span><span class="p">,</span> <span class="n">crve_file_path</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

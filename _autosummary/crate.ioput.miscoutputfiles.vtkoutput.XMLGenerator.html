@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator &mdash; crate 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="crate.ioput.packager" href="crate.ioput.packager.html" />
+    <link rel="prev" title="crate.ioput.miscoutputfiles.vtkoutput.VoxelsArraysFactory" href="crate.ioput.miscoutputfiles.vtkoutput.VoxelsArraysFactory.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            crate
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="crate.html">Code</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="crate.crate_simulation.html">crate.crate_simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.clustering.html">crate.clustering</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="crate.ioput.html">crate.ioput</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="crate.ioput.fileoperations.html">crate.ioput.fileoperations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.ioput.incoutputfiles.html">crate.ioput.incoutputfiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.ioput.info.html">crate.ioput.info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.ioput.ioutilities.html">crate.ioput.ioutilities</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="crate.ioput.miscoutputfiles.html">crate.ioput.miscoutputfiles</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="crate.ioput.miscoutputfiles.voxelsoutput.html">crate.ioput.miscoutputfiles.voxelsoutput</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="crate.ioput.miscoutputfiles.vtkoutput.html">crate.ioput.miscoutputfiles.vtkoutput</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="crate.ioput.packager.html">crate.ioput.packager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.ioput.readinputdata.html">crate.ioput.readinputdata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.ioput.readprocedures.html">crate.ioput.readprocedures</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="crate.main.html">crate.main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.material.html">crate.material</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.online.html">crate.online</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.optimization.html">crate.optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.tensor.html">crate.tensor</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">crate</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="crate.html">crate</a></li>
+          <li class="breadcrumb-item"><a href="crate.ioput.html">crate.ioput</a></li>
+          <li class="breadcrumb-item"><a href="crate.ioput.miscoutputfiles.html">crate.ioput.miscoutputfiles</a></li>
+          <li class="breadcrumb-item"><a href="crate.ioput.miscoutputfiles.vtkoutput.html">crate.ioput.miscoutputfiles.vtkoutput</a></li>
+      <li class="breadcrumb-item active">crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="crate-ioput-miscoutputfiles-vtkoutput-xmlgenerator">
+<h1>crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator<a class="headerlink" href="#crate-ioput-miscoutputfiles-vtkoutput-xmlgenerator" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">XMLGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">byte_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/ioput/miscoutputfiles/vtkoutput.html#XMLGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>VTK XML files generation methods.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator._indent">
+<span class="sig-name descname"><span class="pre">_indent</span></span><a class="headerlink" href="#crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator._indent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Formatting indentation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_file_header">
+<span class="sig-name descname"><span class="pre">write_file_header</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vtk_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/ioput/miscoutputfiles/vtkoutput.html#XMLGenerator.write_file_header"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_file_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write VTK file header.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_file_footer">
+<span class="sig-name descname"><span class="pre">write_file_footer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vtk_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/ioput/miscoutputfiles/vtkoutput.html#XMLGenerator.write_file_footer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_file_footer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write VTK file footer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_open_dataset_elem">
+<span class="sig-name descname"><span class="pre">write_open_dataset_elem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vtk_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_parameters</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/ioput/miscoutputfiles/vtkoutput.html#XMLGenerator.write_open_dataset_elem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_open_dataset_elem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open (write) VTK dataset element.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_close_dataset_elem">
+<span class="sig-name descname"><span class="pre">write_close_dataset_elem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vtk_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/ioput/miscoutputfiles/vtkoutput.html#XMLGenerator.write_close_dataset_elem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_close_dataset_elem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close (write) VTK dataset element.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_open_dataset_piece">
+<span class="sig-name descname"><span class="pre">write_open_dataset_piece</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vtk_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">piece_parameters</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/ioput/miscoutputfiles/vtkoutput.html#XMLGenerator.write_open_dataset_piece"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_open_dataset_piece" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open (write) VTK dataset element piece.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_close_dataset_piece">
+<span class="sig-name descname"><span class="pre">write_close_dataset_piece</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vtk_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/ioput/miscoutputfiles/vtkoutput.html#XMLGenerator.write_close_dataset_piece"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_close_dataset_piece" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close (write) VTK dataset element piece.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_open_point_data">
+<span class="sig-name descname"><span class="pre">write_open_point_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vtk_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/ioput/miscoutputfiles/vtkoutput.html#XMLGenerator.write_open_point_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_open_point_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open (write) VTK point data element.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_close_point_data">
+<span class="sig-name descname"><span class="pre">write_close_point_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vtk_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/ioput/miscoutputfiles/vtkoutput.html#XMLGenerator.write_close_point_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_close_point_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close (write) VTK point data element.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_open_cell_data">
+<span class="sig-name descname"><span class="pre">write_open_cell_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vtk_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/ioput/miscoutputfiles/vtkoutput.html#XMLGenerator.write_open_cell_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_open_cell_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open (write) VTK cell data element.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_close_cell_data">
+<span class="sig-name descname"><span class="pre">write_close_cell_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vtk_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/ioput/miscoutputfiles/vtkoutput.html#XMLGenerator.write_close_cell_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_close_cell_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close (write) VTK cell data element.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_cell_data_array">
+<span class="sig-name descname"><span class="pre">write_cell_data_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vtk_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_parameters</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/ioput/miscoutputfiles/vtkoutput.html#XMLGenerator.write_cell_data_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_cell_data_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write VTK cell data element.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.enclose">
+<span class="sig-name descname"><span class="pre">enclose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/ioput/miscoutputfiles/vtkoutput.html#XMLGenerator.enclose"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.enclose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enclose input in literal quotation marks.</p>
+</dd></dl>
+
+<p>VTK XML file constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – VTK file type.</p></li>
+<li><p><strong>version</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – VTK version.</p></li>
+<li><p><strong>byte_order</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – VTK byte order.</p></li>
+<li><p><strong>format</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – VTK file format.</p></li>
+<li><p><strong>precision</strong> (<em>{'SinglePrecision'</em><em>, </em><em>'DoublePrecision'}</em>) – VTK file data precision.</p></li>
+<li><p><strong>header_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – VTK header type.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">List of Public Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id0" title="crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.enclose"><code class="xref py py-obj docutils literal notranslate"><span class="pre">enclose</span></code></a></p></td>
+<td><p>Enclose input in literal quotation marks.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id1" title="crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_cell_data_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_cell_data_array</span></code></a></p></td>
+<td><p>Write VTK cell data element.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id2" title="crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_close_cell_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_close_cell_data</span></code></a></p></td>
+<td><p>Close (write) VTK cell data element.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id3" title="crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_close_dataset_elem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_close_dataset_elem</span></code></a></p></td>
+<td><p>Close (write) VTK dataset element.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id4" title="crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_close_dataset_piece"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_close_dataset_piece</span></code></a></p></td>
+<td><p>Close (write) VTK dataset element piece.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id5" title="crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_close_point_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_close_point_data</span></code></a></p></td>
+<td><p>Close (write) VTK point data element.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id6" title="crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_file_footer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_file_footer</span></code></a></p></td>
+<td><p>Write VTK file footer.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id7" title="crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_file_header"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_file_header</span></code></a></p></td>
+<td><p>Write VTK file header.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id8" title="crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_open_cell_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_open_cell_data</span></code></a></p></td>
+<td><p>Open (write) VTK cell data element.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id9" title="crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_open_dataset_elem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_open_dataset_elem</span></code></a></p></td>
+<td><p>Open (write) VTK dataset element.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id10" title="crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_open_dataset_piece"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_open_dataset_piece</span></code></a></p></td>
+<td><p>Open (write) VTK dataset element piece.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id11" title="crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.write_open_point_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_open_point_data</span></code></a></p></td>
+<td><p>Open (write) VTK point data element.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">byte_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/ioput/miscoutputfiles/vtkoutput.html#XMLGenerator.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.ioput.miscoutputfiles.vtkoutput.XMLGenerator.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>VTK XML file constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – VTK file type.</p></li>
+<li><p><strong>version</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – VTK version.</p></li>
+<li><p><strong>byte_order</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – VTK byte order.</p></li>
+<li><p><strong>format</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – VTK file format.</p></li>
+<li><p><strong>precision</strong> (<em>{'SinglePrecision'</em><em>, </em><em>'DoublePrecision'}</em>) – VTK file data precision.</p></li>
+<li><p><strong>header_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – VTK header type.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id0">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">enclose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/ioput/miscoutputfiles/vtkoutput.html#XMLGenerator.enclose"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enclose input in literal quotation marks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Input to be converted into a string enclosed in literal quotation
+marks.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>str</strong> – Input converted into a string enclosed in literal quotation marks.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">write_cell_data_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vtk_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_parameters</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/ioput/miscoutputfiles/vtkoutput.html#XMLGenerator.write_cell_data_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write VTK cell data element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vtk_file</strong> (<em>file</em>) – VTK file.</p></li>
+<li><p><strong>data_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – Sorted data of cell element.</p></li>
+<li><p><strong>data_parameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Parameters of cell element.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">write_close_cell_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vtk_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/ioput/miscoutputfiles/vtkoutput.html#XMLGenerator.write_close_cell_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close (write) VTK cell data element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vtk_file</strong> (<em>file</em>) – VTK file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">write_close_dataset_elem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vtk_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/ioput/miscoutputfiles/vtkoutput.html#XMLGenerator.write_close_dataset_elem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close (write) VTK dataset element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vtk_file</strong> (<em>file</em>) – VTK file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">write_close_dataset_piece</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vtk_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/ioput/miscoutputfiles/vtkoutput.html#XMLGenerator.write_close_dataset_piece"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close (write) VTK dataset element piece.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vtk_file</strong> (<em>file</em>) – VTK file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">write_close_point_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vtk_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/ioput/miscoutputfiles/vtkoutput.html#XMLGenerator.write_close_point_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close (write) VTK point data element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vtk_file</strong> (<em>file</em>) – VTK file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">write_file_footer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vtk_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/ioput/miscoutputfiles/vtkoutput.html#XMLGenerator.write_file_footer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write VTK file footer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vtk_file</strong> (<em>file</em>) – VTK file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">write_file_header</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vtk_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/ioput/miscoutputfiles/vtkoutput.html#XMLGenerator.write_file_header"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id7" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write VTK file header.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vtk_file</strong> (<em>file</em>) – VTK file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id8">
+<span class="sig-name descname"><span class="pre">write_open_cell_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vtk_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/ioput/miscoutputfiles/vtkoutput.html#XMLGenerator.write_open_cell_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id8" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open (write) VTK cell data element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vtk_file</strong> (<em>file</em>) – VTK file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id9">
+<span class="sig-name descname"><span class="pre">write_open_dataset_elem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vtk_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_parameters</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/ioput/miscoutputfiles/vtkoutput.html#XMLGenerator.write_open_dataset_elem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id9" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open (write) VTK dataset element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vtk_file</strong> (<em>file</em>) – VTK file.</p></li>
+<li><p><strong>dataset_parameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – VTK dataset element parameters.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id10">
+<span class="sig-name descname"><span class="pre">write_open_dataset_piece</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vtk_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">piece_parameters</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/ioput/miscoutputfiles/vtkoutput.html#XMLGenerator.write_open_dataset_piece"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id10" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open (write) VTK dataset element piece.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vtk_file</strong> (<em>file</em>) – VTK file.</p></li>
+<li><p><strong>piece_parameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – VTK dataset element piece parameters.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id11">
+<span class="sig-name descname"><span class="pre">write_open_point_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vtk_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/crate/ioput/miscoutputfiles/vtkoutput.html#XMLGenerator.write_open_point_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id11" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open (write) VTK point data element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vtk_file</strong> (<em>file</em>) – VTK file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="crate.ioput.miscoutputfiles.vtkoutput.VoxelsArraysFactory.html" class="btn btn-neutral float-left" title="crate.ioput.miscoutputfiles.vtkoutput.VoxelsArraysFactory" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="crate.ioput.packager.html" class="btn btn-neutral float-right" title="crate.ioput.packager" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

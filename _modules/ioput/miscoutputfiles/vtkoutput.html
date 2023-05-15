@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ioput.miscoutputfiles.vtkoutput &mdash; crate 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            crate
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/crate.html">Code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">crate</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ioput.miscoutputfiles.vtkoutput</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ioput.miscoutputfiles.vtkoutput</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;VTK (XML format) output files.</span>
+
+<span class="sd">This module includes a complete toolkit to generate VTK files (XML format)</span>
+<span class="sd">containing data defined at the microstructure level, assumed to be spatially</span>
+<span class="sd">discretized in a regular grid of voxels. Such data may include information</span>
+<span class="sd">about the material phases, clusters and state variables local fields, allowing</span>
+<span class="sd">the spatial visualization through suitable VTK-reading software</span>
+<span class="sd">(e.g., Paraview).</span>
+
+<span class="sd">Classes</span>
+<span class="sd">-------</span>
+<span class="sd">VTKOutput</span>
+<span class="sd">    VTK output.</span>
+<span class="sd">VTKCollection</span>
+<span class="sd">    VTK collection.</span>
+<span class="sd">XMLGenerator</span>
+<span class="sd">    VTK XML files generation methods.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#                                                                       Modules</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1"># Standard</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="c1"># Third-party</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="c1"># Local</span>
+<span class="kn">import</span> <span class="nn">tensor.matrixoperations</span> <span class="k">as</span> <span class="nn">mop</span>
+<span class="kn">from</span> <span class="nn">ioput.miscoutputfiles.voxelsoutput</span> <span class="kn">import</span> <span class="n">VoxelsArraysFactory</span>
+<span class="c1">#</span>
+<span class="c1">#                                                          Authorship &amp; Credits</span>
+<span class="c1"># =============================================================================</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Bernardo Ferreira (bernardo_ferreira@brown.edu)&#39;</span>
+<span class="n">__credits__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Bernardo Ferreira&#39;</span><span class="p">,</span> <span class="p">]</span>
+<span class="n">__status__</span> <span class="o">=</span> <span class="s1">&#39;Stable&#39;</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="VTKOutput"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.VTKOutput.html#crate.main.VTKOutput">[docs]</a><span class="k">class</span> <span class="nc">VTKOutput</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;VTK output.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    _vtk_collection : VTKCollection</span>
+<span class="sd">        VTK collection output.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    write_vtk_file_clustering(self, crve)</span>
+<span class="sd">        Write VTK file associated with the CRVE clustering.</span>
+<span class="sd">    write_vtk_file_time_step(self, time_step, strain_formulation, \</span>
+<span class="sd">                             problem_type, crve, material_state, \</span>
+<span class="sd">                             vtk_vars=&#39;all&#39;, adaptivity_manager=None)</span>
+<span class="sd">        Write VTK file associated with time step (increment).</span>
+<span class="sd">    rewind_files(self, rewind_inc)</span>
+<span class="sd">        Rewind VTK output files.</span>
+<span class="sd">    _set_image_data_parameters(rve_dims, n_voxels_dims)</span>
+<span class="sd">        Set ImageData dataset parameters.</span>
+<span class="sd">    _set_cell_data_name(self, comp_order_sym, comp_order_nsym, var_name, \</span>
+<span class="sd">                        var_type, idx=None, model_name=None)</span>
+<span class="sd">        Set variable cell data array name.</span>
+<span class="sd">    _set_state_var_descriptors(self, n_dim, comp_order_sym, comp_order_nsym, \</span>
+<span class="sd">                               var_name, source, model_state_variables=None, \</span>
+<span class="sd">                               cluster=None, clusters_state=None)</span>
+<span class="sd">        Set state variable descriptors required to output cell data array.</span>
+<span class="sd">    _state_var_cell_data_array(self, n_dim, comp_order_sym, comp_order_nsym, \</span>
+<span class="sd">                               material_phases, material_phases_models, \</span>
+<span class="sd">                               phase_clusters, voxels_clusters, \</span>
+<span class="sd">                               clusters_state, var_name, var_type, \</span>
+<span class="sd">                               comp_idx=None, model_name=None)</span>
+<span class="sd">        Build state variable cell data array.</span>
+<span class="sd">    _reset_labels_from_zero(array_1d)</span>
+<span class="sd">        Reset 1d array of integers starting from zero.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="VTKOutput.__init__"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.VTKOutput.html#crate.main.VTKOutput.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">byte_order</span><span class="p">,</span> <span class="nb">format</span><span class="p">,</span> <span class="n">precision</span><span class="p">,</span>
+                 <span class="n">header_type</span><span class="p">,</span> <span class="n">base_name</span><span class="p">,</span> <span class="n">vtk_dir</span><span class="p">,</span> <span class="n">pvd_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        type : str</span>
+<span class="sd">            VTK file type.</span>
+<span class="sd">        version : str</span>
+<span class="sd">            VTK version.</span>
+<span class="sd">        byte_order : str</span>
+<span class="sd">            VTK byte order.</span>
+<span class="sd">        format : str</span>
+<span class="sd">            VTK file format.</span>
+<span class="sd">        precision : {&#39;SinglePrecision&#39;, &#39;DoublePrecision&#39;}</span>
+<span class="sd">            VTK file data precision.</span>
+<span class="sd">        header_type : str</span>
+<span class="sd">            VTK header type.</span>
+<span class="sd">        base_name : str</span>
+<span class="sd">            Base name of VTK files.</span>
+<span class="sd">        vtk_dir : str</span>
+<span class="sd">            Directory where VTK files are stored.</span>
+<span class="sd">        pvd_dir : str, default=None</span>
+<span class="sd">            Directory where PVD file is stored.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_type</span> <span class="o">=</span> <span class="nb">type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_version</span> <span class="o">=</span> <span class="n">version</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_byte_order</span> <span class="o">=</span> <span class="n">byte_order</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_format</span> <span class="o">=</span> <span class="nb">format</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_precision</span> <span class="o">=</span> <span class="n">precision</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_header_type</span> <span class="o">=</span> <span class="n">header_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_base_name</span> <span class="o">=</span> <span class="n">base_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vtk_dir</span> <span class="o">=</span> <span class="n">vtk_dir</span>
+        <span class="k">if</span> <span class="n">pvd_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pvd_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vtk_dir</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pvd_dir</span> <span class="o">=</span> <span class="n">pvd_dir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vtk_collection</span> <span class="o">=</span> <span class="kc">None</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="VTKOutput.write_vtk_file_clustering"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.VTKOutput.html#crate.main.VTKOutput.write_vtk_file_clustering">[docs]</a>    <span class="k">def</span> <span class="nf">write_vtk_file_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write VTK file associated with the CRVE clustering.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        crve : CRVE</span>
+<span class="sd">            Cluster-Reduced Representative Volume Element.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set clustering VTK file path</span>
+        <span class="n">vtk_file_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vtk_dir</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_name</span> <span class="o">+</span> <span class="s1">&#39;_clusters.vti&#39;</span>
+        <span class="c1"># Open clustering VTK file (append mode)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">vtk_file_path</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">vtk_file_path</span><span class="p">)</span>
+        <span class="n">vtk_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">vtk_file_path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Instantiate VTK XML generator</span>
+        <span class="n">xml</span> <span class="o">=</span> <span class="n">XMLGenerator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_version</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_byte_order</span><span class="p">,</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">_format</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_precision</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_header_type</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Get RVE dimensions</span>
+        <span class="n">rve_dims</span> <span class="o">=</span> <span class="n">crve</span><span class="o">.</span><span class="n">get_rve_dims</span><span class="p">()</span>
+        <span class="c1"># Get regular grid of voxels</span>
+        <span class="n">regular_grid</span> <span class="o">=</span> <span class="n">crve</span><span class="o">.</span><span class="n">get_regular_grid</span><span class="p">()</span>
+        <span class="c1"># Get number of voxels in each direction</span>
+        <span class="n">n_voxels_dims</span> <span class="o">=</span> <span class="p">[</span><span class="n">regular_grid</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">regular_grid</span><span class="o">.</span><span class="n">shape</span><span class="p">))]</span>
+        <span class="c1"># Get cluster associated with each pixel/voxel</span>
+        <span class="n">voxels_clusters</span> <span class="o">=</span> <span class="n">crve</span><span class="o">.</span><span class="n">get_voxels_clusters</span><span class="p">()</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Write VTK file header</span>
+        <span class="n">xml</span><span class="o">.</span><span class="n">write_file_header</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Write VTK dataset element</span>
+        <span class="n">dataset_parameters</span><span class="p">,</span> <span class="n">piece_parameters</span> <span class="o">=</span> \
+            <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_set_image_data_parameters</span><span class="p">(</span><span class="n">rve_dims</span><span class="p">,</span> <span class="n">n_voxels_dims</span><span class="p">)</span>
+        <span class="n">xml</span><span class="o">.</span><span class="n">write_open_dataset_elem</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">,</span> <span class="n">dataset_parameters</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Open VTK dataset element piece</span>
+        <span class="n">xml</span><span class="o">.</span><span class="n">write_open_dataset_piece</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">,</span> <span class="n">piece_parameters</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Open VTK dataset element piece cell data</span>
+        <span class="n">xml</span><span class="o">.</span><span class="n">write_open_cell_data</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Write VTK cell data array - Material phases</span>
+        <span class="n">data_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">regular_grid</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">))</span>
+        <span class="n">min_val</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">data_list</span><span class="p">)</span>
+        <span class="n">max_val</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">data_list</span><span class="p">)</span>
+        <span class="n">data_parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Name&#39;</span><span class="p">:</span> <span class="s1">&#39;Material phase&#39;</span><span class="p">,</span> <span class="s1">&#39;format&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format</span><span class="p">,</span>
+                           <span class="s1">&#39;RangeMin&#39;</span><span class="p">:</span> <span class="n">min_val</span><span class="p">,</span> <span class="s1">&#39;RangeMax&#39;</span><span class="p">:</span> <span class="n">max_val</span><span class="p">}</span>
+        <span class="n">xml</span><span class="o">.</span><span class="n">write_cell_data_array</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">,</span> <span class="n">data_list</span><span class="p">,</span> <span class="n">data_parameters</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Write VTK cell data array - Clusters</span>
+        <span class="n">voxels_clusters_flat</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reset_labels_from_zero</span><span class="p">(</span><span class="n">voxels_clusters</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">))</span>
+        <span class="n">data_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">voxels_clusters_flat</span><span class="p">)</span>
+        <span class="n">min_val</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">data_list</span><span class="p">)</span>
+        <span class="n">max_val</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">data_list</span><span class="p">)</span>
+        <span class="n">data_parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Name&#39;</span><span class="p">:</span> <span class="s1">&#39;Cluster&#39;</span><span class="p">,</span> <span class="s1">&#39;format&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format</span><span class="p">,</span>
+                           <span class="s1">&#39;RangeMin&#39;</span><span class="p">:</span> <span class="n">min_val</span><span class="p">,</span> <span class="s1">&#39;RangeMax&#39;</span><span class="p">:</span> <span class="n">max_val</span><span class="p">}</span>
+        <span class="n">xml</span><span class="o">.</span><span class="n">write_cell_data_array</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">,</span> <span class="n">data_list</span><span class="p">,</span> <span class="n">data_parameters</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Close VTK dataset element cell data</span>
+        <span class="n">xml</span><span class="o">.</span><span class="n">write_close_cell_data</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Close VTK dataset element piece</span>
+        <span class="n">xml</span><span class="o">.</span><span class="n">write_close_dataset_piece</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Close VTK dataset element</span>
+        <span class="n">xml</span><span class="o">.</span><span class="n">write_close_dataset_elem</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Write VTK file footer</span>
+        <span class="n">xml</span><span class="o">.</span><span class="n">write_file_footer</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Close clustering VTK file</span>
+        <span class="n">vtk_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="VTKOutput.write_vtk_file_time_step"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.VTKOutput.html#crate.main.VTKOutput.write_vtk_file_time_step">[docs]</a>    <span class="k">def</span> <span class="nf">write_vtk_file_time_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_step</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span>
+                                 <span class="n">problem_type</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">material_state</span><span class="p">,</span>
+                                 <span class="n">vtk_vars</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">adaptivity_manager</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write VTK file associated with time step (increment).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        time_step : int</span>
+<span class="sd">            Time step.</span>
+<span class="sd">        strain_formulation: {&#39;infinitesimal&#39;, &#39;finite&#39;}</span>
+<span class="sd">            Problem strain formulation.</span>
+<span class="sd">        problem_type : int</span>
+<span class="sd">            Problem type: 2D plane strain (1), 2D plane stress (2),</span>
+<span class="sd">            2D axisymmetric (3) and 3D (4).</span>
+<span class="sd">        crve : CRVE</span>
+<span class="sd">            Cluster-Reduced Representative Volume Element.</span>
+<span class="sd">        material_state : MaterialState</span>
+<span class="sd">            CRVE material constitutive state.</span>
+<span class="sd">        vtk_vars : {&#39;all&#39;, &#39;common&#39;}, default=&#39;all&#39;</span>
+<span class="sd">            If &#39;common&#39;, only state variables common to all material phases</span>
+<span class="sd">            constitutive models are output. Otherwise, all state variables are</span>
+<span class="sd">            output.</span>
+<span class="sd">        adaptivity_manager : AdaptivityManager</span>
+<span class="sd">            CRVE clustering adaptivity manager.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set VTK file path</span>
+        <span class="n">vtk_file_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vtk_dir</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_name</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> \
+            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">time_step</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.vti&#39;</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Open VTK collection file</span>
+        <span class="k">if</span> <span class="n">time_step</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Set VTK collection file path</span>
+            <span class="n">pvd_file_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pvd_dir</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_name</span> <span class="o">+</span> <span class="s1">&#39;.pvd&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_vtk_collection</span> <span class="o">=</span> <span class="n">VTKCollection</span><span class="p">(</span><span class="n">pvd_file_path</span><span class="o">=</span><span class="n">pvd_file_path</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_vtk_collection</span><span class="o">.</span><span class="n">init_vtk_collection_file</span><span class="p">()</span>
+        <span class="c1"># Add VTK file path to collection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vtk_collection</span><span class="o">.</span><span class="n">write_vtk_collection_file</span><span class="p">(</span>
+            <span class="n">time_step</span><span class="o">=</span><span class="n">time_step</span><span class="p">,</span>
+            <span class="n">time_step_file_path</span><span class="o">=</span><span class="s1">&#39;VTK/&#39;</span> <span class="o">+</span> <span class="n">vtk_file_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;VTK/&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Open clustering VTK file (append mode)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">vtk_file_path</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">vtk_file_path</span><span class="p">)</span>
+        <span class="n">vtk_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">vtk_file_path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Instantiate VTK XML generator</span>
+        <span class="n">xml</span> <span class="o">=</span> <span class="n">XMLGenerator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_version</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_byte_order</span><span class="p">,</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">_format</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_precision</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_header_type</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Get RVE dimensions</span>
+        <span class="n">rve_dims</span> <span class="o">=</span> <span class="n">crve</span><span class="o">.</span><span class="n">get_rve_dims</span><span class="p">()</span>
+        <span class="c1"># Set problem number of dimensions</span>
+        <span class="n">n_dim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rve_dims</span><span class="p">)</span>
+        <span class="c1"># Get strain/stress components order</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span> <span class="o">=</span> \
+            <span class="n">mop</span><span class="o">.</span><span class="n">get_problem_type_parameters</span><span class="p">(</span><span class="n">problem_type</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Get regular grid of voxels</span>
+        <span class="n">regular_grid</span> <span class="o">=</span> <span class="n">crve</span><span class="o">.</span><span class="n">get_regular_grid</span><span class="p">()</span>
+        <span class="c1"># Get number of voxels in each direction</span>
+        <span class="n">n_voxels_dims</span> <span class="o">=</span> <span class="p">[</span><span class="n">regular_grid</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">regular_grid</span><span class="o">.</span><span class="n">shape</span><span class="p">))]</span>
+        <span class="c1"># Get material phases</span>
+        <span class="n">material_phases</span> <span class="o">=</span> <span class="n">crve</span><span class="o">.</span><span class="n">get_material_phases</span><span class="p">()</span>
+        <span class="c1"># Get clusters associated with each material phase</span>
+        <span class="n">phase_clusters</span> <span class="o">=</span> <span class="n">crve</span><span class="o">.</span><span class="n">get_phase_clusters</span><span class="p">()</span>
+        <span class="c1"># Get cluster associated with each pixel/voxel</span>
+        <span class="n">voxels_clusters</span> <span class="o">=</span> <span class="n">crve</span><span class="o">.</span><span class="n">get_voxels_clusters</span><span class="p">()</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Get material constitutive model associated with each material phase</span>
+        <span class="n">material_phases_models</span> <span class="o">=</span> <span class="n">material_state</span><span class="o">.</span><span class="n">get_material_phases_models</span><span class="p">()</span>
+        <span class="c1"># Get material state variables associated with each material cluster</span>
+        <span class="n">clusters_state</span> <span class="o">=</span> <span class="n">material_state</span><span class="o">.</span><span class="n">get_clusters_state</span><span class="p">()</span>
+        <span class="c1"># Get deformation gradient associated with each material cluster</span>
+        <span class="n">clusters_def_gradient_mf</span> <span class="o">=</span> \
+            <span class="n">material_state</span><span class="o">.</span><span class="n">get_clusters_def_gradient_mf</span><span class="p">()</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Instantiate factory of voxels arrays</span>
+        <span class="n">voxels_array_factory</span> <span class="o">=</span> <span class="n">VoxelsArraysFactory</span><span class="p">(</span><span class="n">strain_formulation</span><span class="p">,</span>
+                                                   <span class="n">problem_type</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Write VTK file header</span>
+        <span class="n">xml</span><span class="o">.</span><span class="n">write_file_header</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Write VTK dataset element</span>
+        <span class="n">dataset_parameters</span><span class="p">,</span> <span class="n">piece_parameters</span> <span class="o">=</span> \
+            <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_set_image_data_parameters</span><span class="p">(</span><span class="n">rve_dims</span><span class="p">,</span> <span class="n">n_voxels_dims</span><span class="p">)</span>
+        <span class="n">xml</span><span class="o">.</span><span class="n">write_open_dataset_elem</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">,</span> <span class="n">dataset_parameters</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Open VTK dataset element piece</span>
+        <span class="n">xml</span><span class="o">.</span><span class="n">write_open_dataset_piece</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">,</span> <span class="n">piece_parameters</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Open VTK dataset element piece cell data</span>
+        <span class="n">xml</span><span class="o">.</span><span class="n">write_open_cell_data</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Write VTK cell data array - Material phases</span>
+        <span class="n">data_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">regular_grid</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">))</span>
+        <span class="n">min_val</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">data_list</span><span class="p">)</span>
+        <span class="n">max_val</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">data_list</span><span class="p">)</span>
+        <span class="n">data_parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Name&#39;</span><span class="p">:</span> <span class="s1">&#39;Material phase&#39;</span><span class="p">,</span> <span class="s1">&#39;format&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format</span><span class="p">,</span>
+                           <span class="s1">&#39;RangeMin&#39;</span><span class="p">:</span> <span class="n">min_val</span><span class="p">,</span> <span class="s1">&#39;RangeMax&#39;</span><span class="p">:</span> <span class="n">max_val</span><span class="p">}</span>
+        <span class="n">xml</span><span class="o">.</span><span class="n">write_cell_data_array</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">,</span> <span class="n">data_list</span><span class="p">,</span> <span class="n">data_parameters</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Write VTK cell data array - Clusters</span>
+        <span class="n">voxels_clusters_flat</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reset_labels_from_zero</span><span class="p">(</span><span class="n">voxels_clusters</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">))</span>
+        <span class="n">data_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">voxels_clusters_flat</span><span class="p">)</span>
+        <span class="n">min_val</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">data_list</span><span class="p">)</span>
+        <span class="n">max_val</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">data_list</span><span class="p">)</span>
+        <span class="n">data_parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Name&#39;</span><span class="p">:</span> <span class="s1">&#39;Cluster&#39;</span><span class="p">,</span> <span class="s1">&#39;format&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format</span><span class="p">,</span>
+                           <span class="s1">&#39;RangeMin&#39;</span><span class="p">:</span> <span class="n">min_val</span><span class="p">,</span> <span class="s1">&#39;RangeMax&#39;</span><span class="p">:</span> <span class="n">max_val</span><span class="p">}</span>
+        <span class="n">xml</span><span class="o">.</span><span class="n">write_cell_data_array</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">,</span> <span class="n">data_list</span><span class="p">,</span> <span class="n">data_parameters</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Set state variables common to all material constitutive models</span>
+        <span class="k">if</span> <span class="n">problem_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">common_var_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;stress_mf&#39;</span><span class="p">,</span> <span class="s1">&#39;stress_33&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">common_var_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;stress_mf&#39;</span><span class="p">]</span>
+        <span class="c1"># Loop over common state variables</span>
+        <span class="k">for</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="n">common_var_list</span><span class="p">:</span>
+            <span class="c1"># Initialize common state variable flag</span>
+            <span class="n">is_common_var</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Loop over material phases</span>
+            <span class="k">for</span> <span class="n">mat_phase</span> <span class="ow">in</span> <span class="n">material_phases</span><span class="p">:</span>
+                <span class="c1"># Get material phase constitutive model</span>
+                <span class="n">constitutive_model</span> <span class="o">=</span> <span class="n">material_phases_models</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">mat_phase</span><span class="p">)]</span>
+                <span class="c1"># Get material constitutive model state variables</span>
+                <span class="n">model_state_variables</span> <span class="o">=</span> <span class="n">constitutive_model</span><span class="o">.</span><span class="n">state_init</span><span class="p">()</span>
+                <span class="c1"># Check state variable</span>
+                <span class="k">if</span> <span class="n">var_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">model_state_variables</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="c1"># Set common state variable flag</span>
+                    <span class="n">is_common_var</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="c1"># Remove state variable from common list</span>
+                    <span class="n">common_var_list</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">var_name</span><span class="p">)</span>
+                    <span class="c1"># Skip state variable output</span>
+                    <span class="k">break</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Output common state variable</span>
+            <span class="k">if</span> <span class="n">is_common_var</span><span class="p">:</span>
+                <span class="c1"># Get state variable descriptors</span>
+                <span class="n">var</span><span class="p">,</span> <span class="n">var_type</span><span class="p">,</span> <span class="n">var_n_comp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_state_var_descriptors</span><span class="p">(</span>
+                    <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span><span class="p">,</span> <span class="n">var_name</span><span class="p">,</span>
+                    <span class="n">source</span><span class="o">=</span><span class="s1">&#39;model_state_variables&#39;</span><span class="p">,</span>
+                    <span class="n">model_state_variables</span><span class="o">=</span><span class="n">model_state_variables</span><span class="p">)</span>
+                <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                <span class="c1"># Loop over state variable components</span>
+                <span class="k">for</span> <span class="n">comp_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">var_n_comp</span><span class="p">):</span>
+                    <span class="c1"># Build state variable cell data array</span>
+                    <span class="n">rg_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_var_cell_data_array</span><span class="p">(</span>
+                        <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span><span class="p">,</span>
+                        <span class="n">material_phases</span><span class="p">,</span> <span class="n">material_phases_models</span><span class="p">,</span>
+                        <span class="n">phase_clusters</span><span class="p">,</span> <span class="n">voxels_clusters</span><span class="p">,</span> <span class="n">clusters_state</span><span class="p">,</span>
+                        <span class="n">var_name</span><span class="p">,</span> <span class="n">var_type</span><span class="p">,</span> <span class="n">comp_idx</span><span class="o">=</span><span class="n">comp_idx</span><span class="p">)</span>
+                    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                    <span class="c1"># Set output variable data name</span>
+                    <span class="n">data_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_cell_data_name</span><span class="p">(</span>
+                        <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span><span class="p">,</span> <span class="n">var_name</span><span class="p">,</span> <span class="n">var_type</span><span class="p">,</span>
+                        <span class="n">idx</span><span class="o">=</span><span class="n">comp_idx</span><span class="p">)</span>
+                    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                    <span class="c1"># Write VTK cell data array - State variable</span>
+                    <span class="n">data_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">rg_array</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">))</span>
+                    <span class="n">min_val</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">data_list</span><span class="p">)</span>
+                    <span class="n">max_val</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">data_list</span><span class="p">)</span>
+                    <span class="n">data_parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Name&#39;</span><span class="p">:</span> <span class="n">data_name</span><span class="p">,</span>
+                                       <span class="s1">&#39;format&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format</span><span class="p">,</span>
+                                       <span class="s1">&#39;RangeMin&#39;</span><span class="p">:</span> <span class="n">min_val</span><span class="p">,</span>
+                                       <span class="s1">&#39;RangeMax&#39;</span><span class="p">:</span> <span class="n">max_val</span><span class="p">}</span>
+                    <span class="n">xml</span><span class="o">.</span><span class="n">write_cell_data_array</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">,</span> <span class="n">data_list</span><span class="p">,</span>
+                                              <span class="n">data_parameters</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="k">if</span> <span class="n">vtk_vars</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+            <span class="c1"># Initialize list of constitutive models whose state variables have</span>
+            <span class="c1"># already been output</span>
+            <span class="n">output_model_names</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="c1"># Loop over material phases</span>
+            <span class="k">for</span> <span class="n">mat_phase</span> <span class="ow">in</span> <span class="n">material_phases</span><span class="p">:</span>
+                <span class="c1"># Get material phase constitutive model</span>
+                <span class="n">constitutive_model</span> <span class="o">=</span> <span class="n">material_phases_models</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">mat_phase</span><span class="p">)]</span>
+                <span class="c1"># Get material constitutive model name</span>
+                <span class="n">model_name</span> <span class="o">=</span> <span class="n">constitutive_model</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span>
+                <span class="c1"># Skip to next material phase if constitutive model state</span>
+                <span class="c1"># variables have already been output. Otherwise, add material</span>
+                <span class="c1"># constitutive model name to output list</span>
+                <span class="k">if</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="n">output_model_names</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">output_model_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+                <span class="c1"># Get material constitutive model state variables</span>
+                <span class="n">model_state_variables</span> <span class="o">=</span> <span class="n">constitutive_model</span><span class="o">.</span><span class="n">state_init</span><span class="p">()</span>
+                <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                <span class="c1"># Loop over constitutive model state variables</span>
+                <span class="k">for</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">model_state_variables</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                                     <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">common_var_list</span><span class="p">)):</span>
+                    <span class="c1"># Get state variable descriptors</span>
+                    <span class="n">var</span><span class="p">,</span> <span class="n">var_type</span><span class="p">,</span> <span class="n">var_n_comp</span> <span class="o">=</span> \
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_set_state_var_descriptors</span><span class="p">(</span>
+                            <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span><span class="p">,</span> <span class="n">var_name</span><span class="p">,</span>
+                            <span class="n">source</span><span class="o">=</span><span class="s1">&#39;model_state_variables&#39;</span><span class="p">,</span>
+                            <span class="n">model_state_variables</span><span class="o">=</span><span class="n">model_state_variables</span><span class="p">)</span>
+                    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                    <span class="c1"># Loop over state variable components</span>
+                    <span class="k">for</span> <span class="n">comp_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">var_n_comp</span><span class="p">):</span>
+                        <span class="c1"># Build state variable cell data array</span>
+                        <span class="n">rg_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_var_cell_data_array</span><span class="p">(</span>
+                            <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span><span class="p">,</span>
+                            <span class="n">material_phases</span><span class="p">,</span> <span class="n">material_phases_models</span><span class="p">,</span>
+                            <span class="n">phase_clusters</span><span class="p">,</span> <span class="n">voxels_clusters</span><span class="p">,</span> <span class="n">clusters_state</span><span class="p">,</span>
+                            <span class="n">var_name</span><span class="p">,</span> <span class="n">var_type</span><span class="p">,</span> <span class="n">comp_idx</span><span class="o">=</span><span class="n">comp_idx</span><span class="p">,</span>
+                            <span class="n">model_name</span><span class="o">=</span><span class="n">model_name</span><span class="p">)</span>
+                        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                        <span class="c1"># Set output variable data name</span>
+                        <span class="n">data_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_cell_data_name</span><span class="p">(</span>
+                            <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span><span class="p">,</span> <span class="n">var_name</span><span class="p">,</span>
+                            <span class="n">var_type</span><span class="p">,</span> <span class="n">idx</span><span class="o">=</span><span class="n">comp_idx</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="n">model_name</span><span class="p">)</span>
+                        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                        <span class="c1"># Write VTK cell data array - State variable</span>
+                        <span class="n">data_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">rg_array</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">))</span>
+                        <span class="n">min_val</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">data_list</span><span class="p">)</span>
+                        <span class="n">max_val</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">data_list</span><span class="p">)</span>
+                        <span class="n">data_parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Name&#39;</span><span class="p">:</span> <span class="n">data_name</span><span class="p">,</span>
+                                           <span class="s1">&#39;format&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format</span><span class="p">,</span>
+                                           <span class="s1">&#39;RangeMin&#39;</span><span class="p">:</span> <span class="n">min_val</span><span class="p">,</span>
+                                           <span class="s1">&#39;RangeMax&#39;</span><span class="p">:</span> <span class="n">max_val</span><span class="p">}</span>
+                        <span class="n">xml</span><span class="o">.</span><span class="n">write_cell_data_array</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">,</span> <span class="n">data_list</span><span class="p">,</span>
+                                                  <span class="n">data_parameters</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Write VTK cell data array - Von Mises equivalent stress</span>
+        <span class="n">array_vox</span> <span class="o">=</span> <span class="n">voxels_array_factory</span><span class="o">.</span><span class="n">build_voxels_array</span><span class="p">(</span>
+            <span class="n">crve</span><span class="p">,</span> <span class="s1">&#39;vm_stress&#39;</span><span class="p">,</span> <span class="n">clusters_state</span><span class="p">,</span> <span class="n">clusters_def_gradient_mf</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">data_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">array_vox</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">))</span>
+        <span class="n">min_val</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">data_list</span><span class="p">)</span>
+        <span class="n">max_val</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">data_list</span><span class="p">)</span>
+        <span class="n">data_parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Name&#39;</span><span class="p">:</span> <span class="s1">&#39;Von Mises Eq. Stress&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;format&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format</span><span class="p">,</span>
+                           <span class="s1">&#39;RangeMin&#39;</span><span class="p">:</span> <span class="n">min_val</span><span class="p">,</span>
+                           <span class="s1">&#39;RangeMax&#39;</span><span class="p">:</span> <span class="n">max_val</span><span class="p">}</span>
+        <span class="n">xml</span><span class="o">.</span><span class="n">write_cell_data_array</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">,</span> <span class="n">data_list</span><span class="p">,</span> <span class="n">data_parameters</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Write VTK cell data array - Von Mises equivalent strain</span>
+        <span class="n">array_vox</span> <span class="o">=</span> <span class="n">voxels_array_factory</span><span class="o">.</span><span class="n">build_voxels_array</span><span class="p">(</span>
+            <span class="n">crve</span><span class="p">,</span> <span class="s1">&#39;vm_strain&#39;</span><span class="p">,</span> <span class="n">clusters_state</span><span class="p">,</span> <span class="n">clusters_def_gradient_mf</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">data_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">array_vox</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">))</span>
+        <span class="n">min_val</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">data_list</span><span class="p">)</span>
+        <span class="n">max_val</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">data_list</span><span class="p">)</span>
+        <span class="n">data_parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Name&#39;</span><span class="p">:</span> <span class="s1">&#39;Von Mises Eq. Strain&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;format&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format</span><span class="p">,</span>
+                           <span class="s1">&#39;RangeMin&#39;</span><span class="p">:</span> <span class="n">min_val</span><span class="p">,</span>
+                           <span class="s1">&#39;RangeMax&#39;</span><span class="p">:</span> <span class="n">max_val</span><span class="p">}</span>
+        <span class="n">xml</span><span class="o">.</span><span class="n">write_cell_data_array</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">,</span> <span class="n">data_list</span><span class="p">,</span> <span class="n">data_parameters</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Write VTK cell data array - Cluster adaptive level</span>
+        <span class="k">if</span> <span class="n">adaptivity_manager</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">rg_array</span> <span class="o">=</span> <span class="n">adaptivity_manager</span><span class="o">.</span><span class="n">get_adapt_vtk_array</span><span class="p">(</span><span class="n">voxels_clusters</span><span class="p">)</span>
+            <span class="n">data_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">rg_array</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">))</span>
+            <span class="n">min_val</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">data_list</span><span class="p">)</span>
+            <span class="n">max_val</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">data_list</span><span class="p">)</span>
+            <span class="n">data_parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Name&#39;</span><span class="p">:</span> <span class="s1">&#39;Adaptive level&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;format&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format</span><span class="p">,</span>
+                               <span class="s1">&#39;RangeMin&#39;</span><span class="p">:</span> <span class="n">min_val</span><span class="p">,</span>
+                               <span class="s1">&#39;RangeMax&#39;</span><span class="p">:</span> <span class="n">max_val</span><span class="p">}</span>
+            <span class="n">xml</span><span class="o">.</span><span class="n">write_cell_data_array</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">,</span> <span class="n">data_list</span><span class="p">,</span> <span class="n">data_parameters</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Close VTK dataset element cell data</span>
+        <span class="n">xml</span><span class="o">.</span><span class="n">write_close_cell_data</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Close VTK dataset element piece</span>
+        <span class="n">xml</span><span class="o">.</span><span class="n">write_close_dataset_piece</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Close VTK dataset element</span>
+        <span class="n">xml</span><span class="o">.</span><span class="n">write_close_dataset_elem</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Write VTK file footer</span>
+        <span class="n">xml</span><span class="o">.</span><span class="n">write_file_footer</span><span class="p">(</span><span class="n">vtk_file</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Close clustering VTK file</span>
+        <span class="n">vtk_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="VTKOutput.rewind_files"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.VTKOutput.html#crate.main.VTKOutput.rewind_files">[docs]</a>    <span class="k">def</span> <span class="nf">rewind_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rewind_inc</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Rewind VTK output files.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        rewind_inc : int</span>
+<span class="sd">            Increment associated with the rewind state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get VTK output files</span>
+        <span class="n">vtk_files_paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_vtk_dir</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span>
+                           <span class="k">for</span> <span class="n">file_path</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_vtk_dir</span><span class="p">)</span>
+                           <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_vtk_dir</span><span class="p">,</span>
+                                                          <span class="n">file_path</span><span class="p">))]</span>
+        <span class="c1"># Loop over VTK output files</span>
+        <span class="k">for</span> <span class="n">vtk_file_path</span> <span class="ow">in</span> <span class="n">vtk_files_paths</span><span class="p">:</span>
+            <span class="c1"># Get VTK output file time step</span>
+            <span class="n">time_step</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">vtk_file_path</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="c1"># Delete VTK output file and remove it from VTK collection</span>
+            <span class="k">if</span> <span class="n">time_step</span> <span class="o">&gt;</span> <span class="n">rewind_inc</span><span class="p">:</span>
+                <span class="c1"># Delete VTK output file</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">vtk_file_path</span><span class="p">)</span>
+                <span class="c1"># Remove VTK output file from VTK collection</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_vtk_collection</span><span class="o">.</span><span class="n">remove_vtk_collection_file</span><span class="p">(</span>
+                    <span class="n">time_step_file_path</span><span class="o">=</span><span class="s1">&#39;VTK/&#39;</span> <span class="o">+</span> <span class="n">vtk_file_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;VTK/&#39;</span><span class="p">,</span>
+                                                                     <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="VTKOutput._set_image_data_parameters"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.VTKOutput.html#crate.main.VTKOutput._set_image_data_parameters">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_set_image_data_parameters</span><span class="p">(</span><span class="n">rve_dims</span><span class="p">,</span> <span class="n">n_voxels_dims</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set ImageData dataset parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        rve_dims : list[float]</span>
+<span class="sd">            RVE size in each dimension.</span>
+<span class="sd">        n_voxels_dims : list[int]</span>
+<span class="sd">            Number of voxels in each dimension of the regular grid (spatial</span>
+<span class="sd">            discretization of the RVE).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dataset_parameters : dict</span>
+<span class="sd">            ImageData dataset parameters.</span>
+<span class="sd">        dataset_parameters : dict</span>
+<span class="sd">            ImageData dataset piece parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set WholeExtent parameter</span>
+        <span class="n">whole_extent</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">n_voxels_dims</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">whole_extent</span><span class="p">)):</span>
+            <span class="n">whole_extent</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Set Origin parameter</span>
+        <span class="n">origin</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Set Spacing parameter</span>
+        <span class="n">spacing</span> <span class="o">=</span> <span class="p">[</span><span class="n">rve_dims</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">/</span><span class="n">n_voxels_dims</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rve_dims</span><span class="p">))]</span>
+        <span class="c1"># Set null third dimension in 2D problem</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">whole_extent</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">whole_extent</span> <span class="o">=</span> <span class="n">whole_extent</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">spacing</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Build ImageData dataset parameters</span>
+        <span class="n">dataset_parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;WholeExtent&#39;</span><span class="p">:</span> <span class="n">whole_extent</span><span class="p">,</span> <span class="s1">&#39;Origin&#39;</span><span class="p">:</span> <span class="n">origin</span><span class="p">,</span>
+                              <span class="s1">&#39;Spacing&#39;</span><span class="p">:</span> <span class="n">spacing</span><span class="p">}</span>
+        <span class="c1"># Build ImageData dataset piece parameters</span>
+        <span class="n">piece_parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Extent&#39;</span><span class="p">:</span> <span class="n">whole_extent</span><span class="p">}</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">dataset_parameters</span><span class="p">,</span> <span class="n">piece_parameters</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="VTKOutput._set_cell_data_name"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.VTKOutput.html#crate.main.VTKOutput._set_cell_data_name">[docs]</a>    <span class="k">def</span> <span class="nf">_set_cell_data_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span><span class="p">,</span> <span class="n">var_name</span><span class="p">,</span>
+                            <span class="n">var_type</span><span class="p">,</span> <span class="n">idx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set variable cell data array name.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        comp_order_sym : list[str]</span>
+<span class="sd">            Strain/Stress components (str) order (symmetric).</span>
+<span class="sd">        comp_order_nsym : list[str]</span>
+<span class="sd">            Strain/Stress components (str) order (non-symmetric).</span>
+<span class="sd">        var_name : str</span>
+<span class="sd">            Variable name.</span>
+<span class="sd">        var_type : str</span>
+<span class="sd">            Variable type.</span>
+<span class="sd">        idx : str, default=None</span>
+<span class="sd">            Component index.</span>
+<span class="sd">        model_name : str, default=None</span>
+<span class="sd">            Material constitutive model name. If provided, the model name is</span>
+<span class="sd">            included as a prefix in the variable cell data array name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set cell data array name prefix</span>
+        <span class="k">if</span> <span class="n">model_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">prefix</span> <span class="o">=</span> <span class="n">model_name</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Set output variable name</span>
+        <span class="k">if</span> <span class="n">var_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;int&#39;</span><span class="p">,</span> <span class="s1">&#39;bool&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">]:</span>
+            <span class="n">data_name</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="n">var_name</span>
+        <span class="k">elif</span> <span class="n">var_type</span> <span class="o">==</span> <span class="s1">&#39;vector&#39;</span><span class="p">:</span>
+            <span class="n">data_name</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="n">var_name</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">var_type</span> <span class="o">==</span> <span class="s1">&#39;sym_matrix_mf&#39;</span><span class="p">:</span>
+            <span class="n">data_name</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="n">var_name</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">comp_order_sym</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">var_type</span> <span class="o">==</span> <span class="s1">&#39;nsym_matrix_mf&#39;</span><span class="p">:</span>
+            <span class="n">data_name</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="n">var_name</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">comp_order_nsym</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data_name</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="n">var_name</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">comp_order_nsym</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">data_name</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="VTKOutput._set_state_var_descriptors"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.VTKOutput.html#crate.main.VTKOutput._set_state_var_descriptors">[docs]</a>    <span class="k">def</span> <span class="nf">_set_state_var_descriptors</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span><span class="p">,</span> <span class="n">var_name</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span>
+            <span class="n">model_state_variables</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cluster</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">clusters_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set state variable descriptors required to output cell data array.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        n_dim : int</span>
+<span class="sd">            Problem dimension.</span>
+<span class="sd">        comp_order_sym : list[str]</span>
+<span class="sd">            Strain/Stress components (str) order (symmetric).</span>
+<span class="sd">        comp_order_nsym : list[str]</span>
+<span class="sd">            Strain/Stress components (str) order (non-symmetric).</span>
+<span class="sd">        var_name : str</span>
+<span class="sd">            State variable name.</span>
+<span class="sd">        source : {&#39;model_state_variables&#39;, &#39;clusters_state&#39;}</span>
+<span class="sd">            Source where state variable is stored.</span>
+<span class="sd">        model_state_variables : dict, default=None</span>
+<span class="sd">            Material model state variables (required if</span>
+<span class="sd">            `source`=&#39;model_state_variables&#39;).</span>
+<span class="sd">        cluster : int, default=None</span>
+<span class="sd">            Cluster label (required if `source`=&#39;clusters_state&#39;).</span>
+<span class="sd">        clusters_state : dict, default=None</span>
+<span class="sd">            Material constitutive model state variables (item, dict) associated</span>
+<span class="sd">            with each material cluster (key, str) (required if</span>
+<span class="sd">            `source`=&#39;clusters_state&#39;).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        var : {int, float, bool,  array}</span>
+<span class="sd">            State variable.</span>
+<span class="sd">        var_type : str</span>
+<span class="sd">            State variable type.</span>
+<span class="sd">        var_n_comp : int</span>
+<span class="sd">            State variable number of components.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get stored state variable for output</span>
+        <span class="k">if</span> <span class="n">source</span> <span class="o">==</span> <span class="s1">&#39;model_state_variables&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">model_state_variables</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;State variable source is not available.&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">stored_var</span> <span class="o">=</span> <span class="n">model_state_variables</span><span class="p">[</span><span class="n">var_name</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">source</span> <span class="o">==</span> <span class="s1">&#39;clusters_state&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">cluster</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">clusters_state</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;State variable source is not available.&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">stored_var</span> <span class="o">=</span> <span class="n">clusters_state</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)][</span><span class="n">var_name</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown source of state variable.&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Set output state variable descriptors</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stored_var</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stored_var</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">):</span>
+            <span class="n">var_type</span> <span class="o">=</span> <span class="s1">&#39;int&#39;</span>
+            <span class="n">var_n_comp</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="n">stored_var</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stored_var</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stored_var</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">):</span>
+            <span class="n">var_type</span> <span class="o">=</span> <span class="s1">&#39;float&#39;</span>
+            <span class="n">var_n_comp</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="n">stored_var</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stored_var</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="n">var_type</span> <span class="o">=</span> <span class="s1">&#39;bool&#39;</span>
+            <span class="n">var_n_comp</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="n">stored_var</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stored_var</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">stored_var</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">var_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;mf&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">stored_var</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order_sym</span><span class="p">):</span>
+                    <span class="n">var_type</span> <span class="o">=</span> <span class="s1">&#39;sym_matrix_mf&#39;</span>
+                    <span class="n">var_n_comp</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order_sym</span><span class="p">)</span>
+                    <span class="n">var</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_from_mf</span><span class="p">(</span><span class="n">stored_var</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span>
+                                                 <span class="n">comp_order_sym</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">var_type</span> <span class="o">=</span> <span class="s1">&#39;nsym_matrix_mf&#39;</span>
+                    <span class="n">var_n_comp</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order_nsym</span><span class="p">)</span>
+                    <span class="n">var</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_from_mf</span><span class="p">(</span><span class="n">stored_var</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span>
+                                                 <span class="n">comp_order_nsym</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">var_type</span> <span class="o">=</span> <span class="s1">&#39;matrix&#39;</span>
+            <span class="n">var_n_comp</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order_nsym</span><span class="p">)</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="n">stored_var</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">var</span><span class="p">,</span> <span class="n">var_type</span><span class="p">,</span> <span class="n">var_n_comp</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="VTKOutput._state_var_cell_data_array"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.VTKOutput.html#crate.main.VTKOutput._state_var_cell_data_array">[docs]</a>    <span class="k">def</span> <span class="nf">_state_var_cell_data_array</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span>
+            <span class="n">material_phases_models</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span> <span class="n">voxels_clusters</span><span class="p">,</span>
+            <span class="n">clusters_state</span><span class="p">,</span> <span class="n">var_name</span><span class="p">,</span> <span class="n">var_type</span><span class="p">,</span> <span class="n">comp_idx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">model_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Build state variable cell data array.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        n_dim : int</span>
+<span class="sd">            Problem dimension.</span>
+<span class="sd">        comp_order_sym : list[str]</span>
+<span class="sd">            Strain/Stress components (str) order (symmetric).</span>
+<span class="sd">        comp_order_nsym : list[str]</span>
+<span class="sd">            Strain/Stress components (str) order (non-symmetric).</span>
+<span class="sd">        material_phases : list[str]</span>
+<span class="sd">            CRVE material phases labels (str).</span>
+<span class="sd">        material_phases_models : dict</span>
+<span class="sd">            Material constitutive model (item, ConstitutiveModel) associated</span>
+<span class="sd">            with each material phase (key, str).</span>
+<span class="sd">        phase_clusters : dict</span>
+<span class="sd">            Clusters labels (item, list of int) associated with each material</span>
+<span class="sd">            phase (key, str).</span>
+<span class="sd">        voxels_clusters : numpy.ndarray (2d or 3d)</span>
+<span class="sd">            Regular grid of voxels (spatial discretization of the RVE), where</span>
+<span class="sd">            each entry contains the cluster label (int) assigned to the</span>
+<span class="sd">            corresponding voxel.</span>
+<span class="sd">        clusters_state : dict</span>
+<span class="sd">            Material constitutive model state variables (item, dict) associated</span>
+<span class="sd">            with each material cluster (key, str) (required if</span>
+<span class="sd">            `source`=&#39;clusters_state&#39;).</span>
+<span class="sd">        var_name : str</span>
+<span class="sd">            State variable name.</span>
+<span class="sd">        var_type : str</span>
+<span class="sd">            State variable type.</span>
+<span class="sd">        comp_idx : str, default=None</span>
+<span class="sd">            Tensorial component index.</span>
+<span class="sd">        model_name : str, default=None</span>
+<span class="sd">            Material constitutive model name. If not provided, it is assumed</span>
+<span class="sd">            that the state variable is common to all material phases and</span>
+<span class="sd">            associated constitutive models.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        rg_array : numpy.ndarray (2d or 3d)</span>
+<span class="sd">            Array of state variable component of shape equal to RVE regular</span>
+<span class="sd">            grid discretization array.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Initialize regular grid shape array</span>
+        <span class="n">rg_array</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">voxels_clusters</span><span class="p">)</span>
+        <span class="n">rg_array</span> <span class="o">=</span> <span class="n">rg_array</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+        <span class="n">rg_array</span> <span class="o">=</span> <span class="n">rg_array</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Loop over material phases</span>
+        <span class="k">for</span> <span class="n">mat_phase</span> <span class="ow">in</span> <span class="n">material_phases</span><span class="p">:</span>
+            <span class="c1"># Get material phase constitutive model</span>
+            <span class="n">constitutive_model</span> <span class="o">=</span> <span class="n">material_phases_models</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">mat_phase</span><span class="p">)]</span>
+            <span class="c1"># Build state variable cell data array</span>
+            <span class="k">if</span> <span class="n">model_name</span> <span class="ow">is</span> <span class="kc">None</span> \
+                    <span class="ow">or</span> <span class="n">constitutive_model</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span> <span class="o">==</span> <span class="n">model_name</span><span class="p">:</span>
+                <span class="c1"># Loop over material phase clusters</span>
+                <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">phase_clusters</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">]:</span>
+                    <span class="c1"># Get material cluster state variable</span>
+                    <span class="n">cluster_var</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_state_var_descriptors</span><span class="p">(</span>
+                        <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span><span class="p">,</span> <span class="n">var_name</span><span class="p">,</span>
+                        <span class="n">source</span><span class="o">=</span><span class="s1">&#39;clusters_state&#39;</span><span class="p">,</span> <span class="n">cluster</span><span class="o">=</span><span class="n">cluster</span><span class="p">,</span>
+                        <span class="n">clusters_state</span><span class="o">=</span><span class="n">clusters_state</span><span class="p">)</span>
+                    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                    <span class="c1"># Assemble material cluster state variable</span>
+                    <span class="k">if</span> <span class="n">var_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;int&#39;</span><span class="p">,</span> <span class="s1">&#39;bool&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">]:</span>
+                        <span class="n">rg_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">rg_array</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">),</span>
+                                            <span class="n">cluster_var</span><span class="p">,</span> <span class="n">rg_array</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">var_type</span> <span class="o">==</span> <span class="s1">&#39;vector&#39;</span><span class="p">:</span>
+                        <span class="n">rg_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">rg_array</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">),</span>
+                                            <span class="n">cluster_var</span><span class="p">[</span><span class="n">comp_idx</span><span class="p">],</span> <span class="n">rg_array</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">var_type</span> <span class="o">==</span> <span class="s1">&#39;sym_matrix_mf&#39;</span><span class="p">:</span>
+                        <span class="n">idx</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+                                     <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">comp_order_sym</span><span class="p">[</span><span class="n">comp_idx</span><span class="p">]])</span>
+                        <span class="n">rg_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">rg_array</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">),</span>
+                                            <span class="n">cluster_var</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">rg_array</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">var_type</span> <span class="o">==</span> <span class="s1">&#39;nsym_matrix_mf&#39;</span><span class="p">:</span>
+                        <span class="n">idx</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+                                     <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">comp_order_nsym</span><span class="p">[</span><span class="n">comp_idx</span><span class="p">]])</span>
+                        <span class="n">rg_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">rg_array</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">),</span>
+                                            <span class="n">cluster_var</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">rg_array</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">idx</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+                                     <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">comp_order_nsym</span><span class="p">[</span><span class="n">comp_idx</span><span class="p">]])</span>
+                        <span class="n">rg_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">rg_array</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">),</span>
+                                            <span class="n">cluster_var</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">rg_array</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Loop over material phase clusters</span>
+                <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">phase_clusters</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">]:</span>
+                    <span class="c1"># Assemble a default state variable value for all clusters</span>
+                    <span class="c1"># for which the associated material phase is not governed</span>
+                    <span class="c1"># by the provided material constitutive model</span>
+                    <span class="k">if</span> <span class="n">var_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;int&#39;</span><span class="p">]:</span>
+                        <span class="n">rg_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">rg_array</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+                                            <span class="n">rg_array</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">var_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;bool&#39;</span><span class="p">]:</span>
+                        <span class="n">rg_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">rg_array</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">),</span> <span class="kc">False</span><span class="p">,</span>
+                                            <span class="n">rg_array</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">rg_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">rg_array</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+                                            <span class="n">rg_array</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Check if the state variable has been specified for every pixels</span>
+        <span class="c1"># (2D) / voxels (3D)</span>
+        <span class="c1"># in order to build a valid output cell data array</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">rg_array</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">))):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Incomplete VTK output cell data array - &#39;</span>
+                               <span class="o">+</span> <span class="n">var_name</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">rg_array</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="VTKOutput._reset_labels_from_zero"><a class="viewcode-back" href="../../../_autosummary/crate.online.crom.asca.VTKOutput.html#crate.main.VTKOutput._reset_labels_from_zero">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_reset_labels_from_zero</span><span class="p">(</span><span class="n">array_1d</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset 1d array of integers starting from zero.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        array_1d : numpy.ndarray (1d)</span>
+<span class="sd">            1d array of integers.</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        array_1d_new : numpy.ndarray (1d)</span>
+<span class="sd">            Relabeled 1d array of integers.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get sorted old labels</span>
+        <span class="n">old_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">array_1d</span><span class="p">)))</span>
+        <span class="c1"># Set new labels</span>
+        <span class="n">new_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">array_1d</span><span class="p">))))</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Initialize relabeled 1d array</span>
+        <span class="n">array_1d_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">array_1d</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="c1"># Loop over old labels</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">old_labels</span><span class="p">)):</span>
+            <span class="c1"># Get old label indexes</span>
+            <span class="n">idxs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">array_1d</span> <span class="o">==</span> <span class="n">old_labels</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="c1"># Reset old label</span>
+            <span class="n">array_1d_new</span><span class="p">[</span><span class="n">idxs</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Check if all labels have been reset successfuly</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">array_1d_new</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;At least one label has not been successfuly &#39;</span>
+                               <span class="s1">&#39;reset.&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">array_1d_new</span></div></div>
+<span class="c1"># =============================================================================</span>
+<span class="k">class</span> <span class="nc">VTKCollection</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;VTK collection.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    _byte_order : str</span>
+<span class="sd">        VTK byte order.</span>
+<span class="sd">    _indent : str</span>
+<span class="sd">        Formatting indentation.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    init_vtk_collection_file(self)</span>
+<span class="sd">        Open VTK collection output file and write file header and footer.</span>
+<span class="sd">    write_vtk_collection_file(self, time_step, time_step_file_path)</span>
+<span class="sd">        Add VTK file to VTK collection file.</span>
+<span class="sd">    remove_vtk_collection_file(self, time_step_file_path)</span>
+<span class="sd">        Remove VTK file from VTK collection file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pvd_file_path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;VTK collection constructor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        pvd_file_path : str</span>
+<span class="sd">            Path of VTK collection output file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pvd_file_path</span> <span class="o">=</span> <span class="n">pvd_file_path</span>
+        <span class="c1"># Set byte order</span>
+        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">byteorder</span> <span class="o">==</span> <span class="s1">&#39;little&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_byte_order</span> <span class="o">=</span> <span class="s1">&#39;LittleEndian&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_byte_order</span> <span class="o">=</span> <span class="s1">&#39;BigEndian&#39;</span>
+        <span class="c1"># Set formatting indentation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_indent</span> <span class="o">=</span> <span class="s1">&#39;  &#39;</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">init_vtk_collection_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Open VTK collection output file and write file header and footer.&quot;&quot;&quot;</span>
+        <span class="c1"># Open VTK collection file (append mode)</span>
+        <span class="n">vtk_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pvd_file_path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Write VTK collection file header</span>
+        <span class="n">vtk_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;?xml version=&quot;1.0&quot;?&#39;</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">vtk_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;VTKFile type=&#39;</span>
+                       <span class="o">+</span> <span class="n">XMLGenerator</span><span class="o">.</span><span class="n">enclose</span><span class="p">(</span><span class="s1">&#39;Collection&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+                       <span class="o">+</span> <span class="s1">&#39;version=&#39;</span> <span class="o">+</span> <span class="n">XMLGenerator</span><span class="o">.</span><span class="n">enclose</span><span class="p">(</span><span class="s1">&#39;0.1&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+                       <span class="o">+</span> <span class="s1">&#39;byte_order=&#39;</span> <span class="o">+</span> <span class="n">XMLGenerator</span><span class="o">.</span><span class="n">enclose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_byte_order</span><span class="p">)</span>
+                       <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="c1"># Open VTK collection element</span>
+        <span class="n">vtk_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_indent</span> <span class="o">+</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;Collection&#39;</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Close VTK collection element</span>
+        <span class="n">vtk_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_indent</span> <span class="o">+</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;/Collection&#39;</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="c1"># Close VTK collection file</span>
+        <span class="n">vtk_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;/VTKFile&#39;</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="c1"># Close VTK collection file</span>
+        <span class="n">vtk_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">write_vtk_collection_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_step</span><span class="p">,</span> <span class="n">time_step_file_path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add VTK file to VTK collection file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        time_step : int</span>
+<span class="sd">            VTK file time step.</span>
+<span class="sd">        time_step_file_path : str</span>
+<span class="sd">            Path of time step VTK file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Open VTK collection file and read lines (read)</span>
+        <span class="n">file_lines</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pvd_file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Add time step VTK file</span>
+        <span class="n">file_lines</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_indent</span> <span class="o">+</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;DataSet&#39;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+                          <span class="o">+</span> <span class="s1">&#39;timestep=&#39;</span> <span class="o">+</span> <span class="n">XMLGenerator</span><span class="o">.</span><span class="n">enclose</span><span class="p">(</span><span class="n">time_step</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+                          <span class="o">+</span> <span class="s1">&#39;file=&#39;</span> <span class="o">+</span> <span class="n">XMLGenerator</span><span class="o">.</span><span class="n">enclose</span><span class="p">(</span><span class="n">time_step_file_path</span><span class="p">)</span>
+                          <span class="o">+</span> <span class="s1">&#39;/&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Write updated VTK collection file</span>
+        <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pvd_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">file_lines</span><span class="p">)</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">remove_vtk_collection_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_step_file_path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove VTK file from VTK collection file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        time_step_file_path : str</span>
+<span class="sd">            Path of time step VTK file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Open VTK collection file and read lines (read)</span>
+        <span class="n">file_lines</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pvd_file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Loop over VTK output files</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">file_lines</span><span class="p">)):</span>
+            <span class="c1"># Find index of VTK output file to be removed</span>
+            <span class="k">if</span> <span class="n">time_step_file_path</span> <span class="ow">in</span> <span class="n">file_lines</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                <span class="k">break</span>
+            <span class="c1"># Raise error if VTK output file to be removed does not exist</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_lines</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;VTK output file to be removed does not &#39;</span>
+                                   <span class="s1">&#39;exist.&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Remove VTK output file</span>
+        <span class="n">file_lines</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Write updated VTK collection file</span>
+        <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pvd_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">file_lines</span><span class="p">)</span>
+<span class="c1"># =============================================================================</span>
+<span class="k">class</span> <span class="nc">XMLGenerator</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;VTK XML files generation methods.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    _indent : str</span>
+<span class="sd">        Formatting indentation.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    write_file_header(self, vtk_file)</span>
+<span class="sd">        Write VTK file header.</span>
+<span class="sd">    write_file_footer(self, vtk_file)</span>
+<span class="sd">        Write VTK file footer.</span>
+<span class="sd">    write_open_dataset_elem(self, vtk_file, dataset_parameters)</span>
+<span class="sd">        Open (write) VTK dataset element.</span>
+<span class="sd">    write_close_dataset_elem(self, vtk_file)</span>
+<span class="sd">        Close (write) VTK dataset element.</span>
+<span class="sd">    write_open_dataset_piece(self, vtk_file, piece_parameters)</span>
+<span class="sd">        Open (write) VTK dataset element piece.</span>
+<span class="sd">    write_close_dataset_piece(self, vtk_file)</span>
+<span class="sd">        Close (write) VTK dataset element piece.</span>
+<span class="sd">    write_open_point_data(self, vtk_file)</span>
+<span class="sd">        Open (write) VTK point data element.</span>
+<span class="sd">    write_close_point_data(self, vtk_file)</span>
+<span class="sd">        Close (write) VTK point data element.</span>
+<span class="sd">    write_open_cell_data(self, vtk_file)</span>
+<span class="sd">        Open (write) VTK cell data element.</span>
+<span class="sd">    write_close_cell_data(self, vtk_file)</span>
+<span class="sd">        Close (write) VTK cell data element.</span>
+<span class="sd">    write_cell_data_array(self, vtk_file, data_list, data_parameters)</span>
+<span class="sd">        Write VTK cell data element.</span>
+<span class="sd">    enclose(x)</span>
+<span class="sd">        Enclose input in literal quotation marks.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">byte_order</span><span class="p">,</span> <span class="nb">format</span><span class="p">,</span> <span class="n">precision</span><span class="p">,</span>
+                 <span class="n">header_type</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;VTK XML file constructor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        type : str</span>
+<span class="sd">            VTK file type.</span>
+<span class="sd">        version : str</span>
+<span class="sd">            VTK version.</span>
+<span class="sd">        byte_order : str</span>
+<span class="sd">            VTK byte order.</span>
+<span class="sd">        format : str</span>
+<span class="sd">            VTK file format.</span>
+<span class="sd">        precision : {&#39;SinglePrecision&#39;, &#39;DoublePrecision&#39;}</span>
+<span class="sd">            VTK file data precision.</span>
+<span class="sd">        header_type : str</span>
+<span class="sd">            VTK header type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_type</span> <span class="o">=</span> <span class="nb">type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_version</span> <span class="o">=</span> <span class="n">version</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_byte_order</span> <span class="o">=</span> <span class="n">byte_order</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_format</span> <span class="o">=</span> <span class="nb">format</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_precision</span> <span class="o">=</span> <span class="n">precision</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_header_type</span> <span class="o">=</span> <span class="n">header_type</span>
+        <span class="c1"># Set formatting indentation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_indent</span> <span class="o">=</span> <span class="s1">&#39;  &#39;</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">write_file_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write VTK file header.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        vtk_file : file</span>
+<span class="sd">            VTK file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vtk_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;?xml version=&quot;1.0&quot;?&#39;</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">vtk_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;VTKFile type=&#39;</span> <span class="o">+</span> <span class="n">XMLGenerator</span><span class="o">.</span><span class="n">enclose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_type</span><span class="p">)</span>
+                       <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="s1">&#39;version=&#39;</span> <span class="o">+</span> <span class="n">XMLGenerator</span><span class="o">.</span><span class="n">enclose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_version</span><span class="p">)</span>
+                       <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="s1">&#39;byte_order=&#39;</span>
+                       <span class="o">+</span> <span class="n">XMLGenerator</span><span class="o">.</span><span class="n">enclose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_byte_order</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+                       <span class="o">+</span> <span class="s1">&#39;header_type=&#39;</span>
+                       <span class="o">+</span> <span class="n">XMLGenerator</span><span class="o">.</span><span class="n">enclose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_header_type</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">write_file_footer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write VTK file footer.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        vtk_file : file</span>
+<span class="sd">            VTK file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vtk_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;/VTKFile&#39;</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">write_open_dataset_elem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">,</span> <span class="n">dataset_parameters</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Open (write) VTK dataset element.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        vtk_file : file</span>
+<span class="sd">            VTK file.</span>
+<span class="sd">        dataset_parameters : dict</span>
+<span class="sd">            VTK dataset element parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parameters</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">dataset_parameters</span><span class="p">)</span>
+        <span class="n">vtk_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_indent</span> <span class="o">+</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_type</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+                       <span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">key</span> <span class="o">+</span> <span class="s1">&#39;=&#39;</span>
+                                   <span class="o">+</span> <span class="n">XMLGenerator</span><span class="o">.</span><span class="n">enclose</span><span class="p">(</span><span class="n">parameters</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+                                   <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">write_close_dataset_elem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Close (write) VTK dataset element.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        vtk_file : file</span>
+<span class="sd">            VTK file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vtk_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_indent</span> <span class="o">+</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_type</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">write_open_dataset_piece</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">,</span> <span class="n">piece_parameters</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Open (write) VTK dataset element piece.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        vtk_file : file</span>
+<span class="sd">            VTK file.</span>
+<span class="sd">        piece_parameters : dict</span>
+<span class="sd">            VTK dataset element piece parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parameters</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">piece_parameters</span><span class="p">)</span>
+        <span class="n">vtk_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_indent</span> <span class="o">+</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;Piece&#39;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+                       <span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">key</span> <span class="o">+</span> <span class="s1">&#39;=&#39;</span>
+                                   <span class="o">+</span> <span class="n">XMLGenerator</span><span class="o">.</span><span class="n">enclose</span><span class="p">(</span><span class="n">parameters</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+                                   <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">write_close_dataset_piece</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Close (write) VTK dataset element piece.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        vtk_file : file</span>
+<span class="sd">            VTK file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vtk_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_indent</span> <span class="o">+</span> <span class="s1">&#39;&lt;/Piece&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">write_open_point_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Open (write) VTK point data element.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        vtk_file : file</span>
+<span class="sd">            VTK file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vtk_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_indent</span> <span class="o">+</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;PointData&#39;</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">write_close_point_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Close (write) VTK point data element.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        vtk_file : file</span>
+<span class="sd">            VTK file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vtk_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_indent</span> <span class="o">+</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;/PointData&#39;</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">write_open_cell_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Open (write) VTK cell data element.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        vtk_file : file</span>
+<span class="sd">            VTK file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vtk_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_indent</span> <span class="o">+</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;CellData&#39;</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">write_close_cell_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Close (write) VTK cell data element.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        vtk_file : file</span>
+<span class="sd">            VTK file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vtk_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_indent</span> <span class="o">+</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;/CellData&#39;</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">write_cell_data_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">,</span> <span class="n">data_list</span><span class="p">,</span> <span class="n">data_parameters</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write VTK cell data element.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        vtk_file : file</span>
+<span class="sd">            VTK file.</span>
+<span class="sd">        data_list : list</span>
+<span class="sd">            Sorted data of cell element.</span>
+<span class="sd">        data_parameters : dict</span>
+<span class="sd">            Parameters of cell element.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set cell data array data type and associated ascii format</span>
+        <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data_list</span><span class="p">):</span>
+            <span class="n">data_type</span> <span class="o">=</span> <span class="s1">&#39;Int32&#39;</span>
+            <span class="n">frmt</span> <span class="o">=</span> <span class="s1">&#39;d&#39;</span>
+        <span class="k">elif</span> <span class="nb">all</span><span class="p">(</span><span class="s1">&#39;bool&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data_list</span><span class="p">):</span>
+            <span class="n">data_type</span> <span class="o">=</span> <span class="s1">&#39;Int32&#39;</span>
+            <span class="n">frmt</span> <span class="o">=</span> <span class="s1">&#39;d&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_precision</span> <span class="o">==</span> <span class="s1">&#39;SinglePrecision&#39;</span><span class="p">:</span>
+                <span class="n">data_type</span> <span class="o">=</span> <span class="s1">&#39;Float32&#39;</span>
+                <span class="n">frmt</span> <span class="o">=</span> <span class="s1">&#39;16.8e&#39;</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_precision</span> <span class="o">==</span> <span class="s1">&#39;DoublePrecision&#39;</span><span class="p">:</span>
+                <span class="n">data_type</span> <span class="o">=</span> <span class="s1">&#39;Float64&#39;</span>
+                <span class="n">frmt</span> <span class="o">=</span> <span class="s1">&#39;25.16e&#39;</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Initialize cell data array parameters</span>
+        <span class="n">parameters</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">data_list</span>
+        <span class="c1"># Set cell data array name</span>
+        <span class="k">if</span> <span class="s1">&#39;Name&#39;</span> <span class="ow">in</span> <span class="n">data_parameters</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_parameters</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;?&#39;</span>
+        <span class="c1"># Set cell data array type</span>
+        <span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_type</span>
+        <span class="c1"># Set cell data array number of components</span>
+        <span class="k">if</span> <span class="s1">&#39;NumberofComponents&#39;</span> <span class="ow">in</span> <span class="n">data_parameters</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;NumberofComponents&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="n">data_parameters</span><span class="p">[</span><span class="s1">&#39;NumberofComponents&#39;</span><span class="p">]</span>
+        <span class="c1"># Set cell data array format</span>
+        <span class="k">if</span> <span class="s1">&#39;format&#39;</span> <span class="ow">in</span> <span class="n">data_parameters</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;format&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_parameters</span><span class="p">[</span><span class="s1">&#39;format&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown format.&#39;</span><span class="p">)</span>
+        <span class="c1"># Set cell data array range</span>
+        <span class="k">if</span> <span class="s1">&#39;RangeMin&#39;</span> <span class="ow">in</span> <span class="n">data_parameters</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;RangeMin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_parameters</span><span class="p">[</span><span class="s1">&#39;RangeMin&#39;</span><span class="p">]</span>
+            <span class="n">min_val</span> <span class="o">=</span> <span class="n">data_parameters</span><span class="p">[</span><span class="s1">&#39;RangeMin&#39;</span><span class="p">]</span>
+            <span class="c1"># Mask data values according to specified range lower bound</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">min_val</span><span class="p">,</span> <span class="n">min_val</span><span class="p">,</span>
+                                   <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">values</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="s1">&#39;RangeMax&#39;</span> <span class="ow">in</span> <span class="n">data_parameters</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;RangeMax&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_parameters</span><span class="p">[</span><span class="s1">&#39;RangeMax&#39;</span><span class="p">]</span>
+            <span class="n">max_val</span> <span class="o">=</span> <span class="n">data_parameters</span><span class="p">[</span><span class="s1">&#39;RangeMax&#39;</span><span class="p">]</span>
+            <span class="c1"># Mask data values according to specified range upper bound</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_val</span><span class="p">,</span> <span class="n">max_val</span><span class="p">,</span>
+                                   <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">values</span><span class="p">)))</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Write VTK data array header</span>
+        <span class="n">vtk_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_indent</span> <span class="o">+</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;DataArray&#39;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+                       <span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">key</span> <span class="o">+</span> <span class="s1">&#39;=&#39;</span>
+                                   <span class="o">+</span> <span class="n">XMLGenerator</span><span class="o">.</span><span class="n">enclose</span><span class="p">(</span><span class="n">parameters</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+                                   <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Write VTK data array values</span>
+        <span class="n">n_line_vals</span> <span class="o">=</span> <span class="mi">6</span>
+        <span class="n">template1</span> <span class="o">=</span> <span class="mi">5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_indent</span> <span class="o">+</span> <span class="n">n_line_vals</span><span class="o">*</span><span class="p">(</span><span class="s1">&#39;{: &#39;</span> <span class="o">+</span> <span class="n">frmt</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">template2</span> <span class="o">=</span> <span class="mi">5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_indent</span> \
+            <span class="o">+</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">%</span> <span class="n">n_line_vals</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="s1">&#39;{: &#39;</span> <span class="o">+</span> <span class="n">frmt</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">aux_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">n_line_vals</span><span class="p">]</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="n">n_line_vals</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">aux_list</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">aux_list</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">%</span> <span class="n">n_line_vals</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">vtk_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">template2</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">aux_list</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">vtk_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">template1</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">aux_list</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Write VTK data array footer</span>
+        <span class="n">vtk_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_indent</span> <span class="o">+</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;/DataArray&#39;</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">enclose</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Enclose input in literal quotation marks.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : str</span>
+<span class="sd">            Input to be converted into a string enclosed in literal quotation</span>
+<span class="sd">            marks.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str : str</span>
+<span class="sd">            Input converted into a string enclosed in literal quotation marks.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\&#39;</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">x</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\&#39;</span><span class="s1">&#39;</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\&#39;</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\&#39;</span><span class="s1">&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\&#39;</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\&#39;</span><span class="s1">&#39;</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

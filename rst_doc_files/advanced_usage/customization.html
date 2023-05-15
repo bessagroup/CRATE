@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customization &mdash; crate 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Interface: DNS solver" href="interface_dns_solver.html" />
+    <link rel="prev" title="Benchmarks" href="../validation/benchmarks.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            crate
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Customization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#implementing-new-features">Implementing new features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#available-interfaces">Available interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#other-implementations">Other implementations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/crate.html">Code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">crate</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Customization</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="customization">
+<h1>Customization<a class="headerlink" href="#customization" title="Permalink to this heading">¶</a></h1>
+<section id="implementing-new-features">
+<h2>Implementing new features<a class="headerlink" href="#implementing-new-features" title="Permalink to this heading">¶</a></h2>
+<p>Although vanilla CRATE provides a fairly reasonable set of essential features (see <a class="reference internal" href="../basic_usage/available_features.html"><span class="doc">Available features</span></a>), it is expected that the interested user may want to <strong>implement specific features</strong> seeking a particular application or <strong>implement new features</strong> in the context of research and development.</p>
+<p>Given that CRATE is implemented in Python and following an <strong>object-oriented programming (OOP)</strong> paradigm, several interfaces emerged naturally during the computational design process and are now available to easily accommodate new implementations. An <strong>interface</strong> is intrinsically associated with abstraction and polymorphism in OOP, i.e., it is fundamentally a blueprint to implement new classes that respect a given contract and that can be dynamically treated in a unified sense. This contract establishes that certain attributes and/or methods must be defined by new classes according to their specific type and uniqueness.</p>
+<p>Of course that the implementation of new features is <strong>not limited to</strong> the available CRATE interfaces, and other <strong>minor improvements</strong> and/or <strong>major developments</strong> are also possible according with the envisaged research/application goals.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Implementing new features in CRATE requires a <strong>medium level of expertise</strong> in Python programming under an object-oriented programming approach. There is a vast body of literature on such topic (e.g., <a class="reference external" href="https://www.google.com/books/edition/Python_3_Object_Oriented_Programming/08t1DwAAQBAJ?">Phillips (2018)</a>, <a class="reference external" href="https://www.google.com/books/edition/Mastering_Object_Oriented_Python/GF6exgEACAAJ?">Lott (2019)</a>) as well as open-source web resources (e.g., <a class="reference external" href="https://realpython.com/">Real Python</a>, <a class="reference external" href="https://refactoring.guru/design-patterns/python">Refactoring Guru</a>).</p>
+</div>
+</section>
+<hr class="docutils" />
+<section id="available-interfaces">
+<h2>Available interfaces<a class="headerlink" href="#available-interfaces" title="Permalink to this heading">¶</a></h2>
+<p>Below is a list of some CRATE <strong>available interfaces</strong> alongside a brief description and a hyperlink to the corresponding documentation page:</p>
+<ul class="simple">
+<li><p><strong>Interface: Direct Numerical Simulation solver</strong> - Implement a direct numerical simulation (DNS) multi-scale method solver to perform the required offline-stage simulations (<a class="reference internal" href="interface_dns_solver.html"><span class="doc">interface documentation</span></a>);</p></li>
+<li><p><strong>Interface: Clustering feature</strong> - Implement a clustering feature required to perform the RVE cluster analysis (<a class="reference internal" href="interface_clustering_feature.html"><span class="doc">interface documentation</span></a>);</p></li>
+<li><p><strong>Interface: Clustering algorithm</strong> - Implement a clustering algorithm to perform the RVE cluster analysis (<a class="reference internal" href="interface_clustering_algorithm.html"><span class="doc">interface documentation</span></a>);</p></li>
+<li><p><strong>Interface: Constitutive model</strong> - Implement a constitutive model to describe the physical behavior of a given material phase (<a class="reference internal" href="interface_constitutive_model.html"><span class="doc">interface documentation</span></a>).</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="other-implementations">
+<h2>Other implementations<a class="headerlink" href="#other-implementations" title="Permalink to this heading">¶</a></h2>
+<p>Below is a description of possible implementations that can be regarded as a minor enrichment of existent CRATE toolkits:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Tensor/Matrix operations and procedures</strong>:</dt><dd><ul>
+<li><p>Additional algebraic tensorial operations and tensorial operators can be implemented in module <a class="reference internal" href="../../_autosummary/crate.tensor.tensoroperations.html#module-crate.tensor.tensoroperations" title="crate.tensor.tensoroperations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.tensor.tensoroperations</span></code></a>;</p></li>
+<li><p>Additional matricial procedures can be implemented in module <a class="reference internal" href="../../_autosummary/crate.tensor.matrixoperations.html#module-crate.tensor.matrixoperations" title="crate.tensor.matrixoperations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.tensor.matrixoperations</span></code></a>.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Computational solid mechanics procedures</strong>:</dt><dd><ul>
+<li><p>Additional computations and procedures arising in computational solid mechanics can be implemented in module <a class="reference internal" href="../../_autosummary/crate.material.materialoperations.html#module-crate.material.materialoperations" title="crate.material.materialoperations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.material.materialoperations</span></code></a>.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../validation/benchmarks.html" class="btn btn-neutral float-left" title="Benchmarks" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="interface_dns_solver.html" class="btn btn-neutral float-right" title="Interface: DNS solver" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

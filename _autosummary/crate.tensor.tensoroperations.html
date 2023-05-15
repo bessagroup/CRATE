@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>crate.tensor.tensoroperations &mdash; crate 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="crate.tensor.tensoroperations.dd" href="crate.tensor.tensoroperations.dd.html" />
+    <link rel="prev" title="crate.tensor.matrixoperations.matrix_root" href="crate.tensor.matrixoperations.matrix_root.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            crate
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="crate.html">Code</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="crate.crate_simulation.html">crate.crate_simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.clustering.html">crate.clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.ioput.html">crate.ioput</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.main.html">crate.main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.material.html">crate.material</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.online.html">crate.online</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.optimization.html">crate.optimization</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="crate.tensor.html">crate.tensor</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="crate.tensor.matrixoperations.html">crate.tensor.matrixoperations</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">crate.tensor.tensoroperations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.tensor.tensoroperations.dd.html">crate.tensor.tensoroperations.dd</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.tensor.tensoroperations.ddot22_1.html">crate.tensor.tensoroperations.ddot22_1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.tensor.tensoroperations.ddot42_1.html">crate.tensor.tensoroperations.ddot42_1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.tensor.tensoroperations.ddot44_1.html">crate.tensor.tensoroperations.ddot44_1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.tensor.tensoroperations.derivative_isotropic_tensor.html">crate.tensor.tensoroperations.derivative_isotropic_tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.tensor.tensoroperations.diso_scalars.html">crate.tensor.tensoroperations.diso_scalars</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.tensor.tensoroperations.dot12_1.html">crate.tensor.tensoroperations.dot12_1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.tensor.tensoroperations.dot21_1.html">crate.tensor.tensoroperations.dot21_1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.tensor.tensoroperations.dot24_1.html">crate.tensor.tensoroperations.dot24_1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.tensor.tensoroperations.dot24_2.html">crate.tensor.tensoroperations.dot24_2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.tensor.tensoroperations.dot24_3.html">crate.tensor.tensoroperations.dot24_3</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.tensor.tensoroperations.dot24_4.html">crate.tensor.tensoroperations.dot24_4</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.tensor.tensoroperations.dot42_1.html">crate.tensor.tensoroperations.dot42_1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.tensor.tensoroperations.dot42_2.html">crate.tensor.tensoroperations.dot42_2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.tensor.tensoroperations.dot42_3.html">crate.tensor.tensoroperations.dot42_3</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.tensor.tensoroperations.dyad11.html">crate.tensor.tensoroperations.dyad11</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.tensor.tensoroperations.dyad22_1.html">crate.tensor.tensoroperations.dyad22_1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.tensor.tensoroperations.dyad22_2.html">crate.tensor.tensoroperations.dyad22_2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.tensor.tensoroperations.dyad22_3.html">crate.tensor.tensoroperations.dyad22_3</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.tensor.tensoroperations.get_id_operators.html">crate.tensor.tensoroperations.get_id_operators</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.tensor.tensoroperations.isotropic_tensor.html">crate.tensor.tensoroperations.isotropic_tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.tensor.tensoroperations.rotate_tensor.html">crate.tensor.tensoroperations.rotate_tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.tensor.tensoroperations.rotation_tensor_from_euler_angles.html">crate.tensor.tensoroperations.rotation_tensor_from_euler_angles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="crate.tensor.tensoroperations.spectral_decomposition.html">crate.tensor.tensoroperations.spectral_decomposition</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">crate</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="crate.html">crate</a></li>
+          <li class="breadcrumb-item"><a href="crate.tensor.html">crate.tensor</a></li>
+      <li class="breadcrumb-item active">crate.tensor.tensoroperations</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-crate.tensor.tensoroperations">
+<span id="crate-tensor-tensoroperations"></span><h1>crate.tensor.tensoroperations<a class="headerlink" href="#module-crate.tensor.tensoroperations" title="Permalink to this heading">¶</a></h1>
+<p>Algebraic tensorial operations and standard tensorial operators.</p>
+<p>This module is essentially a toolkit containing the definition of several
+standard tensorial operators (e.g., Kronecker delta, second- and fourth-order
+identity tensors, rotation tensor) and tensorial operations (e.g., tensorial
+product, tensorial contraction, spectral decomposition) arising in
+computational mechanics.</p>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">¶</a></h2>
+<dl class="simple">
+<dt>dyad11</dt><dd><p>Dyadic product: <span class="math notranslate nohighlight">\(i \otimes j \rightarrow ij\)</span>.</p>
+</dd>
+<dt>dyad22_1</dt><dd><p>Dyadic product: <span class="math notranslate nohighlight">\(ij \otimes kl \rightarrow ijkl\)</span>.</p>
+</dd>
+<dt>dyad22_2</dt><dd><p>Dyadic product: <span class="math notranslate nohighlight">\(ik \otimes jl \rightarrow ijkl\)</span>.</p>
+</dd>
+<dt>dyad22_3</dt><dd><p>Dyadic product: <span class="math notranslate nohighlight">\(il \otimes jk \rightarrow ijkl\)</span>.</p>
+</dd>
+<dt>dot21_1</dt><dd><p>Single contraction: <span class="math notranslate nohighlight">\(ij \cdot j \rightarrow i\)</span>.</p>
+</dd>
+<dt>dot12_1</dt><dd><p>Single contraction: <span class="math notranslate nohighlight">\(i \cdot ij \rightarrow j\)</span>.</p>
+</dd>
+<dt>dot42_1</dt><dd><p>Single contraction: <span class="math notranslate nohighlight">\(ijkm \cdot lm \rightarrow ijkl\)</span>.</p>
+</dd>
+<dt>dot42_2</dt><dd><p>Single contraction: <span class="math notranslate nohighlight">\(ipkl \cdot jp \rightarrow ijkl\)</span>.</p>
+</dd>
+<dt>dot42_3</dt><dd><p>Single contraction: <span class="math notranslate nohighlight">\(ijkm \cdot ml \rightarrow ijkl\)</span>.</p>
+</dd>
+<dt>dot24_1</dt><dd><p>Single contraction: <span class="math notranslate nohighlight">\(im \cdot mjkl \rightarrow ijkl\)</span>.</p>
+</dd>
+<dt>dot24_2</dt><dd><p>Single contraction: <span class="math notranslate nohighlight">\(jm \cdot imkl \rightarrow ijkl\)</span>.</p>
+</dd>
+<dt>dot24_3</dt><dd><p>Single contraction: <span class="math notranslate nohighlight">\(km \cdot ijml \rightarrow ijkl\)</span>.</p>
+</dd>
+<dt>dot24_4</dt><dd><p>Single contraction: <span class="math notranslate nohighlight">\(lm \cdot ijkm \rightarrow ijkl\)</span>.</p>
+</dd>
+<dt>ddot22_1</dt><dd><p>Double contraction: <span class="math notranslate nohighlight">\(ij : ij \rightarrow \text{scalar}\)</span>.</p>
+</dd>
+<dt>ddot42_1</dt><dd><p>Double contraction: <span class="math notranslate nohighlight">\(ijkl : kl \rightarrow ij\)</span>.</p>
+</dd>
+<dt>ddot44_1</dt><dd><p>Double contraction: <span class="math notranslate nohighlight">\(ijmn : mnkl \rightarrow ijkl\)</span>.</p>
+</dd>
+<dt>dd</dt><dd><p>Kronecker delta function.</p>
+</dd>
+<dt>get_id_operators</dt><dd><p>Set common second- and fourth-order identity operators.</p>
+</dd>
+<dt>spectral_decomposition</dt><dd><p>Perform spectral decomposition of symmetric second-order tensor.</p>
+</dd>
+<dt>isotropic_tensor</dt><dd><p>Isotropic symmetric tensor-valued function of symmetric tensor.</p>
+</dd>
+<dt>derivative_isotropic_tensor</dt><dd><p>Derivative of isotropic tensor-valued function of symmetric tensor.</p>
+</dd>
+<dt>diso_scalars</dt><dd><p>Auxiliar scalars of derivative of isotropic tensor-valued function.</p>
+</dd>
+<dt>rotate_tensor</dt><dd><p>Rotation of <span class="math notranslate nohighlight">\(n\)</span>-dimensional tensor.</p>
+</dd>
+<dt>rotation_tensor_from_euler_angles</dt><dd><p>Set rotation tensor from Euler angles (Bunge convention).</p>
+</dd>
+</dl>
+</section>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="crate.tensor.tensoroperations.dd.html#crate.tensor.tensoroperations.dd" title="crate.tensor.tensoroperations.dd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dd</span></code></a>(i, j)</p></td>
+<td><p>Kronecker delta function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="crate.tensor.tensoroperations.ddot22_1.html#crate.tensor.tensoroperations.ddot22_1" title="crate.tensor.tensoroperations.ddot22_1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ddot22_1</span></code></a>(a2, b2)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="crate.tensor.tensoroperations.ddot42_1.html#crate.tensor.tensoroperations.ddot42_1" title="crate.tensor.tensoroperations.ddot42_1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ddot42_1</span></code></a>(a4, b2)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="crate.tensor.tensoroperations.ddot44_1.html#crate.tensor.tensoroperations.ddot44_1" title="crate.tensor.tensoroperations.ddot44_1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ddot44_1</span></code></a>(a4, b4)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="crate.tensor.tensoroperations.derivative_isotropic_tensor.html#crate.tensor.tensoroperations.derivative_isotropic_tensor" title="crate.tensor.tensoroperations.derivative_isotropic_tensor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">derivative_isotropic_tensor</span></code></a>(mode, x)</p></td>
+<td><p>Derivative of isotropic tensor-valued function of symmetric tensor.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="crate.tensor.tensoroperations.diso_scalars.html#crate.tensor.tensoroperations.diso_scalars" title="crate.tensor.tensoroperations.diso_scalars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">diso_scalars</span></code></a>(abc, eigenvalues, fun, fund)</p></td>
+<td><p>Auxiliar scalars of derivative of isotropic tensor-valued function.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="crate.tensor.tensoroperations.dot12_1.html#crate.tensor.tensoroperations.dot12_1" title="crate.tensor.tensoroperations.dot12_1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dot12_1</span></code></a>(a1, b2)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="crate.tensor.tensoroperations.dot21_1.html#crate.tensor.tensoroperations.dot21_1" title="crate.tensor.tensoroperations.dot21_1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dot21_1</span></code></a>(a2, b1)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="crate.tensor.tensoroperations.dot24_1.html#crate.tensor.tensoroperations.dot24_1" title="crate.tensor.tensoroperations.dot24_1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dot24_1</span></code></a>(a2, b4)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="crate.tensor.tensoroperations.dot24_2.html#crate.tensor.tensoroperations.dot24_2" title="crate.tensor.tensoroperations.dot24_2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dot24_2</span></code></a>(a2, b4)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="crate.tensor.tensoroperations.dot24_3.html#crate.tensor.tensoroperations.dot24_3" title="crate.tensor.tensoroperations.dot24_3"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dot24_3</span></code></a>(a2, b4)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="crate.tensor.tensoroperations.dot24_4.html#crate.tensor.tensoroperations.dot24_4" title="crate.tensor.tensoroperations.dot24_4"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dot24_4</span></code></a>(a2, b4)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="crate.tensor.tensoroperations.dot42_1.html#crate.tensor.tensoroperations.dot42_1" title="crate.tensor.tensoroperations.dot42_1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dot42_1</span></code></a>(a4, b2)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="crate.tensor.tensoroperations.dot42_2.html#crate.tensor.tensoroperations.dot42_2" title="crate.tensor.tensoroperations.dot42_2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dot42_2</span></code></a>(a4, b2)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="crate.tensor.tensoroperations.dot42_3.html#crate.tensor.tensoroperations.dot42_3" title="crate.tensor.tensoroperations.dot42_3"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dot42_3</span></code></a>(a4, b2)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="crate.tensor.tensoroperations.dyad11.html#crate.tensor.tensoroperations.dyad11" title="crate.tensor.tensoroperations.dyad11"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dyad11</span></code></a>(a1, b1)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="crate.tensor.tensoroperations.dyad22_1.html#crate.tensor.tensoroperations.dyad22_1" title="crate.tensor.tensoroperations.dyad22_1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dyad22_1</span></code></a>(a2, b2)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="crate.tensor.tensoroperations.dyad22_2.html#crate.tensor.tensoroperations.dyad22_2" title="crate.tensor.tensoroperations.dyad22_2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dyad22_2</span></code></a>(a2, b2)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="crate.tensor.tensoroperations.dyad22_3.html#crate.tensor.tensoroperations.dyad22_3" title="crate.tensor.tensoroperations.dyad22_3"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dyad22_3</span></code></a>(a2, b2)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="crate.tensor.tensoroperations.get_id_operators.html#crate.tensor.tensoroperations.get_id_operators" title="crate.tensor.tensoroperations.get_id_operators"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_id_operators</span></code></a>(n_dim)</p></td>
+<td><p>Set common second- and fourth-order identity operators.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="crate.tensor.tensoroperations.isotropic_tensor.html#crate.tensor.tensoroperations.isotropic_tensor" title="crate.tensor.tensoroperations.isotropic_tensor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isotropic_tensor</span></code></a>(mode, x)</p></td>
+<td><p>Isotropic symmetric tensor-valued function of symmetric tensor.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="crate.tensor.tensoroperations.rotate_tensor.html#crate.tensor.tensoroperations.rotate_tensor" title="crate.tensor.tensoroperations.rotate_tensor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rotate_tensor</span></code></a>(tensor, r)</p></td>
+<td><p>Rotation of <span class="math notranslate nohighlight">\(n\)</span>-dimensional tensor.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="crate.tensor.tensoroperations.rotation_tensor_from_euler_angles.html#crate.tensor.tensoroperations.rotation_tensor_from_euler_angles" title="crate.tensor.tensoroperations.rotation_tensor_from_euler_angles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rotation_tensor_from_euler_angles</span></code></a>(n_dim, ...)</p></td>
+<td><p>Set rotation tensor from Euler angles (Bunge convention).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="crate.tensor.tensoroperations.spectral_decomposition.html#crate.tensor.tensoroperations.spectral_decomposition" title="crate.tensor.tensoroperations.spectral_decomposition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_decomposition</span></code></a>(x)</p></td>
+<td><p>Perform spectral decomposition of symmetric second-order tensor.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="crate.tensor.matrixoperations.matrix_root.html" class="btn btn-neutral float-left" title="crate.tensor.matrixoperations.matrix_root" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="crate.tensor.tensoroperations.dd.html" class="btn btn-neutral float-right" title="crate.tensor.tensoroperations.dd" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities &mdash; crate 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="crate.clustering.citoperations" href="crate.clustering.citoperations.html" />
+    <link rel="prev" title="crate.clustering.adaptivity.crve_adaptivity.MaterialQuantitiesComputer" href="crate.clustering.adaptivity.crve_adaptivity.MaterialQuantitiesComputer.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            crate
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="crate.html">Code</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="crate.crate_simulation.html">crate.crate_simulation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="crate.clustering.html">crate.clustering</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="crate.clustering.adaptivity.html">crate.clustering.adaptivity</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="crate.clustering.adaptivity.adaptivity_criterion.html">crate.clustering.adaptivity.adaptivity_criterion</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="crate.clustering.adaptivity.crve_adaptivity.html">crate.clustering.adaptivity.crve_adaptivity</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="crate.clustering.citoperations.html">crate.clustering.citoperations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.clustering.clusteringalgs.html">crate.clustering.clusteringalgs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.clustering.clusteringdata.html">crate.clustering.clusteringdata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.clustering.clusteringphase.html">crate.clustering.clusteringphase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.clustering.crve.html">crate.clustering.crve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.clustering.rveelasticdatabase.html">crate.clustering.rveelasticdatabase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crate.clustering.solution.html">crate.clustering.solution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="crate.ioput.html">crate.ioput</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.main.html">crate.main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.material.html">crate.material</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.online.html">crate.online</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.optimization.html">crate.optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crate.tensor.html">crate.tensor</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">crate</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="crate.html">crate</a></li>
+          <li class="breadcrumb-item"><a href="crate.clustering.html">crate.clustering</a></li>
+          <li class="breadcrumb-item"><a href="crate.clustering.adaptivity.html">crate.clustering.adaptivity</a></li>
+          <li class="breadcrumb-item"><a href="crate.clustering.adaptivity.crve_adaptivity.html">crate.clustering.adaptivity.crve_adaptivity</a></li>
+      <li class="breadcrumb-item active">crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="crate-clustering-adaptivity-crve-adaptivity-spatialdiscontinuities">
+<h1>crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities<a class="headerlink" href="#crate-clustering-adaptivity-crve-adaptivity-spatialdiscontinuities" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SpatialDiscontinuities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adapt_mat_phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adapt_trigger_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adapt_max_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adapt_min_voxels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adapt_level_max_diff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swipe_dim_1_every</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swipe_dim_2_every</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swipe_dim_3_every</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_adapt_feature_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">magnitude_lower_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/adaptivity_criterion.html#SpatialDiscontinuities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">AdaptivityCriterion</span></code></p>
+<p>Clustering adaptivity spatial discontinuities criterion.</p>
+<p>The detailed description of the clustering adaptivity spatial
+discontinuities criterion can be found in Ferreira et. al (2022) <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id2" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Ferreira, B.P., Andrade Pires, F.M. and Bessa, M.A. (2022).
+<em>Adaptivity for clustering-based reduced-order modeling of
+localized history-dependent phenomena.</em> Comp Methods Appl M, 393
+(see <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0045782522000895?via%3Dihub">here</a>)</p>
+</aside>
+</aside>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities._clusters_adapt_level">
+<span class="sig-name descname"><span class="pre">_clusters_adapt_level</span></span><a class="headerlink" href="#crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities._clusters_adapt_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adaptive level (item, int) of each cluster (key, str).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities._swipe_dims_every">
+<span class="sig-name descname"><span class="pre">_swipe_dims_every</span></span><a class="headerlink" href="#crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities._swipe_dims_every" title="Permalink to this definition">¶</a></dt>
+<dd><p>Swipe frequency (item, int) of each spatial dimension. First and last
+(boundary) voxels are always considered, irrespective of the swipe
+frequency.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a>], default=None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.get_parameters">
+<span class="sig-name descname"><span class="pre">get_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/adaptivity_criterion.html#SpatialDiscontinuities.get_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.get_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get clustering adaptivity criterion parameters.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.get_target_clusters">
+<span class="sig-name descname"><span class="pre">get_target_clusters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adapt_data_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxels_clusters</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/adaptivity_criterion.html#SpatialDiscontinuities.get_target_clusters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.get_target_clusters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get clustering adaptivity target clusters.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.update_clusters_adapt_level">
+<span class="sig-name descname"><span class="pre">update_clusters_adapt_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptive_clustering_map</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/adaptivity_criterion.html#SpatialDiscontinuities.update_clusters_adapt_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.update_clusters_adapt_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update clusters adaptive level after adaptive procedures.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.get_clusters_adapt_level">
+<span class="sig-name descname"><span class="pre">get_clusters_adapt_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/adaptivity_criterion.html#SpatialDiscontinuities.get_clusters_adapt_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.get_clusters_adapt_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get clusters adaptive level.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.get_min_adapt_feature_val">
+<span class="sig-name descname"><span class="pre">get_min_adapt_feature_val</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/adaptivity_criterion.html#SpatialDiscontinuities.get_min_adapt_feature_val"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.get_min_adapt_feature_val" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get minimum significant value of clustering adaptivity feature.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities._swipe_dimension">
+<span class="sig-name descname"><span class="pre">_swipe_dimension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adapt_data_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxels_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_clusters_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_loops</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/adaptivity_criterion.html#SpatialDiscontinuities._swipe_dimension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities._swipe_dimension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate spatial discontinuities along a given dimension.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities._update_swipe_dims_init_idx">
+<span class="sig-name descname"><span class="pre">_update_swipe_dims_init_idx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/adaptivity_criterion.html#SpatialDiscontinuities._update_swipe_dims_init_idx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities._update_swipe_dims_init_idx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Randomly update the dimensions swipe frequency initial index.</p>
+</dd></dl>
+
+<p>Constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>adapt_mat_phase</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Adaptive material phase label.</p></li>
+<li><p><strong>phase_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clusters labels (item, list[int]) associated with each material
+phase (key, str).</p></li>
+<li><p><strong>adapt_trigger_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><em>default=None</em>) – Threshold associated with the adaptivity trigger condition.</p></li>
+<li><p><strong>adapt_max_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Maximum cluster adaptive level.</p></li>
+<li><p><strong>adapt_min_voxels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Minimum number of voxels that cluster must contain to be targeted
+for adaptivity.</p></li>
+<li><p><strong>adapt_level_max_diff</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Maximum adaptive level difference when targeting clusters of
+adjacent voxels.</p></li>
+<li><p><strong>swipe_dim_1_every</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Swipe frequency of spatial dimension 1. First and last (boundary)
+voxels are always considered.</p></li>
+<li><p><strong>swipe_dim_2_every</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Swipe frequency of spatial dimension 2. First and last (boundary)
+voxels are always considered.</p></li>
+<li><p><strong>swipe_dim_3_every</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Swipe frequency of spatial dimension 3. First and last (boundary)
+voxels are always considered.</p></li>
+<li><p><strong>min_adapt_feature_val</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><em>default=None</em>) – Minimum significant value of clustering adaptivity control feature.</p></li>
+<li><p><strong>magnitude_lower_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><em>default=None</em>) – Factor which affects the maximum stored magnitude associated with
+the lower valued targeted cluster.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">List of Public Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id7" title="crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.get_clusters_adapt_level"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_clusters_adapt_level</span></code></a></p></td>
+<td><p>Get clusters adaptive level.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id8" title="crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.get_min_adapt_feature_val"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_min_adapt_feature_val</span></code></a></p></td>
+<td><p>Get minimum significant value of clustering adaptivity feature.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id9" title="crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.get_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_parameters</span></code></a></p></td>
+<td><p>Get clustering adaptivity criterion parameters.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id10" title="crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.get_target_clusters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_target_clusters</span></code></a></p></td>
+<td><p>Get clustering adaptivity target clusters.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id11" title="crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.update_clusters_adapt_level"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_clusters_adapt_level</span></code></a></p></td>
+<td><p>Update clusters adaptive level after adaptive procedures.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adapt_mat_phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adapt_trigger_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adapt_max_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adapt_min_voxels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adapt_level_max_diff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swipe_dim_1_every</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swipe_dim_2_every</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swipe_dim_3_every</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_adapt_feature_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">magnitude_lower_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/adaptivity_criterion.html#SpatialDiscontinuities.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crate.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>adapt_mat_phase</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Adaptive material phase label.</p></li>
+<li><p><strong>phase_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clusters labels (item, list[int]) associated with each material
+phase (key, str).</p></li>
+<li><p><strong>adapt_trigger_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><em>default=None</em>) – Threshold associated with the adaptivity trigger condition.</p></li>
+<li><p><strong>adapt_max_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Maximum cluster adaptive level.</p></li>
+<li><p><strong>adapt_min_voxels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Minimum number of voxels that cluster must contain to be targeted
+for adaptivity.</p></li>
+<li><p><strong>adapt_level_max_diff</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Maximum adaptive level difference when targeting clusters of
+adjacent voxels.</p></li>
+<li><p><strong>swipe_dim_1_every</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Swipe frequency of spatial dimension 1. First and last (boundary)
+voxels are always considered.</p></li>
+<li><p><strong>swipe_dim_2_every</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Swipe frequency of spatial dimension 2. First and last (boundary)
+voxels are always considered.</p></li>
+<li><p><strong>swipe_dim_3_every</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Swipe frequency of spatial dimension 3. First and last (boundary)
+voxels are always considered.</p></li>
+<li><p><strong>min_adapt_feature_val</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><em>default=None</em>) – Minimum significant value of clustering adaptivity control feature.</p></li>
+<li><p><strong>magnitude_lower_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><em>default=None</em>) – Factor which affects the maximum stored magnitude associated with
+the lower valued targeted cluster.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">_swipe_dimension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adapt_data_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxels_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_clusters_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_loops</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/adaptivity_criterion.html#SpatialDiscontinuities._swipe_dimension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate spatial discontinuities along a given dimension.</p>
+<p>The spatial dimensions are cycled according to the code provided in
+<cite>dim_loops</cite>. The dimension where the spatial discontinuities are
+evaluated is always the first dimension specified in this code (assumed
+dimension i), while the others cycle the remainder dimensions (assumed
+dimensions j and k). During this process, both the list of target
+clusters and the dictionary containing associated data are updated.</p>
+<hr class="docutils" />
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>adapt_data_matrix</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Adaptivity feature data matrix (numpy.ndarray of shape
+(adapt_phase_n_clusters, 2)) that, for the i-th cluster of the
+adaptive material phase, contains the cluster label in
+adapt_data_matrix[i, 0] and the associated adaptive feature value
+in adapt_data_matrix[i, 1].</p></li>
+<li><p><strong>voxels_clusters</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – Regular grid of voxels (spatial discretization of the RVE), where
+each entry contains the cluster label (int) assigned to the
+corresponding voxel.</p></li>
+<li><p><strong>target_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>]</em>) – List containing the labels (int) of clusters to be adapted.</p></li>
+<li><p><strong>target_clusters_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – For each target cluster (key, str), store dictionary (item, dict)
+containing cluster associated parameters required for the adaptive
+procedures.</p></li>
+<li><p><strong>dim_loops</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Ordered specification of dimension cycles, being the spatial
+discontinuities evaluated along dimension <cite>dim_loops[0]</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">_update_swipe_dims_init_idx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/adaptivity_criterion.html#SpatialDiscontinuities._update_swipe_dims_init_idx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Randomly update the dimensions swipe frequency initial index.</p>
+<p>The detailed description of this procedure can be found in
+Ferreira et. al (2022) <a class="footnote-reference brackets" href="#id5" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id5" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">2</a><span class="fn-bracket">]</span></span>
+<p>Ferreira, B.P., Andrade Pires, F.M. and Bessa, M.A. (2022).
+<em>Adaptivity for clustering-based reduced-order modeling of
+localized history-dependent phenomena.</em> Comp Methods Appl M, 393
+(see <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0045782522000895?via%3Dihub">here</a>)</p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">get_clusters_adapt_level</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/adaptivity_criterion.html#SpatialDiscontinuities.get_clusters_adapt_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id7" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get clusters adaptive level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>clusters_adapt_level</strong> – Adaptive level (item, int) of each cluster (key, str).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id8">
+<span class="sig-name descname"><span class="pre">get_min_adapt_feature_val</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/adaptivity_criterion.html#SpatialDiscontinuities.get_min_adapt_feature_val"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id8" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get minimum significant value of clustering adaptivity feature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>min_adapt_feature_val</strong> – Minimum significant value of clustering adaptivity control feature.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id9">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/adaptivity_criterion.html#SpatialDiscontinuities.get_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id9" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get clustering adaptivity criterion parameters.</p>
+<p>Besides returning the mandatory and optional adaptivity criterion
+parameters, this method establishes the default values for the optional
+parameters.</p>
+<hr class="docutils" />
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>mandatory_parameters</strong> (<em>dict</em>) – Mandatory adaptivity type parameters (str) and associated type
+(item, type).</p></li>
+<li><p><strong>optional_parameters</strong> (<em>dict</em>) – Optional adaptivity type parameters (key, str) and associated
+default value (item).</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id10">
+<span class="sig-name descname"><span class="pre">get_target_clusters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adapt_data_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxels_clusters</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/adaptivity_criterion.html#SpatialDiscontinuities.get_target_clusters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id10" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get clustering adaptivity target clusters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>adapt_data_matrix</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Adaptivity feature data matrix (numpy.ndarray of shape
+(adapt_phase_n_clusters, 2)) that, for the i-th cluster of the
+adaptive material phase, contains the cluster label in
+adapt_data_matrix[i, 0] and the associated adaptive feature value
+in adapt_data_matrix[i, 1].</p></li>
+<li><p><strong>voxels_clusters</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – Regular grid of voxels (spatial discretization of the RVE), where
+each entry contains the cluster label (int) assigned to the
+corresponding voxel.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>target_clusters</strong> (<em>list[int]</em>) – List containing the labels (int) of clusters to be adapted.</p></li>
+<li><p><strong>target_clusters_data</strong> (<em>dict</em>) – For each target cluster (key, str), store dictionary (item, dict)
+containing cluster associated parameters required for the adaptive
+procedures.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id11">
+<span class="sig-name descname"><span class="pre">update_clusters_adapt_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adaptive_clustering_map</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/adaptivity/adaptivity_criterion.html#SpatialDiscontinuities.update_clusters_adapt_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id11" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update clusters adaptive level after adaptive procedures.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>adaptive_clustering_map</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – List of new cluster labels (item, list[int]) resulting from the
+adaptive procedures over each target cluster (key, str).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="crate.clustering.adaptivity.crve_adaptivity.MaterialQuantitiesComputer.html" class="btn btn-neutral float-left" title="crate.clustering.adaptivity.crve_adaptivity.MaterialQuantitiesComputer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="crate.clustering.citoperations.html" class="btn btn-neutral float-right" title="crate.clustering.citoperations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

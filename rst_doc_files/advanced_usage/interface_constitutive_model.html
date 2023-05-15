@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interface: Constitutive model &mdash; crate 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Index" href="../reference/index.html" />
+    <link rel="prev" title="Interface: Clustering algorithm" href="interface_clustering_algorithm.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            crate
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Interface: Constitutive model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#context">Context</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#constitutive-framework-and-requirements">Constitutive framework and requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#implementation-steps">Implementation steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recommendations">Recommendations</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/crate.html">Code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">crate</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Interface: Constitutive model</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="interface-constitutive-model">
+<h1>Interface: Constitutive model<a class="headerlink" href="#interface-constitutive-model" title="Permalink to this heading">¶</a></h1>
+<section id="context">
+<h2>Context<a class="headerlink" href="#context" title="Permalink to this heading">¶</a></h2>
+<p>One of the most important ingredients to perform the multi-scale simulation of a heterogeneous material is the set of constitutive models adopted to mathematically describe the physical behavior of each material phase. In a mechanical setting, a <strong>constitutive model</strong> is essentially a given set of equations, usually called constitutive equations, that establishes the relation between strain and stress on a given material point.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For a fundamental background on continuum mechanics and the formulation of the mechanical constitutive initial value problem, the interested reader is referred to <a class="reference external" href="http://dx.doi.org/10.13140/RG.2.2.33940.17289">Ferreira (2022)</a> (see Chapter 2: 2.1-2.9) and references therein.</p>
+</div>
+<p>Therefore, given a particular application, it is often the case that specific constitutive models must be implemented to describe the behavior of the different material phases composing the RVE of the material of interest.</p>
+</section>
+<hr class="docutils" />
+<section id="constitutive-framework-and-requirements">
+<h2>Constitutive framework and requirements<a class="headerlink" href="#constitutive-framework-and-requirements" title="Permalink to this heading">¶</a></h2>
+<p>CRATE constitutive modeling implementation is designed (but not limited to) around a particular case of the general history functional-based constitutive theory named <strong>thermodynamics with internal variables</strong>. Such a framework admits the implementation of a broad spectrum of general nonlinear constitutive models where (i) the thermodynamic state at a given instant of the deformation process is assumed to be completely defined by the instantaneous values of a finite number of state variables, and (ii) a given set of internal variables contains all the relevant information about the material thermodynamical history. Moreover, CRATE assumes an <strong>implicit time integration scheme</strong> and adopts an integration algorithm based on approximated <strong>incremental constitutive functions</strong>. Therefore, the implementation of a constitutive model requires not only the <strong>state update</strong> procedure, i.e., the incremental update of stress and state variables according to the constitutive equations, but also the computation of the <strong>material consistent tangent modulus</strong>, which arises in the linearization of the macro-scale equilibrium problem.</p>
+<p>In this context, the implementation of a particular constitutive model in CRATE requires that the following elements are clearly defined <strong>beforehand</strong>:</p>
+<ul class="simple">
+<li><p><strong>Model name</strong> - A unique identifier of the constitutive model;</p></li>
+<li><p><strong>Constitutive strain formulation</strong> - Closely following the classification described by de Souza Neto and coworkers (<a class="reference external" href="https://onlinelibrary.wiley.com/doi/book/10.1002/9780470694626">de Souza Neto (2022)</a>), CRATE distinguishes three different families of constitutive models (see illustration below): (i) infinitesimal strains, (ii) finite strains, and (iii) finite strains (kinematical extension);</p></li>
+<li><p><strong>Material properties</strong> - A set of material properties and/or hyperparameters that tune the constitutive model for a particular material;</p></li>
+<li><p><strong>Constitutive state update</strong> - The computational implementation of the model constitutive equations that, given the material thermodynamical history, uniquely determine the updated values of stress and internal variables for a given prescribed strain;</p></li>
+<li><p><strong>Material consistent tangent modulus</strong> - The computational implementation of the model material consistent tangent modulus, i.e., the first-order derivative of stress incremental constitutive function with respect to strain.</p></li>
+</ul>
+<a class="reference internal image-reference" href="../../_images/doc_CRATE_constitutive_model_families.png"><img alt="../../_images/doc_CRATE_constitutive_model_families.png" class="align-center" src="../../_images/doc_CRATE_constitutive_model_families.png" style="width: 80%;" /></a>
+</section>
+<hr class="docutils" />
+<section id="implementation-steps">
+<h2>Implementation steps<a class="headerlink" href="#implementation-steps" title="Permalink to this heading">¶</a></h2>
+<p>The implementation of a <strong>new constitutive model</strong> in CRATE involves <strong>four fundamental steps</strong>:</p>
+<ul>
+<li><p><strong>Step 1</strong> - Create a Python module with the name of the new constitutive model (e.g., <code class="code docutils literal notranslate"><span class="pre">new_model.py</span></code>) in <a class="reference internal" href="../../_autosummary/crate.material.models.html#module-crate.material.models" title="crate.material.models"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.material.models</span></code></a> directory;</p></li>
+<li><p><strong>Step 2</strong> - In <code class="code docutils literal notranslate"><span class="pre">new_model.py</span></code>, import the constitutive model interface (<a class="reference internal" href="../../_autosummary/crate.material.models.interface.ConstitutiveModel.html#crate.material.models.interface.ConstitutiveModel" title="crate.material.models.interface.ConstitutiveModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConstitutiveModel</span></code></a>), derive a class for the new constitutive model (e.g., <code class="code docutils literal notranslate"><span class="pre">NewConstitutiveModel</span></code>), and set the constitutive model name as an attribute (e.g., <code class="code docutils literal notranslate"><span class="pre">new_constitutive_model</span></code>):</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># material.models.new_model.py</span>
+
+<span class="kn">from</span> <span class="nn">material.models.interface</span> <span class="kn">import</span> <span class="n">ConstitutiveModel</span>
+
+<span class="k">class</span> <span class="nc">NewConstitutiveModel</span><span class="p">(</span><span class="n">ConstitutiveModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;New constitutive model.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    _name : str</span>
+<span class="sd">        Constitutive model name.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">material_properties</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="s1">&#39;new_constitutive_model&#39;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>Step 3</strong> - In <a class="reference internal" href="../../_autosummary/crate.material.materialmodeling.html#module-crate.material.materialmodeling" title="crate.material.materialmodeling"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.material.materialmodeling</span></code></a>, import and add the initialization of the new constitutive model in the <a class="reference internal" href="../../_autosummary/crate.material.materialmodeling.MaterialState.html#id30" title="crate.material.materialmodeling.MaterialState.init_constitutive_model"><code class="xref py py-meth docutils literal notranslate"><span class="pre">init_constitutive_model()</span></code></a> method of class <a class="reference internal" href="../../_autosummary/crate.material.materialmodeling.MaterialState.html#crate.material.materialmodeling.MaterialState" title="crate.material.materialmodeling.MaterialState"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaterialState</span></code></a>:</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># crate.material.materialmodeling.py</span>
+
+<span class="hll"><span class="kn">from</span> <span class="nn">material.models.new_model</span> <span class="kn">import</span> <span class="n">NewConstitutiveModel</span>
+</span>
+<span class="k">class</span> <span class="nc">MaterialState</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;CRVE material constitutive state.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">init_constitutive_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat_phase</span><span class="p">,</span> <span class="n">model_keyword</span><span class="p">,</span>
+                                <span class="n">model_source</span><span class="o">=</span><span class="s1">&#39;crate&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize material phase constitutive model.&quot;&quot;&quot;</span>
+
+        <span class="c1"># Initialize material phase constitutive model</span>
+        <span class="k">if</span> <span class="n">model_source</span> <span class="o">==</span> <span class="s1">&#39;crate&#39;</span><span class="p">:</span>
+<span class="hll">            <span class="k">if</span> <span class="n">model_keyword</span> <span class="o">==</span> <span class="s1">&#39;new_model&#39;</span><span class="p">:</span>
+</span><span class="hll">                <span class="n">constitutive_model</span> <span class="o">=</span> <span class="n">NewConstitutiveModel</span><span class="p">(</span>
+</span><span class="hll">                    <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span><span class="p">,</span>
+</span><span class="hll">                    <span class="bp">self</span><span class="o">.</span><span class="n">_material_phases_properties</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">])</span>
+</span>            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown constitutive model from CRATE</span><span class="se">\&#39;</span><span class="s1">s &#39;</span>
+                                   <span class="s1">&#39;source.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>Step 4</strong> - Perform the complete implementation of the new constitutive model in <code class="code docutils literal notranslate"><span class="pre">new_model.py</span></code> by developing the class <code class="code docutils literal notranslate"><span class="pre">NewConstitutiveModel</span></code> and implementing the abstract methods (look for the &#64;abstractmethod decorator) established by the constitutive model interface (<a class="reference internal" href="../../_autosummary/crate.material.models.interface.ConstitutiveModel.html#crate.material.models.interface.ConstitutiveModel" title="crate.material.models.interface.ConstitutiveModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConstitutiveModel</span></code></a>).</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="recommendations">
+<h2>Recommendations<a class="headerlink" href="#recommendations" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>If you are not familiar with the implementation of a constitutive model in CRATE, it is <strong>recommended</strong> that you first take a look into the implementation of the constitutive models already available (<a class="reference internal" href="../../_autosummary/crate.material.models.html#module-crate.material.models" title="crate.material.models"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.material.models</span></code></a>). The implementation of these models follows the steps previously outlined and are fully documented;</p></li>
+<li><p>Focus on the essential and don’t lose time implementing standard computations and operations in solid mechanics - make use of the <strong>extensive set of tools available</strong> in <a class="reference internal" href="../../_autosummary/crate.material.materialoperations.html#module-crate.material.materialoperations" title="crate.material.materialoperations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.material.materialoperations</span></code></a> and <a class="reference internal" href="../../_autosummary/crate.tensor.tensoroperations.html#module-crate.tensor.tensoroperations" title="crate.tensor.tensoroperations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.tensor.tensoroperations</span></code></a>;</p></li>
+<li><p>Avoid troublesome debugging processes by taking advantage of the <strong>matricial storage procedures</strong> of strain and stress related tensors available in <a class="reference internal" href="../../_autosummary/crate.tensor.matrixoperations.html#module-crate.tensor.matrixoperations" title="crate.tensor.matrixoperations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.tensor.matrixoperations</span></code></a> - such a toolkit ensures a systematic and consistent way of performing all the conversions between tensorial and matricial forms arising in your implementation.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="interface_clustering_algorithm.html" class="btn btn-neutral float-left" title="Interface: Clustering algorithm" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../reference/index.html" class="btn btn-neutral float-right" title="Index" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

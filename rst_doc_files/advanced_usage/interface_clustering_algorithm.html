@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interface: Clustering algorithm &mdash; crate 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Interface: Constitutive model" href="interface_constitutive_model.html" />
+    <link rel="prev" title="Interface: Clustering feature" href="interface_clustering_feature.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            crate
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Interface: Clustering algorithm</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#context">Context</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#implementation-steps">Implementation steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recommendations">Recommendations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/crate.html">Code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">crate</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Interface: Clustering algorithm</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="interface-clustering-algorithm">
+<h1>Interface: Clustering algorithm<a class="headerlink" href="#interface-clustering-algorithm" title="Permalink to this heading">¶</a></h1>
+<section id="context">
+<h2>Context<a class="headerlink" href="#context" title="Permalink to this heading">¶</a></h2>
+<p>One of the key ingredients of any clustering-based reduced-order model is the “compression” of the material RVE into a cluster-reduced RVE (CRVE) by means of a <strong>clustering-based domain decomposition</strong>, i.e., a cluster analysis that decomposes the spatial domain into a given number of material clusters. A material cluster can be defined as a group of domain points that exhibit some sort of similarity according to a given set of clustering features or attributes available at the point level. To take advantage of prior knowledge about such a similarity, the cluster analysis is <strong>performed independently</strong> for each material phase of the RVE.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For a fundamental background on clustering-based reduced-order modeling, the interested reader is referred to <a class="reference external" href="http://dx.doi.org/10.13140/RG.2.2.33940.17289">Ferreira (2022)</a> (see Chapter 4 and Appendix C) and references therein.</p>
+</div>
+<p>To perform the cluster analysis of the RVE it is necessary to select (at least) one suitable <strong>clustering algorithm</strong> from the vast amount of algorithms available on the literature on unsupervised machine learning (e.g., <a class="reference external" href="https://www.google.com/books/edition/Data_Clustering/cH50DwAAQBAJ?">Aggarwal, C.C., and Reddy C.K. (2018)</a>, <a class="reference external" href="https://www.google.com/books/edition/Data_Clustering_Theory_Algorithms_and_Ap/r4wIEAAAQBAJ?">Gan et al. (2020)</a>). For instance, one well-known and widely applied centroid-based clustering algorithm is called K-Means clustering, for which several implementation algorithms can often be found in open-source libraries.</p>
+<p>Therefore, given a particular application and the constitutive behavior of the RVE material phases, it may be of interest to implement new clustering algorithms that result in the definition of a more suitable CRVE. It is also worth noticing that there are several Python open-source libraries (e.g., <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/cluster.html">SciPy</a>, <a class="reference external" href="https://scikit-learn.org/stable/modules/clustering.html">Scikit-Learn</a>) that provide many ready-to-use implementations of well-established clustering algorithms.</p>
+</section>
+<hr class="docutils" />
+<section id="implementation-steps">
+<h2>Implementation steps<a class="headerlink" href="#implementation-steps" title="Permalink to this heading">¶</a></h2>
+<p>The implementation of a <strong>new clustering algorithm</strong> in CRATE involves <strong>five fundamental steps</strong>:</p>
+<ul>
+<li><p><strong>Step 1</strong> - Create a Python module with the name of the new clustering algorithm (e.g., <code class="code docutils literal notranslate"><span class="pre">new_clustering_algorithm.py</span></code>) in the directory <code class="code docutils literal notranslate"><span class="pre">crate.clustering.algorithms</span></code> (create directory if not existent);</p></li>
+<li><p><strong>Step 2</strong> - In <code class="code docutils literal notranslate"><span class="pre">new_clustering_algorithm.py</span></code>, import the clustering algorithm interface (<a class="reference internal" href="../../_autosummary/crate.clustering.clusteringalgs.ClusteringAlgorithm.html#crate.clustering.clusteringalgs.ClusteringAlgorithm" title="crate.clustering.clusteringalgs.ClusteringAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusteringAlgorithm</span></code></a>) and derive a class for the new clustering algorithm (e.g., <code class="code docutils literal notranslate"><span class="pre">NewClusteringAlgorithm</span></code>):</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># clustering.algorithms.new_clustering_algorithm.py</span>
+
+<span class="kn">from</span> <span class="nn">clustering.clusteringalgs</span> <span class="kn">import</span> <span class="n">ClusteringAlgorithm</span>
+
+<span class="k">class</span> <span class="nc">NewClusteringAlgorithm</span><span class="p">(</span><span class="n">ClusteringAlgorithm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;New clustering algorithm.&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>Step 3</strong> - In <a class="reference internal" href="../../_autosummary/crate.clustering.clusteringalgs.html#module-crate.clustering.clusteringalgs" title="crate.clustering.clusteringalgs"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.clustering.clusteringalgs</span></code></a>, check the already existent clustering algorithms (<code class="xref py py-attr docutils literal notranslate"><span class="pre">available_clustering_alg</span></code>), choose a unique integer identifier <code class="code docutils literal notranslate"><span class="pre">id</span></code> for the new clustering algorithm and add it as a new item of <code class="xref py py-attr docutils literal notranslate"><span class="pre">available_clustering_alg</span></code>:</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># clustering.clusteringalgs.py</span>
+
+<span class="k">class</span> <span class="nc">ClusterAnalysis</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interface to perform a cluster analysis.&quot;&quot;&quot;</span>
+
+    <span class="n">available_clustering_alg</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;&lt; id &gt;&#39;</span><span class="p">:</span> <span class="s1">&#39;New clustering algorithm&#39;</span><span class="p">,</span> <span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>Step 4</strong> - In <a class="reference internal" href="../../_autosummary/crate.clustering.clusteringalgs.html#module-crate.clustering.clusteringalgs" title="crate.clustering.clusteringalgs"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.clustering.clusteringalgs</span></code></a>, import and add the initialization of the new clustering algorithm in the <code class="xref py py-meth docutils literal notranslate"><span class="pre">get_fitted_estimator()</span></code> method of class <code class="xref py py-class docutils literal notranslate"><span class="pre">ClusterAnalysis</span></code>:</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># clustering.clusteringals.py</span>
+
+<span class="hll"><span class="kn">from</span> <span class="nn">clustering.algorithms.new_clustering_algorithm</span> <span class="kn">import</span> <span class="n">NewClusteringAlgorithm</span>
+</span>
+<span class="k">class</span> <span class="nc">ClusterAnalysis</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interface to perform a cluster analysis.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">get_fitted_estimator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">,</span> <span class="n">clust_alg_id</span><span class="p">,</span> <span class="n">n_clusters</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get cluster labels and clustering fitted estimator.&quot;&quot;&quot;</span>
+
+        <span class="c1"># Instantiate clustering algorithm</span>
+<span class="hll">        <span class="k">if</span> <span class="n">clust_alg_id</span> <span class="o">==</span> <span class="s1">&#39;&lt; id &gt;&#39;</span><span class="p">:</span>
+</span><span class="hll">            <span class="c1"># Instantiate New Clustering Algorithm</span>
+</span><span class="hll">            <span class="n">clust_alg</span> <span class="o">=</span> <span class="n">NewClusteringAlgorithm</span><span class="p">()</span>
+</span>        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown clustering algorithm.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>Step 5</strong> - Perform the complete implementation of the new clustering algorithm in <code class="code docutils literal notranslate"><span class="pre">new_clustering_algorithm.py</span></code> by developing the class <code class="code docutils literal notranslate"><span class="pre">NewClusteringAlgorithm</span></code> and implementing the abstract methods (look for the &#64;abstractmethod decorator) established by the clustering algorithm interface (<a class="reference internal" href="../../_autosummary/crate.clustering.clusteringalgs.ClusteringAlgorithm.html#crate.clustering.clusteringalgs.ClusteringAlgorithm" title="crate.clustering.clusteringalgs.ClusteringAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusteringAlgorithm</span></code></a>).</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="recommendations">
+<h2>Recommendations<a class="headerlink" href="#recommendations" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>If you are not familiar with the implementation of a clustering algorithm in CRATE, it is <strong>recommended</strong> that you first take a look into the implementation of the clustering algorithms already available (<a class="reference internal" href="../../_autosummary/crate.clustering.clusteringalgs.html#module-crate.clustering.clusteringalgs" title="crate.clustering.clusteringalgs"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.clustering.clusteringalgs</span></code></a>). Despite being embedded directly in <a class="reference internal" href="../../_autosummary/crate.clustering.clusteringalgs.html#module-crate.clustering.clusteringalgs" title="crate.clustering.clusteringalgs"><code class="xref py py-mod docutils literal notranslate"><span class="pre">crate.clustering.clusteringalgs</span></code></a>, the fundamental implementation steps of these clustering algorithms follows the steps previously outlined and are fully documented;</p></li>
+<li><p>In the particular case of a hierarchical agglomerative clustering algorithm and when access to the linkage matrix is required, derive a class for the new clustering algorithm (e.g., <code class="code docutils literal notranslate"><span class="pre">NewClusteringAlgorithm</span></code>) from the <strong>hierarchical agglomerative clustering algorithm interface</strong> (<a class="reference internal" href="../../_autosummary/crate.clustering.clusteringalgs.AgglomerativeAlgorithm.html#crate.clustering.clusteringalgs.AgglomerativeAlgorithm" title="crate.clustering.clusteringalgs.AgglomerativeAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">AgglomerativeAlgorithm</span></code></a>) instead;</p></li>
+<li><p>Take advantage of the several Python <strong>open-source libraries</strong> (e.g., <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/cluster.html">SciPy</a>, <a class="reference external" href="https://scikit-learn.org/stable/modules/clustering.html">Scikit-Learn</a>) that provide many well-established clustering algorithms and implement a simple <strong>wrapper class</strong> compliant with the clustering algorithm interface (<a class="reference internal" href="../../_autosummary/crate.clustering.clusteringalgs.ClusteringAlgorithm.html#crate.clustering.clusteringalgs.ClusteringAlgorithm" title="crate.clustering.clusteringalgs.ClusteringAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusteringAlgorithm</span></code></a>).</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="interface_clustering_feature.html" class="btn btn-neutral float-left" title="Interface: Clustering feature" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="interface_constitutive_model.html" class="btn btn-neutral float-right" title="Interface: Constitutive model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

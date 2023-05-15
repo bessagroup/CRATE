@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>crate.clustering.rveelasticdatabase &mdash; crate 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            crate
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/crate.html">Code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">crate</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">crate.clustering.rveelasticdatabase</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for crate.clustering.rveelasticdatabase</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Compute RVE local elastic response database.</span>
+
+<span class="sd">This module includes the class which embodies a RVE local elastic response</span>
+<span class="sd">database. This physical-based database is required to compute the clustering</span>
+<span class="sd">features and perform the RVE cluster analysis. This class also includes the</span>
+<span class="sd">computation of the RVE elastic effective tangent modulus when certain</span>
+<span class="sd">macroscale strain loadings are met.</span>
+
+<span class="sd">Classes</span>
+<span class="sd">-------</span>
+<span class="sd">RVEElasticDatabase</span>
+<span class="sd">    RVE local elastic response database class.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#                                                                       Modules</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1"># Standard</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="c1"># Third-party</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="c1"># Local</span>
+<span class="kn">import</span> <span class="nn">ioput.info</span> <span class="k">as</span> <span class="nn">info</span>
+<span class="kn">import</span> <span class="nn">tensor.matrixoperations</span> <span class="k">as</span> <span class="nn">mop</span>
+<span class="kn">from</span> <span class="nn">clustering.solution.ffthombasicscheme</span> <span class="kn">import</span> <span class="n">FFTBasicScheme</span>
+<span class="kn">from</span> <span class="nn">material.materialoperations</span> <span class="kn">import</span> <span class="n">compute_rotation_tensor</span>
+<span class="c1">#</span>
+<span class="c1">#                                                          Authorship &amp; Credits</span>
+<span class="c1"># =============================================================================</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Bernardo Ferreira (bernardo_ferreira@brown.edu)&#39;</span>
+<span class="n">__credits__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Bernardo Ferreira&#39;</span><span class="p">,</span> <span class="p">]</span>
+<span class="n">__status__</span> <span class="o">=</span> <span class="s1">&#39;Stable&#39;</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="RVEElasticDatabase"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.rveelasticdatabase.RVEElasticDatabase.html#crate.clustering.rveelasticdatabase.RVEElasticDatabase">[docs]</a><span class="k">class</span> <span class="nc">RVEElasticDatabase</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;RVE local elastic response database class.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    _global_hom_stress_strain : dict</span>
+<span class="sd">        RVE homogenized stress-strain response (item, numpy.ndarray (2d)) for</span>
+<span class="sd">        each macroscale strain loading identifier (key, int). The homogenized</span>
+<span class="sd">        strain and homogenized stress tensor components of the i-th loading</span>
+<span class="sd">        increment are stored columnwise in the i-th row, sorted respectively.</span>
+<span class="sd">        Infinitesimal strain tensor and Cauchy stress tensor (infinitesimal</span>
+<span class="sd">        strains) or Deformation gradient and first Piola-Kirchhoff stress</span>
+<span class="sd">        tensor (finite strains).</span>
+<span class="sd">    _elastic_eff_modulus_matrix : numpy.ndarray (2d)</span>
+<span class="sd">        RVE&#39;s elastic effective tangent modulus in matrix form, where each</span>
+<span class="sd">        entry contains a given elastic modulus (similar to Voigt notation).</span>
+<span class="sd">        The elastic effective tangent modulus is computed from the stress</span>
+<span class="sd">        conjugate to the infinitesimal strain tensor (infinitesimal strains)</span>
+<span class="sd">        or to the material logarithmic strain tensor (finite strains).</span>
+<span class="sd">    _eff_elastic_properties : dict</span>
+<span class="sd">        Elastic properties (key, str) and their values (item, float) estimated</span>
+<span class="sd">        from the RVE&#39;s elastic effective tangent modulus.</span>
+<span class="sd">    rve_global_response : numpy.ndarray (2d)</span>
+<span class="sd">        RVE local elastic strain response for a given set of macroscale</span>
+<span class="sd">        loadings, where each macroscale loading is associated with a set of</span>
+<span class="sd">        independent strain components (numpy.ndarray of shape</span>
+<span class="sd">        (n_voxels, n_mac_strains*n_strain_comps)). Each column is associated</span>
+<span class="sd">        associated with a independent strain component of the infinitesimal</span>
+<span class="sd">        strain tensor (infinitesimal strains) or material logarithmic strain</span>
+<span class="sd">        tensor (finite strains).</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    compute_rve_response_database(self, dns_method, dns_method_data, \</span>
+<span class="sd">                                  mac_strains, is_strain_sym)</span>
+<span class="sd">        Compute RVE&#39;s local elastic strain response database.</span>
+<span class="sd">    compute_rve_elastic_tangent_modulus(self, strain_magnitude_factor=1.0)</span>
+<span class="sd">        Compute RVE&#39;s elastic effective tangent modulus.</span>
+<span class="sd">    set_eff_isotropic_elastic_constants(self):</span>
+<span class="sd">        Set isotropic elastic constants from effective tangent modulus.</span>
+<span class="sd">    get_eff_isotropic_elastic_constants(self):</span>
+<span class="sd">        Get isotropic elastic constants from effective tangent modulus.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="RVEElasticDatabase.__init__"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.rveelasticdatabase.RVEElasticDatabase.html#crate.clustering.rveelasticdatabase.RVEElasticDatabase.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">rve_dims</span><span class="p">,</span>
+                 <span class="n">n_voxels_dims</span><span class="p">,</span> <span class="n">regular_grid</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span>
+                 <span class="n">material_phases_properties</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        strain_formulation : {&#39;infinitesimal&#39;, &#39;finite&#39;}</span>
+<span class="sd">            Problem strain formulation.</span>
+<span class="sd">        problem_type : int</span>
+<span class="sd">            Problem type: 2D plane strain (1), 2D plane stress (2),</span>
+<span class="sd">            2D axisymmetric (3) and 3D (4).</span>
+<span class="sd">        rve_dims : list[float]</span>
+<span class="sd">            RVE size in each dimension.</span>
+<span class="sd">        n_voxels_dims : list[int]</span>
+<span class="sd">            Number of voxels in each dimension of the regular grid (spatial</span>
+<span class="sd">            discretization of the RVE).</span>
+<span class="sd">        regular_grid : numpy.ndarray (2d or 3d)</span>
+<span class="sd">            Regular grid of voxels (spatial discretization of the RVE), where</span>
+<span class="sd">            each entry contains the material phase label (int) assigned to the</span>
+<span class="sd">            corresponding voxel.</span>
+<span class="sd">        material_phases : list[str]</span>
+<span class="sd">            RVE material phases labels (str).</span>
+<span class="sd">        material_phases_properties : dict</span>
+<span class="sd">            Constitutive model material properties (item, dict) associated to</span>
+<span class="sd">            each material phase (key, str).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">=</span> <span class="n">strain_formulation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span> <span class="o">=</span> <span class="n">problem_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rve_dims</span> <span class="o">=</span> <span class="n">rve_dims</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_voxels_dims</span> <span class="o">=</span> <span class="n">n_voxels_dims</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_regular_grid</span> <span class="o">=</span> <span class="n">regular_grid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_material_phases</span> <span class="o">=</span> <span class="n">material_phases</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_material_phases_properties</span> <span class="o">=</span> <span class="n">material_phases_properties</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_global_hom_stress_strain</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_elastic_eff_modulus_matrix</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_eff_elastic_properties</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rve_global_response</span> <span class="o">=</span> <span class="kc">None</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="RVEElasticDatabase.compute_rve_response_database"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.rveelasticdatabase.RVEElasticDatabase.html#crate.clustering.rveelasticdatabase.RVEElasticDatabase.compute_rve_response_database">[docs]</a>    <span class="k">def</span> <span class="nf">compute_rve_response_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dns_method</span><span class="p">,</span> <span class="n">dns_method_data</span><span class="p">,</span>
+                                      <span class="n">mac_strains</span><span class="p">,</span> <span class="n">is_strain_sym</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute RVE&#39;s local elastic strain response database.</span>
+
+<span class="sd">        Build a RVE&#39;s local elastic strain response database by solving one or</span>
+<span class="sd">        more microscale equilibrium problems (each associated with a given</span>
+<span class="sd">        macroscale strain loading) through a given homogenization-based</span>
+<span class="sd">        multi-scale method.</span>
+
+<span class="sd">        ----</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dns_method : {&#39;fft-basic&#39;}</span>
+<span class="sd">            DNS homogenization-based multi-scale method.</span>
+<span class="sd">        dns_method_data : dict</span>
+<span class="sd">            Parameters of DNS homogenization-based multi-scale method.</span>
+<span class="sd">        mac_strains : list[numpy.ndarray (2d)]</span>
+<span class="sd">            List of macroscale strain loadings (numpy.ndarray (2d)).</span>
+<span class="sd">            Infinitesimal strain tensor (infinitesimal strains) or deformation</span>
+<span class="sd">            gradient (finite strains).</span>
+<span class="sd">        is_strain_sym : bool</span>
+<span class="sd">            True if the macroscale strain second-order tensor associated with</span>
+<span class="sd">            the RVE&#39;s local elastic strain response database is symmetric by</span>
+<span class="sd">            definition, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get problem type parameters</span>
+        <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span> <span class="o">=</span> \
+            <span class="n">mop</span><span class="o">.</span><span class="n">get_problem_type_parameters</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span><span class="p">)</span>
+        <span class="c1"># Set components order compatible with macroscale strain loading</span>
+        <span class="k">if</span> <span class="n">is_strain_sym</span><span class="p">:</span>
+            <span class="n">comp_order</span> <span class="o">=</span> <span class="n">comp_order_sym</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">comp_order</span> <span class="o">=</span> <span class="n">comp_order_nsym</span>
+        <span class="c1"># Get total number of voxels</span>
+        <span class="n">n_voxels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_voxels_dims</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Instatiate homogenization-based multi-scale method</span>
+        <span class="k">if</span> <span class="n">dns_method</span> <span class="o">==</span> <span class="s1">&#39;fft_basic&#39;</span><span class="p">:</span>
+            <span class="n">homogenization_method</span> <span class="o">=</span> <span class="n">FFTBasicScheme</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rve_dims</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_n_voxels_dims</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_regular_grid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_material_phases</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_material_phases_properties</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown homogenization-based multi-scale &#39;</span>
+                               <span class="s1">&#39;method.&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Initialize RVE&#39;s local elastic strain response database</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rve_global_response</span> <span class="o">=</span> \
+            <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_voxels</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">mac_strains</span><span class="p">)</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)))</span>
+        <span class="c1"># Loop over macroscale strain loadings</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mac_strains</span><span class="p">)):</span>
+            <span class="n">info</span><span class="o">.</span><span class="n">displayinfo</span><span class="p">(</span><span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;Macroscale strain loading (&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                             <span class="o">+</span> <span class="s1">&#39; of &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mac_strains</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;)...&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="c1"># Get macroscale strain tensor</span>
+            <span class="n">mac_strain_id</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">mac_strain</span> <span class="o">=</span> <span class="n">mac_strains</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="c1"># Compute RVE&#39;s local elastic strain response</span>
+            <span class="n">strain_vox</span> <span class="o">=</span> <span class="n">homogenization_method</span><span class="o">.</span><span class="n">compute_rve_local_response</span><span class="p">(</span>
+                <span class="n">mac_strain_id</span><span class="p">,</span> <span class="n">mac_strain</span><span class="p">)</span>
+            <span class="c1"># Assemble RVE&#39;s local elastic strain response to database</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">rve_global_response</span><span class="p">[:,</span> <span class="n">i</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)</span> <span class="o">+</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="n">strain_vox</span><span class="p">[</span><span class="n">comp_order</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+            <span class="c1"># Store RVE&#39;s homogenized stress-strain material response</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_global_hom_stress_strain</span><span class="p">[</span><span class="n">mac_strain_id</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">homogenization_method</span><span class="o">.</span><span class="n">get_hom_stress_strain</span><span class="p">())</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="RVEElasticDatabase.compute_rve_elastic_tangent_modulus"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.rveelasticdatabase.RVEElasticDatabase.html#crate.clustering.rveelasticdatabase.RVEElasticDatabase.compute_rve_elastic_tangent_modulus">[docs]</a>    <span class="k">def</span> <span class="nf">compute_rve_elastic_tangent_modulus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_magnitude_factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute RVE&#39;s elastic effective tangent modulus.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        strain_magnitude_factor : float, default=1.0</span>
+<span class="sd">            Macroscale strain magnitude factor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get problem type parameters</span>
+        <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span> <span class="o">=</span> \
+            <span class="n">mop</span><span class="o">.</span><span class="n">get_problem_type_parameters</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Check number of macroscale strain loadings</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_global_hom_stress_strain</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order_sym</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;The computation of the RVE</span><span class="se">\&#39;</span><span class="s1">s elastic &#39;</span>
+                               <span class="s1">&#39;effective tangent modulus requires the RVE &#39;</span>
+                               <span class="s1">&#39;homogenized stress-strain response under a &#39;</span>
+                               <span class="s1">&#39;suitable set of orthogonal macroscale &#39;</span>
+                               <span class="s1">&#39;strain loadings.&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Initialize RVE&#39;s effective tangent modulus matrix</span>
+        <span class="n">elastic_eff_modulus_matrix</span> <span class="o">=</span> \
+            <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order_sym</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order_sym</span><span class="p">)))</span>
+        <span class="c1"># Loop over orthogonal macroscale strain loadings</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order_sym</span><span class="p">)):</span>
+            <span class="c1"># Get Kelvin factor associated with macroscale strain loading</span>
+            <span class="c1"># strain component</span>
+            <span class="n">kf_i</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">kelvin_factor</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">)</span>
+            <span class="c1"># Get macroscale strain loading identifier</span>
+            <span class="n">mac_strain_id</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="c1"># Get RVE homogenized stress-strain material response</span>
+            <span class="n">hom_stress_strain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_global_hom_stress_strain</span><span class="p">[</span><span class="n">mac_strain_id</span><span class="p">]</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Compute stress conjugate</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;infinitesimal&#39;</span><span class="p">:</span>
+                <span class="c1"># Get homogenized Cauchy stress tensor</span>
+                <span class="n">stress_conjugate</span> <span class="o">=</span> \
+                    <span class="n">hom_stress_strain</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order_nsym</span><span class="p">):]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+                        <span class="p">(</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Get homogenized deformation gradient</span>
+                <span class="n">def_gradient</span> <span class="o">=</span> \
+                    <span class="n">hom_stress_strain</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order_nsym</span><span class="p">)]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+                        <span class="p">(</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+                <span class="c1"># Get homogenized first Piola-Kirchhoff stress tensor</span>
+                <span class="n">first_piola_stress</span> <span class="o">=</span> \
+                    <span class="n">hom_stress_strain</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order_nsym</span><span class="p">):]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+                        <span class="p">(</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+                <span class="c1"># Compute rotation tensor</span>
+                <span class="n">rotation</span> <span class="o">=</span> <span class="n">compute_rotation_tensor</span><span class="p">(</span><span class="n">def_gradient</span><span class="p">)</span>
+                <span class="c1"># Compute stress conjugate to material logarithmic strain</span>
+                <span class="n">stress_conjugate</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">rotation</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span>
+                        <span class="n">first_piola_stress</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span>
+                            <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">def_gradient</span><span class="p">),</span> <span class="n">rotation</span><span class="p">)))</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Assemble column of RVE&#39;s effective tangent modulus matrix</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order_sym</span><span class="p">)):</span>
+                <span class="c1"># Get strain component and associated second-order indexes</span>
+                <span class="n">comp_j</span> <span class="o">=</span> <span class="n">comp_order_sym</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                <span class="n">so_idx</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">comp_j</span><span class="p">)])</span>
+                <span class="c1"># Get Kelvin factor associated with strain component</span>
+                <span class="n">kf_j</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">kelvin_factor</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">)</span>
+                <span class="c1"># Assemble column of RVE&#39;s effective tangent modulus matrix</span>
+                <span class="n">elastic_eff_modulus_matrix</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">strain_magnitude_factor</span><span class="p">)</span><span class="o">*</span><span class="n">kf_j</span><span class="o">*</span><span class="n">stress_conjugate</span><span class="p">[</span><span class="n">so_idx</span><span class="p">]</span>
+                <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                <span class="c1"># Remove Kelvin coefficient</span>
+                <span class="n">elastic_eff_modulus_matrix</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">kf_i</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">kf_j</span><span class="p">)</span><span class="o">*</span><span class="n">elastic_eff_modulus_matrix</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Store RVE&#39;s effective tangent modulus matrix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_elastic_eff_modulus_matrix</span> <span class="o">=</span> \
+            <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">elastic_eff_modulus_matrix</span><span class="p">)</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="RVEElasticDatabase.set_eff_isotropic_elastic_constants"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.rveelasticdatabase.RVEElasticDatabase.html#crate.clustering.rveelasticdatabase.RVEElasticDatabase.set_eff_isotropic_elastic_constants">[docs]</a>    <span class="k">def</span> <span class="nf">set_eff_isotropic_elastic_constants</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set isotropic elastic constants from effective tangent modulus.&quot;&quot;&quot;</span>
+        <span class="c1"># Check if RVE&#39;s elastic effective tangent modulus is available</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elastic_eff_modulus_matrix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unavailable RVE</span><span class="se">\&#39;</span><span class="s1">s elastic effective tangent &#39;</span>
+                               <span class="s1">&#39;modulus.&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Get isotropic elastic modulii</span>
+        <span class="n">E1111</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elastic_eff_modulus_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">E1122</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elastic_eff_modulus_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># Compute Young&#39;s modulus</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="n">E1111</span> <span class="o">+</span> <span class="n">E1122</span><span class="p">))</span><span class="o">*</span><span class="p">(</span><span class="n">E1111</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">E1111</span><span class="o">*</span><span class="n">E1122</span> <span class="o">-</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">E1122</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="c1"># Compute Poisson&#39;s coefficient</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">E1122</span><span class="o">/</span><span class="p">(</span><span class="n">E1111</span> <span class="o">+</span> <span class="n">E1122</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Check isotropic elastic constants</span>
+        <span class="n">is_admissible</span> <span class="o">=</span> <span class="p">(</span><span class="n">E</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">v</span> <span class="o">&gt;=</span> <span class="mf">0.0</span> <span class="ow">and</span> <span class="p">(</span><span class="n">v</span><span class="o">/</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_admissible</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Inadmissible isotropic elastic constants from &#39;</span>
+                               <span class="s1">&#39;RVE</span><span class="se">\&#39;</span><span class="s1">s elastic effective tangent modulus.&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Update estimates of effective elastic properties</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_eff_elastic_properties</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;E&#39;</span><span class="p">:</span> <span class="n">E</span><span class="p">,</span> <span class="s1">&#39;v&#39;</span><span class="p">:</span> <span class="n">v</span><span class="p">}</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="RVEElasticDatabase.get_eff_isotropic_elastic_constants"><a class="viewcode-back" href="../../../_autosummary/crate.clustering.rveelasticdatabase.RVEElasticDatabase.html#crate.clustering.rveelasticdatabase.RVEElasticDatabase.get_eff_isotropic_elastic_constants">[docs]</a>    <span class="k">def</span> <span class="nf">get_eff_isotropic_elastic_constants</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get isotropic elastic constants from effective tangent modulus.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        eff_elastic_properties : dict</span>
+<span class="sd">            Elastic properties (key, str) and their values (item, float)</span>
+<span class="sd">            estimated from the RVE&#39;s elastic effective tangent modulus.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_eff_elastic_properties</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

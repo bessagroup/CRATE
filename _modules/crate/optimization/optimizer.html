@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>crate.optimization.optimizer &mdash; crate 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            crate
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/getting_started/run_benchmark.html">Run a benchmark</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Basic usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/general_workflow.html">General workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step1_material_model.html">Step 1: Material model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step2_input_data.html">Step 2: Input data file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step3_simulation.html">Step 3: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/step4_post_processing.html">Step 4: Post-processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/basic_usage/available_features.html">Available features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/validation/benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/customization.html">Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_dns_solver.html">Interface: DNS solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_clustering_feature.html">Interface: Clustering feature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_clustering_algorithm.html">Interface: Clustering algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/advanced_usage/interface_constitutive_model.html">Interface: Constitutive model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rst_doc_files/reference/index.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/crate.html">Code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">BSD 3-Clause License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">crate</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">crate.optimization.optimizer</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for crate.optimization.optimizer</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Optimization algorithms.</span>
+
+<span class="sd">This module includes the interface to implement any optimization algorithm as</span>
+<span class="sd">well as several wrappers over optimization algorithms available on open-source</span>
+<span class="sd">libraries (e.g., `SciPy &lt;https://docs.scipy.org/doc/scipy/reference/generated/</span>
+<span class="sd">scipy.optimize.minimize.html&gt;`_) and others.</span>
+
+<span class="sd">Classes</span>
+<span class="sd">-------</span>
+<span class="sd">Optimizer</span>
+<span class="sd">    Optimization algorithm interface.</span>
+<span class="sd">SciPyMinimizer</span>
+<span class="sd">    SciPy minimization optimizer (wrapper).</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#                                                                       Modules</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1"># Standard</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="c1"># Third-party</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy.optimize</span>
+<span class="c1">#</span>
+<span class="c1">#                                                          Authorship &amp; Credits</span>
+<span class="c1"># =============================================================================</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Bernardo Ferreira (bernardo_ferreira@brown.edu)&#39;</span>
+<span class="n">__credits__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Bernardo Ferreira&#39;</span><span class="p">,</span> <span class="p">]</span>
+<span class="n">__status__</span> <span class="o">=</span> <span class="s1">&#39;Alpha&#39;</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#</span>
+<span class="c1">#                                             Interface: Optimization algorithm</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="Optimizer"><a class="viewcode-back" href="../../../_autosummary/crate.optimization.optimizer.Optimizer.html#crate.optimization.optimizer.Optimizer">[docs]</a><span class="k">class</span> <span class="nc">Optimizer</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Optimization algorithm interface.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    solve_optimization(self, optimization_function, max_n_iter=None, \</span>
+<span class="sd">                       verbose=False):</span>
+<span class="sd">        *abstract*: Solve optimization problem.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Optimizer.__init__"><a class="viewcode-back" href="../../../_autosummary/crate.optimization.optimizer.Optimizer.html#crate.optimization.optimizer.Optimizer.__init__">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="Optimizer.solve_optimization"><a class="viewcode-back" href="../../../_autosummary/crate.optimization.optimizer.Optimizer.html#crate.optimization.optimizer.Optimizer.solve_optimization">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">solve_optimization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">optimization_function</span><span class="p">,</span> <span class="n">max_n_iter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Solve optimization problem.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        optimization_function : OptimizationFunction</span>
+<span class="sd">            Instance of OptimizationFunction class.</span>
+<span class="sd">        max_n_iter : int, default=None</span>
+<span class="sd">            Maximum number of iterations.</span>
+<span class="sd">        verbose : bool, default=False</span>
+<span class="sd">            Enable verbose output.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        parameters : dict</span>
+<span class="sd">            Optimization parameters names (key, str) and values (item, float).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div></div>
+<span class="c1">#</span>
+<span class="c1">#                                                       Optimization algorithms</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="SciPyMinimizer"><a class="viewcode-back" href="../../../_autosummary/crate.optimization.optimizer.SciPyMinimizer.html#crate.optimization.optimizer.SciPyMinimizer">[docs]</a><span class="k">class</span> <span class="nc">SciPyMinimizer</span><span class="p">(</span><span class="n">Optimizer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;SciPy minimization optimizer (wrapper).</span>
+
+<span class="sd">    Documentation: see `here &lt;https://docs.scipy.org/doc/scipy/reference/</span>
+<span class="sd">    generated/scipy.optimize.minimize.html&gt;`_.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    solve_optimization(self, optimization_function, max_n_iter=None, \</span>
+<span class="sd">                       verbose=False)</span>
+<span class="sd">        Solve optimization problem.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="SciPyMinimizer.__init__"><a class="viewcode-back" href="../../../_autosummary/crate.optimization.optimizer.SciPyMinimizer.html#crate.optimization.optimizer.SciPyMinimizer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;Powell&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        method : {&#39;Nelder-Mead&#39;, &#39;Powell&#39;, &#39;CG&#39;, &#39;BFGS&#39;}, default=&#39;Powell&#39;</span>
+<span class="sd">            Optimization method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_method</span> <span class="o">=</span> <span class="n">method</span></div>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="SciPyMinimizer.solve_optimization"><a class="viewcode-back" href="../../../_autosummary/crate.optimization.optimizer.SciPyMinimizer.html#crate.optimization.optimizer.SciPyMinimizer.solve_optimization">[docs]</a>    <span class="k">def</span> <span class="nf">solve_optimization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">optimization_function</span><span class="p">,</span> <span class="n">max_n_iter</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                           <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Solve optimization problem.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        optimization_function : OptimizationFunction</span>
+<span class="sd">            Instance of OptimizationFunction class.</span>
+<span class="sd">        max_n_iter : int, default=1</span>
+<span class="sd">            Maximum number of iterations.</span>
+<span class="sd">        verbose : bool, default=False</span>
+<span class="sd">            Enable verbose output.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        parameters : dict</span>
+<span class="sd">            Optimization parameters names (key, str) and values (item, float).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get optimization function with normalized parameters provided as</span>
+        <span class="c1"># sequence</span>
+        <span class="n">norm_opt_function_seq</span> <span class="o">=</span> <span class="n">optimization_function</span><span class="o">.</span><span class="n">norm_opt_function_seq</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Get optimization function parameters names</span>
+        <span class="n">parameters_names</span> <span class="o">=</span> <span class="n">optimization_function</span><span class="o">.</span><span class="n">get_parameters_names</span><span class="p">()</span>
+        <span class="c1"># Set number of optimization parameters</span>
+        <span class="n">dimension</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">parameters_names</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Get optimization parameters initial guess</span>
+        <span class="n">init_shot</span> <span class="o">=</span> <span class="n">optimization_function</span><span class="o">.</span><span class="n">get_init_shot</span><span class="p">(</span><span class="n">is_normalized</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">init_shot</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">param</span><span class="p">)]</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">parameters_names</span><span class="p">])</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Get optimization parameters lower and upper bounds</span>
+        <span class="n">lower_bounds</span><span class="p">,</span> <span class="n">upper_bounds</span> <span class="o">=</span> \
+            <span class="n">optimization_function</span><span class="o">.</span><span class="n">get_bounds</span><span class="p">(</span><span class="n">is_normalized</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># Build optimization parameters bounds array</span>
+        <span class="n">bounds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="n">lower_bounds</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">param</span><span class="p">)],</span> <span class="n">upper_bounds</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">param</span><span class="p">)])</span>
+                           <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">parameters_names</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span>
+                                                                   <span class="mi">2</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Set algorithmic parameters</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;maxiter&#39;</span><span class="p">:</span> <span class="n">max_n_iter</span><span class="p">,</span> <span class="p">}</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Solve optimization problem</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">fun</span><span class="o">=</span><span class="n">norm_opt_function_seq</span><span class="p">,</span>
+                                         <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span>
+                                         <span class="n">method</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_method</span><span class="p">,</span>
+                                         <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span>
+                                         <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Get optimization solution</span>
+        <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">param</span><span class="p">):</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                      <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">parameters_names</span><span class="p">)}</span>
+        <span class="c1"># optimum = result.fun</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">parameters</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bernardo Ferreira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
