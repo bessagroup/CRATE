@@ -1,7 +1,7 @@
 
 
 <p align="center">
-  <a href=""><img alt="logo" src="docs/media/logo/CRATE_logo_horizontal_long.png?raw=true?raw=true" width="80%"></a>
+  <a href=""><img alt="logo" src="https://user-images.githubusercontent.com/25851824/238439999-4170acd2-409e-4e0c-b262-5971a7df418e.png" width="80%"></a>
 </p>
 
 # What is CRATE?
@@ -42,7 +42,7 @@ You can find everything you need to know in [CRATE documentation](https://bessag
 
 
 <p align="center">
-  <a href=""><img alt="logo" src="docs/schematics/doc_CRATE_conceptual_scheme.png?raw=true" width="80%"></a>
+  <a href=""><img alt="logo" src="https://user-images.githubusercontent.com/25851824/238440445-48811f19-8131-4161-8eeb-108197221986.png" width="80%"></a>
 </p>
 
 
