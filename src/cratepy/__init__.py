@@ -23,11 +23,11 @@ root_dir = str(pathlib.Path(__file__).parents[0])
 if root_dir not in sys.path:
     sys.path.insert(0, root_dir)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-from crate import main
-from crate.main import crate_simulation
-from crate import clustering
-from crate import ioput
-from crate import material
-from crate import online
-from crate import optimization
-from crate import tensor
+from cratepy import main
+from cratepy.main import crate_simulation
+from cratepy import clustering
+from cratepy import ioput
+from cratepy import material
+from cratepy import online
+from cratepy import optimization
+from cratepy import tensor

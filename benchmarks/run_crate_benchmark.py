@@ -5,7 +5,7 @@ a Python environment by simply executing the command:
 
 | python3 run_crate_benchmark.py
 
-Note that this module works even if CRATE Python package 'crate' is not
+Note that this module works even if CRATE Python package 'cratepy' is not
 installed from the Python Package Index (e.g., with pip). However, note that
 CRATE third-party package dependencies (e.g., 'numpy') must be installed and
 accessible to the Python interpreter.
@@ -31,7 +31,7 @@ root_dir = str(pathlib.Path(__file__).parents[1]) + '/src'
 if root_dir not in sys.path:
     sys.path.insert(0, root_dir)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-import crate
+import cratepy
 # =============================================================================
 #
 # =============================================================================
@@ -48,6 +48,6 @@ microstructure_dir = os.path.join(str(pathlib.Path(__file__).parents[0]),
                                   'microstructures')
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Perform CRATE simulation
-crate.crate_simulation(input_file_path,
-                       arg_discret_file_dir=microstructure_dir,
-                       is_null_stdout=False)
+cratepy.crate_simulation(input_file_path,
+                         arg_discret_file_dir=microstructure_dir,
+                         is_null_stdout=False)
