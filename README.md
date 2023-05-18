@@ -60,6 +60,8 @@ You are also welcome to post there any **questions**, **comments** or **suggesti
 
 * Bernardo P. Ferreira is deeply thankful to [Francisco Pires](https://sigarra.up.pt/feup/pt/func_geral.formview?p_codigo=240385) and [Miguel Bessa](https://github.com/mabessa) for supervising the PhD Thesis that motivated the development of CRATE.
 
+* Bernardo P. Ferreira acknowledges the pioneering development of clustering-based reduced-order models by [Zeliang Liu](https://zeliangliu.com/), namely by proposing the [Self-Consistent Clustering Analysis (SCA)](https://www.sciencedirect.com/science/article/pii/S0045782516301499), that established the conceptual framework and foundations for the development of CRATE.
+
 
 # License
 
