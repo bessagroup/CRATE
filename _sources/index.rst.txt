@@ -14,6 +14,14 @@ Summary
 
 ----
 
+Statement of Need
+-----------------
+`cratepy <https://pypi.org/project/cratepy/>`_ is essentially a numerical tool for any application that requires material multi-scale simulations. Given the intrinsic clustering-based reduced-order modeling approach (e.g., `SCA <https://www.sciencedirect.com/science/article/pii/S0045782516301499>`_, `ASCA <https://www.sciencedirect.com/science/article/pii/S0045782522000895?via%3Dihub>`_), CRATE is mostly useful in applications where the computational cost of standard simulation methods is prohibitive, namely to solve lower-scales in coupled hierarchical multi-scale simulations (e.g., `B.P. Ferreira (2022) <http://dx.doi.org/10.13140/RG.2.2.33940.17289>`_) and to generate large material response databases for data-driven frameworks based on machine learning (e.g., `Bessa et al. (2017) <https://www.sciencedirect.com/science/article/pii/S0045782516314803>`_). Clustering-based reduced-order models achieve a **striking balance between accuracy and computational cost** by first performing a clustering-based domain decomposition of the material model and then solving the equilibrium problem formulated over the resulting reduced model.
+
+In the particular case of a **research environment**, `cratepy <https://pypi.org/project/cratepy/>`_ is designed to easily accommodate further developments, either by improving the already implemented methods or by including new numerical models and techniques. It also provides all the fundamental means to perform comparisons with alternative methods, both in terms of accuracy and computational cost. In a **teaching environment**, `cratepy <https://pypi.org/project/cratepy/>`_ is a readily available tool for demonstrative purposes and/or academic work proposals in solid mechanics and material-related courses.
+
+----
+
 Authorship & Citation
 ---------------------
 CRATE was originally developed by Bernardo P. Ferreira [#]_ in the context of his PhD Thesis [#]_ .
