@@ -276,7 +276,7 @@ Deformation gradient and first Piola-Kirchhoff stress tensor (finite
 strains).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (2d)</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)">numpy.ndarray</a> (2d)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -357,7 +357,7 @@ strains).</p>
 <li><p><strong>rve_dims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>]</em>) – RVE size in each dimension.</p></li>
 <li><p><strong>n_voxels_dims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>]</em>) – Number of voxels in each dimension of the regular grid (spatial
 discretization of the RVE).</p></li>
-<li><p><strong>regular_grid</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – Regular grid of voxels (spatial discretization of the RVE), where
+<li><p><strong>regular_grid</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – Regular grid of voxels (spatial discretization of the RVE), where
 each entry contains the material phase label (int) assigned to the
 corresponding voxel.</p></li>
 <li><p><strong>material_phases</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – RVE material phases labels (str).</p></li>
@@ -391,7 +391,7 @@ each material phase (key, str).</p></li>
 <li><p><strong>rve_dims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>]</em>) – RVE size in each dimension.</p></li>
 <li><p><strong>n_voxels_dims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>]</em>) – Number of voxels in each dimension of the regular grid (spatial
 discretization of the RVE).</p></li>
-<li><p><strong>regular_grid</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – Regular grid of voxels (spatial discretization of the RVE), where
+<li><p><strong>regular_grid</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – Regular grid of voxels (spatial discretization of the RVE), where
 each entry contains the material phase label (int) assigned to the
 corresponding voxel.</p></li>
 <li><p><strong>material_phases</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – RVE material phases labels (str).</p></li>
@@ -435,7 +435,7 @@ component (key, str).</p>
 <dd class="field-even"><p><strong>hom_state</strong> – Homogenized strain or stress tensor.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (2d)</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)">numpy.ndarray</a> (2d)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -465,8 +465,8 @@ component (key, str).</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>strain_formulation</strong> (<em>{'infinitesimal'</em><em>, </em><em>'finite'}</em>) – Problem strain formulation.</p></li>
-<li><p><strong>hom_strain</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Homogenized strain tensor.</p></li>
-<li><p><strong>hom_stress</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Homogenized stress tensor.</p></li>
+<li><p><strong>hom_strain</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Homogenized strain tensor.</p></li>
+<li><p><strong>hom_stress</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Homogenized stress tensor.</p></li>
 <li><p><strong>inc_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – Increment running time.</p></li>
 <li><p><strong>total_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – Total running time.</p></li>
 </ul>
@@ -571,7 +571,7 @@ Reduced-Order Modeling.</em> PhD Thesis, University of Porto
 regular grid discretization) for each strain component (key, str).
 Infinitesimal strain tensor (infinitesimal strains) or deformation
 gradient (finite strains).</p></li>
-<li><p><strong>evar1</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – <p>Auxiliar elastic properties array (numpy.ndarray of shape equal to
+<li><p><strong>evar1</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – <p>Auxiliar elastic properties array (numpy.ndarray of shape equal to
 RVE regular grid discretization) containing an elastic
 properties-related quantity associated to each voxel,</p>
 <div class="math notranslate nohighlight">
@@ -579,7 +579,7 @@ properties-related quantity associated to each voxel,</p>
 <p>where <span class="math notranslate nohighlight">\(E\)</span> and <span class="math notranslate nohighlight">\(\nu\)</span> are the Young’s Modulus and
 Poisson’s ratio, respectively.</p>
 </p></li>
-<li><p><strong>evar2</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – <p>Auxiliar elastic properties array (numpy.ndarray of shape equal to
+<li><p><strong>evar2</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – <p>Auxiliar elastic properties array (numpy.ndarray of shape equal to
 RVE regular grid discretization) containing an elastic
 properties-related quantity associated to each voxel,</p>
 <div class="math notranslate nohighlight">
@@ -587,7 +587,7 @@ properties-related quantity associated to each voxel,</p>
 <p>where <span class="math notranslate nohighlight">\(E\)</span> and <span class="math notranslate nohighlight">\(\nu\)</span> are the Young’s Modulus and
 Poisson’s ratio, respectively.</p>
 </p></li>
-<li><p><strong>evar3</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – <p>Auxiliar elastic properties array (numpy.ndarray of shape equal to
+<li><p><strong>evar3</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – <p>Auxiliar elastic properties array (numpy.ndarray of shape equal to
 RVE regular grid discretization) containing an elastic
 properties-related quantity associated to each voxel,</p>
 <div class="math notranslate nohighlight">
@@ -631,7 +631,7 @@ complex microstructure.</em> Comp Methods Appl M, 157:69-94 (see
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>freqs_dims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em><em>]</em>) – List of discrete frequencies (numpy.ndarray (1d)) associated to
+<li><p><strong>freqs_dims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em><em>]</em>) – List of discrete frequencies (numpy.ndarray (1d)) associated to
 each spatial dimension.</p></li>
 <li><p><strong>stress_DFT_vox</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Discrete Fourier Transform of local stress response (item,
 numpy.ndarray of shape equal to RVE regular grid discretization)
@@ -664,7 +664,7 @@ voxels.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>mac_strain_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Macroscale strain second-order tensor identifier.</p></li>
-<li><p><strong>mac_strain</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Macroscale strain second-order tensor. Infinitesimal strain tensor
+<li><p><strong>mac_strain</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Macroscale strain second-order tensor. Infinitesimal strain tensor
 (infinitesimal strains) or deformation gradient (finite strains).</p></li>
 <li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>default=False</em>) – Enable verbose output.</p></li>
 </ul>
@@ -696,7 +696,7 @@ tensor (infinitesimal strains) or Deformation gradient and first
 Piola-Kirchhoff stress tensor (finite strains).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (2d)</p>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)">numpy.ndarray</a> (2d)</p>
 </dd>
 </dl>
 </dd></dl>

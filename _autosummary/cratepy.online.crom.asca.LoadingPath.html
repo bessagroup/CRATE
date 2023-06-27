@@ -319,7 +319,7 @@ the loading constraints for each loading subpath in a
 numpy.ndarray (2d), where the i-th row is associated with the i-th
 strain/stress component and the j-th column is associated with the
 j-th loading subpath.</p></li>
-<li><p><strong>mac_load_presctype</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Loading nature type ({‘strain’, ‘stress’}) associated with each
+<li><p><strong>mac_load_presctype</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Loading nature type ({‘strain’, ‘stress’}) associated with each
 loading constraint (numpy.ndarrayndarray of shape
 (n_comps, n_load_subpaths)), where the i-th row is associated with
 the i-th strain/stress component and the j-th column is associated
@@ -370,7 +370,7 @@ the loading constraints for each loading subpath in a
 numpy.ndarray (2d), where the i-th row is associated with the i-th
 strain/stress component and the j-th column is associated with the
 j-th loading subpath.</p></li>
-<li><p><strong>mac_load_presctype</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Loading nature type ({‘strain’, ‘stress’}) associated with each
+<li><p><strong>mac_load_presctype</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Loading nature type ({‘strain’, ‘stress’}) associated with each
 loading constraint (numpy.ndarrayndarray of shape
 (n_comps, n_load_subpaths)), where the i-th row is associated with
 the i-th strain/stress component and the j-th column is associated
@@ -427,14 +427,14 @@ the incremental loading constraint in a numpy.ndarray of shape
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>comp_order</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – Strain/Stress components (str) order.</p></li>
-<li><p><strong>load_vector</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Loading tensor in vector form (numpy.ndarray of shape (n_comps,)).</p></li>
+<li><p><strong>load_vector</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Loading tensor in vector form (numpy.ndarray of shape (n_comps,)).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>load_mf</strong> – Loading tensor matricial form (numpy.ndarray of shape (n_comps,)).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (1d)</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)">numpy.ndarray</a> (1d)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -580,8 +580,8 @@ numpy.ndarray of shape (n_comps,).</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>hom_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Homogenized strain tensor stored in matricial form.</p></li>
-<li><p><strong>hom_stress_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Homogenized stress tensor stored in matricial form.</p></li>
+<li><p><strong>hom_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Homogenized strain tensor stored in matricial form.</p></li>
+<li><p><strong>hom_stress_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Homogenized stress tensor stored in matricial form.</p></li>
 </ul>
 </dd>
 </dl>

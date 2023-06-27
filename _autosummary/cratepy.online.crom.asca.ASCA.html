@@ -192,7 +192,7 @@ Reduced-Order Modeling.</em> PhD Thesis, University of Porto
 form.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (1d)</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)">numpy.ndarray</a> (1d)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -203,7 +203,7 @@ form.</p>
 <dd><p>Last converged far-field strain tensor (matricial form).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (1d), default=None</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)">numpy.ndarray</a> (1d), default=None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -424,7 +424,7 @@ operations.</p>
 <li><p><strong>material_phases</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – RVE material phases labels (str).</p></li>
 <li><p><strong>phase_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clusters labels (item, list[int]) associated with each material
 phase (key, str).</p></li>
-<li><p><strong>residual</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Lippmann-Schwinger equilibrium residual vector.</p></li>
+<li><p><strong>residual</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Lippmann-Schwinger equilibrium residual vector.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -478,7 +478,7 @@ increment.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>crve</strong> (<a class="reference internal" href="cratepy.clustering.crve.CRVE.html#cratepy.clustering.crve.CRVE" title="cratepy.clustering.crve.CRVE"><em>CRVE</em></a>) – Cluster-Reduced Representative Volume Element.</p></li>
-<li><p><strong>global_cit_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Global cluster interaction matrix. Assembly positions are assigned
+<li><p><strong>global_cit_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Global cluster interaction matrix. Assembly positions are assigned
 according to the order of material_phases (1st) and phase_clusters
 (2nd).</p></li>
 <li><p><strong>material_state</strong> (<a class="reference internal" href="cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState" title="cratepy.ioput.readinputdata.MaterialState"><em>MaterialState</em></a>) – CRVE material constitutive state.</p></li>
@@ -492,7 +492,7 @@ difference between the associated material cluster consistent
 tangent modulus and the reference material elastic tangent modulus.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (2d)</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)">numpy.ndarray</a> (2d)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -637,7 +637,7 @@ the volume fraction of the <span class="math notranslate nohighlight">\(K\)</spa
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>crve</strong> (<a class="reference internal" href="cratepy.clustering.crve.CRVE.html#cratepy.clustering.crve.CRVE" title="cratepy.clustering.crve.CRVE"><em>CRVE</em></a>) – Cluster-Reduced Representative Volume Element.</p></li>
 <li><p><strong>material_state</strong> (<a class="reference internal" href="cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState" title="cratepy.ioput.readinputdata.MaterialState"><em>MaterialState</em></a>) – CRVE material constitutive state.</p></li>
-<li><p><strong>global_cit_diff_tangent_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Global matrix similar to global cluster interaction matrix but
+<li><p><strong>global_cit_diff_tangent_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Global matrix similar to global cluster interaction matrix but
 where each cluster interaction tensor is double contracted with the
 difference between the associated material cluster consistent
 tangent modulus and the elastic reference material tangent modulus.</p></li>
@@ -647,7 +647,7 @@ tangent modulus and the elastic reference material tangent modulus.</p></li>
 <dd class="field-even"><p><strong>jacobian</strong> – Lippmann-Schwinger equilibrium Jacobian matrix.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (2d)</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)">numpy.ndarray</a> (2d)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -910,22 +910,22 @@ the macroscale first Piola-Kirchhoff stress tensor,
 (key, {‘strain’, ‘stress’}), stores the current applied macroscale
 loading constraints in a numpy.ndarray of shape (n_comps,).</p></li>
 <li><p><strong>ref_material</strong> (<a class="reference internal" href="cratepy.online.crom.asca.ElasticReferenceMaterial.html#cratepy.online.crom.asca.ElasticReferenceMaterial" title="cratepy.online.crom.asca.ElasticReferenceMaterial"><em>ElasticReferenceMaterial</em></a>) – Elastic reference material.</p></li>
-<li><p><strong>global_cit_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Global cluster interaction matrix. Assembly positions are assigned
+<li><p><strong>global_cit_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Global cluster interaction matrix. Assembly positions are assigned
 according to the order of material_phases (1st) and phase_clusters
 (2nd).</p></li>
-<li><p><strong>global_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Global vector of clusters strain tensors (matricial form).</p></li>
+<li><p><strong>global_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Global vector of clusters strain tensors (matricial form).</p></li>
 <li><p><strong>inc_mac_load_mf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>, </em><em>default=None</em>) – For each loading nature type (key, {‘strain’, ‘stress’}), stores
 the incremental loading constraint matricial form in a
 numpy.ndarray of shape (n_comps,).</p></li>
-<li><p><strong>farfield_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em><em>, </em><em>default=None</em>) – Far-field strain tensor (matricial form).</p></li>
-<li><p><strong>farfield_strain_old_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em><em>, </em><em>default=None</em>) – Last converged far-field strain tensor (matricial form).</p></li>
+<li><p><strong>farfield_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em><em>, </em><em>default=None</em>) – Far-field strain tensor (matricial form).</p></li>
+<li><p><strong>farfield_strain_old_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em><em>, </em><em>default=None</em>) – Last converged far-field strain tensor (matricial form).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>residual</strong> – Lippmann-Schwinger equilibrium residual vector.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (1d)</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)">numpy.ndarray</a> (1d)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -944,8 +944,8 @@ numpy.ndarray of shape (n_comps,).</p></li>
 <li><p><strong>applied_mac_load_mf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – For each prescribed loading nature type
 (key, {‘strain’, ‘stress’}), stores the current applied loading
 constraints in a numpy.ndarray of shape (n_comps,).</p></li>
-<li><p><strong>residual</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Lippmann-Schwinger equilibrium residual vector.</p></li>
-<li><p><strong>applied_mix_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em><em>, </em><em>default=None</em>) – Strain tensor (matricial form) that contains prescribed strain
+<li><p><strong>residual</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Lippmann-Schwinger equilibrium residual vector.</p></li>
+<li><p><strong>applied_mix_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em><em>, </em><em>default=None</em>) – Strain tensor (matricial form) that contains prescribed strain
 components and (non-prescribed) homogenized strain components.</p></li>
 </ul>
 </dd>
@@ -1063,14 +1063,14 @@ material clusters, and <span class="math notranslate nohighlight">\(n+1\)</span>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>crve</strong> (<a class="reference internal" href="cratepy.clustering.crve.CRVE.html#cratepy.clustering.crve.CRVE" title="cratepy.clustering.crve.CRVE"><em>CRVE</em></a>) – Cluster-Reduced Representative Volume Element.</p></li>
 <li><p><strong>material_state</strong> (<a class="reference internal" href="cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState" title="cratepy.ioput.readinputdata.MaterialState"><em>MaterialState</em></a>) – CRVE material constitutive state.</p></li>
-<li><p><strong>global_cit_diff_tangent_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Global matrix similar to global cluster interaction matrix but
+<li><p><strong>global_cit_diff_tangent_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Global matrix similar to global cluster interaction matrix but
 where each cluster interaction tensor is double contracted with the
 difference between the associated material cluster consistent
 tangent modulus and the elastic reference material tangent modulus.</p></li>
-<li><p><strong>global_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em><em>, </em><em>default=None</em>) – Global vector of clusters strains stored in matricial form. Only
+<li><p><strong>global_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em><em>, </em><em>default=None</em>) – Global vector of clusters strains stored in matricial form. Only
 required for validation of cluster strain concentration tensors
 computation.</p></li>
-<li><p><strong>farfield_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em><em>, </em><em>default=None</em>) – Far-field strain tensor (matricial form). Only required for
+<li><p><strong>farfield_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em><em>, </em><em>default=None</em>) – Far-field strain tensor (matricial form). Only required for
 validation of cluster strain concentration tensors computation.</p></li>
 </ul>
 </dd>
@@ -1191,7 +1191,7 @@ guess.</p></li>
 form.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (1d)</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)">numpy.ndarray</a> (1d)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1209,7 +1209,7 @@ guess.</p>
 <dd class="field-even"><p><strong>global_strain_mf</strong> – Global vector of clusters strains stored in matricial form.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (1d)</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)">numpy.ndarray</a> (1d)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1227,7 +1227,7 @@ guess.</p>
 <dd class="field-even"><p><strong>inc_farfield_strain_mf</strong> – Incremental far-field strain tensor (matricial form).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a> (1d), default=None</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)">numpy.ndarray</a> (1d), default=None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1277,10 +1277,10 @@ the far-field strain tensor.</p>
 <li><p><strong>material_phases</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – RVE material phases labels (str).</p></li>
 <li><p><strong>phase_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clusters labels (item, list[int]) associated with each material
 phase (key, str).</p></li>
-<li><p><strong>global_csct_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Global matrix of cluster strain concentration tensors (matricial
+<li><p><strong>global_csct_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Global matrix of cluster strain concentration tensors (matricial
 form).</p></li>
-<li><p><strong>global_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Global vector of clusters strains stored in matricial form.</p></li>
-<li><p><strong>farfield_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Far-field strain tensor (matricial form).</p></li>
+<li><p><strong>global_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Global vector of clusters strains stored in matricial form.</p></li>
+<li><p><strong>farfield_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Far-field strain tensor (matricial form).</p></li>
 </ul>
 </dd>
 </dl>
@@ -1336,7 +1336,7 @@ the loading constraints for each loading subpath in a
 numpy.ndarray (2d), where the i-th row is associated with the i-th
 strain/stress component and the j-th column is associated with the
 j-th loading subpath.</p></li>
-<li><p><strong>mac_load_presctype</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Loading nature type ({‘strain’, ‘stress’}) associated with each
+<li><p><strong>mac_load_presctype</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Loading nature type ({‘strain’, ‘stress’}) associated with each
 loading constraint (numpy.ndarray of shape
 (n_comps, n_load_subpaths)), where the i-th row is associated with
 the i-th strain/stress component and the j-th column is associated
