@@ -72,6 +72,8 @@ If you find any **issues**, **bugs** or **problems** with CRATE, please use the 
 
 You are also welcome to post any **questions**, **comments** or **suggestions** for improvement in the `GitHub discussions <https://github.com/bessagroup/CRATE/discussions>`_ space!
 
+Please refer to CRATE's `Code of Conduct <https://github.com/bessagroup/CRATE/blob/master/CODE_OF_CONDUCT.md>`_.
+
 .. note::
     Bear in mind that CRATE is a program developed in an academic environment and that I'm currently the only developer as a side project. This means that I'll do my best to address all the issues, questions and suggestions, but do expect a reasonable time frame! ~ Bernardo P. Ferreira
 

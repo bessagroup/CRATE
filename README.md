@@ -45,7 +45,6 @@ If you use CRATE in a scientific publication, it is appreciated that you cite th
 
 You can find everything you need to know in [CRATE documentation](https://bessagroup.github.io/CRATE/)!
 
-
 <p align="center">
   <a href=""><img alt="logo" src="https://user-images.githubusercontent.com/25851824/238440445-48811f19-8131-4161-8eeb-108197221986.png" width="80%"></a>
 </p>
@@ -56,6 +55,8 @@ You can find everything you need to know in [CRATE documentation](https://bessag
 If you find any **issues**, **bugs** or **problems** with CRATE, please use the [GitHub issue tracker](https://github.com/bessagroup/CRATE/issues) to report them. Provide a clear description of the problem, as well as a complete report on the underlying details, so that it can be easily reproduced and (hopefully) fixed!
 
 You are also welcome to post there any **questions**, **comments** or **suggestions** for improvement in the [GitHub discussions](https://github.com/bessagroup/CRATE/discussions) space!
+
+Please refer to CRATE's [Code of Conduct](https://github.com/bessagroup/CRATE/blob/master/CODE_OF_CONDUCT.md).
 
 >**Note:**  
 >Bear in mind that CRATE is a program developed in an academic environment and that I'm currently the only developer as a side project. This means that I'll do my best to address all the issues, questions and suggestions, but do expect a reasonable time frame! ~ *Bernardo P. Ferreira*
