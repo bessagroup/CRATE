@@ -1,7 +1,7 @@
 
 
 <p align="center">
-  <a href=""><img alt="logo" src="https://user-images.githubusercontent.com/25851824/238439999-4170acd2-409e-4e0c-b262-5971a7df418e.png" width="80%"></a>
+  <a href=""><img alt="logo" src="https://user-images.githubusercontent.com/25851824/254047444-74e630b0-85fb-4746-bdf6-df504fda5912.png" width="80%"></a>
 </p>
 
 # What is CRATE?
