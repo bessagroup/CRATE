@@ -58,7 +58,7 @@ def print2(*objects):
     # Print to '.screen' file
     global screen_file_path
     if screen_file_path is not None:
-        screen_file = open(screen_file_path, 'a')
+        screen_file = open(screen_file_path, 'a', encoding='utf-8')
         objects_esc = list()
         for i in range(len(objects)):
             objects_esc.append(escapeANSI(objects[i]))
