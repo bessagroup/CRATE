@@ -119,21 +119,12 @@
 <p><a class="reference external" href="https://pypi.org/project/cratepy/">cratepy</a> is essentially a numerical tool for any application that requires material multi-scale simulations. Given the intrinsic clustering-based reduced-order modeling approach (e.g., <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0045782516301499">SCA</a>, <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0045782522000895?via%3Dihub">ASCA</a>), CRATE is mostly useful in applications where the computational cost of standard simulation methods is prohibitive, namely to solve lower-scales in coupled hierarchical multi-scale simulations (e.g., <a class="reference external" href="http://dx.doi.org/10.13140/RG.2.2.33940.17289">B.P. Ferreira (2022)</a>) and to generate large material response databases for data-driven frameworks based on machine learning (e.g., <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0045782516314803">Bessa et al. (2017)</a>). Clustering-based reduced-order models achieve a <strong>striking balance between accuracy and computational cost</strong> by first performing a clustering-based domain decomposition of the material model and then solving the equilibrium problem formulated over the resulting reduced model.</p>
 <p>In the particular case of a <strong>research environment</strong>, <a class="reference external" href="https://pypi.org/project/cratepy/">cratepy</a> is designed to easily accommodate further developments, either by improving the already implemented methods or by including new numerical models and techniques. It also provides all the fundamental means to perform comparisons with alternative methods, both in terms of accuracy and computational cost. In a <strong>teaching environment</strong>, <a class="reference external" href="https://pypi.org/project/cratepy/">cratepy</a> is a readily available tool for demonstrative purposes and/or academic work proposals in solid mechanics and material-related courses.</p>
 </section>
-<hr class="docutils" />
+<section id="consider-leaving-a-star-if-you-think-crate-is-useful-for-the-research-community">
+<h2>Consider leaving a star if you think CRATE is useful for the research community!<a class="headerlink" href="#consider-leaving-a-star-if-you-think-crate-is-useful-for-the-research-community" title="Permalink to this heading">¶</a></h2>
+</section>
 <section id="authorship-citation">
 <h2>Authorship &amp; Citation<a class="headerlink" href="#authorship-citation" title="Permalink to this heading">¶</a></h2>
 <p>CRATE was originally developed by Bernardo P. Ferreira <a class="footnote-reference brackets" href="#id6" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> in the context of his PhD Thesis <a class="footnote-reference brackets" href="#id7" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> .</p>
-<p>If you use CRATE in a scientific publication, it is appreciated that you cite this PhD Thesis:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@phdthesis</span><span class="p">{</span><span class="n">ferreira</span><span class="p">:</span><span class="mi">2022</span><span class="n">a</span><span class="p">,</span>
-  <span class="n">title</span> <span class="o">=</span> <span class="p">{</span><span class="n">Towards</span> <span class="n">Data</span><span class="o">-</span><span class="n">driven</span> <span class="n">Multi</span><span class="o">-</span><span class="n">scale</span> <span class="n">Optimization</span> <span class="n">of</span> <span class="n">Thermoplastic</span> <span class="n">Blends</span><span class="p">:</span> <span class="n">Microstructural</span> <span class="n">Generation</span><span class="p">,</span> <span class="n">Constitutive</span> <span class="n">Development</span> <span class="ow">and</span> <span class="n">Clustering</span><span class="o">-</span><span class="n">based</span> <span class="n">Reduced</span><span class="o">-</span><span class="n">Order</span> <span class="n">Modeling</span><span class="p">},</span>
-  <span class="n">author</span> <span class="o">=</span> <span class="p">{</span><span class="n">Ferreira</span><span class="p">,</span> <span class="n">B</span><span class="o">.</span><span class="n">P</span><span class="o">.</span><span class="p">},</span>
-  <span class="n">year</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2022</span><span class="p">},</span>
-  <span class="n">langid</span> <span class="o">=</span> <span class="p">{</span><span class="n">english</span><span class="p">},</span>
-  <span class="n">school</span> <span class="o">=</span> <span class="p">{</span><span class="n">University</span> <span class="n">of</span> <span class="n">Porto</span><span class="p">},</span>
-  <span class="n">url</span><span class="o">=</span><span class="p">{</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">hdl</span><span class="o">.</span><span class="n">handle</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="mi">10216</span><span class="o">/</span><span class="mi">146900</span><span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
-</div>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="id6" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">1</a><span class="fn-bracket">]</span></span>
@@ -148,6 +139,36 @@ Reduced-Order Modeling.</em> PhD Thesis, University of Porto
 (see <a class="reference external" href="http://dx.doi.org/10.13140/RG.2.2.33940.17289">here</a>)</p>
 </aside>
 </aside>
+<p>If you use CRATE in your research or in a scientific publication, it is appreciated that you cite the two papers below.</p>
+<p><strong>Journal of Open Source Software:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@article</span><span class="p">{</span><span class="n">Ferreira2023</span><span class="p">,</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="p">{</span><span class="n">CRATE</span><span class="p">:</span> <span class="n">A</span> <span class="n">Python</span> <span class="n">package</span> <span class="n">to</span> <span class="n">perform</span> <span class="n">fast</span> <span class="n">material</span> <span class="n">simulations</span><span class="p">},</span>
+    <span class="n">author</span> <span class="o">=</span> <span class="p">{</span><span class="n">Bernardo</span> <span class="n">P</span><span class="o">.</span> <span class="n">Ferreira</span> <span class="ow">and</span> <span class="n">F</span><span class="o">.</span> <span class="n">M</span><span class="o">.</span> <span class="n">Andrade</span> <span class="n">Pires</span> <span class="ow">and</span> <span class="n">Miguel</span> <span class="n">A</span><span class="o">.</span> <span class="n">Bessa</span><span class="p">}</span>
+    <span class="n">doi</span> <span class="o">=</span> <span class="p">{</span><span class="mf">10.21105</span><span class="o">/</span><span class="n">joss</span><span class="mf">.05594</span><span class="p">},</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="p">{</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">doi</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="mf">10.21105</span><span class="o">/</span><span class="n">joss</span><span class="mf">.05594</span><span class="p">},</span>
+    <span class="n">year</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2023</span><span class="p">},</span>
+    <span class="n">publisher</span> <span class="o">=</span> <span class="p">{</span><span class="n">The</span> <span class="n">Open</span> <span class="n">Journal</span><span class="p">},</span>
+    <span class="n">volume</span> <span class="o">=</span> <span class="p">{</span><span class="mi">8</span><span class="p">},</span>
+    <span class="n">number</span> <span class="o">=</span> <span class="p">{</span><span class="mi">87</span><span class="p">},</span>
+    <span class="n">pages</span> <span class="o">=</span> <span class="p">{</span><span class="mi">5594</span><span class="p">},</span>
+    <span class="n">journal</span> <span class="o">=</span> <span class="p">{</span><span class="n">Journal</span> <span class="n">of</span> <span class="n">Open</span> <span class="n">Source</span> <span class="n">Software</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Computer Methods in Applied Mechanics and Engineering:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@article</span><span class="p">{</span><span class="n">Ferreira2022</span><span class="p">,</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="p">{</span><span class="n">Adaptivity</span> <span class="k">for</span> <span class="n">clustering</span><span class="o">-</span><span class="n">based</span> <span class="n">reduced</span><span class="o">-</span><span class="n">order</span> <span class="n">modeling</span> <span class="n">of</span> <span class="n">localized</span> <span class="n">history</span><span class="o">-</span><span class="n">dependent</span> <span class="n">phenomena</span><span class="p">},</span>
+    <span class="n">author</span> <span class="o">=</span> <span class="p">{</span><span class="n">Ferreira</span><span class="p">,</span> <span class="n">B</span><span class="o">.</span><span class="n">P</span><span class="o">.</span><span class="p">,</span> <span class="ow">and</span> <span class="n">Andrade</span> <span class="n">Pires</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="p">,</span> <span class="ow">and</span> <span class="n">Bessa</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="p">},</span>
+    <span class="n">doi</span> <span class="o">=</span> <span class="p">{</span><span class="mf">10.1016</span><span class="o">/</span><span class="n">j</span><span class="o">.</span><span class="n">cma</span><span class="mf">.2022.114726</span><span class="p">},</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="p">{</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">sciencedirect</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">science</span><span class="o">/</span><span class="n">article</span><span class="o">/</span><span class="n">pii</span><span class="o">/</span><span class="n">S0045782522000895</span><span class="p">},</span>
+    <span class="n">year</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2022</span><span class="p">},</span>
+    <span class="n">volume</span> <span class="o">=</span> <span class="p">{</span><span class="mi">393</span><span class="p">},</span>
+    <span class="n">pages</span> <span class="o">=</span> <span class="p">{</span><span class="mi">114726</span><span class="p">},</span>
+    <span class="n">issn</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0045</span><span class="o">-</span><span class="mi">7825</span><span class="p">},</span>
+    <span class="n">journal</span> <span class="o">=</span> <span class="p">{</span><span class="n">Computer</span> <span class="n">Methods</span> <span class="ow">in</span> <span class="n">Applied</span> <span class="n">Mechanics</span> <span class="ow">and</span> <span class="n">Engineering</span><span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </section>
 <hr class="docutils" />
 <section id="getting-started">
