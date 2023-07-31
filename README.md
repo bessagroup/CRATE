@@ -30,7 +30,7 @@ CRATE was originally developed by Bernardo P. Ferreira<sup>[1](#f1)</sup> in the
 
 If you use CRATE in your research or in a scientific publication, it is appreciated that you cite the two papers below.
 
-**Journal of Open Source Software**:
+**Journal of Open Source Software** ([paper](https://doi.org/10.21105/joss.05594)):
 ```
 @article{Ferreira2023,
   title = {CRATE: A Python package to perform fast material simulations},
@@ -46,7 +46,7 @@ If you use CRATE in your research or in a scientific publication, it is apprecia
 }
 ```
 
-**Computer Methods in Applied Mechanics and Engineering**:
+**Computer Methods in Applied Mechanics and Engineering** ([paper](http://dx.doi.org/10.1016/j.cma.2022.114726)):
 ```
 @article{Ferreira2022,
   title = {Adaptivity for clustering-based reduced-order modeling of localized history-dependent phenomena},
