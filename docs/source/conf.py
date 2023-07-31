@@ -23,7 +23,7 @@ project = 'CRATE'
 author = 'Bernardo Ferreira'
 copyright = '2020, Bernardo Ferreira'
 version = '1.0'
-release = '1.0.2'
+release = '1.0.3'
 
 
 # -- General configuration ----------------------------------------------------
@@ -87,10 +87,10 @@ autosummary_imported_members = True
 
 # intersphinx: https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html#module-sphinx.ext.intersphinx
 intersphinx_mapping = {
-    "python": ("https://docs.python.org/3/", None),
+    "python": ("https://docs.python.org/3", None),
     "numpy": ("https://numpy.org/doc/stable/", None),
-    "scipy": ("https://docs.scipy.org/doc/scipy/reference/", None)}
-
+    "scipy": ("https://docs.scipy.org/doc/scipy/", None)
+}
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

@@ -20,7 +20,8 @@ Statement of Need
 
 In the particular case of a **research environment**, `cratepy <https://pypi.org/project/cratepy/>`_ is designed to easily accommodate further developments, either by improving the already implemented methods or by including new numerical models and techniques. It also provides all the fundamental means to perform comparisons with alternative methods, both in terms of accuracy and computational cost. In a **teaching environment**, `cratepy <https://pypi.org/project/cratepy/>`_ is a readily available tool for demonstrative purposes and/or academic work proposals in solid mechanics and material-related courses.
 
-Consider leaving a star if you think CRATE is useful for the research community!
+Consider `leaving a star <https://github.com/bessagroup/CRATE>`_ if you think CRATE is useful for the research community!
+
 ----
 
 Authorship & Citation
@@ -37,7 +38,7 @@ CRATE was originally developed by Bernardo P. Ferreira [#]_ in the context of hi
 
 If you use CRATE in your research or in a scientific publication, it is appreciated that you cite the two papers below.
 
-**Journal of Open Source Software:**
+**Journal of Open Source Software** (`paper <https://doi.org/10.21105/joss.05594>`_):
 
 .. code-block:: python
 
@@ -54,7 +55,7 @@ If you use CRATE in your research or in a scientific publication, it is apprecia
         journal = {Journal of Open Source Software}
     }
 
-**Computer Methods in Applied Mechanics and Engineering:**
+**Computer Methods in Applied Mechanics and Engineering** (`paper <http://dx.doi.org/10.1016/j.cma.2022.114726>`_):
 
 .. code-block:: python
 
@@ -108,6 +109,7 @@ Credits
 * Bernardo P. Ferreira is deeply thankful to `Francisco Pires <https://sigarra.up.pt/feup/pt/func_geral.formview?p_codigo=240385>`_ and `Miguel Bessa <https://github.com/mabessa>`_ for supervising the PhD Thesis that motivated the development of CRATE.
 
 * Bernardo P. Ferreira acknowledges the pioneering development of clustering-based reduced-order models by `Zeliang Liu <https://zeliangliu.com/>`_ , namely by proposing the `Self-Consistent Clustering Analysis (SCA) <https://www.sciencedirect.com/science/article/pii/S0045782516301499>`_ , that established the conceptual framework and foundations for the development of CRATE.
+
 ----
 
 License
