@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CRATE &mdash; CRATE 1.0.2 documentation</title>
+  <title>CRATE &mdash; CRATE 1.0.3 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/readthedocs-custom.css" type="text/css" />
@@ -118,10 +118,9 @@
 <h2>Statement of Need<a class="headerlink" href="#statement-of-need" title="Permalink to this heading">¶</a></h2>
 <p><a class="reference external" href="https://pypi.org/project/cratepy/">cratepy</a> is essentially a numerical tool for any application that requires material multi-scale simulations. Given the intrinsic clustering-based reduced-order modeling approach (e.g., <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0045782516301499">SCA</a>, <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0045782522000895?via%3Dihub">ASCA</a>), CRATE is mostly useful in applications where the computational cost of standard simulation methods is prohibitive, namely to solve lower-scales in coupled hierarchical multi-scale simulations (e.g., <a class="reference external" href="http://dx.doi.org/10.13140/RG.2.2.33940.17289">B.P. Ferreira (2022)</a>) and to generate large material response databases for data-driven frameworks based on machine learning (e.g., <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0045782516314803">Bessa et al. (2017)</a>). Clustering-based reduced-order models achieve a <strong>striking balance between accuracy and computational cost</strong> by first performing a clustering-based domain decomposition of the material model and then solving the equilibrium problem formulated over the resulting reduced model.</p>
 <p>In the particular case of a <strong>research environment</strong>, <a class="reference external" href="https://pypi.org/project/cratepy/">cratepy</a> is designed to easily accommodate further developments, either by improving the already implemented methods or by including new numerical models and techniques. It also provides all the fundamental means to perform comparisons with alternative methods, both in terms of accuracy and computational cost. In a <strong>teaching environment</strong>, <a class="reference external" href="https://pypi.org/project/cratepy/">cratepy</a> is a readily available tool for demonstrative purposes and/or academic work proposals in solid mechanics and material-related courses.</p>
+<p>Consider <a class="reference external" href="https://github.com/bessagroup/CRATE">leaving a star</a> if you think CRATE is useful for the research community!</p>
 </section>
-<section id="consider-leaving-a-star-if-you-think-crate-is-useful-for-the-research-community">
-<h2>Consider leaving a star if you think CRATE is useful for the research community!<a class="headerlink" href="#consider-leaving-a-star-if-you-think-crate-is-useful-for-the-research-community" title="Permalink to this heading">¶</a></h2>
-</section>
+<hr class="docutils" />
 <section id="authorship-citation">
 <h2>Authorship &amp; Citation<a class="headerlink" href="#authorship-citation" title="Permalink to this heading">¶</a></h2>
 <p>CRATE was originally developed by Bernardo P. Ferreira <a class="footnote-reference brackets" href="#id6" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> in the context of his PhD Thesis <a class="footnote-reference brackets" href="#id7" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> .</p>
@@ -140,7 +139,7 @@ Reduced-Order Modeling.</em> PhD Thesis, University of Porto
 </aside>
 </aside>
 <p>If you use CRATE in your research or in a scientific publication, it is appreciated that you cite the two papers below.</p>
-<p><strong>Journal of Open Source Software:</strong></p>
+<p><strong>Journal of Open Source Software</strong> (<a class="reference external" href="https://doi.org/10.21105/joss.05594">paper</a>):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@article</span><span class="p">{</span><span class="n">Ferreira2023</span><span class="p">,</span>
     <span class="n">title</span> <span class="o">=</span> <span class="p">{</span><span class="n">CRATE</span><span class="p">:</span> <span class="n">A</span> <span class="n">Python</span> <span class="n">package</span> <span class="n">to</span> <span class="n">perform</span> <span class="n">fast</span> <span class="n">material</span> <span class="n">simulations</span><span class="p">},</span>
     <span class="n">author</span> <span class="o">=</span> <span class="p">{</span><span class="n">Bernardo</span> <span class="n">P</span><span class="o">.</span> <span class="n">Ferreira</span> <span class="ow">and</span> <span class="n">F</span><span class="o">.</span> <span class="n">M</span><span class="o">.</span> <span class="n">Andrade</span> <span class="n">Pires</span> <span class="ow">and</span> <span class="n">Miguel</span> <span class="n">A</span><span class="o">.</span> <span class="n">Bessa</span><span class="p">}</span>
@@ -155,7 +154,7 @@ Reduced-Order Modeling.</em> PhD Thesis, University of Porto
 <span class="p">}</span>
 </pre></div>
 </div>
-<p><strong>Computer Methods in Applied Mechanics and Engineering:</strong></p>
+<p><strong>Computer Methods in Applied Mechanics and Engineering</strong> (<a class="reference external" href="http://dx.doi.org/10.1016/j.cma.2022.114726">paper</a>):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@article</span><span class="p">{</span><span class="n">Ferreira2022</span><span class="p">,</span>
     <span class="n">title</span> <span class="o">=</span> <span class="p">{</span><span class="n">Adaptivity</span> <span class="k">for</span> <span class="n">clustering</span><span class="o">-</span><span class="n">based</span> <span class="n">reduced</span><span class="o">-</span><span class="n">order</span> <span class="n">modeling</span> <span class="n">of</span> <span class="n">localized</span> <span class="n">history</span><span class="o">-</span><span class="n">dependent</span> <span class="n">phenomena</span><span class="p">},</span>
     <span class="n">author</span> <span class="o">=</span> <span class="p">{</span><span class="n">Ferreira</span><span class="p">,</span> <span class="n">B</span><span class="o">.</span><span class="n">P</span><span class="o">.</span><span class="p">,</span> <span class="ow">and</span> <span class="n">Andrade</span> <span class="n">Pires</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="p">,</span> <span class="ow">and</span> <span class="n">Bessa</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="p">},</span>
