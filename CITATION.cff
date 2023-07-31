@@ -1,0 +1,42 @@
+cff-version: "1.2.0"
+authors:
+- family-names: Ferreira
+  given-names: Bernardo P.
+  orcid: "https://orcid.org/0000-0001-5956-3877"
+- family-names: Pires
+  given-names: F. M. Andrade
+  orcid: "https://orcid.org/0000-0002-4802-6360"
+- family-names: Bessa
+  given-names: Miguel A.
+  orcid: "https://orcid.org/0000-0002-6216-0355"
+contact:
+- family-names: Bessa
+  given-names: Miguel A.
+  orcid: "https://orcid.org/0000-0002-6216-0355"
+doi: 10.5281/zenodo.8199879
+message: If you use this software, please cite our article in the
+  Journal of Open Source Software.
+preferred-citation:
+  authors:
+  - family-names: Ferreira
+    given-names: Bernardo P.
+    orcid: "https://orcid.org/0000-0001-5956-3877"
+  - family-names: Pires
+    given-names: F. M. Andrade
+    orcid: "https://orcid.org/0000-0002-4802-6360"
+  - family-names: Bessa
+    given-names: Miguel A.
+    orcid: "https://orcid.org/0000-0002-6216-0355"
+  date-published: 2023-07-31
+  doi: 10.21105/joss.05594
+  issn: 2475-9066
+  issue: 87
+  journal: Journal of Open Source Software
+  publisher:
+    name: Open Journals
+  start: 5594
+  title: "CRATE: A Python package to perform fast material simulations"
+  type: article
+  url: "https://joss.theoj.org/papers/10.21105/joss.05594"
+  volume: 8
+title: "CRATE: A Python package to perform fast material simulations"
