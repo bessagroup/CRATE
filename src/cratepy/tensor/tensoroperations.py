@@ -677,7 +677,7 @@ def rotate_tensor(tensor, r):
     # Return
     return rtensor
 # =============================================================================
-def rotation_tensor_from_euler_angles(n_dim, euler_deg):
+def rotation_tensor_from_euler_angles(euler_deg):
     """Set rotation tensor from Euler angles (Bunge convention).
 
     The rotation tensor is defined as
@@ -708,8 +708,6 @@ def rotation_tensor_from_euler_angles(n_dim, euler_deg):
 
     Parameters
     ----------
-    n_dim : int
-        Number of spatial dimensions.
     euler_deg : tuple
         Euler angles (degrees) sorted according to Bunge convention (Z1-X2-Z3).
 
@@ -730,7 +728,7 @@ def rotation_tensor_from_euler_angles(n_dim, euler_deg):
     c3 = np.cos(euler_rad[2])
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Initialize rotation tensor
-    r = np.zeros((n_dim, n_dim))
+    r = np.zeros((3, 3))
     # Build rotation tensor
     r[0, 0] = c1*c3 - c2*s1*s3
     r[1, 0] = c3*s1 + c1*c2*s3
