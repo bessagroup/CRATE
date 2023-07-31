@@ -18,7 +18,7 @@ authors:
     corresponding: true
     affiliation: 1
 affiliations:
- - name: School of Engineering, Brown University, USA
+ - name: School of Engineering, Brown University, United States of America
    index: 1
  - name: Faculty of Engineering, University of Porto, Portugal
    index: 2
