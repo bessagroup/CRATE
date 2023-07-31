@@ -782,7 +782,7 @@
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">rtensor</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="rotation_tensor_from_euler_angles"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.tensoroperations.rotation_tensor_from_euler_angles.html#cratepy.tensor.tensoroperations.rotation_tensor_from_euler_angles">[docs]</a><span class="k">def</span> <span class="nf">rotation_tensor_from_euler_angles</span><span class="p">(</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">euler_deg</span><span class="p">):</span>
+<div class="viewcode-block" id="rotation_tensor_from_euler_angles"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.tensoroperations.rotation_tensor_from_euler_angles.html#cratepy.tensor.tensoroperations.rotation_tensor_from_euler_angles">[docs]</a><span class="k">def</span> <span class="nf">rotation_tensor_from_euler_angles</span><span class="p">(</span><span class="n">euler_deg</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set rotation tensor from Euler angles (Bunge convention).</span>
 
 <span class="sd">    The rotation tensor is defined as</span>
@@ -813,8 +813,6 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    n_dim : int</span>
-<span class="sd">        Number of spatial dimensions.</span>
 <span class="sd">    euler_deg : tuple</span>
 <span class="sd">        Euler angles (degrees) sorted according to Bunge convention (Z1-X2-Z3).</span>
 
@@ -835,7 +833,7 @@
     <span class="n">c3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">euler_rad</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
     <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
     <span class="c1"># Initialize rotation tensor</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">))</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
     <span class="c1"># Build rotation tensor</span>
     <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">c1</span><span class="o">*</span><span class="n">c3</span> <span class="o">-</span> <span class="n">c2</span><span class="o">*</span><span class="n">s1</span><span class="o">*</span><span class="n">s3</span>
     <span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">c3</span><span class="o">*</span><span class="n">s1</span> <span class="o">+</span> <span class="n">c1</span><span class="o">*</span><span class="n">c2</span><span class="o">*</span><span class="n">s3</span>

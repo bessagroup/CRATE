@@ -153,7 +153,7 @@
 <h1>cratepy.tensor.tensoroperations.rotation_tensor_from_euler_angles<a class="headerlink" href="#cratepy-tensor-tensoroperations-rotation-tensor-from-euler-angles" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="cratepy.tensor.tensoroperations.rotation_tensor_from_euler_angles">
-<span class="sig-name descname"><span class="pre">rotation_tensor_from_euler_angles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">euler_deg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/tensor/tensoroperations.html#rotation_tensor_from_euler_angles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.tensor.tensoroperations.rotation_tensor_from_euler_angles" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">rotation_tensor_from_euler_angles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">euler_deg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/tensor/tensoroperations.html#rotation_tensor_from_euler_angles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.tensor.tensoroperations.rotation_tensor_from_euler_angles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set rotation tensor from Euler angles (Bunge convention).</p>
 <p>The rotation tensor is defined as</p>
 <div class="math notranslate nohighlight">
@@ -175,10 +175,7 @@ to the Bunge convention (Z1-X2-Z3).</p>
 <hr class="docutils" />
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>n_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Number of spatial dimensions.</p></li>
-<li><p><strong>euler_deg</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a>) – Euler angles (degrees) sorted according to Bunge convention (Z1-X2-Z3).</p></li>
-</ul>
+<dd class="field-odd"><p><strong>euler_deg</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a>) – Euler angles (degrees) sorted according to Bunge convention (Z1-X2-Z3).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>r</strong> – Rotation tensor (for given rotation angle theta, active transformation
