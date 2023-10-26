@@ -298,7 +298,7 @@ class VoxelsArraysFactory:
                             # Build first Piola-Kirchhoff stress tensor
                             first_piola_stress = mop.get_tensor_from_mf(
                                 first_piola_stress_mf, self._n_dim,
-                                self._comp_order_sym)
+                                self._comp_order_nsym)
                             # Compute Cauchy stress tensor
                             cauchy_stress = cauchy_from_first_piola(
                                 def_gradient, first_piola_stress)
