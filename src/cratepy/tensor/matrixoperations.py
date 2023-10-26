@@ -405,7 +405,7 @@ def kelvin_factor(idx, comp_order):
 #
 #                                                           Matrix condensation
 # =============================================================================
-def get_condensed_matrix(matrix, rows, cols):
+def get_condensed_matrix(matrix, rows, cols, is_check_indexes=False):
     """Perform condensation of matrix given a set of rows and columns.
 
     Parameters
@@ -416,6 +416,10 @@ def get_condensed_matrix(matrix, rows, cols):
         Indexes of rows to keep in condensed matrix.
     cols : numpy.ndarray (1d)
         Indexes of columns to keep in condensed matrix.
+    is_check_indexes : bool, default=False
+        If True, then check validity of condensed rows and columns indexes
+        before performing matrix condensation. May yield non-negligible
+        overhead cost when condensing large matrix.
 
     Returns
     -------
@@ -423,24 +427,26 @@ def get_condensed_matrix(matrix, rows, cols):
         Condensed matrix.
     """
     # Check validity of rows and columns indexes to perform the condensation
-    if not np.all([isinstance(rows[i], int) or isinstance(rows[i], np.integer)
-                   for i in range(len(rows))]):
-        raise RuntimeError('All the indexes specified to perform a matrix '
-                           'condensation must be non-negative integers.')
-    elif not np.all([isinstance(cols[i], int)
-                     or isinstance(cols[i], np.integer)
-                     for i in range(len(cols))]):
-        raise RuntimeError('All the indexes specified to perform a matrix '
-                           'condensation must be non-negative integers.')
-    elif len(list(dict.fromkeys(rows))) != len(rows) or \
-            len(list(dict.fromkeys(cols))) != len(cols):
-        raise RuntimeError('Duplicated rows or columns indexes.')
-    elif np.any([rows[i] not in range(matrix.shape[0])
-                 for i in range(len(rows))]):
-        raise RuntimeError('Out-of-bounds row index.')
-    elif np.any([cols[i] not in range(matrix.shape[1])
-                 for i in range(len(cols))]):
-        raise RuntimeError('Out-of-bounds column index.')
+    if is_check_indexes:
+        if not np.all([isinstance(rows[i], int)
+                       or isinstance(rows[i], np.integer)
+                       for i in range(len(rows))]):
+            raise RuntimeError('All the indexes specified to perform a matrix '
+                               'condensation must be non-negative integers.')
+        elif not np.all([isinstance(cols[i], int)
+                        or isinstance(cols[i], np.integer)
+                        for i in range(len(cols))]):
+            raise RuntimeError('All the indexes specified to perform a matrix '
+                               'condensation must be non-negative integers.')
+        elif len(list(dict.fromkeys(rows))) != len(rows) or \
+                len(list(dict.fromkeys(cols))) != len(cols):
+            raise RuntimeError('Duplicated rows or columns indexes.')
+        elif np.any([rows[i] not in range(matrix.shape[0])
+                    for i in range(len(rows))]):
+            raise RuntimeError('Out-of-bounds row index.')
+        elif np.any([cols[i] not in range(matrix.shape[1])
+                    for i in range(len(cols))]):
+            raise RuntimeError('Out-of-bounds column index.')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Build auxiliary matrices with rows and columns condensation indexes
     rows_matrix = np.zeros((len(rows), len(cols)), dtype=int)

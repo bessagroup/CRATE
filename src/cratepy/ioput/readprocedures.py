@@ -1649,7 +1649,7 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
                 # Get parameter value
                 value = get_formatted_parameter(parameter, line[1])
                 # Store adaptivity criterion parameter
-                if isinstance(value, oacp[parameter]):
+                if isinstance(value, type(oacp[parameter])):
                     adapt_criterion_data[mat_phase][parameter] = \
                         get_formatted_parameter(parameter,
                                                 type(oacp[parameter])(line[1]))
@@ -1665,7 +1665,7 @@ def read_cluster_analysis_scheme(file, file_path, keyword, material_phases,
                 # Get parameter value
                 value = get_formatted_parameter(parameter, line[1])
                 # Store adaptivity type parameter
-                if isinstance(value, oatp[parameter]):
+                if isinstance(value, type(oatp[parameter])):
                     adaptivity_type[mat_phase][parameter] = \
                         get_formatted_parameter(parameter,
                                                 type(oatp[parameter])(line[1]))

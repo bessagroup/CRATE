@@ -1023,7 +1023,9 @@ class MaterialState:
             constitutive_model.state_update(inc_strain, state_variables_old)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute Cauchy stress tensor and material consistent tangent modulus
-        if strain_formulation == 'finite' and strain_type == 'finite-kinext':
+        if (not state_variables['is_su_fail']
+                and strain_formulation == 'finite'
+                and strain_type == 'finite-kinext'):
             # Get Kirchhoff stress tensor (matricial form)
             kirchhoff_stress_mf = state_variables['stress_mf']
             # Build Kirchhoff stress tensor
