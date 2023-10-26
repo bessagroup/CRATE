@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cratepy.clustering.adaptivity.adaptivity_criterion.AdaptiveClusterGrouping &mdash; CRATE 1.0.3 documentation</title>
+  <title>cratepy.clustering.adaptivity.adaptivity_criterion.AdaptiveClusterGrouping &mdash; CRATE 1.0.4 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/readthedocs-custom.css" type="text/css" />
@@ -147,7 +147,7 @@
 adaptive cluster group (key, int).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -159,7 +159,7 @@ adaptive cluster group (key, int).</p>
 (key, int).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -171,7 +171,7 @@ adaptive cluster group (key, int).</p>
 be adapted.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -228,15 +228,15 @@ be adapted.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>adapt_mat_phase</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Adaptive material phase label.</p></li>
-<li><p><strong>phase_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clusters labels (item, list[int]) associated with each material
+<li><p><strong>adapt_mat_phase</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Adaptive material phase label.</p></li>
+<li><p><strong>phase_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Clusters labels (item, list[int]) associated with each material
 phase (key, str).</p></li>
-<li><p><strong>adapt_trigger_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><em>default=None</em>) – Threshold associated with the adaptivity trigger condition,
+<li><p><strong>adapt_trigger_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>default=None</em>) – Threshold associated with the adaptivity trigger condition,
 defining the value of the relative ratio (max - avg)/avg above
 which the adaptive cluster group is set to be adapted, where <cite>max</cite>
 and <cite>avg</cite> are the maximum and average adaptivity feature values in
 the adaptive cluster group, respectively.</p></li>
-<li><p><strong>adapt_split_threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><em>default=None</em>) – Threshold associated with the adaptivity selection criterion,
+<li><p><strong>adapt_split_threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>default=None</em>) – Threshold associated with the adaptivity selection criterion,
 defining the split boundary of each adaptive cluster group
 according to the associated position in terms of the adaptivity
 value range within the group. For instance, a
@@ -244,13 +244,13 @@ value range within the group. For instance, a
 divides the clusters whose adaptivity feature value is above
 min + 0.8*(max - min) (top 20% of the value range) from the
 remaining clusters.</p></li>
-<li><p><strong>adapt_max_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Maximum adaptive cluster group adaptive level.</p></li>
-<li><p><strong>adapt_min_voxels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Minimum number of voxels that cluster must contain to be targeted
+<li><p><strong>adapt_max_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=None</em>) – Maximum adaptive cluster group adaptive level.</p></li>
+<li><p><strong>adapt_min_voxels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=None</em>) – Minimum number of voxels that cluster must contain to be targeted
 for adaptivity.</p></li>
-<li><p><strong>is_merge_adapt_groups</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>default=None</em>) – True if the adaptive cluster groups of the same adaptive level are
+<li><p><strong>is_merge_adapt_groups</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>default=None</em>) – True if the adaptive cluster groups of the same adaptive level are
 to be merged, False if each adaptive cluster group follows an
 independent hierarchy.</p></li>
-<li><p><strong>min_adapt_feature_val</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><em>default=None</em>) – Minimum significant value of clustering adaptivity control feature.</p></li>
+<li><p><strong>min_adapt_feature_val</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>default=None</em>) – Minimum significant value of clustering adaptivity control feature.</p></li>
 </ul>
 </dd>
 </dl>
@@ -285,15 +285,15 @@ independent hierarchy.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>adapt_mat_phase</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Adaptive material phase label.</p></li>
-<li><p><strong>phase_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clusters labels (item, list[int]) associated with each material
+<li><p><strong>adapt_mat_phase</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Adaptive material phase label.</p></li>
+<li><p><strong>phase_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Clusters labels (item, list[int]) associated with each material
 phase (key, str).</p></li>
-<li><p><strong>adapt_trigger_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><em>default=None</em>) – Threshold associated with the adaptivity trigger condition,
+<li><p><strong>adapt_trigger_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>default=None</em>) – Threshold associated with the adaptivity trigger condition,
 defining the value of the relative ratio (max - avg)/avg above
 which the adaptive cluster group is set to be adapted, where <cite>max</cite>
 and <cite>avg</cite> are the maximum and average adaptivity feature values in
 the adaptive cluster group, respectively.</p></li>
-<li><p><strong>adapt_split_threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><em>default=None</em>) – Threshold associated with the adaptivity selection criterion,
+<li><p><strong>adapt_split_threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>default=None</em>) – Threshold associated with the adaptivity selection criterion,
 defining the split boundary of each adaptive cluster group
 according to the associated position in terms of the adaptivity
 value range within the group. For instance, a
@@ -301,13 +301,13 @@ value range within the group. For instance, a
 divides the clusters whose adaptivity feature value is above
 min + 0.8*(max - min) (top 20% of the value range) from the
 remaining clusters.</p></li>
-<li><p><strong>adapt_max_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Maximum adaptive cluster group adaptive level.</p></li>
-<li><p><strong>adapt_min_voxels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Minimum number of voxels that cluster must contain to be targeted
+<li><p><strong>adapt_max_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=None</em>) – Maximum adaptive cluster group adaptive level.</p></li>
+<li><p><strong>adapt_min_voxels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=None</em>) – Minimum number of voxels that cluster must contain to be targeted
 for adaptivity.</p></li>
-<li><p><strong>is_merge_adapt_groups</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>default=None</em>) – True if the adaptive cluster groups of the same adaptive level are
+<li><p><strong>is_merge_adapt_groups</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>default=None</em>) – True if the adaptive cluster groups of the same adaptive level are
 to be merged, False if each adaptive cluster group follows an
 independent hierarchy.</p></li>
-<li><p><strong>min_adapt_feature_val</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><em>default=None</em>) – Minimum significant value of clustering adaptivity control feature.</p></li>
+<li><p><strong>min_adapt_feature_val</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>default=None</em>) – Minimum significant value of clustering adaptivity control feature.</p></li>
 </ul>
 </dd>
 </dl>
@@ -319,7 +319,7 @@ independent hierarchy.</p></li>
 <dd><p>Select target clusters from adaptive cluster group.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>adapt_data_matrix</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Adaptivity feature data matrix (numpy.ndarray of shape
+<dd class="field-odd"><p><strong>adapt_data_matrix</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Adaptivity feature data matrix (numpy.ndarray of shape
 (adapt_phase_n_clusters, 2)) that, for the i-th cluster of the
 adaptive material phase, contains the cluster label in
 adapt_data_matrix[i, 0] and the associated adaptive feature value
@@ -329,7 +329,7 @@ in adapt_data_matrix[i, 1].</p>
 <dd class="field-even"><p><strong>target_clusters</strong> – List containing the labels (int) of clusters to be adapted.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -340,7 +340,7 @@ in adapt_data_matrix[i, 1].</p>
 <dd><p>Evaluate adaptive cluster group adaptivity trigger condition.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>adapt_data_matrix</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Adaptivity feature data matrix (numpy.ndarray of shape
+<dd class="field-odd"><p><strong>adapt_data_matrix</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Adaptivity feature data matrix (numpy.ndarray of shape
 (adapt_phase_n_clusters, 2)) that, for the i-th cluster of the
 adaptive material phase, contains the cluster label in
 adapt_data_matrix[i, 0] and the associated adaptive feature value
@@ -351,7 +351,7 @@ in adapt_data_matrix[i, 1].</p>
 group, False otherwise.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -366,7 +366,7 @@ group, False otherwise.</p>
 adaptive cluster group (key, int).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -381,7 +381,7 @@ adaptive cluster group (key, int).</p>
 (key, int).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -395,7 +395,7 @@ adaptive cluster group (key, int).</p>
 <dd class="field-odd"><p><strong>min_adapt_feature_val</strong> – Minimum significant value of clustering adaptivity control feature.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -427,12 +427,12 @@ default value (item).</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>adapt_data_matrix</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Adaptivity feature data matrix (numpy.ndarray of shape
+<li><p><strong>adapt_data_matrix</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Adaptivity feature data matrix (numpy.ndarray of shape
 (adapt_phase_n_clusters, 2)) that, for the i-th cluster of the
 adaptive material phase, contains the cluster label in
 adapt_data_matrix[i, 0] and the associated adaptive feature value
 in adapt_data_matrix[i, 1].</p></li>
-<li><p><strong>voxels_clusters</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – Regular grid of voxels (spatial discretization of the RVE), where
+<li><p><strong>voxels_clusters</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – Regular grid of voxels (spatial discretization of the RVE), where
 each entry contains the cluster label (int) assigned to the
 corresponding voxel.</p></li>
 </ul>
@@ -455,7 +455,7 @@ procedures.</p></li>
 <dd><p>Update adaptive cluster groups after adaptive procedures.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>adaptive_clustering_map</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – List of new cluster labels (item, list[int]) resulting from the
+<dd class="field-odd"><p><strong>adaptive_clustering_map</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – List of new cluster labels (item, list[int]) resulting from the
 adaptive procedures over each target cluster (key, str).</p>
 </dd>
 </dl>

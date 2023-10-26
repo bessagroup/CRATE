@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>online.crom.asca &mdash; CRATE 1.0.3 documentation</title>
+  <title>online.crom.asca &mdash; CRATE 1.0.4 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
@@ -240,7 +240,7 @@
 <span class="sd">                              is_vtk_output=False, \</span>
 <span class="sd">                              vtk_data=None, is_voxels_output=False)</span>
 <span class="sd">        Solve clustering-based reduced-order equilibrium problem.</span>
-<span class="sd">    _init_global_strain_mf(self, mode=&#39;last_converged&#39;)</span>
+<span class="sd">    _init_global_strain_mf(self, crve, material_state, mode=&#39;last_converged&#39;)</span>
 <span class="sd">        Set clusters strains initial iterative guess.</span>
 <span class="sd">    _init_global_inc_strain_mf(self, n_total_clusters, mode=&#39;last_converged&#39;)</span>
 <span class="sd">        Set clusters incremental strains initial iterative guess.</span>
@@ -504,16 +504,16 @@
             <span class="n">is_adapt_repeat_inc</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
             <span class="c1"># Set clustering adaptivity frequency default</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clust_adapt_freq</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_clust_adapt_freq</span> <span class="o">=</span> <span class="p">{</span><span class="n">mat_phase</span><span class="p">:</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">mat_phase</span>
-                                          <span class="ow">in</span> <span class="n">crve</span><span class="o">.</span><span class="n">get_adapt_material_phases</span><span class="p">()}</span>
+            <span class="k">if</span> <span class="n">clust_adapt_freq</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">clust_adapt_freq</span> <span class="o">=</span> <span class="p">{</span><span class="n">mat_phase</span><span class="p">:</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">mat_phase</span>
+                                    <span class="ow">in</span> <span class="n">crve</span><span class="o">.</span><span class="n">get_adapt_material_phases</span><span class="p">()}</span>
             <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
             <span class="c1"># Initialize clustering adaptivity manager</span>
             <span class="n">adaptivity_manager</span> <span class="o">=</span> <span class="n">AdaptivityManager</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span><span class="p">,</span>
                 <span class="n">crve</span><span class="o">.</span><span class="n">get_adapt_material_phases</span><span class="p">(),</span> <span class="n">crve</span><span class="o">.</span><span class="n">get_phase_clusters</span><span class="p">(),</span>
                 <span class="n">crve</span><span class="o">.</span><span class="n">get_adaptivity_control_feature</span><span class="p">(),</span>
-                <span class="n">crve</span><span class="o">.</span><span class="n">get_adapt_criterion_data</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clust_adapt_freq</span><span class="p">)</span>
+                <span class="n">crve</span><span class="o">.</span><span class="n">get_adapt_criterion_data</span><span class="p">(),</span> <span class="n">clust_adapt_freq</span><span class="p">)</span>
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="c1"># Initialize increment rewinder manager</span>
         <span class="k">if</span> <span class="n">is_solution_rewinding</span><span class="p">:</span>
@@ -647,7 +647,8 @@
             <span class="c1">#                           Clusters strain initial iterative guess</span>
             <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
             <span class="c1"># Set clusters strain initial iterative guess</span>
-            <span class="n">global_strain_mf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_global_strain_mf</span><span class="p">()</span>
+            <span class="n">global_strain_mf</span> <span class="o">=</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">_init_global_strain_mf</span><span class="p">(</span><span class="n">crve</span><span class="p">,</span> <span class="n">material_state</span><span class="p">)</span>
             <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
             <span class="c1"># Set far-field strain initial iterative guess</span>
             <span class="n">farfield_strain_mf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_farfield_strain_mf</span><span class="p">()</span>
@@ -965,9 +966,9 @@
                 <span class="n">is_trigger</span><span class="p">,</span> <span class="n">target_clusters</span><span class="p">,</span> <span class="n">target_clusters_data</span> <span class="o">=</span> \
                     <span class="n">adaptivity_manager</span><span class="o">.</span><span class="n">get_target_clusters</span><span class="p">(</span>
                         <span class="n">crve</span><span class="o">.</span><span class="n">get_phase_clusters</span><span class="p">(),</span> <span class="n">crve</span><span class="o">.</span><span class="n">get_voxels_clusters</span><span class="p">(),</span>
+                        <span class="n">material_state</span><span class="o">.</span><span class="n">get_clusters_state</span><span class="p">(),</span>
                         <span class="n">material_state</span><span class="o">.</span><span class="n">get_clusters_def_gradient_mf</span><span class="p">(),</span>
                         <span class="n">material_state</span><span class="o">.</span><span class="n">get_clusters_def_gradient_old_mf</span><span class="p">(),</span>
-                        <span class="n">material_state</span><span class="o">.</span><span class="n">get_clusters_state</span><span class="p">(),</span>
                         <span class="n">material_state</span><span class="o">.</span><span class="n">get_clusters_state_old</span><span class="p">(),</span>
                         <span class="n">clusters_sct_mf</span><span class="p">,</span> <span class="n">clusters_sct_old_mf</span><span class="p">,</span>
                         <span class="n">clusters_residuals_mf</span><span class="p">,</span> <span class="n">inc</span><span class="p">,</span>
@@ -1164,7 +1165,8 @@
                 <span class="c1"># Update clustering adaptivity output file</span>
                 <span class="n">voxels_output</span><span class="o">.</span><span class="n">write_voxels_output_file</span><span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span>
-                    <span class="n">material_state</span><span class="o">.</span><span class="n">get_clusters_state</span><span class="p">())</span>
+                    <span class="n">material_state</span><span class="o">.</span><span class="n">get_clusters_state</span><span class="p">(),</span>
+                    <span class="n">material_state</span><span class="o">.</span><span class="n">get_clusters_def_gradient_mf</span><span class="p">())</span>
                 <span class="c1"># Increment post-processing time</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_post_process_time</span> <span class="o">+=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">procedure_init_time</span>
             <span class="c1">#</span>
@@ -1235,11 +1237,16 @@
                 <span class="c1"># Set increment initial time</span>
                 <span class="n">inc_init_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._init_global_strain_mf"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._init_global_strain_mf">[docs]</a>    <span class="k">def</span> <span class="nf">_init_global_strain_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;last_converged&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="ASCA._init_global_strain_mf"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._init_global_strain_mf">[docs]</a>    <span class="k">def</span> <span class="nf">_init_global_strain_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">material_state</span><span class="p">,</span>
+                               <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;last_converged&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set clusters strains initial iterative guess.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
+<span class="sd">        crve : CRVE</span>
+<span class="sd">            Cluster-Reduced Representative Volume Element.</span>
+<span class="sd">        material_state : MaterialState</span>
+<span class="sd">            CRVE material constitutive state at rewind state.</span>
 <span class="sd">        mode : {&#39;last_converged&#39;,}, default=&#39;last_converged&#39;</span>
 <span class="sd">            Strategy to set clusters incremental strains initial iterative</span>
 <span class="sd">            guess.</span>
@@ -1249,10 +1256,58 @@
 <span class="sd">        global_strain_mf : numpy.ndarray (1d)</span>
 <span class="sd">            Global vector of clusters strains stored in matricial form.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set strain/stress components order according to problem strain</span>
+        <span class="c1"># formulation</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;infinitesimal&#39;</span><span class="p">:</span>
+            <span class="n">comp_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_sym</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;finite&#39;</span><span class="p">:</span>
+            <span class="n">comp_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown problem strain formulation.&#39;</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Get material phases</span>
+        <span class="n">material_phases</span> <span class="o">=</span> <span class="n">material_state</span><span class="o">.</span><span class="n">get_material_phases</span><span class="p">()</span>
+        <span class="c1"># Get clusters associated with each material phase</span>
+        <span class="n">phase_clusters</span> <span class="o">=</span> <span class="n">crve</span><span class="o">.</span><span class="n">get_phase_clusters</span><span class="p">()</span>
+        <span class="c1"># Get total number of clusters</span>
+        <span class="n">n_total_clusters</span> <span class="o">=</span> <span class="n">crve</span><span class="o">.</span><span class="n">get_n_total_clusters</span><span class="p">()</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+        <span class="c1"># Set clusters strain initial iterative guess associated with the last</span>
+        <span class="c1"># converged solution</span>
         <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;last_converged&#39;</span><span class="p">:</span>
-            <span class="c1"># Set initial iterative guess associated with the last converged</span>
-            <span class="c1"># solution</span>
-            <span class="n">global_strain_mf</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_global_strain_old_mf</span><span class="p">)</span>
+            <span class="c1"># Initialize initial iterative guess</span>
+            <span class="n">global_strain_mf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_total_clusters</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)))</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Get last converged clusters state variables</span>
+            <span class="n">clusters_state_old</span> <span class="o">=</span> <span class="n">material_state</span><span class="o">.</span><span class="n">get_clusters_state_old</span><span class="p">()</span>
+            <span class="c1"># Get last converged clusters deformation gradient</span>
+            <span class="n">clusters_def_gradient_old_mf</span> <span class="o">=</span> \
+                <span class="n">material_state</span><span class="o">.</span><span class="n">get_clusters_def_gradient_old_mf</span><span class="p">()</span>
+            <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+            <span class="c1"># Initialize material cluster strain range indexes</span>
+            <span class="n">i_init</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">i_end</span> <span class="o">=</span> <span class="n">i_init</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)</span>
+            <span class="c1"># Loop over material phases</span>
+            <span class="k">for</span> <span class="n">mat_phase</span> <span class="ow">in</span> <span class="n">material_phases</span><span class="p">:</span>
+                <span class="c1"># Loop over material phase clusters</span>
+                <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">phase_clusters</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">]:</span>
+                    <span class="c1"># Get last converged material cluster infinitesimal strain</span>
+                    <span class="c1"># tensor (infinitesimal strains) or deformation gradient</span>
+                    <span class="c1"># (finite strains)</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;infinitesimal&#39;</span><span class="p">:</span>
+                        <span class="n">strain_old_mf</span> <span class="o">=</span> \
+                            <span class="n">clusters_state_old</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)][</span><span class="s1">&#39;strain_mf&#39;</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">strain_old_mf</span> <span class="o">=</span> \
+                            <span class="n">clusters_def_gradient_old_mf</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span>      
+                    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~        </span>
+                    <span class="c1"># Assemble to initial iterative guess</span>
+                    <span class="n">global_strain_mf</span><span class="p">[</span><span class="n">i_init</span><span class="p">:</span><span class="n">i_end</span><span class="p">]</span> <span class="o">=</span> <span class="n">strain_old_mf</span>
+                    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                    <span class="c1"># Update cluster strain range indexes</span>
+                    <span class="n">i_init</span> <span class="o">=</span> <span class="n">i_init</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)</span>
+                    <span class="n">i_end</span> <span class="o">=</span> <span class="n">i_init</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)</span>
+        <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unavailable strategy to set clusters strains &#39;</span>
                                <span class="s1">&#39;initial iterative guess.&#39;</span><span class="p">)</span>

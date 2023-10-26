@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cratepy.online.crom.asca.InfinitesimalRegressionSCS &mdash; CRATE 1.0.3 documentation</title>
+  <title>cratepy.online.crom.asca.InfinitesimalRegressionSCS &mdash; CRATE 1.0.4 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/readthedocs-custom.css" type="text/css" />
@@ -177,7 +177,7 @@ the homogenized incremental infinitesimal strain tensor, and
 <dd><p>Problem number of spatial dimensions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -188,7 +188,7 @@ the homogenized incremental infinitesimal strain tensor, and
 <dd><p>Strain/Stress components symmetric order.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -199,7 +199,7 @@ the homogenized incremental infinitesimal strain tensor, and
 <dd><p>Strain/Stress components nonsymmetric order.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -209,13 +209,13 @@ the homogenized incremental infinitesimal strain tensor, and
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>strain_formulation</strong> (<em>{'infinitesimal'</em><em>, </em><em>'finite'}</em>) – Problem strain formulation.</p></li>
-<li><p><strong>problem_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Problem type: 2D plane strain (1), 2D plane stress (2),
+<li><p><strong>problem_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – Problem type: 2D plane strain (1), 2D plane stress (2),
 2D axisymmetric (3) and 3D (4).</p></li>
-<li><p><strong>material_properties_old</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Last loading increment converged elastic reference material
+<li><p><strong>material_properties_old</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Last loading increment converged elastic reference material
 properties (key, str) values (item, {int, float, bool}).</p></li>
-<li><p><strong>inc_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Incremental homogenized strain (matricial form).</p></li>
-<li><p><strong>inc_stress_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Incremental homogenized stress (matricial form).</p></li>
-<li><p><strong>is_symmetrized</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>default=False</em>) – True if a symmetric alternative stress-strain conjugate pair is
+<li><p><strong>inc_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Incremental homogenized strain (matricial form).</p></li>
+<li><p><strong>inc_stress_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Incremental homogenized stress (matricial form).</p></li>
+<li><p><strong>is_symmetrized</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>default=False</em>) – True if a symmetric alternative stress-strain conjugate pair is
 adopted in the finite strains regression-based self-consistent
 scheme, False otherwise.</p></li>
 </ul>
@@ -238,13 +238,13 @@ scheme, False otherwise.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>strain_formulation</strong> (<em>{'infinitesimal'</em><em>, </em><em>'finite'}</em>) – Problem strain formulation.</p></li>
-<li><p><strong>problem_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Problem type: 2D plane strain (1), 2D plane stress (2),
+<li><p><strong>problem_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – Problem type: 2D plane strain (1), 2D plane stress (2),
 2D axisymmetric (3) and 3D (4).</p></li>
-<li><p><strong>material_properties_old</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Last loading increment converged elastic reference material
+<li><p><strong>material_properties_old</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Last loading increment converged elastic reference material
 properties (key, str) values (item, {int, float, bool}).</p></li>
-<li><p><strong>inc_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Incremental homogenized strain (matricial form).</p></li>
-<li><p><strong>inc_stress_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Incremental homogenized stress (matricial form).</p></li>
-<li><p><strong>is_symmetrized</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>default=False</em>) – True if a symmetric alternative stress-strain conjugate pair is
+<li><p><strong>inc_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Incremental homogenized strain (matricial form).</p></li>
+<li><p><strong>inc_stress_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Incremental homogenized stress (matricial form).</p></li>
+<li><p><strong>is_symmetrized</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>default=False</em>) – True if a symmetric alternative stress-strain conjugate pair is
 adopted in the finite strains regression-based self-consistent
 scheme, False otherwise.</p></li>
 </ul>

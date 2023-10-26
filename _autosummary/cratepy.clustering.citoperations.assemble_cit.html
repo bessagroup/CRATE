@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cratepy.clustering.citoperations.assemble_cit &mdash; CRATE 1.0.3 documentation</title>
+  <title>cratepy.clustering.citoperations.assemble_cit &mdash; CRATE 1.0.4 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/readthedocs-custom.css" type="text/css" />
@@ -181,25 +181,25 @@ material Lamé parameters.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>strain_formulation</strong> (<em>{'infinitesimal'</em><em>, </em><em>'finite'}</em>) – Problem strain formulation.</p></li>
-<li><p><strong>problem_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Problem type: 2D plane strain (1), 2D plane stress (2),
+<li><p><strong>problem_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – Problem type: 2D plane strain (1), 2D plane stress (2),
 2D axisymmetric (3) and 3D (4).</p></li>
-<li><p><strong>mat_prop_ref</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Reference material properties.</p></li>
-<li><p><strong>material_phases</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – RVE material phases labels (str).</p></li>
-<li><p><strong>phase_n_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Number of clusters (item, int) prescribed for each material phase
+<li><p><strong>mat_prop_ref</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Reference material properties.</p></li>
+<li><p><strong>material_phases</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>]</em>) – RVE material phases labels (str).</p></li>
+<li><p><strong>phase_n_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Number of clusters (item, int) prescribed for each material phase
 (key, str).</p></li>
-<li><p><strong>phase_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clusters labels (item, list[int]) associated to each material phase
+<li><p><strong>phase_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Clusters labels (item, list[int]) associated to each material phase
 (key, str).</p></li>
-<li><p><strong>cit_1_mf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Cluster interaction tensors associated with the first Green operator
+<li><p><strong>cit_1_mf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Cluster interaction tensors associated with the first Green operator
 material independent term. Each tensor is stored in a dictionary
 (item, dict) for each pair of material phases (key, str), which in turn
 contains the corresponding matricial form (item, numpy.ndarray)
 associated to each pair of clusters (key, str).</p></li>
-<li><p><strong>cit_2_mf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Cluster interaction tensors associated with the second Green operator
+<li><p><strong>cit_2_mf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Cluster interaction tensors associated with the second Green operator
 material independent term. Each tensor is stored in a dictionary
 (item, dict) for each pair of material phases (key, str), which in turn
 contains the corresponding matricial form (item, numpy.ndarray)
 associated to each pair of clusters (key, str).</p></li>
-<li><p><strong>cit_0_freq_mf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Cluster interaction tensors associated with the zero-frequency Green
+<li><p><strong>cit_0_freq_mf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Cluster interaction tensors associated with the zero-frequency Green
 operator (material independent) term. Each tensor is stored in a
 dictionary (item, dict) for each pair of material phases (key, str),
 which in turn contains the corresponding matricial form
@@ -212,7 +212,7 @@ according to the order of material_phases (1st) and phase_clusters
 (2nd).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>

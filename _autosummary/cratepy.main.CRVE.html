@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cratepy.main.CRVE &mdash; CRATE 1.0.3 documentation</title>
+  <title>cratepy.main.CRVE &mdash; CRATE 1.0.4 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/readthedocs-custom.css" type="text/css" />
@@ -130,7 +130,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="cratepy.main.CRVE">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CRVE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rve_dims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regular_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_phases</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strain_formulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">global_data_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clustering_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_n_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_clustering_scheme</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eff_elastic_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptive_clustering_scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adapt_criterion_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptivity_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptivity_control_feature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clustering/crve.html#CRVE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.main.CRVE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Cluster-Reduced Representative Volume Element.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cratepy.main.CRVE._n_dim">
@@ -138,7 +138,7 @@
 <dd><p>Problem number of spatial dimensions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -149,7 +149,7 @@
 <dd><p>Strain/Stress components symmetric order.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -160,7 +160,7 @@
 <dd><p>Strain/Stress components nonsymmetric order.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -172,7 +172,7 @@
 discretization of the RVE).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)">int</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -184,7 +184,7 @@ discretization of the RVE).</p>
 the RVE).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -196,7 +196,7 @@ the RVE).</p>
 material phase (key, str).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -210,7 +210,7 @@ associated with the Green operator material independent term evaluated
 in all spatial discrete points (item, numpy.ndarray (2d or 3d)).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -222,7 +222,7 @@ in all spatial discrete points (item, numpy.ndarray (2d or 3d)).</p>
 each material phase (key, str).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -234,7 +234,7 @@ each material phase (key, str).</p>
 material phase (key, str).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -246,7 +246,7 @@ material phase (key, str).</p>
 clustering.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -259,7 +259,7 @@ entry contains the cluster label (int) assigned to the corresponding
 voxel.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)">numpy.ndarray</a> (2d or 3d)</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a> (2d or 3d)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -271,7 +271,7 @@ voxel.</p>
 (key, str).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -283,7 +283,7 @@ voxel.</p>
 (key, str).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -298,7 +298,7 @@ corresponding matricial form (item, numpy.ndarray (2d)) associated with
 each pair of clusters (key, str).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -309,7 +309,7 @@ each pair of clusters (key, str).</p>
 <dd><p>RVE adaptive material phases labels (str).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -320,7 +320,7 @@ each pair of clusters (key, str).</p>
 <dd><p>Total amount of time (s) spent in clustering adaptivity.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -332,7 +332,7 @@ each pair of clusters (key, str).</p>
 interaction tensors computation procedures.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -581,40 +581,40 @@ interaction tensors computation procedures.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>rve_dims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>]</em>) – RVE size in each dimension.</p></li>
-<li><p><strong>regular_grid</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – Regular grid of voxels (spatial discretization of the RVE), where
+<li><p><strong>rve_dims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>]</em>) – RVE size in each dimension.</p></li>
+<li><p><strong>regular_grid</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – Regular grid of voxels (spatial discretization of the RVE), where
 each entry contains the material phase label (int) assigned to the
 corresponding voxel.</p></li>
-<li><p><strong>material_phases</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – RVE material phases labels (str).</p></li>
+<li><p><strong>material_phases</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>]</em>) – RVE material phases labels (str).</p></li>
 <li><p><strong>strain_formulation</strong> (<em>{'infinitesimal'</em><em>, </em><em>'finite'}</em>) – Problem strain formulation.</p></li>
-<li><p><strong>problem_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Problem type: 2D plane strain (1), 2D plane stress (2),
+<li><p><strong>problem_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – Problem type: 2D plane strain (1), 2D plane stress (2),
 2D axisymmetric (3) and 3D (4).</p></li>
-<li><p><strong>global_data_matrix</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Data matrix (numpy.ndarray of shape (n_voxels, n_features_dims))
+<li><p><strong>global_data_matrix</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Data matrix (numpy.ndarray of shape (n_voxels, n_features_dims))
 containing the required clustering features’ data to perform all
 the prescribed cluster analyses.</p></li>
-<li><p><strong>clustering_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clustering type (item, {‘static’, ‘adaptive’}) of each material
+<li><p><strong>clustering_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Clustering type (item, {‘static’, ‘adaptive’}) of each material
 phase (key, str).</p></li>
-<li><p><strong>phase_n_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Number of clusters (item, int) associated with each material phase
+<li><p><strong>phase_n_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Number of clusters (item, int) associated with each material phase
 (key, str).</p></li>
-<li><p><strong>base_clustering_scheme</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Prescribed base clustering scheme (item, numpy.ndarray of shape
+<li><p><strong>base_clustering_scheme</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Prescribed base clustering scheme (item, numpy.ndarray of shape
 (n_clusterings, 3)) for each material phase (key, str). Each row is
 associated with a unique clustering characterized by a clustering
 algorithm (col 1, int), a list of features (col 2, list[int]) and a
 list of the features data matrix’ indexes (col 3, list[int]).</p></li>
-<li><p><strong>eff_elastic_properties</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>, </em><em>default=None</em>) – Elastic properties (key, str) and their values (item, float)
+<li><p><strong>eff_elastic_properties</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a><em>, </em><em>default=None</em>) – Elastic properties (key, str) and their values (item, float)
 estimated from the RVE’s elastic effective tangent modulus.</p></li>
-<li><p><strong>adaptive_clustering_scheme</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Prescribed adaptive clustering scheme (item, numpy.ndarray of shape
+<li><p><strong>adaptive_clustering_scheme</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Prescribed adaptive clustering scheme (item, numpy.ndarray of shape
 (n_clusterings, 3)) for each material phase (key, str). Each row is
 associated with a unique clustering characterized by a clustering
 algorithm (col 1, int), a list of features (col 2, list[int]) and a
 list of the features data matrix’ indexes (col 3, list[int]).</p></li>
-<li><p><strong>adapt_criterion_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>, </em><em>default=None</em>) – Clustering adaptivity criterion (item, dict) associated with each
+<li><p><strong>adapt_criterion_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a><em>, </em><em>default=None</em>) – Clustering adaptivity criterion (item, dict) associated with each
 material phase (key, str). This dictionary contains the adaptivity
 criterion to be used and the required parameters.</p></li>
-<li><p><strong>adaptivity_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>, </em><em>default=None</em>) – Clustering adaptivity type (item, dict) associated with each
+<li><p><strong>adaptivity_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a><em>, </em><em>default=None</em>) – Clustering adaptivity type (item, dict) associated with each
 material phase (key, str). This dictionary contains the adaptivity
 type to be used and the required parameters.</p></li>
-<li><p><strong>adaptivity_control_feature</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>, </em><em>default=None</em>) – Clustering adaptivity control feature (item, str) associated with
+<li><p><strong>adaptivity_control_feature</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a><em>, </em><em>default=None</em>) – Clustering adaptivity control feature (item, str) associated with
 each material phase (key, str).</p></li>
 </ul>
 </dd>
@@ -719,40 +719,40 @@ each material phase (key, str).</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>rve_dims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>]</em>) – RVE size in each dimension.</p></li>
-<li><p><strong>regular_grid</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – Regular grid of voxels (spatial discretization of the RVE), where
+<li><p><strong>rve_dims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>]</em>) – RVE size in each dimension.</p></li>
+<li><p><strong>regular_grid</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – Regular grid of voxels (spatial discretization of the RVE), where
 each entry contains the material phase label (int) assigned to the
 corresponding voxel.</p></li>
-<li><p><strong>material_phases</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – RVE material phases labels (str).</p></li>
+<li><p><strong>material_phases</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>]</em>) – RVE material phases labels (str).</p></li>
 <li><p><strong>strain_formulation</strong> (<em>{'infinitesimal'</em><em>, </em><em>'finite'}</em>) – Problem strain formulation.</p></li>
-<li><p><strong>problem_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Problem type: 2D plane strain (1), 2D plane stress (2),
+<li><p><strong>problem_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – Problem type: 2D plane strain (1), 2D plane stress (2),
 2D axisymmetric (3) and 3D (4).</p></li>
-<li><p><strong>global_data_matrix</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Data matrix (numpy.ndarray of shape (n_voxels, n_features_dims))
+<li><p><strong>global_data_matrix</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Data matrix (numpy.ndarray of shape (n_voxels, n_features_dims))
 containing the required clustering features’ data to perform all
 the prescribed cluster analyses.</p></li>
-<li><p><strong>clustering_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clustering type (item, {‘static’, ‘adaptive’}) of each material
+<li><p><strong>clustering_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Clustering type (item, {‘static’, ‘adaptive’}) of each material
 phase (key, str).</p></li>
-<li><p><strong>phase_n_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Number of clusters (item, int) associated with each material phase
+<li><p><strong>phase_n_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Number of clusters (item, int) associated with each material phase
 (key, str).</p></li>
-<li><p><strong>base_clustering_scheme</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Prescribed base clustering scheme (item, numpy.ndarray of shape
+<li><p><strong>base_clustering_scheme</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Prescribed base clustering scheme (item, numpy.ndarray of shape
 (n_clusterings, 3)) for each material phase (key, str). Each row is
 associated with a unique clustering characterized by a clustering
 algorithm (col 1, int), a list of features (col 2, list[int]) and a
 list of the features data matrix’ indexes (col 3, list[int]).</p></li>
-<li><p><strong>eff_elastic_properties</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>, </em><em>default=None</em>) – Elastic properties (key, str) and their values (item, float)
+<li><p><strong>eff_elastic_properties</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a><em>, </em><em>default=None</em>) – Elastic properties (key, str) and their values (item, float)
 estimated from the RVE’s elastic effective tangent modulus.</p></li>
-<li><p><strong>adaptive_clustering_scheme</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Prescribed adaptive clustering scheme (item, numpy.ndarray of shape
+<li><p><strong>adaptive_clustering_scheme</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Prescribed adaptive clustering scheme (item, numpy.ndarray of shape
 (n_clusterings, 3)) for each material phase (key, str). Each row is
 associated with a unique clustering characterized by a clustering
 algorithm (col 1, int), a list of features (col 2, list[int]) and a
 list of the features data matrix’ indexes (col 3, list[int]).</p></li>
-<li><p><strong>adapt_criterion_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>, </em><em>default=None</em>) – Clustering adaptivity criterion (item, dict) associated with each
+<li><p><strong>adapt_criterion_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a><em>, </em><em>default=None</em>) – Clustering adaptivity criterion (item, dict) associated with each
 material phase (key, str). This dictionary contains the adaptivity
 criterion to be used and the required parameters.</p></li>
-<li><p><strong>adaptivity_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>, </em><em>default=None</em>) – Clustering adaptivity type (item, dict) associated with each
+<li><p><strong>adaptivity_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a><em>, </em><em>default=None</em>) – Clustering adaptivity type (item, dict) associated with each
 material phase (key, str). This dictionary contains the adaptivity
 type to be used and the required parameters.</p></li>
-<li><p><strong>adaptivity_control_feature</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>, </em><em>default=None</em>) – Clustering adaptivity control feature (item, str) associated with
+<li><p><strong>adaptivity_control_feature</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a><em>, </em><em>default=None</em>) – Clustering adaptivity control feature (item, str) associated with
 each material phase (key, str).</p></li>
 </ul>
 </dd>
@@ -786,7 +786,7 @@ Reduced-Order Modeling.</em> PhD Thesis, University of Porto
 <hr class="docutils" />
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>cluster</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Cluster label.</p>
+<dd class="field-odd"><p><strong>cluster</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – Cluster label.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
@@ -831,18 +831,18 @@ Reduced-Order Modeling.</em> PhD Thesis, University of Porto
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>cluster_filter</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a>) – Cluster discrete characteristic function in spatial domain.</p></li>
-<li><p><strong>gop_1_filt_vox</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Regular grid shaped matrix (item, numpy.ndarray) containing each
+<li><p><strong>cluster_filter</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a>) – Cluster discrete characteristic function in spatial domain.</p></li>
+<li><p><strong>gop_1_filt_vox</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Regular grid shaped matrix (item, numpy.ndarray) containing each
 fourth-order matricial form component (key, str) of the convolution
 between the material cluster characteristic function and the first
 Green operator material independent term in the spatial domain
 (inverse discrete Fourier transform).</p></li>
-<li><p><strong>gop_2_filt_vox</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Regular grid shaped matrix (item, numpy.ndarray) containing each
+<li><p><strong>gop_2_filt_vox</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Regular grid shaped matrix (item, numpy.ndarray) containing each
 fourth-order matricial form component (key, str) of the convolution
 between the material cluster characteristic function and the second
 Green operator material independent term in the spatial domain
 (inverse discrete Fourier transform).</p></li>
-<li><p><strong>gop_0_freq_filt_vox</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Regular grid shaped matrix (item, numpy.ndarray) containing each
+<li><p><strong>gop_0_freq_filt_vox</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Regular grid shaped matrix (item, numpy.ndarray) containing each
 fourth-order matricial form component (key, str) of the convolution
 between the material cluster characteristic function and the
 zero-frequency Green operator (material independent) term in the
@@ -878,17 +878,17 @@ characteristic function and the zero-frequency Green operator
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>voxels_clusters</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – Regular grid of voxels (spatial discretization of the RVE), where
+<li><p><strong>voxels_clusters</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – Regular grid of voxels (spatial discretization of the RVE), where
 each entry contains the cluster label (int) assigned to the
 corresponding voxel.</p></li>
-<li><p><strong>cluster_label</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Cluster label.</p></li>
+<li><p><strong>cluster_label</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – Cluster label.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>cluster_voxel_flat_idx</strong> – Flat voxels’ indexes (int) associated with given material cluster.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)">int</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -902,7 +902,7 @@ corresponding voxel.</p></li>
 <dd class="field-odd"><p><strong>max_label</strong> – CRVE maximum cluster label.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -923,7 +923,7 @@ clustering algorithm (col 1, int), a list of features
 <dd class="field-even"><p><strong>indexes</strong> – List of unique clustering features indexes.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)">int</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -935,10 +935,10 @@ clustering algorithm (col 1, int), a list of features
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>regular_grid</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – Regular grid of voxels (spatial discretization of the RVE), where
+<li><p><strong>regular_grid</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – Regular grid of voxels (spatial discretization of the RVE), where
 each entry contains the material phase label (int) assigned to the
 corresponding voxel.</p></li>
-<li><p><strong>material_phases</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – RVE material phases labels (str).</p></li>
+<li><p><strong>material_phases</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>]</em>) – RVE material phases labels (str).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -946,7 +946,7 @@ corresponding voxel.</p></li>
 material phase (key, str).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -989,17 +989,17 @@ Reduced-Order Modeling.</em> PhD Thesis, University of Porto
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>cluster_filter_dft</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a>) – Cluster discrete characteristic function in frequency domain
+<li><p><strong>cluster_filter_dft</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a>) – Cluster discrete characteristic function in frequency domain
 (discrete Fourier transform).</p></li>
-<li><p><strong>gop_1_dft_vox</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Regular grid shaped matrix (item, numpy.ndarray) containing each
+<li><p><strong>gop_1_dft_vox</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Regular grid shaped matrix (item, numpy.ndarray) containing each
 fourth-order matricial form component (key, str) of the first Green
 operator material independent term in the frequency domain
 (discrete Fourier transform).</p></li>
-<li><p><strong>gop_2_dft_vox</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Regular grid shaped matrix (item, numpy.ndarray) containing each
+<li><p><strong>gop_2_dft_vox</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Regular grid shaped matrix (item, numpy.ndarray) containing each
 fourth-order matricial form component (key, str) of the second
 Green operator material independent term in the frequency domain
 (discrete Fourier transform).</p></li>
-<li><p><strong>gop_0_freq_dft_vox</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Regular grid shaped matrix (item, numpy.ndarray) containing each
+<li><p><strong>gop_0_freq_dft_vox</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Regular grid shaped matrix (item, numpy.ndarray) containing each
 fourth-order matricial form component (key, str) of the Green
 operator zero-frequency (material independent) term in the
 frequency domain (discrete Fourier transform).</p></li>
@@ -1055,15 +1055,15 @@ in ascending order of material phase’s labels.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Target string.</p></li>
-<li><p><strong>delimiter</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>default='_'</em>) – Separating delimiter between target’s string left and right sides.</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Target string.</p></li>
+<li><p><strong>delimiter</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>default='_'</em>) – Separating delimiter between target’s string left and right sides.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>y</strong> – Switched string.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1128,7 +1128,7 @@ localized history-dependent phenomena.</em> Comp Methods Appl M, 393
 cluster interaction tensors. The ‘adaptive’ mode speeds up the
 computation of the new cluster interaction tensors resulting from
 an adaptive clustering characterized by <cite>adaptive_clustering_map</cite>.</p></li>
-<li><p><strong>adaptive_clustering_map</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Adaptive clustering map (item, dict with list of new cluster labels
+<li><p><strong>adaptive_clustering_map</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Adaptive clustering map (item, dict with list of new cluster labels
 (item, list[int]) resulting from the refinement of each target
 cluster (key, str)) for each material phase (key, str). Required in
 <cite>adaptive</cite> mode, otherwise ignored.</p></li>
@@ -1148,7 +1148,7 @@ material phase (key, str). This dictionary contains the adaptivity
 criterion to be used and the required parameters.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a>, default=None</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a>, default=None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1162,7 +1162,7 @@ criterion to be used and the required parameters.</p>
 <dd class="field-odd"><p><strong>adapt_material_phases</strong> – RVE adaptive material phases labels (str).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1177,7 +1177,7 @@ criterion to be used and the required parameters.</p>
 interaction tensors computation procedures.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1191,7 +1191,7 @@ interaction tensors computation procedures.</p>
 <dd class="field-odd"><p><strong>adaptive_clustering_time</strong> – Total amount of time (s) spent in clustering adaptivity.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1206,7 +1206,7 @@ interaction tensors computation procedures.</p>
 base clustering.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1221,7 +1221,7 @@ base clustering.</p>
 each material phase (key, str).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a>, default=None</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a>, default=None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1237,7 +1237,7 @@ containing the adaptivity metrics associated with the clustering
 adaptivity output file.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1256,7 +1256,7 @@ numpy.ndarray (2d)) associated with each pair of clusters
 (key, str).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a>]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1271,7 +1271,7 @@ numpy.ndarray (2d)) associated with each pair of clusters
 with each material phase (key, str).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1287,7 +1287,7 @@ the associated type (‘static’ or ‘adaptive’), the base number of
 clusters (int) and the final number of clusters (int).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1302,7 +1302,7 @@ clusters (int) and the final number of clusters (int).</p>
 phase (key, str).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1317,7 +1317,7 @@ phase (key, str).</p>
 (key, str).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1332,7 +1332,7 @@ phase (key, str).</p>
 associated identifiers (key, str).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1347,7 +1347,7 @@ associated identifiers (key, str).</p>
 estimated from the RVE’s elastic effective tangent modulus.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1361,7 +1361,7 @@ estimated from the RVE’s elastic effective tangent modulus.</p>
 <dd class="field-odd"><p><strong>material_phases</strong> – RVE material phases labels (str).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1375,7 +1375,7 @@ estimated from the RVE’s elastic effective tangent modulus.</p>
 <dd class="field-odd"><p><strong>n_total_clusters</strong> – Total number of clusters.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1407,7 +1407,7 @@ of the RVE).</p></li>
 phase (key, str).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1422,7 +1422,7 @@ phase (key, str).</p>
 (key, str).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1438,7 +1438,7 @@ each entry contains the material phase label (int) assigned to the
 corresponding voxel.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)">numpy.ndarray</a> (2d or 3d)</p>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a> (2d or 3d)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1452,7 +1452,7 @@ corresponding voxel.</p>
 <dd class="field-odd"><p><strong>rve_dims</strong> – RVE size in each dimension.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1487,7 +1487,7 @@ each entry contains the cluster label (int) assigned to the
 corresponding voxel.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)">numpy.ndarray</a> (2d or 3d)</p>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a> (2d or 3d)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1499,8 +1499,8 @@ corresponding voxel.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>target_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>]</em>) – List with the labels (int) of clusters to be adapted.</p></li>
-<li><p><strong>target_clusters_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – For each target cluster (key, str), store dictionary (item, dict)
+<li><p><strong>target_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>]</em>) – List with the labels (int) of clusters to be adapted.</p></li>
+<li><p><strong>target_clusters_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – For each target cluster (key, str), store dictionary (item, dict)
 containing cluster associated parameters relevant for the adaptive
 procedures.</p></li>
 </ul>
@@ -1511,7 +1511,7 @@ procedures.</p></li>
 cluster (key, str)) for each material phase (key, str).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1536,7 +1536,7 @@ cluster (key, str)) for each material phase (key, str).</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>crve</strong> (<a class="reference internal" href="#cratepy.main.CRVE" title="cratepy.main.CRVE"><em>CRVE</em></a>) – Cluster-Reduced Representative Volume Element.</p></li>
-<li><p><strong>crve_file_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Path of file where the CRVE’s instance is dumped.</p></li>
+<li><p><strong>crve_file_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Path of file where the CRVE’s instance is dumped.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1549,18 +1549,18 @@ cluster (key, str)) for each material phase (key, str).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>adaptive_clustering_scheme</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Prescribed adaptive clustering scheme (item, numpy.ndarray of shape
+<li><p><strong>adaptive_clustering_scheme</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Prescribed adaptive clustering scheme (item, numpy.ndarray of shape
 (n_clusterings, 3)) for each material phase (key, str). Each row is
 associated with a unique clustering characterized by a clustering
 algorithm (col 1, int), a list of features (col 2, list[int]) and a
 list of the features data matrix’ indexes (col 3, list[int]).</p></li>
-<li><p><strong>adapt_criterion_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clustering adaptivity criterion (item, dict) associated with each
+<li><p><strong>adapt_criterion_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Clustering adaptivity criterion (item, dict) associated with each
 material phase (key, str). This dictionary contains the adaptivity
 criterion to be used and the required parameters.</p></li>
-<li><p><strong>adaptivity_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clustering adaptivity type (item, dict) associated with each
+<li><p><strong>adaptivity_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Clustering adaptivity type (item, dict) associated with each
 material phase (key, str). This dictionary contains the adaptivity
 type to be used and the required parameters.</p></li>
-<li><p><strong>adaptivity_control_feature</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clustering adaptivity control feature (item, str) associated with
+<li><p><strong>adaptivity_control_feature</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Clustering adaptivity control feature (item, str) associated with
 each material phase (key, str).</p></li>
 </ul>
 </dd>

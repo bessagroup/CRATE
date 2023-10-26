@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cratepy.tensor.matrixoperations &mdash; CRATE 1.0.3 documentation</title>
+  <title>cratepy.tensor.matrixoperations &mdash; CRATE 1.0.4 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
@@ -510,7 +510,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                                           Matrix condensation</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="get_condensed_matrix"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.matrixoperations.get_condensed_matrix.html#cratepy.tensor.matrixoperations.get_condensed_matrix">[docs]</a><span class="k">def</span> <span class="nf">get_condensed_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">):</span>
+<div class="viewcode-block" id="get_condensed_matrix"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.matrixoperations.get_condensed_matrix.html#cratepy.tensor.matrixoperations.get_condensed_matrix">[docs]</a><span class="k">def</span> <span class="nf">get_condensed_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">is_check_indexes</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform condensation of matrix given a set of rows and columns.</span>
 
 <span class="sd">    Parameters</span>
@@ -521,6 +521,10 @@
 <span class="sd">        Indexes of rows to keep in condensed matrix.</span>
 <span class="sd">    cols : numpy.ndarray (1d)</span>
 <span class="sd">        Indexes of columns to keep in condensed matrix.</span>
+<span class="sd">    is_check_indexes : bool, default=False</span>
+<span class="sd">        If True, then check validity of condensed rows and columns indexes</span>
+<span class="sd">        before performing matrix condensation. May yield non-negligible</span>
+<span class="sd">        overhead cost when condensing large matrix.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -528,24 +532,26 @@
 <span class="sd">        Condensed matrix.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Check validity of rows and columns indexes to perform the condensation</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">)</span>
-                   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">))]):</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;All the indexes specified to perform a matrix &#39;</span>
-                           <span class="s1">&#39;condensation must be non-negative integers.&#39;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="nb">int</span><span class="p">)</span>
-                     <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">)</span>
-                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">))]):</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;All the indexes specified to perform a matrix &#39;</span>
-                           <span class="s1">&#39;condensation must be non-negative integers.&#39;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">rows</span><span class="p">)))</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span> <span class="ow">or</span> \
-            <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">cols</span><span class="p">)))</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Duplicated rows or columns indexes.&#39;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">([</span><span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">))]):</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Out-of-bounds row index.&#39;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">([</span><span class="n">cols</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">))]):</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Out-of-bounds column index.&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">is_check_indexes</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="nb">int</span><span class="p">)</span>
+                       <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">)</span>
+                       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">))]):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;All the indexes specified to perform a matrix &#39;</span>
+                               <span class="s1">&#39;condensation must be non-negative integers.&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="nb">int</span><span class="p">)</span>
+                        <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">))]):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;All the indexes specified to perform a matrix &#39;</span>
+                               <span class="s1">&#39;condensation must be non-negative integers.&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">rows</span><span class="p">)))</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span> <span class="ow">or</span> \
+                <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">cols</span><span class="p">)))</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Duplicated rows or columns indexes.&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">([</span><span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">))]):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Out-of-bounds row index.&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">([</span><span class="n">cols</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">))]):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Out-of-bounds column index.&#39;</span><span class="p">)</span>
     <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
     <span class="c1"># Build auxiliary matrices with rows and columns condensation indexes</span>
     <span class="n">rows_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>

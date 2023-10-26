@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cratepy.ioput.readprocedures &mdash; CRATE 1.0.3 documentation</title>
+  <title>cratepy.ioput.readprocedures &mdash; CRATE 1.0.4 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
@@ -1754,7 +1754,7 @@
                 <span class="c1"># Get parameter value</span>
                 <span class="n">value</span> <span class="o">=</span> <span class="n">get_formatted_parameter</span><span class="p">(</span><span class="n">parameter</span><span class="p">,</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
                 <span class="c1"># Store adaptivity criterion parameter</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">oacp</span><span class="p">[</span><span class="n">parameter</span><span class="p">]):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">oacp</span><span class="p">[</span><span class="n">parameter</span><span class="p">])):</span>
                     <span class="n">adapt_criterion_data</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">][</span><span class="n">parameter</span><span class="p">]</span> <span class="o">=</span> \
                         <span class="n">get_formatted_parameter</span><span class="p">(</span><span class="n">parameter</span><span class="p">,</span>
                                                 <span class="nb">type</span><span class="p">(</span><span class="n">oacp</span><span class="p">[</span><span class="n">parameter</span><span class="p">])(</span><span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
@@ -1770,7 +1770,7 @@
                 <span class="c1"># Get parameter value</span>
                 <span class="n">value</span> <span class="o">=</span> <span class="n">get_formatted_parameter</span><span class="p">(</span><span class="n">parameter</span><span class="p">,</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
                 <span class="c1"># Store adaptivity type parameter</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">oatp</span><span class="p">[</span><span class="n">parameter</span><span class="p">]):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">oatp</span><span class="p">[</span><span class="n">parameter</span><span class="p">])):</span>
                     <span class="n">adaptivity_type</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">][</span><span class="n">parameter</span><span class="p">]</span> <span class="o">=</span> \
                         <span class="n">get_formatted_parameter</span><span class="p">(</span><span class="n">parameter</span><span class="p">,</span>
                                                 <span class="nb">type</span><span class="p">(</span><span class="n">oatp</span><span class="p">[</span><span class="n">parameter</span><span class="p">])(</span><span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>

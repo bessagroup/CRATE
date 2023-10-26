@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities &mdash; CRATE 1.0.3 documentation</title>
+  <title>cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities &mdash; CRATE 1.0.4 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/readthedocs-custom.css" type="text/css" />
@@ -156,7 +156,7 @@ localized history-dependent phenomena.</em> Comp Methods Appl M, 393
 <dd><p>Adaptive level (item, int) of each cluster (key, str).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -169,7 +169,7 @@ localized history-dependent phenomena.</em> Comp Methods Appl M, 393
 frequency.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a>], default=None</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)">int</a>], default=None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -220,23 +220,23 @@ frequency.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>adapt_mat_phase</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Adaptive material phase label.</p></li>
-<li><p><strong>phase_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clusters labels (item, list[int]) associated with each material
+<li><p><strong>adapt_mat_phase</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Adaptive material phase label.</p></li>
+<li><p><strong>phase_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Clusters labels (item, list[int]) associated with each material
 phase (key, str).</p></li>
-<li><p><strong>adapt_trigger_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><em>default=None</em>) – Threshold associated with the adaptivity trigger condition.</p></li>
-<li><p><strong>adapt_max_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Maximum cluster adaptive level.</p></li>
-<li><p><strong>adapt_min_voxels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Minimum number of voxels that cluster must contain to be targeted
+<li><p><strong>adapt_trigger_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>default=None</em>) – Threshold associated with the adaptivity trigger condition.</p></li>
+<li><p><strong>adapt_max_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=None</em>) – Maximum cluster adaptive level.</p></li>
+<li><p><strong>adapt_min_voxels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=None</em>) – Minimum number of voxels that cluster must contain to be targeted
 for adaptivity.</p></li>
-<li><p><strong>adapt_level_max_diff</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Maximum adaptive level difference when targeting clusters of
+<li><p><strong>adapt_level_max_diff</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=None</em>) – Maximum adaptive level difference when targeting clusters of
 adjacent voxels.</p></li>
-<li><p><strong>swipe_dim_1_every</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Swipe frequency of spatial dimension 1. First and last (boundary)
+<li><p><strong>swipe_dim_1_every</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=None</em>) – Swipe frequency of spatial dimension 1. First and last (boundary)
 voxels are always considered.</p></li>
-<li><p><strong>swipe_dim_2_every</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Swipe frequency of spatial dimension 2. First and last (boundary)
+<li><p><strong>swipe_dim_2_every</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=None</em>) – Swipe frequency of spatial dimension 2. First and last (boundary)
 voxels are always considered.</p></li>
-<li><p><strong>swipe_dim_3_every</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Swipe frequency of spatial dimension 3. First and last (boundary)
+<li><p><strong>swipe_dim_3_every</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=None</em>) – Swipe frequency of spatial dimension 3. First and last (boundary)
 voxels are always considered.</p></li>
-<li><p><strong>min_adapt_feature_val</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><em>default=None</em>) – Minimum significant value of clustering adaptivity control feature.</p></li>
-<li><p><strong>magnitude_lower_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><em>default=None</em>) – Factor which affects the maximum stored magnitude associated with
+<li><p><strong>min_adapt_feature_val</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>default=None</em>) – Minimum significant value of clustering adaptivity control feature.</p></li>
+<li><p><strong>magnitude_lower_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>default=None</em>) – Factor which affects the maximum stored magnitude associated with
 the lower valued targeted cluster.</p></li>
 </ul>
 </dd>
@@ -269,23 +269,23 @@ the lower valued targeted cluster.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>adapt_mat_phase</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Adaptive material phase label.</p></li>
-<li><p><strong>phase_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Clusters labels (item, list[int]) associated with each material
+<li><p><strong>adapt_mat_phase</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Adaptive material phase label.</p></li>
+<li><p><strong>phase_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Clusters labels (item, list[int]) associated with each material
 phase (key, str).</p></li>
-<li><p><strong>adapt_trigger_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><em>default=None</em>) – Threshold associated with the adaptivity trigger condition.</p></li>
-<li><p><strong>adapt_max_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Maximum cluster adaptive level.</p></li>
-<li><p><strong>adapt_min_voxels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Minimum number of voxels that cluster must contain to be targeted
+<li><p><strong>adapt_trigger_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>default=None</em>) – Threshold associated with the adaptivity trigger condition.</p></li>
+<li><p><strong>adapt_max_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=None</em>) – Maximum cluster adaptive level.</p></li>
+<li><p><strong>adapt_min_voxels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=None</em>) – Minimum number of voxels that cluster must contain to be targeted
 for adaptivity.</p></li>
-<li><p><strong>adapt_level_max_diff</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Maximum adaptive level difference when targeting clusters of
+<li><p><strong>adapt_level_max_diff</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=None</em>) – Maximum adaptive level difference when targeting clusters of
 adjacent voxels.</p></li>
-<li><p><strong>swipe_dim_1_every</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Swipe frequency of spatial dimension 1. First and last (boundary)
+<li><p><strong>swipe_dim_1_every</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=None</em>) – Swipe frequency of spatial dimension 1. First and last (boundary)
 voxels are always considered.</p></li>
-<li><p><strong>swipe_dim_2_every</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Swipe frequency of spatial dimension 2. First and last (boundary)
+<li><p><strong>swipe_dim_2_every</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=None</em>) – Swipe frequency of spatial dimension 2. First and last (boundary)
 voxels are always considered.</p></li>
-<li><p><strong>swipe_dim_3_every</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=None</em>) – Swipe frequency of spatial dimension 3. First and last (boundary)
+<li><p><strong>swipe_dim_3_every</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=None</em>) – Swipe frequency of spatial dimension 3. First and last (boundary)
 voxels are always considered.</p></li>
-<li><p><strong>min_adapt_feature_val</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><em>default=None</em>) – Minimum significant value of clustering adaptivity control feature.</p></li>
-<li><p><strong>magnitude_lower_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><em>default=None</em>) – Factor which affects the maximum stored magnitude associated with
+<li><p><strong>min_adapt_feature_val</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>default=None</em>) – Minimum significant value of clustering adaptivity control feature.</p></li>
+<li><p><strong>magnitude_lower_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>default=None</em>) – Factor which affects the maximum stored magnitude associated with
 the lower valued targeted cluster.</p></li>
 </ul>
 </dd>
@@ -306,19 +306,19 @@ clusters and the dictionary containing associated data are updated.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>adapt_data_matrix</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Adaptivity feature data matrix (numpy.ndarray of shape
+<li><p><strong>adapt_data_matrix</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Adaptivity feature data matrix (numpy.ndarray of shape
 (adapt_phase_n_clusters, 2)) that, for the i-th cluster of the
 adaptive material phase, contains the cluster label in
 adapt_data_matrix[i, 0] and the associated adaptive feature value
 in adapt_data_matrix[i, 1].</p></li>
-<li><p><strong>voxels_clusters</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – Regular grid of voxels (spatial discretization of the RVE), where
+<li><p><strong>voxels_clusters</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – Regular grid of voxels (spatial discretization of the RVE), where
 each entry contains the cluster label (int) assigned to the
 corresponding voxel.</p></li>
-<li><p><strong>target_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>]</em>) – List containing the labels (int) of clusters to be adapted.</p></li>
-<li><p><strong>target_clusters_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – For each target cluster (key, str), store dictionary (item, dict)
+<li><p><strong>target_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>]</em>) – List containing the labels (int) of clusters to be adapted.</p></li>
+<li><p><strong>target_clusters_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – For each target cluster (key, str), store dictionary (item, dict)
 containing cluster associated parameters required for the adaptive
 procedures.</p></li>
-<li><p><strong>dim_loops</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Ordered specification of dimension cycles, being the spatial
+<li><p><strong>dim_loops</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Ordered specification of dimension cycles, being the spatial
 discontinuities evaluated along dimension <cite>dim_loops[0]</cite>.</p></li>
 </ul>
 </dd>
@@ -351,7 +351,7 @@ localized history-dependent phenomena.</em> Comp Methods Appl M, 393
 <dd class="field-odd"><p><strong>clusters_adapt_level</strong> – Adaptive level (item, int) of each cluster (key, str).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -365,7 +365,7 @@ localized history-dependent phenomena.</em> Comp Methods Appl M, 393
 <dd class="field-odd"><p><strong>min_adapt_feature_val</strong> – Minimum significant value of clustering adaptivity control feature.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -398,12 +398,12 @@ default value (item).</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>adapt_data_matrix</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Adaptivity feature data matrix (numpy.ndarray of shape
+<li><p><strong>adapt_data_matrix</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Adaptivity feature data matrix (numpy.ndarray of shape
 (adapt_phase_n_clusters, 2)) that, for the i-th cluster of the
 adaptive material phase, contains the cluster label in
 adapt_data_matrix[i, 0] and the associated adaptive feature value
 in adapt_data_matrix[i, 1].</p></li>
-<li><p><strong>voxels_clusters</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – Regular grid of voxels (spatial discretization of the RVE), where
+<li><p><strong>voxels_clusters</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em> or </em><em>3d</em><em>)</em>) – Regular grid of voxels (spatial discretization of the RVE), where
 each entry contains the cluster label (int) assigned to the
 corresponding voxel.</p></li>
 </ul>
@@ -426,7 +426,7 @@ procedures.</p></li>
 <dd><p>Update clusters adaptive level after adaptive procedures.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>adaptive_clustering_map</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – List of new cluster labels (item, list[int]) resulting from the
+<dd class="field-odd"><p><strong>adaptive_clustering_map</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – List of new cluster labels (item, list[int]) resulting from the
 adaptive procedures over each target cluster (key, str).</p>
 </dd>
 </dl>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ioput.miscoutputfiles.voxelsoutput &mdash; CRATE 1.0.3 documentation</title>
+  <title>ioput.miscoutputfiles.voxelsoutput &mdash; CRATE 1.0.4 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
@@ -151,7 +151,8 @@
 <span class="sd">    -------</span>
 <span class="sd">    init_voxels_output_file(self, crve)</span>
 <span class="sd">        Open output file and write file header.</span>
-<span class="sd">    write_voxels_output_file(self, n_dim, comp_order, crve, clusters_state)</span>
+<span class="sd">    write_voxels_output_file(self, n_dim, comp_order, crve, clusters_state, \</span>
+<span class="sd">                             clusters_def_gradient_mf)</span>
 <span class="sd">        Write output file.</span>
 <span class="sd">    rewind_file(self, rewind_inc)</span>
 <span class="sd">        Rewind output file.</span>
@@ -208,7 +209,7 @@
         <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_voxout_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">write_list</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="VoxelsOutput.write_voxels_output_file"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.VoxelsOutput.html#cratepy.ioput.miscoutputfiles.vtkoutput.VoxelsOutput.write_voxels_output_file">[docs]</a>    <span class="k">def</span> <span class="nf">write_voxels_output_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span>
-                                 <span class="n">clusters_state</span><span class="p">):</span>
+                                 <span class="n">clusters_state</span><span class="p">,</span> <span class="n">clusters_def_gradient_mf</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Write output file.</span>
 
 <span class="sd">        Parameters</span>
@@ -222,6 +223,9 @@
 <span class="sd">        clusters_state : dict</span>
 <span class="sd">            Material constitutive model state variables (item, dict) associated</span>
 <span class="sd">            to each material cluster (key, str).</span>
+<span class="sd">        clusters_def_gradient_mf : dict</span>
+<span class="sd">            Deformation gradient (item, numpy.ndarray (1d)) associated with</span>
+<span class="sd">            each material cluster (key, str), stored in matricial form.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="c1"># Instantiate factory of voxels arrays</span>
@@ -243,8 +247,7 @@
             <span class="n">outvar_n_dims</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_variables</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
             <span class="c1"># Get material-related output variable voxels array list</span>
             <span class="n">array_vox_list</span> <span class="o">=</span> <span class="n">voxels_array_factory</span><span class="o">.</span><span class="n">build_voxels_array</span><span class="p">(</span>
-                <span class="n">crve</span><span class="p">,</span> <span class="n">outvar</span><span class="p">,</span> <span class="n">clusters_state</span><span class="p">)</span>
-
+                <span class="n">crve</span><span class="p">,</span> <span class="n">outvar</span><span class="p">,</span> <span class="n">clusters_state</span><span class="p">,</span> <span class="n">clusters_def_gradient_mf</span><span class="p">)</span>
             <span class="c1"># Loop over material-related output variable dimensions</span>
             <span class="k">for</span> <span class="n">var_dim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">outvar_n_dims</span><span class="p">):</span>
                 <span class="c1"># Store material-related output variable dimension in voxels</span>
@@ -403,7 +406,7 @@
                             <span class="c1"># Build first Piola-Kirchhoff stress tensor</span>
                             <span class="n">first_piola_stress</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_from_mf</span><span class="p">(</span>
                                 <span class="n">first_piola_stress_mf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span>
-                                <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_sym</span><span class="p">)</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span><span class="p">)</span>
                             <span class="c1"># Compute Cauchy stress tensor</span>
                             <span class="n">cauchy_stress</span> <span class="o">=</span> <span class="n">cauchy_from_first_piola</span><span class="p">(</span>
                                 <span class="n">def_gradient</span><span class="p">,</span> <span class="n">first_piola_stress</span><span class="p">)</span>

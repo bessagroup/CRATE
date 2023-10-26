@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cratepy.material.materialmodeling &mdash; CRATE 1.0.3 documentation</title>
+  <title>cratepy.material.materialmodeling &mdash; CRATE 1.0.4 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
@@ -1128,7 +1128,9 @@
             <span class="n">constitutive_model</span><span class="o">.</span><span class="n">state_update</span><span class="p">(</span><span class="n">inc_strain</span><span class="p">,</span> <span class="n">state_variables_old</span><span class="p">)</span>
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="c1"># Compute Cauchy stress tensor and material consistent tangent modulus</span>
-        <span class="k">if</span> <span class="n">strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;finite&#39;</span> <span class="ow">and</span> <span class="n">strain_type</span> <span class="o">==</span> <span class="s1">&#39;finite-kinext&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">state_variables</span><span class="p">[</span><span class="s1">&#39;is_su_fail&#39;</span><span class="p">]</span>
+                <span class="ow">and</span> <span class="n">strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;finite&#39;</span>
+                <span class="ow">and</span> <span class="n">strain_type</span> <span class="o">==</span> <span class="s1">&#39;finite-kinext&#39;</span><span class="p">):</span>
             <span class="c1"># Get Kirchhoff stress tensor (matricial form)</span>
             <span class="n">kirchhoff_stress_mf</span> <span class="o">=</span> <span class="n">state_variables</span><span class="p">[</span><span class="s1">&#39;stress_mf&#39;</span><span class="p">]</span>
             <span class="c1"># Build Kirchhoff stress tensor</span>
