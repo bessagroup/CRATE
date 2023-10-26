@@ -135,7 +135,7 @@ class ASCA:
                               is_vtk_output=False, \
                               vtk_data=None, is_voxels_output=False)
         Solve clustering-based reduced-order equilibrium problem.
-    _init_global_strain_mf(self, mode='last_converged')
+    _init_global_strain_mf(self, crve, material_state, mode='last_converged')
         Set clusters strains initial iterative guess.
     _init_global_inc_strain_mf(self, n_total_clusters, mode='last_converged')
         Set clusters incremental strains initial iterative guess.
@@ -399,16 +399,16 @@ class ASCA:
             is_adapt_repeat_inc = True
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Set clustering adaptivity frequency default
-            if self._clust_adapt_freq is None:
-                self._clust_adapt_freq = {mat_phase: 1 for mat_phase
-                                          in crve.get_adapt_material_phases()}
+            if clust_adapt_freq is None:
+                clust_adapt_freq = {mat_phase: 1 for mat_phase
+                                    in crve.get_adapt_material_phases()}
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Initialize clustering adaptivity manager
             adaptivity_manager = AdaptivityManager(
                 self._strain_formulation, self._problem_type,
                 crve.get_adapt_material_phases(), crve.get_phase_clusters(),
                 crve.get_adaptivity_control_feature(),
-                crve.get_adapt_criterion_data(), self._clust_adapt_freq)
+                crve.get_adapt_criterion_data(), clust_adapt_freq)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize increment rewinder manager
         if is_solution_rewinding:
@@ -542,7 +542,8 @@ class ASCA:
             #                           Clusters strain initial iterative guess
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Set clusters strain initial iterative guess
-            global_strain_mf = self._init_global_strain_mf()
+            global_strain_mf = \
+                self._init_global_strain_mf(crve, material_state)
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Set far-field strain initial iterative guess
             farfield_strain_mf = self._init_farfield_strain_mf()
@@ -860,9 +861,9 @@ class ASCA:
                 is_trigger, target_clusters, target_clusters_data = \
                     adaptivity_manager.get_target_clusters(
                         crve.get_phase_clusters(), crve.get_voxels_clusters(),
+                        material_state.get_clusters_state(),
                         material_state.get_clusters_def_gradient_mf(),
                         material_state.get_clusters_def_gradient_old_mf(),
-                        material_state.get_clusters_state(),
                         material_state.get_clusters_state_old(),
                         clusters_sct_mf, clusters_sct_old_mf,
                         clusters_residuals_mf, inc,
@@ -1059,7 +1060,8 @@ class ASCA:
                 # Update clustering adaptivity output file
                 voxels_output.write_voxels_output_file(
                     self._n_dim, comp_order, crve,
-                    material_state.get_clusters_state())
+                    material_state.get_clusters_state(),
+                    material_state.get_clusters_def_gradient_mf())
                 # Increment post-processing time
                 self._post_process_time += time.time() - procedure_init_time
             #
@@ -1130,11 +1132,16 @@ class ASCA:
                 # Set increment initial time
                 inc_init_time = time.time()
     # -------------------------------------------------------------------------
-    def _init_global_strain_mf(self, mode='last_converged'):
+    def _init_global_strain_mf(self, crve, material_state,
+                               mode='last_converged'):
         """Set clusters strains initial iterative guess.
 
         Parameters
         ----------
+        crve : CRVE
+            Cluster-Reduced Representative Volume Element.
+        material_state : MaterialState
+            CRVE material constitutive state at rewind state.
         mode : {'last_converged',}, default='last_converged'
             Strategy to set clusters incremental strains initial iterative
             guess.
@@ -1144,10 +1151,58 @@ class ASCA:
         global_strain_mf : numpy.ndarray (1d)
             Global vector of clusters strains stored in matricial form.
         """
+        # Set strain/stress components order according to problem strain
+        # formulation
+        if self._strain_formulation == 'infinitesimal':
+            comp_order = self._comp_order_sym
+        elif self._strain_formulation == 'finite':
+            comp_order = self._comp_order_nsym
+        else:
+            raise RuntimeError('Unknown problem strain formulation.')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Get material phases
+        material_phases = material_state.get_material_phases()
+        # Get clusters associated with each material phase
+        phase_clusters = crve.get_phase_clusters()
+        # Get total number of clusters
+        n_total_clusters = crve.get_n_total_clusters()
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Set clusters strain initial iterative guess associated with the last
+        # converged solution
         if mode == 'last_converged':
-            # Set initial iterative guess associated with the last converged
-            # solution
-            global_strain_mf = copy.deepcopy(self._global_strain_old_mf)
+            # Initialize initial iterative guess
+            global_strain_mf = np.zeros((n_total_clusters*len(comp_order)))
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Get last converged clusters state variables
+            clusters_state_old = material_state.get_clusters_state_old()
+            # Get last converged clusters deformation gradient
+            clusters_def_gradient_old_mf = \
+                material_state.get_clusters_def_gradient_old_mf()
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Initialize material cluster strain range indexes
+            i_init = 0
+            i_end = i_init + len(comp_order)
+            # Loop over material phases
+            for mat_phase in material_phases:
+                # Loop over material phase clusters
+                for cluster in phase_clusters[mat_phase]:
+                    # Get last converged material cluster infinitesimal strain
+                    # tensor (infinitesimal strains) or deformation gradient
+                    # (finite strains)
+                    if self._strain_formulation == 'infinitesimal':
+                        strain_old_mf = \
+                            clusters_state_old[str(cluster)]['strain_mf']
+                    else:
+                        strain_old_mf = \
+                            clusters_def_gradient_old_mf[str(cluster)]      
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~        
+                    # Assemble to initial iterative guess
+                    global_strain_mf[i_init:i_end] = strain_old_mf
+                    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    # Update cluster strain range indexes
+                    i_init = i_init + len(comp_order)
+                    i_end = i_init + len(comp_order)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         else:
             raise RuntimeError('Unavailable strategy to set clusters strains '
                                'initial iterative guess.')
