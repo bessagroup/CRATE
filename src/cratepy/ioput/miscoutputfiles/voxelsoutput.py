@@ -46,7 +46,8 @@ class VoxelsOutput:
     -------
     init_voxels_output_file(self, crve)
         Open output file and write file header.
-    write_voxels_output_file(self, n_dim, comp_order, crve, clusters_state)
+    write_voxels_output_file(self, n_dim, comp_order, crve, clusters_state, \
+                             clusters_def_gradient_mf)
         Write output file.
     rewind_file(self, rewind_inc)
         Rewind output file.
@@ -103,7 +104,7 @@ class VoxelsOutput:
         open(self._voxout_file_path, 'w').writelines(write_list)
     # -------------------------------------------------------------------------
     def write_voxels_output_file(self, n_dim, comp_order, crve,
-                                 clusters_state):
+                                 clusters_state, clusters_def_gradient_mf):
         """Write output file.
 
         Parameters
@@ -117,6 +118,9 @@ class VoxelsOutput:
         clusters_state : dict
             Material constitutive model state variables (item, dict) associated
             to each material cluster (key, str).
+        clusters_def_gradient_mf : dict
+            Deformation gradient (item, numpy.ndarray (1d)) associated with
+            each material cluster (key, str), stored in matricial form.
         """
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Instantiate factory of voxels arrays
@@ -138,8 +142,7 @@ class VoxelsOutput:
             outvar_n_dims = self._output_variables[i][1]
             # Get material-related output variable voxels array list
             array_vox_list = voxels_array_factory.build_voxels_array(
-                crve, outvar, clusters_state)
-
+                crve, outvar, clusters_state, clusters_def_gradient_mf)
             # Loop over material-related output variable dimensions
             for var_dim in range(outvar_n_dims):
                 # Store material-related output variable dimension in voxels
