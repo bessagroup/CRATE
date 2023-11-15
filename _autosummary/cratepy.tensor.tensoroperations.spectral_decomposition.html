@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cratepy.tensor.tensoroperations.spectral_decomposition &mdash; CRATE 1.0.4 documentation</title>
+  <title>cratepy.tensor.tensoroperations.spectral_decomposition &mdash; CRATE 1.0.5 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/readthedocs-custom.css" type="text/css" />
@@ -152,7 +152,7 @@
 <h1>cratepy.tensor.tensoroperations.spectral_decomposition<a class="headerlink" href="#cratepy-tensor-tensoroperations-spectral-decomposition" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="cratepy.tensor.tensoroperations.spectral_decomposition">
-<span class="sig-name descname"><span class="pre">spectral_decomposition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/tensor/tensoroperations.html#spectral_decomposition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.tensor.tensoroperations.spectral_decomposition" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">spectral_decomposition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_real_if_close</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/tensor/tensoroperations.html#spectral_decomposition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.tensor.tensoroperations.spectral_decomposition" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform spectral decomposition of symmetric second-order tensor.</p>
 <p>The computational implementation of the spectral decomposition follows the
 Appendix A of Computational Methods for Plasticity <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
@@ -167,8 +167,13 @@ Chichester, UK (see <a class="reference external" href="https://onlinelibrary.wi
 <hr class="docutils" />
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Second-order tensor (square array) whose eigenvalues and eigenvectors
-are computed.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Second-order tensor (square array) whose eigenvalues and eigenvectors
+are computed.</p></li>
+<li><p><strong>is_real_if_close</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>default=False</em>) – If True, then drop imaginary parts of eigenvalues and eigenvectors if
+these are close to zero (tolerance with respect to machine epsilon for
+input type) and convert to real type.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">

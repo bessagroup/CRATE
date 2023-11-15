@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cratepy.tensor.tensoroperations &mdash; CRATE 1.0.4 documentation</title>
+  <title>cratepy.tensor.tensoroperations &mdash; CRATE 1.0.5 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
@@ -316,7 +316,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                                        Spectral decomposition</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="spectral_decomposition"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.tensoroperations.spectral_decomposition.html#cratepy.tensor.tensoroperations.spectral_decomposition">[docs]</a><span class="k">def</span> <span class="nf">spectral_decomposition</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<div class="viewcode-block" id="spectral_decomposition"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.tensoroperations.spectral_decomposition.html#cratepy.tensor.tensoroperations.spectral_decomposition">[docs]</a><span class="k">def</span> <span class="nf">spectral_decomposition</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">is_real_if_close</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform spectral decomposition of symmetric second-order tensor.</span>
 
 <span class="sd">    The computational implementation of the spectral decomposition follows the</span>
@@ -334,6 +334,10 @@
 <span class="sd">    x : numpy.ndarray (2d)</span>
 <span class="sd">        Second-order tensor (square array) whose eigenvalues and eigenvectors</span>
 <span class="sd">        are computed.</span>
+<span class="sd">    is_real_if_close : bool, default=False</span>
+<span class="sd">        If True, then drop imaginary parts of eigenvalues and eigenvectors if</span>
+<span class="sd">        these are close to zero (tolerance with respect to machine epsilon for</span>
+<span class="sd">        input type) and convert to real type.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -358,6 +362,12 @@
     <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
     <span class="c1"># Perform spectral decomposition</span>
     <span class="n">eigenvalues</span><span class="p">,</span> <span class="n">eigenvectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+    <span class="c1"># If imaginary parts are close to zero (tolerance with respect to machine</span>
+    <span class="c1"># epsilon for input type), then drop imaginary part and convert to real</span>
+    <span class="k">if</span> <span class="n">is_real_if_close</span><span class="p">:</span>
+        <span class="n">eigenvalues</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real_if_close</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)</span>
+        <span class="n">eigenvectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real_if_close</span><span class="p">(</span><span class="n">eigenvectors</span><span class="p">)</span>
     <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
     <span class="c1"># Get eigenvalues sorted in descending order</span>
     <span class="n">sort_idxs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -513,8 +523,8 @@
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown scalar function.&#39;</span><span class="p">)</span>
     <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
     <span class="c1"># Perform spectral decomposition</span>
-    <span class="n">eigenvalues</span><span class="p">,</span> <span class="n">eigenvectors</span><span class="p">,</span> <span class="n">eig_multiplicity</span><span class="p">,</span> <span class="n">eigenprojections</span> <span class="o">=</span> \
-        <span class="n">spectral_decomposition</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">eigenvalues</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">eigenprojections</span> <span class="o">=</span> \
+        <span class="n">spectral_decomposition</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">is_real_if_close</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
     <span class="c1"># Initialize isotropic symmetric tensor-valued function</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
@@ -572,8 +582,8 @@
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown scalar function.&#39;</span><span class="p">)</span>
     <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
     <span class="c1"># Perform spectral decomposition</span>
-    <span class="n">eigenvalues</span><span class="p">,</span> <span class="n">eigenvectors</span><span class="p">,</span> <span class="n">eig_multiplicity</span><span class="p">,</span> <span class="n">eigenprojections</span> <span class="o">=</span> \
-        <span class="n">spectral_decomposition</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">eigenvalues</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">eig_multiplicity</span><span class="p">,</span> <span class="n">eigenprojections</span> <span class="o">=</span> \
+        <span class="n">spectral_decomposition</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">is_real_if_close</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="c1"># Compute number of distinct eigenvalues</span>
     <span class="n">n_eig_distinct</span> <span class="o">=</span> <span class="n">n_dim</span> <span class="o">-</span> \
         <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([</span><span class="mi">1</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">eig_multiplicity</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">val</span> <span class="o">==</span> <span class="mi">0</span><span class="p">])</span>

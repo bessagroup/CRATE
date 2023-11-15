@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cratepy.clustering.clusteringdata &mdash; CRATE 1.0.4 documentation</title>
+  <title>cratepy.clustering.clusteringdata &mdash; CRATE 1.0.5 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
@@ -472,7 +472,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Perform spectral decomposition of material logarithmic strain tensor</span>
     <span class="n">log_eigenvalues</span><span class="p">,</span> <span class="n">log_eigenvectors</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> \
-        <span class="n">top</span><span class="o">.</span><span class="n">spectral_decomposition</span><span class="p">(</span><span class="n">log_strain</span><span class="p">)</span>
+        <span class="n">top</span><span class="o">.</span><span class="n">spectral_decomposition</span><span class="p">(</span><span class="n">log_strain</span><span class="p">,</span> <span class="n">is_real_if_close</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="c1"># Compute deformation gradient eigenvalues</span>
     <span class="n">dg_eigenvalues</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_eigenvalues</span><span class="p">)</span>
     <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
