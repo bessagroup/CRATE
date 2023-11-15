@@ -367,7 +367,7 @@ def def_gradient_from_log_strain(log_strain):
     """
     # Perform spectral decomposition of material logarithmic strain tensor
     log_eigenvalues, log_eigenvectors, _, _ = \
-        top.spectral_decomposition(log_strain)
+        top.spectral_decomposition(log_strain, is_real_if_close=True)
     # Compute deformation gradient eigenvalues
     dg_eigenvalues = np.exp(log_eigenvalues)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
