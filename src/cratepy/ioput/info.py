@@ -93,7 +93,7 @@ def displayinfo(code, *args, **kwargs):
     elif code == '0':
         arguments = \
             ['CRATE - Clustering-based Nonlinear Analysis of Materials',
-             'Created by Bernardo P. Ferreira', 'Release 1.0.4 (Oct 2023)'] \
+             'Created by Bernardo P. Ferreira', 'Release 1.0.5 (Oct 2023)'] \
             + 2*[args[0], ] + list(args[1:3])
         info = tuple(arguments)
         template = '\n' + colorama.Fore.WHITE + tilde_line \
