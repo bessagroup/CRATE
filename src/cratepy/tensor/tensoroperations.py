@@ -211,7 +211,7 @@ def get_id_operators(n_dim):
 #
 #                                                        Spectral decomposition
 # =============================================================================
-def spectral_decomposition(x):
+def spectral_decomposition(x, is_real_if_close=False):
     """Perform spectral decomposition of symmetric second-order tensor.
 
     The computational implementation of the spectral decomposition follows the
@@ -229,6 +229,10 @@ def spectral_decomposition(x):
     x : numpy.ndarray (2d)
         Second-order tensor (square array) whose eigenvalues and eigenvectors
         are computed.
+    is_real_if_close : bool, default=False
+        If True, then drop imaginary parts of eigenvalues and eigenvectors if
+        these are close to zero (tolerance with respect to machine epsilon for
+        input type) and convert to real type.
 
     Returns
     -------
@@ -253,6 +257,12 @@ def spectral_decomposition(x):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Perform spectral decomposition
     eigenvalues, eigenvectors = np.linalg.eig(x)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # If imaginary parts are close to zero (tolerance with respect to machine
+    # epsilon for input type), then drop imaginary part and convert to real
+    if is_real_if_close:
+        eigenvalues = np.real_if_close(eigenvalues)
+        eigenvectors = np.real_if_close(eigenvectors)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Get eigenvalues sorted in descending order
     sort_idxs = np.argsort(eigenvalues)[::-1]
@@ -408,8 +418,8 @@ def isotropic_tensor(mode, x):
         raise RuntimeError('Unknown scalar function.')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Perform spectral decomposition
-    eigenvalues, eigenvectors, eig_multiplicity, eigenprojections = \
-        spectral_decomposition(x)
+    eigenvalues, _, _, eigenprojections = \
+        spectral_decomposition(x, is_real_if_close=True)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Initialize isotropic symmetric tensor-valued function
     y = np.zeros(x.shape)
@@ -467,8 +477,8 @@ def derivative_isotropic_tensor(mode, x):
         raise RuntimeError('Unknown scalar function.')
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Perform spectral decomposition
-    eigenvalues, eigenvectors, eig_multiplicity, eigenprojections = \
-        spectral_decomposition(x)
+    eigenvalues, _, eig_multiplicity, eigenprojections = \
+        spectral_decomposition(x, is_real_if_close=True)
     # Compute number of distinct eigenvalues
     n_eig_distinct = n_dim - \
         np.sum([1 for key, val in eig_multiplicity.items() if val == 0])
