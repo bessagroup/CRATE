@@ -494,6 +494,8 @@
 #       parameters. Default is 'init_eff_tangent', being the elastic properties
 #       estimated from the effective tangent modulus computed on the
 #       offline-stage (required set of orthogonal macroscale strain loadings).
+#       When using the finite strains SCS, the 'beta' parameter (defaults to
+#       0.25) can also be passed into the parameter list.
 # -----------------------------------------------------------------------------
 [insert here]
 
