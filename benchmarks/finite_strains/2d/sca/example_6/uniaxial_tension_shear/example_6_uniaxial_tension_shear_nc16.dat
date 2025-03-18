@@ -19,8 +19,7 @@
 #
 # The micro-scale equilibrium problem is solved with the finite strain
 # extension of the Self-Consistent Clustering Analysis (SCA) compatible with
-# multiplicative kinematics, keeping the homogeneous (fictitious) reference
-# material properties constant.
+# multiplicative kinematics.
 #
 # =============================================================================
 
@@ -299,7 +298,7 @@ Discretization_File
 Self_Consistent_Scheme regression 3
 E_init init_eff_tangent
 v_init init_eff_tangent
-scheme eig
+beta 0.25
 
 
 #                                       Clustering data DNS solution method [O]
