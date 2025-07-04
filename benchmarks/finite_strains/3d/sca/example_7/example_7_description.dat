@@ -1,0 +1,34 @@
+#
+# Example:
+#
+# 3D finite strains simulation of a 2-phase heterogeneous material
+# characterized by randomly distributed spherical particles
+# (volume fraction = 20%) embedded in a matrix (volume fraction = 80%).
+#
+# The matrix material phase constitutive behavior is governed by the von Mises
+# isotropic elasto-plastic constitutive model with isotropic hardening, whereas
+# the particle's material phase is governed by the isotropic linear elastic
+# constitutive model.
+#
+# The 3D heterogeneous material RVE is subjected to two different macro-scale
+# strain and stress-driven monotonic loading paths:
+#
+# - Simple shear
+# - Uniaxial tension
+# - Combined uniaxial tension - shear
+#
+# The micro-scale equilibrium problem is solved with the finite strain
+# extension of the Self-Consistent Clustering Analysis (SCA) compatible with
+# multiplicative kinematics, where the homogeneous (fictitious) reference
+# material properties are estimated via the self-consistent scheme developed in
+# the reference paper. This study showcases the accuracy of the SCA method
+# under finite strains with a self-consistent approach. The results are
+# compared with the solution obtained by means of the Finite Element Method
+# (DNS solution).
+#
+#
+# Source: Paper
+#
+# Ferreira, B.P., Cardoso Coelho, R. P., Andrade Pires, F. M., Bessa, M. A.
+# (2025). Finite Strain Self-consistent Clustering Analysis under
+# Multiplicative Kinematics. Submitted

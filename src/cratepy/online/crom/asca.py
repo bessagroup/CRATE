@@ -477,12 +477,17 @@ class ASCA:
                 scs_init_properties = {}
                 scs_init_properties['E'] = self._scs_parameters['E_init']
                 scs_init_properties['v'] = self._scs_parameters['v_init']
+        # Set up beta parameter (for finite strain SCS)
+        if self._scs_parameters is not None and 'beta' in self._scs_parameters:
+            scs_init_properties['beta'] = self._scs_parameters['beta']
         # Set initial value of elastic reference material properties
         ref_material.init_material_properties(
             material_state.get_material_phases(),
             material_state.get_material_phases_properties(),
             material_state.get_material_phases_vf(),
-            properties=scs_init_properties)
+            properties=scs_init_properties,
+            scs_parameters=self._scs_parameters,
+        )
         # Initialize reference material elastic properties locking flag
         if self._self_consistent_scheme == 'none':
             is_lock_prop_ref = True
@@ -2983,7 +2988,9 @@ class ElasticReferenceMaterial:
     # -------------------------------------------------------------------------
     def init_material_properties(self, material_phases,
                                  material_phases_properties,
-                                 material_phases_vf, properties=None):
+                                 material_phases_vf,
+                                 properties=None,
+                                 scs_parameters=None):
         """Set initial guess of elastic reference material properties.
 
         Parameters
@@ -3001,6 +3008,8 @@ class ElasticReferenceMaterial:
             properties (key, str). Expecting Young's modulus ('E') and
             Poisson's coefficient ('v') for an isotropic elastic reference
             material.
+        scs_parameters : dict, default=None
+            Self-consistent scheme parameters.
         """
         if properties is None:
             # If a initial guess of the elastic reference material properties
@@ -3016,6 +3025,8 @@ class ElasticReferenceMaterial:
             # Set initial guess of elastic reference material properties
             E = properties['E']
             v = properties['v']
+        # Read the beta parameter for the finite-strain self-consistent scheme
+        self.beta = float(scs_parameters.get('beta', 0.25))
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Initialize elastic reference material properties
         self._material_properties_init = {'E': E, 'v': v}
@@ -3176,9 +3187,6 @@ class ElasticReferenceMaterial:
             inc_strain_mf = strain_mf - strain_old_mf
             # Compute incremental homogenized Cauchy stress tensor
             inc_stress_mf = stress_mf - stress_old_mf
-        else:
-            raise RuntimeError('A suitable self-consistent scheme has not '
-                               'been developed under finite strains yet.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute elastic reference material properties based on the
         # regression-based self-consistent scheme
@@ -3191,6 +3199,14 @@ class ElasticReferenceMaterial:
                     self._strain_formulation, self._problem_type,
                     copy.deepcopy(self._material_properties_old),
                     inc_strain_mf, inc_stress_mf)
+            elif self._strain_formulation == 'finite':
+                ref_optimizer = FiniteStrainRegressionSCS(
+                    self._problem_type,
+                    strain_mf,
+                    strain_old_mf,
+                    eff_tangent_mf,
+                    self.beta,
+                )
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Compute elastic reference material properties
         E, v = ref_optimizer.compute_reference_properties()
@@ -3402,10 +3418,8 @@ class ElasticReferenceMaterial:
         available_scs : tuple[str]
             Available self-consistent schemes.
         """
-        if strain_formulation == 'infinitesimal':
+        if strain_formulation in ('infinitesimal', 'finite'):
             available_scs = ('none', 'regression')
-        elif strain_formulation == 'finite':
-            available_scs = ('none',)
         else:
             raise RuntimeError('Unknown problem strain formulation.')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -3699,3 +3713,102 @@ class InfinitesimalRegressionSCS(ReferenceMaterialOptimizer):
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Return
         return E, v
+
+
+class FiniteStrainRegressionSCS(ReferenceMaterialOptimizer):
+    """Finite strains format regression-based self-consistent scheme."""
+    def __init__(
+        self,
+        problem_type,
+        strain_mf,
+        strain_old_mf,
+        homo_tangent_mf,
+        beta,
+        is_symmetrized=False,
+    ):
+        """Constructor.
+
+        Parameters
+        ----------
+        problem_type : int
+            Problem type: 2D plane strain (1), 2D plane stress (2),
+            2D axisymmetric (3) and 3D (4).
+        strain_mf : numpy.ndarray (1d)
+            Total homogenized strain (matricial form).
+        strain_old_mf : numpy.ndarray (1d)
+            Last total homogenized strain (matricial form).
+        homo_tangent_mf : numpy.ndarray (2d)
+            Homogenised material tangent (matricial form).
+        beta : float
+            Mixing parameter for the self-consistent scheme.
+        is_symmetrized : bool, default=False
+            True if a symmetric alternative stress-strain conjugate pair is
+            adopted in the finite strains regression-based self-consistent
+            scheme, False otherwise.
+        """
+        self.beta = beta
+        self._strain_mf = copy.deepcopy(strain_mf)
+        self._strain_old_mf = copy.deepcopy(strain_old_mf)
+        self._homo_tangent_mf = copy.deepcopy(homo_tangent_mf)
+        # Get problem type parameters
+        n_dim, comp_order_sym, comp_order_nsym = \
+            mop.get_problem_type_parameters(problem_type)
+        self._n_dim = n_dim
+        self._c_ord = comp_order_sym if is_symmetrized else comp_order_nsym
+    # -------------------------------------------------------------------------
+    def compute_reference_properties(self):
+        """Compute elastic reference material properties.
+
+        Returns
+        -------
+        E : float
+            Young modulus of elastic reference material.
+        v : float
+            Poisson ratio of elastic reference material.
+        """
+        # Get tensors from matricial forms
+        strain = mop.get_tensor_from_mf(
+            self._strain_mf,
+            self._n_dim,
+            self._c_ord,
+        )
+        strain_old = mop.get_tensor_from_mf(
+            self._strain_old_mf,
+            self._n_dim,
+            self._c_ord,
+        )
+        homo_tangent = mop.get_tensor_from_mf(
+            self._homo_tangent_mf,
+            self._n_dim,
+            self._c_ord,
+        )
+        #
+        # Compute auxiliary quantities
+        cur_strain = strain - np.eye(strain.shape[0])
+        delta_strain = strain - strain_old
+        #
+        # Step 1: evaluate the solution of the tangent-based problem
+        tang_matrix = np.array([[self._n_dim * self._n_dim, 2 * self._n_dim],
+                                [self._n_dim, 2 * self._n_dim * self._n_dim]])
+        tang_rhs = np.array([np.einsum('iikk', homo_tangent),
+                             np.einsum('ijij', homo_tangent)])
+        lam, miu = np.linalg.solve(tang_matrix, tang_rhs)
+        E_tang, nu = ElasticReferenceMaterial.technical_from_lame(lam, miu)
+        #
+        # Step 2: solve the optimisation of the energy difference
+        numerator = (1 + nu) * np.einsum(
+            'ij,ij',
+            np.einsum('ijkl,kl', homo_tangent, cur_strain),
+            delta_strain,
+        )
+        denominator = (
+            nu * np.trace(cur_strain) * np.trace(delta_strain) / (1 - 2 * nu)
+            + np.einsum('ij,ij', cur_strain, delta_strain)
+        )
+        E_ener = numerator / denominator
+        #
+        # Step 3: establish the bounds and interpolate using beta
+        E_min = min(E_ener, E_tang)
+        E_max = max(E_ener, E_tang)
+        E = self.beta * E_max + (1 - self.beta) * E_min
+        return E, nu

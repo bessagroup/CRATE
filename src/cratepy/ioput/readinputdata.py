@@ -165,12 +165,8 @@ def read_input_data_file(input_file, dirs_dict, is_minimize_output=False):
                                               keyword, strain_formulation)
     else:
         # Set default self-consistent scheme and associated parameters
-        if strain_formulation == 'infinitesimal':
+        if strain_formulation in ('infinitesimal', 'finite'):
             self_consistent_scheme = 'regression'
-            scs_parameters = {'E_init': 'init_eff_tangent',
-                              'v_init': 'init_eff_tangent'}
-        elif strain_formulation == 'finite':
-            self_consistent_scheme = 'none'
             scs_parameters = {'E_init': 'init_eff_tangent',
                               'v_init': 'init_eff_tangent'}
         else:

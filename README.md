@@ -92,6 +92,8 @@ Please refer to CRATE's [Code of Conduct](https://github.com/bessagroup/CRATE/bl
 
 * Bernardo P. Ferreira acknowledges the pioneering development of clustering-based reduced-order models by [Zeliang Liu](https://zeliangliu.com/), namely by proposing the [Self-Consistent Clustering Analysis (SCA)](https://www.sciencedirect.com/science/article/pii/S0045782516301499), that established the conceptual framework and foundations for the development of CRATE.
 
+* Bernardo P. Ferreira is thankful to [Rui Coelho](https://github.com/ruicoelhopedro) for his essential contribution to developing a self-consistent scheme under finite strains and a corresponding set of comprehensive benchmarks. If you're interested in chess, you might enjoy exploring Rui's chess engine called [Pawn](https://github.com/ruicoelhopedro/pawn)!
+
 
 # License
 
