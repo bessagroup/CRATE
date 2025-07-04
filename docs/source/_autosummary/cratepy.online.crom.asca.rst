@@ -1,4 +1,4 @@
-cratepy.online.crom.asca
+﻿cratepy.online.crom.asca
 ========================
 
 .. automodule:: cratepy.online.crom.asca
@@ -33,6 +33,7 @@ cratepy.online.crom.asca
       ClusteringAdaptivityOutput
       EffTanOutput
       ElasticReferenceMaterial
+      FiniteStrainRegressionSCS
       HomResOutput
       IncrementRewinder
       InfinitesimalRegressionSCS

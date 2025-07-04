@@ -23,7 +23,7 @@ project = 'CRATE'
 author = 'Bernardo Ferreira'
 copyright = '2020, Bernardo Ferreira'
 version = '1.0'
-release = '1.0.5'
+release = '1.0.6'
 
 
 # -- General configuration ----------------------------------------------------
