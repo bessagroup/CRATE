@@ -82,9 +82,6 @@ You are also welcome to post there any **questions**, **comments** or **suggesti
 
 Please refer to CRATE's [Code of Conduct](https://github.com/bessagroup/CRATE/blob/master/CODE_OF_CONDUCT.md).
 
->**Note:**  
->Bear in mind that CRATE is a program developed in an academic environment and that I'm currently the only developer as a side project. This means that I'll do my best to address all the issues, questions and suggestions, but do expect a reasonable time frame! ~ *Bernardo P. Ferreira*
-
 
 # Credits
 
