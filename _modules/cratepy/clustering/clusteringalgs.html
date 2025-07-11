@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cratepy.clustering.clusteringalgs &mdash; CRATE 1.0.5 documentation</title>
+  <title>cratepy.clustering.clusteringalgs &mdash; CRATE 1.0.6 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
@@ -130,11 +130,11 @@
 <span class="c1">#                                                                       Modules</span>
 <span class="c1"># =============================================================================</span>
 <span class="c1"># Standard</span>
-<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
 <span class="c1"># Third-party</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">sklearn.cluster</span> <span class="k">as</span> <span class="nn">skclst</span>
-<span class="kn">import</span> <span class="nn">scipy.cluster.hierarchy</span> <span class="k">as</span> <span class="nn">sciclst</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sklearn.cluster</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">skclst</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.cluster.hierarchy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sciclst</span>
 <span class="c1">#</span>
 <span class="c1">#                                                          Authorship &amp; Credits</span>
 <span class="c1"># =============================================================================</span>
@@ -147,7 +147,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                                              Cluster Analysis</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="ClusterAnalysis"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.ClusterAnalysis.html#cratepy.clustering.clusteringalgs.ClusterAnalysis">[docs]</a><span class="k">class</span> <span class="nc">ClusterAnalysis</span><span class="p">:</span>
+<div class="viewcode-block" id="ClusterAnalysis"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.ClusterAnalysis.html#cratepy.clustering.clusteringalgs.ClusterAnalysis">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ClusterAnalysis</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Interface to perform a cluster analysis.</span>
 
 <span class="sd">    Attributes</span>
@@ -165,11 +165,11 @@
                                 <span class="s1">&#39;2&#39;</span><span class="p">:</span> <span class="s1">&#39;Mini-Batch K-Means (scikit-learn)&#39;</span><span class="p">,</span>
                                 <span class="s1">&#39;3&#39;</span><span class="p">:</span> <span class="s1">&#39;Agglomerative (scipy)&#39;</span><span class="p">,</span> <span class="p">}</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ClusterAnalysis.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.ClusterAnalysis.html#cratepy.clustering.clusteringalgs.ClusterAnalysis.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ClusterAnalysis.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.ClusterAnalysis.html#cratepy.clustering.clusteringalgs.ClusterAnalysis.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ClusterAnalysis.get_fitted_estimator"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.ClusterAnalysis.html#cratepy.clustering.clusteringalgs.ClusterAnalysis.get_fitted_estimator">[docs]</a>    <span class="k">def</span> <span class="nf">get_fitted_estimator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">,</span> <span class="n">clust_alg_id</span><span class="p">,</span> <span class="n">n_clusters</span><span class="p">):</span>
+<div class="viewcode-block" id="ClusterAnalysis.get_fitted_estimator"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.ClusterAnalysis.html#cratepy.clustering.clusteringalgs.ClusterAnalysis.get_fitted_estimator">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_fitted_estimator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">,</span> <span class="n">clust_alg_id</span><span class="p">,</span> <span class="n">n_clusters</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get cluster labels and clustering fitted estimator.</span>
 
 <span class="sd">        Parameters</span>
@@ -247,7 +247,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                               Interface: Clustering algorithm</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="ClusteringAlgorithm"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.ClusteringAlgorithm.html#cratepy.clustering.clusteringalgs.ClusteringAlgorithm">[docs]</a><span class="k">class</span> <span class="nc">ClusteringAlgorithm</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<div class="viewcode-block" id="ClusteringAlgorithm"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.ClusteringAlgorithm.html#cratepy.clustering.clusteringalgs.ClusteringAlgorithm">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ClusteringAlgorithm</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Clustering algorithm interface.</span>
 
 <span class="sd">    Methods</span>
@@ -257,12 +257,12 @@
 <span class="sd">        dataset item.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="ClusteringAlgorithm.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.ClusteringAlgorithm.html#cratepy.clustering.clusteringalgs.ClusteringAlgorithm.__init__">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="ClusteringAlgorithm.perform_clustering"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.ClusteringAlgorithm.html#cratepy.clustering.clusteringalgs.ClusteringAlgorithm.perform_clustering">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">perform_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">perform_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform cluster analysis and get cluster label of each dataset item.</span>
 
 <span class="sd">        Parameters</span>
@@ -278,7 +278,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div></div>
 <span class="c1"># -----------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="AgglomerativeAlgorithm"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.AgglomerativeAlgorithm.html#cratepy.clustering.clusteringalgs.AgglomerativeAlgorithm">[docs]</a><span class="k">class</span> <span class="nc">AgglomerativeAlgorithm</span><span class="p">(</span><span class="n">ClusteringAlgorithm</span><span class="p">):</span>
+<div class="viewcode-block" id="AgglomerativeAlgorithm"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.AgglomerativeAlgorithm.html#cratepy.clustering.clusteringalgs.AgglomerativeAlgorithm">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">AgglomerativeAlgorithm</span><span class="p">(</span><span class="n">ClusteringAlgorithm</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Hierarchical agglomerative interface.</span>
 
 <span class="sd">    Methods</span>
@@ -287,7 +287,7 @@
 <span class="sd">        *abstract*: Get hierarchical agglomerative clustering linkage matrix.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="AgglomerativeAlgorithm.get_linkage_matrix"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.AgglomerativeAlgorithm.html#cratepy.clustering.clusteringalgs.AgglomerativeAlgorithm.get_linkage_matrix">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">get_linkage_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_linkage_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get hierarchical agglomerative clustering linkage matrix.</span>
 
 <span class="sd">        Returns</span>
@@ -312,7 +312,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                                         Clustering algorithms</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="KMeansSK"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.KMeansSK.html#cratepy.clustering.clusteringalgs.KMeansSK">[docs]</a><span class="k">class</span> <span class="nc">KMeansSK</span><span class="p">(</span><span class="n">ClusteringAlgorithm</span><span class="p">):</span>
+<div class="viewcode-block" id="KMeansSK"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.KMeansSK.html#cratepy.clustering.clusteringalgs.KMeansSK">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">KMeansSK</span><span class="p">(</span><span class="n">ClusteringAlgorithm</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;K-Means clustering algorithm (wrapper).</span>
 
 <span class="sd">    Documentation: see `here &lt;https://scikit-learn.org/stable/modules/</span>
@@ -323,7 +323,7 @@
 <span class="sd">    perform_clustering(self, data_matrix):</span>
 <span class="sd">        Perform cluster analysis and get cluster label of each dataset item.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="KMeansSK.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.KMeansSK.html#cratepy.clustering.clusteringalgs.KMeansSK.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="s1">&#39;k-means++&#39;</span><span class="p">,</span> <span class="n">n_init</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span>
+<div class="viewcode-block" id="KMeansSK.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.KMeansSK.html#cratepy.clustering.clusteringalgs.KMeansSK.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="s1">&#39;k-means++&#39;</span><span class="p">,</span> <span class="n">n_init</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span>
                  <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;lloyd&#39;</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
 
@@ -356,7 +356,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_random_state</span> <span class="o">=</span> <span class="n">random_state</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_algorithm</span> <span class="o">=</span> <span class="n">algorithm</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="KMeansSK.perform_clustering"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.KMeansSK.html#cratepy.clustering.clusteringalgs.KMeansSK.perform_clustering">[docs]</a>    <span class="k">def</span> <span class="nf">perform_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">):</span>
+<div class="viewcode-block" id="KMeansSK.perform_clustering"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.KMeansSK.html#cratepy.clustering.clusteringalgs.KMeansSK.perform_clustering">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">perform_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform cluster analysis and get cluster label of each dataset item.</span>
 
 <span class="sd">        Parameters</span>
@@ -384,7 +384,7 @@
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="k">return</span> <span class="n">cluster_labels</span></div></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="MiniBatchKMeansSK"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.MiniBatchKMeansSK.html#cratepy.clustering.clusteringalgs.MiniBatchKMeansSK">[docs]</a><span class="k">class</span> <span class="nc">MiniBatchKMeansSK</span><span class="p">(</span><span class="n">ClusteringAlgorithm</span><span class="p">):</span>
+<div class="viewcode-block" id="MiniBatchKMeansSK"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.MiniBatchKMeansSK.html#cratepy.clustering.clusteringalgs.MiniBatchKMeansSK">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">MiniBatchKMeansSK</span><span class="p">(</span><span class="n">ClusteringAlgorithm</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Mini-Batch K-Means clustering algorithm (wrapper).</span>
 
 <span class="sd">    Documentation: see `here &lt;https://scikit-learn.org/stable/modules/</span>
@@ -401,7 +401,7 @@
 <span class="sd">    The Mini-Batch K-Means clustering algorithm is taken from scikit-learn</span>
 <span class="sd">    (https://scikit-learn.org). Further information can be found in there.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="MiniBatchKMeansSK.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.MiniBatchKMeansSK.html#cratepy.clustering.clusteringalgs.MiniBatchKMeansSK.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="s1">&#39;k-means++&#39;</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+<div class="viewcode-block" id="MiniBatchKMeansSK.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.MiniBatchKMeansSK.html#cratepy.clustering.clusteringalgs.MiniBatchKMeansSK.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="s1">&#39;k-means++&#39;</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
                  <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_no_improvement</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
                  <span class="n">init_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_init</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">reassignment_ratio</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
                  <span class="n">n_clusters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -445,7 +445,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_init_size</span> <span class="o">=</span> <span class="n">init_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reassignment_ratio</span> <span class="o">=</span> <span class="n">reassignment_ratio</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MiniBatchKMeansSK.perform_clustering"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.MiniBatchKMeansSK.html#cratepy.clustering.clusteringalgs.MiniBatchKMeansSK.perform_clustering">[docs]</a>    <span class="k">def</span> <span class="nf">perform_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">):</span>
+<div class="viewcode-block" id="MiniBatchKMeansSK.perform_clustering"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.MiniBatchKMeansSK.html#cratepy.clustering.clusteringalgs.MiniBatchKMeansSK.perform_clustering">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">perform_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform cluster analysis and get cluster label of each dataset item.</span>
 
 <span class="sd">        Parameters</span>
@@ -473,7 +473,7 @@
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="k">return</span> <span class="n">cluster_labels</span></div></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="AgglomerativeSP"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.AgglomerativeSP.html#cratepy.clustering.clusteringalgs.AgglomerativeSP">[docs]</a><span class="k">class</span> <span class="nc">AgglomerativeSP</span><span class="p">(</span><span class="n">AgglomerativeAlgorithm</span><span class="p">):</span>
+<div class="viewcode-block" id="AgglomerativeSP"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.AgglomerativeSP.html#cratepy.clustering.clusteringalgs.AgglomerativeSP">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">AgglomerativeSP</span><span class="p">(</span><span class="n">AgglomerativeAlgorithm</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Agglomerative clustering algorithm (wrapper).</span>
 
 <span class="sd">    Documentation: see `here &lt;https://docs.scipy.org/doc/scipy/reference/</span>
@@ -494,7 +494,7 @@
 <span class="sd">        original dataset items. All cluster indices j &gt;= n refer to the</span>
 <span class="sd">        cluster formed in Z[j-n, :].</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="AgglomerativeSP.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.AgglomerativeSP.html#cratepy.clustering.clusteringalgs.AgglomerativeSP.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;ward&#39;</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;euclidean&#39;</span><span class="p">,</span>
+<div class="viewcode-block" id="AgglomerativeSP.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.AgglomerativeSP.html#cratepy.clustering.clusteringalgs.AgglomerativeSP.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;ward&#39;</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;euclidean&#39;</span><span class="p">,</span>
                  <span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;maxclust&#39;</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
 
@@ -526,7 +526,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_criterion</span> <span class="o">=</span> <span class="n">criterion</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_linkage_matrix</span> <span class="o">=</span> <span class="kc">None</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="AgglomerativeSP.perform_clustering"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.AgglomerativeSP.html#cratepy.clustering.clusteringalgs.AgglomerativeSP.perform_clustering">[docs]</a>    <span class="k">def</span> <span class="nf">perform_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">):</span>
+<div class="viewcode-block" id="AgglomerativeSP.perform_clustering"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.AgglomerativeSP.html#cratepy.clustering.clusteringalgs.AgglomerativeSP.perform_clustering">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">perform_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform cluster analysis and get cluster label of each dataset item.</span>
 
 <span class="sd">        Parameters</span>
@@ -553,7 +553,7 @@
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="k">return</span> <span class="n">cluster_labels</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="AgglomerativeSP.get_linkage_matrix"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.AgglomerativeSP.html#cratepy.clustering.clusteringalgs.AgglomerativeSP.get_linkage_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">get_linkage_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AgglomerativeSP.get_linkage_matrix"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringalgs.AgglomerativeSP.html#cratepy.clustering.clusteringalgs.AgglomerativeSP.get_linkage_matrix">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_linkage_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get hierarchical agglomerative clustering linkage matrix.</span>
 
 <span class="sd">        Returns</span>

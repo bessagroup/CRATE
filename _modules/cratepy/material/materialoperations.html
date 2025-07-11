@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cratepy.material.materialoperations &mdash; CRATE 1.0.5 documentation</title>
+  <title>cratepy.material.materialoperations &mdash; CRATE 1.0.6 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
@@ -146,10 +146,10 @@
 <span class="c1">#                                                                       Modules</span>
 <span class="c1"># =============================================================================</span>
 <span class="c1"># Third-party</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="c1"># Local</span>
-<span class="kn">import</span> <span class="nn">tensor.matrixoperations</span> <span class="k">as</span> <span class="nn">mop</span>
-<span class="kn">import</span> <span class="nn">tensor.tensoroperations</span> <span class="k">as</span> <span class="nn">top</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensor.matrixoperations</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mop</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensor.tensoroperations</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">top</span>
 <span class="c1">#</span>
 <span class="c1">#                                                          Authorship &amp; Credits</span>
 <span class="c1"># =============================================================================</span>
@@ -160,7 +160,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                                               Rotation tensor</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="compute_rotation_tensor"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.compute_rotation_tensor.html#cratepy.material.materialoperations.compute_rotation_tensor">[docs]</a><span class="k">def</span> <span class="nf">compute_rotation_tensor</span><span class="p">(</span><span class="n">def_gradient</span><span class="p">):</span>
+<div class="viewcode-block" id="compute_rotation_tensor"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.compute_rotation_tensor.html#cratepy.material.materialoperations.compute_rotation_tensor">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">compute_rotation_tensor</span><span class="p">(</span><span class="n">def_gradient</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Rotation tensor from polar decomposition of deformation gradient.</span>
 
 <span class="sd">    .. math::</span>
@@ -194,7 +194,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                                    Strain tensors conversions</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="compute_material_log_strain"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.compute_material_log_strain.html#cratepy.material.materialoperations.compute_material_log_strain">[docs]</a><span class="k">def</span> <span class="nf">compute_material_log_strain</span><span class="p">(</span><span class="n">def_gradient</span><span class="p">):</span>
+<div class="viewcode-block" id="compute_material_log_strain"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.compute_material_log_strain.html#cratepy.material.materialoperations.compute_material_log_strain">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">compute_material_log_strain</span><span class="p">(</span><span class="n">def_gradient</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Material logarithmic strain from deformation gradient.</span>
 
 <span class="sd">    .. math::</span>
@@ -224,7 +224,7 @@
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">material_log_strain</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="compute_spatial_log_strain"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.compute_spatial_log_strain.html#cratepy.material.materialoperations.compute_spatial_log_strain">[docs]</a><span class="k">def</span> <span class="nf">compute_spatial_log_strain</span><span class="p">(</span><span class="n">def_gradient</span><span class="p">):</span>
+<div class="viewcode-block" id="compute_spatial_log_strain"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.compute_spatial_log_strain.html#cratepy.material.materialoperations.compute_spatial_log_strain">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">compute_spatial_log_strain</span><span class="p">(</span><span class="n">def_gradient</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Spatial logarithmic strain from deformation gradient.</span>
 
 <span class="sd">    .. math::</span>
@@ -256,7 +256,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                                    Stress tensors conversions</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="cauchy_from_kirchhoff"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.cauchy_from_kirchhoff.html#cratepy.material.materialoperations.cauchy_from_kirchhoff">[docs]</a><span class="k">def</span> <span class="nf">cauchy_from_kirchhoff</span><span class="p">(</span><span class="n">def_gradient</span><span class="p">,</span> <span class="n">kirchhoff_stress</span><span class="p">):</span>
+<div class="viewcode-block" id="cauchy_from_kirchhoff"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.cauchy_from_kirchhoff.html#cratepy.material.materialoperations.cauchy_from_kirchhoff">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">cauchy_from_kirchhoff</span><span class="p">(</span><span class="n">def_gradient</span><span class="p">,</span> <span class="n">kirchhoff_stress</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Cauchy stress tensor from Kirchhoff stress tensor.</span>
 
 <span class="sd">    .. math::</span>
@@ -288,7 +288,7 @@
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">cauchy_stress</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="first_piola_from_kirchhoff"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.first_piola_from_kirchhoff.html#cratepy.material.materialoperations.first_piola_from_kirchhoff">[docs]</a><span class="k">def</span> <span class="nf">first_piola_from_kirchhoff</span><span class="p">(</span><span class="n">def_gradient</span><span class="p">,</span> <span class="n">kirchhoff_stress</span><span class="p">):</span>
+<div class="viewcode-block" id="first_piola_from_kirchhoff"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.first_piola_from_kirchhoff.html#cratepy.material.materialoperations.first_piola_from_kirchhoff">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">first_piola_from_kirchhoff</span><span class="p">(</span><span class="n">def_gradient</span><span class="p">,</span> <span class="n">kirchhoff_stress</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;First Piola-Kirchhoff stress tensor from Kirchhoff stress tensor.</span>
 
 <span class="sd">    .. math::</span>
@@ -320,7 +320,7 @@
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">first_piola_stress</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="cauchy_from_first_piola"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.cauchy_from_first_piola.html#cratepy.material.materialoperations.cauchy_from_first_piola">[docs]</a><span class="k">def</span> <span class="nf">cauchy_from_first_piola</span><span class="p">(</span><span class="n">def_gradient</span><span class="p">,</span> <span class="n">first_piola_stress</span><span class="p">):</span>
+<div class="viewcode-block" id="cauchy_from_first_piola"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.cauchy_from_first_piola.html#cratepy.material.materialoperations.cauchy_from_first_piola">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">cauchy_from_first_piola</span><span class="p">(</span><span class="n">def_gradient</span><span class="p">,</span> <span class="n">first_piola_stress</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Cauchy stress tensor from first Piola-Kirchhoff stress tensor.</span>
 
 <span class="sd">    .. math::</span>
@@ -353,7 +353,7 @@
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">cauchy_stress</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="cauchy_from_second_piola"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.cauchy_from_second_piola.html#cratepy.material.materialoperations.cauchy_from_second_piola">[docs]</a><span class="k">def</span> <span class="nf">cauchy_from_second_piola</span><span class="p">(</span><span class="n">def_gradient</span><span class="p">,</span> <span class="n">second_piola_stress</span><span class="p">):</span>
+<div class="viewcode-block" id="cauchy_from_second_piola"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.cauchy_from_second_piola.html#cratepy.material.materialoperations.cauchy_from_second_piola">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">cauchy_from_second_piola</span><span class="p">(</span><span class="n">def_gradient</span><span class="p">,</span> <span class="n">second_piola_stress</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Cauchy stress tensor from second Piola-Kirchhoff stress tensor.</span>
 
 <span class="sd">    .. math::</span>
@@ -388,7 +388,7 @@
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">cauchy_stress</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="first_piola_from_cauchy"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.first_piola_from_cauchy.html#cratepy.material.materialoperations.first_piola_from_cauchy">[docs]</a><span class="k">def</span> <span class="nf">first_piola_from_cauchy</span><span class="p">(</span><span class="n">def_gradient</span><span class="p">,</span> <span class="n">cauchy_stress</span><span class="p">):</span>
+<div class="viewcode-block" id="first_piola_from_cauchy"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.first_piola_from_cauchy.html#cratepy.material.materialoperations.first_piola_from_cauchy">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">first_piola_from_cauchy</span><span class="p">(</span><span class="n">def_gradient</span><span class="p">,</span> <span class="n">cauchy_stress</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;First Piola-Kirchhoff stress tensor from Cauchy stress tensor.</span>
 
 <span class="sd">    .. math::</span>
@@ -421,7 +421,7 @@
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">first_piola_stress</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="first_piola_from_second_piola"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.first_piola_from_second_piola.html#cratepy.material.materialoperations.first_piola_from_second_piola">[docs]</a><span class="k">def</span> <span class="nf">first_piola_from_second_piola</span><span class="p">(</span><span class="n">def_gradient</span><span class="p">,</span> <span class="n">second_piola_stress</span><span class="p">):</span>
+<div class="viewcode-block" id="first_piola_from_second_piola"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.first_piola_from_second_piola.html#cratepy.material.materialoperations.first_piola_from_second_piola">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">first_piola_from_second_piola</span><span class="p">(</span><span class="n">def_gradient</span><span class="p">,</span> <span class="n">second_piola_stress</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;First Piola-Kirchhoff from second Piola-Kirchhoff stress tensor.</span>
 
 <span class="sd">    .. math::</span>
@@ -451,7 +451,7 @@
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">first_piola_stress</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="kirchhoff_from_first_piola"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.kirchhoff_from_first_piola.html#cratepy.material.materialoperations.kirchhoff_from_first_piola">[docs]</a><span class="k">def</span> <span class="nf">kirchhoff_from_first_piola</span><span class="p">(</span><span class="n">def_gradient</span><span class="p">,</span> <span class="n">first_piola_stress</span><span class="p">):</span>
+<div class="viewcode-block" id="kirchhoff_from_first_piola"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.kirchhoff_from_first_piola.html#cratepy.material.materialoperations.kirchhoff_from_first_piola">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">kirchhoff_from_first_piola</span><span class="p">(</span><span class="n">def_gradient</span><span class="p">,</span> <span class="n">first_piola_stress</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Kirchhoff stress tensor from first Piola-Kirchhoff stress tensor.</span>
 
 <span class="sd">    .. math::</span>
@@ -483,7 +483,7 @@
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">kirchhoff_stress</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="material_from_spatial_tangent_modulus"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.material_from_spatial_tangent_modulus.html#cratepy.material.materialoperations.material_from_spatial_tangent_modulus">[docs]</a><span class="k">def</span> <span class="nf">material_from_spatial_tangent_modulus</span><span class="p">(</span><span class="n">spatial_consistent_tangent</span><span class="p">,</span>
+<div class="viewcode-block" id="material_from_spatial_tangent_modulus"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.material_from_spatial_tangent_modulus.html#cratepy.material.materialoperations.material_from_spatial_tangent_modulus">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">material_from_spatial_tangent_modulus</span><span class="p">(</span><span class="n">spatial_consistent_tangent</span><span class="p">,</span>
                                           <span class="n">def_gradient</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Material consistent tangent modulus from spatial counterpart.</span>
 
@@ -523,7 +523,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                                 Stress-strain conjugate pairs</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="conjugate_material_log_strain"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.conjugate_material_log_strain.html#cratepy.material.materialoperations.conjugate_material_log_strain">[docs]</a><span class="k">def</span> <span class="nf">conjugate_material_log_strain</span><span class="p">(</span><span class="n">def_gradient</span><span class="p">,</span> <span class="n">first_piola_stress</span><span class="p">):</span>
+<div class="viewcode-block" id="conjugate_material_log_strain"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.conjugate_material_log_strain.html#cratepy.material.materialoperations.conjugate_material_log_strain">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">conjugate_material_log_strain</span><span class="p">(</span><span class="n">def_gradient</span><span class="p">,</span> <span class="n">first_piola_stress</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Stress conjugate of material logarithmic strain tensor.</span>
 
 <span class="sd">    *Material logarithmic strain tensor*:</span>
@@ -579,7 +579,7 @@
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">material_log_strain</span><span class="p">,</span> <span class="n">stress_conjugate</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="conjugate_spatial_log_strain"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.conjugate_spatial_log_strain.html#cratepy.material.materialoperations.conjugate_spatial_log_strain">[docs]</a><span class="k">def</span> <span class="nf">conjugate_spatial_log_strain</span><span class="p">(</span><span class="n">def_gradient</span><span class="p">,</span> <span class="n">first_piola_stress</span><span class="p">):</span>
+<div class="viewcode-block" id="conjugate_spatial_log_strain"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.conjugate_spatial_log_strain.html#cratepy.material.materialoperations.conjugate_spatial_log_strain">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">conjugate_spatial_log_strain</span><span class="p">(</span><span class="n">def_gradient</span><span class="p">,</span> <span class="n">first_piola_stress</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Stress conjugate of spatial logarithmic strain tensor.</span>
 
 <span class="sd">    *Spatial logarithmic strain tensor*:</span>
@@ -631,7 +631,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                    Computation of material-related quantities</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="MaterialQuantitiesComputer"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.MaterialQuantitiesComputer.html#cratepy.material.materialoperations.MaterialQuantitiesComputer">[docs]</a><span class="k">class</span> <span class="nc">MaterialQuantitiesComputer</span><span class="p">:</span>
+<div class="viewcode-block" id="MaterialQuantitiesComputer"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.MaterialQuantitiesComputer.html#cratepy.material.materialoperations.MaterialQuantitiesComputer">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">MaterialQuantitiesComputer</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Computation of quantities based on material state variables.</span>
 
 <span class="sd">    Material-related quantities computations are always performed assuming the</span>
@@ -657,7 +657,7 @@
 <span class="sd">        Compute von Mises equivalent strain.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialQuantitiesComputer.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.MaterialQuantitiesComputer.html#cratepy.material.materialoperations.MaterialQuantitiesComputer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MaterialQuantitiesComputer.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.MaterialQuantitiesComputer.html#cratepy.material.materialoperations.MaterialQuantitiesComputer.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.&quot;&quot;&quot;</span>
         <span class="c1"># Get 3D problem parameters</span>
         <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span> <span class="o">=</span> \
@@ -673,7 +673,7 @@
                                             <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_sym</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fodevprojsym_mf</span> <span class="o">=</span> <span class="n">fodevprojsym_mf</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialQuantitiesComputer.get_vm_stress"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.MaterialQuantitiesComputer.html#cratepy.material.materialoperations.MaterialQuantitiesComputer.get_vm_stress">[docs]</a>    <span class="k">def</span> <span class="nf">get_vm_stress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stress_mf</span><span class="p">):</span>
+<div class="viewcode-block" id="MaterialQuantitiesComputer.get_vm_stress"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.MaterialQuantitiesComputer.html#cratepy.material.materialoperations.MaterialQuantitiesComputer.get_vm_stress">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_vm_stress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stress_mf</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute von Mises equivalent stress.</span>
 
 <span class="sd">        .. math::</span>
@@ -699,7 +699,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">vm_stress</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MaterialQuantitiesComputer.get_vm_strain"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.MaterialQuantitiesComputer.html#cratepy.material.materialoperations.MaterialQuantitiesComputer.get_vm_strain">[docs]</a>    <span class="k">def</span> <span class="nf">get_vm_strain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_mf</span><span class="p">):</span>
+<div class="viewcode-block" id="MaterialQuantitiesComputer.get_vm_strain"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.materialoperations.MaterialQuantitiesComputer.html#cratepy.material.materialoperations.MaterialQuantitiesComputer.get_vm_strain">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_vm_strain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_mf</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute von Mises equivalent strain.</span>
 
 <span class="sd">        .. math::</span>

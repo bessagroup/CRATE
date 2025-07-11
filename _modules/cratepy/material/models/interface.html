@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cratepy.material.models.interface &mdash; CRATE 1.0.5 documentation</title>
+  <title>cratepy.material.models.interface &mdash; CRATE 1.0.6 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/readthedocs-custom.css" type="text/css" />
@@ -116,8 +116,8 @@
 <span class="c1">#                                                                       Modules</span>
 <span class="c1"># =============================================================================</span>
 <span class="c1"># Standard</span>
-<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
-<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
 <span class="c1">#</span>
 <span class="c1">#                                                          Authorship &amp; Credits</span>
 <span class="c1"># =============================================================================</span>
@@ -127,7 +127,7 @@
 <span class="c1"># =============================================================================</span>
 <span class="c1">#</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="ConstitutiveModel"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.interface.ConstitutiveModel.html#cratepy.material.models.interface.ConstitutiveModel">[docs]</a><span class="k">class</span> <span class="nc">ConstitutiveModel</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<div class="viewcode-block" id="ConstitutiveModel"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.interface.ConstitutiveModel.html#cratepy.material.models.interface.ConstitutiveModel">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ConstitutiveModel</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Constitutive model interface.</span>
 
 <span class="sd">    Attributes</span>
@@ -164,7 +164,7 @@
 <span class="sd">        Constitutive model material properties.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="ConstitutiveModel.__init__"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.interface.ConstitutiveModel.html#cratepy.material.models.interface.ConstitutiveModel.__init__">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">material_properties</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">material_properties</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
 
 <span class="sd">        Parameters</span>
@@ -182,7 +182,7 @@
     <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="ConstitutiveModel.get_required_properties"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.interface.ConstitutiveModel.html#cratepy.material.models.interface.ConstitutiveModel.get_required_properties">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">get_required_properties</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_required_properties</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get constitutive model material properties and constitutive options.</span>
 
 <span class="sd">        Returns</span>
@@ -196,7 +196,7 @@
         <span class="k">pass</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="ConstitutiveModel.state_init"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.interface.ConstitutiveModel.html#cratepy.material.models.interface.ConstitutiveModel.state_init">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">state_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">state_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get initialized material constitutive model state variables.</span>
 
 <span class="sd">        Returns</span>
@@ -207,7 +207,7 @@
         <span class="k">pass</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="ConstitutiveModel.state_update"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.interface.ConstitutiveModel.html#cratepy.material.models.interface.ConstitutiveModel.state_update">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">state_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inc_strain</span><span class="p">,</span> <span class="n">state_variables_old</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">state_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inc_strain</span><span class="p">,</span> <span class="n">state_variables_old</span><span class="p">,</span>
                      <span class="n">su_max_n_iterations</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">su_conv_tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform material constitutive model state update.</span>
 
@@ -232,7 +232,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ConstitutiveModel.get_name"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.interface.ConstitutiveModel.html#cratepy.material.models.interface.ConstitutiveModel.get_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ConstitutiveModel.get_name"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.interface.ConstitutiveModel.html#cratepy.material.models.interface.ConstitutiveModel.get_name">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get constitutive model name.</span>
 
 <span class="sd">        Returns</span>
@@ -242,7 +242,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ConstitutiveModel.get_strain_type"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.interface.ConstitutiveModel.html#cratepy.material.models.interface.ConstitutiveModel.get_strain_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_strain_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ConstitutiveModel.get_strain_type"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.interface.ConstitutiveModel.html#cratepy.material.models.interface.ConstitutiveModel.get_strain_type">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_strain_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get material constitutive model strain formulation.</span>
 
 <span class="sd">        Returns</span>
@@ -256,7 +256,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_type</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ConstitutiveModel.get_source"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.interface.ConstitutiveModel.html#cratepy.material.models.interface.ConstitutiveModel.get_source">[docs]</a>    <span class="k">def</span> <span class="nf">get_source</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ConstitutiveModel.get_source"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.interface.ConstitutiveModel.html#cratepy.material.models.interface.ConstitutiveModel.get_source">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_source</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get material constitutive model source.</span>
 
 <span class="sd">        Returns</span>
@@ -266,7 +266,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_source</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ConstitutiveModel.get_material_properties"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.interface.ConstitutiveModel.html#cratepy.material.models.interface.ConstitutiveModel.get_material_properties">[docs]</a>    <span class="k">def</span> <span class="nf">get_material_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ConstitutiveModel.get_material_properties"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.interface.ConstitutiveModel.html#cratepy.material.models.interface.ConstitutiveModel.get_material_properties">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_material_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constitutive model material properties.</span>
 
 <span class="sd">        Returns</span>

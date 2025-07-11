@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cratepy.ioput.fileoperations &mdash; CRATE 1.0.5 documentation</title>
+  <title>cratepy.ioput.fileoperations &mdash; CRATE 1.0.6 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
@@ -124,11 +124,11 @@
 <span class="c1">#                                                                       Modules</span>
 <span class="c1"># =============================================================================</span>
 <span class="c1"># Standard</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
 <span class="c1"># Local</span>
-<span class="kn">import</span> <span class="nn">ioput.info</span> <span class="k">as</span> <span class="nn">info</span>
-<span class="kn">import</span> <span class="nn">ioput.ioutilities</span> <span class="k">as</span> <span class="nn">ioutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ioput.info</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">info</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ioput.ioutilities</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ioutil</span>
 <span class="c1">#</span>
 <span class="c1">#                                                          Authorship &amp; Credits</span>
 <span class="c1"># =============================================================================</span>
@@ -141,7 +141,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                                          Directory operations</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="make_directory"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.fileoperations.make_directory.html#cratepy.ioput.fileoperations.make_directory">[docs]</a><span class="k">def</span> <span class="nf">make_directory</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="n">option</span><span class="o">=</span><span class="s1">&#39;no_overwrite&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="make_directory"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.fileoperations.make_directory.html#cratepy.ioput.fileoperations.make_directory">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">make_directory</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="n">option</span><span class="o">=</span><span class="s1">&#39;no_overwrite&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create new directory.</span>
 
 <span class="sd">    Parameters</span>
@@ -162,7 +162,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown option.&#39;</span><span class="p">)</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="remove_dirs"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.fileoperations.remove_dirs.html#cratepy.ioput.fileoperations.remove_dirs">[docs]</a><span class="k">def</span> <span class="nf">remove_dirs</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">required_dirnames</span><span class="p">):</span>
+<div class="viewcode-block" id="remove_dirs"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.fileoperations.remove_dirs.html#cratepy.ioput.fileoperations.remove_dirs">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">remove_dirs</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">required_dirnames</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove unrequired directories and files in target directory.</span>
 
 <span class="sd">    Parameters</span>
@@ -183,7 +183,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                                               Input data file</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="set_input_datafile_path"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.fileoperations.set_input_datafile_path.html#cratepy.ioput.fileoperations.set_input_datafile_path">[docs]</a><span class="k">def</span> <span class="nf">set_input_datafile_path</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<div class="viewcode-block" id="set_input_datafile_path"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.fileoperations.set_input_datafile_path.html#cratepy.ioput.fileoperations.set_input_datafile_path">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">set_input_datafile_path</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Process input data file path.</span>
 
 <span class="sd">    Parameters</span>
@@ -223,7 +223,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                                             Results directory</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="set_problem_dirs"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.fileoperations.set_problem_dirs.html#cratepy.ioput.fileoperations.set_problem_dirs">[docs]</a><span class="k">def</span> <span class="nf">set_problem_dirs</span><span class="p">(</span><span class="n">input_file_name</span><span class="p">,</span> <span class="n">input_file_dir</span><span class="p">,</span>
+<div class="viewcode-block" id="set_problem_dirs"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.fileoperations.set_problem_dirs.html#cratepy.ioput.fileoperations.set_problem_dirs">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">set_problem_dirs</span><span class="p">(</span><span class="n">input_file_name</span><span class="p">,</span> <span class="n">input_file_dir</span><span class="p">,</span>
                      <span class="n">is_minimize_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_null_stdout</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set output directory structure.</span>
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cratepy.clustering.adaptivity.crve_adaptivity &mdash; CRATE 1.0.5 documentation</title>
+  <title>cratepy.clustering.adaptivity.crve_adaptivity &mdash; CRATE 1.0.6 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/readthedocs-custom.css" type="text/css" />
@@ -129,19 +129,19 @@
 <span class="c1">#                                                                       Modules</span>
 <span class="c1"># =============================================================================</span>
 <span class="c1"># Standard</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="c1"># Third-party</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="c1"># Local</span>
-<span class="kn">import</span> <span class="nn">ioput.info</span> <span class="k">as</span> <span class="nn">info</span>
-<span class="kn">import</span> <span class="nn">tensor.matrixoperations</span> <span class="k">as</span> <span class="nn">mop</span>
-<span class="kn">import</span> <span class="nn">ioput.ioutilities</span> <span class="k">as</span> <span class="nn">ioutil</span>
-<span class="kn">from</span> <span class="nn">material.materialoperations</span> <span class="kn">import</span> <span class="n">compute_spatial_log_strain</span><span class="p">,</span> \
+<span class="kn">import</span><span class="w"> </span><span class="nn">ioput.info</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">info</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensor.matrixoperations</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mop</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ioput.ioutilities</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ioutil</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">material.materialoperations</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_spatial_log_strain</span><span class="p">,</span> \
                                         <span class="n">cauchy_from_first_piola</span><span class="p">,</span> \
                                         <span class="n">MaterialQuantitiesComputer</span>
-<span class="kn">from</span> <span class="nn">clustering.adaptivity.adaptivity_criterion</span> <span class="kn">import</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">clustering.adaptivity.adaptivity_criterion</span><span class="w"> </span><span class="kn">import</span> \
     <span class="n">AdaptiveClusterGrouping</span><span class="p">,</span> <span class="n">SpatialDiscontinuities</span>
 <span class="c1">#</span>
 <span class="c1">#                                                          Authorship &amp; Credits</span>
@@ -152,7 +152,7 @@
 <span class="c1"># =============================================================================</span>
 <span class="c1">#</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="AdaptivityManager"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager">[docs]</a><span class="k">class</span> <span class="nc">AdaptivityManager</span><span class="p">:</span>
+<div class="viewcode-block" id="AdaptivityManager"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">AdaptivityManager</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;CRVE clustering adaptivity manager.</span>
 
 <span class="sd">    Attributes</span>
@@ -216,7 +216,7 @@
 <span class="sd">    get_adapt_vtk_array(self, voxels_clusters)</span>
 <span class="sd">        Get regular grid array with the adaptive level of each cluster.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="AdaptivityManager.__init__"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">adapt_material_phases</span><span class="p">,</span>
+<div class="viewcode-block" id="AdaptivityManager.__init__"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">adapt_material_phases</span><span class="p">,</span>
                  <span class="n">phase_clusters</span><span class="p">,</span> <span class="n">adaptivity_control_feature</span><span class="p">,</span>
                  <span class="n">adapt_criterion_data</span><span class="p">,</span> <span class="n">clust_adapt_freq</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
@@ -333,7 +333,7 @@
                 <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown clustering adaptivity criterion.&#39;</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="AdaptivityManager.get_adaptivity_criterions"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.get_adaptivity_criterions">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_adaptivity_criterions</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_adaptivity_criterions</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get available clustering adaptivity criterions.</span>
 
 <span class="sd">        Returns</span>
@@ -349,7 +349,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">available_adapt_criterions</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="AdaptivityManager.get_target_clusters"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.get_target_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">get_target_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span> <span class="n">voxels_clusters</span><span class="p">,</span>
+<div class="viewcode-block" id="AdaptivityManager.get_target_clusters"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.get_target_clusters">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_target_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span> <span class="n">voxels_clusters</span><span class="p">,</span>
                             <span class="n">clusters_state</span><span class="p">,</span> <span class="n">clusters_def_gradient_mf</span><span class="p">,</span>
                             <span class="n">clusters_def_gradient_old_mf</span><span class="p">,</span> <span class="n">clusters_state_old</span><span class="p">,</span>
                             <span class="n">clusters_sct_mf</span><span class="p">,</span> <span class="n">clusters_sct_old_mf</span><span class="p">,</span>
@@ -496,7 +496,7 @@
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="k">return</span> <span class="n">is_trigger</span><span class="p">,</span> <span class="n">target_clusters</span><span class="p">,</span> <span class="n">target_clusters_data</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="AdaptivityManager._get_adaptivity_data_matrix"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager._get_adaptivity_data_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">_get_adaptivity_data_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_phase</span><span class="p">,</span> <span class="n">adapt_control_feature</span><span class="p">,</span>
+<div class="viewcode-block" id="AdaptivityManager._get_adaptivity_data_matrix"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager._get_adaptivity_data_matrix">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_get_adaptivity_data_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_phase</span><span class="p">,</span> <span class="n">adapt_control_feature</span><span class="p">,</span>
                                     <span class="n">phase_clusters</span><span class="p">,</span> <span class="n">clusters_def_gradient_mf</span><span class="p">,</span>
                                     <span class="n">clusters_def_gradient_old_mf</span><span class="p">,</span>
                                     <span class="n">clusters_state</span><span class="p">,</span> <span class="n">clusters_state_old</span><span class="p">,</span>
@@ -876,7 +876,7 @@
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="k">return</span> <span class="n">adapt_data_matrix</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="AdaptivityManager.adaptive_refinement"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.adaptive_refinement">[docs]</a>    <span class="k">def</span> <span class="nf">adaptive_refinement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">material_state</span><span class="p">,</span> <span class="n">target_clusters</span><span class="p">,</span>
+<div class="viewcode-block" id="AdaptivityManager.adaptive_refinement"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.adaptive_refinement">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">adaptive_refinement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">material_state</span><span class="p">,</span> <span class="n">target_clusters</span><span class="p">,</span>
                             <span class="n">target_clusters_data</span><span class="p">,</span> <span class="n">inc</span><span class="p">,</span>
                             <span class="n">improved_init_guess</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform CRVE adaptive clustering refinement.</span>
@@ -1126,7 +1126,7 @@
                 <span class="o">+</span> <span class="s1">&#39;</span><span class="si">{:&gt;14.4e}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dtime</span><span class="p">),</span>
                 <span class="mi">2</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="AdaptivityManager.check_inc_adaptive_steps"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.check_inc_adaptive_steps">[docs]</a>    <span class="k">def</span> <span class="nf">check_inc_adaptive_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inc</span><span class="p">):</span>
+<div class="viewcode-block" id="AdaptivityManager.check_inc_adaptive_steps"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.check_inc_adaptive_steps">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">check_inc_adaptive_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inc</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check number of adaptive steps performed in loading increment.</span>
 
 <span class="sd">        Parameters</span>
@@ -1150,7 +1150,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_inc_adaptive_steps</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">inc</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="k">return</span> <span class="kc">True</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="AdaptivityManager.clear_inc_adaptive_steps"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.clear_inc_adaptive_steps">[docs]</a>    <span class="k">def</span> <span class="nf">clear_inc_adaptive_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inc_threshold</span><span class="p">):</span>
+<div class="viewcode-block" id="AdaptivityManager.clear_inc_adaptive_steps"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.clear_inc_adaptive_steps">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">clear_inc_adaptive_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inc_threshold</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset number of adaptive steps performed after threshold increment.</span>
 
 <span class="sd">        Parameters</span>
@@ -1167,7 +1167,7 @@
             <span class="k">if</span> <span class="n">inc</span> <span class="o">&gt;</span> <span class="n">inc_threshold</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_inc_adaptive_steps</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">inc</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="AdaptivityManager.is_adapt_phase_activated"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.is_adapt_phase_activated">[docs]</a>    <span class="k">def</span> <span class="nf">is_adapt_phase_activated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat_phase</span><span class="p">,</span> <span class="n">inc</span><span class="p">):</span>
+<div class="viewcode-block" id="AdaptivityManager.is_adapt_phase_activated"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.is_adapt_phase_activated">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_adapt_phase_activated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat_phase</span><span class="p">,</span> <span class="n">inc</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if material phase adaptivity procedures are activated.</span>
 
 <span class="sd">        Parameters</span>
@@ -1200,7 +1200,7 @@
         <span class="c1"># Return adaptivity activation flag</span>
         <span class="k">return</span> <span class="n">is_activated</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="AdaptivityManager.reset_adapt_activation_parameters"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.reset_adapt_activation_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">reset_adapt_activation_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AdaptivityManager.reset_adapt_activation_parameters"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.reset_adapt_activation_parameters">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">reset_adapt_activation_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset parameters associated with clustering adaptivity activation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_ref_init_inc</span> <span class="o">=</span> \
@@ -1208,7 +1208,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_feature_min_trigger</span> <span class="o">=</span> \
             <span class="p">{</span><span class="n">mat_phase</span><span class="p">:</span> <span class="kc">False</span> <span class="k">for</span> <span class="n">mat_phase</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_material_phases</span><span class="p">}</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="AdaptivityManager.get_adapt_vtk_array"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.get_adapt_vtk_array">[docs]</a>    <span class="k">def</span> <span class="nf">get_adapt_vtk_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">voxels_clusters</span><span class="p">):</span>
+<div class="viewcode-block" id="AdaptivityManager.get_adapt_vtk_array"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptivityManager.get_adapt_vtk_array">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_adapt_vtk_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">voxels_clusters</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get regular grid array with the adaptive level of each cluster.</span>
 
 <span class="sd">        A cluster adaptive level of 0 is associated with the base clustering</span>
@@ -1269,7 +1269,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                             Clustering adaptivity output file</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="ClusteringAdaptivityOutput"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.ClusteringAdaptivityOutput.html#cratepy.clustering.adaptivity.crve_adaptivity.ClusteringAdaptivityOutput">[docs]</a><span class="k">class</span> <span class="nc">ClusteringAdaptivityOutput</span><span class="p">:</span>
+<div class="viewcode-block" id="ClusteringAdaptivityOutput"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.ClusteringAdaptivityOutput.html#cratepy.clustering.adaptivity.crve_adaptivity.ClusteringAdaptivityOutput">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ClusteringAdaptivityOutput</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Clustering adaptivity output.</span>
 
 <span class="sd">    Attributes</span>
@@ -1289,7 +1289,7 @@
 <span class="sd">        Rewind clustering adaptivity output file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ClusteringAdaptivityOutput.__init__"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.ClusteringAdaptivityOutput.html#cratepy.clustering.adaptivity.crve_adaptivity.ClusteringAdaptivityOutput.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapt_file_path</span><span class="p">,</span> <span class="n">adapt_material_phases</span><span class="p">):</span>
+<div class="viewcode-block" id="ClusteringAdaptivityOutput.__init__"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.ClusteringAdaptivityOutput.html#cratepy.clustering.adaptivity.crve_adaptivity.ClusteringAdaptivityOutput.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapt_file_path</span><span class="p">,</span> <span class="n">adapt_material_phases</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
 
 <span class="sd">        Parameters</span>
@@ -1311,7 +1311,7 @@
         <span class="c1"># Set column width</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_col_width</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_header</span><span class="p">])</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ClusteringAdaptivityOutput.init_adapt_file"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.ClusteringAdaptivityOutput.html#cratepy.clustering.adaptivity.crve_adaptivity.ClusteringAdaptivityOutput.init_adapt_file">[docs]</a>    <span class="k">def</span> <span class="nf">init_adapt_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">):</span>
+<div class="viewcode-block" id="ClusteringAdaptivityOutput.init_adapt_file"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.ClusteringAdaptivityOutput.html#cratepy.clustering.adaptivity.crve_adaptivity.ClusteringAdaptivityOutput.init_adapt_file">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">init_adapt_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Open clustering adaptivity output file and write file header.</span>
 
 <span class="sd">        Parameters</span>
@@ -1351,7 +1351,7 @@
         <span class="c1"># Close clustering adaptivity output file</span>
         <span class="n">adapt_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ClusteringAdaptivityOutput.write_adapt_file"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.ClusteringAdaptivityOutput.html#cratepy.clustering.adaptivity.crve_adaptivity.ClusteringAdaptivityOutput.write_adapt_file">[docs]</a>    <span class="k">def</span> <span class="nf">write_adapt_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inc</span><span class="p">,</span> <span class="n">adaptivity_manager</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span>
+<div class="viewcode-block" id="ClusteringAdaptivityOutput.write_adapt_file"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.ClusteringAdaptivityOutput.html#cratepy.clustering.adaptivity.crve_adaptivity.ClusteringAdaptivityOutput.write_adapt_file">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">write_adapt_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inc</span><span class="p">,</span> <span class="n">adaptivity_manager</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span>
                          <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;increment&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Write clustering adaptivity output file.</span>
 
@@ -1409,7 +1409,7 @@
         <span class="c1"># Close clustering adaptivity output file</span>
         <span class="n">adapt_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ClusteringAdaptivityOutput.rewind_file"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.ClusteringAdaptivityOutput.html#cratepy.clustering.adaptivity.crve_adaptivity.ClusteringAdaptivityOutput.rewind_file">[docs]</a>    <span class="k">def</span> <span class="nf">rewind_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rewind_inc</span><span class="p">):</span>
+<div class="viewcode-block" id="ClusteringAdaptivityOutput.rewind_file"><a class="viewcode-back" href="../../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.ClusteringAdaptivityOutput.html#cratepy.clustering.adaptivity.crve_adaptivity.ClusteringAdaptivityOutput.rewind_file">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">rewind_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rewind_inc</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Rewind clustering adaptivity output file.</span>
 
 <span class="sd">        Parameters</span>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>material.models.elastic &mdash; CRATE 1.0.5 documentation</title>
+  <title>material.models.elastic &mdash; CRATE 1.0.6 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
@@ -120,10 +120,10 @@
 <span class="c1">#                                                                       Modules</span>
 <span class="c1"># =============================================================================</span>
 <span class="c1"># Third-party</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="c1"># Local</span>
-<span class="kn">import</span> <span class="nn">tensor.matrixoperations</span> <span class="k">as</span> <span class="nn">mop</span>
-<span class="kn">from</span> <span class="nn">material.models.interface</span> <span class="kn">import</span> <span class="n">ConstitutiveModel</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensor.matrixoperations</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mop</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">material.models.interface</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConstitutiveModel</span>
 <span class="c1">#</span>
 <span class="c1">#                                                          Authorship &amp; Credits</span>
 <span class="c1"># =============================================================================</span>
@@ -133,7 +133,7 @@
 <span class="c1"># =============================================================================</span>
 <span class="c1">#</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="Elastic"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.models.von_mises.Elastic.html#cratepy.ioput.readprocedures.Elastic">[docs]</a><span class="k">class</span> <span class="nc">Elastic</span><span class="p">(</span><span class="n">ConstitutiveModel</span><span class="p">):</span>
+<div class="viewcode-block" id="Elastic"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.models.von_mises.Elastic.html#cratepy.ioput.readprocedures.Elastic">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Elastic</span><span class="p">(</span><span class="n">ConstitutiveModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Linear elastic constitutive model.</span>
 
 <span class="sd">    Attributes</span>
@@ -171,7 +171,7 @@
 <span class="sd">    get_technical_from_elastic_moduli(elastic_symmetry, elastic_properties)</span>
 <span class="sd">        Get technical constants of elasticity from elastic moduli.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="Elastic.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.models.von_mises.Elastic.html#cratepy.ioput.readprocedures.Elastic.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">material_properties</span><span class="p">):</span>
+<div class="viewcode-block" id="Elastic.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.models.von_mises.Elastic.html#cratepy.ioput.readprocedures.Elastic.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">material_properties</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
 
 <span class="sd">        Parameters</span>
@@ -216,7 +216,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_material_properties</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">technical_constants</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="Elastic.get_required_properties"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.models.von_mises.Elastic.html#cratepy.ioput.readprocedures.Elastic.get_required_properties">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_required_properties</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_required_properties</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get constitutive model material properties and constitutive options.</span>
 
 <span class="sd">        *Input data file syntax*:</span>
@@ -262,7 +262,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">material_properties</span><span class="p">,</span> <span class="n">constitutive_options</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="Elastic.state_init"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.models.von_mises.Elastic.html#cratepy.ioput.readprocedures.Elastic.state_init">[docs]</a>    <span class="k">def</span> <span class="nf">state_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Elastic.state_init"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.models.von_mises.Elastic.html#cratepy.ioput.readprocedures.Elastic.state_init">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">state_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get initialized material constitutive model state variables.</span>
 
 <span class="sd">        Constitutive model state variables:</span>
@@ -339,7 +339,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">state_variables_init</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="Elastic.state_update"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.models.von_mises.Elastic.html#cratepy.ioput.readprocedures.Elastic.state_update">[docs]</a>    <span class="k">def</span> <span class="nf">state_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inc_strain</span><span class="p">,</span> <span class="n">state_variables_old</span><span class="p">,</span>
+<div class="viewcode-block" id="Elastic.state_update"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.models.von_mises.Elastic.html#cratepy.ioput.readprocedures.Elastic.state_update">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">state_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inc_strain</span><span class="p">,</span> <span class="n">state_variables_old</span><span class="p">,</span>
                      <span class="n">su_max_n_iterations</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">su_conv_tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform constitutive model state update.</span>
 
@@ -449,7 +449,7 @@
         <span class="k">return</span> <span class="n">state_variables</span><span class="p">,</span> <span class="n">consistent_tangent_mf</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="Elastic.get_available_elastic_symmetries"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.models.von_mises.Elastic.html#cratepy.ioput.readprocedures.Elastic.get_available_elastic_symmetries">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_available_elastic_symmetries</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_available_elastic_symmetries</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get available elastic symmetries under general anisotropy.</span>
 
 <span class="sd">        Available elastic symmetries:</span>
@@ -592,7 +592,7 @@
         <span class="k">return</span> <span class="n">elastic_symmetries</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="Elastic.elastic_tangent_modulus"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.models.von_mises.Elastic.html#cratepy.ioput.readprocedures.Elastic.elastic_tangent_modulus">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">elastic_tangent_modulus</span><span class="p">(</span><span class="n">elastic_properties</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">elastic_tangent_modulus</span><span class="p">(</span><span class="n">elastic_properties</span><span class="p">,</span>
                                 <span class="n">elastic_symmetry</span><span class="o">=</span><span class="s1">&#39;isotropic&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute 3D elasticity tensor under general anisotropic elasticity.</span>
 
@@ -734,7 +734,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">elastic_tangent_mf</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="Elastic.get_technical_from_elastic_moduli"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.models.von_mises.Elastic.html#cratepy.ioput.readprocedures.Elastic.get_technical_from_elastic_moduli">[docs]</a>    <span class="k">def</span> <span class="nf">get_technical_from_elastic_moduli</span><span class="p">(</span><span class="n">elastic_symmetry</span><span class="p">,</span>
+<div class="viewcode-block" id="Elastic.get_technical_from_elastic_moduli"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.models.von_mises.Elastic.html#cratepy.ioput.readprocedures.Elastic.get_technical_from_elastic_moduli">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_technical_from_elastic_moduli</span><span class="p">(</span><span class="n">elastic_symmetry</span><span class="p">,</span>
                                           <span class="n">elastic_properties</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get technical constants of elasticity from elastic moduli.</span>
 

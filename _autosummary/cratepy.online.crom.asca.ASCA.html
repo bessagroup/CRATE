@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cratepy.online.crom.asca.ASCA &mdash; CRATE 1.0.5 documentation</title>
+  <title>cratepy.online.crom.asca.ASCA &mdash; CRATE 1.0.6 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/readthedocs-custom.css" type="text/css" />
@@ -131,7 +131,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="cratepy.online.crom.asca.ASCA">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ASCA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strain_formulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">self_consistent_scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'regression'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scs_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scs_max_n_iterations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scs_conv_tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_n_iterations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conv_tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_subinc_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_cinc_cuts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_adapt_repeat_inc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/online/crom/asca.html#ASCA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.online.crom.asca.ASCA" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Adaptive Self-Consistent Clustering Analysis (ASCA).</p>
 <p>The detailed formulation of this method can be found in
 Ferreira et. al (2022) <a class="footnote-reference brackets" href="#id3" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> and also in Ferreira (2022) <a class="footnote-reference brackets" href="#id4" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
@@ -158,7 +158,7 @@ Reduced-Order Modeling.</em> PhD Thesis, University of Porto
 <dd><p>Problem number of spatial dimensions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)">int</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -169,7 +169,7 @@ Reduced-Order Modeling.</em> PhD Thesis, University of Porto
 <dd><p>Strain/Stress components symmetric order.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -180,7 +180,7 @@ Reduced-Order Modeling.</em> PhD Thesis, University of Porto
 <dd><p>Strain/Stress components nonsymmetric order.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -192,7 +192,7 @@ Reduced-Order Modeling.</em> PhD Thesis, University of Porto
 form.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a> (1d)</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a> (1d)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -203,7 +203,7 @@ form.</p>
 <dd><p>Last converged far-field strain tensor (matricial form).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a> (1d), default=None</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a> (1d), default=None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -214,7 +214,7 @@ form.</p>
 <dd><p>Total time (s) associated with online-stage.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -225,7 +225,7 @@ form.</p>
 <dd><p>Total time (s) associated with the solution of the equilibrium problem.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -236,7 +236,7 @@ form.</p>
 <dd><p>Total time (s) associated with post-processing operations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -354,19 +354,19 @@ form.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>strain_formulation</strong> (<em>{'infinitesimal'</em><em>, </em><em>'finite'}</em>) – Problem strain formulation.</p></li>
-<li><p><strong>problem_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – Problem type: 2D plane strain (1), 2D plane stress (2),
+<li><p><strong>problem_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Problem type: 2D plane strain (1), 2D plane stress (2),
 2D axisymmetric (3) and 3D (4).</p></li>
 <li><p><strong>self_consistent_scheme</strong> (<em>{'regression'</em><em>,</em><em>}</em><em>, </em><em>default='regression'</em>) – Self-consistent scheme to update the elastic reference material
 properties.</p></li>
 <li><p><strong>scs_parameters</strong> (<em>{dict</em><em>, </em><em>None}</em><em>, </em><em>default=None</em>) – Self-consistent scheme parameters (key, str; item,
 {int, float, bool}).</p></li>
-<li><p><strong>scs_max_n_iterations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=20</em>) – Self-consistent scheme maximum number of iterations.</p></li>
-<li><p><strong>scs_conv_tol</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>default=1e-4</em>) – Self-consistent scheme convergence tolerance.</p></li>
-<li><p><strong>max_n_iterations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=12</em>) – Newton-Raphson maximum number of iterations.</p></li>
-<li><p><strong>conv_tol</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>default=1e-6</em>) – Newton-Raphson convergence tolerance.</p></li>
-<li><p><strong>max_subinc_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=5</em>) – Maximum level of loading subincrementation.</p></li>
-<li><p><strong>max_cinc_cuts</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=5</em>) – Maximum number of consecutive increment cuts.</p></li>
-<li><p><strong>is_adapt_repeat_inc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>default=False</em>) – True if loading increment is to be repeated after a clustering
+<li><p><strong>scs_max_n_iterations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>default=20</em>) – Self-consistent scheme maximum number of iterations.</p></li>
+<li><p><strong>scs_conv_tol</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>default=1e-4</em>) – Self-consistent scheme convergence tolerance.</p></li>
+<li><p><strong>max_n_iterations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>default=12</em>) – Newton-Raphson maximum number of iterations.</p></li>
+<li><p><strong>conv_tol</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>default=1e-6</em>) – Newton-Raphson convergence tolerance.</p></li>
+<li><p><strong>max_subinc_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>default=5</em>) – Maximum level of loading subincrementation.</p></li>
+<li><p><strong>max_cinc_cuts</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>default=5</em>) – Maximum number of consecutive increment cuts.</p></li>
+<li><p><strong>is_adapt_repeat_inc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>default=False</em>) – True if loading increment is to be repeated after a clustering
 adaptivity step, False otherwise.</p></li>
 </ul>
 </dd>
@@ -391,19 +391,19 @@ adaptivity step, False otherwise.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>strain_formulation</strong> (<em>{'infinitesimal'</em><em>, </em><em>'finite'}</em>) – Problem strain formulation.</p></li>
-<li><p><strong>problem_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – Problem type: 2D plane strain (1), 2D plane stress (2),
+<li><p><strong>problem_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Problem type: 2D plane strain (1), 2D plane stress (2),
 2D axisymmetric (3) and 3D (4).</p></li>
 <li><p><strong>self_consistent_scheme</strong> (<em>{'regression'</em><em>,</em><em>}</em><em>, </em><em>default='regression'</em>) – Self-consistent scheme to update the elastic reference material
 properties.</p></li>
 <li><p><strong>scs_parameters</strong> (<em>{dict</em><em>, </em><em>None}</em><em>, </em><em>default=None</em>) – Self-consistent scheme parameters (key, str; item,
 {int, float, bool}).</p></li>
-<li><p><strong>scs_max_n_iterations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=20</em>) – Self-consistent scheme maximum number of iterations.</p></li>
-<li><p><strong>scs_conv_tol</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>default=1e-4</em>) – Self-consistent scheme convergence tolerance.</p></li>
-<li><p><strong>max_n_iterations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=12</em>) – Newton-Raphson maximum number of iterations.</p></li>
-<li><p><strong>conv_tol</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>default=1e-6</em>) – Newton-Raphson convergence tolerance.</p></li>
-<li><p><strong>max_subinc_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=5</em>) – Maximum level of loading subincrementation.</p></li>
-<li><p><strong>max_cinc_cuts</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=5</em>) – Maximum number of consecutive increment cuts.</p></li>
-<li><p><strong>is_adapt_repeat_inc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>default=False</em>) – True if loading increment is to be repeated after a clustering
+<li><p><strong>scs_max_n_iterations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>default=20</em>) – Self-consistent scheme maximum number of iterations.</p></li>
+<li><p><strong>scs_conv_tol</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>default=1e-4</em>) – Self-consistent scheme convergence tolerance.</p></li>
+<li><p><strong>max_n_iterations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>default=12</em>) – Newton-Raphson maximum number of iterations.</p></li>
+<li><p><strong>conv_tol</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>default=1e-6</em>) – Newton-Raphson convergence tolerance.</p></li>
+<li><p><strong>max_subinc_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>default=5</em>) – Maximum level of loading subincrementation.</p></li>
+<li><p><strong>max_cinc_cuts</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>default=5</em>) – Maximum number of consecutive increment cuts.</p></li>
+<li><p><strong>is_adapt_repeat_inc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>default=False</em>) – True if loading increment is to be repeated after a clustering
 adaptivity step, False otherwise.</p></li>
 </ul>
 </dd>
@@ -421,10 +421,10 @@ operations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>material_phases</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>]</em>) – RVE material phases labels (str).</p></li>
-<li><p><strong>phase_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Clusters labels (item, list[int]) associated with each material
+<li><p><strong>material_phases</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>]</em>) – RVE material phases labels (str).</p></li>
+<li><p><strong>phase_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Clusters labels (item, list[int]) associated with each material
 phase (key, str).</p></li>
-<li><p><strong>residual</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Lippmann-Schwinger equilibrium residual vector.</p></li>
+<li><p><strong>residual</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Lippmann-Schwinger equilibrium residual vector.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -433,7 +433,7 @@ phase (key, str).</p></li>
 (key, str).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -478,7 +478,7 @@ increment.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>crve</strong> (<a class="reference internal" href="cratepy.clustering.crve.CRVE.html#cratepy.clustering.crve.CRVE" title="cratepy.clustering.crve.CRVE"><em>CRVE</em></a>) – Cluster-Reduced Representative Volume Element.</p></li>
-<li><p><strong>global_cit_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Global cluster interaction matrix. Assembly positions are assigned
+<li><p><strong>global_cit_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Global cluster interaction matrix. Assembly positions are assigned
 according to the order of material_phases (1st) and phase_clusters
 (2nd).</p></li>
 <li><p><strong>material_state</strong> (<a class="reference internal" href="cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState" title="cratepy.ioput.readinputdata.MaterialState"><em>MaterialState</em></a>) – CRVE material constitutive state.</p></li>
@@ -492,7 +492,7 @@ difference between the associated material cluster consistent
 tangent modulus and the reference material elastic tangent modulus.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a> (2d)</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a> (2d)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -637,7 +637,7 @@ the volume fraction of the <span class="math notranslate nohighlight">\(K\)</spa
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>crve</strong> (<a class="reference internal" href="cratepy.clustering.crve.CRVE.html#cratepy.clustering.crve.CRVE" title="cratepy.clustering.crve.CRVE"><em>CRVE</em></a>) – Cluster-Reduced Representative Volume Element.</p></li>
 <li><p><strong>material_state</strong> (<a class="reference internal" href="cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState" title="cratepy.ioput.readinputdata.MaterialState"><em>MaterialState</em></a>) – CRVE material constitutive state.</p></li>
-<li><p><strong>global_cit_diff_tangent_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Global matrix similar to global cluster interaction matrix but
+<li><p><strong>global_cit_diff_tangent_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Global matrix similar to global cluster interaction matrix but
 where each cluster interaction tensor is double contracted with the
 difference between the associated material cluster consistent
 tangent modulus and the elastic reference material tangent modulus.</p></li>
@@ -647,7 +647,7 @@ tangent modulus and the elastic reference material tangent modulus.</p></li>
 <dd class="field-even"><p><strong>jacobian</strong> – Lippmann-Schwinger equilibrium Jacobian matrix.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a> (2d)</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a> (2d)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -904,28 +904,28 @@ the macroscale first Piola-Kirchhoff stress tensor,
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>crve</strong> (<a class="reference internal" href="cratepy.clustering.crve.CRVE.html#cratepy.clustering.crve.CRVE" title="cratepy.clustering.crve.CRVE"><em>CRVE</em></a>) – Cluster-Reduced Representative Volume Element.</p></li>
 <li><p><strong>material_state</strong> (<a class="reference internal" href="cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState" title="cratepy.ioput.readinputdata.MaterialState"><em>MaterialState</em></a>) – CRVE material constitutive state.</p></li>
-<li><p><strong>presc_strain_idxs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>]</em>) – Prescribed macroscale loading strain components indexes.</p></li>
-<li><p><strong>presc_stress_idxs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>]</em>) – Prescribed macroscale loading stress components indexes.</p></li>
-<li><p><strong>applied_mac_load_mf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – For each prescribed loading nature type
+<li><p><strong>presc_strain_idxs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Prescribed macroscale loading strain components indexes.</p></li>
+<li><p><strong>presc_stress_idxs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Prescribed macroscale loading stress components indexes.</p></li>
+<li><p><strong>applied_mac_load_mf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – For each prescribed loading nature type
 (key, {‘strain’, ‘stress’}), stores the current applied macroscale
 loading constraints in a numpy.ndarray of shape (n_comps,).</p></li>
 <li><p><strong>ref_material</strong> (<a class="reference internal" href="cratepy.online.crom.asca.ElasticReferenceMaterial.html#cratepy.online.crom.asca.ElasticReferenceMaterial" title="cratepy.online.crom.asca.ElasticReferenceMaterial"><em>ElasticReferenceMaterial</em></a>) – Elastic reference material.</p></li>
-<li><p><strong>global_cit_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Global cluster interaction matrix. Assembly positions are assigned
+<li><p><strong>global_cit_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Global cluster interaction matrix. Assembly positions are assigned
 according to the order of material_phases (1st) and phase_clusters
 (2nd).</p></li>
-<li><p><strong>global_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Global vector of clusters strain tensors (matricial form).</p></li>
-<li><p><strong>inc_mac_load_mf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a><em>, </em><em>default=None</em>) – For each loading nature type (key, {‘strain’, ‘stress’}), stores
+<li><p><strong>global_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Global vector of clusters strain tensors (matricial form).</p></li>
+<li><p><strong>inc_mac_load_mf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em>, </em><em>default=None</em>) – For each loading nature type (key, {‘strain’, ‘stress’}), stores
 the incremental loading constraint matricial form in a
 numpy.ndarray of shape (n_comps,).</p></li>
-<li><p><strong>farfield_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em><em>, </em><em>default=None</em>) – Far-field strain tensor (matricial form).</p></li>
-<li><p><strong>farfield_strain_old_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em><em>, </em><em>default=None</em>) – Last converged far-field strain tensor (matricial form).</p></li>
+<li><p><strong>farfield_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em><em>, </em><em>default=None</em>) – Far-field strain tensor (matricial form).</p></li>
+<li><p><strong>farfield_strain_old_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em><em>, </em><em>default=None</em>) – Last converged far-field strain tensor (matricial form).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>residual</strong> – Lippmann-Schwinger equilibrium residual vector.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a> (1d)</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a> (1d)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -939,13 +939,13 @@ numpy.ndarray of shape (n_comps,).</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>crve</strong> (<a class="reference internal" href="cratepy.clustering.crve.CRVE.html#cratepy.clustering.crve.CRVE" title="cratepy.clustering.crve.CRVE"><em>CRVE</em></a>) – Cluster-Reduced Representative Volume Element.</p></li>
 <li><p><strong>material_state</strong> (<a class="reference internal" href="cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState" title="cratepy.ioput.readinputdata.MaterialState"><em>MaterialState</em></a>) – CRVE material constitutive state.</p></li>
-<li><p><strong>presc_strain_idxs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>]</em>) – Prescribed macroscale loading strain components indexes.</p></li>
-<li><p><strong>presc_stress_idxs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>]</em>) – Prescribed macroscale loading stress components indexes.</p></li>
-<li><p><strong>applied_mac_load_mf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – For each prescribed loading nature type
+<li><p><strong>presc_strain_idxs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Prescribed macroscale loading strain components indexes.</p></li>
+<li><p><strong>presc_stress_idxs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Prescribed macroscale loading stress components indexes.</p></li>
+<li><p><strong>applied_mac_load_mf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – For each prescribed loading nature type
 (key, {‘strain’, ‘stress’}), stores the current applied loading
 constraints in a numpy.ndarray of shape (n_comps,).</p></li>
-<li><p><strong>residual</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Lippmann-Schwinger equilibrium residual vector.</p></li>
-<li><p><strong>applied_mix_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em><em>, </em><em>default=None</em>) – Strain tensor (matricial form) that contains prescribed strain
+<li><p><strong>residual</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Lippmann-Schwinger equilibrium residual vector.</p></li>
+<li><p><strong>applied_mix_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em><em>, </em><em>default=None</em>) – Strain tensor (matricial form) that contains prescribed strain
 components and (non-prescribed) homogenized strain components.</p></li>
 </ul>
 </dd>
@@ -1063,14 +1063,14 @@ material clusters, and <span class="math notranslate nohighlight">\(n+1\)</span>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>crve</strong> (<a class="reference internal" href="cratepy.clustering.crve.CRVE.html#cratepy.clustering.crve.CRVE" title="cratepy.clustering.crve.CRVE"><em>CRVE</em></a>) – Cluster-Reduced Representative Volume Element.</p></li>
 <li><p><strong>material_state</strong> (<a class="reference internal" href="cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState" title="cratepy.ioput.readinputdata.MaterialState"><em>MaterialState</em></a>) – CRVE material constitutive state.</p></li>
-<li><p><strong>global_cit_diff_tangent_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Global matrix similar to global cluster interaction matrix but
+<li><p><strong>global_cit_diff_tangent_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Global matrix similar to global cluster interaction matrix but
 where each cluster interaction tensor is double contracted with the
 difference between the associated material cluster consistent
 tangent modulus and the elastic reference material tangent modulus.</p></li>
-<li><p><strong>global_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em><em>, </em><em>default=None</em>) – Global vector of clusters strains stored in matricial form. Only
+<li><p><strong>global_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em><em>, </em><em>default=None</em>) – Global vector of clusters strains stored in matricial form. Only
 required for validation of cluster strain concentration tensors
 computation.</p></li>
-<li><p><strong>farfield_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em><em>, </em><em>default=None</em>) – Far-field strain tensor (matricial form). Only required for
+<li><p><strong>farfield_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em><em>, </em><em>default=None</em>) – Far-field strain tensor (matricial form). Only required for
 validation of cluster strain concentration tensors computation.</p></li>
 </ul>
 </dd>
@@ -1106,9 +1106,9 @@ validation of cluster strain concentration tensors computation.</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>mode</strong> (<em>{'init'</em><em>, </em><em>'iter'}</em>) – Output mode: Newton-Raphson iteration header (‘init’) or solution
 related metrics (‘iter’).</p></li>
-<li><p><strong>nr_iter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – Newton-Raphson iteration counter.</p></li>
-<li><p><strong>nr_iter_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Total Newton-Raphson iteration time (s).</p></li>
-<li><p><strong>errors</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>]</em>) – List of errors associated with the Newton-Raphson convergence
+<li><p><strong>nr_iter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Newton-Raphson iteration counter.</p></li>
+<li><p><strong>nr_iter_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Total Newton-Raphson iteration time (s).</p></li>
+<li><p><strong>errors</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>]</em>) – List of errors associated with the Newton-Raphson convergence
 evaluation.</p></li>
 </ul>
 </dd>
@@ -1123,11 +1123,11 @@ evaluation.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ref_material</strong> (<a class="reference internal" href="cratepy.online.crom.asca.ElasticReferenceMaterial.html#cratepy.online.crom.asca.ElasticReferenceMaterial" title="cratepy.online.crom.asca.ElasticReferenceMaterial"><em>ElasticReferenceMaterial</em></a>) – Elastic reference material.</p></li>
-<li><p><strong>is_lock_prop_ref</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – True if elastic reference material properties are locked, False
+<li><p><strong>is_lock_prop_ref</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – True if elastic reference material properties are locked, False
 otherwise.</p></li>
 <li><p><strong>mode</strong> (<em>{'init'</em><em>, </em><em>'end'}</em>) – Output mode: Self-consistent scheme iteration header (<cite>init</cite>) or
 footer (<cite>end</cite>).</p></li>
-<li><p><strong>scs_iter_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Total self-consistent scheme time (s).</p></li>
+<li><p><strong>scs_iter_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Total self-consistent scheme time (s).</p></li>
 </ul>
 </dd>
 </dl>
@@ -1140,8 +1140,8 @@ footer (<cite>end</cite>).</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>material_phases</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>]</em>) – RVE material phases labels (str).</p></li>
-<li><p><strong>phase_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Clusters labels (item, list[int]) associated with each material
+<li><p><strong>material_phases</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>]</em>) – RVE material phases labels (str).</p></li>
+<li><p><strong>phase_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Clusters labels (item, list[int]) associated with each material
 phase (key, str).</p></li>
 </ul>
 </dd>
@@ -1151,7 +1151,7 @@ phase (key, str).</p></li>
 (key, str).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1181,7 +1181,7 @@ guess.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>n_total_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – Total number of clusters.</p></li>
+<li><p><strong>n_total_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Total number of clusters.</p></li>
 <li><p><strong>mode</strong> (<em>{'last_converged'</em><em>,</em><em>}</em><em>, </em><em>default='last_converged'</em>) – Strategy to set clusters incremental strains initial iterative
 guess.</p></li>
 </ul>
@@ -1191,7 +1191,7 @@ guess.</p></li>
 form.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a> (1d)</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a> (1d)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1213,7 +1213,7 @@ guess.</p></li>
 <dd class="field-even"><p><strong>global_strain_mf</strong> – Global vector of clusters strains stored in matricial form.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a> (1d)</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a> (1d)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1231,7 +1231,7 @@ guess.</p>
 <dd class="field-even"><p><strong>inc_farfield_strain_mf</strong> – Incremental far-field strain tensor (matricial form).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a> (1d), default=None</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a> (1d), default=None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1243,14 +1243,14 @@ guess.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>output_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Absolute directory path of output files.</p></li>
+<li><p><strong>output_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Absolute directory path of output files.</p></li>
 <li><p><strong>crve</strong> (<a class="reference internal" href="cratepy.clustering.crve.CRVE.html#cratepy.clustering.crve.CRVE" title="cratepy.clustering.crve.CRVE"><em>CRVE</em></a>) – Cluster-Reduced Representative Volume Element.</p></li>
-<li><p><strong>problem_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>default='problem'</em>) – Problem name.</p></li>
-<li><p><strong>is_clust_adapt_output</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>default=False</em>) – Clustering adaptivity output flag.</p></li>
-<li><p><strong>is_ref_material_output</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>default=False</em>) – Reference material output flag.</p></li>
-<li><p><strong>is_vtk_output</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>default=False</em>) – VTK output flag.</p></li>
-<li><p><strong>vtk_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a><em>, </em><em>default=None</em>) – VTK output file parameters.</p></li>
-<li><p><strong>is_voxels_output</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Voxels output flag.</p></li>
+<li><p><strong>problem_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>default='problem'</em>) – Problem name.</p></li>
+<li><p><strong>is_clust_adapt_output</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>default=False</em>) – Clustering adaptivity output flag.</p></li>
+<li><p><strong>is_ref_material_output</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>default=False</em>) – Reference material output flag.</p></li>
+<li><p><strong>is_vtk_output</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>default=False</em>) – VTK output flag.</p></li>
+<li><p><strong>vtk_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em>, </em><em>default=None</em>) – VTK output file parameters.</p></li>
+<li><p><strong>is_voxels_output</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Voxels output flag.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1278,13 +1278,13 @@ the far-field strain tensor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>material_phases</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>]</em>) – RVE material phases labels (str).</p></li>
-<li><p><strong>phase_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Clusters labels (item, list[int]) associated with each material
+<li><p><strong>material_phases</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>]</em>) – RVE material phases labels (str).</p></li>
+<li><p><strong>phase_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Clusters labels (item, list[int]) associated with each material
 phase (key, str).</p></li>
-<li><p><strong>global_csct_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Global matrix of cluster strain concentration tensors (matricial
+<li><p><strong>global_csct_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Global matrix of cluster strain concentration tensors (matricial
 form).</p></li>
-<li><p><strong>global_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Global vector of clusters strains stored in matricial form.</p></li>
-<li><p><strong>farfield_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Far-field strain tensor (matricial form).</p></li>
+<li><p><strong>global_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Global vector of clusters strains stored in matricial form.</p></li>
+<li><p><strong>farfield_strain_mf</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em> (</em><em>1d</em><em>)</em>) – Far-field strain tensor (matricial form).</p></li>
 </ul>
 </dd>
 </dl>
@@ -1335,35 +1335,35 @@ Reduced-Order Modeling.</em> PhD Thesis, University of Porto
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>crve</strong> (<a class="reference internal" href="cratepy.clustering.crve.CRVE.html#cratepy.clustering.crve.CRVE" title="cratepy.clustering.crve.CRVE"><em>CRVE</em></a>) – Cluster-Reduced Representative Volume Element.</p></li>
 <li><p><strong>material_state</strong> (<a class="reference internal" href="cratepy.ioput.readinputdata.MaterialState.html#cratepy.ioput.readinputdata.MaterialState" title="cratepy.ioput.readinputdata.MaterialState"><em>MaterialState</em></a>) – CRVE material constitutive state.</p></li>
-<li><p><strong>mac_load</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – For each loading nature type (key, {‘strain’, ‘stress’}), stores
+<li><p><strong>mac_load</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – For each loading nature type (key, {‘strain’, ‘stress’}), stores
 the loading constraints for each loading subpath in a
 numpy.ndarray (2d), where the i-th row is associated with the i-th
 strain/stress component and the j-th column is associated with the
 j-th loading subpath.</p></li>
-<li><p><strong>mac_load_presctype</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Loading nature type ({‘strain’, ‘stress’}) associated with each
+<li><p><strong>mac_load_presctype</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Loading nature type ({‘strain’, ‘stress’}) associated with each
 loading constraint (numpy.ndarray of shape
 (n_comps, n_load_subpaths)), where the i-th row is associated with
 the i-th strain/stress component and the j-th column is associated
 with the j-th loading subpath.</p></li>
-<li><p><strong>mac_load_increm</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – For each loading subpath id (key, str), stores a numpy.ndarray of
+<li><p><strong>mac_load_increm</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – For each loading subpath id (key, str), stores a numpy.ndarray of
 shape (n_load_increments, 2) where each row is associated with a
 prescribed loading increment, and the columns 0 and 1 contain the
 corresponding incremental load factor and incremental time,
 respectively.</p></li>
-<li><p><strong>output_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Absolute directory path of output files.</p></li>
-<li><p><strong>problem_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>default='problem'</em>) – Problem name.</p></li>
-<li><p><strong>clust_adapt_freq</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a><em>, </em><em>default=None</em>) – Clustering adaptivity frequency (relative to loading
+<li><p><strong>output_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Absolute directory path of output files.</p></li>
+<li><p><strong>problem_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>default='problem'</em>) – Problem name.</p></li>
+<li><p><strong>clust_adapt_freq</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em>, </em><em>default=None</em>) – Clustering adaptivity frequency (relative to loading
 incrementation) (item, int) associated with each adaptive
 cluster-reduced material phase (key, str).</p></li>
-<li><p><strong>is_solution_rewinding</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>default=False</em>) – Problem solution rewinding flag.</p></li>
-<li><p><strong>rewind_state_criterion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><em>tuple</em></a><em>, </em><em>default=None</em>) – Rewind state storage criterion [0] and associated parameter [1].</p></li>
-<li><p><strong>rewinding_criterion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><em>tuple</em></a><em>, </em><em>default=None</em>) – Rewinding criterion [0] and associated parameter [1].</p></li>
-<li><p><strong>max_n_rewinds</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=1</em>) – Maximum number of rewind operations.</p></li>
-<li><p><strong>is_clust_adapt_output</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>default=False</em>) – Clustering adaptivity output flag.</p></li>
-<li><p><strong>is_ref_material_output</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>default=False</em>) – Reference material output flag.</p></li>
-<li><p><strong>is_vtk_output</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>default=False</em>) – VTK output flag.</p></li>
-<li><p><strong>vtk_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a><em>, </em><em>default=None</em>) – VTK output file parameters.</p></li>
-<li><p><strong>is_voxels_output</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Voxels output file flag.</p></li>
+<li><p><strong>is_solution_rewinding</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>default=False</em>) – Problem solution rewinding flag.</p></li>
+<li><p><strong>rewind_state_criterion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>, </em><em>default=None</em>) – Rewind state storage criterion [0] and associated parameter [1].</p></li>
+<li><p><strong>rewinding_criterion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>, </em><em>default=None</em>) – Rewinding criterion [0] and associated parameter [1].</p></li>
+<li><p><strong>max_n_rewinds</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>default=1</em>) – Maximum number of rewind operations.</p></li>
+<li><p><strong>is_clust_adapt_output</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>default=False</em>) – Clustering adaptivity output flag.</p></li>
+<li><p><strong>is_ref_material_output</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>default=False</em>) – Reference material output flag.</p></li>
+<li><p><strong>is_vtk_output</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>default=False</em>) – VTK output flag.</p></li>
+<li><p><strong>vtk_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em>, </em><em>default=None</em>) – VTK output file parameters.</p></li>
+<li><p><strong>is_voxels_output</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Voxels output file flag.</p></li>
 </ul>
 </dd>
 </dl>

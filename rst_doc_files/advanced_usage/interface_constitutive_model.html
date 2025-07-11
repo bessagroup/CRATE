@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Interface: Constitutive model &mdash; CRATE 1.0.5 documentation</title>
+  <title>Interface: Constitutive model &mdash; CRATE 1.0.6 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/readthedocs-custom.css" type="text/css" />
@@ -145,9 +145,9 @@
 <blockquote>
 <div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># material.models.new_model.py</span>
 
-<span class="kn">from</span> <span class="nn">material.models.interface</span> <span class="kn">import</span> <span class="n">ConstitutiveModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">material.models.interface</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConstitutiveModel</span>
 
-<span class="k">class</span> <span class="nc">NewConstitutiveModel</span><span class="p">(</span><span class="n">ConstitutiveModel</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">NewConstitutiveModel</span><span class="p">(</span><span class="n">ConstitutiveModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;New constitutive model.</span>
 
 <span class="sd">    Attributes</span>
@@ -155,7 +155,7 @@
 <span class="sd">    _name : str</span>
 <span class="sd">        Constitutive model name.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">material_properties</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">material_properties</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="s1">&#39;new_constitutive_model&#39;</span>
@@ -167,12 +167,12 @@
 <blockquote>
 <div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># cratepy.material.materialmodeling.py</span>
 
-<span class="hll"><span class="kn">from</span> <span class="nn">material.models.new_model</span> <span class="kn">import</span> <span class="n">NewConstitutiveModel</span>
+<span class="hll"><span class="kn">from</span><span class="w"> </span><span class="nn">material.models.new_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">NewConstitutiveModel</span>
 </span>
-<span class="k">class</span> <span class="nc">MaterialState</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MaterialState</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;CRVE material constitutive state.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">init_constitutive_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat_phase</span><span class="p">,</span> <span class="n">model_keyword</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">init_constitutive_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat_phase</span><span class="p">,</span> <span class="n">model_keyword</span><span class="p">,</span>
                                 <span class="n">model_source</span><span class="o">=</span><span class="s1">&#39;crate&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize material phase constitutive model.&quot;&quot;&quot;</span>
 

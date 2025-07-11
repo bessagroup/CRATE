@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cratepy.tensor.matrixoperations &mdash; CRATE 1.0.5 documentation</title>
+  <title>cratepy.tensor.matrixoperations &mdash; CRATE 1.0.6 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
@@ -141,9 +141,9 @@
 <span class="c1">#                                                                       Modules</span>
 <span class="c1"># =============================================================================</span>
 <span class="c1"># Third-party</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">scipy.linalg</span>
-<span class="kn">import</span> <span class="nn">itertools</span> <span class="k">as</span> <span class="nn">it</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.linalg</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">it</span>
 <span class="c1">#</span>
 <span class="c1">#                                                          Authorship &amp; Credits</span>
 <span class="c1"># =============================================================================</span>
@@ -156,7 +156,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                                       Problem type parameters</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="get_problem_type_parameters"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.matrixoperations.get_problem_type_parameters.html#cratepy.tensor.matrixoperations.get_problem_type_parameters">[docs]</a><span class="k">def</span> <span class="nf">get_problem_type_parameters</span><span class="p">(</span><span class="n">problem_type</span><span class="p">):</span>
+<div class="viewcode-block" id="get_problem_type_parameters"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.matrixoperations.get_problem_type_parameters.html#cratepy.tensor.matrixoperations.get_problem_type_parameters">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_problem_type_parameters</span><span class="p">(</span><span class="n">problem_type</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get parameters dependent on the problem type.</span>
 
 <span class="sd">    Parameters</span>
@@ -193,7 +193,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                        Tensorial - Matricial forms conversion</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="get_tensor_mf"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.matrixoperations.get_tensor_mf.html#cratepy.tensor.matrixoperations.get_tensor_mf">[docs]</a><span class="k">def</span> <span class="nf">get_tensor_mf</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">):</span>
+<div class="viewcode-block" id="get_tensor_mf"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.matrixoperations.get_tensor_mf.html#cratepy.tensor.matrixoperations.get_tensor_mf">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_tensor_mf</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get tensor matricial form.</span>
 
 <span class="sd">    Store a given second-order or fourth-order tensor in matricial form for a</span>
@@ -310,7 +310,7 @@
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">tensor_mf</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="get_tensor_from_mf"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.matrixoperations.get_tensor_from_mf.html#cratepy.tensor.matrixoperations.get_tensor_from_mf">[docs]</a><span class="k">def</span> <span class="nf">get_tensor_from_mf</span><span class="p">(</span><span class="n">tensor_mf</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">):</span>
+<div class="viewcode-block" id="get_tensor_from_mf"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.matrixoperations.get_tensor_from_mf.html#cratepy.tensor.matrixoperations.get_tensor_from_mf">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_tensor_from_mf</span><span class="p">(</span><span class="n">tensor_mf</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Recover tensor from associated matricial form.</span>
 
 <span class="sd">    Recover a given second-order or fourth-order tensor from the associated</span>
@@ -453,7 +453,7 @@
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">tensor</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="kelvin_factor"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.matrixoperations.kelvin_factor.html#cratepy.tensor.matrixoperations.kelvin_factor">[docs]</a><span class="k">def</span> <span class="nf">kelvin_factor</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">):</span>
+<div class="viewcode-block" id="kelvin_factor"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.matrixoperations.kelvin_factor.html#cratepy.tensor.matrixoperations.kelvin_factor">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">kelvin_factor</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">comp_order</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get Kelvin notation coefficient of given strain/stress component.</span>
 
 <span class="sd">    The Kelvin notation [#]_ is a particular way of building the matricial form</span>
@@ -510,7 +510,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                                           Matrix condensation</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="get_condensed_matrix"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.matrixoperations.get_condensed_matrix.html#cratepy.tensor.matrixoperations.get_condensed_matrix">[docs]</a><span class="k">def</span> <span class="nf">get_condensed_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">is_check_indexes</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="get_condensed_matrix"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.matrixoperations.get_condensed_matrix.html#cratepy.tensor.matrixoperations.get_condensed_matrix">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_condensed_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">is_check_indexes</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform condensation of matrix given a set of rows and columns.</span>
 
 <span class="sd">    Parameters</span>
@@ -568,7 +568,7 @@
 <span class="c1">#</span>
 <span class="c1">#                              Strain/Stress 2D - 3D matricial form conversions</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="get_state_3Dmf_from_2Dmf"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.matrixoperations.get_state_3Dmf_from_2Dmf.html#cratepy.tensor.matrixoperations.get_state_3Dmf_from_2Dmf">[docs]</a><span class="k">def</span> <span class="nf">get_state_3Dmf_from_2Dmf</span><span class="p">(</span><span class="n">problem_type</span><span class="p">,</span> <span class="n">mf_2d</span><span class="p">,</span> <span class="n">comp_33</span><span class="p">):</span>
+<div class="viewcode-block" id="get_state_3Dmf_from_2Dmf"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.matrixoperations.get_state_3Dmf_from_2Dmf.html#cratepy.tensor.matrixoperations.get_state_3Dmf_from_2Dmf">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_state_3Dmf_from_2Dmf</span><span class="p">(</span><span class="n">problem_type</span><span class="p">,</span> <span class="n">mf_2d</span><span class="p">,</span> <span class="n">comp_33</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Build 3D counterpart of 2D strain/stress second-order tensor.</span>
 
 <span class="sd">    Parameters</span>
@@ -617,7 +617,7 @@
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">mf_3d</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="get_state_2Dmf_from_3Dmf"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.matrixoperations.get_state_2Dmf_from_3Dmf.html#cratepy.tensor.matrixoperations.get_state_2Dmf_from_3Dmf">[docs]</a><span class="k">def</span> <span class="nf">get_state_2Dmf_from_3Dmf</span><span class="p">(</span><span class="n">problem_type</span><span class="p">,</span> <span class="n">mf_3d</span><span class="p">):</span>
+<div class="viewcode-block" id="get_state_2Dmf_from_3Dmf"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.matrixoperations.get_state_2Dmf_from_3Dmf.html#cratepy.tensor.matrixoperations.get_state_2Dmf_from_3Dmf">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_state_2Dmf_from_3Dmf</span><span class="p">(</span><span class="n">problem_type</span><span class="p">,</span> <span class="n">mf_3d</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Build 2D counterpart of 3D strain/stress second- or fourth-order tensor.</span>
 
 <span class="sd">    Parameters</span>
@@ -668,7 +668,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                                    P-th root of square matrix</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="matrix_root"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.matrixoperations.matrix_root.html#cratepy.tensor.matrixoperations.matrix_root">[docs]</a><span class="k">def</span> <span class="nf">matrix_root</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+<div class="viewcode-block" id="matrix_root"><a class="viewcode-back" href="../../../_autosummary/cratepy.tensor.matrixoperations.matrix_root.html#cratepy.tensor.matrixoperations.matrix_root">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">matrix_root</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute p-th root of general nonsymmetric square matrix.</span>
 
 <span class="sd">    Parameters</span>

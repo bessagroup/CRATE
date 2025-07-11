@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cratepy.clustering.clusteringalgs.MiniBatchKMeansSK &mdash; CRATE 1.0.5 documentation</title>
+  <title>cratepy.clustering.clusteringalgs.MiniBatchKMeansSK &mdash; CRATE 1.0.6 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/readthedocs-custom.css" type="text/css" />
@@ -159,21 +159,21 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>n_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=None</em>) – Number of clusters to find.</p></li>
-<li><p><strong>init</strong> (<em>{‘k-means++’</em><em>, </em><em>‘random’</em><em>, </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em>, </em><em>callable}</em><em>,               </em><em>default=’k-means++’</em>) – Method for centroid initialization.</p></li>
-<li><p><strong>n_init</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=3</em>) – Number of times K-Means is run with different centroid seeds.</p></li>
-<li><p><strong>max_iter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=300</em>) – Maximum number of iterations.</p></li>
-<li><p><strong>tol</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>default=1e-4</em>) – Convergence tolerance (based on Frobenius norm of the different in
+<li><p><strong>n_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>default=None</em>) – Number of clusters to find.</p></li>
+<li><p><strong>init</strong> (<em>{‘k-means++’</em><em>, </em><em>‘random’</em><em>, </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em>, </em><em>callable}</em><em>,               </em><em>default=’k-means++’</em>) – Method for centroid initialization.</p></li>
+<li><p><strong>n_init</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>default=3</em>) – Number of times K-Means is run with different centroid seeds.</p></li>
+<li><p><strong>max_iter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>default=300</em>) – Maximum number of iterations.</p></li>
+<li><p><strong>tol</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>default=1e-4</em>) – Convergence tolerance (based on Frobenius norm of the different in
 the cluster centers of two consecutive iterations).</p></li>
-<li><p><strong>random_state</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>RandomState instance</em><em>, </em><em>default=None</em>) – Determines random number generation for centroid initialization.
+<li><p><strong>random_state</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>RandomState instance</em><em>, </em><em>default=None</em>) – Determines random number generation for centroid initialization.
 Use an int to make the randomness deterministic.</p></li>
-<li><p><strong>init_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=None</em>) – Number of samples to randomly sample for speeding up the
+<li><p><strong>init_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>default=None</em>) – Number of samples to randomly sample for speeding up the
 initialization (sometimes at the expense of accuracy): the only
 algorithm is initialized by running a batch KMeans on a random
 subset of the data.</p></li>
 <li><p><strong>n_init</strong> – Number of random initializations that are tried (best of
 initializations is used to run the algorithm).</p></li>
-<li><p><strong>reassignment_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>default=0.01</em>) – Control the fraction of the maximum number of counts for a center
+<li><p><strong>reassignment_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>default=0.01</em>) – Control the fraction of the maximum number of counts for a center
 to be reassigned.</p></li>
 </ul>
 </dd>
@@ -194,21 +194,21 @@ to be reassigned.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>n_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=None</em>) – Number of clusters to find.</p></li>
-<li><p><strong>init</strong> (<em>{‘k-means++’</em><em>, </em><em>‘random’</em><em>, </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em>, </em><em>callable}</em><em>,               </em><em>default=’k-means++’</em>) – Method for centroid initialization.</p></li>
-<li><p><strong>n_init</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=3</em>) – Number of times K-Means is run with different centroid seeds.</p></li>
-<li><p><strong>max_iter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=300</em>) – Maximum number of iterations.</p></li>
-<li><p><strong>tol</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>default=1e-4</em>) – Convergence tolerance (based on Frobenius norm of the different in
+<li><p><strong>n_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>default=None</em>) – Number of clusters to find.</p></li>
+<li><p><strong>init</strong> (<em>{‘k-means++’</em><em>, </em><em>‘random’</em><em>, </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em>, </em><em>callable}</em><em>,               </em><em>default=’k-means++’</em>) – Method for centroid initialization.</p></li>
+<li><p><strong>n_init</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>default=3</em>) – Number of times K-Means is run with different centroid seeds.</p></li>
+<li><p><strong>max_iter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>default=300</em>) – Maximum number of iterations.</p></li>
+<li><p><strong>tol</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>default=1e-4</em>) – Convergence tolerance (based on Frobenius norm of the different in
 the cluster centers of two consecutive iterations).</p></li>
-<li><p><strong>random_state</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>RandomState instance</em><em>, </em><em>default=None</em>) – Determines random number generation for centroid initialization.
+<li><p><strong>random_state</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>RandomState instance</em><em>, </em><em>default=None</em>) – Determines random number generation for centroid initialization.
 Use an int to make the randomness deterministic.</p></li>
-<li><p><strong>init_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=None</em>) – Number of samples to randomly sample for speeding up the
+<li><p><strong>init_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>default=None</em>) – Number of samples to randomly sample for speeding up the
 initialization (sometimes at the expense of accuracy): the only
 algorithm is initialized by running a batch KMeans on a random
 subset of the data.</p></li>
 <li><p><strong>n_init</strong> – Number of random initializations that are tried (best of
 initializations is used to run the algorithm).</p></li>
-<li><p><strong>reassignment_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>default=0.01</em>) – Control the fraction of the maximum number of counts for a center
+<li><p><strong>reassignment_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>default=0.01</em>) – Control the fraction of the maximum number of counts for a center
 to be reassigned.</p></li>
 </ul>
 </dd>
@@ -221,14 +221,14 @@ to be reassigned.</p></li>
 <dd><p>Perform cluster analysis and get cluster label of each dataset item.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data_matrix</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Data matrix containing the required data to perform the cluster
+<dd class="field-odd"><p><strong>data_matrix</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – Data matrix containing the required data to perform the cluster
 analysis (numpy.ndarray of shape (n_items, n_features)).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>cluster_labels</strong> – Cluster label (int) assigned to each dataset item.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a> (1d)</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a> (1d)</p>
 </dd>
 </dl>
 </dd></dl>

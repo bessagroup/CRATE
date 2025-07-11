@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>clustering.adaptivity.adaptivity_criterion &mdash; CRATE 1.0.5 documentation</title>
+  <title>clustering.adaptivity.adaptivity_criterion &mdash; CRATE 1.0.6 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
@@ -131,13 +131,13 @@
 <span class="c1">#                                                                       Modules</span>
 <span class="c1"># =============================================================================</span>
 <span class="c1"># Standard</span>
-<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
 <span class="c1"># Third-party</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="c1"># Local</span>
-<span class="kn">import</span> <span class="nn">ioput.ioutilities</span> <span class="k">as</span> <span class="nn">ioutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ioput.ioutilities</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ioutil</span>
 <span class="c1">#</span>
 <span class="c1">#                                                          Authorship &amp; Credits</span>
 <span class="c1"># =============================================================================</span>
@@ -148,7 +148,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                    Interface: Clustering adaptivity criterion</span>
 <span class="c1"># =============================================================================</span>
-<span class="k">class</span> <span class="nc">AdaptivityCriterion</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AdaptivityCriterion</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Clustering adaptivity criterion interface.</span>
 
 <span class="sd">    Methods</span>
@@ -160,13 +160,13 @@
 <span class="sd">        data.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.&quot;&quot;&quot;</span>
         <span class="k">pass</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
     <span class="nd">@staticmethod</span>
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">get_parameters</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_parameters</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get clustering adaptivity criterion parameters.</span>
 
 <span class="sd">        Besides returning the mandatory and optional adaptivity criterion</span>
@@ -185,7 +185,7 @@
         <span class="k">pass</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">get_target_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_target_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get clustering adaptivity target clusters ans associated data.</span>
 
 <span class="sd">        Returns</span>
@@ -201,7 +201,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                                           Adaptivity criteria</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="AdaptiveClusterGrouping"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping">[docs]</a><span class="k">class</span> <span class="nc">AdaptiveClusterGrouping</span><span class="p">(</span><span class="n">AdaptivityCriterion</span><span class="p">):</span>
+<div class="viewcode-block" id="AdaptiveClusterGrouping"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">AdaptiveClusterGrouping</span><span class="p">(</span><span class="n">AdaptivityCriterion</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Clustering adaptivity cluster grouping criterion.</span>
 
 <span class="sd">    This adaptivity clustering criterion is not formally documented.</span>
@@ -237,7 +237,7 @@
 <span class="sd">    _adaptivity_selection_criterion(self, adapt_data_matrix)</span>
 <span class="sd">        Select target clusters from adaptive cluster group.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="AdaptiveClusterGrouping.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapt_mat_phase</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span>
+<div class="viewcode-block" id="AdaptiveClusterGrouping.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapt_mat_phase</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span>
                  <span class="n">adapt_trigger_ratio</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">adapt_split_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">adapt_max_level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">adapt_min_voxels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">is_merge_adapt_groups</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_adapt_feature_val</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -324,7 +324,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_min_adapt_feature_val</span> <span class="o">=</span> <span class="n">min_adapt_feature_val</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="AdaptiveClusterGrouping.get_parameters"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.get_parameters">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_parameters</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_parameters</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get clustering adaptivity criterion parameters.</span>
 
 <span class="sd">        Besides returning the mandatory and optional adaptivity criterion</span>
@@ -354,7 +354,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">mandatory_parameters</span><span class="p">,</span> <span class="n">optional_parameters</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="AdaptiveClusterGrouping.get_target_clusters"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.get_target_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">get_target_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapt_data_matrix</span><span class="p">,</span> <span class="n">voxels_clusters</span><span class="p">):</span>
+<div class="viewcode-block" id="AdaptiveClusterGrouping.get_target_clusters"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.get_target_clusters">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_target_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapt_data_matrix</span><span class="p">,</span> <span class="n">voxels_clusters</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get clustering adaptivity target clusters.</span>
 
 <span class="sd">        Parameters</span>
@@ -481,7 +481,7 @@
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="k">return</span> <span class="n">target_clusters</span><span class="p">,</span> <span class="n">target_clusters_data</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="AdaptiveClusterGrouping.update_group_clusters"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.update_group_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">update_group_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptive_clustering_map</span><span class="p">):</span>
+<div class="viewcode-block" id="AdaptiveClusterGrouping.update_group_clusters"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.update_group_clusters">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">update_group_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptive_clustering_map</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update adaptive cluster groups after adaptive procedures.</span>
 
 <span class="sd">        Parameters</span>
@@ -505,7 +505,7 @@
                     <span class="n">new_clusters</span> <span class="o">=</span> <span class="n">adaptive_clustering_map</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">old_cluster</span><span class="p">)]</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_groups</span><span class="p">[</span><span class="n">group_id</span><span class="p">]</span> <span class="o">+=</span> <span class="n">new_clusters</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="AdaptiveClusterGrouping.get_adapt_groups"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.get_adapt_groups">[docs]</a>    <span class="k">def</span> <span class="nf">get_adapt_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AdaptiveClusterGrouping.get_adapt_groups"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.get_adapt_groups">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_adapt_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get adaptive cluster groups.</span>
 
 <span class="sd">        Returns</span>
@@ -516,7 +516,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_adapt_groups</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="AdaptiveClusterGrouping.get_groups_adapt_level"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.get_groups_adapt_level">[docs]</a>    <span class="k">def</span> <span class="nf">get_groups_adapt_level</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AdaptiveClusterGrouping.get_groups_adapt_level"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.get_groups_adapt_level">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_groups_adapt_level</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get adaptive cluster groups adaptive level.</span>
 
 <span class="sd">        Returns</span>
@@ -527,7 +527,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_groups_adapt_level</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="AdaptiveClusterGrouping.get_min_adapt_feature_val"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.get_min_adapt_feature_val">[docs]</a>    <span class="k">def</span> <span class="nf">get_min_adapt_feature_val</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AdaptiveClusterGrouping.get_min_adapt_feature_val"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.get_min_adapt_feature_val">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_min_adapt_feature_val</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get minimum significant value of clustering adaptivity feature.</span>
 
 <span class="sd">        Returns</span>
@@ -537,7 +537,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_adapt_feature_val</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="AdaptiveClusterGrouping._adaptivity_trigger_condition"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping._adaptivity_trigger_condition">[docs]</a>    <span class="k">def</span> <span class="nf">_adaptivity_trigger_condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapt_data_matrix</span><span class="p">):</span>
+<div class="viewcode-block" id="AdaptiveClusterGrouping._adaptivity_trigger_condition"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping._adaptivity_trigger_condition">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_adaptivity_trigger_condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapt_data_matrix</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate adaptive cluster group adaptivity trigger condition.</span>
 
 <span class="sd">        Parameters</span>
@@ -570,7 +570,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="AdaptiveClusterGrouping._adaptivity_selection_criterion"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping._adaptivity_selection_criterion">[docs]</a>    <span class="k">def</span> <span class="nf">_adaptivity_selection_criterion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapt_data_matrix</span><span class="p">):</span>
+<div class="viewcode-block" id="AdaptiveClusterGrouping._adaptivity_selection_criterion"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping.html#cratepy.clustering.adaptivity.crve_adaptivity.AdaptiveClusterGrouping._adaptivity_selection_criterion">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_adaptivity_selection_criterion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapt_data_matrix</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Select target clusters from adaptive cluster group.</span>
 
 <span class="sd">        Parameters</span>
@@ -605,7 +605,7 @@
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="k">return</span> <span class="n">target_clusters</span></div></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="SpatialDiscontinuities"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.html#cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities">[docs]</a><span class="k">class</span> <span class="nc">SpatialDiscontinuities</span><span class="p">(</span><span class="n">AdaptivityCriterion</span><span class="p">):</span>
+<div class="viewcode-block" id="SpatialDiscontinuities"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.html#cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">SpatialDiscontinuities</span><span class="p">(</span><span class="n">AdaptivityCriterion</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Clustering adaptivity spatial discontinuities criterion.</span>
 
 <span class="sd">    The detailed description of the clustering adaptivity spatial</span>
@@ -644,7 +644,7 @@
 <span class="sd">    _update_swipe_dims_init_idx(self)</span>
 <span class="sd">        Randomly update the dimensions swipe frequency initial index.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="SpatialDiscontinuities.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.html#cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapt_mat_phase</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span>
+<div class="viewcode-block" id="SpatialDiscontinuities.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.html#cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapt_mat_phase</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span>
                  <span class="n">adapt_trigger_ratio</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">adapt_max_level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">adapt_min_voxels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">adapt_level_max_diff</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">swipe_dim_1_every</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">swipe_dim_2_every</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -746,7 +746,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_swipe_dims_init_idx</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="SpatialDiscontinuities.get_parameters"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.html#cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.get_parameters">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_parameters</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_parameters</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get clustering adaptivity criterion parameters.</span>
 
 <span class="sd">        Besides returning the mandatory and optional adaptivity criterion</span>
@@ -781,7 +781,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">mandatory_parameters</span><span class="p">,</span> <span class="n">optional_parameters</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="SpatialDiscontinuities.get_target_clusters"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.html#cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.get_target_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">get_target_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapt_data_matrix</span><span class="p">,</span> <span class="n">voxels_clusters</span><span class="p">):</span>
+<div class="viewcode-block" id="SpatialDiscontinuities.get_target_clusters"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.html#cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.get_target_clusters">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_target_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapt_data_matrix</span><span class="p">,</span> <span class="n">voxels_clusters</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get clustering adaptivity target clusters.</span>
 
 <span class="sd">        Parameters</span>
@@ -831,7 +831,7 @@
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="k">return</span> <span class="n">target_clusters</span><span class="p">,</span> <span class="n">target_clusters_data</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="SpatialDiscontinuities.update_clusters_adapt_level"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.html#cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.update_clusters_adapt_level">[docs]</a>    <span class="k">def</span> <span class="nf">update_clusters_adapt_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptive_clustering_map</span><span class="p">):</span>
+<div class="viewcode-block" id="SpatialDiscontinuities.update_clusters_adapt_level"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.html#cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.update_clusters_adapt_level">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">update_clusters_adapt_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptive_clustering_map</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update clusters adaptive level after adaptive procedures.</span>
 
 <span class="sd">        Parameters</span>
@@ -851,7 +851,7 @@
             <span class="c1"># Remove parent cluster</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_adapt_level</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">old_cluster</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="SpatialDiscontinuities.get_clusters_adapt_level"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.html#cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.get_clusters_adapt_level">[docs]</a>    <span class="k">def</span> <span class="nf">get_clusters_adapt_level</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SpatialDiscontinuities.get_clusters_adapt_level"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.html#cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.get_clusters_adapt_level">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_clusters_adapt_level</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get clusters adaptive level.</span>
 
 <span class="sd">        Returns</span>
@@ -861,7 +861,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clusters_adapt_level</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="SpatialDiscontinuities.get_min_adapt_feature_val"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.html#cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.get_min_adapt_feature_val">[docs]</a>    <span class="k">def</span> <span class="nf">get_min_adapt_feature_val</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SpatialDiscontinuities.get_min_adapt_feature_val"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.html#cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.get_min_adapt_feature_val">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_min_adapt_feature_val</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get minimum significant value of clustering adaptivity feature.</span>
 
 <span class="sd">        Returns</span>
@@ -871,7 +871,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_adapt_feature_val</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="SpatialDiscontinuities._swipe_dimension"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.html#cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities._swipe_dimension">[docs]</a>    <span class="k">def</span> <span class="nf">_swipe_dimension</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapt_data_matrix</span><span class="p">,</span> <span class="n">voxels_clusters</span><span class="p">,</span>
+<div class="viewcode-block" id="SpatialDiscontinuities._swipe_dimension"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.html#cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities._swipe_dimension">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_swipe_dimension</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adapt_data_matrix</span><span class="p">,</span> <span class="n">voxels_clusters</span><span class="p">,</span>
                          <span class="n">target_clusters</span><span class="p">,</span> <span class="n">target_clusters_data</span><span class="p">,</span> <span class="n">dim_loops</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate spatial discontinuities along a given dimension.</span>
 
@@ -1167,7 +1167,7 @@
             <span class="n">target_clusters_data</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)][</span><span class="s1">&#39;is_dynamic_split_factor&#39;</span><span class="p">]</span> <span class="o">=</span> \
                 <span class="kc">True</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="SpatialDiscontinuities._update_swipe_dims_init_idx"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.html#cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities._update_swipe_dims_init_idx">[docs]</a>    <span class="k">def</span> <span class="nf">_update_swipe_dims_init_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SpatialDiscontinuities._update_swipe_dims_init_idx"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities.html#cratepy.clustering.adaptivity.crve_adaptivity.SpatialDiscontinuities._update_swipe_dims_init_idx">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_update_swipe_dims_init_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Randomly update the dimensions swipe frequency initial index.</span>
 
 <span class="sd">        The detailed description of this procedure can be found in</span>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cratepy.material.isotropichardlaw &mdash; CRATE 1.0.5 documentation</title>
+  <title>cratepy.material.isotropichardlaw &mdash; CRATE 1.0.6 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
@@ -121,7 +121,7 @@
 <span class="c1">#                                                                       Modules</span>
 <span class="c1"># =============================================================================</span>
 <span class="c1"># Third-party</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="c1">#</span>
 <span class="c1">#                                                          Authorship &amp; Credits</span>
 <span class="c1"># =============================================================================</span>
@@ -131,7 +131,7 @@
 <span class="c1"># =============================================================================</span>
 <span class="c1">#</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="get_available_hardening_types"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.isotropichardlaw.get_available_hardening_types.html#cratepy.material.isotropichardlaw.get_available_hardening_types">[docs]</a><span class="k">def</span> <span class="nf">get_available_hardening_types</span><span class="p">():</span>
+<div class="viewcode-block" id="get_available_hardening_types"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.isotropichardlaw.get_available_hardening_types.html#cratepy.material.isotropichardlaw.get_available_hardening_types">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_available_hardening_types</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get available isotropic hardening laws.</span>
 
 <span class="sd">    The isotropic hardening law is specified in the input data file as a</span>
@@ -227,7 +227,7 @@
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">available_hardening_types</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="build_hardening_parameters"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.isotropichardlaw.build_hardening_parameters.html#cratepy.material.isotropichardlaw.build_hardening_parameters">[docs]</a><span class="k">def</span> <span class="nf">build_hardening_parameters</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">material_properties</span><span class="p">):</span>
+<div class="viewcode-block" id="build_hardening_parameters"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.isotropichardlaw.build_hardening_parameters.html#cratepy.material.isotropichardlaw.build_hardening_parameters">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">build_hardening_parameters</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">material_properties</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Build hardening parameters according with isotropic hardening type.</span>
 
 <span class="sd">    Parameters</span>
@@ -270,7 +270,7 @@
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">hardening_parameters</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="get_hardening_law"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.isotropichardlaw.get_hardening_law.html#cratepy.material.isotropichardlaw.get_hardening_law">[docs]</a><span class="k">def</span> <span class="nf">get_hardening_law</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+<div class="viewcode-block" id="get_hardening_law"><a class="viewcode-back" href="../../../_autosummary/cratepy.material.isotropichardlaw.get_hardening_law.html#cratepy.material.isotropichardlaw.get_hardening_law">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_hardening_law</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get isotropic hardening law to compute yield stress and hardening slope.</span>
 
 <span class="sd">    Parameters</span>
@@ -286,7 +286,7 @@
     <span class="c1"># Piecewise linear isotropic hardening</span>
     <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;piecewise_linear&#39;</span><span class="p">:</span>
         <span class="c1"># Set piecewise linear isotropic hardening law</span>
-        <span class="k">def</span> <span class="nf">hardening_law</span><span class="p">(</span><span class="n">hardening_parameters</span><span class="p">,</span> <span class="n">acc_p_strain</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">hardening_law</span><span class="p">(</span><span class="n">hardening_parameters</span><span class="p">,</span> <span class="n">acc_p_strain</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Piecewise linear isotropic hardening law.</span>
 
 <span class="sd">            Provided the required isotropic hardening law parameters and a</span>
@@ -355,7 +355,7 @@
     <span class="c1"># Linear isotropic hardening</span>
     <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;linear&#39;</span><span class="p">:</span>
         <span class="c1"># Set linear isotropic hardening law</span>
-        <span class="k">def</span> <span class="nf">hardening_law</span><span class="p">(</span><span class="n">hardening_parameters</span><span class="p">,</span> <span class="n">acc_p_strain</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">hardening_law</span><span class="p">(</span><span class="n">hardening_parameters</span><span class="p">,</span> <span class="n">acc_p_strain</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Linear isotropic hardening law.</span>
 
 <span class="sd">            Provided the required isotropic hardening law parameters and a</span>
@@ -393,7 +393,7 @@
     <span class="c1"># Nadai-Ludwik isotropic hardening</span>
     <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;nadai_ludwik&#39;</span><span class="p">:</span>
         <span class="c1"># Set Nadai-Ludwik isotropic hardening law</span>
-        <span class="k">def</span> <span class="nf">hardening_law</span><span class="p">(</span><span class="n">hardening_parameters</span><span class="p">,</span> <span class="n">acc_p_strain</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">hardening_law</span><span class="p">(</span><span class="n">hardening_parameters</span><span class="p">,</span> <span class="n">acc_p_strain</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Nadai-Ludwik isotropic hardening law.</span>
 
 <span class="sd">            Provided the required isotropic hardening law parameters and a</span>

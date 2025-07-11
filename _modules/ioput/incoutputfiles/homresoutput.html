@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ioput.incoutputfiles.homresoutput &mdash; CRATE 1.0.5 documentation</title>
+  <title>ioput.incoutputfiles.homresoutput &mdash; CRATE 1.0.6 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
@@ -117,14 +117,14 @@
 <span class="c1">#                                                                       Modules</span>
 <span class="c1"># =============================================================================</span>
 <span class="c1"># Standard</span>
-<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
 <span class="c1"># Third-party</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="c1"># Local</span>
-<span class="kn">import</span> <span class="nn">tensor.matrixoperations</span> <span class="k">as</span> <span class="nn">mop</span>
-<span class="kn">import</span> <span class="nn">tensor.tensoroperations</span> <span class="k">as</span> <span class="nn">top</span>
-<span class="kn">from</span> <span class="nn">ioput.incoutputfiles.interface</span> <span class="kn">import</span> <span class="n">IncrementalOutputFile</span>
-<span class="kn">from</span> <span class="nn">material.materialoperations</span> <span class="kn">import</span> <span class="n">compute_spatial_log_strain</span><span class="p">,</span> \
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensor.matrixoperations</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mop</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensor.tensoroperations</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">top</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ioput.incoutputfiles.interface</span><span class="w"> </span><span class="kn">import</span> <span class="n">IncrementalOutputFile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">material.materialoperations</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_spatial_log_strain</span><span class="p">,</span> \
                                         <span class="n">cauchy_from_first_piola</span><span class="p">,</span> \
                                         <span class="n">MaterialQuantitiesComputer</span>
 <span class="c1">#</span>
@@ -136,7 +136,7 @@
 <span class="c1"># =============================================================================</span>
 <span class="c1">#</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="HomResOutput"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.HomResOutput.html#cratepy.online.crom.asca.HomResOutput">[docs]</a><span class="k">class</span> <span class="nc">HomResOutput</span><span class="p">(</span><span class="n">IncrementalOutputFile</span><span class="p">):</span>
+<div class="viewcode-block" id="HomResOutput"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.HomResOutput.html#cratepy.online.crom.asca.HomResOutput">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">HomResOutput</span><span class="p">(</span><span class="n">IncrementalOutputFile</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Output file: Homogenized strain/stress results.</span>
 
 <span class="sd">    Attributes</span>
@@ -156,7 +156,7 @@
 <span class="sd">               hom_results, effective_time)</span>
 <span class="sd">        Write output file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="HomResOutput.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.HomResOutput.html#cratepy.online.crom.asca.HomResOutput.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
+<div class="viewcode-block" id="HomResOutput.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.HomResOutput.html#cratepy.online.crom.asca.HomResOutput.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
 
 <span class="sd">        Parameters</span>
@@ -178,7 +178,7 @@
         <span class="c1"># Set column width</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_col_width</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_header</span><span class="p">])</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="HomResOutput.init_file"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.HomResOutput.html#cratepy.online.crom.asca.HomResOutput.init_file">[docs]</a>    <span class="k">def</span> <span class="nf">init_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">):</span>
+<div class="viewcode-block" id="HomResOutput.init_file"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.HomResOutput.html#cratepy.online.crom.asca.HomResOutput.init_file">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">init_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Open output file and write file header.</span>
 
 <span class="sd">        Parameters</span>
@@ -220,7 +220,7 @@
         <span class="c1"># Close output file</span>
         <span class="n">output_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="HomResOutput.write_file"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.HomResOutput.html#cratepy.online.crom.asca.HomResOutput.write_file">[docs]</a>    <span class="k">def</span> <span class="nf">write_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">mac_load_path</span><span class="p">,</span>
+<div class="viewcode-block" id="HomResOutput.write_file"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.HomResOutput.html#cratepy.online.crom.asca.HomResOutput.write_file">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">write_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">mac_load_path</span><span class="p">,</span>
                    <span class="n">hom_results</span><span class="p">,</span> <span class="n">effective_time</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Write output file.</span>
 

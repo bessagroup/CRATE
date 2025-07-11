@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cratepy.main &mdash; CRATE 1.0.5 documentation</title>
+  <title>cratepy.main &mdash; CRATE 1.0.6 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/readthedocs-custom.css" type="text/css" />
@@ -126,22 +126,22 @@
 <span class="c1">#                                                                       Modules</span>
 <span class="c1"># =============================================================================</span>
 <span class="c1"># Standard</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">pickle</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
 <span class="c1"># Third-party</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="c1"># Local</span>
-<span class="kn">import</span> <span class="nn">ioput.info</span> <span class="k">as</span> <span class="nn">info</span>
-<span class="kn">import</span> <span class="nn">ioput.readinputdata</span> <span class="k">as</span> <span class="nn">rid</span>
-<span class="kn">import</span> <span class="nn">ioput.fileoperations</span> <span class="k">as</span> <span class="nn">filop</span>
-<span class="kn">import</span> <span class="nn">ioput.packager</span> <span class="k">as</span> <span class="nn">packager</span>
-<span class="kn">from</span> <span class="nn">clustering.crve</span> <span class="kn">import</span> <span class="n">CRVE</span>
-<span class="kn">from</span> <span class="nn">clustering.clusteringdata</span> <span class="kn">import</span> <span class="n">set_clustering_data</span>
-<span class="kn">from</span> <span class="nn">online.crom.asca</span> <span class="kn">import</span> <span class="n">ASCA</span>
-<span class="kn">from</span> <span class="nn">ioput.miscoutputfiles.vtkoutput</span> <span class="kn">import</span> <span class="n">VTKOutput</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ioput.info</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">info</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ioput.readinputdata</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">rid</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ioput.fileoperations</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">filop</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ioput.packager</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">packager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clustering.crve</span><span class="w"> </span><span class="kn">import</span> <span class="n">CRVE</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clustering.clusteringdata</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_clustering_data</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">online.crom.asca</span><span class="w"> </span><span class="kn">import</span> <span class="n">ASCA</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ioput.miscoutputfiles.vtkoutput</span><span class="w"> </span><span class="kn">import</span> <span class="n">VTKOutput</span>
 <span class="c1">#</span>
 <span class="c1">#                                                          Authorship &amp; Credits</span>
 <span class="c1"># =============================================================================</span>
@@ -151,7 +151,7 @@
 <span class="c1"># =============================================================================</span>
 <span class="c1">#</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="crate_simulation"><a class="viewcode-back" href="../../_autosummary/cratepy.main.crate_simulation.html#cratepy.crate_simulation">[docs]</a><span class="k">def</span> <span class="nf">crate_simulation</span><span class="p">(</span><span class="n">arg_input_file_path</span><span class="p">,</span> <span class="n">arg_discret_file_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="crate_simulation"><a class="viewcode-back" href="../../_autosummary/cratepy.main.crate_simulation.html#cratepy.crate_simulation">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">crate_simulation</span><span class="p">(</span><span class="n">arg_input_file_path</span><span class="p">,</span> <span class="n">arg_discret_file_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                      <span class="n">is_null_stdout</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform CRATE simulation.</span>
 

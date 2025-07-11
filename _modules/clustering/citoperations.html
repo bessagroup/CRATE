@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>clustering.citoperations &mdash; CRATE 1.0.5 documentation</title>
+  <title>clustering.citoperations &mdash; CRATE 1.0.6 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/readthedocs-custom.css" type="text/css" />
@@ -123,13 +123,13 @@
 <span class="c1">#                                                                       Modules</span>
 <span class="c1"># =============================================================================</span>
 <span class="c1"># Standard</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">itertools</span> <span class="k">as</span> <span class="nn">it</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">it</span>
 <span class="c1"># Third-party</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">numpy.matlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy.matlib</span>
 <span class="c1"># Local</span>
-<span class="kn">import</span> <span class="nn">tensor.matrixoperations</span> <span class="k">as</span> <span class="nn">mop</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensor.matrixoperations</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mop</span>
 <span class="c1">#</span>
 <span class="c1">#                                                          Authorship &amp; Credits</span>
 <span class="c1"># =============================================================================</span>
@@ -142,7 +142,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                                          Discrete frequencies</span>
 <span class="c1"># =============================================================================</span>
-<span class="k">def</span> <span class="nf">set_discrete_freqs</span><span class="p">(</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">rve_dims</span><span class="p">,</span> <span class="n">n_voxels_dims</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">set_discrete_freqs</span><span class="p">(</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">rve_dims</span><span class="p">,</span> <span class="n">n_voxels_dims</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform frequency discretization of the spatial domain.</span>
 
 <span class="sd">    Perform frequency discretization by setting the spatial discrete</span>
@@ -217,7 +217,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                                                Green operator</span>
 <span class="c1"># =============================================================================</span>
-<span class="k">def</span> <span class="nf">gop_material_independent_terms</span><span class="p">(</span><span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">rve_dims</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gop_material_independent_terms</span><span class="p">(</span><span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">rve_dims</span><span class="p">,</span>
                                    <span class="n">n_voxels_dims</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute Green operator material independent terms in frequency domain.</span>
 
@@ -425,7 +425,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                    Global cluster interaction matrix assembly</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="assemble_cit"><a class="viewcode-back" href="../../_autosummary/cratepy.online.crom.asca.assemble_cit.html#cratepy.online.crom.asca.assemble_cit">[docs]</a><span class="k">def</span> <span class="nf">assemble_cit</span><span class="p">(</span><span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">mat_prop_ref</span><span class="p">,</span>
+<div class="viewcode-block" id="assemble_cit"><a class="viewcode-back" href="../../_autosummary/cratepy.online.crom.asca.assemble_cit.html#cratepy.online.crom.asca.assemble_cit">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">assemble_cit</span><span class="p">(</span><span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">mat_prop_ref</span><span class="p">,</span>
                  <span class="n">material_phases</span><span class="p">,</span> <span class="n">phase_n_clusters</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span> <span class="n">cit_1_mf</span><span class="p">,</span>
                  <span class="n">cit_2_mf</span><span class="p">,</span> <span class="n">cit_0_freq_mf</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Assemble global cluster interaction matrix.</span>

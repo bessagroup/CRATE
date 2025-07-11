@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cratepy.material.models.von_mises &mdash; CRATE 1.0.5 documentation</title>
+  <title>cratepy.material.models.von_mises &mdash; CRATE 1.0.6 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/readthedocs-custom.css" type="text/css" />
@@ -123,18 +123,18 @@
 <span class="c1">#                                                                       Modules</span>
 <span class="c1"># =============================================================================</span>
 <span class="c1"># Standard</span>
-<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
 <span class="c1"># Third-party</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="c1"># Local</span>
-<span class="kn">import</span> <span class="nn">tensor.tensoroperations</span> <span class="k">as</span> <span class="nn">top</span>
-<span class="kn">import</span> <span class="nn">tensor.matrixoperations</span> <span class="k">as</span> <span class="nn">mop</span>
-<span class="kn">from</span> <span class="nn">material.models.interface</span> <span class="kn">import</span> <span class="n">ConstitutiveModel</span>
-<span class="kn">from</span> <span class="nn">material.isotropichardlaw</span> <span class="kn">import</span> <span class="n">get_available_hardening_types</span><span class="p">,</span> \
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensor.tensoroperations</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">top</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensor.matrixoperations</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mop</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">material.models.interface</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConstitutiveModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">material.isotropichardlaw</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_available_hardening_types</span><span class="p">,</span> \
                                       <span class="n">build_hardening_parameters</span><span class="p">,</span> \
                                       <span class="n">get_hardening_law</span>
-<span class="kn">from</span> <span class="nn">material.models.elastic</span> <span class="kn">import</span> <span class="n">Elastic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">material.models.elastic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Elastic</span>
 <span class="c1">#</span>
 <span class="c1">#                                                          Authorship &amp; Credits</span>
 <span class="c1"># =============================================================================</span>
@@ -144,7 +144,7 @@
 <span class="c1"># =============================================================================</span>
 <span class="c1">#</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="VonMises"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.von_mises.VonMises.html#cratepy.material.models.von_mises.VonMises">[docs]</a><span class="k">class</span> <span class="nc">VonMises</span><span class="p">(</span><span class="n">ConstitutiveModel</span><span class="p">):</span>
+<div class="viewcode-block" id="VonMises"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.von_mises.VonMises.html#cratepy.material.models.von_mises.VonMises">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">VonMises</span><span class="p">(</span><span class="n">ConstitutiveModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Von Mises constitutive model with isotropic strain hardening.</span>
 
 <span class="sd">    Attributes</span>
@@ -176,7 +176,7 @@
 <span class="sd">                 su_max_n_iterations=20, su_conv_tol=1e-6)</span>
 <span class="sd">        Perform material constitutive model state update.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="VonMises.__init__"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.von_mises.VonMises.html#cratepy.material.models.von_mises.VonMises.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">material_properties</span><span class="p">):</span>
+<div class="viewcode-block" id="VonMises.__init__"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.von_mises.VonMises.html#cratepy.material.models.von_mises.VonMises.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">material_properties</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constitutive model constructor.</span>
 
 <span class="sd">        Parameters</span>
@@ -225,7 +225,7 @@
                                <span class="s1">&#39;case.&#39;</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="VonMises.get_required_properties"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.von_mises.VonMises.html#cratepy.material.models.von_mises.VonMises.get_required_properties">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_required_properties</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_required_properties</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get constitutive model material properties and constitutive options.</span>
 
 <span class="sd">        *Input data file syntax*:</span>
@@ -281,7 +281,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">material_properties</span><span class="p">,</span> <span class="n">constitutive_options</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="VonMises.state_init"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.von_mises.VonMises.html#cratepy.material.models.von_mises.VonMises.state_init">[docs]</a>    <span class="k">def</span> <span class="nf">state_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="VonMises.state_init"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.von_mises.VonMises.html#cratepy.material.models.von_mises.VonMises.state_init">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">state_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get initialized material constitutive model state variables.</span>
 
 <span class="sd">        Constitutive model state variables:</span>
@@ -369,7 +369,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">state_variables_init</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="VonMises.state_update"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.von_mises.VonMises.html#cratepy.material.models.von_mises.VonMises.state_update">[docs]</a>    <span class="k">def</span> <span class="nf">state_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inc_strain</span><span class="p">,</span> <span class="n">state_variables_old</span><span class="p">,</span>
+<div class="viewcode-block" id="VonMises.state_update"><a class="viewcode-back" href="../../../../_autosummary/cratepy.material.models.von_mises.VonMises.html#cratepy.material.models.von_mises.VonMises.state_update">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">state_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inc_strain</span><span class="p">,</span> <span class="n">state_variables_old</span><span class="p">,</span>
                      <span class="n">su_max_n_iterations</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">su_conv_tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform material constitutive model state update.</span>
 

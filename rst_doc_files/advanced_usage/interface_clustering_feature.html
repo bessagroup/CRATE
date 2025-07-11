@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Interface: Clustering feature &mdash; CRATE 1.0.5 documentation</title>
+  <title>Interface: Clustering feature &mdash; CRATE 1.0.6 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/readthedocs-custom.css" type="text/css" />
@@ -134,12 +134,12 @@
 <blockquote>
 <div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># clustering.features.new_feature_algorithm.py</span>
 
-<span class="kn">from</span> <span class="nn">clustering.clusteringdata</span> <span class="kn">import</span> <span class="n">FeatureAlgorithm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clustering.clusteringdata</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeatureAlgorithm</span>
 
-<span class="k">class</span> <span class="nc">NewFeatureAlgorithm</span><span class="p">(</span><span class="n">FeatureAlgorithm</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">NewFeatureAlgorithm</span><span class="p">(</span><span class="n">FeatureAlgorithm</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;New clustering feature algorithm.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.&quot;&quot;&quot;</span>
 
         <span class="k">pass</span>
@@ -159,9 +159,9 @@
 <blockquote>
 <div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># cratepy.clustering.clusteringdata.py</span>
 
-<span class="hll"><span class="kn">from</span> <span class="nn">clustering.features.new_feature_algorithm</span> <span class="kn">import</span> <span class="n">NewFeatureAlgorithm</span>
+<span class="hll"><span class="kn">from</span><span class="w"> </span><span class="nn">clustering.features.new_feature_algorithm</span><span class="w"> </span><span class="kn">import</span> <span class="n">NewFeatureAlgorithm</span>
 </span>
-<span class="k">def</span> <span class="nf">get_available_clustering_features</span><span class="p">(</span><span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_available_clustering_features</span><span class="p">(</span><span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get available clustering features and corresponding descriptors.&quot;&quot;&quot;</span>
 
     <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>

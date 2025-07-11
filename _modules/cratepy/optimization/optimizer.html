@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cratepy.optimization.optimizer &mdash; CRATE 1.0.5 documentation</title>
+  <title>cratepy.optimization.optimizer &mdash; CRATE 1.0.6 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
@@ -121,10 +121,10 @@
 <span class="c1">#                                                                       Modules</span>
 <span class="c1"># =============================================================================</span>
 <span class="c1"># Standard</span>
-<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
 <span class="c1"># Third-party</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">scipy.optimize</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.optimize</span>
 <span class="c1">#</span>
 <span class="c1">#                                                          Authorship &amp; Credits</span>
 <span class="c1"># =============================================================================</span>
@@ -137,7 +137,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                             Interface: Optimization algorithm</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="Optimizer"><a class="viewcode-back" href="../../../_autosummary/cratepy.optimization.optimizer.Optimizer.html#cratepy.optimization.optimizer.Optimizer">[docs]</a><span class="k">class</span> <span class="nc">Optimizer</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<div class="viewcode-block" id="Optimizer"><a class="viewcode-back" href="../../../_autosummary/cratepy.optimization.optimizer.Optimizer.html#cratepy.optimization.optimizer.Optimizer">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Optimizer</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Optimization algorithm interface.</span>
 
 <span class="sd">    Methods</span>
@@ -147,12 +147,12 @@
 <span class="sd">        *abstract*: Solve optimization problem.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Optimizer.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.optimization.optimizer.Optimizer.html#cratepy.optimization.optimizer.Optimizer.__init__">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="Optimizer.solve_optimization"><a class="viewcode-back" href="../../../_autosummary/cratepy.optimization.optimizer.Optimizer.html#cratepy.optimization.optimizer.Optimizer.solve_optimization">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">solve_optimization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">optimization_function</span><span class="p">,</span> <span class="n">max_n_iter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">solve_optimization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">optimization_function</span><span class="p">,</span> <span class="n">max_n_iter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                            <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Solve optimization problem.</span>
 
@@ -174,7 +174,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                                       Optimization algorithms</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="SciPyMinimizer"><a class="viewcode-back" href="../../../_autosummary/cratepy.optimization.optimizer.SciPyMinimizer.html#cratepy.optimization.optimizer.SciPyMinimizer">[docs]</a><span class="k">class</span> <span class="nc">SciPyMinimizer</span><span class="p">(</span><span class="n">Optimizer</span><span class="p">):</span>
+<div class="viewcode-block" id="SciPyMinimizer"><a class="viewcode-back" href="../../../_autosummary/cratepy.optimization.optimizer.SciPyMinimizer.html#cratepy.optimization.optimizer.SciPyMinimizer">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">SciPyMinimizer</span><span class="p">(</span><span class="n">Optimizer</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;SciPy minimization optimizer (wrapper).</span>
 
 <span class="sd">    Documentation: see `here &lt;https://docs.scipy.org/doc/scipy/reference/</span>
@@ -186,7 +186,7 @@
 <span class="sd">                       verbose=False)</span>
 <span class="sd">        Solve optimization problem.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="SciPyMinimizer.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.optimization.optimizer.SciPyMinimizer.html#cratepy.optimization.optimizer.SciPyMinimizer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;Powell&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="SciPyMinimizer.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.optimization.optimizer.SciPyMinimizer.html#cratepy.optimization.optimizer.SciPyMinimizer.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;Powell&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
 
 <span class="sd">        Parameters</span>
@@ -196,7 +196,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_method</span> <span class="o">=</span> <span class="n">method</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="SciPyMinimizer.solve_optimization"><a class="viewcode-back" href="../../../_autosummary/cratepy.optimization.optimizer.SciPyMinimizer.html#cratepy.optimization.optimizer.SciPyMinimizer.solve_optimization">[docs]</a>    <span class="k">def</span> <span class="nf">solve_optimization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">optimization_function</span><span class="p">,</span> <span class="n">max_n_iter</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<div class="viewcode-block" id="SciPyMinimizer.solve_optimization"><a class="viewcode-back" href="../../../_autosummary/cratepy.optimization.optimizer.SciPyMinimizer.html#cratepy.optimization.optimizer.SciPyMinimizer.solve_optimization">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">solve_optimization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">optimization_function</span><span class="p">,</span> <span class="n">max_n_iter</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                            <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Solve optimization problem.</span>
 

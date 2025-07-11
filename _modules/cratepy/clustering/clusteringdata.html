@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cratepy.clustering.clusteringdata &mdash; CRATE 1.0.5 documentation</title>
+  <title>cratepy.clustering.clusteringdata &mdash; CRATE 1.0.6 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
@@ -139,16 +139,16 @@
 <span class="c1">#                                                                       Modules</span>
 <span class="c1"># =============================================================================</span>
 <span class="c1"># Standard</span>
-<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
-<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
 <span class="c1"># Third-party</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">sklearn.preprocessing</span> <span class="k">as</span> <span class="nn">skpp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">skpp</span>
 <span class="c1"># Local</span>
-<span class="kn">import</span> <span class="nn">ioput.info</span> <span class="k">as</span> <span class="nn">info</span>
-<span class="kn">import</span> <span class="nn">tensor.tensoroperations</span> <span class="k">as</span> <span class="nn">top</span>
-<span class="kn">import</span> <span class="nn">tensor.matrixoperations</span> <span class="k">as</span> <span class="nn">mop</span>
-<span class="kn">from</span> <span class="nn">clustering.rveelasticdatabase</span> <span class="kn">import</span> <span class="n">RVEElasticDatabase</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ioput.info</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">info</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensor.tensoroperations</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">top</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensor.matrixoperations</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mop</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clustering.rveelasticdatabase</span><span class="w"> </span><span class="kn">import</span> <span class="n">RVEElasticDatabase</span>
 <span class="c1">#</span>
 <span class="c1">#                                                          Authorship &amp; Credits</span>
 <span class="c1"># =============================================================================</span>
@@ -158,7 +158,7 @@
 <span class="c1"># =============================================================================</span>
 <span class="c1">#</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="set_clustering_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.set_clustering_data.html#cratepy.clustering.clusteringdata.set_clustering_data">[docs]</a><span class="k">def</span> <span class="nf">set_clustering_data</span><span class="p">(</span><span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">rve_dims</span><span class="p">,</span>
+<div class="viewcode-block" id="set_clustering_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.set_clustering_data.html#cratepy.clustering.clusteringdata.set_clustering_data">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">set_clustering_data</span><span class="p">(</span><span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">rve_dims</span><span class="p">,</span>
                         <span class="n">n_voxels_dims</span><span class="p">,</span> <span class="n">regular_grid</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span>
                         <span class="n">material_phases_properties</span><span class="p">,</span> <span class="n">dns_method</span><span class="p">,</span>
                         <span class="n">dns_method_data</span><span class="p">,</span> <span class="n">standardization_method</span><span class="p">,</span>
@@ -276,7 +276,7 @@
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">clustering_data</span><span class="p">,</span> <span class="n">rve_elastic_database</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="get_available_clustering_features"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.get_available_clustering_features.html#cratepy.clustering.clusteringdata.get_available_clustering_features">[docs]</a><span class="k">def</span> <span class="nf">get_available_clustering_features</span><span class="p">(</span><span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">):</span>
+<div class="viewcode-block" id="get_available_clustering_features"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.get_available_clustering_features.html#cratepy.clustering.clusteringdata.get_available_clustering_features">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_available_clustering_features</span><span class="p">(</span><span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get available clustering features and corresponding descriptors.</span>
 
 <span class="sd">    Available clustering features identifiers:</span>
@@ -422,7 +422,7 @@
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">features_descriptors</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="def_gradient_from_log_strain"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.def_gradient_from_log_strain.html#cratepy.clustering.clusteringdata.def_gradient_from_log_strain">[docs]</a><span class="k">def</span> <span class="nf">def_gradient_from_log_strain</span><span class="p">(</span><span class="n">log_strain</span><span class="p">):</span>
+<div class="viewcode-block" id="def_gradient_from_log_strain"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.def_gradient_from_log_strain.html#cratepy.clustering.clusteringdata.def_gradient_from_log_strain">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">def_gradient_from_log_strain</span><span class="p">(</span><span class="n">log_strain</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get deformation gradient from material logarithmic strain tensor.</span>
 
 <span class="sd">    Among the multitude of deformation gradients that may correspond to a given</span>
@@ -487,7 +487,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                                         Cluster analysis data</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="ClusterAnalysisData"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.ClusterAnalysisData.html#cratepy.clustering.clusteringdata.ClusterAnalysisData">[docs]</a><span class="k">class</span> <span class="nc">ClusterAnalysisData</span><span class="p">:</span>
+<div class="viewcode-block" id="ClusterAnalysisData"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.ClusterAnalysisData.html#cratepy.clustering.clusteringdata.ClusterAnalysisData">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ClusterAnalysisData</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Features data required to perform the RVE cluster analysis.</span>
 
 <span class="sd">    Attributes</span>
@@ -531,7 +531,7 @@
 <span class="sd">    get_global_data_matrix(self)</span>
 <span class="sd">        Get global data matrix containing all clustering features.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="ClusterAnalysisData.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.ClusterAnalysisData.html#cratepy.clustering.clusteringdata.ClusterAnalysisData.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">rve_dims</span><span class="p">,</span>
+<div class="viewcode-block" id="ClusterAnalysisData.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.ClusterAnalysisData.html#cratepy.clustering.clusteringdata.ClusterAnalysisData.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">rve_dims</span><span class="p">,</span>
                  <span class="n">n_voxels_dims</span><span class="p">,</span> <span class="n">base_clustering_scheme</span><span class="p">,</span>
                  <span class="n">adaptive_clustering_scheme</span><span class="p">,</span> <span class="n">feature_descriptors</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
@@ -592,7 +592,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_sym</span> <span class="o">=</span> <span class="n">comp_order_sym</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span> <span class="o">=</span> <span class="n">comp_order_nsym</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ClusterAnalysisData.set_prescribed_features"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.ClusterAnalysisData.html#cratepy.clustering.clusteringdata.ClusterAnalysisData.set_prescribed_features">[docs]</a>    <span class="k">def</span> <span class="nf">set_prescribed_features</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ClusterAnalysisData.set_prescribed_features"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.ClusterAnalysisData.html#cratepy.clustering.clusteringdata.ClusterAnalysisData.set_prescribed_features">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_prescribed_features</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set prescribed clustering features.&quot;&quot;&quot;</span>
         <span class="c1"># Get material phases</span>
         <span class="n">material_phases</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_clustering_scheme</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
@@ -615,7 +615,7 @@
         <span class="c1"># Get set of unique prescribed clustering features</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_features</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_features</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ClusterAnalysisData.get_features"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.ClusterAnalysisData.html#cratepy.clustering.clusteringdata.ClusterAnalysisData.get_features">[docs]</a>    <span class="k">def</span> <span class="nf">get_features</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ClusterAnalysisData.get_features"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.ClusterAnalysisData.html#cratepy.clustering.clusteringdata.ClusterAnalysisData.get_features">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_features</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get prescribed clustering features.</span>
 
 <span class="sd">        Returns</span>
@@ -625,7 +625,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_features</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ClusterAnalysisData.set_feature_global_indexes"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.ClusterAnalysisData.html#cratepy.clustering.clusteringdata.ClusterAnalysisData.set_feature_global_indexes">[docs]</a>    <span class="k">def</span> <span class="nf">set_feature_global_indexes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ClusterAnalysisData.set_feature_global_indexes"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.ClusterAnalysisData.html#cratepy.clustering.clusteringdata.ClusterAnalysisData.set_feature_global_indexes">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_feature_global_indexes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set prescribed clustering features global data matrix indexes.</span>
 
 <span class="sd">        Assign a list of global data matrix indexes to each clustering feature</span>
@@ -682,7 +682,7 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">_adaptive_clustering_scheme</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> \
                         <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">indexes</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ClusterAnalysisData.set_clustering_mac_strains"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.ClusterAnalysisData.html#cratepy.clustering.clusteringdata.ClusterAnalysisData.set_clustering_mac_strains">[docs]</a>    <span class="k">def</span> <span class="nf">set_clustering_mac_strains</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ClusterAnalysisData.set_clustering_mac_strains"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.ClusterAnalysisData.html#cratepy.clustering.clusteringdata.ClusterAnalysisData.set_clustering_mac_strains">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_clustering_mac_strains</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set macroscale strain loadings to compute clustering features.</span>
 
 <span class="sd">        List the required macroscale strain loadings to compute all the</span>
@@ -720,7 +720,7 @@
                     <span class="c1"># Append macroscale strain loading</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_mac_strains</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mac_strain</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ClusterAnalysisData.get_clustering_mac_strains"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.ClusterAnalysisData.html#cratepy.clustering.clusteringdata.ClusterAnalysisData.get_clustering_mac_strains">[docs]</a>    <span class="k">def</span> <span class="nf">get_clustering_mac_strains</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ClusterAnalysisData.get_clustering_mac_strains"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.ClusterAnalysisData.html#cratepy.clustering.clusteringdata.ClusterAnalysisData.get_clustering_mac_strains">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_clustering_mac_strains</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set macroscale strain loadings to compute clustering features.</span>
 
 <span class="sd">        Returns</span>
@@ -733,7 +733,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mac_strains</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ClusterAnalysisData.set_global_data_matrix"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.ClusterAnalysisData.html#cratepy.clustering.clusteringdata.ClusterAnalysisData.set_global_data_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">set_global_data_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rve_global_response</span><span class="p">):</span>
+<div class="viewcode-block" id="ClusterAnalysisData.set_global_data_matrix"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.ClusterAnalysisData.html#cratepy.clustering.clusteringdata.ClusterAnalysisData.set_global_data_matrix">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_global_data_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rve_global_response</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute global data matrix containing all clustering features.</span>
 
 <span class="sd">        Compute the data matrix required to perform all the RVE clusterings</span>
@@ -801,7 +801,7 @@
             <span class="n">j_end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_features_idxs</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">feature</span><span class="p">)][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_global_data_matrix</span><span class="p">[:,</span> <span class="n">j_init</span><span class="p">:</span><span class="n">j_end</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_matrix</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ClusterAnalysisData.get_global_data_matrix"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.ClusterAnalysisData.html#cratepy.clustering.clusteringdata.ClusterAnalysisData.get_global_data_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">get_global_data_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ClusterAnalysisData.get_global_data_matrix"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.ClusterAnalysisData.html#cratepy.clustering.clusteringdata.ClusterAnalysisData.get_global_data_matrix">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_global_data_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get global data matrix containing all clustering features.</span>
 
 <span class="sd">        Returns</span>
@@ -815,7 +815,7 @@
 <span class="c1">#</span>
 <span class="c1">#                           Interface: Clustering feature computation algorithm</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="FeatureAlgorithm"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.FeatureAlgorithm.html#cratepy.clustering.clusteringdata.FeatureAlgorithm">[docs]</a><span class="k">class</span> <span class="nc">FeatureAlgorithm</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<div class="viewcode-block" id="FeatureAlgorithm"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.FeatureAlgorithm.html#cratepy.clustering.clusteringdata.FeatureAlgorithm">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FeatureAlgorithm</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Feature computation algorithm interface.</span>
 
 <span class="sd">    Methods</span>
@@ -825,12 +825,12 @@
 <span class="sd">        *abstract*: Compute data matrix associated to clustering feature.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="FeatureAlgorithm.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.FeatureAlgorithm.html#cratepy.clustering.clusteringdata.FeatureAlgorithm.__init__">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="FeatureAlgorithm.get_feature_data_matrix"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.FeatureAlgorithm.html#cratepy.clustering.clusteringdata.FeatureAlgorithm.get_feature_data_matrix">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">get_feature_data_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feature_data_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span>
                                 <span class="n">rve_dims</span><span class="p">,</span> <span class="n">n_voxels_dims</span><span class="p">,</span> <span class="n">rve_response</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute data matrix associated to clustering feature.</span>
 
@@ -862,7 +862,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                    Clustering features computation algorithms</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="StrainConcentrationTensor"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.StrainConcentrationTensor.html#cratepy.clustering.clusteringdata.StrainConcentrationTensor">[docs]</a><span class="k">class</span> <span class="nc">StrainConcentrationTensor</span><span class="p">(</span><span class="n">FeatureAlgorithm</span><span class="p">):</span>
+<div class="viewcode-block" id="StrainConcentrationTensor"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.StrainConcentrationTensor.html#cratepy.clustering.clusteringdata.StrainConcentrationTensor">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">StrainConcentrationTensor</span><span class="p">(</span><span class="n">FeatureAlgorithm</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fourth-order elastic strain concentration tensor.</span>
 
 <span class="sd">    The fourth-order elastic strain concentration tensor is defined in terms of</span>
@@ -920,11 +920,11 @@
 <span class="sd">                            n_voxels_dims, rve_response)</span>
 <span class="sd">        Compute data matrix associated to clustering feature.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="StrainConcentrationTensor.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.StrainConcentrationTensor.html#cratepy.clustering.clusteringdata.StrainConcentrationTensor.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="StrainConcentrationTensor.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.StrainConcentrationTensor.html#cratepy.clustering.clusteringdata.StrainConcentrationTensor.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="StrainConcentrationTensor.get_feature_data_matrix"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.StrainConcentrationTensor.html#cratepy.clustering.clusteringdata.StrainConcentrationTensor.get_feature_data_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">get_feature_data_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span>
+<div class="viewcode-block" id="StrainConcentrationTensor.get_feature_data_matrix"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.StrainConcentrationTensor.html#cratepy.clustering.clusteringdata.StrainConcentrationTensor.get_feature_data_matrix">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_feature_data_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span>
                                 <span class="n">rve_dims</span><span class="p">,</span> <span class="n">n_voxels_dims</span><span class="p">,</span> <span class="n">rve_response</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute data matrix associated to clustering feature.</span>
 
@@ -982,7 +982,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">data_matrix</span></div></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="SpatialCoordinates"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.SpatialCoordinates.html#cratepy.clustering.clusteringdata.SpatialCoordinates">[docs]</a><span class="k">class</span> <span class="nc">SpatialCoordinates</span><span class="p">(</span><span class="n">FeatureAlgorithm</span><span class="p">):</span>
+<div class="viewcode-block" id="SpatialCoordinates"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.SpatialCoordinates.html#cratepy.clustering.clusteringdata.SpatialCoordinates">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">SpatialCoordinates</span><span class="p">(</span><span class="n">FeatureAlgorithm</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Spatial coordinates.</span>
 
 <span class="sd">    Methods</span>
@@ -991,11 +991,11 @@
 <span class="sd">                            n_voxels_dims, rve_response)</span>
 <span class="sd">        Compute data matrix associated to clustering feature.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="SpatialCoordinates.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.SpatialCoordinates.html#cratepy.clustering.clusteringdata.SpatialCoordinates.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SpatialCoordinates.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.SpatialCoordinates.html#cratepy.clustering.clusteringdata.SpatialCoordinates.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="SpatialCoordinates.get_feature_data_matrix"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.SpatialCoordinates.html#cratepy.clustering.clusteringdata.SpatialCoordinates.get_feature_data_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">get_feature_data_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span>
+<div class="viewcode-block" id="SpatialCoordinates.get_feature_data_matrix"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.SpatialCoordinates.html#cratepy.clustering.clusteringdata.SpatialCoordinates.get_feature_data_matrix">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_feature_data_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span>
                                 <span class="n">rve_dims</span><span class="p">,</span> <span class="n">n_voxels_dims</span><span class="p">,</span> <span class="n">rve_response</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute data matrix associated to clustering feature.</span>
 
@@ -1065,7 +1065,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                     Interface: Data standardization algorithm</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="Standardizer"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.Standardizer.html#cratepy.clustering.clusteringdata.Standardizer">[docs]</a><span class="k">class</span> <span class="nc">Standardizer</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<div class="viewcode-block" id="Standardizer"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.Standardizer.html#cratepy.clustering.clusteringdata.Standardizer">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Standardizer</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Data standardization algorithm interface.</span>
 
 <span class="sd">    Methods</span>
@@ -1074,12 +1074,12 @@
 <span class="sd">        *abstract*: Standardize provided data matrix.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Standardizer.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.Standardizer.html#cratepy.clustering.clusteringdata.Standardizer.__init__">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="Standardizer.get_standardized_data_matrix"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.Standardizer.html#cratepy.clustering.clusteringdata.Standardizer.get_standardized_data_matrix">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">get_standardized_data_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_standardized_data_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Standardize provided data matrix.</span>
 
 <span class="sd">        Parameters</span>
@@ -1098,7 +1098,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                               Data standardization algorithms</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="MinMaxScaler"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.MinMaxScaler.html#cratepy.clustering.clusteringdata.MinMaxScaler">[docs]</a><span class="k">class</span> <span class="nc">MinMaxScaler</span><span class="p">(</span><span class="n">Standardizer</span><span class="p">):</span>
+<div class="viewcode-block" id="MinMaxScaler"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.MinMaxScaler.html#cratepy.clustering.clusteringdata.MinMaxScaler">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">MinMaxScaler</span><span class="p">(</span><span class="n">Standardizer</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Min-Max scaling algorithm (wrapper).</span>
 
 <span class="sd">    Transform features by scaling each feature to a given min-max range.</span>
@@ -1117,7 +1117,7 @@
 <span class="sd">    get_standardized_data_matrix(self, data_matrix)</span>
 <span class="sd">        Standardize provided data matrix.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="MinMaxScaler.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.MinMaxScaler.html#cratepy.clustering.clusteringdata.MinMaxScaler.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
+<div class="viewcode-block" id="MinMaxScaler.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.MinMaxScaler.html#cratepy.clustering.clusteringdata.MinMaxScaler.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Standardization algorithm constructor.</span>
 
 <span class="sd">        Parameters</span>
@@ -1127,7 +1127,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_feature_range</span> <span class="o">=</span> <span class="n">feature_range</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MinMaxScaler.get_standardized_data_matrix"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.MinMaxScaler.html#cratepy.clustering.clusteringdata.MinMaxScaler.get_standardized_data_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">get_standardized_data_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">):</span>
+<div class="viewcode-block" id="MinMaxScaler.get_standardized_data_matrix"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.MinMaxScaler.html#cratepy.clustering.clusteringdata.MinMaxScaler.get_standardized_data_matrix">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_standardized_data_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Standardize provided data matrix.</span>
 
 <span class="sd">        Parameters</span>
@@ -1150,7 +1150,7 @@
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="k">return</span> <span class="n">data_matrix</span></div></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="StandardScaler"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.StandardScaler.html#cratepy.clustering.clusteringdata.StandardScaler">[docs]</a><span class="k">class</span> <span class="nc">StandardScaler</span><span class="p">(</span><span class="n">Standardizer</span><span class="p">):</span>
+<div class="viewcode-block" id="StandardScaler"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.StandardScaler.html#cratepy.clustering.clusteringdata.StandardScaler">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">StandardScaler</span><span class="p">(</span><span class="n">Standardizer</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Standard scaling algorithm (wrapper).</span>
 
 <span class="sd">    Transform features by removing the mean and scaling to unit variance</span>
@@ -1165,10 +1165,10 @@
 <span class="sd">    get_standardized_data_matrix(self, data_matrix)</span>
 <span class="sd">        Standardize provided data matrix.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="StandardScaler.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.StandardScaler.html#cratepy.clustering.clusteringdata.StandardScaler.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="StandardScaler.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.StandardScaler.html#cratepy.clustering.clusteringdata.StandardScaler.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Standardization algorithm constructor.&quot;&quot;&quot;</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="StandardScaler.get_standardized_data_matrix"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.StandardScaler.html#cratepy.clustering.clusteringdata.StandardScaler.get_standardized_data_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">get_standardized_data_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">):</span>
+<div class="viewcode-block" id="StandardScaler.get_standardized_data_matrix"><a class="viewcode-back" href="../../../_autosummary/cratepy.clustering.clusteringdata.StandardScaler.html#cratepy.clustering.clusteringdata.StandardScaler.get_standardized_data_matrix">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_standardized_data_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Standardize provided data matrix.</span>
 
 <span class="sd">        Parameters</span>

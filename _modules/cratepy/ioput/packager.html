@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cratepy.ioput.packager &mdash; CRATE 1.0.5 documentation</title>
+  <title>cratepy.ioput.packager &mdash; CRATE 1.0.6 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
@@ -135,10 +135,10 @@
 <span class="c1">#                                                                       Modules</span>
 <span class="c1"># =============================================================================</span>
 <span class="c1"># Standard</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">itertools</span> <span class="k">as</span> <span class="nn">it</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">it</span>
 <span class="c1"># Third-party</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="c1">#</span>
 <span class="c1">#                                                          Authorship &amp; Credits</span>
 <span class="c1"># =============================================================================</span>
@@ -148,7 +148,7 @@
 <span class="c1"># =============================================================================</span>
 <span class="c1">#</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="store_paths_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_paths_data.html#cratepy.ioput.packager.store_paths_data">[docs]</a><span class="k">def</span> <span class="nf">store_paths_data</span><span class="p">(</span><span class="n">input_file_name</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">input_file_dir</span><span class="p">,</span>
+<div class="viewcode-block" id="store_paths_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_paths_data.html#cratepy.ioput.packager.store_paths_data">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">store_paths_data</span><span class="p">(</span><span class="n">input_file_name</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">input_file_dir</span><span class="p">,</span>
                      <span class="n">problem_name</span><span class="p">,</span> <span class="n">problem_dir</span><span class="p">,</span> <span class="n">offline_stage_dir</span><span class="p">,</span>
                      <span class="n">postprocess_dir</span><span class="p">,</span> <span class="n">crve_file_path</span><span class="p">,</span> <span class="n">discret_file_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Store problem directories and files paths.</span>
@@ -194,7 +194,7 @@
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">dirs_dict</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="store_problem_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_problem_data.html#cratepy.ioput.packager.store_problem_data">[docs]</a><span class="k">def</span> <span class="nf">store_problem_data</span><span class="p">(</span><span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span>
+<div class="viewcode-block" id="store_problem_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_problem_data.html#cratepy.ioput.packager.store_problem_data">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">store_problem_data</span><span class="p">(</span><span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span>
                        <span class="n">comp_order_nsym</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Store data associated with the problem formulation and type.</span>
 
@@ -228,7 +228,7 @@
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">problem_dict</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="store_material_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_material_data.html#cratepy.ioput.packager.store_material_data">[docs]</a><span class="k">def</span> <span class="nf">store_material_data</span><span class="p">(</span><span class="n">material_phases</span><span class="p">,</span> <span class="n">material_phases_data</span><span class="p">,</span>
+<div class="viewcode-block" id="store_material_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_material_data.html#cratepy.ioput.packager.store_material_data">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">store_material_data</span><span class="p">(</span><span class="n">material_phases</span><span class="p">,</span> <span class="n">material_phases_data</span><span class="p">,</span>
                         <span class="n">material_phases_properties</span><span class="p">,</span> <span class="n">material_phases_vf</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Store data associated with the material phases.</span>
 
@@ -262,7 +262,7 @@
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">mat_dict</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="store_loading_path_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_loading_path_data.html#cratepy.ioput.packager.store_loading_path_data">[docs]</a><span class="k">def</span> <span class="nf">store_loading_path_data</span><span class="p">(</span><span class="n">mac_load_type</span><span class="p">,</span> <span class="n">mac_load</span><span class="p">,</span> <span class="n">mac_load_presctype</span><span class="p">,</span>
+<div class="viewcode-block" id="store_loading_path_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_loading_path_data.html#cratepy.ioput.packager.store_loading_path_data">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">store_loading_path_data</span><span class="p">(</span><span class="n">mac_load_type</span><span class="p">,</span> <span class="n">mac_load</span><span class="p">,</span> <span class="n">mac_load_presctype</span><span class="p">,</span>
                             <span class="n">mac_load_increm</span><span class="p">,</span> <span class="n">is_solution_rewinding</span><span class="p">,</span>
                             <span class="n">rewind_state_criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                             <span class="n">rewinding_criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_n_rewinds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -321,7 +321,7 @@
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">macload_dict</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="store_regular_grid_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_regular_grid_data.html#cratepy.ioput.packager.store_regular_grid_data">[docs]</a><span class="k">def</span> <span class="nf">store_regular_grid_data</span><span class="p">(</span><span class="n">discret_file_path</span><span class="p">,</span> <span class="n">regular_grid</span><span class="p">,</span> <span class="n">rve_dims</span><span class="p">,</span>
+<div class="viewcode-block" id="store_regular_grid_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_regular_grid_data.html#cratepy.ioput.packager.store_regular_grid_data">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">store_regular_grid_data</span><span class="p">(</span><span class="n">discret_file_path</span><span class="p">,</span> <span class="n">regular_grid</span><span class="p">,</span> <span class="n">rve_dims</span><span class="p">,</span>
                             <span class="n">problem_dict</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Store data associated with the RVE spatial discretization.</span>
 
@@ -386,7 +386,7 @@
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">rg_dict</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="store_clustering_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_clustering_data.html#cratepy.ioput.packager.store_clustering_data">[docs]</a><span class="k">def</span> <span class="nf">store_clustering_data</span><span class="p">(</span><span class="n">clustering_solution_method</span><span class="p">,</span> <span class="n">standardization_method</span><span class="p">,</span>
+<div class="viewcode-block" id="store_clustering_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_clustering_data.html#cratepy.ioput.packager.store_clustering_data">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">store_clustering_data</span><span class="p">(</span><span class="n">clustering_solution_method</span><span class="p">,</span> <span class="n">standardization_method</span><span class="p">,</span>
                           <span class="n">phase_n_clusters</span><span class="p">,</span> <span class="n">rg_dict</span><span class="p">,</span> <span class="n">clustering_type</span><span class="p">,</span>
                           <span class="n">base_clustering_scheme</span><span class="p">,</span> <span class="n">adaptive_clustering_scheme</span><span class="p">,</span>
                           <span class="n">adapt_criterion_data</span><span class="p">,</span> <span class="n">adaptivity_type</span><span class="p">,</span>
@@ -475,7 +475,7 @@
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">clst_dict</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="store_scs_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_scs_data.html#cratepy.ioput.packager.store_scs_data">[docs]</a><span class="k">def</span> <span class="nf">store_scs_data</span><span class="p">(</span><span class="n">self_consistent_scheme</span><span class="p">,</span> <span class="n">scs_parameters</span><span class="p">,</span>
+<div class="viewcode-block" id="store_scs_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_scs_data.html#cratepy.ioput.packager.store_scs_data">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">store_scs_data</span><span class="p">(</span><span class="n">self_consistent_scheme</span><span class="p">,</span> <span class="n">scs_parameters</span><span class="p">,</span>
                    <span class="n">scs_max_n_iterations</span><span class="p">,</span> <span class="n">scs_conv_tol</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Store data associated with the self-consistent scheme.</span>
 
@@ -506,7 +506,7 @@
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">scs_dict</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="store_algorithmic_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_algorithmic_data.html#cratepy.ioput.packager.store_algorithmic_data">[docs]</a><span class="k">def</span> <span class="nf">store_algorithmic_data</span><span class="p">(</span><span class="n">max_n_iterations</span><span class="p">,</span> <span class="n">conv_tol</span><span class="p">,</span> <span class="n">max_subinc_level</span><span class="p">,</span>
+<div class="viewcode-block" id="store_algorithmic_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_algorithmic_data.html#cratepy.ioput.packager.store_algorithmic_data">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">store_algorithmic_data</span><span class="p">(</span><span class="n">max_n_iterations</span><span class="p">,</span> <span class="n">conv_tol</span><span class="p">,</span> <span class="n">max_subinc_level</span><span class="p">,</span>
                            <span class="n">max_cinc_cuts</span><span class="p">,</span> <span class="n">su_max_n_iterations</span><span class="p">,</span> <span class="n">su_conv_tol</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Store data associated with the problem solution algorithmic parameters.</span>
 
@@ -542,7 +542,7 @@
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">algpar_dict</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="store_vtk_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_vtk_data.html#cratepy.ioput.packager.store_vtk_data">[docs]</a><span class="k">def</span> <span class="nf">store_vtk_data</span><span class="p">(</span><span class="n">is_vtk_output</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="store_vtk_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_vtk_data.html#cratepy.ioput.packager.store_vtk_data">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">store_vtk_data</span><span class="p">(</span><span class="n">is_vtk_output</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Store data associated with the VTK output.</span>
 
 <span class="sd">    Parameters</span>
@@ -577,7 +577,7 @@
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">vtk_dict</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="store_output_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_output_data.html#cratepy.ioput.packager.store_output_data">[docs]</a><span class="k">def</span> <span class="nf">store_output_data</span><span class="p">(</span><span class="n">is_ref_material_output</span><span class="p">,</span> <span class="n">is_voxels_output</span><span class="p">):</span>
+<div class="viewcode-block" id="store_output_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.packager.store_output_data.html#cratepy.ioput.packager.store_output_data">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">store_output_data</span><span class="p">(</span><span class="n">is_ref_material_output</span><span class="p">,</span> <span class="n">is_voxels_output</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Store data associated with general output files.</span>
 
 <span class="sd">    Parameters</span>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>clustering.crve &mdash; CRATE 1.0.5 documentation</title>
+  <title>clustering.crve &mdash; CRATE 1.0.6 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/readthedocs-custom.css" type="text/css" />
@@ -132,17 +132,17 @@
 <span class="c1">#                                                                       Modules</span>
 <span class="c1"># =============================================================================</span>
 <span class="c1"># Standard</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">itertools</span> <span class="k">as</span> <span class="nn">it</span>
-<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">it</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
 <span class="c1"># Third-party</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="c1"># Local</span>
-<span class="kn">import</span> <span class="nn">ioput.info</span> <span class="k">as</span> <span class="nn">info</span>
-<span class="kn">import</span> <span class="nn">tensor.matrixoperations</span> <span class="k">as</span> <span class="nn">mop</span>
-<span class="kn">import</span> <span class="nn">clustering.citoperations</span> <span class="k">as</span> <span class="nn">citop</span>
-<span class="kn">from</span> <span class="nn">clustering.clusteringphase</span> <span class="kn">import</span> <span class="n">SCRMP</span><span class="p">,</span> <span class="n">GACRMP</span><span class="p">,</span> <span class="n">HAACRMP</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ioput.info</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">info</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensor.matrixoperations</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mop</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">clustering.citoperations</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">citop</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clustering.clusteringphase</span><span class="w"> </span><span class="kn">import</span> <span class="n">SCRMP</span><span class="p">,</span> <span class="n">GACRMP</span><span class="p">,</span> <span class="n">HAACRMP</span>
 <span class="c1">#</span>
 <span class="c1">#                                                          Authorship &amp; Credits</span>
 <span class="c1"># =============================================================================</span>
@@ -152,7 +152,7 @@
 <span class="c1"># =============================================================================</span>
 <span class="c1">#</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="CRVE"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE">[docs]</a><span class="k">class</span> <span class="nc">CRVE</span><span class="p">:</span>
+<div class="viewcode-block" id="CRVE"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">CRVE</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Cluster-Reduced Representative Volume Element.</span>
 
 <span class="sd">    Attributes</span>
@@ -298,7 +298,7 @@
 <span class="sd">        Dump CRVE into file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE.__init__"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rve_dims</span><span class="p">,</span> <span class="n">regular_grid</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span>
+<div class="viewcode-block" id="CRVE.__init__"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rve_dims</span><span class="p">,</span> <span class="n">regular_grid</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span>
                  <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span> <span class="n">global_data_matrix</span><span class="p">,</span>
                  <span class="n">clustering_type</span><span class="p">,</span> <span class="n">phase_n_clusters</span><span class="p">,</span> <span class="n">base_clustering_scheme</span><span class="p">,</span>
                  <span class="n">eff_elastic_properties</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">adaptive_clustering_scheme</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -404,7 +404,7 @@
         <span class="c1"># phase</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_base_phase_n_clusters</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_phase_n_clusters</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE.perform_crve_base_clustering"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.perform_crve_base_clustering">[docs]</a>    <span class="k">def</span> <span class="nf">perform_crve_base_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE.perform_crve_base_clustering"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.perform_crve_base_clustering">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">perform_crve_base_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute CRVE base clustering.&quot;&quot;&quot;</span>
         <span class="n">info</span><span class="o">.</span><span class="n">displayinfo</span><span class="p">(</span><span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;Computing CRVE base clustering...&#39;</span><span class="p">)</span>
         <span class="c1"># Initialize base clustering labels</span>
@@ -485,7 +485,7 @@
         <span class="c1"># Compute material clusters&#39; volume fraction</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_clusters_vf</span><span class="p">()</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE.perform_crve_adaptivity"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.perform_crve_adaptivity">[docs]</a>    <span class="k">def</span> <span class="nf">perform_crve_adaptivity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_clusters</span><span class="p">,</span> <span class="n">target_clusters_data</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE.perform_crve_adaptivity"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.perform_crve_adaptivity">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">perform_crve_adaptivity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_clusters</span><span class="p">,</span> <span class="n">target_clusters_data</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform CRVE clustering adaptivity.</span>
 
 <span class="sd">        Parameters</span>
@@ -579,7 +579,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">adaptive_clustering_map</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE.get_rve_dims"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_rve_dims">[docs]</a>    <span class="k">def</span> <span class="nf">get_rve_dims</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE.get_rve_dims"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_rve_dims">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_rve_dims</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get RVE dimensions.</span>
 
 <span class="sd">        Returns</span>
@@ -589,7 +589,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rve_dims</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE.get_material_phases"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_material_phases">[docs]</a>    <span class="k">def</span> <span class="nf">get_material_phases</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE.get_material_phases"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_material_phases">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_material_phases</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get RVE material phases.</span>
 
 <span class="sd">        Returns</span>
@@ -599,7 +599,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_material_phases</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE.get_n_voxels"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_n_voxels">[docs]</a>    <span class="k">def</span> <span class="nf">get_n_voxels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE.get_n_voxels"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_n_voxels">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_n_voxels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get number of voxels in each dimension and total number of voxels.</span>
 
 <span class="sd">        Returns</span>
@@ -613,7 +613,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_voxels_dims</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_voxels</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE.get_regular_grid"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_regular_grid">[docs]</a>    <span class="k">def</span> <span class="nf">get_regular_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE.get_regular_grid"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_regular_grid">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_regular_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get regular grid of voxels with material phase labels.</span>
 
 <span class="sd">        Returns</span>
@@ -625,7 +625,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_regular_grid</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE.get_phase_n_clusters"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_phase_n_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">get_phase_n_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE.get_phase_n_clusters"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_phase_n_clusters">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_phase_n_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get number of clusters associated with each material phase.</span>
 
 <span class="sd">        Returns</span>
@@ -636,7 +636,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_phase_n_clusters</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE.get_phase_clusters"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_phase_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">get_phase_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE.get_phase_clusters"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_phase_clusters">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_phase_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get clusters associated with each material phase.</span>
 
 <span class="sd">        Returns</span>
@@ -647,7 +647,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_phase_clusters</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE.get_voxels_clusters"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_voxels_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">get_voxels_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE.get_voxels_clusters"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_voxels_clusters">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_voxels_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get regular grid containing the cluster label of each voxel.</span>
 
 <span class="sd">        Returns</span>
@@ -659,7 +659,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_voxels_clusters</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE.get_n_total_clusters"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_n_total_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">get_n_total_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE.get_n_total_clusters"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_n_total_clusters">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_n_total_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current total number of clusters.</span>
 
 <span class="sd">        Returns</span>
@@ -676,7 +676,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">n_total_clusters</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE.get_cluster_phases"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_cluster_phases">[docs]</a>    <span class="k">def</span> <span class="nf">get_cluster_phases</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE.get_cluster_phases"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_cluster_phases">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_cluster_phases</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get cluster-reduced material phase instance of each material phase.</span>
 
 <span class="sd">        Returns</span>
@@ -687,7 +687,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cluster_phases</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE.get_clusters_vf"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_clusters_vf">[docs]</a>    <span class="k">def</span> <span class="nf">get_clusters_vf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE.get_clusters_vf"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_clusters_vf">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_clusters_vf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get clusters volume fraction.</span>
 
 <span class="sd">        Returns</span>
@@ -698,7 +698,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clusters_vf</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE.get_cit_x_mf"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_cit_x_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_cit_x_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE.get_cit_x_mf"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_cit_x_mf">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_cit_x_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get cluster interaction tensors (Green material independent terms).</span>
 
 <span class="sd">        Returns</span>
@@ -713,7 +713,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cit_x_mf</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE.get_eff_isotropic_elastic_constants"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_eff_isotropic_elastic_constants">[docs]</a>    <span class="k">def</span> <span class="nf">get_eff_isotropic_elastic_constants</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE.get_eff_isotropic_elastic_constants"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_eff_isotropic_elastic_constants">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_eff_isotropic_elastic_constants</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get isotropic elastic constants from elastic tangent modulus.</span>
 
 <span class="sd">        Returns</span>
@@ -724,7 +724,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_eff_elastic_properties</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE.get_adapt_material_phases"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_adapt_material_phases">[docs]</a>    <span class="k">def</span> <span class="nf">get_adapt_material_phases</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE.get_adapt_material_phases"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_adapt_material_phases">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_adapt_material_phases</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get adaptive material phases labels.</span>
 
 <span class="sd">        Returns</span>
@@ -734,7 +734,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_adapt_material_phases</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE.get_adaptivity_control_feature"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_adaptivity_control_feature">[docs]</a>    <span class="k">def</span> <span class="nf">get_adaptivity_control_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE.get_adaptivity_control_feature"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_adaptivity_control_feature">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_adaptivity_control_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get clustering adaptivity control feature of each material phase.</span>
 
 <span class="sd">        Returns</span>
@@ -745,7 +745,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_adaptivity_control_feature</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE.get_adapt_criterion_data"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_adapt_criterion_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_adapt_criterion_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE.get_adapt_criterion_data"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_adapt_criterion_data">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_adapt_criterion_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get clustering adaptivity criterion data of each material phase.</span>
 
 <span class="sd">        Returns</span>
@@ -757,7 +757,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_adapt_criterion_data</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE.get_voxels_array_variables"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_voxels_array_variables">[docs]</a>    <span class="k">def</span> <span class="nf">get_voxels_array_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE.get_voxels_array_variables"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_voxels_array_variables">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_voxels_array_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get required variables to build a clusters state based voxels array.</span>
 
 <span class="sd">        Returns</span>
@@ -775,7 +775,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_material_phases</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phase_clusters</span><span class="p">,</span> \
             <span class="bp">self</span><span class="o">.</span><span class="n">_voxels_clusters</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE.get_adaptive_step"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_adaptive_step">[docs]</a>    <span class="k">def</span> <span class="nf">get_adaptive_step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE.get_adaptive_step"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_adaptive_step">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_adaptive_step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get counter of adaptive clustering steps.</span>
 
 <span class="sd">        Returns</span>
@@ -786,7 +786,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adaptive_step</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE.get_adaptive_clustering_time"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_adaptive_clustering_time">[docs]</a>    <span class="k">def</span> <span class="nf">get_adaptive_clustering_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE.get_adaptive_clustering_time"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_adaptive_clustering_time">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_adaptive_clustering_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get total amount of time spent in clustering adaptivity.</span>
 
 <span class="sd">        Returns</span>
@@ -796,7 +796,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adaptive_clustering_time</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE.get_adaptive_cit_time"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_adaptive_cit_time">[docs]</a>    <span class="k">def</span> <span class="nf">get_adaptive_cit_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE.get_adaptive_cit_time"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_adaptive_cit_time">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_adaptive_cit_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get total time spent in adaptivity cluster interaction tensors.</span>
 
 <span class="sd">        Returns</span>
@@ -807,7 +807,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adaptive_cit_time</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE.get_clustering_type"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_clustering_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_clustering_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE.get_clustering_type"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_clustering_type">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_clustering_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get clustering type of each material phase.</span>
 
 <span class="sd">        Returns</span>
@@ -818,7 +818,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clustering_type</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE.get_adaptivity_output"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_adaptivity_output">[docs]</a>    <span class="k">def</span> <span class="nf">get_adaptivity_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE.get_adaptivity_output"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_adaptivity_output">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_adaptivity_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get required data for clustering adaptivity output file.</span>
 
 <span class="sd">        Returns</span>
@@ -841,7 +841,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">adaptivity_output</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE.get_clustering_summary"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_clustering_summary">[docs]</a>    <span class="k">def</span> <span class="nf">get_clustering_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE.get_clustering_summary"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_clustering_summary">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_clustering_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get summary of number of clusters of each material phase.</span>
 
 <span class="sd">        Returns</span>
@@ -864,7 +864,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">clustering_summary</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE.reset_adaptive_parameters"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.reset_adaptive_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">reset_adaptive_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE.reset_adaptive_parameters"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.reset_adaptive_parameters">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">reset_adaptive_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset CRVE adaptive progress parameters and set base clustering.&quot;&quot;&quot;</span>
         <span class="c1"># Reset counter of adaptive clustering steps</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_adaptive_step</span> <span class="o">=</span> <span class="mi">0</span>
@@ -883,7 +883,7 @@
             <span class="c1"># Reset adaptive progress parameters</span>
             <span class="n">crmp</span><span class="o">.</span><span class="n">reset_adaptive_parameters</span><span class="p">()</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE.update_adaptive_parameters"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.update_adaptive_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">update_adaptive_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptive_clustering_scheme</span><span class="p">,</span>
+<div class="viewcode-block" id="CRVE.update_adaptive_parameters"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.update_adaptive_parameters">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">update_adaptive_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptive_clustering_scheme</span><span class="p">,</span>
                                    <span class="n">adapt_criterion_data</span><span class="p">,</span> <span class="n">adaptivity_type</span><span class="p">,</span>
                                    <span class="n">adaptivity_control_feature</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update CRVE clustering adaptivity attributes.</span>
@@ -935,7 +935,7 @@
             <span class="n">crmp</span><span class="o">.</span><span class="n">update_adaptivity_type</span><span class="p">(</span><span class="n">adaptivity_type</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">])</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="CRVE.get_crmp_types"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.get_crmp_types">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_crmp_types</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_crmp_types</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get available cluster-reduced material phases types.</span>
 
 <span class="sd">        Returns</span>
@@ -953,7 +953,7 @@
         <span class="k">return</span> <span class="n">available_crmp_types</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="CRVE._get_features_indexes"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE._get_features_indexes">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_get_features_indexes</span><span class="p">(</span><span class="n">clustering_scheme</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_features_indexes</span><span class="p">(</span><span class="n">clustering_scheme</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get unique clustering features indexes from clustering scheme.</span>
 
 <span class="sd">        Parameters</span>
@@ -980,7 +980,7 @@
         <span class="k">return</span> <span class="n">indexes</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="CRVE._get_phase_idxs"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE._get_phase_idxs">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_get_phase_idxs</span><span class="p">(</span><span class="n">regular_grid</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_phase_idxs</span><span class="p">(</span><span class="n">regular_grid</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get flat indexes of each material phase&#39;s voxels.</span>
 
 <span class="sd">        Parameters</span>
@@ -1010,7 +1010,7 @@
         <span class="k">return</span> <span class="n">phase_voxel_flat_idx</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="CRVE._get_cluster_idxs"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE._get_cluster_idxs">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_get_cluster_idxs</span><span class="p">(</span><span class="n">voxels_clusters</span><span class="p">,</span> <span class="n">cluster_label</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_cluster_idxs</span><span class="p">(</span><span class="n">voxels_clusters</span><span class="p">,</span> <span class="n">cluster_label</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get flat indexes of given cluster&#39;s voxels.</span>
 
 <span class="sd">        Parameters</span>
@@ -1035,7 +1035,7 @@
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="k">return</span> <span class="n">cluster_voxel_flat_idx</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE._set_phase_clusters"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE._set_phase_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">_set_phase_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE._set_phase_clusters"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE._set_phase_clusters">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_set_phase_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set CRVE cluster labels associated with each material phase.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_phase_clusters</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="c1"># Loop over material phases</span>
@@ -1048,7 +1048,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_phase_n_clusters</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">]</span> <span class="o">=</span> \
                 <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_phase_clusters</span><span class="p">[</span><span class="n">mat_phase</span><span class="p">])</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE._set_clusters_vf"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE._set_clusters_vf">[docs]</a>    <span class="k">def</span> <span class="nf">_set_clusters_vf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE._set_clusters_vf"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE._set_clusters_vf">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_set_clusters_vf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set CRVE clusters&#39; volume fractions.&quot;&quot;&quot;</span>
         <span class="c1"># Compute voxel volume</span>
         <span class="n">voxel_vol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rve_dims</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_voxels_dims</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
@@ -1062,7 +1062,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_clusters_vf</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cluster</span><span class="p">)]</span> <span class="o">=</span> \
                 <span class="p">(</span><span class="n">n_voxels_cluster</span><span class="o">*</span><span class="n">voxel_vol</span><span class="p">)</span><span class="o">/</span><span class="n">rve_vol</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE._get_clusters_max_label"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE._get_clusters_max_label">[docs]</a>    <span class="k">def</span> <span class="nf">_get_clusters_max_label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE._get_clusters_max_label"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE._get_clusters_max_label">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_get_clusters_max_label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get CRVE maximum cluster label.</span>
 
 <span class="sd">        Returns</span>
@@ -1081,7 +1081,7 @@
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="k">return</span> <span class="n">max_label</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE._sort_cluster_labels"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE._sort_cluster_labels">[docs]</a>    <span class="k">def</span> <span class="nf">_sort_cluster_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE._sort_cluster_labels"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE._sort_cluster_labels">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_sort_cluster_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reassign and sort CRVE cluster labels material phasewise.</span>
 
 <span class="sd">        Reassign CRVE cluster labels in the range (0, n_clusters) and sort them</span>
@@ -1128,7 +1128,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_voxels_clusters</span><span class="p">[</span><span class="n">voxel_idx</span><span class="p">]</span> <span class="o">=</span> \
                 <span class="n">sort_dict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_voxels_clusters</span><span class="p">[</span><span class="n">voxel_idx</span><span class="p">]]</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE.compute_cit"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.compute_cit">[docs]</a>    <span class="k">def</span> <span class="nf">compute_cit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;full&#39;</span><span class="p">,</span> <span class="n">adaptive_clustering_map</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE.compute_cit"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.compute_cit">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">compute_cit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;full&#39;</span><span class="p">,</span> <span class="n">adaptive_clustering_map</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute CRVE cluster interaction tensors.</span>
 
 <span class="sd">        *Cluster interaction tensors:*</span>
@@ -1373,7 +1373,7 @@
             <span class="c1"># cluster interaction tensors computation procedures</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_adaptive_cit_time</span> <span class="o">+=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">init_time</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE._cluster_filter"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE._cluster_filter">[docs]</a>    <span class="k">def</span> <span class="nf">_cluster_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cluster</span><span class="p">):</span>
+<div class="viewcode-block" id="CRVE._cluster_filter"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE._cluster_filter">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_cluster_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cluster</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute cluster discrete characteristic function.</span>
 
 <span class="sd">        .. math::</span>
@@ -1427,7 +1427,7 @@
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="k">return</span> <span class="n">cluster_filter</span><span class="p">,</span> <span class="n">cluster_filter_dft</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE._gop_convolution"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE._gop_convolution">[docs]</a>    <span class="k">def</span> <span class="nf">_gop_convolution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cluster_filter_dft</span><span class="p">,</span> <span class="n">gop_1_dft_vox</span><span class="p">,</span>
+<div class="viewcode-block" id="CRVE._gop_convolution"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE._gop_convolution">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_gop_convolution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cluster_filter_dft</span><span class="p">,</span> <span class="n">gop_1_dft_vox</span><span class="p">,</span>
                          <span class="n">gop_2_dft_vox</span><span class="p">,</span> <span class="n">gop_0_freq_dft_vox</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convolution of cluster characteristic function and Green operator.</span>
 
@@ -1555,7 +1555,7 @@
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="k">return</span> <span class="n">gop_1_filt_vox</span><span class="p">,</span> <span class="n">gop_2_filt_vox</span><span class="p">,</span> <span class="n">gop_0_freq_filt_vox</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="CRVE._discrete_cit_integral"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE._discrete_cit_integral">[docs]</a>    <span class="k">def</span> <span class="nf">_discrete_cit_integral</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cluster_filter</span><span class="p">,</span> <span class="n">gop_1_filt_vox</span><span class="p">,</span>
+<div class="viewcode-block" id="CRVE._discrete_cit_integral"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE._discrete_cit_integral">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_discrete_cit_integral</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cluster_filter</span><span class="p">,</span> <span class="n">gop_1_filt_vox</span><span class="p">,</span>
                                <span class="n">gop_2_filt_vox</span><span class="p">,</span> <span class="n">gop_0_freq_filt_vox</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Discrete integral over the spatial domain of material cluster.</span>
 
@@ -1667,7 +1667,7 @@
         <span class="k">return</span> <span class="n">cit_1_integral_mf</span><span class="p">,</span> <span class="n">cit_2_integral_mf</span><span class="p">,</span> <span class="n">cit_0_freq_integral_mf</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="CRVE._switch_pair"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE._switch_pair">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_switch_pair</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;_&#39;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_switch_pair</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;_&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Switch left and right sides of string with separating delimiter.</span>
 
 <span class="sd">        Parameters</span>
@@ -1688,7 +1688,7 @@
         <span class="k">return</span> <span class="n">delimiter</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">delimiter</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="CRVE.save_crve_file"><a class="viewcode-back" href="../../_autosummary/cratepy.main.CRVE.html#cratepy.ioput.readprocedures.CRVE.save_crve_file">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">save_crve_file</span><span class="p">(</span><span class="n">crve</span><span class="p">,</span> <span class="n">crve_file_path</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_crve_file</span><span class="p">(</span><span class="n">crve</span><span class="p">,</span> <span class="n">crve_file_path</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Dump CRVE into file.</span>
 
 <span class="sd">        Parameters</span>

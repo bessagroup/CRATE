@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cratepy.clustering.clusteringdata.ClusterAnalysisData &mdash; CRATE 1.0.5 documentation</title>
+  <title>cratepy.clustering.clusteringdata.ClusterAnalysisData &mdash; CRATE 1.0.6 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/readthedocs-custom.css" type="text/css" />
@@ -149,7 +149,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="cratepy.clustering.clusteringdata.ClusterAnalysisData">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ClusterAnalysisData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strain_formulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rve_dims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_voxels_dims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_clustering_scheme</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptive_clustering_scheme</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_descriptors</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cratepy/clustering/clusteringdata.html#ClusterAnalysisData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cratepy.clustering.clusteringdata.ClusterAnalysisData" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Features data required to perform the RVE cluster analysis.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cratepy.clustering.clusteringdata.ClusterAnalysisData._features">
@@ -157,7 +157,7 @@
 <dd><p>Set of prescribed features identifiers (int).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.12)">set</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)">int</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.13)">set</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -169,7 +169,7 @@
 (key, str).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -181,7 +181,7 @@
 associated to each feature (key, str).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -195,7 +195,7 @@ tensor (infinitesimal strains) and the deformation gradient (finite
 strains).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a> (2d)]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a>[<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a> (2d)]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -206,7 +206,7 @@ strains).</p>
 <dd><p>Strain/Stress components symmetric order.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -217,7 +217,7 @@ strains).</p>
 <dd><p>Strain/Stress components nonsymmetric order.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -230,7 +230,7 @@ containing the required clustering features’ data to perform all the
 prescribed RVE clusterings.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a> (2d)</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a> (2d)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -282,29 +282,29 @@ prescribed RVE clusterings.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>strain_formulation</strong> (<em>{'infinitesimal'</em><em>, </em><em>'finite'}</em>) – Problem strain formulation.</p></li>
-<li><p><strong>problem_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – Problem type: 2D plane strain (1), 2D plane stress (2),
+<li><p><strong>problem_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Problem type: 2D plane strain (1), 2D plane stress (2),
 2D axisymmetric (3) and 3D (4).</p></li>
-<li><p><strong>rve_dims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>]</em>) – RVE size in each dimension.</p></li>
-<li><p><strong>n_voxels_dims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>]</em>) – Number of voxels in each dimension of the regular grid (spatial
+<li><p><strong>rve_dims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>]</em>) – RVE size in each dimension.</p></li>
+<li><p><strong>n_voxels_dims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Number of voxels in each dimension of the regular grid (spatial
 discretization of the RVE).</p></li>
-<li><p><strong>base_clustering_scheme</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Prescribed base clustering scheme (item, numpy.ndarray of shape
+<li><p><strong>base_clustering_scheme</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Prescribed base clustering scheme (item, numpy.ndarray of shape
 (n_clusterings, 3)) for each material phase (key, str). Each row is
 associated with a unique clustering characterized by a clustering
 algorithm (col 1, int), a list of features (col 2, list[int]) and a
 list of the features data matrix’ indexes (col 3, list[int]).</p></li>
-<li><p><strong>adaptive_clustering_scheme</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Prescribed adaptive clustering scheme (item, numpy.ndarray of shape
+<li><p><strong>adaptive_clustering_scheme</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Prescribed adaptive clustering scheme (item, numpy.ndarray of shape
 (n_clusterings, 3)) for each material phase (key, str). Each row is
 associated with a unique clustering characterized by a clustering
 algorithm (col 1, int), a list of features (col 2, list[int]) and a
 list of the features data matrix’ indexes (col 3, list[int]).</p></li>
-<li><p><strong>features_descriptors</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Data (tuple structured as (number of feature dimensions (int),
+<li><p><strong>features_descriptors</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Data (tuple structured as (number of feature dimensions (int),
 feature computation algorithm (function), list of macroscale strain
 loadings (list[numpy.ndarray (2d)]),
 strain magnitude factor (float))) associated to each feature
 (key, str). The macroscale strain loading is the infinitesimal
 strain tensor (infinitesimal strains) or the deformation gradient
 (finite strains).</p></li>
-<li><p><strong>n_voxels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – Total number of voxels of the regular grid (spatial discretization
+<li><p><strong>n_voxels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Total number of voxels of the regular grid (spatial discretization
 of the RVE).</p></li>
 </ul>
 </dd>
@@ -344,29 +344,29 @@ of the RVE).</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>strain_formulation</strong> (<em>{'infinitesimal'</em><em>, </em><em>'finite'}</em>) – Problem strain formulation.</p></li>
-<li><p><strong>problem_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – Problem type: 2D plane strain (1), 2D plane stress (2),
+<li><p><strong>problem_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Problem type: 2D plane strain (1), 2D plane stress (2),
 2D axisymmetric (3) and 3D (4).</p></li>
-<li><p><strong>rve_dims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>]</em>) – RVE size in each dimension.</p></li>
-<li><p><strong>n_voxels_dims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>]</em>) – Number of voxels in each dimension of the regular grid (spatial
+<li><p><strong>rve_dims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>]</em>) – RVE size in each dimension.</p></li>
+<li><p><strong>n_voxels_dims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Number of voxels in each dimension of the regular grid (spatial
 discretization of the RVE).</p></li>
-<li><p><strong>base_clustering_scheme</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Prescribed base clustering scheme (item, numpy.ndarray of shape
+<li><p><strong>base_clustering_scheme</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Prescribed base clustering scheme (item, numpy.ndarray of shape
 (n_clusterings, 3)) for each material phase (key, str). Each row is
 associated with a unique clustering characterized by a clustering
 algorithm (col 1, int), a list of features (col 2, list[int]) and a
 list of the features data matrix’ indexes (col 3, list[int]).</p></li>
-<li><p><strong>adaptive_clustering_scheme</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Prescribed adaptive clustering scheme (item, numpy.ndarray of shape
+<li><p><strong>adaptive_clustering_scheme</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Prescribed adaptive clustering scheme (item, numpy.ndarray of shape
 (n_clusterings, 3)) for each material phase (key, str). Each row is
 associated with a unique clustering characterized by a clustering
 algorithm (col 1, int), a list of features (col 2, list[int]) and a
 list of the features data matrix’ indexes (col 3, list[int]).</p></li>
-<li><p><strong>features_descriptors</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – Data (tuple structured as (number of feature dimensions (int),
+<li><p><strong>features_descriptors</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Data (tuple structured as (number of feature dimensions (int),
 feature computation algorithm (function), list of macroscale strain
 loadings (list[numpy.ndarray (2d)]),
 strain magnitude factor (float))) associated to each feature
 (key, str). The macroscale strain loading is the infinitesimal
 strain tensor (infinitesimal strains) or the deformation gradient
 (finite strains).</p></li>
-<li><p><strong>n_voxels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – Total number of voxels of the regular grid (spatial discretization
+<li><p><strong>n_voxels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Total number of voxels of the regular grid (spatial discretization
 of the RVE).</p></li>
 </ul>
 </dd>
@@ -385,7 +385,7 @@ infinitesimal strain tensor (infinitesimal strains) and the
 deformation gradient (finite strains).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a> (2d)]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a>[<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a> (2d)]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -399,7 +399,7 @@ deformation gradient (finite strains).</p>
 <dd class="field-odd"><p><strong>features</strong> – Set of prescribed features identifiers (int).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.12)">set</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)">int</a>]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.13)">set</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -415,7 +415,7 @@ containing the required clustering features data to perform all the
 prescribed RVE clusterings.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a> (2d)</p>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a> (2d)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -447,7 +447,7 @@ data matrix’ indexes associated to each prescribed RVE clustering.</p>
 feature (key, str).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -463,7 +463,7 @@ database) and post assembly to the clustering global data matrix.</p>
 <hr class="docutils" />
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>rve_global_response</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – RVE local elastic strain response for a given set of macroscale
+<dd class="field-odd"><p><strong>rve_global_response</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a><em> (</em><em>2d</em><em>)</em>) – RVE local elastic strain response for a given set of macroscale
 loadings, where each macroscale loading is associated with a set of
 independent strain components (numpy.ndarray of shape
 (n_voxels, n_mac_strains*n_strain_comps)). Each column is

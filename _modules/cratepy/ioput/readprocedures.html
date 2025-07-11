@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cratepy.ioput.readprocedures &mdash; CRATE 1.0.5 documentation</title>
+  <title>cratepy.ioput.readprocedures &mdash; CRATE 1.0.6 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
@@ -152,24 +152,24 @@
 <span class="c1">#                                                                       Modules</span>
 <span class="c1"># =============================================================================</span>
 <span class="c1"># Standard</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">linecache</span>
-<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">linecache</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="c1"># Third-party</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="c1"># Local</span>
-<span class="kn">import</span> <span class="nn">ioput.info</span> <span class="k">as</span> <span class="nn">info</span>
-<span class="kn">import</span> <span class="nn">ioput.ioutilities</span> <span class="k">as</span> <span class="nn">ioutil</span>
-<span class="kn">from</span> <span class="nn">clustering.crve</span> <span class="kn">import</span> <span class="n">CRVE</span>
-<span class="kn">from</span> <span class="nn">clustering.clusteringphase</span> <span class="kn">import</span> <span class="n">SCRMP</span>
-<span class="kn">from</span> <span class="nn">clustering.adaptivity.crve_adaptivity</span> <span class="kn">import</span> <span class="n">AdaptivityManager</span>
-<span class="kn">from</span> <span class="nn">online.loading.macloadincrem</span> <span class="kn">import</span> <span class="n">RewindManager</span>
-<span class="kn">from</span> <span class="nn">material.materialmodeling</span> <span class="kn">import</span> <span class="n">get_available_material_models</span>
-<span class="kn">from</span> <span class="nn">material.models.elastic</span> <span class="kn">import</span> <span class="n">Elastic</span>
-<span class="kn">from</span> <span class="nn">material.models.von_mises</span> <span class="kn">import</span> <span class="n">VonMises</span>
-<span class="kn">from</span> <span class="nn">material.models.stvenant_kirchhoff</span> <span class="kn">import</span> <span class="n">StVenantKirchhoff</span>
-<span class="kn">from</span> <span class="nn">online.crom.asca</span> <span class="kn">import</span> <span class="n">ElasticReferenceMaterial</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ioput.info</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">info</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ioput.ioutilities</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ioutil</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clustering.crve</span><span class="w"> </span><span class="kn">import</span> <span class="n">CRVE</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clustering.clusteringphase</span><span class="w"> </span><span class="kn">import</span> <span class="n">SCRMP</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clustering.adaptivity.crve_adaptivity</span><span class="w"> </span><span class="kn">import</span> <span class="n">AdaptivityManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">online.loading.macloadincrem</span><span class="w"> </span><span class="kn">import</span> <span class="n">RewindManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">material.materialmodeling</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_available_material_models</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">material.models.elastic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Elastic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">material.models.von_mises</span><span class="w"> </span><span class="kn">import</span> <span class="n">VonMises</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">material.models.stvenant_kirchhoff</span><span class="w"> </span><span class="kn">import</span> <span class="n">StVenantKirchhoff</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">online.crom.asca</span><span class="w"> </span><span class="kn">import</span> <span class="n">ElasticReferenceMaterial</span>
 <span class="c1">#</span>
 <span class="c1">#                                                          Authorship &amp; Credits</span>
 <span class="c1"># =============================================================================</span>
@@ -182,7 +182,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                                               Search keywords</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="searchkeywordline"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.searchkeywordline.html#cratepy.ioput.readprocedures.searchkeywordline">[docs]</a><span class="k">def</span> <span class="nf">searchkeywordline</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">keyword</span><span class="p">):</span>
+<div class="viewcode-block" id="searchkeywordline"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.searchkeywordline.html#cratepy.ioput.readprocedures.searchkeywordline">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">searchkeywordline</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">keyword</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Search mandatory keyword in data file and get corresponding line number.</span>
 
 <span class="sd">    Parameters</span>
@@ -209,7 +209,7 @@
         <span class="o">+</span> <span class="s1">&#39;data file.&#39;</span>
     <span class="n">info</span><span class="o">.</span><span class="n">displayinfo</span><span class="p">(</span><span class="s1">&#39;4&#39;</span><span class="p">,</span> <span class="n">summary</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">keyword</span><span class="p">)</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="searchoptkeywordline"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.searchoptkeywordline.html#cratepy.ioput.readprocedures.searchoptkeywordline">[docs]</a><span class="k">def</span> <span class="nf">searchoptkeywordline</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">keyword</span><span class="p">):</span>
+<div class="viewcode-block" id="searchoptkeywordline"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.searchoptkeywordline.html#cratepy.ioput.readprocedures.searchoptkeywordline">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">searchoptkeywordline</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">keyword</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Search optional keyword in data file and get corresponding line number.</span>
 
 <span class="sd">    Parameters</span>
@@ -239,7 +239,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                                           Parameter formatter</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="get_formatted_parameter"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.get_formatted_parameter.html#cratepy.ioput.readprocedures.get_formatted_parameter">[docs]</a><span class="k">def</span> <span class="nf">get_formatted_parameter</span><span class="p">(</span><span class="n">parameter</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">etype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="get_formatted_parameter"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.get_formatted_parameter.html#cratepy.ioput.readprocedures.get_formatted_parameter">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_formatted_parameter</span><span class="p">(</span><span class="n">parameter</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">etype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get string parameter converted to appropriate type.</span>
 
 <span class="sd">    Parameters</span>
@@ -290,7 +290,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                                              General keywords</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="readtypeAkeyword"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.readtypeAkeyword.html#cratepy.ioput.readprocedures.readtypeAkeyword">[docs]</a><span class="k">def</span> <span class="nf">readtypeAkeyword</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">max_val</span><span class="p">):</span>
+<div class="viewcode-block" id="readtypeAkeyword"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.readtypeAkeyword.html#cratepy.ioput.readprocedures.readtypeAkeyword">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">readtypeAkeyword</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">max_val</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read keyword of specification type A.</span>
 
 <span class="sd">    The keyword specification of type A is associated with a positive</span>
@@ -338,7 +338,7 @@
             <span class="n">info</span><span class="o">.</span><span class="n">displayinfo</span><span class="p">(</span><span class="s1">&#39;4&#39;</span><span class="p">,</span> <span class="n">summary</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">keyword</span><span class="p">)</span>
     <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="readtypeBkeyword"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.readtypeBkeyword.html#cratepy.ioput.readprocedures.readtypeBkeyword">[docs]</a><span class="k">def</span> <span class="nf">readtypeBkeyword</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">):</span>
+<div class="viewcode-block" id="readtypeBkeyword"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.readtypeBkeyword.html#cratepy.ioput.readprocedures.readtypeBkeyword">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">readtypeBkeyword</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read keyword of specification type B.</span>
 
 <span class="sd">    The keyword specification of type B is associated with a positive</span>
@@ -386,7 +386,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                                             Specific keywords</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="read_material_properties"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.read_material_properties.html#cratepy.ioput.readprocedures.read_material_properties">[docs]</a><span class="k">def</span> <span class="nf">read_material_properties</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">):</span>
+<div class="viewcode-block" id="read_material_properties"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.read_material_properties.html#cratepy.ioput.readprocedures.read_material_properties">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">read_material_properties</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read material phases data and properties.</span>
 
 <span class="sd">    The specification of the data associated with the material phases has the</span>
@@ -761,7 +761,7 @@
     <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
     <span class="k">return</span> <span class="n">n_material_phases</span><span class="p">,</span> <span class="n">material_phases_data</span><span class="p">,</span> <span class="n">material_phases_properties</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="read_macroscale_loading"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.read_macroscale_loading.html#cratepy.ioput.readprocedures.read_macroscale_loading">[docs]</a><span class="k">def</span> <span class="nf">read_macroscale_loading</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">mac_load_type</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span>
+<div class="viewcode-block" id="read_macroscale_loading"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.read_macroscale_loading.html#cratepy.ioput.readprocedures.read_macroscale_loading">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">read_macroscale_loading</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">mac_load_type</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span>
                             <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_nsym</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read macroscale loading constraints.</span>
 
@@ -1164,7 +1164,7 @@
     <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
     <span class="k">return</span> <span class="n">mac_load</span><span class="p">,</span> <span class="n">mac_load_presctype</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="read_mac_load_increm"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.read_mac_load_increm.html#cratepy.ioput.readprocedures.read_mac_load_increm">[docs]</a><span class="k">def</span> <span class="nf">read_mac_load_increm</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">n_load_subpaths</span><span class="p">):</span>
+<div class="viewcode-block" id="read_mac_load_increm"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.read_mac_load_increm.html#cratepy.ioput.readprocedures.read_mac_load_increm">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">read_mac_load_increm</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">n_load_subpaths</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read macroscale loading incrementation.</span>
 
 <span class="sd">    The specification of the data associated with the macroscale loading</span>
@@ -1320,7 +1320,7 @@
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">mac_load_increm</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="decode_increm_spec"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.decode_increm_spec.html#cratepy.ioput.readprocedures.decode_increm_spec">[docs]</a><span class="k">def</span> <span class="nf">decode_increm_spec</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">load_time_factor</span><span class="p">):</span>
+<div class="viewcode-block" id="decode_increm_spec"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.decode_increm_spec.html#cratepy.ioput.readprocedures.decode_increm_spec">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">decode_increm_spec</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">load_time_factor</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Decode macroscale loading increment specification.</span>
 
 <span class="sd">    A macroscale loading increment specification has the format</span>
@@ -1382,7 +1382,7 @@
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">n_rep</span><span class="p">,</span> <span class="n">inc_lfact</span><span class="p">,</span> <span class="n">inc_time</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="read_phase_clustering"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.read_phase_clustering.html#cratepy.ioput.readprocedures.read_phase_clustering">[docs]</a><span class="k">def</span> <span class="nf">read_phase_clustering</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">n_material_phases</span><span class="p">,</span>
+<div class="viewcode-block" id="read_phase_clustering"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.read_phase_clustering.html#cratepy.ioput.readprocedures.read_phase_clustering">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">read_phase_clustering</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">n_material_phases</span><span class="p">,</span>
                           <span class="n">material_properties</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read (base) number of clusters associated with each material phase.</span>
 
@@ -1459,7 +1459,7 @@
         <span class="n">phase_n_clusters</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]))]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">phase_n_clusters</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="read_cluster_analysis_scheme"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.read_cluster_analysis_scheme.html#cratepy.ioput.readprocedures.read_cluster_analysis_scheme">[docs]</a><span class="k">def</span> <span class="nf">read_cluster_analysis_scheme</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span>
+<div class="viewcode-block" id="read_cluster_analysis_scheme"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.read_cluster_analysis_scheme.html#cratepy.ioput.readprocedures.read_cluster_analysis_scheme">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">read_cluster_analysis_scheme</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span>
                                  <span class="n">clustering_features</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read cluster analysis scheme.</span>
 
@@ -1873,7 +1873,7 @@
         <span class="n">adaptive_clustering_scheme</span><span class="p">,</span> <span class="n">adapt_criterion_data</span><span class="p">,</span> <span class="n">adaptivity_type</span><span class="p">,</span> \
         <span class="n">adaptivity_control_feature</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="read_clustering_scheme"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.read_clustering_scheme.html#cratepy.ioput.readprocedures.read_clustering_scheme">[docs]</a><span class="k">def</span> <span class="nf">read_clustering_scheme</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">line_number</span><span class="p">):</span>
+<div class="viewcode-block" id="read_clustering_scheme"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.read_clustering_scheme.html#cratepy.ioput.readprocedures.read_clustering_scheme">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">read_clustering_scheme</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">line_number</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read material phase&#39;s prescribed clustering scheme.</span>
 
 <span class="sd">    Parameters</span>
@@ -1941,7 +1941,7 @@
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">clustering_scheme</span><span class="p">,</span> <span class="n">line_number</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="check_clustering_scheme"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.check_clustering_scheme.html#cratepy.ioput.readprocedures.check_clustering_scheme">[docs]</a><span class="k">def</span> <span class="nf">check_clustering_scheme</span><span class="p">(</span><span class="n">mat_phase</span><span class="p">,</span> <span class="n">clustering_scheme</span><span class="p">,</span> <span class="n">valid_algorithms</span><span class="p">,</span>
+<div class="viewcode-block" id="check_clustering_scheme"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.check_clustering_scheme.html#cratepy.ioput.readprocedures.check_clustering_scheme">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">check_clustering_scheme</span><span class="p">(</span><span class="n">mat_phase</span><span class="p">,</span> <span class="n">clustering_scheme</span><span class="p">,</span> <span class="n">valid_algorithms</span><span class="p">,</span>
                             <span class="n">valid_features</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check material phase&#39;s prescribed clustering scheme.</span>
 
@@ -1980,7 +1980,7 @@
                 <span class="o">+</span> <span class="n">indent</span> <span class="o">+</span> <span class="s1">&#39;input data file is invalid.&#39;</span>
             <span class="n">info</span><span class="o">.</span><span class="n">displayinfo</span><span class="p">(</span><span class="s1">&#39;4&#39;</span><span class="p">,</span> <span class="n">summary</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">mat_phase</span><span class="p">)</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="read_adaptivity_frequency"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.read_adaptivity_frequency.html#cratepy.ioput.readprocedures.read_adaptivity_frequency">[docs]</a><span class="k">def</span> <span class="nf">read_adaptivity_frequency</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">adapt_material_phases</span><span class="p">):</span>
+<div class="viewcode-block" id="read_adaptivity_frequency"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.read_adaptivity_frequency.html#cratepy.ioput.readprocedures.read_adaptivity_frequency">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">read_adaptivity_frequency</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">adapt_material_phases</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read clustering adaptivity frequency.</span>
 
 <span class="sd">    The specification of the data associated with the clustering adaptivity</span>
@@ -2087,7 +2087,7 @@
     <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
     <span class="k">return</span> <span class="n">clust_adapt_freq</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="read_rewind_state_parameters"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.read_rewind_state_parameters.html#cratepy.ioput.readprocedures.read_rewind_state_parameters">[docs]</a><span class="k">def</span> <span class="nf">read_rewind_state_parameters</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">):</span>
+<div class="viewcode-block" id="read_rewind_state_parameters"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.read_rewind_state_parameters.html#cratepy.ioput.readprocedures.read_rewind_state_parameters">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">read_rewind_state_parameters</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read the solution rewind state criterion parameters.</span>
 
 <span class="sd">    The specification of the data associated with the solution rewind state</span>
@@ -2165,7 +2165,7 @@
     <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
     <span class="k">return</span> <span class="n">rewind_state_criterion</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="read_rewinding_criterion_parameters"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.read_rewinding_criterion_parameters.html#cratepy.ioput.readprocedures.read_rewinding_criterion_parameters">[docs]</a><span class="k">def</span> <span class="nf">read_rewinding_criterion_parameters</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">):</span>
+<div class="viewcode-block" id="read_rewinding_criterion_parameters"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.read_rewinding_criterion_parameters.html#cratepy.ioput.readprocedures.read_rewinding_criterion_parameters">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">read_rewinding_criterion_parameters</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read the solution rewinding criterion parameters.</span>
 
 <span class="sd">    The specification of the data associated with the solution rewind criterion</span>
@@ -2242,7 +2242,7 @@
     <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
     <span class="k">return</span> <span class="n">rewinding_criterion</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="read_discretization_file_path"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.read_discretization_file_path.html#cratepy.ioput.readprocedures.read_discretization_file_path">[docs]</a><span class="k">def</span> <span class="nf">read_discretization_file_path</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">valid_exts</span><span class="p">,</span>
+<div class="viewcode-block" id="read_discretization_file_path"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.read_discretization_file_path.html#cratepy.ioput.readprocedures.read_discretization_file_path">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">read_discretization_file_path</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">valid_exts</span><span class="p">,</span>
                                   <span class="n">discret_file_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read spatial discretization file path.</span>
 
@@ -2321,7 +2321,7 @@
     <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
     <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">discret_file_path</span><span class="p">)</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="read_rve_dimensions"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.read_rve_dimensions.html#cratepy.ioput.readprocedures.read_rve_dimensions">[docs]</a><span class="k">def</span> <span class="nf">read_rve_dimensions</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">):</span>
+<div class="viewcode-block" id="read_rve_dimensions"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.read_rve_dimensions.html#cratepy.ioput.readprocedures.read_rve_dimensions">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">read_rve_dimensions</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read RVE dimensions (size length along each spatial dimension).</span>
 
 <span class="sd">    The specification of the data associated with the RVE dimensions has the</span>
@@ -2389,7 +2389,7 @@
     <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
     <span class="k">return</span> <span class="n">rve_dims</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="read_self_consistent_scheme"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.read_self_consistent_scheme.html#cratepy.ioput.readprocedures.read_self_consistent_scheme">[docs]</a><span class="k">def</span> <span class="nf">read_self_consistent_scheme</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">):</span>
+<div class="viewcode-block" id="read_self_consistent_scheme"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.read_self_consistent_scheme.html#cratepy.ioput.readprocedures.read_self_consistent_scheme">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">read_self_consistent_scheme</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read self-consistent scheme and associated parameters.</span>
 
 <span class="sd">    The specification of the data associated with the self-consistent scheme</span>
@@ -2518,7 +2518,7 @@
     <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
     <span class="k">return</span> <span class="n">self_consistent_scheme</span><span class="p">,</span> <span class="n">scs_parameters</span></div>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="read_vtk_options"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.read_vtk_options.html#cratepy.ioput.readprocedures.read_vtk_options">[docs]</a><span class="k">def</span> <span class="nf">read_vtk_options</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">keyword_line_number</span><span class="p">):</span>
+<div class="viewcode-block" id="read_vtk_options"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.read_vtk_options.html#cratepy.ioput.readprocedures.read_vtk_options">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">read_vtk_options</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">keyword_line_number</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read VTK output options.</span>
 
 <span class="sd">    The specification of the data associated with the VTK output options has</span>

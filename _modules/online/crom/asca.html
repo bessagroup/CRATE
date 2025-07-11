@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>online.crom.asca &mdash; CRATE 1.0.5 documentation</title>
+  <title>online.crom.asca &mdash; CRATE 1.0.6 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
@@ -155,27 +155,27 @@
 <span class="c1">#                                                                       Modules</span>
 <span class="c1"># =============================================================================</span>
 <span class="c1"># Standard</span>
-<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
 <span class="c1"># Third-party</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">numpy.matlib</span>
-<span class="kn">import</span> <span class="nn">scipy.linalg</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy.matlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.linalg</span>
 <span class="c1"># Local</span>
-<span class="kn">import</span> <span class="nn">ioput.info</span> <span class="k">as</span> <span class="nn">info</span>
-<span class="kn">import</span> <span class="nn">tensor.matrixoperations</span> <span class="k">as</span> <span class="nn">mop</span>
-<span class="kn">import</span> <span class="nn">tensor.tensoroperations</span> <span class="k">as</span> <span class="nn">top</span>
-<span class="kn">from</span> <span class="nn">clustering.citoperations</span> <span class="kn">import</span> <span class="n">assemble_cit</span>
-<span class="kn">from</span> <span class="nn">online.loading.macloadincrem</span> <span class="kn">import</span> <span class="n">LoadingPath</span><span class="p">,</span> <span class="n">IncrementRewinder</span><span class="p">,</span> \
+<span class="kn">import</span><span class="w"> </span><span class="nn">ioput.info</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">info</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensor.matrixoperations</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mop</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensor.tensoroperations</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">top</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clustering.citoperations</span><span class="w"> </span><span class="kn">import</span> <span class="n">assemble_cit</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">online.loading.macloadincrem</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoadingPath</span><span class="p">,</span> <span class="n">IncrementRewinder</span><span class="p">,</span> \
                                          <span class="n">RewindManager</span>
-<span class="kn">from</span> <span class="nn">clustering.adaptivity.crve_adaptivity</span> <span class="kn">import</span> <span class="n">AdaptivityManager</span><span class="p">,</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">clustering.adaptivity.crve_adaptivity</span><span class="w"> </span><span class="kn">import</span> <span class="n">AdaptivityManager</span><span class="p">,</span> \
                                                   <span class="n">ClusteringAdaptivityOutput</span>
-<span class="kn">from</span> <span class="nn">ioput.incoutputfiles.homresoutput</span> <span class="kn">import</span> <span class="n">HomResOutput</span>
-<span class="kn">from</span> <span class="nn">ioput.incoutputfiles.efftanoutput</span> <span class="kn">import</span> <span class="n">EffTanOutput</span>
-<span class="kn">from</span> <span class="nn">ioput.incoutputfiles.refmatoutput</span> <span class="kn">import</span> <span class="n">RefMatOutput</span>
-<span class="kn">from</span> <span class="nn">ioput.miscoutputfiles.vtkoutput</span> <span class="kn">import</span> <span class="n">VTKOutput</span>
-<span class="kn">from</span> <span class="nn">ioput.miscoutputfiles.voxelsoutput</span> <span class="kn">import</span> <span class="n">VoxelsOutput</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ioput.incoutputfiles.homresoutput</span><span class="w"> </span><span class="kn">import</span> <span class="n">HomResOutput</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ioput.incoutputfiles.efftanoutput</span><span class="w"> </span><span class="kn">import</span> <span class="n">EffTanOutput</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ioput.incoutputfiles.refmatoutput</span><span class="w"> </span><span class="kn">import</span> <span class="n">RefMatOutput</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ioput.miscoutputfiles.vtkoutput</span><span class="w"> </span><span class="kn">import</span> <span class="n">VTKOutput</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ioput.miscoutputfiles.voxelsoutput</span><span class="w"> </span><span class="kn">import</span> <span class="n">VoxelsOutput</span>
 <span class="c1">#</span>
 <span class="c1">#                                                          Authorship &amp; Credits</span>
 <span class="c1"># =============================================================================</span>
@@ -185,7 +185,7 @@
 <span class="c1"># =============================================================================</span>
 <span class="c1">#</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="ASCA"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA">[docs]</a><span class="k">class</span> <span class="nc">ASCA</span><span class="p">:</span>
+<div class="viewcode-block" id="ASCA"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ASCA</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Adaptive Self-Consistent Clustering Analysis (ASCA).</span>
 
 <span class="sd">    The detailed formulation of this method can be found in</span>
@@ -290,7 +290,7 @@
 <span class="sd">                      is_voxels_output=None)</span>
 <span class="sd">        Create and initialize output files.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="ASCA.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span>
+<div class="viewcode-block" id="ASCA.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span>
                  <span class="n">self_consistent_scheme</span><span class="o">=</span><span class="s1">&#39;regression&#39;</span><span class="p">,</span> <span class="n">scs_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">scs_max_n_iterations</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">scs_conv_tol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span>
                  <span class="n">max_n_iterations</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">conv_tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span> <span class="n">max_subinc_level</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
@@ -350,7 +350,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_effective_time</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_post_process_time</span> <span class="o">=</span> <span class="mf">0.0</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA.get_time_profile"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA.get_time_profile">[docs]</a>    <span class="k">def</span> <span class="nf">get_time_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ASCA.get_time_profile"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA.get_time_profile">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_time_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get time profile of online-stage.</span>
 
 <span class="sd">        Returns</span>
@@ -365,7 +365,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_total_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_effective_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post_process_time</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA.solve_equilibrium_problem"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA.solve_equilibrium_problem">[docs]</a>    <span class="k">def</span> <span class="nf">solve_equilibrium_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">material_state</span><span class="p">,</span> <span class="n">mac_load</span><span class="p">,</span>
+<div class="viewcode-block" id="ASCA.solve_equilibrium_problem"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA.solve_equilibrium_problem">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">solve_equilibrium_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">material_state</span><span class="p">,</span> <span class="n">mac_load</span><span class="p">,</span>
                                   <span class="n">mac_load_presctype</span><span class="p">,</span> <span class="n">mac_load_increm</span><span class="p">,</span>
                                   <span class="n">output_dir</span><span class="p">,</span> <span class="n">problem_name</span><span class="o">=</span><span class="s1">&#39;problem&#39;</span><span class="p">,</span>
                                   <span class="n">clust_adapt_freq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -582,12 +582,17 @@
                 <span class="n">scs_init_properties</span> <span class="o">=</span> <span class="p">{}</span>
                 <span class="n">scs_init_properties</span><span class="p">[</span><span class="s1">&#39;E&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scs_parameters</span><span class="p">[</span><span class="s1">&#39;E_init&#39;</span><span class="p">]</span>
                 <span class="n">scs_init_properties</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scs_parameters</span><span class="p">[</span><span class="s1">&#39;v_init&#39;</span><span class="p">]</span>
+        <span class="c1"># Set up beta parameter (for finite strain SCS)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scs_parameters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s1">&#39;beta&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scs_parameters</span><span class="p">:</span>
+            <span class="n">scs_init_properties</span><span class="p">[</span><span class="s1">&#39;beta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scs_parameters</span><span class="p">[</span><span class="s1">&#39;beta&#39;</span><span class="p">]</span>
         <span class="c1"># Set initial value of elastic reference material properties</span>
         <span class="n">ref_material</span><span class="o">.</span><span class="n">init_material_properties</span><span class="p">(</span>
             <span class="n">material_state</span><span class="o">.</span><span class="n">get_material_phases</span><span class="p">(),</span>
             <span class="n">material_state</span><span class="o">.</span><span class="n">get_material_phases_properties</span><span class="p">(),</span>
             <span class="n">material_state</span><span class="o">.</span><span class="n">get_material_phases_vf</span><span class="p">(),</span>
-            <span class="n">properties</span><span class="o">=</span><span class="n">scs_init_properties</span><span class="p">)</span>
+            <span class="n">properties</span><span class="o">=</span><span class="n">scs_init_properties</span><span class="p">,</span>
+            <span class="n">scs_parameters</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_scs_parameters</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="c1"># Initialize reference material elastic properties locking flag</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_self_consistent_scheme</span> <span class="o">==</span> <span class="s1">&#39;none&#39;</span><span class="p">:</span>
             <span class="n">is_lock_prop_ref</span> <span class="o">=</span> <span class="kc">True</span>
@@ -1237,7 +1242,7 @@
                 <span class="c1"># Set increment initial time</span>
                 <span class="n">inc_init_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._init_global_strain_mf"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._init_global_strain_mf">[docs]</a>    <span class="k">def</span> <span class="nf">_init_global_strain_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">material_state</span><span class="p">,</span>
+<div class="viewcode-block" id="ASCA._init_global_strain_mf"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._init_global_strain_mf">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_init_global_strain_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">material_state</span><span class="p">,</span>
                                <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;last_converged&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set clusters strains initial iterative guess.</span>
 
@@ -1315,7 +1320,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">global_strain_mf</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._init_global_inc_strain_mf"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._init_global_inc_strain_mf">[docs]</a>    <span class="k">def</span> <span class="nf">_init_global_inc_strain_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_total_clusters</span><span class="p">,</span>
+<div class="viewcode-block" id="ASCA._init_global_inc_strain_mf"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._init_global_inc_strain_mf">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_init_global_inc_strain_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_total_clusters</span><span class="p">,</span>
                                    <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;last_converged&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set clusters incremental strains initial iterative guess.</span>
 
@@ -1354,7 +1359,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">global_inc_strain_mf</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._init_farfield_strain_mf"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._init_farfield_strain_mf">[docs]</a>    <span class="k">def</span> <span class="nf">_init_farfield_strain_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;last_converged&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="ASCA._init_farfield_strain_mf"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._init_farfield_strain_mf">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_init_farfield_strain_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;last_converged&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set far-field strain initial iterative guess.</span>
 
 <span class="sd">        Parameters</span>
@@ -1379,7 +1384,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">farfield_strain_mf</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._init_inc_farfield_strain_mf"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._init_inc_farfield_strain_mf">[docs]</a>    <span class="k">def</span> <span class="nf">_init_inc_farfield_strain_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;last_converged&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="ASCA._init_inc_farfield_strain_mf"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._init_inc_farfield_strain_mf">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_init_inc_farfield_strain_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;last_converged&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set incremental far-field strain initial iterative guess.</span>
 
 <span class="sd">        Parameters</span>
@@ -1411,7 +1416,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">inc_farfield_strain_mf</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._build_residual"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._build_residual">[docs]</a>    <span class="k">def</span> <span class="nf">_build_residual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">material_state</span><span class="p">,</span> <span class="n">presc_strain_idxs</span><span class="p">,</span>
+<div class="viewcode-block" id="ASCA._build_residual"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._build_residual">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_build_residual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">material_state</span><span class="p">,</span> <span class="n">presc_strain_idxs</span><span class="p">,</span>
                         <span class="n">presc_stress_idxs</span><span class="p">,</span> <span class="n">applied_mac_load_mf</span><span class="p">,</span> <span class="n">ref_material</span><span class="p">,</span>
                         <span class="n">global_cit_mf</span><span class="p">,</span> <span class="n">global_strain_mf</span><span class="p">,</span> <span class="n">inc_mac_load_mf</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                         <span class="n">farfield_strain_mf</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">farfield_strain_old_mf</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -1854,7 +1859,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">residual</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._build_jacobian"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._build_jacobian">[docs]</a>    <span class="k">def</span> <span class="nf">_build_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">material_state</span><span class="p">,</span> <span class="n">presc_strain_idxs</span><span class="p">,</span>
+<div class="viewcode-block" id="ASCA._build_jacobian"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._build_jacobian">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_build_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">material_state</span><span class="p">,</span> <span class="n">presc_strain_idxs</span><span class="p">,</span>
                         <span class="n">presc_stress_idxs</span><span class="p">,</span> <span class="n">global_cit_diff_tangent_mf</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Build Lippmann-Schwinger equilibrium Jacobian matrix.</span>
 
@@ -2119,7 +2124,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">jacobian</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._build_global_cit_diff_tangent_mf"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._build_global_cit_diff_tangent_mf">[docs]</a>    <span class="k">def</span> <span class="nf">_build_global_cit_diff_tangent_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">global_cit_mf</span><span class="p">,</span>
+<div class="viewcode-block" id="ASCA._build_global_cit_diff_tangent_mf"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._build_global_cit_diff_tangent_mf">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_build_global_cit_diff_tangent_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">global_cit_mf</span><span class="p">,</span>
                                           <span class="n">material_state</span><span class="p">,</span> <span class="n">ref_material</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Build global cluster interaction - tangent modulus matrix.</span>
 
@@ -2213,7 +2218,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">global_cit_diff_tangent_mf</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._check_convergence"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._check_convergence">[docs]</a>    <span class="k">def</span> <span class="nf">_check_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">material_state</span><span class="p">,</span> <span class="n">presc_strain_idxs</span><span class="p">,</span>
+<div class="viewcode-block" id="ASCA._check_convergence"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._check_convergence">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_check_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">material_state</span><span class="p">,</span> <span class="n">presc_strain_idxs</span><span class="p">,</span>
                            <span class="n">presc_stress_idxs</span><span class="p">,</span> <span class="n">applied_mac_load_mf</span><span class="p">,</span> <span class="n">residual</span><span class="p">,</span>
                            <span class="n">applied_mix_strain_mf</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check Lippmann-Schwinger equilibrium convergence.</span>
@@ -2327,7 +2332,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">is_converged</span><span class="p">,</span> <span class="n">errors</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._crve_effective_tangent_modulus"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._crve_effective_tangent_modulus">[docs]</a>    <span class="k">def</span> <span class="nf">_crve_effective_tangent_modulus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">material_state</span><span class="p">,</span>
+<div class="viewcode-block" id="ASCA._crve_effective_tangent_modulus"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._crve_effective_tangent_modulus">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_crve_effective_tangent_modulus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">material_state</span><span class="p">,</span>
                                         <span class="n">global_cit_diff_tangent_mf</span><span class="p">,</span>
                                         <span class="n">global_strain_mf</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                         <span class="n">farfield_strain_mf</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -2616,7 +2621,7 @@
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="k">return</span> <span class="n">eff_tangent_mf</span><span class="p">,</span> <span class="n">clusters_sct_mf</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._validate_csct"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._validate_csct">[docs]</a>    <span class="k">def</span> <span class="nf">_validate_csct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span> <span class="n">global_csct_mf</span><span class="p">,</span>
+<div class="viewcode-block" id="ASCA._validate_csct"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._validate_csct">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_csct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span> <span class="n">global_csct_mf</span><span class="p">,</span>
                        <span class="n">global_strain_mf</span><span class="p">,</span> <span class="n">farfield_strain_mf</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate clusters strain concentration tensors computation.</span>
 
@@ -2672,7 +2677,7 @@
                 <span class="n">i_init</span> <span class="o">=</span> <span class="n">i_init</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)</span>
                 <span class="n">i_end</span> <span class="o">=</span> <span class="n">i_init</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp_order</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._init_clusters_sct"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._init_clusters_sct">[docs]</a>    <span class="k">def</span> <span class="nf">_init_clusters_sct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">):</span>
+<div class="viewcode-block" id="ASCA._init_clusters_sct"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._init_clusters_sct">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_init_clusters_sct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize cluster strain concentration tensors.</span>
 
 <span class="sd">        Parameters</span>
@@ -2712,7 +2717,7 @@
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="k">return</span> <span class="n">cluster_sct_mf</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._build_clusters_residuals"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._build_clusters_residuals">[docs]</a>    <span class="k">def</span> <span class="nf">_build_clusters_residuals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span>
+<div class="viewcode-block" id="ASCA._build_clusters_residuals"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._build_clusters_residuals">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_build_clusters_residuals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span>
                                   <span class="n">residual</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Build clusters equilibrium residuals dictionary.</span>
 
@@ -2768,7 +2773,7 @@
         <span class="k">return</span> <span class="n">clusters_residuals_mf</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="ASCA._display_inc_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._display_inc_data">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_display_inc_data</span><span class="p">(</span><span class="n">mac_load_path</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_display_inc_data</span><span class="p">(</span><span class="n">mac_load_path</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Display loading increment data.</span>
 
 <span class="sd">        Parameters</span>
@@ -2788,7 +2793,7 @@
                          <span class="n">sp_inc_time</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="ASCA._display_scs_iter_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._display_scs_iter_data">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_display_scs_iter_data</span><span class="p">(</span><span class="n">ref_material</span><span class="p">,</span> <span class="n">is_lock_prop_ref</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_display_scs_iter_data</span><span class="p">(</span><span class="n">ref_material</span><span class="p">,</span> <span class="n">is_lock_prop_ref</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">,</span>
                                <span class="n">scs_iter_time</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Display reference material self-consistent scheme iteration data.</span>
 
@@ -2839,7 +2844,7 @@
                                      <span class="n">material_properties</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">],</span> <span class="n">norm_dv</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="ASCA._display_nr_iter_data"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._display_nr_iter_data">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_display_nr_iter_data</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">,</span> <span class="n">nr_iter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nr_iter_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_display_nr_iter_data</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">,</span> <span class="n">nr_iter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nr_iter_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                               <span class="n">errors</span><span class="o">=</span><span class="p">[]):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Display Newton-Raphson iteration data.</span>
 
@@ -2861,7 +2866,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">info</span><span class="o">.</span><span class="n">displayinfo</span><span class="p">(</span><span class="s1">&#39;9&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ASCA._set_output_files"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._set_output_files">[docs]</a>    <span class="k">def</span> <span class="nf">_set_output_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">problem_name</span><span class="o">=</span><span class="s1">&#39;problem&#39;</span><span class="p">,</span>
+<div class="viewcode-block" id="ASCA._set_output_files"><a class="viewcode-back" href="../../../_autosummary/cratepy.main.ASCA.html#cratepy.ioput.readprocedures.ASCA._set_output_files">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_set_output_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">problem_name</span><span class="o">=</span><span class="s1">&#39;problem&#39;</span><span class="p">,</span>
                           <span class="n">is_clust_adapt_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                           <span class="n">is_ref_material_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_vtk_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                           <span class="n">vtk_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_voxels_output</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -2969,7 +2974,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                   Reference (fictitious) homogeneous material</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial">[docs]</a><span class="k">class</span> <span class="nc">ElasticReferenceMaterial</span><span class="p">:</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ElasticReferenceMaterial</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Elastic reference material.</span>
 
 <span class="sd">    Attributes</span>
@@ -3051,7 +3056,7 @@
 <span class="sd">    technical_from_lame(lam, miu)</span>
 <span class="sd">        Get Young modulus and Poisson ratio from Lamé parameters.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span>
                  <span class="n">self_consistent_scheme</span><span class="p">,</span> <span class="n">conv_tol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
 
@@ -3086,9 +3091,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_sym</span> <span class="o">=</span> <span class="n">comp_order_sym</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span> <span class="o">=</span> <span class="n">comp_order_nsym</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.init_material_properties"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.init_material_properties">[docs]</a>    <span class="k">def</span> <span class="nf">init_material_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.init_material_properties"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.init_material_properties">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">init_material_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span>
                                  <span class="n">material_phases_properties</span><span class="p">,</span>
-                                 <span class="n">material_phases_vf</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                                 <span class="n">material_phases_vf</span><span class="p">,</span>
+                                 <span class="n">properties</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                 <span class="n">scs_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set initial guess of elastic reference material properties.</span>
 
 <span class="sd">        Parameters</span>
@@ -3106,6 +3113,8 @@
 <span class="sd">            properties (key, str). Expecting Young&#39;s modulus (&#39;E&#39;) and</span>
 <span class="sd">            Poisson&#39;s coefficient (&#39;v&#39;) for an isotropic elastic reference</span>
 <span class="sd">            material.</span>
+<span class="sd">        scs_parameters : dict, default=None</span>
+<span class="sd">            Self-consistent scheme parameters.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">properties</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># If a initial guess of the elastic reference material properties</span>
@@ -3121,6 +3130,8 @@
             <span class="c1"># Set initial guess of elastic reference material properties</span>
             <span class="n">E</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="s1">&#39;E&#39;</span><span class="p">]</span>
             <span class="n">v</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">]</span>
+        <span class="c1"># Read the beta parameter for the finite-strain self-consistent scheme</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">beta</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">scs_parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;beta&#39;</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">))</span>
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="c1"># Initialize elastic reference material properties</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_material_properties_init</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;E&#39;</span><span class="p">:</span> <span class="n">E</span><span class="p">,</span> <span class="s1">&#39;v&#39;</span><span class="p">:</span> <span class="n">v</span><span class="p">}</span>
@@ -3132,7 +3143,7 @@
         <span class="c1"># Update elastic tangent modulus and elastic compliance matrix</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_elastic_tangent</span><span class="p">()</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.update_material_properties"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.update_material_properties">[docs]</a>    <span class="k">def</span> <span class="nf">update_material_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.update_material_properties"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.update_material_properties">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">update_material_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update elastic reference material properties.</span>
 
 <span class="sd">        Parameters</span>
@@ -3149,12 +3160,12 @@
         <span class="c1"># Update elastic tangent modulus and elastic compliance matrix</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_elastic_tangent</span><span class="p">()</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.update_converged_material_properties"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.update_converged_material_properties">[docs]</a>    <span class="k">def</span> <span class="nf">update_converged_material_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.update_converged_material_properties"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.update_converged_material_properties">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">update_converged_material_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update converged elastic reference material properties.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_material_properties_old</span> <span class="o">=</span> \
             <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_material_properties</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.reset_material_properties"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.reset_material_properties">[docs]</a>    <span class="k">def</span> <span class="nf">reset_material_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.reset_material_properties"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.reset_material_properties">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">reset_material_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset material properties to last loading increment values.&quot;&quot;&quot;</span>
         <span class="c1"># Reset elastic reference material properties to last loading increment</span>
         <span class="c1"># values</span>
@@ -3164,12 +3175,12 @@
         <span class="c1"># Update elastic tangent modulus and elastic compliance matrix</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_elastic_tangent</span><span class="p">()</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.set_material_properties_scs_init"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.set_material_properties_scs_init">[docs]</a>    <span class="k">def</span> <span class="nf">set_material_properties_scs_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.set_material_properties_scs_init"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.set_material_properties_scs_init">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_material_properties_scs_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set material properties converged in the first loading increment.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_material_properties_scs_init</span> <span class="o">=</span> \
             <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_material_properties</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.get_material_properties"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.get_material_properties">[docs]</a>    <span class="k">def</span> <span class="nf">get_material_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.get_material_properties"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.get_material_properties">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_material_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get elastic reference material properties.</span>
 
 <span class="sd">        Returns</span>
@@ -3180,7 +3191,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_material_properties</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.get_elastic_tangent_mf"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.get_elastic_tangent_mf">[docs]</a>    <span class="k">def</span> <span class="nf">get_elastic_tangent_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.get_elastic_tangent_mf"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.get_elastic_tangent_mf">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_elastic_tangent_mf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get elastic tangent modulus in matricial form.</span>
 
 <span class="sd">        Returns</span>
@@ -3190,7 +3201,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_elastic_tangent_mf</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.get_elastic_compliance_matrix"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.get_elastic_compliance_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">get_elastic_compliance_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.get_elastic_compliance_matrix"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.get_elastic_compliance_matrix">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_elastic_compliance_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get elastic compliance in matrix form.</span>
 
 <span class="sd">        Returns</span>
@@ -3200,15 +3211,15 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_elastic_compliance_matrix</span><span class="p">)</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.init_scs_iter"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.init_scs_iter">[docs]</a>    <span class="k">def</span> <span class="nf">init_scs_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.init_scs_iter"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.init_scs_iter">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">init_scs_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize self-consistent scheme iteration counter.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_scs_iter</span> <span class="o">=</span> <span class="mi">0</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.update_scs_iter"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.update_scs_iter">[docs]</a>    <span class="k">def</span> <span class="nf">update_scs_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.update_scs_iter"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.update_scs_iter">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">update_scs_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update self-consistent scheme iteration counter.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_scs_iter</span> <span class="o">+=</span> <span class="mi">1</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.get_scs_iter"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.get_scs_iter">[docs]</a>    <span class="k">def</span> <span class="nf">get_scs_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.get_scs_iter"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.get_scs_iter">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_scs_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get self-consistent scheme iteration counter.</span>
 
 <span class="sd">        Returns</span>
@@ -3218,7 +3229,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scs_iter</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.get_norm_dE"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.get_norm_dE">[docs]</a>    <span class="k">def</span> <span class="nf">get_norm_dE</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.get_norm_dE"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.get_norm_dE">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_norm_dE</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get normalized iterative change of Young modulus.</span>
 
 <span class="sd">        Returns</span>
@@ -3229,7 +3240,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_norm_dE</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.get_norm_dv"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.get_norm_dv">[docs]</a>    <span class="k">def</span> <span class="nf">get_norm_dv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.get_norm_dv"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.get_norm_dv">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_norm_dv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get normalized iterative change of Poisson ratio.</span>
 
 <span class="sd">        Returns</span>
@@ -3240,7 +3251,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_norm_dv</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.self_consistent_update"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.self_consistent_update">[docs]</a>    <span class="k">def</span> <span class="nf">self_consistent_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_mf</span><span class="p">,</span> <span class="n">strain_old_mf</span><span class="p">,</span> <span class="n">stress_mf</span><span class="p">,</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.self_consistent_update"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.self_consistent_update">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">self_consistent_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_mf</span><span class="p">,</span> <span class="n">strain_old_mf</span><span class="p">,</span> <span class="n">stress_mf</span><span class="p">,</span>
                                <span class="n">stress_old_mf</span><span class="p">,</span> <span class="n">eff_tangent_mf</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute reference elastic properties through self-consistent scheme.</span>
 
@@ -3281,9 +3292,6 @@
             <span class="n">inc_strain_mf</span> <span class="o">=</span> <span class="n">strain_mf</span> <span class="o">-</span> <span class="n">strain_old_mf</span>
             <span class="c1"># Compute incremental homogenized Cauchy stress tensor</span>
             <span class="n">inc_stress_mf</span> <span class="o">=</span> <span class="n">stress_mf</span> <span class="o">-</span> <span class="n">stress_old_mf</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;A suitable self-consistent scheme has not &#39;</span>
-                               <span class="s1">&#39;been developed under finite strains yet.&#39;</span><span class="p">)</span>
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="c1"># Compute elastic reference material properties based on the</span>
         <span class="c1"># regression-based self-consistent scheme</span>
@@ -3296,6 +3304,14 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span><span class="p">,</span>
                     <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_material_properties_old</span><span class="p">),</span>
                     <span class="n">inc_strain_mf</span><span class="p">,</span> <span class="n">inc_stress_mf</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;finite&#39;</span><span class="p">:</span>
+                <span class="n">ref_optimizer</span> <span class="o">=</span> <span class="n">FiniteStrainRegressionSCS</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_problem_type</span><span class="p">,</span>
+                    <span class="n">strain_mf</span><span class="p">,</span>
+                    <span class="n">strain_old_mf</span><span class="p">,</span>
+                    <span class="n">eff_tangent_mf</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span>
+                <span class="p">)</span>
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="c1"># Compute elastic reference material properties</span>
         <span class="n">E</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">ref_optimizer</span><span class="o">.</span><span class="n">compute_reference_properties</span><span class="p">()</span>
@@ -3306,7 +3322,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">is_admissible</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">v</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial._update_elastic_tangent"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial._update_elastic_tangent">[docs]</a>    <span class="k">def</span> <span class="nf">_update_elastic_tangent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial._update_elastic_tangent"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial._update_elastic_tangent">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_update_elastic_tangent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update reference material elastic tangent modulus and compliance.</span>
 
 <span class="sd">        *Infinitesimal strains:*</span>
@@ -3424,7 +3440,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_elastic_tangent_mf</span> <span class="o">=</span> <span class="n">elastic_tangent_mf</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_elastic_compliance_matrix</span> <span class="o">=</span> <span class="n">elastic_compliance_matrix</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial._check_scs_solution"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial._check_scs_solution">[docs]</a>    <span class="k">def</span> <span class="nf">_check_scs_solution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial._check_scs_solution"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial._check_scs_solution">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_check_scs_solution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check admissibility of self-consistent scheme iterative solution.</span>
 
 <span class="sd">        Parameters</span>
@@ -3457,7 +3473,7 @@
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="k">return</span> <span class="n">is_admissible</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="ElasticReferenceMaterial.check_scs_convergence"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.check_scs_convergence">[docs]</a>    <span class="k">def</span> <span class="nf">check_scs_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticReferenceMaterial.check_scs_convergence"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.check_scs_convergence">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">check_scs_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check self-consistent scheme iterative solution convergence.</span>
 
 <span class="sd">        Parameters</span>
@@ -3494,7 +3510,7 @@
         <span class="k">return</span> <span class="n">is_converged</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="ElasticReferenceMaterial.get_available_scs"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.get_available_scs">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_available_scs</span><span class="p">(</span><span class="n">strain_formulation</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_available_scs</span><span class="p">(</span><span class="n">strain_formulation</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get available self-consistent schemes.</span>
 
 <span class="sd">        Parameters</span>
@@ -3507,17 +3523,15 @@
 <span class="sd">        available_scs : tuple[str]</span>
 <span class="sd">            Available self-consistent schemes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;infinitesimal&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">strain_formulation</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;infinitesimal&#39;</span><span class="p">,</span> <span class="s1">&#39;finite&#39;</span><span class="p">):</span>
             <span class="n">available_scs</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="s1">&#39;regression&#39;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">strain_formulation</span> <span class="o">==</span> <span class="s1">&#39;finite&#39;</span><span class="p">:</span>
-            <span class="n">available_scs</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;none&#39;</span><span class="p">,)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Unknown problem strain formulation.&#39;</span><span class="p">)</span>
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="k">return</span> <span class="n">available_scs</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="ElasticReferenceMaterial.lame_from_technical"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.lame_from_technical">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">lame_from_technical</span><span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">lame_from_technical</span><span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get Lamé parameters from Young modulus and Poisson ratio.</span>
 
 <span class="sd">        Parameters</span>
@@ -3542,7 +3556,7 @@
         <span class="k">return</span> <span class="n">lam</span><span class="p">,</span> <span class="n">miu</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="ElasticReferenceMaterial.technical_from_lame"><a class="viewcode-back" href="../../../_autosummary/cratepy.ioput.readprocedures.ElasticReferenceMaterial.html#cratepy.ioput.readprocedures.ElasticReferenceMaterial.technical_from_lame">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">technical_from_lame</span><span class="p">(</span><span class="n">lam</span><span class="p">,</span> <span class="n">miu</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">technical_from_lame</span><span class="p">(</span><span class="n">lam</span><span class="p">,</span> <span class="n">miu</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get Young modulus and Poisson ratio from Lamé parameters.</span>
 
 <span class="sd">        Parameters</span>
@@ -3568,7 +3582,7 @@
 <span class="c1">#</span>
 <span class="c1">#                            Interface: Reference material properties optimizer</span>
 <span class="c1"># =============================================================================</span>
-<span class="k">class</span> <span class="nc">ReferenceMaterialOptimizer</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ReferenceMaterialOptimizer</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Elastic reference material properties optimizer interface.</span>
 
 <span class="sd">    Attributes</span>
@@ -3581,7 +3595,7 @@
 <span class="sd">        Strain/Stress components nonsymmetric order.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Elastic reference material properties optimizer constructor.</span>
 
 <span class="sd">        Parameters</span>
@@ -3595,7 +3609,7 @@
         <span class="k">pass</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">compute_reference_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_reference_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute elastic reference material properties.</span>
 
 <span class="sd">        Returns</span>
@@ -3609,7 +3623,7 @@
 <span class="c1">#</span>
 <span class="c1">#                                      Reference material properties optimizers</span>
 <span class="c1"># =============================================================================</span>
-<span class="k">class</span> <span class="nc">InfinitesimalRegressionSCS</span><span class="p">(</span><span class="n">ReferenceMaterialOptimizer</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">InfinitesimalRegressionSCS</span><span class="p">(</span><span class="n">ReferenceMaterialOptimizer</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Infinitesimal strains format regression-based self-consistent scheme.</span>
 
 <span class="sd">    *Mimization problem:*</span>
@@ -3667,7 +3681,7 @@
 <span class="sd">    _comp_order_nsym : list[str]</span>
 <span class="sd">        Strain/Stress components nonsymmetric order.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span> <span class="n">problem_type</span><span class="p">,</span>
                  <span class="n">material_properties_old</span><span class="p">,</span> <span class="n">inc_strain_mf</span><span class="p">,</span> <span class="n">inc_stress_mf</span><span class="p">,</span>
                  <span class="n">is_symmetrized</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
@@ -3704,7 +3718,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_sym</span> <span class="o">=</span> <span class="n">comp_order_sym</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_comp_order_nsym</span> <span class="o">=</span> <span class="n">comp_order_nsym</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
-    <span class="k">def</span> <span class="nf">compute_reference_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_reference_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute elastic reference material properties.</span>
 
 <span class="sd">        Returns</span>
@@ -3804,6 +3818,105 @@
         <span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">E</span><span class="p">,</span> <span class="n">v</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">FiniteStrainRegressionSCS</span><span class="p">(</span><span class="n">ReferenceMaterialOptimizer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Finite strains format regression-based self-consistent scheme.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">problem_type</span><span class="p">,</span>
+        <span class="n">strain_mf</span><span class="p">,</span>
+        <span class="n">strain_old_mf</span><span class="p">,</span>
+        <span class="n">homo_tangent_mf</span><span class="p">,</span>
+        <span class="n">beta</span><span class="p">,</span>
+        <span class="n">is_symmetrized</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        problem_type : int</span>
+<span class="sd">            Problem type: 2D plane strain (1), 2D plane stress (2),</span>
+<span class="sd">            2D axisymmetric (3) and 3D (4).</span>
+<span class="sd">        strain_mf : numpy.ndarray (1d)</span>
+<span class="sd">            Total homogenized strain (matricial form).</span>
+<span class="sd">        strain_old_mf : numpy.ndarray (1d)</span>
+<span class="sd">            Last total homogenized strain (matricial form).</span>
+<span class="sd">        homo_tangent_mf : numpy.ndarray (2d)</span>
+<span class="sd">            Homogenised material tangent (matricial form).</span>
+<span class="sd">        beta : float</span>
+<span class="sd">            Mixing parameter for the self-consistent scheme.</span>
+<span class="sd">        is_symmetrized : bool, default=False</span>
+<span class="sd">            True if a symmetric alternative stress-strain conjugate pair is</span>
+<span class="sd">            adopted in the finite strains regression-based self-consistent</span>
+<span class="sd">            scheme, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">beta</span> <span class="o">=</span> <span class="n">beta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_strain_mf</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">strain_mf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_strain_old_mf</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">strain_old_mf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_homo_tangent_mf</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">homo_tangent_mf</span><span class="p">)</span>
+        <span class="c1"># Get problem type parameters</span>
+        <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span> <span class="o">=</span> \
+            <span class="n">mop</span><span class="o">.</span><span class="n">get_problem_type_parameters</span><span class="p">(</span><span class="n">problem_type</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span> <span class="o">=</span> <span class="n">n_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_c_ord</span> <span class="o">=</span> <span class="n">comp_order_sym</span> <span class="k">if</span> <span class="n">is_symmetrized</span> <span class="k">else</span> <span class="n">comp_order_nsym</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_reference_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute elastic reference material properties.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        E : float</span>
+<span class="sd">            Young modulus of elastic reference material.</span>
+<span class="sd">        v : float</span>
+<span class="sd">            Poisson ratio of elastic reference material.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get tensors from matricial forms</span>
+        <span class="n">strain</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_from_mf</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_strain_mf</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_c_ord</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">strain_old</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_from_mf</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_strain_old_mf</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_c_ord</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">homo_tangent</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">get_tensor_from_mf</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_homo_tangent_mf</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_c_ord</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="c1"># Compute auxiliary quantities</span>
+        <span class="n">cur_strain</span> <span class="o">=</span> <span class="n">strain</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">strain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">delta_strain</span> <span class="o">=</span> <span class="n">strain</span> <span class="o">-</span> <span class="n">strain_old</span>
+        <span class="c1">#</span>
+        <span class="c1"># Step 1: evaluate the solution of the tangent-based problem</span>
+        <span class="n">tang_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">],</span>
+                                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dim</span><span class="p">]])</span>
+        <span class="n">tang_rhs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;iikk&#39;</span><span class="p">,</span> <span class="n">homo_tangent</span><span class="p">),</span>
+                             <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ijij&#39;</span><span class="p">,</span> <span class="n">homo_tangent</span><span class="p">)])</span>
+        <span class="n">lam</span><span class="p">,</span> <span class="n">miu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">tang_matrix</span><span class="p">,</span> <span class="n">tang_rhs</span><span class="p">)</span>
+        <span class="n">E_tang</span><span class="p">,</span> <span class="n">nu</span> <span class="o">=</span> <span class="n">ElasticReferenceMaterial</span><span class="o">.</span><span class="n">technical_from_lame</span><span class="p">(</span><span class="n">lam</span><span class="p">,</span> <span class="n">miu</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="c1"># Step 2: solve the optimisation of the energy difference</span>
+        <span class="n">numerator</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">nu</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span>
+            <span class="s1">&#39;ij,ij&#39;</span><span class="p">,</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ijkl,kl&#39;</span><span class="p">,</span> <span class="n">homo_tangent</span><span class="p">,</span> <span class="n">cur_strain</span><span class="p">),</span>
+            <span class="n">delta_strain</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">denominator</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">nu</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">cur_strain</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">delta_strain</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">nu</span><span class="p">)</span>
+            <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ij,ij&#39;</span><span class="p">,</span> <span class="n">cur_strain</span><span class="p">,</span> <span class="n">delta_strain</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">E_ener</span> <span class="o">=</span> <span class="n">numerator</span> <span class="o">/</span> <span class="n">denominator</span>
+        <span class="c1">#</span>
+        <span class="c1"># Step 3: establish the bounds and interpolate using beta</span>
+        <span class="n">E_min</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">E_ener</span><span class="p">,</span> <span class="n">E_tang</span><span class="p">)</span>
+        <span class="n">E_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">E_ener</span><span class="p">,</span> <span class="n">E_tang</span><span class="p">)</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">beta</span> <span class="o">*</span> <span class="n">E_max</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">beta</span><span class="p">)</span> <span class="o">*</span> <span class="n">E_min</span>
+        <span class="k">return</span> <span class="n">E</span><span class="p">,</span> <span class="n">nu</span>
 </pre></div>
 
            </div>

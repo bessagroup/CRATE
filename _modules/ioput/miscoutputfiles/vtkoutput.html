@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ioput.miscoutputfiles.vtkoutput &mdash; CRATE 1.0.5 documentation</title>
+  <title>ioput.miscoutputfiles.vtkoutput &mdash; CRATE 1.0.6 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/readthedocs-custom.css" type="text/css" />
@@ -125,14 +125,14 @@
 <span class="c1">#                                                                       Modules</span>
 <span class="c1"># =============================================================================</span>
 <span class="c1"># Standard</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
 <span class="c1"># Third-party</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="c1"># Local</span>
-<span class="kn">import</span> <span class="nn">tensor.matrixoperations</span> <span class="k">as</span> <span class="nn">mop</span>
-<span class="kn">from</span> <span class="nn">ioput.miscoutputfiles.voxelsoutput</span> <span class="kn">import</span> <span class="n">VoxelsArraysFactory</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensor.matrixoperations</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mop</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ioput.miscoutputfiles.voxelsoutput</span><span class="w"> </span><span class="kn">import</span> <span class="n">VoxelsArraysFactory</span>
 <span class="c1">#</span>
 <span class="c1">#                                                          Authorship &amp; Credits</span>
 <span class="c1"># =============================================================================</span>
@@ -142,7 +142,7 @@
 <span class="c1"># =============================================================================</span>
 <span class="c1">#</span>
 <span class="c1"># =============================================================================</span>
-<div class="viewcode-block" id="VTKOutput"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.VTKOutput.html#cratepy.main.VTKOutput">[docs]</a><span class="k">class</span> <span class="nc">VTKOutput</span><span class="p">:</span>
+<div class="viewcode-block" id="VTKOutput"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.VTKOutput.html#cratepy.main.VTKOutput">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">VTKOutput</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;VTK output.</span>
 
 <span class="sd">    Attributes</span>
@@ -178,7 +178,7 @@
 <span class="sd">    _reset_labels_from_zero(array_1d)</span>
 <span class="sd">        Reset 1d array of integers starting from zero.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="VTKOutput.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.VTKOutput.html#cratepy.main.VTKOutput.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">byte_order</span><span class="p">,</span> <span class="nb">format</span><span class="p">,</span> <span class="n">precision</span><span class="p">,</span>
+<div class="viewcode-block" id="VTKOutput.__init__"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.VTKOutput.html#cratepy.main.VTKOutput.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">byte_order</span><span class="p">,</span> <span class="nb">format</span><span class="p">,</span> <span class="n">precision</span><span class="p">,</span>
                  <span class="n">header_type</span><span class="p">,</span> <span class="n">base_name</span><span class="p">,</span> <span class="n">vtk_dir</span><span class="p">,</span> <span class="n">pvd_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
 
@@ -217,7 +217,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_pvd_dir</span> <span class="o">=</span> <span class="n">pvd_dir</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_vtk_collection</span> <span class="o">=</span> <span class="kc">None</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="VTKOutput.write_vtk_file_clustering"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.VTKOutput.html#cratepy.main.VTKOutput.write_vtk_file_clustering">[docs]</a>    <span class="k">def</span> <span class="nf">write_vtk_file_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">):</span>
+<div class="viewcode-block" id="VTKOutput.write_vtk_file_clustering"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.VTKOutput.html#cratepy.main.VTKOutput.write_vtk_file_clustering">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">write_vtk_file_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crve</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Write VTK file associated with the CRVE clustering.</span>
 
 <span class="sd">        Parameters</span>
@@ -293,7 +293,7 @@
         <span class="c1"># Close clustering VTK file</span>
         <span class="n">vtk_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="VTKOutput.write_vtk_file_time_step"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.VTKOutput.html#cratepy.main.VTKOutput.write_vtk_file_time_step">[docs]</a>    <span class="k">def</span> <span class="nf">write_vtk_file_time_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_step</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span>
+<div class="viewcode-block" id="VTKOutput.write_vtk_file_time_step"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.VTKOutput.html#cratepy.main.VTKOutput.write_vtk_file_time_step">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">write_vtk_file_time_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_step</span><span class="p">,</span> <span class="n">strain_formulation</span><span class="p">,</span>
                                  <span class="n">problem_type</span><span class="p">,</span> <span class="n">crve</span><span class="p">,</span> <span class="n">material_state</span><span class="p">,</span>
                                  <span class="n">vtk_vars</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">adaptivity_manager</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Write VTK file associated with time step (increment).</span>
@@ -571,7 +571,7 @@
         <span class="c1"># Close clustering VTK file</span>
         <span class="n">vtk_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="VTKOutput.rewind_files"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.VTKOutput.html#cratepy.main.VTKOutput.rewind_files">[docs]</a>    <span class="k">def</span> <span class="nf">rewind_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rewind_inc</span><span class="p">):</span>
+<div class="viewcode-block" id="VTKOutput.rewind_files"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.VTKOutput.html#cratepy.main.VTKOutput.rewind_files">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">rewind_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rewind_inc</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Rewind VTK output files.</span>
 
 <span class="sd">        Parameters</span>
@@ -598,7 +598,7 @@
                                                                      <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="VTKOutput._set_image_data_parameters"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.VTKOutput.html#cratepy.main.VTKOutput._set_image_data_parameters">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_set_image_data_parameters</span><span class="p">(</span><span class="n">rve_dims</span><span class="p">,</span> <span class="n">n_voxels_dims</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_set_image_data_parameters</span><span class="p">(</span><span class="n">rve_dims</span><span class="p">,</span> <span class="n">n_voxels_dims</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set ImageData dataset parameters.</span>
 
 <span class="sd">        Parameters</span>
@@ -640,7 +640,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">dataset_parameters</span><span class="p">,</span> <span class="n">piece_parameters</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="VTKOutput._set_cell_data_name"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.VTKOutput.html#cratepy.main.VTKOutput._set_cell_data_name">[docs]</a>    <span class="k">def</span> <span class="nf">_set_cell_data_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span><span class="p">,</span> <span class="n">var_name</span><span class="p">,</span>
+<div class="viewcode-block" id="VTKOutput._set_cell_data_name"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.VTKOutput.html#cratepy.main.VTKOutput._set_cell_data_name">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_set_cell_data_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span><span class="p">,</span> <span class="n">var_name</span><span class="p">,</span>
                             <span class="n">var_type</span><span class="p">,</span> <span class="n">idx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set variable cell data array name.</span>
 
@@ -681,7 +681,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">data_name</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="VTKOutput._set_state_var_descriptors"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.VTKOutput.html#cratepy.main.VTKOutput._set_state_var_descriptors">[docs]</a>    <span class="k">def</span> <span class="nf">_set_state_var_descriptors</span><span class="p">(</span>
+<div class="viewcode-block" id="VTKOutput._set_state_var_descriptors"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.VTKOutput.html#cratepy.main.VTKOutput._set_state_var_descriptors">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_set_state_var_descriptors</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span><span class="p">,</span> <span class="n">var_name</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span>
             <span class="n">model_state_variables</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cluster</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">clusters_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set state variable descriptors required to output cell data array.</span>
@@ -764,7 +764,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">var</span><span class="p">,</span> <span class="n">var_type</span><span class="p">,</span> <span class="n">var_n_comp</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="VTKOutput._state_var_cell_data_array"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.VTKOutput.html#cratepy.main.VTKOutput._state_var_cell_data_array">[docs]</a>    <span class="k">def</span> <span class="nf">_state_var_cell_data_array</span><span class="p">(</span>
+<div class="viewcode-block" id="VTKOutput._state_var_cell_data_array"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.VTKOutput.html#cratepy.main.VTKOutput._state_var_cell_data_array">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_state_var_cell_data_array</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">comp_order_sym</span><span class="p">,</span> <span class="n">comp_order_nsym</span><span class="p">,</span> <span class="n">material_phases</span><span class="p">,</span>
             <span class="n">material_phases_models</span><span class="p">,</span> <span class="n">phase_clusters</span><span class="p">,</span> <span class="n">voxels_clusters</span><span class="p">,</span>
             <span class="n">clusters_state</span><span class="p">,</span> <span class="n">var_name</span><span class="p">,</span> <span class="n">var_type</span><span class="p">,</span> <span class="n">comp_idx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -881,7 +881,7 @@
         <span class="k">return</span> <span class="n">rg_array</span></div>
     <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="VTKOutput._reset_labels_from_zero"><a class="viewcode-back" href="../../../_autosummary/cratepy.online.crom.asca.VTKOutput.html#cratepy.main.VTKOutput._reset_labels_from_zero">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_reset_labels_from_zero</span><span class="p">(</span><span class="n">array_1d</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_reset_labels_from_zero</span><span class="p">(</span><span class="n">array_1d</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset 1d array of integers starting from zero.</span>
 
 <span class="sd">        Parameters</span>
@@ -915,7 +915,7 @@
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">array_1d_new</span></div></div>
 <span class="c1"># =============================================================================</span>
-<span class="k">class</span> <span class="nc">VTKCollection</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">VTKCollection</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;VTK collection.</span>
 
 <span class="sd">    Attributes</span>
@@ -934,7 +934,7 @@
 <span class="sd">    remove_vtk_collection_file(self, time_step_file_path)</span>
 <span class="sd">        Remove VTK file from VTK collection file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pvd_file_path</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pvd_file_path</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;VTK collection constructor.</span>
 
 <span class="sd">        Parameters</span>
@@ -951,7 +951,7 @@
         <span class="c1"># Set formatting indentation</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_indent</span> <span class="o">=</span> <span class="s1">&#39;  &#39;</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
-    <span class="k">def</span> <span class="nf">init_vtk_collection_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">init_vtk_collection_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Open VTK collection output file and write file header and footer.&quot;&quot;&quot;</span>
         <span class="c1"># Open VTK collection file (append mode)</span>
         <span class="n">vtk_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pvd_file_path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span>
@@ -973,7 +973,7 @@
         <span class="c1"># Close VTK collection file</span>
         <span class="n">vtk_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
-    <span class="k">def</span> <span class="nf">write_vtk_collection_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_step</span><span class="p">,</span> <span class="n">time_step_file_path</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write_vtk_collection_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_step</span><span class="p">,</span> <span class="n">time_step_file_path</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add VTK file to VTK collection file.</span>
 
 <span class="sd">        Parameters</span>
@@ -995,7 +995,7 @@
         <span class="c1"># Write updated VTK collection file</span>
         <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pvd_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">file_lines</span><span class="p">)</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
-    <span class="k">def</span> <span class="nf">remove_vtk_collection_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_step_file_path</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_vtk_collection_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_step_file_path</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove VTK file from VTK collection file.</span>
 
 <span class="sd">        Parameters</span>
@@ -1022,7 +1022,7 @@
         <span class="c1"># Write updated VTK collection file</span>
         <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pvd_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">file_lines</span><span class="p">)</span>
 <span class="c1"># =============================================================================</span>
-<span class="k">class</span> <span class="nc">XMLGenerator</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">XMLGenerator</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;VTK XML files generation methods.</span>
 
 <span class="sd">    Attributes</span>
@@ -1057,7 +1057,7 @@
 <span class="sd">    enclose(x)</span>
 <span class="sd">        Enclose input in literal quotation marks.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">byte_order</span><span class="p">,</span> <span class="nb">format</span><span class="p">,</span> <span class="n">precision</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">byte_order</span><span class="p">,</span> <span class="nb">format</span><span class="p">,</span> <span class="n">precision</span><span class="p">,</span>
                  <span class="n">header_type</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;VTK XML file constructor.</span>
 
@@ -1085,7 +1085,7 @@
         <span class="c1"># Set formatting indentation</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_indent</span> <span class="o">=</span> <span class="s1">&#39;  &#39;</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
-    <span class="k">def</span> <span class="nf">write_file_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write_file_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Write VTK file header.</span>
 
 <span class="sd">        Parameters</span>
@@ -1101,7 +1101,7 @@
                        <span class="o">+</span> <span class="s1">&#39;header_type=&#39;</span>
                        <span class="o">+</span> <span class="n">XMLGenerator</span><span class="o">.</span><span class="n">enclose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_header_type</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
-    <span class="k">def</span> <span class="nf">write_file_footer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write_file_footer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Write VTK file footer.</span>
 
 <span class="sd">        Parameters</span>
@@ -1111,7 +1111,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">vtk_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;/VTKFile&#39;</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
-    <span class="k">def</span> <span class="nf">write_open_dataset_elem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">,</span> <span class="n">dataset_parameters</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write_open_dataset_elem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">,</span> <span class="n">dataset_parameters</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Open (write) VTK dataset element.</span>
 
 <span class="sd">        Parameters</span>
@@ -1127,7 +1127,7 @@
                                    <span class="o">+</span> <span class="n">XMLGenerator</span><span class="o">.</span><span class="n">enclose</span><span class="p">(</span><span class="n">parameters</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
                                    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
-    <span class="k">def</span> <span class="nf">write_close_dataset_elem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write_close_dataset_elem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Close (write) VTK dataset element.</span>
 
 <span class="sd">        Parameters</span>
@@ -1137,7 +1137,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">vtk_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_indent</span> <span class="o">+</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_type</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
-    <span class="k">def</span> <span class="nf">write_open_dataset_piece</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">,</span> <span class="n">piece_parameters</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write_open_dataset_piece</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">,</span> <span class="n">piece_parameters</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Open (write) VTK dataset element piece.</span>
 
 <span class="sd">        Parameters</span>
@@ -1153,7 +1153,7 @@
                                    <span class="o">+</span> <span class="n">XMLGenerator</span><span class="o">.</span><span class="n">enclose</span><span class="p">(</span><span class="n">parameters</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
                                    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
-    <span class="k">def</span> <span class="nf">write_close_dataset_piece</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write_close_dataset_piece</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Close (write) VTK dataset element piece.</span>
 
 <span class="sd">        Parameters</span>
@@ -1163,7 +1163,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">vtk_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_indent</span> <span class="o">+</span> <span class="s1">&#39;&lt;/Piece&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
-    <span class="k">def</span> <span class="nf">write_open_point_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write_open_point_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Open (write) VTK point data element.</span>
 
 <span class="sd">        Parameters</span>
@@ -1173,7 +1173,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">vtk_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_indent</span> <span class="o">+</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;PointData&#39;</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
-    <span class="k">def</span> <span class="nf">write_close_point_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write_close_point_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Close (write) VTK point data element.</span>
 
 <span class="sd">        Parameters</span>
@@ -1183,7 +1183,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">vtk_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_indent</span> <span class="o">+</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;/PointData&#39;</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
-    <span class="k">def</span> <span class="nf">write_open_cell_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write_open_cell_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Open (write) VTK cell data element.</span>
 
 <span class="sd">        Parameters</span>
@@ -1193,7 +1193,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">vtk_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_indent</span> <span class="o">+</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;CellData&#39;</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
-    <span class="k">def</span> <span class="nf">write_close_cell_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write_close_cell_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Close (write) VTK cell data element.</span>
 
 <span class="sd">        Parameters</span>
@@ -1203,7 +1203,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">vtk_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_indent</span> <span class="o">+</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;/CellData&#39;</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
-    <span class="k">def</span> <span class="nf">write_cell_data_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">,</span> <span class="n">data_list</span><span class="p">,</span> <span class="n">data_parameters</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write_cell_data_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vtk_file</span><span class="p">,</span> <span class="n">data_list</span><span class="p">,</span> <span class="n">data_parameters</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Write VTK cell data element.</span>
 
 <span class="sd">        Parameters</span>
@@ -1287,7 +1287,7 @@
         <span class="n">vtk_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_indent</span> <span class="o">+</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;/DataArray&#39;</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">enclose</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">enclose</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Enclose input in literal quotation marks.</span>
 
 <span class="sd">        Parameters</span>
